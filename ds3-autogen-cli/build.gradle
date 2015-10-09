@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':ds3-autogen')
+    compile project(':ds3-autogen-c')
+    compile project(':ds3-autogen-java')
+    compile project(':ds3-autogen-net')
+    compile project(':ds3-autogen-python')
+}
