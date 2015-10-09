@@ -1,6 +1,9 @@
 apply plugin: 'application'
 
+mainClassName = 'com.spectralogic.autogen.cli.Main'
+
 dependencies {
+    compile 'commons-cli:commons-cli:1.3'
     compile project(':ds3-autogen-api')
     compile project(':ds3-autogen')
     compile project(':ds3-autogen-c')
