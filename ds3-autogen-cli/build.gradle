@@ -1,3 +1,5 @@
+apply plugin: 'application'
+
 dependencies {
     compile project(':ds3-autogen')
     compile project(':ds3-autogen-c')
