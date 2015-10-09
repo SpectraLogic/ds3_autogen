@@ -1,1 +1,1 @@
-include 'ds3-autogen'
+include 'ds3-autogen', 'ds3-autogen-api', 'ds3-autogen-c', 'ds3-autogen-java', 'ds3-autogen-net', 'ds3-autogen-python'

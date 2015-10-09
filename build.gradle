@@ -14,15 +14,15 @@
  */
 
 allprojects {
-    group = 'com.spectralogic.ds3'
-    version = '1.2.0-RC2'
+    group = 'com.spectralogic.ds3autogen'
+    version = '1.0.0-SNAPSHOT'
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'findbugs'
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
     repositories {
         mavenCentral()
         mavenLocal()
