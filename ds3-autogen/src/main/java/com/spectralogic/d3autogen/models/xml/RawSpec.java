@@ -13,7 +13,7 @@ public class RawSpec {
         return contract;
     }
 
-    public void setContract(Contract contract) {
+    public void setContract(final Contract contract) {
         this.contract = contract;
     }
 }
