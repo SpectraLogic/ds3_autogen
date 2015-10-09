@@ -1,6 +1,7 @@
 apply plugin: 'application'
 
 dependencies {
+    compile project(':ds3-autogen-api')
     compile project(':ds3-autogen')
     compile project(':ds3-autogen-c')
     compile project(':ds3-autogen-java')
