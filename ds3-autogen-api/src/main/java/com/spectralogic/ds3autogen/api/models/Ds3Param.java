@@ -15,5 +15,24 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-public class Ds3Type {
+public class Ds3Param {
+
+    private String name;
+    private String type;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
 }

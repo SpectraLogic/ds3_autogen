@@ -1,24 +1,37 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.d3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 
 import java.util.List;
 
 public class Request {
 
-    public enum Requirement { REQUIRED, NOT_ALLOWED }
-    public enum HttpVerb { GET, DELETE, POST, PUT, HEAD }
-
     @JacksonXmlProperty(isAttribute = true, localName = "BucketRequirement")
-    private Requirement bucketRequirement;
+    private Ds3Request.Requirement bucketRequirement;
 
     @JacksonXmlProperty(isAttribute = true, localName = "HttpVerb")
-    private HttpVerb httpVerb;
+    private Ds3Request.HttpVerb httpVerb;
 
     @JacksonXmlProperty(isAttribute = true, localName = "ObjectRequirement")
-    private Requirement objectRequirement;
+    private Ds3Request.Requirement objectRequirement;
 
     @JsonProperty("OptionalQueryParams")
     @JacksonXmlElementWrapper(useWrapping = true)
@@ -28,27 +41,27 @@ public class Request {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Param> requiredQueryParams;
 
-    public Requirement getBucketRequirement() {
+    public Ds3Request.Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public void setBucketRequirement(final Requirement bucketRequirement) {
+    public void setBucketRequirement(final Ds3Request.Requirement bucketRequirement) {
         this.bucketRequirement = bucketRequirement;
     }
 
-    public HttpVerb getHttpVerb() {
+    public Ds3Request.HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
-    public void setHttpVerb(final HttpVerb httpVerb) {
+    public void setHttpVerb(final Ds3Request.HttpVerb httpVerb) {
         this.httpVerb = httpVerb;
     }
 
-    public Requirement getObjectRequirement() {
+    public Ds3Request.Requirement getObjectRequirement() {
         return objectRequirement;
     }
 
-    public void setObjectRequirement(final Requirement objectRequirement) {
+    public void setObjectRequirement(final Ds3Request.Requirement objectRequirement) {
         this.objectRequirement = objectRequirement;
     }
     public List<Param> getOptionalQueryParams() {

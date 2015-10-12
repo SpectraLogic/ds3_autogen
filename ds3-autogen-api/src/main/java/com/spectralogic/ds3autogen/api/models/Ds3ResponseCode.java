@@ -15,5 +15,26 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-public class Ds3Type {
+import java.util.List;
+
+public class Ds3ResponseCode {
+
+    private String code;
+    private List<Ds3ResponseType> ds3ResponseTypes;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(final String code) {
+        this.code = code;
+    }
+
+    public List<Ds3ResponseType> getDs3ResponseTypes() {
+        return ds3ResponseTypes;
+    }
+
+    public void setDs3ResponseTypes(final List<Ds3ResponseType> ds3ResponseType) {
+        this.ds3ResponseTypes = ds3ResponseType;
+    }
 }
