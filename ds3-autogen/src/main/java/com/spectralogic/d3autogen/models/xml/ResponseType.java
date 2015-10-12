@@ -13,7 +13,26 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.d3autogen.models.xml;
 
-public class Ds3Type {
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+
+public class ResponseType {
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Type")
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    public Ds3ResponseType toDs3ResponseType() {
+        final Ds3ResponseType ds3ResponseType = new Ds3ResponseType(type);
+        return ds3ResponseType;
+    }
 }

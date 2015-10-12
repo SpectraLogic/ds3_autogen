@@ -13,16 +13,35 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen;
+package com.spectralogic.d3autogen.models.xml;
 
-import com.spectralogic.ds3autogen.api.FileUtils;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
 
-import java.io.OutputStream;
-import java.nio.file.Path;
+public class Param {
 
-public class FileUtilsImpl implements FileUtils {
-    @Override
-    public OutputStream getOutputFile(final Path path) {
-        return null;
+    @JacksonXmlProperty(isAttribute = true, localName = "Name")
+    private String name;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Type")
+    private String type;
+
+    public String getName() { return name; }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    public Ds3Param toDs3Param() {
+        final Ds3Param ds3Param = new Ds3Param(name, type);
+        return ds3Param;
     }
 }

@@ -15,5 +15,21 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-public class Ds3Type {
+import com.google.common.collect.ImmutableList;
+
+public class Ds3ResponseCode {
+
+    private final String code;
+    private final ImmutableList<Ds3ResponseType> ds3ResponseTypes;
+
+    public Ds3ResponseCode(final String code, final ImmutableList<Ds3ResponseType> ds3ResponseTypes) {
+        this.code = code;
+        this.ds3ResponseTypes = ds3ResponseTypes;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public ImmutableList<Ds3ResponseType> getDs3ResponseTypes() { return ds3ResponseTypes; }
 }
