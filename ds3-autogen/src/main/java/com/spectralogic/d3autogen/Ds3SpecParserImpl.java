@@ -49,7 +49,7 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
 
     private static Ds3ApiSpec toSpec(final RawSpec contract) {
         //TODO add Ds3Type conversion
-        Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(ImmutableList.copyOf(contract.getContract().getDs3Requests()), null);
+        Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(contract.getContract().getDs3Requests(), null);
         return ds3ApiSpec;
     }
 }

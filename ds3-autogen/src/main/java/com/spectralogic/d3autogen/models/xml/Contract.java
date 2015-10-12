@@ -17,9 +17,9 @@ package com.spectralogic.d3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Contract {
@@ -36,11 +36,11 @@ public class Contract {
         this.requestHandlers = requestHandlers;
     }
 
-    public List<Ds3Request> getDs3Requests() {
-        List<Ds3Request> ds3Requests = new ArrayList<Ds3Request>();
+    public ImmutableList<Ds3Request> getDs3Requests() {
+        final ImmutableList.Builder<Ds3Request> ds3RequestBuilder = ImmutableList.builder();
         for (final RequestHandler requestHandler : requestHandlers) {
-            ds3Requests.add(requestHandler.toDs3Request());
+            ds3RequestBuilder.add(requestHandler.toDs3Request());
         }
-        return ds3Requests;
+        return ds3RequestBuilder.build();
     }
 }
