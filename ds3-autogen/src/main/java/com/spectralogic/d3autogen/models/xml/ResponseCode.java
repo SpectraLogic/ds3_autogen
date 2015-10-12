@@ -49,7 +49,7 @@ public class ResponseCode {
     }
 
     public Ds3ResponseCode toDs3ResponseCode() {
-        Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(code, toDs3ResponseTypes());
+        final Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(code, toDs3ResponseTypes());
         return ds3ResponseCode;
     }
 

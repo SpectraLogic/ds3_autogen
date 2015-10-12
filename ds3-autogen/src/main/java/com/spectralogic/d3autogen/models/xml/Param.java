@@ -41,7 +41,7 @@ public class Param {
     }
 
     public Ds3Param toDs3Param() {
-        Ds3Param ds3Param = new Ds3Param(name, type);
+        final Ds3Param ds3Param = new Ds3Param(name, type);
         return ds3Param;
     }
 }

@@ -73,7 +73,7 @@ public class RequestHandler {
     }
 
     public Ds3Request toDs3Request() {
-        Ds3Request ds3request = new Ds3Request(
+        final Ds3Request ds3request = new Ds3Request(
                 name,
                 request.getHttpVerb(),
                 classification,
