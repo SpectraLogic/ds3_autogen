@@ -17,13 +17,11 @@ package com.spectralogic.ds3autogen.api.models;
 
 public class Ds3ResponseType {
 
-    private String type;
+    private final String type;
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(final String type) {
+    public Ds3ResponseType(final String type) {
         this.type = type;
     }
+
+    public String getType() { return type; }
 }

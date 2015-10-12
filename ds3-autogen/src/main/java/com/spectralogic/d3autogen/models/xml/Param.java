@@ -41,9 +41,7 @@ public class Param {
     }
 
     public Ds3Param toDs3Param() {
-        Ds3Param ds3Param = new Ds3Param();
-        ds3Param.setName(name);
-        ds3Param.setType(type);
+        Ds3Param ds3Param = new Ds3Param(name, type);
         return ds3Param;
     }
 }

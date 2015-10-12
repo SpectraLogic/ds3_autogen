@@ -17,10 +17,10 @@ package com.spectralogic.d3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseCode {
@@ -49,17 +49,15 @@ public class ResponseCode {
     }
 
     public Ds3ResponseCode toDs3ResponseCode() {
-        Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode();
-        ds3ResponseCode.setCode(code);
-        ds3ResponseCode.setDs3ResponseTypes(toDs3ResponseTypes());
+        Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(code, toDs3ResponseTypes());
         return ds3ResponseCode;
     }
 
-    private List<Ds3ResponseType> toDs3ResponseTypes() {
-        List<Ds3ResponseType> ds3ResponseTypes = new ArrayList<Ds3ResponseType>();
+    private ImmutableList<Ds3ResponseType> toDs3ResponseTypes() {
+        final ImmutableList.Builder<Ds3ResponseType> ds3ResponseTypesBuilder = ImmutableList.builder();
         for(final ResponseType responseType : responseTypes) {
-            ds3ResponseTypes.add(responseType.toDs3ResponseType());
+            ds3ResponseTypesBuilder.add(responseType.toDs3ResponseType());
         }
-        return ds3ResponseTypes;
+        return ds3ResponseTypesBuilder.build();
     }
 }

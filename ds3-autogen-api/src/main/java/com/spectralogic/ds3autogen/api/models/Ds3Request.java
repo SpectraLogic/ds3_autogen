@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 public class Ds3Request {
 
@@ -23,78 +23,56 @@ public class Ds3Request {
     public enum HttpVerb { GET, DELETE, POST, PUT, HEAD }
     public enum Requirement { REQUIRED, NOT_ALLOWED }
 
-    private String name;
-    private HttpVerb httpVerb;
-    private Classification classification;
-    private Requirement bucketRequirement;
-    private Requirement objectRequirement;
+    private final String name;
+    private final HttpVerb httpVerb;
+    private final Classification classification;
+    private final Requirement bucketRequirement;
+    private final Requirement objectRequirement;
 
-    private List<Ds3ResponseCode> ds3ResponseCodes;
-    private List<Ds3Param> optionalQueryParams;
-    private List<Ds3Param> requiredQueryParams;
+    private final ImmutableList<Ds3ResponseCode> ds3ResponseCodes;
+    private final ImmutableList<Ds3Param> optionalQueryParams;
+    private final ImmutableList<Ds3Param> requiredQueryParams;
 
-    public Ds3Request() { }
+    public Ds3Request(
+            final String name,
+            final HttpVerb httpVerb,
+            final Classification classification,
+            final Requirement bucketRequirement,
+            final Requirement objectRequirement,
+            final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
+            final ImmutableList<Ds3Param> optionalQueryParams,
+            final ImmutableList<Ds3Param> requiredQueryParams) {
+        this.name = name;
+        this.httpVerb = httpVerb;
+        this.classification = classification;
+        this.bucketRequirement = bucketRequirement;
+        this.objectRequirement = objectRequirement;
+        this.ds3ResponseCodes = ds3ResponseCodes;
+        this.optionalQueryParams = optionalQueryParams;
+        this.requiredQueryParams = requiredQueryParams;
+    }
 
     public Classification getClassification() {
         return classification;
     }
 
-    public void setClassification(final Classification classification) {
-        this.classification = classification;
-    }
+    public String getName() { return name; }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
     public HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
-    public void setHttpVerb(final HttpVerb httpVerb) {
-        this.httpVerb = httpVerb;
-    }
+    public ImmutableList<Ds3ResponseCode> getDs3ResponseCodes() { return ds3ResponseCodes; }
 
-    public List<Ds3ResponseCode> getDs3ResponseCodes() {
-        return ds3ResponseCodes;
-    }
-
-    public void setDs3ResponseCodes(final List<Ds3ResponseCode> ds3ResponseCodes) {
-        this.ds3ResponseCodes = ds3ResponseCodes;
-    }
-
-    public List<Ds3Param> getOptionalQueryParams() {
+    public ImmutableList<Ds3Param> getOptionalQueryParams() {
         return optionalQueryParams;
     }
 
-    public void setOptionalQueryParams(final List<Ds3Param> optionalQueryParams) {
-        this.optionalQueryParams = optionalQueryParams;
-    }
-
-    public List<Ds3Param> getRequiredQueryParams() {
-        return requiredQueryParams;
-    }
-
-    public void setRequiredQueryParams(final List<Ds3Param> requiredQueryParams) {
-        this.requiredQueryParams = requiredQueryParams;
-    }
+    public ImmutableList<Ds3Param> getRequiredQueryParams() { return requiredQueryParams; }
 
     public Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public void setBucketRequirement(final Requirement bucketRequirement) {
-        this.bucketRequirement = bucketRequirement;
-    }
-
-    public Requirement getObjectRequirement() {
-        return objectRequirement;
-    }
-
-    public void setObjectRequirement(final Requirement objectRequirement) {
-        this.objectRequirement = objectRequirement;
-    }
+    public Requirement getObjectRequirement() { return objectRequirement; }
 }

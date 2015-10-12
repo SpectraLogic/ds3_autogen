@@ -18,6 +18,7 @@ package com.spectralogic.d3autogen;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.d3autogen.models.xml.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
@@ -36,6 +37,7 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
         module = new JacksonXmlModule();
         module.setDefaultUseWrapper(false);
         mapper = new XmlMapper(module);
+        mapper.registerModule(new GuavaModule());
         final SimpleFilterProvider filterProvider = new SimpleFilterProvider().setFailOnUnknownId(false);
         mapper.setFilters(filterProvider);
     }

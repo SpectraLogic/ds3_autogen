@@ -32,9 +32,7 @@ public class ResponseType {
     }
 
     public Ds3ResponseType toDs3ResponseType() {
-        Ds3ResponseType ds3ResponseType = new Ds3ResponseType();
-        ds3ResponseType.setType(type);
-
+        Ds3ResponseType ds3ResponseType = new Ds3ResponseType(type);
         return ds3ResponseType;
     }
 }
