@@ -48,4 +48,25 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getRequests().get(0).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
         assertThat(spec.getRequests().get(1).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.AbortMultiPartUploadRequestHandler"));
     }
+
+    @Test
+    public void twoRequestHandlersAndOneType() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndOneType.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+        assertThat(spec.getTypes().size(), is(1));
+        assertThat(spec.getTypes().get(0).getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+    }
+
+    @Test
+    public void twoRequestHandlersAndTwoTypes() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndTwoTypes.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+        assertThat(spec.getTypes().size(), is(2));
+        assertThat(spec.getTypes().get(0).getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+        assertThat(spec.getTypes().get(1).getName(), is("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"));
+    }
 }
