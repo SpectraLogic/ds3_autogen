@@ -16,13 +16,14 @@
 package com.spectralogic.ds3autogen.api.models;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class Ds3ApiSpec {
 
     private final ImmutableList<Ds3Request> requests;
-    private final ImmutableList<Ds3Type> types;
+    private final ImmutableMap<String, Ds3Type> types;
 
-    public Ds3ApiSpec(final ImmutableList<Ds3Request> requests, final ImmutableList<Ds3Type> types) {
+    public Ds3ApiSpec(final ImmutableList<Ds3Request> requests, final ImmutableMap<String, Ds3Type> types) {
         this.requests = requests;
         this.types = types;
     }
@@ -31,7 +32,7 @@ public class Ds3ApiSpec {
         return this.requests;
     }
 
-    public ImmutableList<Ds3Type> getTypes() {
+    public ImmutableMap<String, Ds3Type> getTypes() {
         return this.types;
     }
 }

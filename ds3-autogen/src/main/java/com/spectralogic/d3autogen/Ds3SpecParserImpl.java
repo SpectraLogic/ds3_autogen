@@ -48,7 +48,10 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
     }
 
     private static Ds3ApiSpec toSpec(final RawSpec contract) {
-        final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(contract.getContract().getDs3Requests(), null);
+        final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
+                contract.getContract().getDs3Requests(),
+                contract.getContract().getDs3Types());
+
         return ds3ApiSpec;
     }
 }

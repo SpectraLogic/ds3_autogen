@@ -48,4 +48,28 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getRequests().get(0).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
         assertThat(spec.getRequests().get(1).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.AbortMultiPartUploadRequestHandler"));
     }
+
+    @Test
+    public void twoRequestHandlersAndOneType() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndOneType.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+        assertThat(spec.getTypes().size(), is(1));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
+    }
+
+    @Test
+    public void twoRequestHandlersAndTwoTypes() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndTwoTypes.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+        assertThat(spec.getTypes().size(), is(2));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(true));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
+    }
 }

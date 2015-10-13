@@ -15,5 +15,32 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
+import com.google.common.collect.ImmutableList;
+
 public class Ds3Type {
+
+    private final String name;
+    private final ImmutableList<Ds3Element> elements;
+    private final ImmutableList<Ds3EnumConstant> enumConstants;
+
+    public Ds3Type(
+            final String name,
+            final ImmutableList<Ds3Element> elements,
+            final ImmutableList<Ds3EnumConstant> enumConstants) {
+        this.name = name;
+        this.elements = elements;
+        this.enumConstants = enumConstants;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ImmutableList<Ds3Element> getElements() {
+        return elements;
+    }
+
+    public ImmutableList<Ds3EnumConstant> getEnumConstants() {
+        return enumConstants;
+    }
 }

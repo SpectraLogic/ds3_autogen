@@ -18,7 +18,9 @@ package com.spectralogic.d3autogen.models.xml;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class Contract {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<RequestHandler> requestHandlers;
 
+    @JsonProperty("Types")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Type> types;
+
     public List<RequestHandler> getRequestHandlers() {
         return requestHandlers;
     }
@@ -36,11 +42,30 @@ public class Contract {
         this.requestHandlers = requestHandlers;
     }
 
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(final List<Type> types) {
+        this.types = types;
+    }
+
     public ImmutableList<Ds3Request> getDs3Requests() {
         final ImmutableList.Builder<Ds3Request> ds3RequestBuilder = ImmutableList.builder();
         for (final RequestHandler requestHandler : requestHandlers) {
             ds3RequestBuilder.add(requestHandler.toDs3Request());
         }
         return ds3RequestBuilder.build();
+    }
+
+    public ImmutableMap<String, Ds3Type> getDs3Types() {
+        if (types == null) {
+            return null;
+        }
+        final ImmutableMap.Builder<String, Ds3Type> ds3TypeBuilder = ImmutableMap.builder();
+        for (final Type type : types) {
+            ds3TypeBuilder.put(type.getName(), type.toDs3Type());
+        }
+        return ds3TypeBuilder.build();
     }
 }
