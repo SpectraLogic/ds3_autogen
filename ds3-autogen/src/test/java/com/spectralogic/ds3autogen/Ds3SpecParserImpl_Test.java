@@ -56,7 +56,8 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec, is(notNullValue()));
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(1));
-        assertThat(spec.getTypes().get(0).getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
     }
 
     @Test
@@ -66,7 +67,9 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec, is(notNullValue()));
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(2));
-        assertThat(spec.getTypes().get(0).getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
-        assertThat(spec.getTypes().get(1).getName(), is("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(true));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
     }
 }
