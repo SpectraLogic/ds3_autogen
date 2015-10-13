@@ -37,4 +37,15 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getRequests().size(), is(1));
         assertThat(spec.getRequests().get(0).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
     }
+
+    @Test
+    public void twoRequestHandlers() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlers.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getRequests(), is(notNullValue()));
+        assertThat(spec.getRequests().size(), is(2));
+        assertThat(spec.getRequests().get(0).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
+        assertThat(spec.getRequests().get(1).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.AbortMultiPartUploadRequestHandler"));
+    }
 }
