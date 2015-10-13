@@ -72,4 +72,13 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
     }
+
+    @Test
+    public void fullXml() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/fullXml.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getRequests(), is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+    }
 }

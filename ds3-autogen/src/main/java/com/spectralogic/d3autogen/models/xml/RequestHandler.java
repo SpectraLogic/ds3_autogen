@@ -22,13 +22,14 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Enums;
 
 import java.util.List;
 
 public class RequestHandler {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Classification")
-    private Ds3Request.Classification classification;
+    private Enums.Classification classification;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
@@ -40,11 +41,11 @@ public class RequestHandler {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<ResponseCode> responseCodes;
 
-    public Ds3Request.Classification getClassification() {
+    public Enums.Classification getClassification() {
         return classification;
     }
 
-    public void setClassification(final Ds3Request.Classification classification) {
+    public void setClassification(final Enums.Classification classification) {
         this.classification = classification;
     }
 
@@ -79,6 +80,10 @@ public class RequestHandler {
                 classification,
                 request.getBucketRequirement(),
                 request.getObjectRequirement(),
+                request.getAction(),
+                request.getResource(),
+                request.getResourceType(),
+                request.getOperation(),
                 toDs3ResponseCodes(),
                 toDs3Params(request.getOptionalQueryParams()),
                 toDs3Params(request.getRequiredQueryParams()));

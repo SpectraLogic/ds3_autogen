@@ -1,0 +1,87 @@
+package com.spectralogic.ds3autogen.api.models;
+
+public class Enums {
+    public enum Classification { amazons3, spectrads3, spectrainternal }
+
+    public enum HttpVerb { GET, DELETE, POST, PUT, HEAD }
+
+    public enum Requirement { REQUIRED, NOT_ALLOWED }
+
+    public enum Action { CREATE, DELETE, SHOW, LIST, MODIFY, BULK_MODIFY }
+
+    public enum ResourceType { SINGLETON, NON_SINGLETON }
+
+    public enum Resource {
+        BLOB_STORE_TASK,
+        BEANS_RETRIEVER,
+        BUCKET,
+        BUCKET_ACL,
+        CACHE_FILESYSTEM,
+        CACHE_STATE,
+        CAPACITY_SUMMARY,
+        DATA_PATH,
+        DATA_PATH_BACKEND,
+        DATA_PERSISTENCE_RULE,
+        DATA_POLICY,
+        DATA_POLICY_ACL,
+        FOLDER,
+        GENERIC_DAO_NOTIFICATION_REGISTRATION,
+        GROUP,
+        GROUP_MEMBER,
+        HEAP_DUMP,
+        JOB,
+        JOB_CHUNK,
+        JOB_COMPLETED_NOTIFICATION_REGISTRATION,
+        JOB_CREATED_NOTIFICATION_REGISTRATION,
+        NODE,
+        OBJECT,
+        OBJECT_CACHED_NOTIFICATION_REGISTRATION,
+        OBJECT_LOST_NOTIFICATION_REGISTRATION,
+        OBJECT_PERSISTED_NOTIFICATION_REGISTRATION,
+        POOL,
+        POOL_ENVIRONMENT,
+        POOL_FAILURE,
+        POOL_FAILURE_NOTIFICATION_REGISTRATION,
+        POOL_PARTITION,
+        STORAGE_DOMAIN,
+        STORAGE_DOMAIN_FAILURE,
+        STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION,
+        STORAGE_DOMAIN_MEMBER,
+        SYSTEM_HEALTH,
+        SYSTEM_INFORMATION,
+        TAPE,
+        TAPE_DENSITY_DIRECTIVE,
+        TAPE_DRIVE,
+        TAPE_ENVIRONMENT,
+        TAPE_FAILURE,
+        TAPE_FAILURE_NOTIFICATION_REGISTRATION,
+        TAPE_LIBRARY,
+        TAPE_PARTITION,
+        TAPE_PARTITION_FAILURE,
+        TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION,
+        USER
+    }
+
+    public enum Operation {
+        ALLOCATE,
+        CANCEL_EJECT,
+        CANCEL_FORMAT,
+        CANCEL_IMPORT,
+        CANCEL_ONLINE,
+        CLEAN,
+        COMPACT,
+        DEALLOCATE,
+        EJECT,
+        FORMAT,
+        GET_PHYSICAL_PLACEMENT,
+        IMPORT,
+        INSPECT,
+        ONLINE,
+        REGENERATE_SECRET_KEY,
+        START_BULK_GET,
+        START_BULK_PUT,
+        START_BULK_VERIFY,
+        VERIFY,
+        VERIFY_PHYSICAL_PLACEMENT
+    }
+}

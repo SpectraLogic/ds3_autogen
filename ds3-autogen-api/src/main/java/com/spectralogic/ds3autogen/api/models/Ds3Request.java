@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Ds3Request {
 
-    public enum Classification { amazons3, spectrads3, spectrainternal }
-    public enum HttpVerb { GET, DELETE, POST, PUT, HEAD }
-    public enum Requirement { REQUIRED, NOT_ALLOWED }
-
     private final String name;
-    private final HttpVerb httpVerb;
-    private final Classification classification;
-    private final Requirement bucketRequirement;
-    private final Requirement objectRequirement;
+    private final Enums.HttpVerb httpVerb;
+    private final Enums.Classification classification;
+    private final Enums.Requirement bucketRequirement;
+    private final Enums.Requirement objectRequirement;
+    private final Enums.Action action;
+    private final Enums.Resource resource;
+    private final Enums.ResourceType resourceType;
+    private final Enums.Operation operation;
 
     private final ImmutableList<Ds3ResponseCode> ds3ResponseCodes;
     private final ImmutableList<Ds3Param> optionalQueryParams;
@@ -35,10 +35,14 @@ public class Ds3Request {
 
     public Ds3Request(
             final String name,
-            final HttpVerb httpVerb,
-            final Classification classification,
-            final Requirement bucketRequirement,
-            final Requirement objectRequirement,
+            final Enums.HttpVerb httpVerb,
+            final Enums.Classification classification,
+            final Enums.Requirement bucketRequirement,
+            final Enums.Requirement objectRequirement,
+            final Enums.Action action,
+            final Enums.Resource resource,
+            final Enums.ResourceType resourceType,
+            final Enums.Operation operation,
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final ImmutableList<Ds3Param> optionalQueryParams,
             final ImmutableList<Ds3Param> requiredQueryParams) {
@@ -47,18 +51,22 @@ public class Ds3Request {
         this.classification = classification;
         this.bucketRequirement = bucketRequirement;
         this.objectRequirement = objectRequirement;
+        this.action = action;
+        this.resource = resource;
+        this.resourceType = resourceType;
+        this.operation = operation;
         this.ds3ResponseCodes = ds3ResponseCodes;
         this.optionalQueryParams = optionalQueryParams;
         this.requiredQueryParams = requiredQueryParams;
     }
 
-    public Classification getClassification() {
+    public Enums.Classification getClassification() {
         return classification;
     }
 
     public String getName() { return name; }
 
-    public HttpVerb getHttpVerb() {
+    public Enums.HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
@@ -70,9 +78,15 @@ public class Ds3Request {
 
     public ImmutableList<Ds3Param> getRequiredQueryParams() { return requiredQueryParams; }
 
-    public Requirement getBucketRequirement() {
+    public Enums.Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public Requirement getObjectRequirement() { return objectRequirement; }
+    public Enums.Requirement getObjectRequirement() { return objectRequirement; }
+
+    public Enums.Action getAction() { return action; }
+
+    public Enums.Resource getResource() { return resource; }
+
+    public Enums.ResourceType getResourceType() { return resourceType; }
 }

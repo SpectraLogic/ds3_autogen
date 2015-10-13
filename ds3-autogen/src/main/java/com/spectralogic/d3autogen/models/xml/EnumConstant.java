@@ -43,6 +43,9 @@ public class EnumConstant {
     }
 
     private ImmutableList<Ds3Property> toDs3Properties() {
+        if (properties == null) {
+            return null;
+        }
         final ImmutableList.Builder<Ds3Property> ds3PropertyBuilder = ImmutableList.builder();
         for (final Property property : properties) {
             ds3PropertyBuilder.add(property.toDs3Property());

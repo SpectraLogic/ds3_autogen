@@ -17,6 +17,9 @@ public class Element {
     @JacksonXmlProperty(isAttribute = true, localName = "Type")
     private String type;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "ComponentType")
+    private String componentType;
+
     @JsonProperty("Annotations")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Annotation> annotations;
@@ -45,10 +48,19 @@ public class Element {
         this.annotations = annotations;
     }
 
+    public String getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(final String componentType) {
+        this.componentType = componentType;
+    }
+
     public Ds3Element toDs3Element() {
         final Ds3Element ds3Element = new Ds3Element(
                 name,
                 type,
+                componentType,
                 toDs3Annotations());
 
         return ds3Element;

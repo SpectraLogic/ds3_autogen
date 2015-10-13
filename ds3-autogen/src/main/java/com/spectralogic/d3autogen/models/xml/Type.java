@@ -57,6 +57,9 @@ public class Type {
     }
 
     private ImmutableList<Ds3Element> toDs3Elements() {
+        if (elements == null) {
+            return null;
+        }
         final ImmutableList.Builder<Ds3Element> ds3ElementBuilder = ImmutableList.builder();
         for (final Element element : elements) {
             ds3ElementBuilder.add(element.toDs3Element());
