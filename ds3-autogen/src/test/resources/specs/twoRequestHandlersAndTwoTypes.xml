@@ -1,0 +1,137 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams />
+                    <RequiredQueryParams>
+                        <Param Name="Id" Type="java.util.UUID" />
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="java.lang.String" />
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.AbortMultiPartUploadRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="UploadId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                <Elements>
+                    <Element Name="SpecifiableByUser" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+                <EnumConstants>
+                    <EnumConstant Name="CRITICAL">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="URGENT">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="HIGH">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="NORMAL">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="LOW">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="BACKGROUND">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.tape.TapeFailure">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="TapeDriveId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.TapeDrive" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="TapeId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.Tape" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>
