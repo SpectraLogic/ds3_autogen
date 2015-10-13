@@ -38,7 +38,7 @@ public class ResponseType {
         return componentType;
     }
 
-    public void setComponentType(String componentType) {
+    public void setComponentType(final String componentType) {
         this.componentType = componentType;
     }
 
