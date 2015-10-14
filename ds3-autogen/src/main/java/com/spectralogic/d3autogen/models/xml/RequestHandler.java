@@ -19,17 +19,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Enums;
 
 import java.util.List;
 
 public class RequestHandler {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Classification")
-    private Enums.Classification classification;
+    private Classification classification;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
@@ -41,11 +41,11 @@ public class RequestHandler {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<ResponseCode> responseCodes;
 
-    public Enums.Classification getClassification() {
+    public Classification getClassification() {
         return classification;
     }
 
-    public void setClassification(final Enums.Classification classification) {
+    public void setClassification(final Classification classification) {
         this.classification = classification;
     }
 

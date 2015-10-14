@@ -18,33 +18,32 @@ package com.spectralogic.d3autogen.models.xml;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Enums;
+import com.spectralogic.ds3autogen.api.models.*;
 
 import java.util.List;
 
 public class Request {
 
     @JacksonXmlProperty(isAttribute = true, localName = "BucketRequirement")
-    private Enums.Requirement bucketRequirement;
+    private Requirement bucketRequirement;
 
     @JacksonXmlProperty(isAttribute = true, localName = "HttpVerb")
-    private Enums.HttpVerb httpVerb;
+    private HttpVerb httpVerb;
 
     @JacksonXmlProperty(isAttribute = true, localName = "ObjectRequirement")
-    private Enums.Requirement objectRequirement;
+    private Requirement objectRequirement;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Action")
-    private Enums.Action action;
+    private Action action;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Resource")
-    private Enums.Resource resource;
+    private Resource resource;
 
     @JacksonXmlProperty(isAttribute = true, localName = "ResourceType")
-    private Enums.ResourceType resourceType;
+    private ResourceType resourceType;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Operation")
-    private Enums.Operation operation;
+    private Operation operation;
 
     @JsonProperty("OptionalQueryParams")
     @JacksonXmlElementWrapper(useWrapping = true)
@@ -54,27 +53,27 @@ public class Request {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Param> requiredQueryParams;
 
-    public Enums.Requirement getBucketRequirement() {
+    public Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public void setBucketRequirement(final Enums.Requirement bucketRequirement) {
+    public void setBucketRequirement(final Requirement bucketRequirement) {
         this.bucketRequirement = bucketRequirement;
     }
 
-    public Enums.HttpVerb getHttpVerb() {
+    public HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
-    public void setHttpVerb(final Enums.HttpVerb httpVerb) {
+    public void setHttpVerb(final HttpVerb httpVerb) {
         this.httpVerb = httpVerb;
     }
 
-    public Enums.Requirement getObjectRequirement() {
+    public Requirement getObjectRequirement() {
         return objectRequirement;
     }
 
-    public void setObjectRequirement(final Enums.Requirement objectRequirement) {
+    public void setObjectRequirement(final Requirement objectRequirement) {
         this.objectRequirement = objectRequirement;
     }
     public List<Param> getOptionalQueryParams() {
@@ -93,35 +92,35 @@ public class Request {
         this.requiredQueryParams = requiredQueryParams;
     }
 
-    public Enums.Action getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(final Enums.Action action) {
+    public void setAction(final Action action) {
         this.action = action;
     }
 
-    public Enums.Resource getResource() {
+    public Resource getResource() {
         return resource;
     }
 
-    public void setResource(final Enums.Resource resource) {
+    public void setResource(final Resource resource) {
         this.resource = resource;
     }
 
-    public Enums.ResourceType getResourceType() {
+    public ResourceType getResourceType() {
         return resourceType;
     }
 
-    public void setResourceType(final Enums.ResourceType resourceType) {
+    public void setResourceType(final ResourceType resourceType) {
         this.resourceType = resourceType;
     }
 
-    public Enums.Operation getOperation() {
+    public Operation getOperation() {
         return operation;
     }
 
-    public void setOperation(final Enums.Operation operation) {
+    public void setOperation(final Operation operation) {
         this.operation = operation;
     }
 }

@@ -13,13 +13,27 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api;
+package com.spectralogic.ds3autogen.api.models;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-public interface Ds3SpecParser {
-    Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException;
+public enum Operation {
+    ALLOCATE,
+    CANCEL_EJECT,
+    CANCEL_FORMAT,
+    CANCEL_IMPORT,
+    CANCEL_ONLINE,
+    CLEAN,
+    COMPACT,
+    DEALLOCATE,
+    EJECT,
+    FORMAT,
+    GET_PHYSICAL_PLACEMENT,
+    IMPORT,
+    INSPECT,
+    ONLINE,
+    REGENERATE_SECRET_KEY,
+    START_BULK_GET,
+    START_BULK_PUT,
+    START_BULK_VERIFY,
+    VERIFY,
+    VERIFY_PHYSICAL_PLACEMENT
 }

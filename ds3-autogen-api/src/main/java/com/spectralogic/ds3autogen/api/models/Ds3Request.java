@@ -20,14 +20,14 @@ import com.google.common.collect.ImmutableList;
 public class Ds3Request {
 
     private final String name;
-    private final Enums.HttpVerb httpVerb;
-    private final Enums.Classification classification;
-    private final Enums.Requirement bucketRequirement;
-    private final Enums.Requirement objectRequirement;
-    private final Enums.Action action;
-    private final Enums.Resource resource;
-    private final Enums.ResourceType resourceType;
-    private final Enums.Operation operation;
+    private final HttpVerb httpVerb;
+    private final Classification classification;
+    private final Requirement bucketRequirement;
+    private final Requirement objectRequirement;
+    private final Action action;
+    private final Resource resource;
+    private final ResourceType resourceType;
+    private final Operation operation;
 
     private final ImmutableList<Ds3ResponseCode> ds3ResponseCodes;
     private final ImmutableList<Ds3Param> optionalQueryParams;
@@ -35,14 +35,14 @@ public class Ds3Request {
 
     public Ds3Request(
             final String name,
-            final Enums.HttpVerb httpVerb,
-            final Enums.Classification classification,
-            final Enums.Requirement bucketRequirement,
-            final Enums.Requirement objectRequirement,
-            final Enums.Action action,
-            final Enums.Resource resource,
-            final Enums.ResourceType resourceType,
-            final Enums.Operation operation,
+            final HttpVerb httpVerb,
+            final Classification classification,
+            final Requirement bucketRequirement,
+            final Requirement objectRequirement,
+            final Action action,
+            final Resource resource,
+            final ResourceType resourceType,
+            final Operation operation,
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final ImmutableList<Ds3Param> optionalQueryParams,
             final ImmutableList<Ds3Param> requiredQueryParams) {
@@ -60,13 +60,13 @@ public class Ds3Request {
         this.requiredQueryParams = requiredQueryParams;
     }
 
-    public Enums.Classification getClassification() {
+    public Classification getClassification() {
         return classification;
     }
 
     public String getName() { return name; }
 
-    public Enums.HttpVerb getHttpVerb() {
+    public HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
@@ -78,15 +78,19 @@ public class Ds3Request {
 
     public ImmutableList<Ds3Param> getRequiredQueryParams() { return requiredQueryParams; }
 
-    public Enums.Requirement getBucketRequirement() {
+    public Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public Enums.Requirement getObjectRequirement() { return objectRequirement; }
+    public Requirement getObjectRequirement() { return objectRequirement; }
 
-    public Enums.Action getAction() { return action; }
+    public Action getAction() { return action; }
 
-    public Enums.Resource getResource() { return resource; }
+    public Resource getResource() { return resource; }
 
-    public Enums.ResourceType getResourceType() { return resourceType; }
+    public ResourceType getResourceType() { return resourceType; }
+
+    public Operation getOperation() {
+        return operation;
+    }
 }
