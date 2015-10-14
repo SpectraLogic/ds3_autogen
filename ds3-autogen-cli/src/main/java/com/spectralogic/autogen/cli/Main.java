@@ -49,6 +49,8 @@ public class Main {
 
         System.out.println("Generating " + args.getType().toString() + " ds3 sdk code for the spec " + args.getInputSpec() );
 
+        //TODO make the input file also accept a url that we can read from
+
         final Ds3ApiSpec spec = parser.getSpec(Files.newInputStream(Paths.get(args.getInputSpec())));
 
     }
