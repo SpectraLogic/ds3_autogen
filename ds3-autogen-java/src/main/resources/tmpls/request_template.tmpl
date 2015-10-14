@@ -15,15 +15,38 @@
 
 // This code is auto-generated, do not modify
 
-package ${package}
+package ${packageName};
+
+import com.spectralogic.ds3client.HttpVerb;
 
 public class ${name} extends AbstractRequest {
 
     // Variables
+    <#list requiredArguments as arg>
+    final private ${arg.getType()} ${arg.getName()};
+    </#list>
 
     // Constructor
-    public ${name}(${contructorArgs}){
-
+    public ${name}(${constructorArguments}) {
+        <#list requiredArguments as arg>
+        this.${arg.getName()} = ${arg.getName()};
+        </#list>
     }
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.${verb};
+    }
+
+    @Override
+    public String getPath() {
+        return ${path};
+    }
+
+    <#list requiredArguments as arg>
+    public ${arg.getType()} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()}
+    }
+    </#list>
 
 }
