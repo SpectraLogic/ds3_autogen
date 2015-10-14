@@ -23,6 +23,9 @@ public class ResponseType {
     @JacksonXmlProperty(isAttribute = true, localName = "Type")
     private String type;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "ComponentType")
+    private String componentType;
+
     public String getType() {
         return type;
     }
@@ -31,8 +34,16 @@ public class ResponseType {
         this.type = type;
     }
 
+    public String getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(final String componentType) {
+        this.componentType = componentType;
+    }
+
     public Ds3ResponseType toDs3ResponseType() {
-        final Ds3ResponseType ds3ResponseType = new Ds3ResponseType(type);
+        final Ds3ResponseType ds3ResponseType = new Ds3ResponseType(type, componentType);
         return ds3ResponseType;
     }
 }

@@ -26,17 +26,17 @@ import java.util.List;
 public class ResponseCode {
 
     @JsonProperty("Code")
-    private String code;
+    private int code;
 
     @JsonProperty("ResponseTypes")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<ResponseType> responseTypes;
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(final String code) {
+    public void setCode(final int code) {
         this.code = code;
     }
 

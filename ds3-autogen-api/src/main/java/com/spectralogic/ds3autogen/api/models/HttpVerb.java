@@ -15,21 +15,10 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-public class Ds3ResponseType {
-
-    private final String type;
-    private final String componentType;
-
-    public Ds3ResponseType(
-            final String type,
-            final String componentType) {
-        this.type = type;
-        this.componentType = componentType;
-    }
-
-    public String getType() { return type; }
-
-    public String getComponentType() {
-        return componentType;
-    }
+public enum HttpVerb {
+    DELETE,
+    GET,
+    HEAD,
+    POST,
+    PUT
 }

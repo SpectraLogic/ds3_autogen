@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
@@ -28,7 +29,7 @@ import java.util.List;
 public class RequestHandler {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Classification")
-    private Ds3Request.Classification classification;
+    private Classification classification;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
@@ -40,11 +41,11 @@ public class RequestHandler {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<ResponseCode> responseCodes;
 
-    public Ds3Request.Classification getClassification() {
+    public Classification getClassification() {
         return classification;
     }
 
-    public void setClassification(final Ds3Request.Classification classification) {
+    public void setClassification(final Classification classification) {
         this.classification = classification;
     }
 
@@ -79,6 +80,10 @@ public class RequestHandler {
                 classification,
                 request.getBucketRequirement(),
                 request.getObjectRequirement(),
+                request.getAction(),
+                request.getResource(),
+                request.getResourceType(),
+                request.getOperation(),
                 toDs3ResponseCodes(),
                 toDs3Params(request.getOptionalQueryParams()),
                 toDs3Params(request.getRequiredQueryParams()));

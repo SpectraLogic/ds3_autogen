@@ -15,9 +15,10 @@
 
 package com.spectralogic.ds3autogen;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import org.junit.Test;
 
@@ -25,6 +26,7 @@ import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3SpecParserImpl_Test {
@@ -35,7 +37,28 @@ public class Ds3SpecParserImpl_Test {
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/singleRequestHandler.xml"));
         assertThat(spec, is(notNullValue()));
         assertThat(spec.getRequests().size(), is(1));
-        assertThat(spec.getRequests().get(0).getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
+
+        final Ds3Request ds3Request = spec.getRequests().get(0);
+        assertThat(ds3Request.getName(), is("com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler"));
+        assertThat(ds3Request.getHttpVerb(), is(HttpVerb.GET));
+        assertThat(ds3Request.getClassification(), is(Classification.amazons3));
+        assertThat(ds3Request.getBucketRequirement(), is(Requirement.REQUIRED));
+        assertThat(ds3Request.getObjectRequirement(), is(Requirement.REQUIRED));
+        assertThat(ds3Request.getAction(), is(nullValue()));
+        assertThat(ds3Request.getResource(), is(nullValue()));
+        assertThat(ds3Request.getResourceType(), is(nullValue()));
+        assertThat(ds3Request.getOperation(), is(nullValue()));
+
+        assertThat(ds3Request.getDs3ResponseCodes().size(), is(1));
+        assertThat(ds3Request.getDs3ResponseCodes().get(0).getCode(), is(200));
+        assertThat(ds3Request.getDs3ResponseCodes().get(0).getDs3ResponseTypes().size(), is(1));
+        assertThat(ds3Request.getDs3ResponseCodes().get(0).getDs3ResponseTypes().get(0).getType(), is("java.lang.String"));
+        assertThat(ds3Request.getDs3ResponseCodes().get(0).getDs3ResponseTypes().get(0).getComponentType(), is(nullValue()));
+
+        assertThat(ds3Request.getOptionalQueryParams(), is(nullValue()));
+        assertThat(ds3Request.getRequiredQueryParams().size(), is(1));
+        assertThat(ds3Request.getRequiredQueryParams().get(0).getName(), is("Id"));
+        assertThat(ds3Request.getRequiredQueryParams().get(0).getType(), is("java.util.UUID"));
     }
 
     @Test
@@ -57,7 +80,25 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(1));
         assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
-        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
+
+        final Ds3Type ds3Type = spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority");
+        assertThat(ds3Type, is(notNullValue()));
+        assertThat(ds3Type.getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+
+        assertThat(ds3Type.getElements(), is(notNullValue()));
+        assertThat(ds3Type.getElements().size(), is(1));
+        assertThat(ds3Type.getElements().get(0).getName(), is("SpecifiableByUser"));
+        assertThat(ds3Type.getElements().get(0).getType(), is("boolean"));
+        assertThat(ds3Type.getElements().get(0).getComponentType(), is(nullValue()));
+        assertThat(ds3Type.getElements().get(0).getDs3Annotations(), is(nullValue()));
+
+        assertThat(ds3Type.getEnumConstants(), is(notNullValue()));
+        assertThat(ds3Type.getEnumConstants().size(), is(6));
+        assertThat(ds3Type.getEnumConstants().get(0).getName(), is("CRITICAL"));
+        assertThat(ds3Type.getEnumConstants().get(0).getDs3Properties(), is(notNullValue()));
+        assertThat(ds3Type.getEnumConstants().get(0).getDs3Properties().get(0).getName(), is("SpecifiableByUser"));
+        assertThat(ds3Type.getEnumConstants().get(0).getDs3Properties().get(0).getValue(), is("false"));
+        assertThat(ds3Type.getEnumConstants().get(0).getDs3Properties().get(0).getValueType(), is("boolean"));
     }
 
     @Test
@@ -71,5 +112,14 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(true));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
+    }
+
+    @Test
+    public void fullXml() throws IOException, ParserException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/fullXml.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getRequests(), is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
     }
 }

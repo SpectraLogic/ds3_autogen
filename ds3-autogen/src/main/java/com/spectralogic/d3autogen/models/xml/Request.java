@@ -18,20 +18,32 @@ package com.spectralogic.d3autogen.models.xml;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.*;
 
 import java.util.List;
 
 public class Request {
 
     @JacksonXmlProperty(isAttribute = true, localName = "BucketRequirement")
-    private Ds3Request.Requirement bucketRequirement;
+    private Requirement bucketRequirement;
 
     @JacksonXmlProperty(isAttribute = true, localName = "HttpVerb")
-    private Ds3Request.HttpVerb httpVerb;
+    private HttpVerb httpVerb;
 
     @JacksonXmlProperty(isAttribute = true, localName = "ObjectRequirement")
-    private Ds3Request.Requirement objectRequirement;
+    private Requirement objectRequirement;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Action")
+    private Action action;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Resource")
+    private Resource resource;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "ResourceType")
+    private ResourceType resourceType;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Operation")
+    private Operation operation;
 
     @JsonProperty("OptionalQueryParams")
     @JacksonXmlElementWrapper(useWrapping = true)
@@ -41,27 +53,27 @@ public class Request {
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Param> requiredQueryParams;
 
-    public Ds3Request.Requirement getBucketRequirement() {
+    public Requirement getBucketRequirement() {
         return bucketRequirement;
     }
 
-    public void setBucketRequirement(final Ds3Request.Requirement bucketRequirement) {
+    public void setBucketRequirement(final Requirement bucketRequirement) {
         this.bucketRequirement = bucketRequirement;
     }
 
-    public Ds3Request.HttpVerb getHttpVerb() {
+    public HttpVerb getHttpVerb() {
         return httpVerb;
     }
 
-    public void setHttpVerb(final Ds3Request.HttpVerb httpVerb) {
+    public void setHttpVerb(final HttpVerb httpVerb) {
         this.httpVerb = httpVerb;
     }
 
-    public Ds3Request.Requirement getObjectRequirement() {
+    public Requirement getObjectRequirement() {
         return objectRequirement;
     }
 
-    public void setObjectRequirement(final Ds3Request.Requirement objectRequirement) {
+    public void setObjectRequirement(final Requirement objectRequirement) {
         this.objectRequirement = objectRequirement;
     }
     public List<Param> getOptionalQueryParams() {
@@ -78,5 +90,37 @@ public class Request {
 
     public void setRequiredQueryParams(final List<Param> requiredQueryParams) {
         this.requiredQueryParams = requiredQueryParams;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(final Action action) {
+        this.action = action;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(final Resource resource) {
+        this.resource = resource;
+    }
+
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
+    public void setResourceType(final ResourceType resourceType) {
+        this.resourceType = resourceType;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(final Operation operation) {
+        this.operation = operation;
     }
 }

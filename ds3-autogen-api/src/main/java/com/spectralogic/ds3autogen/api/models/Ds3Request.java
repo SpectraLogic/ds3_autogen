@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Ds3Request {
 
-    public enum Classification { amazons3, spectrads3, spectrainternal }
-    public enum HttpVerb { GET, DELETE, POST, PUT, HEAD }
-    public enum Requirement { REQUIRED, NOT_ALLOWED }
-
     private final String name;
     private final HttpVerb httpVerb;
     private final Classification classification;
     private final Requirement bucketRequirement;
     private final Requirement objectRequirement;
+    private final Action action;
+    private final Resource resource;
+    private final ResourceType resourceType;
+    private final Operation operation;
 
     private final ImmutableList<Ds3ResponseCode> ds3ResponseCodes;
     private final ImmutableList<Ds3Param> optionalQueryParams;
@@ -39,6 +39,10 @@ public class Ds3Request {
             final Classification classification,
             final Requirement bucketRequirement,
             final Requirement objectRequirement,
+            final Action action,
+            final Resource resource,
+            final ResourceType resourceType,
+            final Operation operation,
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final ImmutableList<Ds3Param> optionalQueryParams,
             final ImmutableList<Ds3Param> requiredQueryParams) {
@@ -47,6 +51,10 @@ public class Ds3Request {
         this.classification = classification;
         this.bucketRequirement = bucketRequirement;
         this.objectRequirement = objectRequirement;
+        this.action = action;
+        this.resource = resource;
+        this.resourceType = resourceType;
+        this.operation = operation;
         this.ds3ResponseCodes = ds3ResponseCodes;
         this.optionalQueryParams = optionalQueryParams;
         this.requiredQueryParams = requiredQueryParams;
@@ -75,4 +83,14 @@ public class Ds3Request {
     }
 
     public Requirement getObjectRequirement() { return objectRequirement; }
+
+    public Action getAction() { return action; }
+
+    public Resource getResource() { return resource; }
+
+    public ResourceType getResourceType() { return resourceType; }
+
+    public Operation getOperation() {
+        return operation;
+    }
 }

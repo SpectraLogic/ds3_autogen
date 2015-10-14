@@ -15,21 +15,25 @@
 
 package com.spectralogic.ds3autogen.api.models;
 
-public class Ds3ResponseType {
-
-    private final String type;
-    private final String componentType;
-
-    public Ds3ResponseType(
-            final String type,
-            final String componentType) {
-        this.type = type;
-        this.componentType = componentType;
-    }
-
-    public String getType() { return type; }
-
-    public String getComponentType() {
-        return componentType;
-    }
+public enum Operation {
+    ALLOCATE,
+    CANCEL_EJECT,
+    CANCEL_FORMAT,
+    CANCEL_IMPORT,
+    CANCEL_ONLINE,
+    CLEAN,
+    COMPACT,
+    DEALLOCATE,
+    EJECT,
+    FORMAT,
+    GET_PHYSICAL_PLACEMENT,
+    IMPORT,
+    INSPECT,
+    ONLINE,
+    REGENERATE_SECRET_KEY,
+    START_BULK_GET,
+    START_BULK_PUT,
+    START_BULK_VERIFY,
+    VERIFY,
+    VERIFY_PHYSICAL_PLACEMENT
 }
