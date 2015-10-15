@@ -13,16 +13,21 @@
  * ****************************************************************************
  */
 
+
 package com.spectralogic.ds3autogen.api;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
-import java.io.IOException;
+public class ResourceUtils {
+    public static File loadFileResource(final String fileName) throws URISyntaxException, FileNotFoundException {
 
-import java.nio.file.Path;
-
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException;
+        final URL resourceUrl = ResourceUtils.class.getClassLoader().getResource(fileName);
+        if (resourceUrl == null) {
+            throw new FileNotFoundException(fileName);
+        }
+        return new File(resourceUrl.toURI());
+    }
 }
