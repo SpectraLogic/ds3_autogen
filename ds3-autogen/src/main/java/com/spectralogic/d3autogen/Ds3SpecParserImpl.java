@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteStreams;
 import com.spectralogic.d3autogen.models.xml.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
@@ -43,6 +45,10 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
 
     @Override
     public Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException {
+        //System.out.println("Ds3ApiSpec::getSpec");
+        //stream.mark(8096);
+        //System.out.println(new String(ByteStreams.toByteArray(stream), Charsets.UTF_8));
+        //stream.reset();
         return toSpec(mapper.readValue(stream, RawSpec.class));
     }
 

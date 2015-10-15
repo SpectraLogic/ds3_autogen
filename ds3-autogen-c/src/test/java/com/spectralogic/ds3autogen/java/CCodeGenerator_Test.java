@@ -26,9 +26,8 @@ public class CCodeGenerator_Test {
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/GetObjectRequestHandler.java");
+        final Path requestPath = Paths.get("./ds3_c_sdk/src/DeleteBucketRequestHandler.c");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
