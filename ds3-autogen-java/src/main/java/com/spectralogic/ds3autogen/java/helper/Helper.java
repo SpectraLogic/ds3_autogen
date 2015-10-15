@@ -26,7 +26,7 @@ import java.util.List;
 
 public final class Helper {
 
-    private static Helper helper = new Helper();
+    private static final Helper helper = new Helper();
 
     private Helper() {}
 
