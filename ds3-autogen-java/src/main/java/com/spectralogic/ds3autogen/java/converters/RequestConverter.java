@@ -1,7 +1,9 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.java.models.Arguments;
@@ -16,11 +18,15 @@ public class RequestConverter {
     private final Ds3Request ds3Request;
     private final String packageName;
     private final ImmutableList<Arguments> requiredConstructorArguments;
+    private final ImmutableList<Arguments> optionalArguments;
+    private final ImmutableList<String> imports;
 
     private RequestConverter(final Ds3Request ds3Request, final String packageName) {
         this.ds3Request = ds3Request;
         this.packageName = packageName;
         this.requiredConstructorArguments = getRequiredArgs(ds3Request);
+        this.optionalArguments = getOptionalArgs(ds3Request);
+        this.imports = getImports(ds3Request);
     }
 
     private Request convert() {
@@ -31,7 +37,9 @@ public class RequestConverter {
                 ds3Request.getHttpVerb(),
                 requestPath(ds3Request),
                 constructorArgs(requiredConstructorArguments),
-                requiredConstructorArguments);
+                requiredConstructorArguments,
+                optionalArguments,
+                imports);
     }
 
     public static Request toRequest(final Ds3Request ds3Request, final String packageName) {
@@ -47,7 +55,8 @@ public class RequestConverter {
 
         final List<String> argArray = new ArrayList<>();
 
-        final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + a.getType() + " " + a.getName()).iterator();
+        final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + a.getType() + " "
+                + a.getName().substring(0,1).toLowerCase() + a.getName().substring(1)).iterator();
 
         while(argIter.hasNext()) {
             argArray.add(argIter.next());
@@ -85,6 +94,38 @@ public class RequestConverter {
             }
         }
 
+        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
+            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+            requiredArgs.add(new Arguments(paramType, ds3Param.getName()));
+        }
+
         return requiredArgs.build();
+    }
+
+    private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> optionalArgs = ImmutableList.builder();
+
+        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+            optionalArgs.add(new Arguments(paramType, ds3Param.getName()));
+        }
+        return optionalArgs.build();
+    }
+
+    private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
+        final ImmutableSet.Builder<String> imports = ImmutableSet.builder();
+
+        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
+            if (ds3Param.getType().contains(".")) {
+                imports.add(ds3Param.getType());
+            }
+        }
+        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+            if (ds3Param.getType().contains(".")) {
+                imports.add(ds3Param.getType());
+            }
+        }
+
+        return imports.build().asList();
     }
 }

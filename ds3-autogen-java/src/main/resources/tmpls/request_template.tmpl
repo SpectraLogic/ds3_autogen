@@ -18,20 +18,33 @@
 package ${packageName};
 
 import com.spectralogic.ds3client.HttpVerb;
+<#list imports as import>
+import ${import};
+</#list>
 
 public class ${name} extends AbstractRequest {
 
     // Variables
     <#list requiredArguments as arg>
-    final private ${arg.getType()} ${arg.getName()};
+    final private ${arg.getType()} ${arg.getName()?uncap_first};
+    </#list>
+    <#list optionalArguments as arg>
+    private ${arg.getType()} ${arg.getName()?uncap_first};
     </#list>
 
     // Constructor
     public ${name}(${constructorArguments}) {
         <#list requiredArguments as arg>
-        this.${arg.getName()} = ${arg.getName()};
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
     }
+
+    <#list optionalArguments as arg>
+    public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+    }
+
+    </#list>
 
     @Override
     public HttpVerb getVerb() {
@@ -45,8 +58,14 @@ public class ${name} extends AbstractRequest {
 
     <#list requiredArguments as arg>
     public ${arg.getType()} get${arg.getName()?cap_first}() {
-        return this.${arg.getName()}
+        return this.${arg.getName()?uncap_first};
     }
-    </#list>
 
+    </#list>
+    <#list optionalArguments as arg>
+    public ${arg.getType()} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+
+    </#list>
 }
