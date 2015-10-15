@@ -33,7 +33,7 @@ public class ${name} extends AbstractRequest {
     </#list>
 
     // Constructor
-    public ${name}(${constructorArguments}) {
+    public ${name}(${helper.constructorArgs(requiredArguments)}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -42,6 +42,8 @@ public class ${name} extends AbstractRequest {
     <#list optionalArguments as arg>
     public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.updateQueryParam("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
+        return this;
     }
 
     </#list>
