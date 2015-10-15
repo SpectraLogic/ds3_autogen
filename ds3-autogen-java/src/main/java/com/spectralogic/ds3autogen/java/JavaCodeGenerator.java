@@ -1,11 +1,9 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
 import freemarker.template.*;
@@ -73,6 +71,4 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
 
     }
-
-
 }
