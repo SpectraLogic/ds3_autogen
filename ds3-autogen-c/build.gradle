@@ -1,3 +1,5 @@
 dependencies {
     compile project(':ds3-autogen-api')
+    compile 'org.apache.velocity:velocity:1.7'
+    testCompile project(':ds3-autogen')
 }
