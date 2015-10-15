@@ -1,37 +1,39 @@
 <Data>
     <Contract>
-        <RequestHandler Classification="amazons3"
-                        Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteBucketRequestHandler">
-            <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="NOT_ALLOWED">
-                <OptionalQueryParams/>
-                <RequiredQueryParams/>
-            </Request>
-            <ResponseCodes>
-                <ResponseCode>
-                    <Code>204</Code>
-                    <ResponseTypes>
-                        <ResponseType Type="null"/>
-                    </ResponseTypes>
-                </ResponseCode>
-                <ResponseCode>
-                    <Code>403</Code>
-                    <ResponseTypes>
-                        <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
-                    </ResponseTypes>
-                </ResponseCode>
-                <ResponseCode>
-                    <Code>404</Code>
-                    <ResponseTypes>
-                        <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
-                    </ResponseTypes>
-                </ResponseCode>
-                <ResponseCode>
-                    <Code>409</Code>
-                    <ResponseTypes>
-                        <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
-                    </ResponseTypes>
-                </ResponseCode>
-            </ResponseCodes>
-        </RequestHandler>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3"
+                            Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteBucketRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="NOT_ALLOWED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+        </RequestHandlers>
     </Contract>
 </Data>
