@@ -3,7 +3,10 @@
         <RequestHandlers>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="REQUIRED">
-                    <OptionalQueryParams />
+                    <OptionalQueryParams>
+                        <Param Name="UploadId" Type="java.util.UUID" />
+                        <Param Name="Offset" Type="long"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Id" Type="java.util.UUID" />
                     </RequiredQueryParams>
