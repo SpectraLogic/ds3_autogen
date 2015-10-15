@@ -21,7 +21,7 @@ import org.apache.velocity.exception.MethodInvocationException;
 public class CCodeGenerator implements CodeGenerator {
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) {
-
+        System.out.println("CCodeGenerator::generate");
         Velocity.init();
         VelocityContext context = new VelocityContext();
         context.put( "name", new String("Velocity"));
@@ -34,9 +34,10 @@ public class CCodeGenerator implements CodeGenerator {
                     // use the amazons3 template
                 } else if (request.getClassification() == Classification.spectrads3) {
                     // use the spectras3 template
+                    System.out.println("amazonS3 request");
 
                 } else if (request.getClassification() == Classification.spectrainternal) /* && codeGenType != production */ {
-                    // use the internal-request template
+                    System.out.println("spectra internal request");
                 }
             }
 
@@ -45,13 +46,17 @@ public class CCodeGenerator implements CodeGenerator {
             }
         } catch ( ResourceNotFoundException rnfe ) {
             // couldn't find the template
+            System.out.println("Couldn't find template");
         } catch( ParseErrorException pee ) {
             // syntax error: problem parsing the template
+            System.out.println("Problem parsing template");
         } catch( MethodInvocationException mie ) {
             // something invoked in the template
             // threw an exception
+            System.out.println("Something invoked in the template threw an exception");
         } catch( Exception e ) {
             // Pokemon!
+            System.out.println("!!!Pokemon exception!!!");
         }
 
         StringWriter sw = new StringWriter();
