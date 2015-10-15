@@ -52,7 +52,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateCommands() throws IOException, TemplateException {
-        for(final Ds3Request request : spec.getRequests()) {
+        for (final Ds3Request request : spec.getRequests()) {
             generateRequest(request);
         }
     }
