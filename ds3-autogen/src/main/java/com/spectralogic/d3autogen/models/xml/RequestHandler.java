@@ -105,6 +105,7 @@ public class RequestHandler {
             return null;
         }
 
+        System.out.println("toDs3Params[" + params.size() + "]");
         final ImmutableList.Builder<Ds3Param> ds3ParamsBuilder = ImmutableList.builder();
         for (final Param param : params) {
             ds3ParamsBuilder.add(param.toDs3Param());
