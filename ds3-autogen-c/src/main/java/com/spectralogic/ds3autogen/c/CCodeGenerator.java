@@ -2,92 +2,83 @@ package com.spectralogic.ds3autogen.c;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ResourceUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.c.descriptors.*;
-import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.c.converters.*;
+import com.spectralogic.ds3autogen.c.models.Request;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.file.Path;
-import java.util.Map;
 
-import java.io.StringWriter;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.ResourceNotFoundException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.MethodInvocationException;
+import java.nio.file.Paths;
+
+import freemarker.template.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CCodeGenerator implements CodeGenerator {
-    @Override
-    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) {
-        System.out.println("CCodeGenerator::generate");
-        generateInitRequest(spec);
+    private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
+
+    private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+
+    private Ds3ApiSpec spec;
+    private FileUtils fileUtils;
+    private Path destDir;
+
+    public CCodeGenerator() {
+        config.setDefaultEncoding("UTF-8");
+        config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
     }
-
-    public void generateInitRequest(final Ds3ApiSpec spec) {
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-
-        Velocity.init();
-        VelocityContext context = new VelocityContext();
-        Template template = null;
+    @Override
+    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
+        this.spec = spec;
+        this.fileUtils = fileUtils;
+        this.destDir = destDir;
 
         try {
-            for (Ds3Request ds3Request : spec.getRequests()) {
-                System.out.println("Generating Request[" + ds3Request.getName() + "]");
-                if (ds3Request.getClassification() == Classification.amazons3) {
-                    // use the amazons3 template
-                    System.out.println("amazonS3 ds3Request");
-                    final Request request = RequestDescriptor.toRequest(ds3Request);
-                    context.put("request", request);
+            generateCommands();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
+    }
 
-                    final String templateName = "./src/main/resources/templates/AmazonS3InitRequestHandler.tmplt";
-                    System.out.println("Loading template " + templateName);
-                    template = ve.getTemplate(templateName);
-                    System.out.println("Template loaded!");
-                } else if (ds3Request.getClassification() == Classification.spectrads3) {
-                    // use the spectras3 template
-                    System.out.println("amazonS3 request");
-
-                } else if (ds3Request.getClassification() == Classification.spectrainternal) /* && codeGenType != production */ {
-                    System.out.println("spectra internal request");
-                }
-
-                StringWriter sw = new StringWriter();
-
-                if (sw != null) {
-                    System.out.println("merging template");
-                    template.merge(context, sw);
-                }
-                System.out.println(sw.toString());
-                // write to file /ds3_c_sdk/ds3_init_$request.getName().c 
-            }
-
-            /*
-            for (Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
-                System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue().getName() + "]");
-            }
-            */
-        } catch ( ResourceNotFoundException rnfe ) {
-            // couldn't find the template
-            System.out.println("Couldn't find template");
-        } catch( ParseErrorException pee ) {
-            // syntax error: problem parsing the template
-            System.out.println("Problem parsing template");
-        } catch( MethodInvocationException mie ) {
-            // something invoked in the template
-            // threw an exception
-            System.out.println("Something invoked in the template threw an exception");
-        } catch( Exception e ) {
-            // Pokemon!
-            System.out.println("!!!Pokemon exception!!!\n" + e);
+    private void generateCommands() throws IOException, TemplateException {
+        for (final Ds3Request request : spec.getRequests()) {
+            generateInitRequest(request);
         }
 
+        /*
+        for (Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
+            System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue().getName() + "]");
+        }
+        */
+    }
 
+    public void generateInitRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
+        Template template = null;
+        Request request = null;
+
+        System.out.println("Generating Request[" + ds3Request.getName() + "]");
+        if (ds3Request.getClassification() == Classification.amazons3) {
+            request = RequestConverter.toRequest(ds3Request);
+            System.out.println("Loading template AmazonS3InitRequestHandler.tmplt");
+            template = config.getTemplate("AmazonS3InitRequestHandler.tmplt");
+            System.out.println("Template loaded!");
+        } else if (ds3Request.getClassification() == Classification.spectrads3) {
+            System.out.println("amazonS3 request");
+        } else if (ds3Request.getClassification() == Classification.spectrainternal) /* && codeGenType != production */ {
+            System.out.println("spectra internal request");
+        }
+
+        final Path outputPath = Paths.get(destDir + "/ds3_c_sdk/src/DeleteBucketRequestHandler.c");
+        System.out.println("outputPath[" + outputPath.toString() + "]");
+        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
+        final Writer writer = new OutputStreamWriter(outStream);
+        template.process(request, writer);
     }
 }
