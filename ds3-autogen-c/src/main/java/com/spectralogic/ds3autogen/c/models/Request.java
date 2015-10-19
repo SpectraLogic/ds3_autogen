@@ -1,18 +1,20 @@
 package com.spectralogic.ds3autogen.c.models;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
 
 public class Request {
     private final String name;
-    private final Ds3Request.HttpVerb verb;
+    private final HttpVerb verb;
     private final String path;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
 
     public Request(
             final String name,
-            final Ds3Request.HttpVerb verb,
+            final HttpVerb verb,
             final String path,
             final ImmutableList<Arguments> requiredArguments,
             final ImmutableList<Arguments> optionalArguments) {
@@ -27,7 +29,12 @@ public class Request {
         return name;
     }
 
-    public Ds3Request.HttpVerb getVerb() {
+    public String getNameRoot() {
+        final String nameRoot =  name.substring(name.lastIndexOf('.') + 1);
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, nameRoot);
+    }
+
+    public HttpVerb getVerb() {
         return verb;
     }
 
