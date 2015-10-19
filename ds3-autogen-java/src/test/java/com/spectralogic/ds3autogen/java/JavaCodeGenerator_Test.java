@@ -6,7 +6,10 @@ import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +24,9 @@ import static org.mockito.Mockito.when;
 public class JavaCodeGenerator_Test {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator_Test.class);
+
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
@@ -37,6 +43,17 @@ public class JavaCodeGenerator_Test {
         codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+
+    }
+
+    @Test
+    public void wholeXmlDoc() throws IOException, ParserException {
+        final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
     }
 }
