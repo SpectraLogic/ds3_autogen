@@ -87,38 +87,62 @@ public class RequestConverter {
             }
         }
 
-        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            requiredArgs.add(new Arguments(paramType, ds3Param.getName()));
+        if (ds3Request.getRequiredQueryParams() != null) {
+            for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
+                if (ds3Param.getType() != null) {
+                    final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+                    requiredArgs.add(new Arguments(paramType, ds3Param.getName()));
+                } else {
+                    //TODO special case non-specified type
+                }
+            }
         }
 
         return requiredArgs.build();
     }
 
     private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
+        if (ds3Request.getOptionalQueryParams() == null) {
+            return ImmutableList.of();
+        }
+
         final ImmutableList.Builder<Arguments> optionalArgs = ImmutableList.builder();
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            optionalArgs.add(new Arguments(paramType, ds3Param.getName()));
+            if (ds3Param.getType() != null) {
+                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+                optionalArgs.add(new Arguments(paramType, ds3Param.getName()));
+            } else {
+                //TODO special case non-specified type
+            }
         }
         return optionalArgs.build();
     }
 
     private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
-        final ImmutableSet.Builder<String> imports = ImmutableSet.builder();
+        final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
-        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-            if (ds3Param.getType().contains(".")) {
-                imports.add(ds3Param.getType());
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+
+        return importsBuilder.build().asList();
+    }
+
+    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
+        if (paramList == null) {
+            return ImmutableSet.of();
+        }
+
+        final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
+        for (final Ds3Param ds3Param : paramList) {
+            if (ds3Param.getType() != null) {
+                if (ds3Param.getType().contains(".")) {
+                    importsBuilder.add(ds3Param.getType());
+                }
+            } else {
+                //TODO special case non-specified type
             }
         }
-        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            if (ds3Param.getType().contains(".")) {
-                imports.add(ds3Param.getType());
-            }
-        }
-
-        return imports.build().asList();
+        return importsBuilder.build();
     }
 }
