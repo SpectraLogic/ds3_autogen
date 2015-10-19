@@ -17,7 +17,8 @@
  THIS FILE IS AUTO GENERATED!!! DO NOT MODIFY!!!
  *****************************************************************************/
 
- #include "ds3.h"
-ds3_request* ds3_init_$request.Name(const char* bucket_name) {
+#[[#include "ds3.h"]]#
 
+ds3_request* ds3_init_$request.getName()(const char* bucket_name) {
+    return (ds3_request*) _common_request_init(HTTP_$request.getVerb(), _build_path($request.getPath(), bucket_name, NULL));
 }
