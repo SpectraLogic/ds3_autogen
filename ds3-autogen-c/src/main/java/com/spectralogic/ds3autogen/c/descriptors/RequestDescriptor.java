@@ -21,7 +21,8 @@ public class RequestDescriptor {
                 this.ds3Request.getName(),
                 this.ds3Request.getHttpVerb(),
                 requestPath(this.ds3Request),
-                getRequiredArgs(ds3Request));
+                getRequiredArgs(ds3Request),
+                getOptionalArgs(ds3Request));
     }
 
     public static Request toRequest(final Ds3Request ds3Request) {

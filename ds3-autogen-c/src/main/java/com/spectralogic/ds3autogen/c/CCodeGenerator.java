@@ -21,8 +21,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 public class CCodeGenerator implements CodeGenerator {
     @Override
@@ -37,7 +35,6 @@ public class CCodeGenerator implements CodeGenerator {
 
         Velocity.init();
         VelocityContext context = new VelocityContext();
-        //context.
         Template template = null;
 
         try {
@@ -52,8 +49,6 @@ public class CCodeGenerator implements CodeGenerator {
                     final String templateName = "./src/main/resources/templates/AmazonS3InitRequestHandler.tmplt";
                     System.out.println("Loading template " + templateName);
                     template = ve.getTemplate(templateName);
-                    //ResourceUtils.loadFileResource("templates/AmazonS3InitRequestHandler.tmplt");
-
                     System.out.println("Template loaded!");
                 } else if (ds3Request.getClassification() == Classification.spectrads3) {
                     // use the spectras3 template
@@ -62,6 +57,15 @@ public class CCodeGenerator implements CodeGenerator {
                 } else if (ds3Request.getClassification() == Classification.spectrainternal) /* && codeGenType != production */ {
                     System.out.println("spectra internal request");
                 }
+
+                StringWriter sw = new StringWriter();
+
+                if (sw != null) {
+                    System.out.println("merging template");
+                    template.merge(context, sw);
+                }
+                System.out.println(sw.toString());
+                // write to file /ds3_c_sdk/ds3_init_$request.getName().c 
             }
 
             /*
@@ -84,12 +88,6 @@ public class CCodeGenerator implements CodeGenerator {
             System.out.println("!!!Pokemon exception!!!\n" + e);
         }
 
-        StringWriter sw = new StringWriter();
 
-        if (sw != null) {
-            System.out.println("merging template");
-            template.merge(context, sw);
-        }
-        System.out.println(sw.toString());
     }
 }

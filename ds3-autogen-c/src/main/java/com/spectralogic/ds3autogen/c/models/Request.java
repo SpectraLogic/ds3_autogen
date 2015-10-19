@@ -8,12 +8,19 @@ public class Request {
     private final Ds3Request.HttpVerb verb;
     private final String path;
     private final ImmutableList<Arguments> requiredArguments;
+    private final ImmutableList<Arguments> optionalArguments;
 
-    public Request(final String name, final Ds3Request.HttpVerb verb, final String path, final ImmutableList<Arguments> requiredArguments) {
+    public Request(
+            final String name,
+            final Ds3Request.HttpVerb verb,
+            final String path,
+            final ImmutableList<Arguments> requiredArguments,
+            final ImmutableList<Arguments> optionalArguments) {
         this.name = name;
         this.verb = verb;
         this.path = path;
         this.requiredArguments = requiredArguments;
+        this.optionalArguments = optionalArguments;
     }
 
     public String getName() {
@@ -32,4 +39,7 @@ public class Request {
         return requiredArguments;
     }
 
+    public ImmutableList<Arguments> getOptionalArguments() {
+        return optionalArguments;
+    }
 }
