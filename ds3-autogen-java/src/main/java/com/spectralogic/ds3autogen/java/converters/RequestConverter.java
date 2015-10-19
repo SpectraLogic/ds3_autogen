@@ -133,7 +133,7 @@ public class RequestConverter {
             return ImmutableSet.of();
         }
 
-        ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
+        final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
         for (final Ds3Param ds3Param : paramList) {
             if (ds3Param.getType() != null) {
                 if (ds3Param.getType().contains(".")) {
