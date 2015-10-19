@@ -1,18 +1,20 @@
-package com.spectralogic.ds3autogen.c.descriptors;
+package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.c.models.*;
 
-public class RequestDescriptor {
+public class RequestConverter {
     private final Ds3Request ds3Request;
-    private final ImmutableList<Arguments> requiredConstructorArguments;
+    private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
 
-    private RequestDescriptor(final Ds3Request ds3Request) {
+    private RequestConverter(final Ds3Request ds3Request) {
         this.ds3Request = ds3Request;
-        this.requiredConstructorArguments = getRequiredArgs(ds3Request);
+        this.requiredArguments = getRequiredArgs(ds3Request);
         this.optionalArguments = getOptionalArgs(ds3Request);
     }
 
@@ -27,7 +29,7 @@ public class RequestDescriptor {
 
     public static Request toRequest(final Ds3Request ds3Request) {
         System.out.println("Request::toRequest[" + ds3Request.getName() + "]");
-        final RequestDescriptor converter = new RequestDescriptor(ds3Request);
+        final RequestConverter converter = new RequestConverter(ds3Request);
         System.out.println("  converting...");
         return converter.convert();
     }
@@ -36,11 +38,11 @@ public class RequestDescriptor {
         final StringBuilder builder = new StringBuilder();
         builder.append("\"/\"");
 
-        if (ds3Request.getClassification() == Ds3Request.Classification.amazons3) {
-            if (ds3Request.getBucketRequirement() == Ds3Request.Requirement.REQUIRED) {
+        if (ds3Request.getClassification() == Classification.amazons3) {
+            if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
                 builder.append(" + this.bucketName");
 
-                if (ds3Request.getObjectRequirement() == Ds3Request.Requirement.REQUIRED) {
+                if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
                     builder.append(" + \"/\" + this.objectName");
                 }
             }
@@ -54,10 +56,10 @@ public class RequestDescriptor {
     private static ImmutableList<Arguments> getRequiredArgs(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
         System.out.println("Getting required args...");
-        if (ds3Request.getBucketRequirement() == Ds3Request.Requirement.REQUIRED) {
+        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
             System.out.println("bucket name REQUIRED.");
             requiredArgsBuilder.add(new Arguments("String", "bucketName"));
-            if (ds3Request.getObjectRequirement() == Ds3Request.Requirement.REQUIRED) {
+            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
                 System.out.println("bucket name REQUIRED.");
                 requiredArgsBuilder.add(new Arguments("String", "objectName"));
             }
