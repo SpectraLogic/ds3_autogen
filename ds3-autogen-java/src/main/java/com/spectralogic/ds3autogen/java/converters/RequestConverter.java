@@ -120,22 +120,20 @@ public class RequestConverter {
     }
 
     private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
-        ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
+        final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
-        importsBuilder = getImportsFromParamList(importsBuilder, ds3Request.getRequiredQueryParams());
-        importsBuilder = getImportsFromParamList(importsBuilder, ds3Request.getOptionalQueryParams());
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
         return importsBuilder.build().asList();
     }
 
-    private static ImmutableSet.Builder<String> getImportsFromParamList(
-            final ImmutableSet.Builder<String> importsBuilder,
-            final ImmutableList<Ds3Param> paramList) {
-
+    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
         if (paramList == null) {
-            return importsBuilder;
+            return ImmutableSet.of();
         }
 
+        ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
         for (final Ds3Param ds3Param : paramList) {
             if (ds3Param.getType() != null) {
                 if (ds3Param.getType().contains(".")) {
@@ -145,6 +143,6 @@ public class RequestConverter {
                 //TODO special case non-specified type
             }
         }
-        return importsBuilder;
+        return importsBuilder.build();
     }
 }
