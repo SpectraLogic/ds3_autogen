@@ -56,8 +56,8 @@ public class Ds3Request {
         this.resourceType = resourceType;
         this.operation = operation;
         this.ds3ResponseCodes = ds3ResponseCodes;
-        this.optionalQueryParams = optionalQueryParams;
         this.requiredQueryParams = requiredQueryParams;
+        this.optionalQueryParams = optionalQueryParams;
     }
 
     public Classification getClassification() {

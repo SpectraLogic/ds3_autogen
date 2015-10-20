@@ -13,16 +13,22 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api;
+package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+public class Arguments {
+    final private String type;
+    final private String name;
 
-import java.io.IOException;
+    public Arguments(final String type, final String name) {
+        this.type = type;
+        this.name = name;
+    }
 
-import java.nio.file.Path;
+    public String getName() {
+        return name;
+    }
 
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException;
+    public String getType() {
+        return type;
+    }
 }
