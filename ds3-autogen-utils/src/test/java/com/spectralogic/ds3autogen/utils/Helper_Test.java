@@ -13,22 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.c.models;
+package com.spectralogic.ds3autogen.utils;
 
-public class Arguments {
-    final private String type;
-    final private String name;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-    public Arguments(final String type, final String name) {
-        this.type = type;
-        this.name = name;
+public class Helper_Test {
+    @Test
+    public void camelCaseToUnderscore_Test() {
+        assertEquals(Helper.getInstance().camelToUnderscore("BumpyCaseWord"), "bumpy_case_word");
     }
 
-    public String getName() {
-        return name;
+    @Test
+    public void removeTrailingRequestHandler_Test() {
+        assertEquals(Helper.getInstance().removeTrailingRequestHandler("SomeRequestHandler"), "Some");
     }
 
-    public String getType() {
-        return type;
+    @Test
+    public void unqualifiedName_Test() {
+        assertEquals(Helper.getInstance().unqualifiedName("some.qualified.name"), "name");
     }
 }

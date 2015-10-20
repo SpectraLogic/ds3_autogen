@@ -1,3 +1,18 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
@@ -5,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.c.models.*;
 
 public class RequestConverter {
@@ -36,18 +52,30 @@ public class RequestConverter {
 
     private static String requestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("\"/\"");
+        builder.append("\"/");
 
         if (ds3Request.getClassification() == Classification.amazons3) {
-            if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-                builder.append(" + this.bucketName");
-
-                if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                    builder.append(" + \"/\" + this.objectName");
-                }
-            }
+            builder.append("\"");
         } else {
             builder.append("_rest_/");
+
+            if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
+                builder.append("bucket/\"");
+            } else {
+                builder.append("\"");
+            }
+        }
+
+        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
+            builder.append(", bucket_name");
+
+            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
+                builder.append(", object_name");
+            } else {
+                builder.append(", NULL");
+            }
+        } else {
+            builder.append(", NULL, NULL");
         }
 
         return builder.toString();
