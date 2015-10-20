@@ -62,4 +62,25 @@ public final class Helper {
 
         return String.join(", ", argArray);
     }
+
+    /**
+     *
+     * @param name - "SomeRequestHandler"
+     * @return String - "Some"
+     */
+    public static String removeTrailingRequestHandler(final String name) {
+        if (false == name.endsWith("RequestHandler")) {
+            return name;
+        }
+        return name.substring(0, name.lastIndexOf("RequestHandler"));
+    }
+
+    /**
+     *
+     * @param name - com.spectralogic.blah.SomeRequestHandler
+     * @return String - SomeRequestHandler
+     */
+    public static String unqualifiedName(final String name) {
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
 }
