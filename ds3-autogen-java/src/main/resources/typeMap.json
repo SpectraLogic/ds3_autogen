@@ -1,19 +1,405 @@
 { "RequestMap": [
-    { "Name": "com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler",
-      "ParamMap": [
-        {"Name": "Delimiter", "Type": "String"},
-        {"Name": "Marker", "Type": "String"},
-        {"Name": "Prefix", "Type": "String"},
-        {"Name": "MaxKeys", "Type": "int"}
-      ]
-    },
-    { "Name": "test",
-      "ParamMap": [
-        {"Name": "2", "Type": "1"},
-        {"Name": "3", "Type": "1"},
-        {"Name": "4", "Type": "1"},
-        {"Name": "5", "Type": "1"}
-      ]
-    }
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler",
+    "ParamMap": [
+      {"Name": "Delimiter", "Type": "String"},
+      {"Name": "Marker",    "Type": "String"},
+      {"Name": "Prefix",    "Type": "String"},
+      {"Name": "MaxKeys",   "Type": "int"}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.amazons3.ListMultiPartUploadPartsRequestHandler",
+    "ParamMap": [
+      {"Name": "MaxParts", "Type": ""},
+      {"Name": "PartNumberMarker", "Type": ""},
+      {"Name": "UploadId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.amazons3.ListMultiPartUploadsRequestHandler",
+    "ParamMap": [
+      {"Name": "Delimiter", "Type": ""},
+      {"Name": "KeyMarker", "Type": ""},
+      {"Name": "MaxUploads", "Type": ""},
+      {"Name": "Prefix", "Type": ""},
+      {"Name": "UploadIdMarker", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.acl.GetBucketAclsRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "GroupId", "Type": ""},
+      {"Name": "Permission", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.acl.GetDataPolicyAclsRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "GroupId", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.cache.GetCacheFilesystemsRequestHandler",
+    "ParamMap": [
+      {"Name": "NodeId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.capacity.GetBucketCapacitySummaryRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.capacity.GetStorageDomainCapacitySummaryRequestHandler",
+    "ParamMap": [
+      {"Name": "StorageDomainId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataPersistenceRulesRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "IsolationLevel", "Type": ""},
+      {"Name": "State", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataPoliciesRequestHandler",
+    "ParamMap": [
+      {"Name": "ChecksumType", "Type": ""},
+      {"Name": "EndToEndCrcRequired", "Type": ""},
+      {"Name": "Name", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.GetGroupMembersRequestHandler",
+    "ParamMap": [
+      {"Name": "GroupId", "Type": ""},
+      {"Name": "MemberGroupId", "Type": ""},
+      {"Name": "MemberUserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.GetGroupsRequestHandler",
+    "ParamMap": [
+      {"Name": "BuiltIn", "Type": ""},
+      {"Name": "Name", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.VerifyUserIsMemberOfGroupRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler",
+    "ParamMap": [
+      {"Name": "ChunkClientProcessingOrderGuarantee", "Type": ""},
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobsRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCompletedNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCreatedNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectCachedNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectLostNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectPersistedNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetPoolFailureNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetStorageDomainFailureNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetTapeFailureNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetTapePartitionFailureNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.DeleteFolderRecursivelyRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectsRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler",
+    "ParamMap": [
+      {"Name": "StorageDomainId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler",
+    "ParamMap": [
+      {"Name": "StorageDomainId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.CompactAllPoolsRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.CompactPoolRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolFailuresRequestHandler",
+    "ParamMap": [
+      {"Name": "ErrorMessage", "Type": ""},
+      {"Name": "PoolId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolPartitionsRequestHandler",
+    "ParamMap": [
+      {"Name": "Name", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolsRequestHandler",
+    "ParamMap": [
+      {"Name": "AssignedToStorageDomain", "Type": ""},
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "Health", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "PartitionId", "Type": ""},
+      {"Name": "PoweredOn", "Type": ""},
+      {"Name": "State", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportAllPoolsRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportPoolRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ModifyAllPoolsRequestHandler",
+    "ParamMap": [
+      {"Name": "Quiesced", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.VerifyAllPoolsRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.VerifyPoolRequestHandler",
+    "ParamMap": [
+      {"Name": "Priority", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainFailuresRequestHandler",
+    "ParamMap": [
+      {"Name": "ErrorMessage", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainMembersRequestHandler",
+    "ParamMap": [
+      {"Name": "PoolPartitionId", "Type": ""},
+      {"Name": "State", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "TapePartitionId", "Type": ""},
+      {"Name": "TapeType", "Type": ""},
+      {"Name": "WritePreference", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainsRequestHandler",
+    "ParamMap": [
+      {"Name": "AutoEjectUponCron", "Type": ""},
+      {"Name": "AutoEjectUponJobCancellation", "Type": ""},
+      {"Name": "AutoEjectUponJobCompletion", "Type": ""},
+      {"Name": "AutoEjectUponMediaFull", "Type": ""},
+      {"Name": "MediaEjectionAllowed", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "WriteOptimization", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectAllTapesRequestHandler",
+    "ParamMap": [
+      {"Name": "EjectLabel", "Type": ""},
+      {"Name": "EjectLocation", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler",
+    "ParamMap": [
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "EjectLabel", "Type": ""},
+      {"Name": "EjectLocation", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectTapeRequestHandler",
+    "ParamMap": [
+      {"Name": "EjectLabel", "Type": ""},
+      {"Name": "EjectLocation", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeDensityDirectivesRequestHandler",
+    "ParamMap": [
+      {"Name": "Density", "Type": ""},
+      {"Name": "PartitionId", "Type": ""},
+      {"Name": "TapeType", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeDrivesRequestHandler",
+    "ParamMap": [
+      {"Name": "PartitionId", "Type": ""},
+      {"Name": "SerialNumber", "Type": ""},
+      {"Name": "State", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeFailuresRequestHandler",
+    "ParamMap": [
+      {"Name": "ErrorMessage", "Type": ""},
+      {"Name": "TapeDriveId", "Type": ""},
+      {"Name": "TapeId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeLibrariesRequestHandler",
+    "ParamMap": [
+      {"Name": "ManagementUrl", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "SerialNumber", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionFailuresRequestHandler",
+    "ParamMap": [
+      {"Name": "ErrorMessage", "Type": ""},
+      {"Name": "PartitionId", "Type": ""},
+      {"Name": "Type", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionsRequestHandler",
+    "ParamMap": [
+      {"Name": "ImportExportConfiguration", "Type": ""},
+      {"Name": "LibraryId", "Type": ""},
+      {"Name": "Name", "Type": ""},
+      {"Name": "Quiesced", "Type": ""},
+      {"Name": "SerialNumber", "Type": ""},
+      {"Name": "State", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesRequestHandler",
+    "ParamMap": [
+      {"Name": "AssignedToStorageDomain", "Type": ""},
+      {"Name": "BarCode", "Type": ""},
+      {"Name": "BucketId", "Type": ""},
+      {"Name": "EjectLabel", "Type": ""},
+      {"Name": "EjectLocation", "Type": ""},
+      {"Name": "FullOfData", "Type": ""},
+      {"Name": "PartitionId", "Type": ""},
+      {"Name": "PreviousState", "Type": ""},
+      {"Name": "SerialNumber", "Type": ""},
+      {"Name": "State", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "Type", "Type": ""},
+      {"Name": "WriteProtected", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportTapeRequestHandler",
+    "ParamMap": [
+      {"Name": "DataPolicyId", "Type": ""},
+      {"Name": "StorageDomainId", "Type": ""},
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyAllTapePartitionsRequestHandler",
+    "ParamMap": [
+      {"Name": "Quiesced", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ReplacePermanentlyOfflineTapePartitionRequestHandler",
+    "ParamMap": [
+      {"Name": "PartitionId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.GetUsersRequestHandler",
+    "ParamMap": [
+      {"Name": "AuthId", "Type": ""},
+      {"Name": "DefaultDataPolicyId", "Type": ""},
+      {"Name": "Name", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrainternal.notification.GetGenericDaoNotificationRegistrationsRequestHandler",
+    "ParamMap": [
+      {"Name": "UserId", "Type": ""}
+    ]
+  },
+  { "Name": "com.spectralogic.s3.server.handler.reqhandler.spectrainternal.system.CreateHeapDumpRequestHandler",
+    "ParamMap": [
+      {"Name": "Application", "Type": ""}
+    ]
+  }
   ]
 }
