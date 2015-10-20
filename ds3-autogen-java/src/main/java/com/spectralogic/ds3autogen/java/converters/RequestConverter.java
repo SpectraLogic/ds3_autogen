@@ -21,7 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
-import com.spectralogic.ds3autogen.java.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.java.models.Request;
 
 public class RequestConverter {

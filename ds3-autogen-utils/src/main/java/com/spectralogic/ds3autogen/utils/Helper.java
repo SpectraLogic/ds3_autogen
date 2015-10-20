@@ -13,11 +13,11 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.helper;
+package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.java.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

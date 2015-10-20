@@ -16,8 +16,9 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.java.helper.Helper;
+import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Request {
     private final String packageName;
