@@ -16,20 +16,26 @@
 package com.spectralogic.ds3autogen.java.typemap;
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.java.typemap.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.java.typemap.models.Ds3TypeMapperParserImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class TypeMapper {
 
     private ImmutableMap<String, ImmutableMap<String,String>> typeMapper;
+    private final static Logger LOG = LoggerFactory.getLogger(TypeMapper.class);
 
     public TypeMapper() {
         try {
             final Ds3TypeMapperParser parser = new Ds3TypeMapperParserImpl();
             final Ds3TypeMapper ds3TypeMapper = parser.getMap();
             this.typeMapper = ds3TypeMapper.getTypeMapper();
-        } catch (Exception e) {
-            //TODO
+        } catch (final ParserException|IOException e) {
+            LOG.error("Attempted to create Type Mapper", e);
         }
     }
 
@@ -49,6 +55,8 @@ public class TypeMapper {
     public String getMappedType(final String requestName, final String argName) {
         if (containsArgument(requestName, argName)) {
             return typeMapper.get(requestName).get(argName);
+        } else {
+            LOG.error("Could not map type for: " + requestName + ", " + argName);
         }
         return null;
     }

@@ -98,8 +98,6 @@ public class RequestConverter {
                     final String paramType = typeMapper.getMappedType(ds3Request.getName(), ds3Param.getName());
                     if (paramType != null) {
                         requiredArgs.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
-                    } else {
-                        //TODO throw could not map type exception
                     }
                 }
             }
@@ -123,8 +121,6 @@ public class RequestConverter {
                 final String paramType = typeMapper.getMappedType(ds3Request.getName(), ds3Param.getName());
                 if (paramType != null) {
                     optionalArgs.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
-                } else {
-                    //TODO throw could not map type exception
                 }
             }
         }
