@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.java.models.Arguments;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.java.typemap.TypeMapper;
 
 public class RequestConverter {
 
@@ -31,6 +32,7 @@ public class RequestConverter {
     private final ImmutableList<Arguments> requiredConstructorArguments;
     private final ImmutableList<Arguments> optionalArguments;
     private final ImmutableList<String> imports;
+    private final static TypeMapper typeMapper = new TypeMapper();
 
     private RequestConverter(final Ds3Request ds3Request, final String packageName) {
         this.ds3Request = ds3Request;
@@ -93,7 +95,12 @@ public class RequestConverter {
                     final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                     requiredArgs.add(new Arguments(paramType, ds3Param.getName()));
                 } else {
-                    //TODO special case non-specified type
+                    final String paramType = typeMapper.getMappedType(ds3Request.getName(), ds3Param.getName());
+                    if (paramType != null) {
+                        requiredArgs.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
+                    } else {
+                        //TODO throw could not map type exception
+                    }
                 }
             }
         }
@@ -113,7 +120,12 @@ public class RequestConverter {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 optionalArgs.add(new Arguments(paramType, ds3Param.getName()));
             } else {
-                //TODO special case non-specified type
+                final String paramType = typeMapper.getMappedType(ds3Request.getName(), ds3Param.getName());
+                if (paramType != null) {
+                    optionalArgs.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
+                } else {
+                    //TODO throw could not map type exception
+                }
             }
         }
         return optionalArgs.build();
@@ -122,13 +134,16 @@ public class RequestConverter {
     private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getRequiredQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getOptionalQueryParams()));
 
         return importsBuilder.build().asList();
     }
 
-    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
+    private static ImmutableSet<String> getImportsFromParamList(
+            final String requestName,
+            final ImmutableList<Ds3Param> paramList) {
+
         if (paramList == null) {
             return ImmutableSet.of();
         }
@@ -140,7 +155,10 @@ public class RequestConverter {
                     importsBuilder.add(ds3Param.getType());
                 }
             } else {
-                //TODO special case non-specified type
+                final String paramType = typeMapper.getMappedType(requestName, ds3Param.getName());
+                if (paramType != null && paramType.contains(".")) {
+                    importsBuilder.add(paramType);
+                }
             }
         }
         return importsBuilder.build();

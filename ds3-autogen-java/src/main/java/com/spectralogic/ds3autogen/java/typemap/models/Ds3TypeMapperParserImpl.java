@@ -1,0 +1,50 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+package com.spectralogic.ds3autogen.java.typemap.models;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.google.common.io.ByteStreams;
+import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.java.typemap.Ds3TypeMapperParser;
+import com.spectralogic.ds3autogen.java.typemap.models.xml.TypeMap;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Ds3TypeMapperParserImpl implements Ds3TypeMapperParser {
+
+    private final ObjectMapper objectMapper;
+    private final byte[] jsonData;
+
+    public Ds3TypeMapperParserImpl() throws IOException {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new GuavaModule());
+
+        final InputStream inputStream = Ds3TypeMapperParserImpl.class.getResourceAsStream("/typeMap.json");
+        jsonData = ByteStreams.toByteArray(inputStream);
+    }
+
+    @Override
+    public Ds3TypeMapper getMap() throws ParserException, IOException {
+        return toMap(objectMapper.readValue(jsonData, TypeMap.class));
+    }
+
+    private static Ds3TypeMapper toMap(final TypeMap typeMap) {
+        final Ds3TypeMapper ds3TypeMapper = new Ds3TypeMapper(typeMap.getTypeMap());
+        return ds3TypeMapper;
+    }
+}

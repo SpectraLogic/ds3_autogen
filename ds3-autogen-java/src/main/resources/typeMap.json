@@ -1,0 +1,19 @@
+{ "RequestMap": [
+    { "Name": "com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler",
+      "ParamMap": [
+        {"Name": "Delimiter", "Type": "String"},
+        {"Name": "Marker", "Type": "String"},
+        {"Name": "Prefix", "Type": "String"},
+        {"Name": "MaxKeys", "Type": "int"}
+      ]
+    },
+    { "Name": "test",
+      "ParamMap": [
+        {"Name": "2", "Type": "1"},
+        {"Name": "3", "Type": "1"},
+        {"Name": "4", "Type": "1"},
+        {"Name": "5", "Type": "1"}
+      ]
+    }
+  ]
+}
