@@ -27,20 +27,22 @@ import java.io.InputStream;
 
 public class Ds3TypeMapperParserImpl implements Ds3TypeMapperParser {
 
-    private final ObjectMapper objectMapper;
-    private final byte[] jsonData;
+    private final Ds3TypeMapper ds3TypeMapper;
 
     public Ds3TypeMapperParserImpl() throws IOException {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new GuavaModule());
+        this.ds3TypeMapper = initDs3TypeMapper();
+    }
 
+    private static Ds3TypeMapper initDs3TypeMapper() throws IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new GuavaModule());
         final InputStream inputStream = Ds3TypeMapperParserImpl.class.getResourceAsStream("/typeMap.json");
-        jsonData = ByteStreams.toByteArray(inputStream);
+        return toMap(objectMapper.readValue(ByteStreams.toByteArray(inputStream), TypeMap.class));
     }
 
     @Override
     public Ds3TypeMapper getMap() throws ParserException, IOException {
-        return toMap(objectMapper.readValue(jsonData, TypeMap.class));
+        return this.ds3TypeMapper;
     }
 
     private static Ds3TypeMapper toMap(final TypeMap typeMap) {

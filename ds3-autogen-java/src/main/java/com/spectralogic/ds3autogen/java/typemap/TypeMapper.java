@@ -15,49 +15,39 @@
 
 package com.spectralogic.ds3autogen.java.typemap;
 
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.java.typemap.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.java.typemap.models.Ds3TypeMapperParserImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class TypeMapper {
 
-    private ImmutableMap<String, ImmutableMap<String,String>> typeMapper;
-    private final static Logger LOG = LoggerFactory.getLogger(TypeMapper.class);
+    private static final TypeMapper typeMapper;
+    private final Ds3TypeMapper ds3TypeMapper;
 
-    public TypeMapper() {
+    static {
         try {
-            final Ds3TypeMapperParser parser = new Ds3TypeMapperParserImpl();
-            final Ds3TypeMapper ds3TypeMapper = parser.getMap();
-            this.typeMapper = ds3TypeMapper.getTypeMapper();
-        } catch (final ParserException|IOException e) {
-            LOG.error("Attempted to create Type Mapper", e);
+            typeMapper = new TypeMapper();
+        } catch (final IOException|ParserException e) {
+            throw new ExceptionInInitializerError(e);
         }
     }
 
-    public ImmutableMap<String, ImmutableMap<String, String>> getTypeMapper() {
+    private TypeMapper() throws IOException, ParserException {
+        ds3TypeMapper = initTypeMapper();
+    }
+
+    private static Ds3TypeMapper initTypeMapper() throws IOException, ParserException {
+        final Ds3TypeMapperParser parser = new Ds3TypeMapperParserImpl();
+        return parser.getMap();
+    }
+
+    public static TypeMapper getInstance() {
         return typeMapper;
     }
 
-    private boolean containsArgument(final String requestName, final String argName) {
-        if (typeMapper.containsKey(requestName)) {
-            if (typeMapper.get(requestName).containsKey(argName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public String getMappedType(final String requestName, final String argName) {
-        if (containsArgument(requestName, argName)) {
-            return typeMapper.get(requestName).get(argName);
-        } else {
-            LOG.error("Could not map type for: " + requestName + ", " + argName);
-        }
-        return null;
+        return ds3TypeMapper.getMappedType(requestName, argName);
     }
 }
