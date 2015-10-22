@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
     private Ds3ApiSpec spec;
+    private Ds3TypeMapper ds3TypeMapper;
     private FileUtils fileUtils;
     private Path destDir;
 
@@ -54,8 +56,13 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
+    public void generate(
+            final Ds3ApiSpec spec,
+            final Ds3TypeMapper ds3TypeMapper,
+            final FileUtils fileUtils,
+            final Path destDir) throws IOException {
         this.spec = spec;
+        this.ds3TypeMapper = ds3TypeMapper;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
@@ -75,7 +82,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = config.getTemplate("request_template.tmpl");
 
-        final Request request = RequestConverter.toRequest(ds3Request, COMMANDS_PACKAGE);
+        final Request request = RequestConverter.toRequest(ds3Request, ds3TypeMapper, COMMANDS_PACKAGE);
         final Path requestPath = destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());

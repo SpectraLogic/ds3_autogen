@@ -13,14 +13,15 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.typemap.models;
+package com.spectralogic.d3autogen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.io.ByteStreams;
+import com.spectralogic.d3autogen.models.xml.TypeMap;
+import com.spectralogic.ds3autogen.api.Ds3TypeMapperParser;
 import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.java.typemap.Ds3TypeMapperParser;
-import com.spectralogic.ds3autogen.java.typemap.models.xml.TypeMap;
+import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 
 import java.io.IOException;
 import java.io.InputStream;

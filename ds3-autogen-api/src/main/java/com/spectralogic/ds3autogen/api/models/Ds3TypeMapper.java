@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.typemap.models;
+package com.spectralogic.ds3autogen.api.models;
 
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
