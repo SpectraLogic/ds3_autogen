@@ -21,18 +21,15 @@ import org.slf4j.LoggerFactory;
 
 public class Ds3TypeMapper {
 
-    private final ImmutableMap<String, ImmutableMap<String,String>> typeMapper;
     private final static Logger LOG = LoggerFactory.getLogger(Ds3TypeMapper.class);
+    private final ImmutableMap<String, ImmutableMap<String,String>> typeMapper;
 
     public Ds3TypeMapper(final ImmutableMap<String, ImmutableMap<String, String>> typeMapper) {
         this.typeMapper = typeMapper;
     }
 
     public boolean containsArgument(final String requestName, final String argName) {
-        if(typeMapper.containsKey(requestName) && typeMapper.get(requestName).containsKey(argName)) {
-            return true;
-        }
-        return false;
+        return typeMapper.containsKey(requestName) && typeMapper.get(requestName).containsKey(argName);
     }
 
     public String getMappedType(final String requestName, final String argName) {
