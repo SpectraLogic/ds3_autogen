@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.java.typemap.TypeMapper;
 
 public class RequestConverter {
 
@@ -31,6 +32,7 @@ public class RequestConverter {
     private final ImmutableList<Arguments> requiredConstructorArguments;
     private final ImmutableList<Arguments> optionalArguments;
     private final ImmutableList<String> imports;
+    private final static TypeMapper typeMapper = TypeMapper.getInstance();
 
     private RequestConverter(final Ds3Request ds3Request, final String packageName) {
         this.ds3Request = ds3Request;
@@ -87,17 +89,7 @@ public class RequestConverter {
             }
         }
 
-        if (ds3Request.getRequiredQueryParams() != null) {
-            for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-                if (ds3Param.getType() != null) {
-                    final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                    requiredArgs.add(new Arguments(paramType, ds3Param.getName()));
-                } else {
-                    //TODO special case non-specified type
-                }
-            }
-        }
-
+        requiredArgs.addAll(getArgsFromParamList(ds3Request.getName(), ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
 
@@ -107,28 +99,45 @@ public class RequestConverter {
         }
 
         final ImmutableList.Builder<Arguments> optionalArgs = ImmutableList.builder();
+        optionalArgs.addAll(getArgsFromParamList(ds3Request.getName(), ds3Request.getOptionalQueryParams()));
+        return optionalArgs.build();
+    }
 
-        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+    private static ImmutableList<Arguments> getArgsFromParamList(
+            final String requestName,
+            final ImmutableList<Ds3Param> paramList) {
+        if(paramList == null) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
+        for (final Ds3Param ds3Param : paramList) {
             if (ds3Param.getType() != null) {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                optionalArgs.add(new Arguments(paramType, ds3Param.getName()));
+                argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
             } else {
-                //TODO special case non-specified type
+                final String paramType = typeMapper.getMappedType(requestName, ds3Param.getName());
+                if (paramType != null) {
+                    argsBuilder.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
+                }
             }
         }
-        return optionalArgs.build();
+        return argsBuilder.build();
     }
 
     private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getRequiredQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getOptionalQueryParams()));
 
         return importsBuilder.build().asList();
     }
 
-    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
+    private static ImmutableSet<String> getImportsFromParamList(
+            final String requestName,
+            final ImmutableList<Ds3Param> paramList) {
+
         if (paramList == null) {
             return ImmutableSet.of();
         }
@@ -140,7 +149,10 @@ public class RequestConverter {
                     importsBuilder.add(ds3Param.getType());
                 }
             } else {
-                //TODO special case non-specified type
+                final String paramType = typeMapper.getMappedType(requestName, ds3Param.getName());
+                if (paramType != null && paramType.contains(".")) {
+                    importsBuilder.add(paramType);
+                }
             }
         }
         return importsBuilder.build();
