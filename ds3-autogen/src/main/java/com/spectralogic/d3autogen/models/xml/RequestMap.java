@@ -13,13 +13,33 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.typemap;
+package com.spectralogic.d3autogen.models.xml;
 
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.java.typemap.models.Ds3TypeMapper;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.IOException;
+import java.util.List;
 
-public interface Ds3TypeMapperParser {
-    Ds3TypeMapper getMap() throws ParserException, IOException;
+public class RequestMap {
+
+    @JsonProperty("Name")
+    private String requestName;
+
+    @JsonProperty("ParamMap")
+    private List<ParamMap> params;
+
+    public String getRequestName() {
+        return requestName;
+    }
+
+    public void setRequestName(final String requestName) {
+        this.requestName = requestName;
+    }
+
+    public List<ParamMap> getParams() {
+        return params;
+    }
+
+    public void setParams(final List<ParamMap> params) {
+        this.params = params;
+    }
 }

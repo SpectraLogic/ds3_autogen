@@ -21,6 +21,9 @@ import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.Ds3TypeMapperParser;
+import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
+import com.spectralogic.d3autogen.Ds3TypeMapperParserImpl;
 import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,7 +58,10 @@ public class JavaCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
         LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
 
@@ -69,11 +75,14 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestMissingParamTypes.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
         LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
     }
@@ -85,7 +94,10 @@ public class JavaCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
     }
 }

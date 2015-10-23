@@ -13,33 +13,30 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.typemap.models.xml;
+package com.spectralogic.d3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
-public class RequestMap {
+public class ParamMap {
 
     @JsonProperty("Name")
-    private String requestName;
+    private String name;
+    @JsonProperty("Type")
+    private String type;
 
-    @JsonProperty("ParamMap")
-    private List<ParamMap> params;
-
-    public String getRequestName() {
-        return requestName;
+    public String getType() {
+        return type;
     }
 
-    public void setRequestName(final String requestName) {
-        this.requestName = requestName;
+    public void setType(final String type) {
+        this.type = type;
     }
 
-    public List<ParamMap> getParams() {
-        return params;
+    public String getName() {
+        return name;
     }
 
-    public void setParams(final List<ParamMap> params) {
-        this.params = params;
+    public void setName(final String name) {
+        this.name = name;
     }
 }
