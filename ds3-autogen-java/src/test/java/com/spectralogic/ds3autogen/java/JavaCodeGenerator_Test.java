@@ -95,11 +95,14 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/bulkRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
         LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
     }
