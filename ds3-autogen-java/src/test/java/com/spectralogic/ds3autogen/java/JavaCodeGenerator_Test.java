@@ -79,6 +79,23 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void bulkRequestHandler() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/CreatePutJobRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/bulkRequestHandler.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+
+        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+    }
+
+    @Test
     public void wholeXmlDoc() throws IOException, ParserException {
         final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
