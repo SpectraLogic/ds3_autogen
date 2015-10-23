@@ -16,13 +16,16 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.FileUtils;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +83,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
-        final Template tmpl = config.getTemplate("request_template.tmpl");
+        final Template tmpl = getRequestTemplate(ds3Request);
 
         final Request request = RequestConverter.toRequest(ds3Request, ds3TypeMapper, COMMANDS_PACKAGE);
         final Path requestPath = destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
@@ -92,5 +95,20 @@ public class JavaCodeGenerator implements CodeGenerator {
             tmpl.process(request, writer);
         }
 
+    }
+
+    private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        final Template template;
+        if (isBulkRequest(ds3Request)) {
+            template = config.getTemplate("bulk_request_template.tmpl");
+        } else {
+            template = config.getTemplate("request_template.tmpl");
+        }
+
+        return template;
+    }
+
+    private boolean isBulkRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null && ds3Request.getOperation().toString().contains("BULK");
     }
 }

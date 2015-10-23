@@ -51,6 +51,7 @@ public class RequestConverter {
                 classParts[classParts.length - 1],
                 ds3Request.getHttpVerb(),
                 requestPath(ds3Request),
+                ds3Request.getOperation(),
                 requiredConstructorArguments,
                 optionalArguments,
                 imports);
