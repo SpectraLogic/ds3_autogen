@@ -72,14 +72,9 @@ public class ${name} extends BulkRequest {
     }
     </#if>
     </#list>
+    
     @Override
     public BulkCommand getCommand() {
-        <#if operation?contains("GET")>
-        return bulkCommand.GET;
-        <#elseif operation?contains("PUT")>
-        return BulkCommand.PUT;
-        <#else>
-        //TODO handle case START_BULK_VERIFY
-        </#if>
+        return bulkCommand.${helper.getBulkVerb(operation)};
     }
 }

@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
 import freemarker.template.Configuration;
@@ -109,6 +110,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private boolean isBulkRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null && ds3Request.getOperation().toString().contains("BULK");
+        return ds3Request.getOperation() != null && (
+                ds3Request.getOperation() == Operation.START_BULK_GET
+                || ds3Request.getOperation() == Operation.START_BULK_PUT);
     }
 }
