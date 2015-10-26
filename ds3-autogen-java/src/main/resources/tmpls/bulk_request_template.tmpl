@@ -73,7 +73,7 @@ public class ${name} extends BulkRequest {
     </#if>
     </#list>
     @Override
-    public BulkCommand() {
+    public BulkCommand getCommand() {
         <#if operation?contains("GET")>
         return bulkCommand.GET;
         <#elseif operation?contains("PUT")>
