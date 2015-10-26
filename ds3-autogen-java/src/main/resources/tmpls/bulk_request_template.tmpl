@@ -34,6 +34,12 @@ public class ${name} extends BulkRequest {
     </#if>
     </#list>
 
+    <#list optionalArguments as arg>
+    <#if arg.getType() == "void">
+    private boolean ${arg.getName()};
+    </#if>
+    </#list>
+
     // Constructor
     public ${name}(final String bucket, final List<Ds3Object> objects, ${helper.constructorArgs(requiredArguments)}) throws XmlProcessingException {
         super(bucket, objects);
@@ -43,22 +49,33 @@ public class ${name} extends BulkRequest {
     <#list optionalArguments as arg>
     <#if baseClassArgs?seq_contains(arg.getName())>
     @Override
-    public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
         super.with${arg.getName()?cap_first}(${arg.getName()?uncap_first});
         return this;
     }
     <#elseif arg.getName() == "MaxUploadSize">
-    public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
         if (${arg.getName()?uncap_first} > MIN_UPLOAD_SIZE_IN_BYTES) {
-            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${arg.getType()?cap_first}.toString(${arg.getName()?uncap_first}));
+            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.getType(arg)?cap_first}.toString(${arg.getName()?uncap_first}));
         } else {
             this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", MAX_UPLOAD_SIZE_IN_BYTES);
         }
         return this;
     }
-    <#else>
-    public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
+    <#elseif arg.getType() == "void">
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        if (this.${arg.getName()?uncap_first}) {
+            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
+        } else {
+            this.getQueryParams().remove("${arg.getName()?uncap_first}");
+        }
+        return this;
+    }
+    <#else>
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
         return this;
     }
     </#if>
@@ -66,13 +83,13 @@ public class ${name} extends BulkRequest {
     </#list>
 
     <#list optionalArguments as arg>
-    <#if baseClassArgs?seq_contains(arg.getName())>
-    public ${arg.getType()} get${arg.getName()?cap_first}() {
+    <#if baseClassArgs?seq_contains(arg.getName()) == false>
+    public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
     </#if>
     </#list>
-    
+
     @Override
     public BulkCommand getCommand() {
         return bulkCommand.${helper.getBulkVerb(operation)};

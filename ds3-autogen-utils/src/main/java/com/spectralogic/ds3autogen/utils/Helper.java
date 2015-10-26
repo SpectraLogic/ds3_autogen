@@ -42,7 +42,9 @@ public final class Helper {
     }
 
     public static String argToString(final Arguments arg) {
-        if (arg.getType().equals("String")) {
+        if (arg.getType().equals("void")) {
+            return "null";
+        } else if (arg.getType().equals("String")) {
             return StringUtils.uncapitalize(arg.getName());
         } else {
             return StringUtils.uncapitalize(arg.getName()) + ".toString()";
@@ -97,5 +99,12 @@ public final class Helper {
         } else {
             return null;
         }
+    }
+
+    public static String getType(final Arguments arg) {
+        if (arg.getType() != null && arg.getType().equals("void")) {
+            return "boolean";
+        }
+        return arg.getType();
     }
 }
