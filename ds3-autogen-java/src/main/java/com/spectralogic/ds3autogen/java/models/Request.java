@@ -16,8 +16,10 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Action;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Request {
@@ -25,6 +27,8 @@ public class Request {
     private final String name;
     private final HttpVerb verb;
     private final String path;
+    private final Operation operation;
+    private final Action action;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
     private final ImmutableList<String> imports;
@@ -34,6 +38,8 @@ public class Request {
                    final String name,
                    final HttpVerb verb,
                    final String path,
+                   final Operation operation,
+                   final Action action,
                    final ImmutableList<Arguments> requiredArguments,
                    final ImmutableList<Arguments> optionalArguments,
                    final ImmutableList<String> imports) {
@@ -41,6 +47,8 @@ public class Request {
         this.name = name;
         this.verb = verb;
         this.path = path;
+        this.operation = operation;
+        this.action = action;
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
         this.imports = imports;
@@ -78,5 +86,11 @@ public class Request {
 
     public Helper getHelper() {
         return helper;
+    }
+
+    public Operation getOperation() { return operation; }
+
+    public Action getAction() {
+        return action;
     }
 }

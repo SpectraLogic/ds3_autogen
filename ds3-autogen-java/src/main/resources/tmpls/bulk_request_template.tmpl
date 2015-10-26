@@ -1,0 +1,97 @@
+<#assign baseClassArgs = ["Priority", "WriteOptimization"]>
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+// This code is auto-generated, do not modify
+
+package ${packageName};
+
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+<#list imports as import>
+import ${import};
+</#list>
+
+public class ${name} extends BulkRequest {
+
+    <#list optionalArguments as arg>
+    <#if arg.getName() == "MaxUploadSize">
+    private static final String MAX_UPLOAD_SIZE_IN_BYTES = "100000000000";
+    public static final int MIN_UPLOAD_SIZE_IN_BYTES = 10485760;
+    </#if>
+    </#list>
+
+    <#list optionalArguments as arg>
+    <#if arg.getType() == "void">
+    private boolean ${arg.getName()};
+    </#if>
+    </#list>
+
+    // Constructor
+    public ${name}(final String bucket, final List<Ds3Object> objects, ${helper.constructorArgs(requiredArguments)}) throws XmlProcessingException {
+        super(bucket, objects);
+        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
+    }
+
+    <#list optionalArguments as arg>
+    <#if baseClassArgs?seq_contains(arg.getName())>
+    @Override
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
+        super.with${arg.getName()?cap_first}(${arg.getName()?uncap_first});
+        return this;
+    }
+    <#elseif arg.getName() == "MaxUploadSize">
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
+        if (${arg.getName()?uncap_first} > MIN_UPLOAD_SIZE_IN_BYTES) {
+            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.getType(arg)?cap_first}.toString(${arg.getName()?uncap_first}));
+        } else {
+            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", MAX_UPLOAD_SIZE_IN_BYTES);
+        }
+        return this;
+    }
+    <#elseif arg.getType() == "void">
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        if (this.${arg.getName()?uncap_first}) {
+            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
+        } else {
+            this.getQueryParams().remove("${arg.getName()?uncap_first}");
+        }
+        return this;
+    }
+    <#else>
+    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
+        return this;
+    }
+    </#if>
+
+    </#list>
+
+    <#list optionalArguments as arg>
+    <#if baseClassArgs?seq_contains(arg.getName()) == false>
+    public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+    </#if>
+    </#list>
+
+    @Override
+    public BulkCommand getCommand() {
+        return bulkCommand.${helper.getBulkVerb(operation)};
+    }
+}
