@@ -40,12 +40,7 @@ public class ${name} extends AbstractRequest {
     }
 
     <#list optionalArguments as arg>
-    public ${name} with${arg.getName()?cap_first}(final ${arg.getType()} ${arg.getName()?uncap_first}) {
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        this.updateQueryParam("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
-        return this;
-    }
-
+${javaHelper.createWithConstructor(arg, name, "NONE")}
     </#list>
 
     @Override

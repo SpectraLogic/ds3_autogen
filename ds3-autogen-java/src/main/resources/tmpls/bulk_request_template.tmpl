@@ -1,4 +1,3 @@
-<#assign baseClassArgs = ["Priority", "WriteOptimization"]>
 /*
  * ******************************************************************************
  *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
@@ -47,49 +46,17 @@ public class ${name} extends BulkRequest {
     }
 
     <#list optionalArguments as arg>
-    <#if baseClassArgs?seq_contains(arg.getName())>
-    @Override
-    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
-        super.with${arg.getName()?cap_first}(${arg.getName()?uncap_first});
-        return this;
-    }
-    <#elseif arg.getName() == "MaxUploadSize">
-    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
-        if (${arg.getName()?uncap_first} > MIN_UPLOAD_SIZE_IN_BYTES) {
-            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.getType(arg)?cap_first}.toString(${arg.getName()?uncap_first}));
-        } else {
-            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", MAX_UPLOAD_SIZE_IN_BYTES);
-        }
-        return this;
-    }
-    <#elseif arg.getType() == "void">
-    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        if (this.${arg.getName()?uncap_first}) {
-            this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
-        } else {
-            this.getQueryParams().remove("${arg.getName()?uncap_first}");
-        }
-        return this;
-    }
-    <#else>
-    public ${name} with${arg.getName()?cap_first}(final ${helper.getType(arg)} ${arg.getName()?uncap_first}) {
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        this.getQueryParams().put("${helper.camelToUnderscore(arg.getName())}", ${helper.argToString(arg)});
-        return this;
-    }
-    </#if>
-
+${javaHelper.createWithConstructor(arg, name, "BULK")}
     </#list>
 
     <#list optionalArguments as arg>
-    <#if baseClassArgs?seq_contains(arg.getName()) == false>
+    <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
     public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
+
     </#if>
     </#list>
-
     @Override
     public BulkCommand getCommand() {
         return bulkCommand.${helper.getBulkVerb(operation)};

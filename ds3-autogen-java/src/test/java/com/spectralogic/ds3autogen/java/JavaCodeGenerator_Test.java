@@ -16,14 +16,10 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.Ds3TypeMapperParser;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.d3autogen.Ds3TypeMapperParserImpl;
+import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
 import org.junit.Rule;
 import org.junit.Test;

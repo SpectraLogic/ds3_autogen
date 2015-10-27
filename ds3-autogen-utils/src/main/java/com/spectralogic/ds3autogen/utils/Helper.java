@@ -41,16 +41,6 @@ public final class Helper {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
     }
 
-    public static String argToString(final Arguments arg) {
-        if (arg.getType().equals("void")) {
-            return "null";
-        } else if (arg.getType().equals("String")) {
-            return StringUtils.uncapitalize(arg.getName());
-        } else {
-            return StringUtils.uncapitalize(arg.getName()) + ".toString()";
-        }
-    }
-
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
         if (requiredArguments.isEmpty()) {
             return "";
@@ -61,7 +51,7 @@ public final class Helper {
         final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + a.getType() + " "
                 + StringUtils.uncapitalize(a.getName())).iterator();
 
-        while(argIter.hasNext()) {
+        while (argIter.hasNext()) {
             argArray.add(argIter.next());
         }
 
