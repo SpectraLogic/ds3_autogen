@@ -40,7 +40,7 @@ public class ${name} extends AbstractRequest {
     }
 
     <#list optionalArguments as arg>
-${javaHelper.createWithConstructor(arg, name, "NONE")}
+${javaHelper.createWithConstructor(arg, name)}
     </#list>
 
     @Override

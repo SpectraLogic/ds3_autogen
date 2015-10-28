@@ -20,7 +20,7 @@ public class JavaHelper_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("Priority", "Priority");
-        final String result = javaHelper.createWithConstructor(arg, "CreatePutJobRequestHandler", "BULK");
+        final String result = javaHelper.createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -36,7 +36,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("long", "MaxUploadSize");
-        final String result = javaHelper.createWithConstructor(arg, "CreatePutJobRequestHandler", "BULK");
+        final String result = javaHelper.createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -53,7 +53,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("void", "FullDetails");
-        final String result = javaHelper.createWithConstructor(arg, "GetJobsRequestHandler", "BULK");
+        final String result = javaHelper.createWithConstructorBulk(arg, "GetJobsRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -66,7 +66,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("String", "Delimiter");
-        final String result = javaHelper.createWithConstructor(arg, "GetBucketRequestHandler", "BULK");
+        final String result = javaHelper.createWithConstructorBulk(arg, "GetBucketRequestHandler");
         assertThat(result, is(expectedResult));
     }
 }

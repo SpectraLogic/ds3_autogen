@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
+import com.spectralogic.ds3autogen.java.utils.TestHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -35,9 +36,13 @@ import java.nio.file.Paths;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class JavaCodeGenerator_Test {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator_Test.class);
+    private static final TestHelper testHelper = TestHelper.getInstance();
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -59,8 +64,10 @@ public class JavaCodeGenerator_Test {
 
         codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
-        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
 
+        assertThat(testHelper.extendsClass("GetObjectRequestHandler", "AbstractRequest", generatedCode), is(true));
     }
 
     @Test
@@ -80,7 +87,10 @@ public class JavaCodeGenerator_Test {
 
         codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
-        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        assertThat(testHelper.extendsClass("GetBucketRequestHandler", "AbstractRequest", generatedCode), is(true));
     }
 
     @Test
@@ -100,7 +110,11 @@ public class JavaCodeGenerator_Test {
 
         codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
 
-        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        assertThat(testHelper.extendsClass("CreatePutJobRequestHandler", "BulkRequest", generatedCode), is(true));
+        assertThat(testHelper.hasMethod("getCommand", "BulkCommand", TestHelper.Scope.PUBLIC, generatedCode), is(true));
     }
 
     @Test

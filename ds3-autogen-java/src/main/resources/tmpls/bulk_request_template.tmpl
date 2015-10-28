@@ -46,7 +46,7 @@ public class ${name} extends BulkRequest {
     }
 
     <#list optionalArguments as arg>
-${javaHelper.createWithConstructor(arg, name, "BULK")}
+${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
 
     <#list optionalArguments as arg>

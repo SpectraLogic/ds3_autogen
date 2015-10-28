@@ -22,49 +22,34 @@ public class JavaHelper {
         return bulkBaseClassArgs.contains(name);
     }
 
-    public static String createWithConstructor(
-            final Arguments arg,
-            final String requestName,
-            final String specialCase) {
-        if (specialCase.equals("NONE")) {
-            return createWithConstructor(arg, requestName);
-        } else if (specialCase.equals("BULK")) {
-            return createWithConstructorBulk(arg, requestName);
-        } else {
-            return null;
-        }
-    }
-
-    private static String createWithConstructor(final Arguments arg, final String requestName) {
-        String constructor = new String();
+    public static String createWithConstructor(final Arguments arg, final String requestName) {
+        final StringBuilder stringBuilder = new StringBuilder();
         if (arg.getType().equals("void")) {
-            constructor += voidWithConstructor(arg, requestName);
+            stringBuilder.append(voidWithConstructor(arg, requestName));
         } else {
-            constructor += withConstructor(arg, requestName);
+            stringBuilder.append(withConstructor(arg, requestName));
         }
 
-        constructor += indent(2) + "return this;\n"
-                + indent(1) + "}\n";
-        return constructor;
+        stringBuilder.append(indent(2) + "return this;\n" + indent(1) + "}\n");
+        return stringBuilder.toString();
     }
 
-    private static String createWithConstructorBulk(final Arguments arg, final String requestName) {
-        String constructor = new String();
+    public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
+        final StringBuilder stringBuilder = new StringBuilder();
         if (bulkBaseClassArgs.contains(arg.getName())) {
-            constructor += indent(1) + "@Override\n"
+            stringBuilder.append(indent(1) + "@Override\n"
                     + withConstructorFirstLine(arg, requestName)
-                    + indent(2) + "super.with" + capFirst(arg.getName()) + "(" + uncapFirst(arg.getName()) + ");\n";
+                    + indent(2) + "super.with" + capFirst(arg.getName()) + "(" + uncapFirst(arg.getName()) + ");\n");
         } else if (arg.getName().equals("MaxUploadSize")) {
-            constructor += maxUploadSizeWithConstructor(arg, requestName);
+            stringBuilder.append(maxUploadSizeWithConstructor(arg, requestName));
         } else if (arg.getType().equals("void")) {
-            constructor += voidWithConstructor(arg, requestName);
+            stringBuilder.append(voidWithConstructor(arg, requestName));
         } else {
-            constructor += withConstructor(arg, requestName);
+            stringBuilder.append(withConstructor(arg, requestName));
         }
 
-        constructor += indent(2) + "return this;\n"
-                + indent(1) + "}\n";
-        return constructor;
+        stringBuilder.append(indent(2) + "return this;\n" + indent(1) + "}\n");
+        return stringBuilder.toString();
     }
 
     private static String withConstructor(final Arguments arg, final String requestName) {
@@ -113,14 +98,14 @@ public class JavaHelper {
     }
 
     private static String indent(final int depth) {
-        String curIndent = new String();
+        StringBuilder stringBuilder = new StringBuilder();
         if (depth <= 0) {
             return null;
         }
         for (int i = 0; i < depth; i++) {
-            curIndent += indent;
+            stringBuilder.append(indent);
         }
-        return curIndent;
+        return stringBuilder.toString();
     }
 
     public static String argToString(final Arguments arg) {
@@ -135,11 +120,11 @@ public class JavaHelper {
         }
     }
 
-    private static String capFirst(final String str) {
+    public static String capFirst(final String str) {
         return StringUtils.capitalize(str);
     }
 
-    private static String uncapFirst(final String str) {
+    public static String uncapFirst(final String str) {
         return StringUtils.uncapitalize(str);
     }
 }
