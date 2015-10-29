@@ -17,52 +17,48 @@
 
 package ${packageName};
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 <#list imports as import>
 import ${import};
 </#list>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends BulkRequest {
 
-    // Variables
-    <#list requiredArguments as arg>
-    final private ${arg.getType()} ${arg.getName()?uncap_first};
-    </#list>
     <#list optionalArguments as arg>
-    private ${arg.getType()} ${arg.getName()?uncap_first};
+    <#if arg.getName() == "MaxUploadSize">
+    private static final String MAX_UPLOAD_SIZE_IN_BYTES = "100000000000";
+    public static final int MIN_UPLOAD_SIZE_IN_BYTES = 10485760;
+    </#if>
+    </#list>
+
+    <#list optionalArguments as arg>
+    <#if arg.getType() == "void">
+    private boolean ${arg.getName()};
+    </#if>
     </#list>
 
     // Constructor
-    public ${name}(${helper.constructorArgs(requiredArguments)}) {
-        <#list requiredArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
+    public ${name}(final String bucket, final List<Ds3Object> objects, ${helper.constructorArgs(requiredArguments)}) throws XmlProcessingException {
+        super(bucket, objects);
+        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
     }
 
     <#list optionalArguments as arg>
-${javaHelper.createWithConstructor(arg, name)}
+${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
 
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.${helper.getHttpVerb(verb, action)};
-    }
-
-    @Override
-    public String getPath() {
-        return ${path};
-    }
-
-    <#list requiredArguments as arg>
-    public ${arg.getType()} get${arg.getName()?cap_first}() {
-        return this.${arg.getName()?uncap_first};
-    }
-
-    </#list>
     <#list optionalArguments as arg>
-    public ${arg.getType()} get${arg.getName()?cap_first}() {
+    <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
+    public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
 
+    </#if>
     </#list>
+    @Override
+    public BulkCommand getCommand() {
+        return bulkCommand.${helper.getBulkVerb(operation)};
+    }
 }

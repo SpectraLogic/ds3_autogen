@@ -17,7 +17,10 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Action;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -38,14 +41,6 @@ public final class Helper {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
     }
 
-    public static String argToString(final Arguments arg) {
-        if (arg.getType().equals("String")) {
-            return StringUtils.uncapitalize(arg.getName());
-        } else {
-            return StringUtils.uncapitalize(arg.getName()) + ".toString()";
-        }
-    }
-
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
         if (requiredArguments.isEmpty()) {
             return "";
@@ -56,10 +51,50 @@ public final class Helper {
         final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + a.getType() + " "
                 + StringUtils.uncapitalize(a.getName())).iterator();
 
-        while(argIter.hasNext()) {
+        while (argIter.hasNext()) {
             argArray.add(argIter.next());
         }
 
         return String.join(", ", argArray);
+    }
+
+    public static String getHttpVerb(final HttpVerb httpVerb, final Action action) {
+        if(httpVerb != null) {
+            return httpVerb.toString();
+        }
+
+        switch (action) {
+            case BULK_MODIFY:
+                return "PUT";
+            case CREATE:
+                return "PUT";
+            case DELETE:
+                return "DELETE";
+            case LIST:
+                return "GET";
+            case MODIFY:
+                return "PUT";
+            case SHOW:
+                return "GET";
+            default:
+                return null;
+        }
+    }
+
+    public static String getBulkVerb(final Operation operation) {
+        if (operation == Operation.START_BULK_GET) {
+            return "GET";
+        } else if (operation == Operation.START_BULK_PUT) {
+            return "PUT";
+        } else {
+            return null;
+        }
+    }
+
+    public static String getType(final Arguments arg) {
+        if (arg.getType() != null && arg.getType().equals("void")) {
+            return "boolean";
+        }
+        return arg.getType();
     }
 }
