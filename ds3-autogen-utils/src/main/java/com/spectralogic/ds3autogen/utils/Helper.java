@@ -48,7 +48,7 @@ public final class Helper {
 
         final List<String> argArray = new ArrayList<>();
 
-        final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + a.getType() + " "
+        final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + getType(a) + " "
                 + StringUtils.uncapitalize(a.getName())).iterator();
 
         while (argIter.hasNext()) {

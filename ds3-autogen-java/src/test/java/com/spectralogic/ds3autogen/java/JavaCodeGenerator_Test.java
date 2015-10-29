@@ -90,7 +90,12 @@ public class JavaCodeGenerator_Test {
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
 
-        assertThat(testHelper.extendsClass("GetBucketRequestHandler", "AbstractRequest", generatedCode), is(true));
+        final String requestName = "GetBucketRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("Delimiter", "String", requestName, generatedCode, true), is(true));
+        assertThat(testHelper.isOptParamOfType("Marker", "String", requestName, generatedCode, true), is(true));
+        assertThat(testHelper.isOptParamOfType("MaxKeys", "int", requestName, generatedCode, true), is(true));
+        assertThat(testHelper.isOptParamOfType("Prefix", "String", requestName, generatedCode, true), is(true));
     }
 
     @Test
@@ -113,8 +118,40 @@ public class JavaCodeGenerator_Test {
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
 
-        assertThat(testHelper.extendsClass("CreatePutJobRequestHandler", "BulkRequest", generatedCode), is(true));
+        final String requestName = "CreatePutJobRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "BulkRequest", generatedCode), is(true));
         assertThat(testHelper.hasMethod("getCommand", "BulkCommand", TestHelper.Scope.PUBLIC, generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("MaxUploadSize", "long", requestName, generatedCode, true), is(true));
+        assertThat(testHelper.isOptParamOfType("Priority", "Priority", requestName, generatedCode, true), is(true));
+        assertThat(testHelper.isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, true), is(true));
+    }
+
+    @Test
+    public void physicalPlacementRequestHandler() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/VerifyPhysicalPlacementForObjectsRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/verifyPhysicalPlacementRequest.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        final String requestName = "VerifyPhysicalPlacementForObjectsRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("FullDetails", "boolean", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("StorageDomainId", "UUID", requestName, generatedCode, false), is(true));
     }
 
     @Test
