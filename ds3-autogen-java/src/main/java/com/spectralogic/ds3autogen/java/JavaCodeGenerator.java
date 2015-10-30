@@ -111,13 +111,13 @@ public class JavaCodeGenerator implements CodeGenerator {
         return template;
     }
 
-    private boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
+    private static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null && (
                 ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
                 || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT);
     }
 
-    private boolean isBulkRequest(final Ds3Request ds3Request) {
+    private static boolean isBulkRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null && (
                 ds3Request.getOperation() == Operation.START_BULK_GET
                 || ds3Request.getOperation() == Operation.START_BULK_PUT);
