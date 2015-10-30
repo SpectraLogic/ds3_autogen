@@ -102,6 +102,8 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template template;
         if (isBulkRequest(ds3Request)) {
             template = config.getTemplate("bulk_request_template.tmpl");
+        } else if (isMultiFileDelete(ds3Request)) {
+            template = config.getTemplate("multi_file_delete_request_template.tmpl");
         } else {
             template = config.getTemplate("request_template.tmpl");
         }
@@ -113,5 +115,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         return ds3Request.getOperation() != null && (
                 ds3Request.getOperation() == Operation.START_BULK_GET
                 || ds3Request.getOperation() == Operation.START_BULK_PUT);
+    }
+
+    private static boolean isMultiFileDelete(final Ds3Request ds3Request) {
+        return ds3Request.getName().endsWith("DeleteObjectsRequestHandler");
     }
 }
