@@ -102,6 +102,8 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template template;
         if (isBulkRequest(ds3Request)) {
             template = config.getTemplate("bulk_request_template.tmpl");
+        } else if (isPhysicalPlacementRequest(ds3Request)) {
+            template = config.getTemplate("physical_placement_request_template.tmpl");
         } else {
             template = config.getTemplate("request_template.tmpl");
         }
@@ -109,7 +111,13 @@ public class JavaCodeGenerator implements CodeGenerator {
         return template;
     }
 
-    private boolean isBulkRequest(final Ds3Request ds3Request) {
+    private static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null && (
+                ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
+                || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT);
+    }
+
+    private static boolean isBulkRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null && (
                 ds3Request.getOperation() == Operation.START_BULK_GET
                 || ds3Request.getOperation() == Operation.START_BULK_PUT);

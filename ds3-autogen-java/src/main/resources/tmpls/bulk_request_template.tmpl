@@ -35,7 +35,7 @@ public class ${name} extends BulkRequest {
 
     <#list optionalArguments as arg>
     <#if arg.getType() == "void">
-    private boolean ${arg.getName()};
+    private boolean ${arg.getName()?uncap_first};
     </#if>
     </#list>
 
