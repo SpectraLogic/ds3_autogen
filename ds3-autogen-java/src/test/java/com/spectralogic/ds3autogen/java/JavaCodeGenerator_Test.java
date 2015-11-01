@@ -176,6 +176,10 @@ public class JavaCodeGenerator_Test {
 
         final String requestName = "DeleteObjectsRequestHandler";
         assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("RollBack", "boolean", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("Quiet", "boolean", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Objects", "List<String>", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Delete", "boolean", requestName, generatedCode, false), is(false));
     }
 
     @Test
