@@ -155,6 +155,30 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void multiFileDeleteHandler() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/DeleteObjectsRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/multiFileDeleteRequestHandler.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        final String requestName = "DeleteObjectsRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+    }
+
+    @Test
     public void wholeXmlDoc() throws IOException, ParserException {
         final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
