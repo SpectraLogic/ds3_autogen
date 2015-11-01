@@ -47,7 +47,7 @@ public class JavaCodeGenerator_Test {
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    //@Test
+    @Test
     public void singleRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/GetObjectRequestHandler.java");
@@ -70,7 +70,7 @@ public class JavaCodeGenerator_Test {
         assertThat(testHelper.extendsClass("GetObjectRequestHandler", "AbstractRequest", generatedCode), is(true));
     }
 
-    //@Test
+    @Test
     public void getBucket() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/GetBucketRequestHandler.java");
@@ -93,7 +93,7 @@ public class JavaCodeGenerator_Test {
         assertThat(testHelper.extendsClass("GetBucketRequestHandler", "AbstractRequest", generatedCode), is(true));
     }
 
-    //@Test
+    @Test
     public void bulkRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/CreatePutJobRequestHandler.java");
@@ -141,7 +141,7 @@ public class JavaCodeGenerator_Test {
         assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
     }
 
-    //@Test
+    @Test
     public void getObjectHandlers() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/GetObjectRequestHandler.java");
@@ -165,7 +165,7 @@ public class JavaCodeGenerator_Test {
         assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
     }
 
-    //@Test
+    @Test
     public void wholeXmlDoc() throws IOException, ParserException {
         final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

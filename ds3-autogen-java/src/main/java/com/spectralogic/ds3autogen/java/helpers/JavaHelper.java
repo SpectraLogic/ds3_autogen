@@ -1,5 +1,6 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
@@ -122,6 +123,20 @@ public class JavaHelper {
         } else {
             return uncapFirst(arg.getName()) + ".toString()";
         }
+    }
+
+    public static String argTypeList(final ImmutableList<Arguments> arguments) {
+        if (arguments.isEmpty()) {
+            return "";
+        }
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < arguments.size(); i++) {
+            stringBuilder.append(arguments.get(i).getType());
+            if (i < arguments.size() - 1) {
+                stringBuilder.append(", ");
+            }
+        }
+        return stringBuilder.toString();
     }
 
     public static String capFirst(final String str) {

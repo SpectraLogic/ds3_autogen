@@ -44,7 +44,7 @@ public class ${name} extends AbstractRequest {
     // Constructor
 
     /**
-     * @deprecated use {@link #${name}()} instead //TODO add argsTypeList to JavaHelper to destinguish constructor fingerprint
+     * @deprecated use {@link #${name}(${javaHelper.argTypeList(requiredArguments)}, ${javaHelper.argTypeList(optionalArguments)}, long, SeekableChannel)} instead
      */
     @Deprecated
     public ${name}(${helper.constructorArgs(requiredArguments)}, final long size, final SeekableChannel channel) {
@@ -53,6 +53,7 @@ public class ${name} extends AbstractRequest {
         </#list>
         this.size = size;
         this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
     }
 
     public ${name}(${helper.constructorArgs(requiredArguments)}, ${helper.constructorArgs(optionalArguments)}, final long size, final SeekableChannel channel) {
@@ -64,6 +65,7 @@ public class ${name} extends AbstractRequest {
         </#list>
         this.size = size;
         this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
 
         <#list optionalArguments as arg>
         ${javaHelper.putQueryParamLine(arg)}
@@ -100,6 +102,21 @@ ${javaHelper.createWithConstructor(arg, name)}
         return ${path};
     }
 
+    @Override
+    public Checksum getChecksum() {
+        return this.checksum;
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
+    }
+
+    @Override
+    public InputStream getStream() {
+        return this.stream;
+    }
+
     <#list requiredArguments as arg>
     public ${arg.getType()} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
@@ -112,4 +129,7 @@ ${javaHelper.createWithConstructor(arg, name)}
     }
 
     </#list>
+    public SeekableByteChannel getChannel() {
+        return this.channel;
+    }
 }
