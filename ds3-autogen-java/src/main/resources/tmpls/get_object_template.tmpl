@@ -46,7 +46,7 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     <#list requiredArguments as arg>
-    final private ${arg.getType()} ${arg.getName()?uncap_first};
+    private final ${arg.getType()} ${arg.getName()?uncap_first};
     </#list>
     <#list optionalArguments as arg>
     private ${arg.getType()} ${arg.getName()?uncap_first};
@@ -83,7 +83,7 @@ public class ${name} extends AbstractRequest {
     <#list optionalArguments as arg>
 ${javaHelper.createWithConstructor(arg, name)}
     </#list>
-    public GetObjectRequest withByteRange(final Range byteRange) {
+    public ${name} withByteRange(final Range byteRange) {
         this.byteRange = byteRange;
         if (byteRange != null) {
             this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
@@ -127,7 +127,7 @@ ${javaHelper.createWithConstructor(arg, name)}
         return this.byteRange;
     }
 
-    public WritableByteChannel getDestinationChannel() {
+    public WritableByteChannel getChannel() {
         return this.channel;
     }
 }

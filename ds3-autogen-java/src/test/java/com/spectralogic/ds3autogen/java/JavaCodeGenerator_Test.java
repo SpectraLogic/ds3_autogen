@@ -176,6 +176,12 @@ public class JavaCodeGenerator_Test {
 
         final String requestName = "CreateObjectRequestHandler";
         assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Channel", "SeekableByteChannel", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Size", "long", requestName, generatedCode, false), is(true));
     }
 
     @Test
@@ -200,6 +206,13 @@ public class JavaCodeGenerator_Test {
 
         final String requestName = "GetObjectRequestHandler";
         assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.hasStaticMethod("buildRangeHeaderText", "String", TestHelper.Scope.PRIVATE, generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("ByteRange", "Range", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Channel", "WritableByteChannel", requestName, generatedCode, false), is(true));
     }
 
     @Test

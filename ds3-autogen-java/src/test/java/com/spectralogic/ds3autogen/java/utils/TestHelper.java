@@ -27,6 +27,14 @@ public class TestHelper {
         return code.contains(scope.toString().toLowerCase() + " " + returnType + " " + methodName + "(");
     }
 
+    public static boolean hasStaticMethod(
+            final String methodName,
+            final String returnType,
+            final Scope scope,
+            final String code) {
+        return code.contains(scope.toString().toLowerCase() + " static " + returnType + " " + methodName + "(");
+    }
+
     //Checks if a parameter is of the specified type in the class constructor, get method,
     //and within the class parameter list.  It only checks the constructor if the parameter is inherited
     public static boolean isReqParamOfType(
