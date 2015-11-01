@@ -155,6 +155,67 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void createObjectHandlers() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/CreateObjectRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/createObjectRequestHandler.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        final String requestName = "CreateObjectRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Channel", "SeekableByteChannel", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Size", "long", requestName, generatedCode, false), is(true));
+    }
+
+    @Test
+    public void getObjectHandlers() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/GetObjectRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/getObjectRequestHandler.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        final String requestName = "GetObjectRequestHandler";
+        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
+        assertThat(testHelper.hasStaticMethod("buildRangeHeaderText", "String", TestHelper.Scope.PRIVATE, generatedCode), is(true));
+        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isOptParamOfType("ByteRange", "Range", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
+        assertThat(testHelper.isReqParamOfType("Channel", "WritableByteChannel", requestName, generatedCode, false), is(true));
+    }
+
+    @Test
     public void wholeXmlDoc() throws IOException, ParserException {
         final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
