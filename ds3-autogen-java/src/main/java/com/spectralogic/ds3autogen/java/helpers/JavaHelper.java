@@ -61,9 +61,9 @@ public class JavaHelper {
     private static String maxUploadSizeWithConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + "if (" + uncapFirst(arg.getName()) + " > MIN_UPLOAD_SIZE_IN_BYTES) {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), argToString(arg))
+                + indent(3) + putQueryParamLine(arg.getName(), argToString(arg)) + "\n"
                 + indent(2) + "} else {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), "MAX_UPLOAD_SIZE_IN_BYTES")
+                + indent(3) + putQueryParamLine(arg.getName(), "MAX_UPLOAD_SIZE_IN_BYTES") + "\n"
                 + indent(2) + "}\n";
     }
 
@@ -71,7 +71,7 @@ public class JavaHelper {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + "this." + uncapFirst(arg.getName()) + " = " + uncapFirst(arg.getName()) + ";\n"
                 + indent(2) + "if (this." + uncapFirst(arg.getName()) + ") {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), "null")
+                + indent(3) + putQueryParamLine(arg.getName(), "null") + "\n"
                 + indent(2) + "} else {\n"
                 + indent(3) + removeQueryParamLine(arg.getName())
                 + indent(2) + "}\n";
@@ -89,8 +89,12 @@ public class JavaHelper {
         return "this.getQueryParams().remove(\"" + Helper.camelToUnderscore(name) + "\");\n";
     }
 
+    public static String putQueryParamLine(final Arguments arg) {
+        return putQueryParamLine(arg.getName(), argToString(arg));
+    }
+
     private static String putQueryParamLine(final String name, final String type) {
-        return "this.getQueryParams().put(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");\n";
+        return "this.getQueryParams().put(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");";
     }
 
     private static String updateQueryParamLine(final String name, final String type) {
