@@ -101,7 +101,7 @@ public class JavaCodeGenerator_Test {
     @Test
     public void bulkRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/CreatePutJobRequestHandler.java");
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/CreatePutJobRequestHandler.java");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
@@ -130,7 +130,7 @@ public class JavaCodeGenerator_Test {
     @Test
     public void physicalPlacementRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/VerifyPhysicalPlacementForObjectsRequestHandler.java");
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/VerifyPhysicalPlacementForObjectsRequestHandler.java");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
@@ -158,7 +158,6 @@ public class JavaCodeGenerator_Test {
     public void multiFileDeleteHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/DeleteObjectsRequestHandler.java");
-
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
@@ -187,7 +186,6 @@ public class JavaCodeGenerator_Test {
     public void createObjectHandlers() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/CreateObjectRequestHandler.java");
-
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
