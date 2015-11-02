@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
@@ -122,14 +123,7 @@ public class JavaHelper {
     }
 
     public static String argsToList(final List<Arguments> arguments) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < arguments.size(); i++) {
-            stringBuilder.append(uncapFirst(arguments.get(i).getName()));
-            if (i < arguments.size() - 1) {
-                stringBuilder.append(", ");
-            }
-        }
-        return stringBuilder.toString();
+        return arguments.stream().map(i -> uncapFirst(i.getName())).collect(Collectors.joining(", "));
     }
 
     public static ImmutableList<Arguments> removeArgument(final List<Arguments> arguments, final String name) {
