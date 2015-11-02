@@ -97,4 +97,12 @@ public class TestHelper {
         }
         return null;
     }
+
+    public static boolean hasImport(final String importName, final String code) {
+        return code.contains("import " + importName + ";");
+    }
+
+    public static boolean isOfPackage(final String packageName, final String code) {
+        return code.contains("package " + packageName + ";");
+    }
 }

@@ -18,6 +18,15 @@
 package ${packageName};
 
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.delete.Delete;
+import com.spectralogic.ds3client.models.delete.DeleteObject;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 <#list imports as import>
 import ${import};
 </#list>
