@@ -95,4 +95,23 @@ public class JavaHelper_Test {
         final String result = javaHelper.argsToList(arguments);
         assertThat(result, is(expectedResult));
     }
+
+    @Test
+    public void getType() {
+        assertThat(javaHelper.getType(new Arguments("void",    "test")), is("boolean"));
+        assertThat(javaHelper.getType(new Arguments("Integer", "test")), is("int"));
+        assertThat(javaHelper.getType(new Arguments("long",    "test")), is("long"));
+        assertThat(javaHelper.getType(new Arguments(null,      "test")), is(""));
+    }
+
+    @Test
+    public void constructorArgs() {
+        final String expectedResult = "final Type1 arg1, final Type2 arg2, final Type3 arg3";
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"),
+                new Arguments("Type3", "Arg3"));
+        final String result = javaHelper.constructorArgs(arguments);
+        assertThat(result, is(expectedResult));
+    }
 }
