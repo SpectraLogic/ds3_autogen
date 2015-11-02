@@ -42,8 +42,7 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private static final String ROOT_PACKAGE = "com.spectralogic.ds3client";
     private static final String COMMANDS_PACKAGE = ROOT_PACKAGE + ".commands";
-    private static final String SPECTRADS3_ROOT_PACKAGE = "com.spectralogic.spectrads3";
-    private static final String SPECTRADS3_COMMANDS_PACKAGE = SPECTRADS3_ROOT_PACKAGE + ".commands";
+    private static final String SPECTRADS3_COMMANDS_PACKAGE = COMMANDS_PACKAGE + ".spectrads3";
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
@@ -97,7 +96,7 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     }
 
-    private Path getPath(Ds3Request ds3Request, Request request) {
+    private Path getPath(final Ds3Request ds3Request, final Request request) {
         if (ds3Request.getClassification() == Classification.spectrads3) {
             return destDir.resolve(baseProjectPath.resolve(Paths.get(SPECTRADS3_COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
         } else {

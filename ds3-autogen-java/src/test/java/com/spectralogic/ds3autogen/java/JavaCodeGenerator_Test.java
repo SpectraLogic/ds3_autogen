@@ -101,7 +101,7 @@ public class JavaCodeGenerator_Test {
     @Test
     public void bulkRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/spectrads3/commands/CreatePutJobRequestHandler.java");
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/CreatePutJobRequestHandler.java");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
@@ -130,7 +130,7 @@ public class JavaCodeGenerator_Test {
     @Test
     public void physicalPlacementRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/spectrads3/commands/VerifyPhysicalPlacementForObjectsRequestHandler.java");
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/VerifyPhysicalPlacementForObjectsRequestHandler.java");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
