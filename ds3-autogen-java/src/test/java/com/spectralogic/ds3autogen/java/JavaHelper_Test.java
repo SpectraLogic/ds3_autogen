@@ -4,6 +4,9 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -67,6 +70,17 @@ public class JavaHelper_Test {
                 "    }\n";
         final Arguments arg = new Arguments("String", "Delimiter");
         final String result = javaHelper.createWithConstructorBulk(arg, "GetBucketRequestHandler");
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void argsToList() {
+        final String expectedResult = "arg1, arg2, arg3";
+        final List<Arguments> arguments = Arrays.asList(
+                new Arguments("type1", "Arg1"),
+                new Arguments("type1", "Arg2"),
+                new Arguments("type1", "Arg3"));
+        final String result = javaHelper.argsToList(arguments);
         assertThat(result, is(expectedResult));
     }
 }
