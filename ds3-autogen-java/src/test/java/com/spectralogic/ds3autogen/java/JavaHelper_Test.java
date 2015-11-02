@@ -1,5 +1,6 @@
 package com.spectralogic.ds3autogen.java;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import org.junit.Test;
@@ -57,6 +58,17 @@ public class JavaHelper_Test {
                 "    }\n";
         final Arguments arg = new Arguments("void", "FullDetails");
         final String result = javaHelper.createWithConstructorBulk(arg, "GetJobsRequestHandler");
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void argTypeList() {
+        final String expectedResult = "Type1, Type2, Type3";
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "arg1"),
+                new Arguments("Type2", "arg2"),
+                new Arguments("Type3", "arg3"));
+        final String result = javaHelper.argTypeList(arguments);
         assertThat(result, is(expectedResult));
     }
 
