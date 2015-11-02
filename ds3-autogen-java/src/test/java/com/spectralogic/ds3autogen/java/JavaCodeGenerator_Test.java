@@ -33,16 +33,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class JavaCodeGenerator_Test {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator_Test.class);
-    private static final TestHelper testHelper = TestHelper.getInstance();
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -67,7 +66,7 @@ public class JavaCodeGenerator_Test {
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
 
-        assertThat(testHelper.extendsClass("GetObjectRequestHandler", "AbstractRequest", generatedCode), is(true));
+        assertTrue(extendsClass("GetObjectRequestHandler", "AbstractRequest", generatedCode));
     }
 
     @Test
@@ -91,11 +90,13 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         final String requestName = "GetBucketRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
-        assertThat(testHelper.isOptParamOfType("Delimiter", "String", requestName, generatedCode, true), is(true));
-        assertThat(testHelper.isOptParamOfType("Marker", "String", requestName, generatedCode, true), is(true));
-        assertThat(testHelper.isOptParamOfType("MaxKeys", "int", requestName, generatedCode, true), is(true));
-        assertThat(testHelper.isOptParamOfType("Prefix", "String", requestName, generatedCode, true), is(true));
+        assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(isOptParamOfType("Delimiter", "String", requestName, generatedCode, true));
+        assertTrue(isOptParamOfType("Marker", "String", requestName, generatedCode, true));
+        assertTrue(isOptParamOfType("MaxKeys", "int", requestName, generatedCode, true));
+        assertTrue(isOptParamOfType("Prefix", "String", requestName, generatedCode, true));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
     }
 
     @Test
@@ -118,13 +119,22 @@ public class JavaCodeGenerator_Test {
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
 
+        //TODO: check out writeOptimization
+
         final String requestName = "CreatePutJobRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "BulkRequest", generatedCode), is(true));
-        assertThat(testHelper.hasMethod("getCommand", "BulkCommand", TestHelper.Scope.PUBLIC, generatedCode), is(true));
-        assertThat(testHelper.isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("MaxUploadSize", "long", requestName, generatedCode, true), is(true));
-        assertThat(testHelper.isOptParamOfType("Priority", "Priority", requestName, generatedCode, true), is(true));
-        assertThat(testHelper.isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, true), is(true));
+        assertTrue(extendsClass(requestName, "BulkRequest", generatedCode));
+        assertTrue(hasMethod("getCommand", "BulkCommand", TestHelper.Scope.PUBLIC, generatedCode));
+        assertTrue(isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("MaxUploadSize", "long", requestName, generatedCode, true));
+        assertTrue(isOptParamOfType("Priority", "Priority", requestName, generatedCode, true));
+        assertTrue(isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, true));
+
+        assertTrue(hasImport("com.spectralogic.s3.server.request.rest.RestOperationType", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Priority", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", generatedCode));
+        //assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.WriteOptimization", generatedCode));
     }
 
     @Test
@@ -148,10 +158,14 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         final String requestName = "VerifyPhysicalPlacementForObjectsRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
-        assertThat(testHelper.isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("FullDetails", "boolean", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("StorageDomainId", "UUID", requestName, generatedCode, false), is(true));
+        assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(isReqParamOfType("Operation", "RestOperationType", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("FullDetails", "boolean", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, generatedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.s3.server.request.rest.RestOperationType", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
+        assertTrue(hasImport("java.util.UUID", generatedCode));
     }
 
     @Test
@@ -175,11 +189,21 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         final String requestName = "DeleteObjectsRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
-        assertThat(testHelper.isOptParamOfType("RollBack", "boolean", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("Quiet", "boolean", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("Objects", "List<String>", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("Delete", "boolean", requestName, generatedCode, false), is(false));
+        assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(isOptParamOfType("RollBack", "boolean", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("Quiet", "boolean", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<String>", requestName, generatedCode, false));
+        assertFalse(isReqParamOfType("Delete", "boolean", requestName, generatedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Contents", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.delete.Delete", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.delete.DeleteObject", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", generatedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", generatedCode));
+        assertTrue(hasImport("java.io.InputStream", generatedCode));
+        assertTrue(hasImport("java.util.ArrayList", generatedCode));
+        assertTrue(hasImport("java.util.List", generatedCode));
     }
 
     @Test
@@ -203,13 +227,19 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         final String requestName = "CreateObjectRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
-        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("Channel", "SeekableByteChannel", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("Size", "long", requestName, generatedCode, false), is(true));
+        assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(isOptParamOfType("Job", "UUID", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("Offset", "long", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("ObjectName", "String", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Channel", "SeekableByteChannel", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Size", "long", requestName, generatedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Checksum", generatedCode));
+        assertTrue(hasImport("java.io.InputStream", generatedCode));
+        assertTrue(hasImport("java.nio.channels.SeekableByteChannel", generatedCode));
+        assertTrue(hasImport("java.util.UUID", generatedCode));
     }
 
     @Test
@@ -233,14 +263,19 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         final String requestName = "GetObjectRequestHandler";
-        assertThat(testHelper.extendsClass(requestName, "AbstractRequest", generatedCode), is(true));
-        assertThat(testHelper.hasStaticMethod("buildRangeHeaderText", "String", TestHelper.Scope.PRIVATE, generatedCode), is(true));
-        assertThat(testHelper.isOptParamOfType("Job", "UUID", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("Offset", "long", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isOptParamOfType("ByteRange", "Range", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("BucketName", "String", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("ObjectName", "String", requestName, generatedCode, false), is(true));
-        assertThat(testHelper.isReqParamOfType("Channel", "WritableByteChannel", requestName, generatedCode, false), is(true));
+        assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(hasStaticMethod("buildRangeHeaderText", "String", TestHelper.Scope.PRIVATE, generatedCode));
+        assertTrue(isOptParamOfType("Job", "UUID", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("Offset", "long", requestName, generatedCode, false));
+        assertTrue(isOptParamOfType("ByteRange", "Range", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("ObjectName", "String", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, generatedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
+        assertTrue(hasImport("org.apache.http.entity.ContentType", generatedCode));
+        assertTrue(hasImport("java.nio.channels.WritableByteChannel", generatedCode));
+        assertTrue(hasImport("java.util.UUID", generatedCode));
     }
 
     @Test
