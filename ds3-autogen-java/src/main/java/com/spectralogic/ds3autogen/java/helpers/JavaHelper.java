@@ -32,16 +32,14 @@ public class JavaHelper {
             stringBuilder.append(withConstructor(arg, requestName));
         }
 
-        stringBuilder.append(indent(2) + "return this;\n" + indent(1) + "}\n");
+        stringBuilder.append(indent(2)).append("return this;\n").append(indent(1)).append("}\n");
         return stringBuilder.toString();
     }
 
     public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
         final StringBuilder stringBuilder = new StringBuilder();
         if (bulkBaseClassArgs.contains(arg.getName())) {
-            stringBuilder.append(indent(1) + "@Override\n"
-                    + withConstructorFirstLine(arg, requestName)
-                    + indent(2) + "super.with" + capFirst(arg.getName()) + "(" + uncapFirst(arg.getName()) + ");\n");
+            stringBuilder.append(indent(1)).append("@Override\n").append(withConstructorFirstLine(arg, requestName)).append(indent(2)).append("super.with").append(capFirst(arg.getName())).append("(").append(uncapFirst(arg.getName())).append(");\n");
         } else if (arg.getName().equals("MaxUploadSize")) {
             stringBuilder.append(maxUploadSizeWithConstructor(arg, requestName));
         } else if (arg.getType().equals("void")) {
@@ -50,7 +48,7 @@ public class JavaHelper {
             stringBuilder.append(withConstructor(arg, requestName));
         }
 
-        stringBuilder.append(indent(2) + "return this;\n" + indent(1) + "}\n");
+        stringBuilder.append(indent(2)).append("return this;\n").append(indent(1)).append("}\n");
         return stringBuilder.toString();
     }
 
@@ -111,14 +109,16 @@ public class JavaHelper {
     }
 
     public static String argToString(final Arguments arg) {
-        if (arg.getType().equals("void")) {
-            return "null";
-        } else if (arg.getType().equals("String")) {
-            return uncapFirst(arg.getName());
-        } else if (arg.getType().equals("Integer") || arg.getType().equals("long")) {
-            return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
-        } else {
-            return uncapFirst(arg.getName()) + ".toString()";
+        switch (arg.getType()) {
+            case "void":
+                return "null";
+            case "String":
+                return uncapFirst(arg.getName());
+            case "Integer":
+            case "long":
+                return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
+            default:
+                return uncapFirst(arg.getName()) + ".toString()";
         }
     }
 
