@@ -17,10 +17,7 @@ package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
 import freemarker.template.Configuration;
@@ -45,6 +42,8 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private static final String ROOT_PACKAGE = "com.spectralogic.ds3client";
     private static final String COMMANDS_PACKAGE = ROOT_PACKAGE + ".commands";
+    private static final String SPECTRADS3_ROOT_PACKAGE = "com.spectralogic.spectrads3";
+    private static final String SPECTRADS3_COMMANDS_PACKAGE = SPECTRADS3_ROOT_PACKAGE + ".commands";
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
@@ -86,8 +85,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
 
-        final Request request = RequestConverter.toRequest(ds3Request, ds3TypeMapper, COMMANDS_PACKAGE);
-        final Path requestPath = destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
+        final Request request = getRequest(ds3Request);
+        final Path requestPath = getPath(ds3Request, request);
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());
 
@@ -96,6 +95,22 @@ public class JavaCodeGenerator implements CodeGenerator {
             tmpl.process(request, writer);
         }
 
+    }
+
+    private Path getPath(Ds3Request ds3Request, Request request) {
+        if (ds3Request.getClassification() == Classification.spectrads3) {
+            return destDir.resolve(baseProjectPath.resolve(Paths.get(SPECTRADS3_COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
+        } else {
+            return destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
+        }
+    }
+
+    private Request getRequest(final Ds3Request ds3Request) {
+        if (ds3Request.getClassification() == Classification.spectrads3) {
+            return RequestConverter.toRequest(ds3Request, ds3TypeMapper, SPECTRADS3_COMMANDS_PACKAGE);
+        } else {
+            return RequestConverter.toRequest(ds3Request, ds3TypeMapper, COMMANDS_PACKAGE);
+        }
     }
 
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
