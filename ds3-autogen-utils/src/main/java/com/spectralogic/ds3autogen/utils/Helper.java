@@ -16,16 +16,9 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Action;
-import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public final class Helper {
 
