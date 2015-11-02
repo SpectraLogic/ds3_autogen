@@ -1,0 +1,135 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+// This code is auto-generated, do not modify
+
+package ${packageName};
+
+import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Checksum;
+<#list imports as import>
+import ${import};
+</#list>
+import java.io.InputStream;
+import java.nio.channels.SeekableByteChannel;
+
+public class ${name} extends AbstractRequest {
+
+    // Variables
+    public final static string AMZ_META_HEADER = "x-amz-meta-";
+
+    private final SeekableByteChannel channel;
+    private final InputStream stream;
+    private final long size;
+    <#list requiredArguments as arg>
+    private final ${arg.getType()} ${arg.getName()?uncap_first};
+    </#list>
+    <#list optionalArguments as arg>
+    private ${arg.getType()} ${arg.getName()?uncap_first};
+    </#list>
+    private Checksum checksum = Checksum.none();
+
+    // Constructor
+
+    /**
+     * @deprecated use {@link #${name}(${javaHelper.argTypeList(requiredArguments)}, ${javaHelper.argTypeList(optionalArguments)}, long, SeekableChannel)} instead
+     */
+    @Deprecated
+    public ${name}(${helper.constructorArgs(requiredArguments)}, final long size, final SeekableByteChannel channel) {
+        <#list requiredArguments as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+        this.size = size;
+        this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
+    }
+
+    public ${name}(${helper.constructorArgs(requiredArguments)}, ${helper.constructorArgs(optionalArguments)}, final long size, final SeekableByteChannel channel) {
+        <#list requiredArguments as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+        <#list optionalArguments as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+        this.size = size;
+        this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
+
+        <#list optionalArguments as arg>
+        ${javaHelper.putQueryParamLine(arg)}
+        </#list>
+    }
+
+    <#list optionalArguments as arg>
+${javaHelper.createWithConstructor(arg, name)}
+    </#list>
+
+    public PutObjectRequest withChecksum(final Checksum checksum) {
+        this.checksum = checksum;
+        return this;
+    }
+
+	public PutObjectRequest withMetaData(final String key, final String value) {
+		final String modifiedKey;
+		if (!key.toLowerCase().startsWith(AMZ_META_HEADER)){
+			modifiedKey = AMZ_META_HEADER + key;
+		} else {
+			modifiedKey = key;
+		}
+		this.getHeaders().put(modifiedKey, value);
+		return this;
+	}
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.${helper.getHttpVerb(verb, action)};
+    }
+
+    @Override
+    public String getPath() {
+        return ${path};
+    }
+
+    @Override
+    public Checksum getChecksum() {
+        return this.checksum;
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
+    }
+
+    @Override
+    public InputStream getStream() {
+        return this.stream;
+    }
+
+    <#list requiredArguments as arg>
+    public ${arg.getType()} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+
+    </#list>
+    <#list optionalArguments as arg>
+    public ${arg.getType()} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+
+    </#list>
+    public SeekableByteChannel getChannel() {
+        return this.channel;
+    }
+}
