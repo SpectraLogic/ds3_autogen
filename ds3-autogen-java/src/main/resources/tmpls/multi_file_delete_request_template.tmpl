@@ -27,15 +27,15 @@ public class ${name} extends AbstractRequest {
     // Variables
     private final List<String> objects;
     <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
-    private final ${helper.getType(arg)} ${arg.getName()?uncap_first};
+    private final ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
     </#list>
     <#list optionalArguments as arg>
-    private ${helper.getType(arg)} ${arg.getName()?uncap_first};
+    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
     </#list>
     private boolean quiet = false;
 
     // Constructor
-    public ${name}(${helper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final List<String> objects) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final List<String> objects) {
         <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -43,7 +43,7 @@ public class ${name} extends AbstractRequest {
         this.getQueryParams().put("delete", null);
     }
 
-    public ${name}(${helper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final Iterable<Contents> objs) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final Iterable<Contents> objs) {
         this(${javaHelper.argsToList(javaHelper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
     }
 
@@ -99,13 +99,13 @@ ${javaHelper.createWithConstructor(arg, name)}
     }
 
     <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
-    public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
+    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
 
     </#list>
     <#list optionalArguments as arg>
-    public ${helper.getType(arg)} get${arg.getName()?cap_first}() {
+    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
 

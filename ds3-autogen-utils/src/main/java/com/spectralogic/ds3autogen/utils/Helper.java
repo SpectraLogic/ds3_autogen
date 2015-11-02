@@ -41,23 +41,6 @@ public final class Helper {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
     }
 
-    public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
-        if (requiredArguments.isEmpty()) {
-            return "";
-        }
-
-        final List<String> argArray = new ArrayList<>();
-
-        final Iterator<String> argIter = requiredArguments.stream().map(a -> "final " + getType(a) + " "
-                + StringUtils.uncapitalize(a.getName())).iterator();
-
-        while (argIter.hasNext()) {
-            argArray.add(argIter.next());
-        }
-
-        return String.join(", ", argArray);
-    }
-
     public static String getHttpVerb(final HttpVerb httpVerb, final Action action) {
         if(httpVerb != null) {
             return httpVerb.toString();
@@ -89,12 +72,5 @@ public final class Helper {
         } else {
             return null;
         }
-    }
-
-    public static String getType(final Arguments arg) {
-        if (arg.getType() != null && arg.getType().equals("void")) {
-            return "boolean";
-        }
-        return arg.getType();
     }
 }

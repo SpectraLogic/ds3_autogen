@@ -5,7 +5,9 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +80,7 @@ public class JavaHelper {
     }
 
     private static String withConstructorFirstLine(final Arguments arg, final String requestName) {
-        return indent(1) + "public " + requestName + " with" + capFirst(arg.getName()) + "(final " + Helper.getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
+        return indent(1) + "public " + requestName + " with" + capFirst(arg.getName()) + "(final " + getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
     }
 
     private static String argAssignmentLine(final String name) {
@@ -150,5 +152,31 @@ public class JavaHelper {
 
     public static String uncapFirst(final String str) {
         return StringUtils.uncapitalize(str);
+    }
+
+    public static String getType(final Arguments arg) {
+        if (arg.getType() == null) {
+            return "";
+        }
+
+        switch (arg.getType()) {
+            case "void":
+                return "boolean";
+            case "Integer":
+                return "int";
+            default:
+                return arg.getType();
+        }
+    }
+
+    public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
+        if (requiredArguments.isEmpty()) {
+            return "";
+        }
+
+        return requiredArguments
+                .stream()
+                .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
     }
 }
