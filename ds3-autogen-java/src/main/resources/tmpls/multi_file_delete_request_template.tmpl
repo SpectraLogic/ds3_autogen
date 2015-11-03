@@ -18,6 +18,15 @@
 package ${packageName};
 
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.delete.Delete;
+import com.spectralogic.ds3client.models.delete.DeleteObject;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 <#list imports as import>
 import ${import};
 </#list>
@@ -35,7 +44,7 @@ public class ${name} extends AbstractRequest {
     private boolean quiet = false;
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final List<String> objects) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"), false, true)}final List<String> objects) {
         <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -43,7 +52,7 @@ public class ${name} extends AbstractRequest {
         this.getQueryParams().put("delete", null);
     }
 
-    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"))}, final Iterable<Contents> objs) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"), false, true)}final Iterable<Contents> objs) {
         this(${javaHelper.argsToList(javaHelper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
     }
 

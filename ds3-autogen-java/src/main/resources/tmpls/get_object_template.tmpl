@@ -60,14 +60,14 @@ public class ${name} extends AbstractRequest {
      * @deprecated use {@link #${name}(${javaHelper.argTypeList(requiredArguments)}, ${javaHelper.argTypeList(optionalArguments)}, WritableByteChannel)} instead
      */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(requiredArguments)}, final WritableByteChannel channel) {
+    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}final WritableByteChannel channel) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.channel = channel;
     }
 
-    public ${name}(${javaHelper.constructorArgs(requiredArguments)}, ${javaHelper.constructorArgs(optionalArguments)}, final WritableByteChannel channel) {
+    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}${javaHelper.constructorArgs(optionalArguments, false, true)}final WritableByteChannel channel) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>

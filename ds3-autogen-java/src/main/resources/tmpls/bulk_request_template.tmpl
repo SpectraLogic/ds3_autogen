@@ -40,9 +40,11 @@ public class ${name} extends BulkRequest {
     </#list>
 
     // Constructor
-    public ${name}(final String bucket, final List<Ds3Object> objects, ${javaHelper.constructorArgs(requiredArguments)}) throws XmlProcessingException {
+    public ${name}(final String bucket, final List<Ds3Object> objects${javaHelper.constructorArgs(requiredArguments, true, false)}) throws XmlProcessingException {
         super(bucket, objects);
+        <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
+        </#if>
     }
 
     <#list optionalArguments as arg>

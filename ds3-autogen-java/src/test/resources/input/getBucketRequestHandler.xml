@@ -9,9 +9,7 @@
                         <Param Name="MaxKeys"/>
                         <Param Name="Prefix"/>
                     </OptionalQueryParams>
-                    <RequiredQueryParams>
-                        <Param Name="Test" Type="java.util.UUID" />
-                    </RequiredQueryParams>
+                    <RequiredQueryParams />
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
