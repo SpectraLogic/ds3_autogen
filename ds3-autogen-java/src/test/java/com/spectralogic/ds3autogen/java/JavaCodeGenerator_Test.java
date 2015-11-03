@@ -101,6 +101,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -133,6 +134,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_VERIFY, generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -171,6 +173,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_GET, generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -209,6 +212,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_PUT, generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -247,6 +251,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.VERIFY_PHYSICAL_PLACEMENT, generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -288,6 +293,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -327,6 +333,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
@@ -366,6 +373,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
+        assertTrue(hasCopyright(generatedCode));
     }
 
     @Test
