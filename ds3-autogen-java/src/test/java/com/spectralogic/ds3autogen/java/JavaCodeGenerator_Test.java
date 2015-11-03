@@ -161,14 +161,12 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOptParamOfType("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestName, generatedCode, true));
         assertTrue(isOptParamOfType("Priority", "Priority", requestName, generatedCode, true));
-        assertTrue(isOptParamOfType("WriteOptimization", "WriteOptimization", requestName, generatedCode, true));
 
         assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Priority", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", generatedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.WriteOptimization", generatedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
@@ -202,13 +200,11 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("MaxUploadSize", "long", requestName, generatedCode, true));
         assertTrue(isOptParamOfType("Priority", "Priority", requestName, generatedCode, true));
-        assertTrue(isOptParamOfType("WriteOptimization", "WriteOptimization", requestName, generatedCode, true));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Priority", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", generatedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.WriteOptimization", generatedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
