@@ -124,7 +124,9 @@ public class RequestConverter {
 
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : paramList) {
-            if (ds3Param.getType() != null) {
+            if (ds3Param.getName().equals("Operation")) {
+              //Do not add
+            } else if (ds3Param.getType() != null) {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
             } else {
@@ -159,7 +161,9 @@ public class RequestConverter {
 
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
         for (final Ds3Param ds3Param : paramList) {
-            if (ds3Param.getType() != null) {
+            if (ds3Param.getName().equals("Operation")) {
+                //Do not add
+            } else if (ds3Param.getType() != null) {
                 if (ds3Param.getType().contains(".")) {
                     importsBuilder.add(ds3Param.getType());
                 }

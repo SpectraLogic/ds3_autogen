@@ -1,5 +1,8 @@
 package com.spectralogic.ds3autogen.java.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 
 public class TestHelper {
@@ -73,7 +76,7 @@ public class TestHelper {
             final String requestName,
             final String code) {
         return code.contains("public " + requestName + " with" + JavaHelper.capFirst(paramName)
-                    + "(final " + paramType + " " + JavaHelper.uncapFirst(paramName) + ")");
+                + "(final " + paramType + " " + JavaHelper.uncapFirst(paramName) + ")");
     }
 
     private static boolean doesConstructorContainParam(
@@ -104,5 +107,22 @@ public class TestHelper {
 
     public static boolean isOfPackage(final String packageName, final String code) {
         return code.contains("package " + packageName + ";");
+    }
+
+    public static boolean hasOperation(final Operation operation, final String code) {
+        return code.contains("this.getQueryParams().put(\"operation\", \"" + operation.toString().toLowerCase() + "\");");
+    }
+
+    public static boolean doesNotHaveOperation(final String code) {
+        return !code.contains("this.getQueryParams().put(\"operation\", ");
+    }
+
+
+    public static boolean hasConstructor(
+            final String requestName,
+            final ImmutableList<Arguments> arguments,
+            final String code) {
+        final String expected = "public " + requestName + "(" + JavaHelper.constructorArgs(arguments) + ")";
+        return code.contains(expected);
     }
 }

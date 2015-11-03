@@ -19,6 +19,7 @@ package ${packageName};
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 <#list imports as import>
 import ${import};
@@ -40,14 +41,22 @@ public class ${name} extends BulkRequest {
     </#list>
 
     // Constructor
-    public ${name}(final String bucket, final List<Ds3Object> objects, ${javaHelper.constructorArgs(requiredArguments)}) throws XmlProcessingException {
+    public ${name}(final String bucket, final List<Ds3Object> objects${javaHelper.constructorArgs(requiredArguments, true, false)}) throws XmlProcessingException {
         super(bucket, objects);
+        <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
+        </#if>
     }
 
     <#list optionalArguments as arg>
 ${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
+
+    @Override
+    public ${name} withWriteOptimization(final WriteOptimization writeOptimization) {
+        super.withWriteOptimization(writeOptimization);
+        return this;
+    }
 
     <#list optionalArguments as arg>
     <#if javaHelper.isBulkRequestArg(arg.getName()) == false>

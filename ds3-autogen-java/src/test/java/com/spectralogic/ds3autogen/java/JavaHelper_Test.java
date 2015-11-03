@@ -106,12 +106,18 @@ public class JavaHelper_Test {
 
     @Test
     public void constructorArgs() {
-        final String expectedResult = "final Type1 arg1, final Type2 arg2, final Type3 arg3";
+        final String expectedResult1 = "final Type1 arg1, final Type2 arg2, final Type3 arg3";
+        final String expectedResult2 = ", " + expectedResult1;
+        final String expectedResult3 = expectedResult2 + ", ";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
                 new Arguments("Type1", "Arg1"),
                 new Arguments("Type2", "Arg2"),
                 new Arguments("Type3", "Arg3"));
-        final String result = javaHelper.constructorArgs(arguments);
-        assertThat(result, is(expectedResult));
+        final String result1 = javaHelper.constructorArgs(arguments, false, false);
+        final String result2 = javaHelper.constructorArgs(arguments, true, false);
+        final String result3 = javaHelper.constructorArgs(arguments, true, true);
+        assertThat(result1, is(expectedResult1));
+        assertThat(result2, is(expectedResult2));
+        assertThat(result3, is(expectedResult3));
     }
 }

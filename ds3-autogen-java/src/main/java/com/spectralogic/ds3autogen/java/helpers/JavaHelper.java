@@ -167,11 +167,25 @@ public class JavaHelper {
         }
     }
 
-    public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
+    public static String constructorArgs(
+            final ImmutableList<Arguments> requiredArguments,
+            final boolean preComma,
+            final boolean postComma) {
         if (requiredArguments.isEmpty()) {
             return "";
         }
+        final StringBuilder builder = new StringBuilder();
+        if (preComma) {
+            builder.append(", ");
+        }
+        builder.append(constructorArgs(requiredArguments));
+        if (postComma) {
+            builder.append(", ");
+        }
+        return builder.toString();
+    }
 
+    public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
         return requiredArguments
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
