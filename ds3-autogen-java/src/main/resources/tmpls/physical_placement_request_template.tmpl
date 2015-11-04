@@ -8,14 +8,37 @@ import com.spectralogic.ds3client.HttpVerb;
 public class ${name} extends AbstractRequest {
 
     // Variables
+    private final List<String> objects;
+    private final String bucketName;
     <#include "variables.tmpl"/>
 
     // Constructor
-    <#include "constructor.tmpl"/>
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, "Objects", "List<String>"), "BucketName", "String"))}) {
+        this.bucketName = bucketName;
+        this.objects = objects;
+        <#list requiredArguments as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+        <#if operation??>
+        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
+        </#if>
+    }
 
     <#include "with_constructors.tmpl"/>
 
-    <#include "getters_verb_path.tmpl"/>
+    public Stream getContentStream() {
+        //TODO
+    }
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.${helper.getHttpVerb(verb, action)};
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/bucket/" + this.bucketName;
+    }
 
     <#include "getters.tmpl"/>
 }

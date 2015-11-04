@@ -27,7 +27,7 @@ public class ${name} extends AbstractRequest {
     private boolean quiet = false;
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"), false, true)}final List<String> objects) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objects", "List<String>"))}) {
         <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -35,7 +35,7 @@ public class ${name} extends AbstractRequest {
         this.getQueryParams().put("delete", null);
     }
 
-    public ${name}(${javaHelper.constructorArgs(javaHelper.removeArgument(requiredArguments, "Delete"), false, true)}final Iterable<Contents> objs) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
         this(${javaHelper.argsToList(javaHelper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
     }
 
@@ -68,17 +68,9 @@ public class ${name} extends AbstractRequest {
 
     <#include "getters_verb_path.tmpl"/>
 
-    @Override getSize() {
-        return this.size;
-    }
+    ${javaHelper.createGetter("Objects", "List<String>")}
 
-    public List<String> getObjects() {
-        return objects;
-    }
-
-    public boolean getQuiet() {
-        return quiet;
-    }
+    ${javaHelper.createGetter("Quiet", "boolean")}
 
     <#include "getters.tmpl"/>
 }

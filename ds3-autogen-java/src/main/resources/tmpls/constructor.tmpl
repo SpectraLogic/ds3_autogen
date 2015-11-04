@@ -1,4 +1,4 @@
-    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, false)}) {
+    public ${name}(${javaHelper.constructorArgs(requiredArguments)}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>

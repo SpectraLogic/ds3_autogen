@@ -15,9 +15,11 @@
 
 package com.spectralogic.ds3autogen.java;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
 import com.spectralogic.d3autogen.Ds3TypeMapperParserImpl;
 import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.api.models.Operation;
@@ -102,6 +104,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
     @Test
@@ -135,6 +141,13 @@ public class JavaCodeGenerator_Test {
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_VERIFY, generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        //TODO uncomment once payload is understood
+        /*
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
+        */
     }
 
     @Test
@@ -174,6 +187,11 @@ public class JavaCodeGenerator_Test {
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_GET, generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
     @Test
@@ -213,11 +231,34 @@ public class JavaCodeGenerator_Test {
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.START_BULK_PUT, generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
     @Test
-    public void getPhysicalPlacementForObjectsRequestHandler() {
-        //TODO
+    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/GetPhysicalPlacementForObjectsRequestHandler.java");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
+        final Ds3TypeMapper typeMapper = typeParser.getMap();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/getPhysicalPlacementRequest.xml"));
+        final CodeGenerator codeGenerator = new JavaCodeGenerator();
+
+        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+
+        final String generatedCode = new String(outputStream.toByteArray());
+        LOG.info("Generated code:\n" + generatedCode);
+
+        //TODO path should be: "/_rest_/bucket/" + this.bucketName
     }
 
     @Test
@@ -252,6 +293,13 @@ public class JavaCodeGenerator_Test {
         assertFalse(generatedCode.contains("RestOperationType"));
         assertTrue(hasOperation(Operation.VERIFY_PHYSICAL_PLACEMENT, generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        //TODO uncomment once payload is understood
+        /*
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
+        */
     }
 
     @Test
@@ -294,6 +342,11 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<String>", "Objects"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
     @Test
@@ -334,6 +387,19 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("long", "Size"),
+                new Arguments("SeekableByteChannel", "Channel"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
+
+        final ImmutableList.Builder builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.add(new Arguments("UUID", "Job"));
+        builder.add(new Arguments("long", "Offset"));
+        assertTrue(hasConstructor(requestName, builder.build(), generatedCode));
     }
 
     @Test
@@ -374,6 +440,18 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", generatedCode));
         assertTrue(doesNotHaveOperation(generatedCode));
         assertTrue(hasCopyright(generatedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("WritableByteChannel", "Channel"));
+        assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
+
+        final ImmutableList.Builder builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.add(new Arguments("UUID", "Job"));
+        builder.add(new Arguments("long", "Offset"));
+        assertTrue(hasConstructor(requestName, builder.build(), generatedCode));
     }
 
     @Test

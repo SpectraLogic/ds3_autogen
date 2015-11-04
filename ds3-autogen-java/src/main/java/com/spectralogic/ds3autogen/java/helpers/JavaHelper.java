@@ -5,7 +5,9 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,12 @@ public class JavaHelper {
 
         stringBuilder.append(indent(2)).append("return this;\n").append(indent(1)).append("}\n");
         return stringBuilder.toString();
+    }
+
+    public static String createGetter(final String argName, final String argType) {
+        return "public " + argType + " get" + capFirst(argName) + "() {\n"
+                + indent(2) + "return this." + uncapFirst(argName) + ";\n"
+                + indent(1) + "}\n";
     }
 
     public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
@@ -136,8 +144,39 @@ public class JavaHelper {
         return builder.build();
     }
 
+    public static ImmutableList<Arguments> addArgument(
+            final ImmutableList<Arguments> arguments,
+            final ImmutableList<Arguments> additionalArguments) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(arguments);
+        builder.addAll(additionalArguments);
+        return builder.build();
+    }
+
+    public static ImmutableList<Arguments> addArgument(
+            final ImmutableList<Arguments> arguments,
+            final String argName,
+            final String argType) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(arguments);
+        builder.add(new Arguments(argType, argName));
+        return builder.build();
+    }
+
+    public static ImmutableList<Arguments> sortConstructorArgs(final ImmutableList<Arguments> arguments) {
+        final List<Arguments> sortable = new ArrayList<>();
+        sortable.addAll(arguments);
+        Collections.sort(sortable, new CustomComparator());
+
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(sortable);
+        return builder.build();
+    }
+
     public static String argTypeList(final ImmutableList<Arguments> arguments) {
-        return arguments.stream().map(i -> i.getType()).collect(Collectors.joining(", "));
+        return sortConstructorArgs(arguments)
+                .stream()
+                .map(i -> i.getType()).collect(Collectors.joining(", "));
     }
 
     public static String argsToList(final List<Arguments> arguments) {
@@ -167,26 +206,8 @@ public class JavaHelper {
         }
     }
 
-    public static String constructorArgs(
-            final ImmutableList<Arguments> requiredArguments,
-            final boolean preComma,
-            final boolean postComma) {
-        if (requiredArguments.isEmpty()) {
-            return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-        if (preComma) {
-            builder.append(", ");
-        }
-        builder.append(constructorArgs(requiredArguments));
-        if (postComma) {
-            builder.append(", ");
-        }
-        return builder.toString();
-    }
-
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
-        return requiredArguments
+        return sortConstructorArgs(requiredArguments)
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
