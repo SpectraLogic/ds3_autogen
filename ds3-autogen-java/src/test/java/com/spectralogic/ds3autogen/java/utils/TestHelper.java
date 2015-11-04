@@ -117,12 +117,33 @@ public class TestHelper {
         return !code.contains("this.getQueryParams().put(\"operation\", ");
     }
 
-
     public static boolean hasConstructor(
             final String requestName,
             final ImmutableList<Arguments> arguments,
             final String code) {
         final String expected = "public " + requestName + "(" + JavaHelper.constructorArgs(arguments) + ")";
         return code.contains(expected);
+    }
+
+    public static boolean hasCopyright(final String code) {
+        final String copyright =
+                "/*\n" +
+                " * ******************************************************************************\n" +
+                " *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.\n" +
+                " *   Licensed under the Apache License, Version 2.0 (the \"License\"). You may not use\n" +
+                " *   this file except in compliance with the License. A copy of the License is located at\n" +
+                " *\n" +
+                " *   http://www.apache.org/licenses/LICENSE-2.0\n" +
+                " *\n" +
+                " *   or in the \"license\" file accompanying this file.\n" +
+                " *   This file is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR\n" +
+                " *   CONDITIONS OF ANY KIND, either express or implied. See the License for the\n" +
+                " *   specific language governing permissions and limitations under the License.\n" +
+                " * ****************************************************************************\n" +
+                " */\n" +
+                "\n" +
+                "// This code is auto-generated, do not modify";
+
+        return code.replace("\r\n", "\n").contains(copyright);
     }
 }
