@@ -23,8 +23,8 @@ public class ${name} extends BulkRequest {
     </#list>
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, "BucketName", "String"), "Objects", "List<Ds3Object>"))}) throws XmlProcessingException {
-        super(bucket, objects);
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(requiredArguments, "Objects", "List<Ds3Object>"))}) throws XmlProcessingException {
+        super(bucketName, objects);
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>

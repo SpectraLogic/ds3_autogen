@@ -134,7 +134,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     private static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null && (
                 ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
-                || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT);
+                || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
+                || ds3Request.getOperation() == Operation.START_BULK_VERIFY);
     }
 
     private static boolean isBulkRequest(final Ds3Request ds3Request) {

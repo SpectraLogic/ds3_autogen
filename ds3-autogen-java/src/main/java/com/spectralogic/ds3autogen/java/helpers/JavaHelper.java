@@ -2,6 +2,7 @@ package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -210,6 +211,26 @@ public class JavaHelper {
         return sortConstructorArgs(requiredArguments)
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
+    }
+
+    /*
+     * Creates a comma separated list of argument names, while changing one argument name to a specified value
+     */
+    public static String modifiedArgNameList(
+            final ImmutableList<Arguments> arguments,
+            final String modifyArgName, final String toArgName) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final Arguments arg : arguments) {
+            if (arg.getName().equals(modifyArgName)) {
+                builder.add(toArgName);
+            } else {
+                builder.add(uncapFirst(arg.getName()));
+            }
+        }
+        return builder.build()
+                .stream()
+                .map(i -> i)
                 .collect(Collectors.joining(", "));
     }
 }

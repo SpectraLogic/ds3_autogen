@@ -35,20 +35,30 @@ public class ${name} extends AbstractRequest {
     }
 
     public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
-        <#list requiredArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        <#list optionalArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        this.size = size;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
 
-        <#list optionalArguments as arg>
-        ${javaHelper.putQueryParamLine(arg)}
-        </#list>
+        ${name}(${javaHelper.modifiedArgNameList(
+            javaHelper.addArgument(
+                javaHelper.addArgument(
+                    javaHelper.addArgument(
+                        requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "this.stream")})
     }
+
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
+            <#list requiredArguments as arg>
+            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+            </#list>
+            <#list optionalArguments as arg>
+            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+            </#list>
+            this.size = size;
+            this.stream = stream;
+
+            <#list optionalArguments as arg>
+            ${javaHelper.putQueryParamLine(arg)}
+            </#list>
+        }
 
     <#include "with_constructors.tmpl"/>
 

@@ -198,4 +198,15 @@ public class JavaHelper_Test {
         final String result = JavaHelper.createGetter("BucketName", "String");
         assertThat(result, is(expectedResult));
     }
+
+    @Test
+    public void modifiedArgNameList() {
+        final String expectedResult = "Integer.toString(arg1), arg2, arg3";
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"),
+                new Arguments("Type3", "Arg3"));
+        final String result = JavaHelper.modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
+        assertThat(result, is(expectedResult));
+    }
 }

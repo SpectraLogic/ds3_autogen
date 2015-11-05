@@ -146,4 +146,8 @@ public class TestHelper {
 
         return code.replace("\r\n", "\n").contains(copyright);
     }
+
+    public static boolean hasPath(final String path, final String code) {
+        return code.contains("return " + path + ";");
+    }
 }
