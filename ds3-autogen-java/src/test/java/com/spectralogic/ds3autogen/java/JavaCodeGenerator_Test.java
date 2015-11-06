@@ -172,10 +172,17 @@ public class JavaCodeGenerator_Test {
 
         final String requestName = "CreateVerifyJobRequestHandler";
         assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("Priority", "Priority", requestName, generatedCode, true));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Priority", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", generatedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", generatedCode));
+        assertTrue(hasImport("java.io.InputStream", generatedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
@@ -185,7 +192,7 @@ public class JavaCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<String>", "Objects"));
+                new Arguments("List<Ds3Object>", "Objects"));
         assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
@@ -300,12 +307,17 @@ public class JavaCodeGenerator_Test {
         final String requestName = "GetPhysicalPlacementForObjectsRequestHandler";
         assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, generatedCode, false));
-        assertTrue(isReqParamOfType("Objects", "List<String>", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("FullDetails", "boolean", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, generatedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
         assertTrue(hasImport("java.util.UUID", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", generatedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", generatedCode));
+        assertTrue(hasImport("java.io.InputStream", generatedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
@@ -315,7 +327,7 @@ public class JavaCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<String>", "Objects"));
+                new Arguments("List<Ds3Object>", "Objects"));
         assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
@@ -342,13 +354,18 @@ public class JavaCodeGenerator_Test {
         final String requestName = "VerifyPhysicalPlacementForObjectsRequestHandler";
         assertTrue(extendsClass(requestName, "AbstractRequest", generatedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, generatedCode, false));
-        assertTrue(isReqParamOfType("Objects", "List<String>", requestName, generatedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("FullDetails", "boolean", requestName, generatedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, generatedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", generatedCode));
         assertTrue(hasImport("java.util.UUID", generatedCode));
         assertTrue(hasImport("java.util.List", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", generatedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", generatedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", generatedCode));
+        assertTrue(hasImport("java.io.InputStream", generatedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", generatedCode));
         assertFalse(generatedCode.contains("RestOperationType"));
@@ -358,7 +375,7 @@ public class JavaCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<String>", "Objects"));
+                new Arguments("List<Ds3Object>", "Objects"));
         assertTrue(hasConstructor(requestName, constructorArgs, generatedCode));
     }
 
