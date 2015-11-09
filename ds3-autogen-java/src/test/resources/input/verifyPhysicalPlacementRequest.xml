@@ -5,7 +5,7 @@
                 <Request Action="SHOW" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="FullDetails" Type="void"/>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
