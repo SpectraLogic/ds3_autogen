@@ -116,7 +116,7 @@ public class JavaHelper {
             final Operation operation) {
         final StringBuilder builder = new StringBuilder();
         builder.append("final String " + outputStringName + " = XmlOutput.toXml(" + objectListName + ", ");
-        if (operation == Operation.START_BULK_GET) {
+        if (operation == Operation.START_BULK_PUT) {
             return builder.append("true);").toString();
         }
         return  builder.append("false);").toString();
