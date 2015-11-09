@@ -17,11 +17,9 @@ package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
-import com.spectralogic.d3autogen.Ds3TypeMapperParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
 import com.spectralogic.ds3autogen.java.utils.TestHelper;
@@ -61,10 +59,7 @@ public class JavaCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -80,14 +75,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/getBucketRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -119,14 +111,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/modifyBucketRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -158,14 +147,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/createVerifyJobRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -204,14 +190,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/createGetJobRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -248,14 +231,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/createPutJobRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -292,14 +272,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/getPhysicalPlacementRequest.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -339,14 +316,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/verifyPhysicalPlacementRequest.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -387,14 +361,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/deleteObjectsRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -435,14 +406,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/createObjectRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -500,14 +468,11 @@ public class JavaCodeGenerator_Test {
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/getObjectRequestHandler.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
@@ -552,10 +517,7 @@ public class JavaCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
     }
 }

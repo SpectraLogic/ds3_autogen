@@ -16,10 +16,8 @@
 package com.spectralogic.ds3autogen.net;
 
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
-import com.spectralogic.d3autogen.Ds3TypeMapperParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,10 +53,7 @@ public class NetCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(NetCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
 
-        final Ds3TypeMapperParser typeParser = new Ds3TypeMapperParserImpl();
-        final Ds3TypeMapper typeMapper = typeParser.getMap();
-
-        codeGenerator.generate(spec, typeMapper, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);

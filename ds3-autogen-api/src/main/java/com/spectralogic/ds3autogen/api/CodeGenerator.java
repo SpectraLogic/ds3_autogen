@@ -16,14 +16,12 @@
 package com.spectralogic.ds3autogen.api;
 
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 public interface CodeGenerator {
     void generate(final Ds3ApiSpec spec,
-                  final Ds3TypeMapper typeMapper,
                   final FileUtils fileUtils,
                   final Path destDir) throws IOException;
 }
