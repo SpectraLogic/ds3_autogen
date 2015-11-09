@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.models.Request;
-import com.sun.org.apache.xpath.internal.Arg;
 
 public class RequestConverter {
 

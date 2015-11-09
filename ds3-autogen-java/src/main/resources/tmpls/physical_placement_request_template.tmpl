@@ -33,7 +33,8 @@ public class ${name} extends AbstractRequest {
     public Stream getContentStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
-        final String xmlOutput = XmlOutput.toXml(objects);
+
+        ${javaHelper.toXmlLine("xmlOutput", "objects", operation)}
 
         final byte[] stringBytes = xmlOutput.getBytes();
         return new ByteArrayInputStream(stringBytes);

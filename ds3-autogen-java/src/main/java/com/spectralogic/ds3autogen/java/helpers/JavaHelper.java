@@ -2,7 +2,7 @@ package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -108,6 +108,18 @@ public class JavaHelper {
 
     private static String updateQueryParamLine(final String name, final String type) {
         return "this.updateQueryParam(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");\n";
+    }
+
+    public static String toXmlLine(
+            final String outputStringName,
+            final String objectListName,
+            final Operation operation) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("final String " + outputStringName + " = XmlOutput.toXml(" + objectListName + ", ");
+        if (operation == Operation.START_BULK_GET) {
+            return builder.append("true);").toString();
+        }
+        return  builder.append("false);").toString();
     }
 
     private static String indent(final int depth) {
