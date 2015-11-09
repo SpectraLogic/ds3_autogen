@@ -75,8 +75,8 @@ public class RequestConverter {
                 }
             }
         } else {
-            if (ds3Request.getResource() == Resource.BUCKET) {
-                builder.append("\"/_rest_/bucket/\"");
+            if (ds3Request.getResource() != null) {
+                builder.append("\"/_rest_/" + ds3Request.getResource().toString().toLowerCase() + "/\"");
                 if (!queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")) {
                     builder.append(" + this.bucketName");
                 }
