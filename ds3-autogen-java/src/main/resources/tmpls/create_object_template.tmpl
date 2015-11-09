@@ -22,10 +22,10 @@ public class ${name} extends AbstractRequest {
     // Constructor
 
     /**
-     * @deprecated use {@link #${name}(${javaHelper.argTypeList(requiredArguments)}, ${javaHelper.argTypeList(optionalArguments)}, long, SeekableChannel)} instead
+     * @deprecated use {@link #${name}(${javaHelper.argTypeList(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) instead
      */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}final long size, final SeekableByteChannel channel) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, "Size", "long"), "Channel", "SeekableByteChannel"))}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -34,21 +34,31 @@ public class ${name} extends AbstractRequest {
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
-    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}${javaHelper.constructorArgs(optionalArguments, false, true)}final long size, final SeekableByteChannel channel) {
-        <#list requiredArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        <#list optionalArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        this.size = size;
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
 
-        <#list optionalArguments as arg>
-        ${javaHelper.putQueryParamLine(arg)}
-        </#list>
+        ${name}(${javaHelper.modifiedArgNameList(
+            javaHelper.addArgument(
+                javaHelper.addArgument(
+                    javaHelper.addArgument(
+                        requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "this.stream")})
     }
+
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
+            <#list requiredArguments as arg>
+            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+            </#list>
+            <#list optionalArguments as arg>
+            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+            </#list>
+            this.size = size;
+            this.stream = stream;
+
+            <#list optionalArguments as arg>
+            ${javaHelper.putQueryParamLine(arg)}
+            </#list>
+        }
 
     <#include "with_constructors.tmpl"/>
 
@@ -71,23 +81,15 @@ public class ${name} extends AbstractRequest {
     <#include "getters_verb_path.tmpl"/>
 
     @Override
-    public Checksum getChecksum() {
-        return this.checksum;
-    }
+    ${javaHelper.createGetter("Checksum", "Checksum")}
 
     @Override
-    public long getSize() {
-        return this.size;
-    }
+    ${javaHelper.createGetter("Size", "long")}
 
     @Override
-    public InputStream getStream() {
-        return this.stream;
-    }
+    ${javaHelper.createGetter("Stream", "InputStream")}
 
     <#include "getters.tmpl"/>
 
-    public SeekableByteChannel getChannel() {
-        return this.channel;
-    }
+    ${javaHelper.createGetter("Channel", "SeekableByteChannel")}
 }

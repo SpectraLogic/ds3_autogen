@@ -1,0 +1,29 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.ModifyBucketRequestHandler">
+                <Request Action="MODIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

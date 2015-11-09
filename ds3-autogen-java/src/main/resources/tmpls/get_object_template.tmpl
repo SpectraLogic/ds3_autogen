@@ -35,17 +35,17 @@ public class ${name} extends AbstractRequest {
     // Constructor
 
     /**
-     * @deprecated use {@link #${name}(${javaHelper.argTypeList(requiredArguments)}, ${javaHelper.argTypeList(optionalArguments)}, WritableByteChannel)} instead
+     * @deprecated use {@link #${name}(${javaHelper.argTypeList(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Channel", "WritableByteChannel"))})} instead
      */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}final WritableByteChannel channel) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(requiredArguments, "Channel", "WritableByteChannel"))}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.channel = channel;
     }
 
-    public ${name}(${javaHelper.constructorArgs(requiredArguments, false, true)}${javaHelper.constructorArgs(optionalArguments, false, true)}final WritableByteChannel channel) {
+    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Channel", "WritableByteChannel"))}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -81,11 +81,7 @@ public class ${name} extends AbstractRequest {
 
     <#include "getters.tmpl"/>
 
-    public Range getByteRange() {
-        return this.byteRange;
-    }
+    ${javaHelper.createGetter("ByteRange", "Range")}
 
-    public WritableByteChannel getChannel() {
-        return this.channel;
-    }
+    ${javaHelper.createGetter("Channel", "WritableByteChannel")}
 }

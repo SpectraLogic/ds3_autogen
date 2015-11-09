@@ -17,13 +17,8 @@ package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Requirement;
-import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.api.models.Ds3TypeMapper;
 
 public class RequestConverter {
 
@@ -69,9 +64,9 @@ public class RequestConverter {
 
     private static String requestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("\"/\"");
 
         if (ds3Request.getClassification() == Classification.amazons3) {
+            builder.append("\"/\"");
             if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
                 builder.append(" + this.bucketName");
 
@@ -80,10 +75,31 @@ public class RequestConverter {
                 }
             }
         } else {
-            builder.append("_rest_/");
+            if (ds3Request.getResource() != null) {
+                builder.append("\"/_rest_/" + ds3Request.getResource().toString().toLowerCase() + "/\"");
+                if (!queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")) {
+                    builder.append(" + this.bucketName");
+                }
+            } else {
+                builder.append("\"/_rest_/\"");
+            }
         }
 
         return builder.toString();
+    }
+
+    private static boolean queryParamsContain(
+            final ImmutableList<Ds3Param> params,
+            final String name) {
+        if (params == null) {
+            return false;
+        }
+        for (final Ds3Param param : params) {
+            if (param.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static ImmutableList<Arguments> getRequiredArgs(
@@ -91,10 +107,11 @@ public class RequestConverter {
             final Ds3TypeMapper ds3TypeMapper) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
 
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-            requiredArgs.add(new Arguments("String", "bucketName"));
+        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED
+                || ds3Request.getResource() == Resource.BUCKET) {
+            requiredArgs.add(new Arguments("String", "BucketName"));
             if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                requiredArgs.add(new Arguments("String", "objectName"));
+                requiredArgs.add(new Arguments("String", "ObjectName"));
             }
         }
 
