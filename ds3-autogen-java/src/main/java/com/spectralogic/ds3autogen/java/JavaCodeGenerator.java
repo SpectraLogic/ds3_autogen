@@ -47,7 +47,6 @@ public class JavaCodeGenerator implements CodeGenerator {
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
     private Ds3ApiSpec spec;
-    private Ds3TypeMapper ds3TypeMapper;
     private FileUtils fileUtils;
     private Path destDir;
 
@@ -60,11 +59,9 @@ public class JavaCodeGenerator implements CodeGenerator {
     @Override
     public void generate(
             final Ds3ApiSpec spec,
-            final Ds3TypeMapper ds3TypeMapper,
             final FileUtils fileUtils,
             final Path destDir) throws IOException {
         this.spec = spec;
-        this.ds3TypeMapper = ds3TypeMapper;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
@@ -106,9 +103,9 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private Request getRequest(final Ds3Request ds3Request) {
         if (ds3Request.getClassification() == Classification.spectrads3) {
-            return RequestConverter.toRequest(ds3Request, ds3TypeMapper, SPECTRADS3_COMMANDS_PACKAGE);
+            return RequestConverter.toRequest(ds3Request, SPECTRADS3_COMMANDS_PACKAGE);
         } else {
-            return RequestConverter.toRequest(ds3Request, ds3TypeMapper, COMMANDS_PACKAGE);
+            return RequestConverter.toRequest(ds3Request, COMMANDS_PACKAGE);
         }
     }
 

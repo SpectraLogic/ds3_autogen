@@ -30,13 +30,12 @@ public class RequestConverter {
 
     private RequestConverter(
             final Ds3Request ds3Request,
-            final Ds3TypeMapper ds3TypeMapper,
             final String packageName) {
         this.ds3Request = ds3Request;
         this.packageName = packageName;
-        this.requiredConstructorArguments = getRequiredArgs(ds3Request, ds3TypeMapper);
-        this.optionalArguments = getOptionalArgs(ds3Request, ds3TypeMapper);
-        this.imports = getImports(ds3Request, ds3TypeMapper);
+        this.requiredConstructorArguments = getRequiredArgs(ds3Request);
+        this.optionalArguments = getOptionalArgs(ds3Request);
+        this.imports = getImports(ds3Request);
     }
 
     private Request convert() {
@@ -55,9 +54,8 @@ public class RequestConverter {
 
     public static Request toRequest(
             final Ds3Request ds3Request,
-            final Ds3TypeMapper ds3TypeMapper,
             final String packageName) {
-        final RequestConverter converter = new RequestConverter(ds3Request, ds3TypeMapper, packageName);
+        final RequestConverter converter = new RequestConverter(ds3Request, packageName);
 
         return converter.convert();
     }
@@ -103,8 +101,7 @@ public class RequestConverter {
     }
 
     private static ImmutableList<Arguments> getRequiredArgs(
-            final Ds3Request ds3Request,
-            final Ds3TypeMapper ds3TypeMapper) {
+            final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
 
         if (ds3Request.getBucketRequirement() == Requirement.REQUIRED
@@ -115,82 +112,55 @@ public class RequestConverter {
             }
         }
 
-        requiredArgs.addAll(getArgsFromParamList(ds3Request.getName(), ds3Request.getRequiredQueryParams(), ds3TypeMapper));
+        requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
 
     private static ImmutableList<Arguments> getOptionalArgs(
-            final Ds3Request ds3Request,
-            final Ds3TypeMapper ds3TypeMapper) {
+            final Ds3Request ds3Request) {
         if (ds3Request.getOptionalQueryParams() == null) {
             return ImmutableList.of();
         }
 
         final ImmutableList.Builder<Arguments> optionalArgs = ImmutableList.builder();
-        optionalArgs.addAll(getArgsFromParamList(ds3Request.getName(), ds3Request.getOptionalQueryParams(), ds3TypeMapper));
+        optionalArgs.addAll(getArgsFromParamList(ds3Request.getOptionalQueryParams()));
         return optionalArgs.build();
     }
 
-    private static ImmutableList<Arguments> getArgsFromParamList(
-            final String requestName,
-            final ImmutableList<Ds3Param> paramList,
-            final Ds3TypeMapper ds3TypeMapper) {
+    private static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
         if(paramList == null) {
             return ImmutableList.of();
         }
 
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : paramList) {
-            if (ds3Param.getName().equals("Operation")) {
-              //Do not add
-            } else if (ds3Param.getType() != null) {
+            if (!ds3Param.getName().equals("Operation")) {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
-            } else {
-                //Verify that manual type map is never used
-                assert(false);
-                final String paramType = ds3TypeMapper.getMappedType(requestName, ds3Param.getName());
-                if (paramType != null) {
-                    argsBuilder.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));
-                }
             }
         }
         return argsBuilder.build();
     }
 
-    private static ImmutableList<String> getImports(
-            final Ds3Request ds3Request,
-            final Ds3TypeMapper ds3TypeMapper) {
+    private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getRequiredQueryParams(), ds3TypeMapper));
-        importsBuilder.addAll(getImportsFromParamList(ds3Request.getName(), ds3Request.getOptionalQueryParams(), ds3TypeMapper));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
+        importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
         return importsBuilder.build().asList();
     }
 
-    private static ImmutableSet<String> getImportsFromParamList(
-            final String requestName,
-            final ImmutableList<Ds3Param> paramList,
-            final Ds3TypeMapper ds3TypeMapper) {
-
+    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
         if (paramList == null) {
             return ImmutableSet.of();
         }
 
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
         for (final Ds3Param ds3Param : paramList) {
-            if (ds3Param.getName().equals("Operation")) {
-                //Do not add
-            } else if (ds3Param.getType() != null) {
-                if (ds3Param.getType().contains(".")) {
-                    importsBuilder.add(ds3Param.getType());
-                }
-            } else {
-                final String paramType = ds3TypeMapper.getMappedType(requestName, ds3Param.getName());
-                if (paramType != null && paramType.contains(".")) {
-                    importsBuilder.add(paramType);
-                }
+            if (!ds3Param.getName().equals("Operation")
+                    && ds3Param.getType().contains(".")) {
+                importsBuilder.add(ds3Param.getType());
             }
         }
         return importsBuilder.build();
