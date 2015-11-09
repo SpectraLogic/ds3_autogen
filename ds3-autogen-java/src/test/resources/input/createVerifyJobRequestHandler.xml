@@ -4,7 +4,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler">
                 <Request Action="MODIFY" Operation="START_BULK_VERIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>

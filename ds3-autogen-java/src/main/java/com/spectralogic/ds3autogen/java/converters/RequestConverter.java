@@ -147,6 +147,8 @@ public class RequestConverter {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
             } else {
+                //Verify that manual type map is never used
+                assert(false);
                 final String paramType = ds3TypeMapper.getMappedType(requestName, ds3Param.getName());
                 if (paramType != null) {
                     argsBuilder.add(new Arguments(paramType.substring(paramType.lastIndexOf(".") + 1), ds3Param.getName()));

@@ -4,12 +4,12 @@
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="NOT_ALLOWED">
                     <OptionalQueryParams>
-                        <Param Name="Delimiter"/>
-                        <Param Name="Marker"/>
-                        <Param Name="MaxKeys"/>
-                        <Param Name="Prefix"/>
+                        <Param Name="Delimiter" Type="java.lang.String"/>
+                        <Param Name="Marker" Type="java.lang.String"/>
+                        <Param Name="MaxKeys" Type="int"/>
+                        <Param Name="Prefix" Type="java.lang.String"/>
                     </OptionalQueryParams>
-                    <RequiredQueryParams />
+                    <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>

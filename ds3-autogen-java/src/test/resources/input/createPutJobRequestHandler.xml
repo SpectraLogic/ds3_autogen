@@ -6,7 +6,7 @@
                     <OptionalQueryParams>
                         <Param Name="IgnoreNamingConflicts" Type="void"/>
                         <Param Name="MaxUploadSize" Type="long"/>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>

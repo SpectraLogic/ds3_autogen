@@ -181,7 +181,9 @@
             </RequestHandler>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="RollBack" Type="void"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
@@ -201,7 +203,9 @@
             </RequestHandler>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectsRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="POST" ObjectRequirement="NOT_ALLOWED">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="RollBack" Type="void"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Delete" Type="void"/>
                     </RequiredQueryParams>
@@ -218,10 +222,10 @@
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="NOT_ALLOWED">
                     <OptionalQueryParams>
-                        <Param Name="Delimiter"/>
-                        <Param Name="Marker"/>
-                        <Param Name="MaxKeys"/>
-                        <Param Name="Prefix"/>
+                        <Param Name="Delimiter" Type="java.lang.String"/>
+                        <Param Name="Marker" Type="java.lang.String"/>
+                        <Param Name="MaxKeys" Type="int"/>
+                        <Param Name="Prefix" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -360,11 +364,11 @@
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.ListMultiPartUploadPartsRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="REQUIRED">
                     <OptionalQueryParams>
-                        <Param Name="MaxParts"/>
-                        <Param Name="PartNumberMarker"/>
+                        <Param Name="MaxParts" Type="int"/>
+                        <Param Name="PartNumberMarker" Type="java.lang.Integer"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
-                        <Param Name="UploadId"/>
+                        <Param Name="UploadId" Type="java.util.UUID"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -379,11 +383,11 @@
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.ListMultiPartUploadsRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="NOT_ALLOWED">
                     <OptionalQueryParams>
-                        <Param Name="Delimiter"/>
-                        <Param Name="KeyMarker"/>
-                        <Param Name="MaxUploads"/>
-                        <Param Name="Prefix"/>
-                        <Param Name="UploadIdMarker"/>
+                        <Param Name="Delimiter" Type="java.lang.String"/>
+                        <Param Name="KeyMarker" Type="java.lang.String"/>
+                        <Param Name="MaxUploads" Type="int"/>
+                        <Param Name="Prefix" Type="java.lang.String"/>
+                        <Param Name="UploadIdMarker" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Uploads" Type="void"/>
@@ -603,12 +607,14 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.acl.GetBucketAclsRequestHandler">
                 <Request Action="LIST" Resource="BUCKET_ACL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="BucketId"/>
-                        <Param Name="GroupId"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="Permission"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Permission" Type="com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -644,11 +650,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.acl.GetDataPolicyAclsRequestHandler">
                 <Request Action="LIST" Resource="DATA_POLICY_ACL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="GroupId"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -755,11 +763,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler">
                 <Request Action="LIST" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="Name"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -828,9 +838,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.cache.GetCacheFilesystemsRequestHandler">
                 <Request Action="LIST" Resource="CACHE_FILESYSTEM" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="NodeId"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="NodeId" Type="java.util.UUID"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -896,10 +908,16 @@
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.capacity.GetBucketCapacitySummaryRequestHandler">
                 <Request Action="LIST" Resource="CAPACITY_SUMMARY" ResourceType="SINGLETON">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="PoolHealth" Type="com.spectralogic.s3.common.dao.domain.pool.PoolHealth"/>
+                        <Param Name="PoolState" Type="com.spectralogic.s3.common.dao.domain.pool.PoolState"/>
+                        <Param Name="PoolType" Type="com.spectralogic.s3.common.dao.domain.pool.PoolType"/>
+                        <Param Name="TapeState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="TapeType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
-                        <Param Name="BucketId"/>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -913,9 +931,15 @@
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.capacity.GetStorageDomainCapacitySummaryRequestHandler">
                 <Request Action="LIST" Resource="CAPACITY_SUMMARY" ResourceType="SINGLETON">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="PoolHealth" Type="com.spectralogic.s3.common.dao.domain.pool.PoolHealth"/>
+                        <Param Name="PoolState" Type="com.spectralogic.s3.common.dao.domain.pool.PoolState"/>
+                        <Param Name="PoolType" Type="com.spectralogic.s3.common.dao.domain.pool.PoolType"/>
+                        <Param Name="TapeState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="TapeType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -929,7 +953,13 @@
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.capacity.GetSystemCapacitySummaryRequestHandler">
                 <Request Action="LIST" Resource="CAPACITY_SUMMARY" ResourceType="SINGLETON">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="PoolHealth" Type="com.spectralogic.s3.common.dao.domain.pool.PoolHealth"/>
+                        <Param Name="PoolState" Type="com.spectralogic.s3.common.dao.domain.pool.PoolState"/>
+                        <Param Name="PoolType" Type="com.spectralogic.s3.common.dao.domain.pool.PoolType"/>
+                        <Param Name="TapeState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="TapeType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
@@ -937,6 +967,20 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.CapacitySummaryContainer"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.dataplanner.GetDataPathBackendRequestHandler">
+                <Request Action="LIST" Resource="DATA_PATH_BACKEND" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -953,6 +997,31 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.common.rpc.dataplanner.domain.BlobStoreTasksInformation"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.dataplanner.ModifyDataPathBackendRequestHandler">
+                <Request Action="BULK_MODIFY" Resource="DATA_PATH_BACKEND" ResourceType="SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Activated" Type="boolean"/>
+                        <Param Name="AutoActivateTimeoutInMins" Type="java.lang.Integer"/>
+                        <Param Name="AutoInspectOnStartup" Type="boolean"/>
+                        <Param Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -989,6 +1058,7 @@
                         <Param Name="DefaultVerifyJobPriority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="EndToEndCrcRequired" Type="boolean"/>
                         <Param Name="RebuildPriority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                        <Param Name="Versioning" Type="com.spectralogic.s3.common.dao.domain.ds3.VersioningLevel"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Name" Type="java.lang.String"/>
@@ -1054,13 +1124,15 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataPersistenceRulesRequestHandler">
                 <Request Action="LIST" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="IsolationLevel"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="IsolationLevel" Type="com.spectralogic.s3.common.dao.domain.ds3.DataIsolationLevel"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="State"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1076,11 +1148,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataPoliciesRequestHandler">
                 <Request Action="LIST" Resource="DATA_POLICY" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ChecksumType"/>
-                        <Param Name="EndToEndCrcRequired"/>
-                        <Param Name="Name"/>
+                        <Param Name="ChecksumType" Type="com.spectralogic.util.security.ChecksumType"/>
+                        <Param Name="EndToEndCrcRequired" Type="boolean"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1137,6 +1211,7 @@
                         <Param Name="EndToEndCrcRequired" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="RebuildPriority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                        <Param Name="Versioning" Type="com.spectralogic.s3.common.dao.domain.ds3.VersioningLevel"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1145,6 +1220,52 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.GetDegradedBucketsRequestHandler">
+                <Request Action="LIST" Resource="DEGRADED_BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.Bucket" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.GetDegradedDataPersistenceRulesRequestHandler">
+                <Request Action="LIST" Resource="DEGRADED_DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="IsolationLevel" Type="com.spectralogic.s3.common.dao.domain.ds3.DataIsolationLevel"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRule" Type="array"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -1275,11 +1396,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.GetGroupMembersRequestHandler">
                 <Request Action="LIST" Resource="GROUP_MEMBER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="GroupId"/>
-                        <Param Name="MemberGroupId"/>
-                        <Param Name="MemberUserId"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="MemberGroupId" Type="java.util.UUID"/>
+                        <Param Name="MemberUserId" Type="java.util.UUID"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1309,10 +1432,12 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.GetGroupsRequestHandler">
                 <Request Action="LIST" Resource="GROUP" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="BuiltIn"/>
-                        <Param Name="Name"/>
+                        <Param Name="BuiltIn" Type="boolean"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1350,7 +1475,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.VerifyUserIsMemberOfGroupRequestHandler">
                 <Request Action="MODIFY" Operation="VERIFY" Resource="GROUP" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="UserId"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -1430,8 +1555,8 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler">
                 <Request Action="MODIFY" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ChunkClientProcessingOrderGuarantee"/>
-                        <Param Name="Priority"/>
+                        <Param Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -1467,8 +1592,9 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler">
                 <Request Action="MODIFY" Operation="START_BULK_PUT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="IgnoreNamingConflicts" Type="void"/>
                         <Param Name="MaxUploadSize" Type="long"/>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -1498,7 +1624,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler">
                 <Request Action="MODIFY" Operation="START_BULK_VERIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -1604,7 +1730,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobsRequestHandler">
                 <Request Action="LIST" Resource="JOB" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="BucketId"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
                         <Param Name="FullDetails" Type="void"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -1657,8 +1783,10 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.node.GetNodesRequestHandler">
                 <Request Action="LIST" Resource="NODE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2032,9 +2160,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCompletedNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2064,9 +2194,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCreatedNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="JOB_CREATED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2096,9 +2228,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectCachedNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="OBJECT_CACHED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2128,9 +2262,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectLostNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="OBJECT_LOST_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2166,9 +2302,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetObjectPersistedNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="OBJECT_PERSISTED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2198,9 +2336,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetPoolFailureNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="POOL_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2236,9 +2376,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetStorageDomainFailureNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2268,9 +2410,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetTapeFailureNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="TAPE_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2300,9 +2444,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetTapePartitionFailureNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2317,9 +2463,11 @@
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.DeleteFolderRecursivelyRequestHandler">
                 <Request Action="DELETE" Resource="FOLDER" ResourceType="NON_SINGLETON">
-                    <OptionalQueryParams/>
+                    <OptionalQueryParams>
+                        <Param Name="RollBack" Type="void"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
-                        <Param Name="BucketId"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
                         <Param Name="Recursive" Type="void"/>
                     </RequiredQueryParams>
                 </Request>
@@ -2363,14 +2511,18 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectsRequestHandler">
                 <Request Action="LIST" Resource="OBJECT" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="BucketId"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
                         <Param Name="Folder" Type="java.lang.String"/>
                         <Param Name="FullDetails" Type="void"/>
                         <Param Name="IncludePhysicalPlacement" Type="void"/>
-                        <Param Name="Name"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Latest" Type="boolean"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType"/>
+                        <Param Name="Version" Type="long"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2399,7 +2551,7 @@
                 <Request Action="MODIFY" Operation="GET_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="FullDetails" Type="void"/>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2425,7 +2577,7 @@
                 <Request Action="SHOW" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="FullDetails" Type="void"/>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2482,7 +2634,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.CompactAllPoolsRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="COMPACT" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2500,7 +2652,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.CompactPoolRequestHandler">
                 <Request Action="MODIFY" Operation="COMPACT" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2655,11 +2807,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolFailuresRequestHandler">
                 <Request Action="LIST" Resource="POOL_FAILURE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ErrorMessage"/>
+                        <Param Name="ErrorMessage" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PoolId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PoolId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.pool.PoolFailureType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2689,10 +2843,12 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolPartitionsRequestHandler">
                 <Request Action="LIST" Resource="POOL_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Name"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.pool.PoolType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2722,17 +2878,19 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetPoolsRequestHandler">
                 <Request Action="LIST" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="AssignedToStorageDomain"/>
-                        <Param Name="BucketId"/>
-                        <Param Name="Health"/>
-                        <Param Name="Name"/>
+                        <Param Name="AssignedToStorageDomain" Type="boolean"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Health" Type="com.spectralogic.s3.common.dao.domain.pool.PoolHealth"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PartitionId"/>
-                        <Param Name="PoweredOn"/>
-                        <Param Name="State"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="PoweredOn" Type="boolean"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.pool.PoolState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.pool.PoolType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -2748,9 +2906,10 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportAllPoolsRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="IMPORT" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="UserId"/>
+                        <Param Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2768,9 +2927,10 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportPoolRequestHandler">
                 <Request Action="MODIFY" Operation="IMPORT" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="UserId"/>
+                        <Param Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2789,7 +2949,7 @@
                 <Request Action="BULK_MODIFY" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
-                        <Param Name="Quiesced"/>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -2855,7 +3015,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.VerifyAllPoolsRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="VERIFY" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -2873,7 +3033,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.VerifyPoolRequestHandler">
                 <Request Action="MODIFY" Operation="VERIFY" Resource="POOL" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Priority"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -3010,11 +3170,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainFailuresRequestHandler">
                 <Request Action="LIST" Resource="STORAGE_DOMAIN_FAILURE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ErrorMessage"/>
+                        <Param Name="ErrorMessage" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.StorageDomainFailureType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3044,14 +3206,16 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainMembersRequestHandler">
                 <Request Action="LIST" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PoolPartitionId"/>
-                        <Param Name="State"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="TapePartitionId"/>
-                        <Param Name="TapeType"/>
-                        <Param Name="WritePreference"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PoolPartitionId" Type="java.util.UUID"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.StorageDomainMemberState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="TapePartitionId" Type="java.util.UUID"/>
+                        <Param Name="TapeType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                        <Param Name="WritePreference" Type="com.spectralogic.s3.common.dao.domain.ds3.WritePreferenceLevel"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3081,15 +3245,17 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.GetStorageDomainsRequestHandler">
                 <Request Action="LIST" Resource="STORAGE_DOMAIN" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="AutoEjectUponCron"/>
-                        <Param Name="AutoEjectUponJobCancellation"/>
-                        <Param Name="AutoEjectUponJobCompletion"/>
-                        <Param Name="AutoEjectUponMediaFull"/>
-                        <Param Name="MediaEjectionAllowed"/>
-                        <Param Name="Name"/>
+                        <Param Name="AutoEjectUponCron" Type="java.lang.String"/>
+                        <Param Name="AutoEjectUponJobCancellation" Type="boolean"/>
+                        <Param Name="AutoEjectUponJobCompletion" Type="boolean"/>
+                        <Param Name="AutoEjectUponMediaFull" Type="boolean"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="MediaEjectionAllowed" Type="boolean"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="WriteOptimization"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3145,20 +3311,6 @@
                         <Code>409</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                </ResponseCodes>
-            </RequestHandler>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.ActivateBackendRequestHandler">
-                <Request Action="BULK_MODIFY" Resource="DATA_PATH_BACKEND" ResourceType="SINGLETON">
-                    <OptionalQueryParams/>
-                    <RequiredQueryParams/>
-                </Request>
-                <ResponseCodes>
-                    <ResponseCode>
-                        <Code>204</Code>
-                        <ResponseTypes>
-                            <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -3470,8 +3622,8 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="EjectLabel"/>
-                        <Param Name="EjectLocation"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -3489,13 +3641,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="BucketId"/>
-                        <Param Name="EjectLabel"/>
-                        <Param Name="EjectLocation"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
-                        <Param Name="StorageDomainId"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -3510,8 +3662,8 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectTapeRequestHandler">
                 <Request Action="MODIFY" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="EjectLabel"/>
-                        <Param Name="EjectLocation"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -3609,11 +3761,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeDensityDirectivesRequestHandler">
                 <Request Action="LIST" Resource="TAPE_DENSITY_DIRECTIVE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Density"/>
+                        <Param Name="Density" Type="com.spectralogic.s3.common.dao.domain.tape.TapeDriveType"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PartitionId"/>
-                        <Param Name="TapeType"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="TapeType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3649,12 +3803,14 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeDrivesRequestHandler">
                 <Request Action="LIST" Resource="TAPE_DRIVE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PartitionId"/>
-                        <Param Name="SerialNumber"/>
-                        <Param Name="State"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="SerialNumber" Type="java.lang.String"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeDriveState"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeDriveType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3670,12 +3826,14 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeFailuresRequestHandler">
                 <Request Action="LIST" Resource="TAPE_FAILURE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ErrorMessage"/>
+                        <Param Name="ErrorMessage" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="TapeDriveId"/>
-                        <Param Name="TapeId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="TapeDriveId" Type="java.util.UUID"/>
+                        <Param Name="TapeId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeFailureType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3691,11 +3849,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeLibrariesRequestHandler">
                 <Request Action="LIST" Resource="TAPE_LIBRARY" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ManagementUrl"/>
-                        <Param Name="Name"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="ManagementUrl" Type="java.lang.String"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="SerialNumber"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="SerialNumber" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3725,11 +3885,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionFailuresRequestHandler">
                 <Request Action="LIST" Resource="TAPE_PARTITION_FAILURE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ErrorMessage"/>
+                        <Param Name="ErrorMessage" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PartitionId"/>
-                        <Param Name="Type"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapePartitionFailureType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3762,14 +3924,16 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionsRequestHandler">
                 <Request Action="LIST" Resource="TAPE_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ImportExportConfiguration"/>
-                        <Param Name="LibraryId"/>
-                        <Param Name="Name"/>
+                        <Param Name="ImportExportConfiguration" Type="com.spectralogic.s3.common.dao.domain.tape.ImportExportConfiguration"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="LibraryId" Type="java.util.UUID"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="Quiesced"/>
-                        <Param Name="SerialNumber"/>
-                        <Param Name="State"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                        <Param Name="SerialNumber" Type="java.lang.String"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapePartitionState"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3802,22 +3966,24 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesRequestHandler">
                 <Request Action="LIST" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="AssignedToStorageDomain"/>
-                        <Param Name="BarCode"/>
-                        <Param Name="BucketId"/>
-                        <Param Name="EjectLabel"/>
-                        <Param Name="EjectLocation"/>
+                        <Param Name="AssignedToStorageDomain" Type="boolean"/>
+                        <Param Name="BarCode" Type="java.lang.String"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
                         <Param Name="FullDetails" Type="void"/>
-                        <Param Name="FullOfData"/>
+                        <Param Name="FullOfData" Type="boolean"/>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PartitionId"/>
-                        <Param Name="PreviousState"/>
-                        <Param Name="SerialNumber"/>
-                        <Param Name="State"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="Type"/>
-                        <Param Name="WriteProtected"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="SerialNumber" Type="java.lang.String"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                        <Param Name="WriteProtected" Type="boolean"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -3833,9 +3999,10 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="UserId"/>
+                        <Param Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -3853,9 +4020,10 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportTapeRequestHandler">
                 <Request Action="MODIFY" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DataPolicyId"/>
-                        <Param Name="StorageDomainId"/>
-                        <Param Name="UserId"/>
+                        <Param Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -3910,7 +4078,7 @@
                 <Request Action="BULK_MODIFY" Resource="TAPE_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
-                        <Param Name="Quiesced"/>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -4027,7 +4195,7 @@
                 <Request Action="DELETE" Resource="TAPE_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
-                        <Param Name="PartitionId"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -4104,11 +4272,13 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.GetUsersRequestHandler">
                 <Request Action="LIST" Resource="USER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="AuthId"/>
-                        <Param Name="DefaultDataPolicyId"/>
-                        <Param Name="Name"/>
+                        <Param Name="AuthId" Type="java.lang.String"/>
+                        <Param Name="DefaultDataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -4117,6 +4287,18 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.User" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>410</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -4228,9 +4410,11 @@
             <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.notification.GetGenericDaoNotificationRegistrationsRequestHandler">
                 <Request Action="LIST" Resource="GENERIC_DAO_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
-                        <Param Name="UserId"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -4247,7 +4431,7 @@
                 <Request Action="CREATE" Resource="HEAP_DUMP" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
-                        <Param Name="Application"/>
+                        <Param Name="Application" Type="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.system.CreateHeapDumpRequestHandler$Application"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -4561,6 +4745,48 @@
                     <EnumConstant Name="SECURE_BUCKET_ISOLATED"/>
                 </EnumConstants>
             </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend">
+                <Elements>
+                    <Element Name="Activated" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="AutoActivateTimeoutInMins" Type="java.lang.Integer">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="AutoInspectOnStartup" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="ABORT" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LastHeartbeat" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRule">
                 <Elements>
                     <Element Name="DataPolicyId" Type="java.util.UUID">
@@ -4719,6 +4945,15 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="LOW" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Versioning" Type="com.spectralogic.s3.common.dao.domain.ds3.VersioningLevel">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="NONE" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -4981,6 +5216,15 @@
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
+                    <Element Name="Latest" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Name" Type="java.lang.String">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
@@ -4999,6 +5243,12 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultLongValue">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Long"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="2" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -5311,6 +5561,25 @@
                         </Annotations>
                     </Element>
                 </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.VersioningLevel">
+                <Elements>
+                    <Element Name="LtfsObjectNamingAllowed" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+                <EnumConstants>
+                    <EnumConstant Name="NONE">
+                        <Properties>
+                            <Property Name="LtfsObjectNamingAllowed" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="KEEP_LATEST">
+                        <Properties>
+                            <Property Name="LtfsObjectNamingAllowed" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization">
                 <Elements/>
@@ -6601,8 +6870,18 @@
             <Type Name="com.spectralogic.s3.common.dao.domain.pool.PoolType">
                 <Elements/>
                 <EnumConstants>
-                    <EnumConstant Name="ARCHIVE"/>
-                    <EnumConstant Name="ENTERPRISE"/>
+                    <EnumConstant Name="NEARLINE"/>
+                    <EnumConstant Name="ONLINE"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="ABORT"/>
+                    <EnumConstant Name="ACCEPT_MOST_RECENT"/>
+                    <EnumConstant Name="ACCEPT_HIGHEST_VERSION"/>
+                    <EnumConstant Name="ACCEPT_IMPORT"/>
+                    <EnumConstant Name="ACCEPT_EXISTING"/>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.shared.Quiesced">
@@ -7539,10 +7818,18 @@
                         <Annotations/>
                     </Element>
                     <Element Name="Delimiter" Type="java.lang.String">
-                        <Annotations/>
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
                     </Element>
                     <Element Name="Marker" Type="java.lang.String">
-                        <Annotations/>
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
                     </Element>
                     <Element Name="MaxKeys" Type="int">
                         <Annotations/>
@@ -7565,7 +7852,11 @@
                         </Annotations>
                     </Element>
                     <Element Name="Prefix" Type="java.lang.String">
-                        <Annotations/>
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
                     </Element>
                     <Element Name="Truncated" Type="boolean">
                         <Annotations>
@@ -8483,6 +8774,16 @@
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="DATA_POLICY_ACL">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DEGRADED_BUCKET">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DEGRADED_DATA_PERSISTENCE_RULE">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
