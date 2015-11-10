@@ -214,11 +214,11 @@ public class JavaHelper_Test {
 
     @Test
     public void getResponseCodes() {
-        final String expectedResult = "200, 206";
+        final String expectedResult = "200, 206, 307, 400";
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(206, null),
                 new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(200, null),
                 new Ds3ResponseCode(400, null));
 
         final String result = JavaHelper.getResponseCodes(responseCodes);

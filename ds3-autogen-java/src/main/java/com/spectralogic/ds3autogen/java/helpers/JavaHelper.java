@@ -245,12 +245,13 @@ public class JavaHelper {
     }
 
     public static String getResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        final List<String> sortable = new ArrayList<>();
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (responseCode.getCode() < 300) {
-                builder.add(Integer.toString(responseCode.getCode()));
-            }
+            sortable.add(Integer.toString(responseCode.getCode()));
         }
+        Collections.sort(sortable);
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        builder.addAll(sortable);
         return builder.build()
                 .stream()
                 .map(i -> i)
