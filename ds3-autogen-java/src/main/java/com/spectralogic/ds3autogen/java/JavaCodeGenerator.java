@@ -17,13 +17,18 @@ package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
-import freemarker.core.ParseException;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,16 +107,11 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isBulkResponse(ds3Request)) {
+        if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response_template.tmpl");
         } else {
             return config.getTemplate("response/response_template.tmpl");
         }
-    }
-
-    private static boolean isBulkResponse(final Ds3Request ds3Request) {
-        //TODO
-        return false;
     }
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {

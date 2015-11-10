@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.java.converters;
 
-import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.Response;
 
@@ -23,14 +22,12 @@ public class ResponseConverter {
 
     private final Ds3Request ds3Request;
     private final String packageName;
-    private final ImmutableList<String> imports;
 
     private ResponseConverter(
             final Ds3Request ds3Request,
             final String packageName) {
         this.ds3Request = ds3Request;
         this.packageName = packageName;
-        this.imports = getImports(ds3Request);
     }
 
     private Response convert() {
@@ -38,7 +35,7 @@ public class ResponseConverter {
         return new Response(
                 packageName,
                 getResponseName(ds3Request.getName()),
-                getImports(ds3Request));
+                ds3Request.getDs3ResponseCodes());
     }
 
     public static Response toResponse(
@@ -51,10 +48,5 @@ public class ResponseConverter {
     private static String getResponseName(final String ds3RequestName) {
         final String[] classParts = ds3RequestName.split("\\.");
         return classParts[classParts.length - 1].replace("Request", "Response");
-    }
-
-    //TODO
-    private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
-        return null;
     }
 }

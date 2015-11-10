@@ -1,1 +1,29 @@
-HELLO: Testing response
+<#include "../copyright.tmpl"/>
+
+package ${packageName};
+
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+
+public class ${name} extends AbstractResponse {
+
+    private String result;
+
+<#include "response_constructor.tmpl"/>
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(${javaHelper.getResponseCodes(responseCodes)});
+            try (final InputStream content = getResponse().getResponseStream()) {
+                this.result = content.toString();
+            }
+        } finally {
+            this.getResponse.close();
+        }
+    }
+
+    public String getResult() {
+        return result;
+    }
+}

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.utils.Helper;
 
@@ -24,15 +25,15 @@ public class Response {
     private final String name;
     private final Helper helper;
     private final JavaHelper javaHelper;
-    private final ImmutableList<String> imports;
+    private final ImmutableList<Ds3ResponseCode> responseCodes;
 
     public Response(
             final String packageName,
             final String name,
-            final ImmutableList<String> imports) {
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
         this.packageName = packageName;
         this.name = name;
-        this.imports = imports;
+        this.responseCodes = responseCodes;
 
         this.helper = Helper.getInstance();
         this.javaHelper = JavaHelper.getInstance();
@@ -46,15 +47,15 @@ public class Response {
         return name;
     }
 
+    public ImmutableList<Ds3ResponseCode> getResponseCodes() {
+        return responseCodes;
+    }
+
     public Helper getHelper() {
         return helper;
     }
 
     public JavaHelper getJavaHelper() {
         return javaHelper;
-    }
-
-    public ImmutableList<String> getImports() {
-        return imports;
     }
 }

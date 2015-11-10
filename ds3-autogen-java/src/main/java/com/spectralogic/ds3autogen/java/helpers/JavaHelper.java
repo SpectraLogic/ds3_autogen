@@ -2,14 +2,12 @@ package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JavaHelper {
@@ -238,6 +236,19 @@ public class JavaHelper {
                 builder.add(toArgName);
             } else {
                 builder.add(uncapFirst(arg.getName()));
+            }
+        }
+        return builder.build()
+                .stream()
+                .map(i -> i)
+                .collect(Collectors.joining(", "));
+    }
+
+    public static String getResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (responseCode.getCode() < 300) {
+                builder.add(Integer.toString(responseCode.getCode()));
             }
         }
         return builder.build()
