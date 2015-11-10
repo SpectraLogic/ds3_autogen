@@ -19,11 +19,11 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
+import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.models.Request;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import com.spectralogic.ds3autogen.java.models.Response;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,14 +75,50 @@ public class JavaCodeGenerator implements CodeGenerator {
     private void generateCommands() throws IOException, TemplateException {
         for (final Ds3Request request : spec.getRequests()) {
             generateRequest(request);
+            generateResponse(request);
         }
+    }
+
+    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
+        final Template tmpl = getResponseTemplate(ds3Request);
+
+        final Response response = getResponse(ds3Request);
+        final Path responsePath = getPath(ds3Request, response.getName());
+
+        LOG.info("Getting outputstream for file:" + responsePath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(responsePath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(response, writer);
+        }
+    }
+
+    private Response getResponse(final Ds3Request ds3Request) {
+        if (ds3Request.getClassification() == Classification.spectrads3) {
+            return ResponseConverter.toResponse(ds3Request, SPECTRADS3_COMMANDS_PACKAGE);
+        } else {
+            return ResponseConverter.toResponse(ds3Request, COMMANDS_PACKAGE);
+        }
+    }
+
+    private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isBulkResponse(ds3Request)) {
+            return config.getTemplate("response/bulk_response_template.tmpl");
+        } else {
+            return config.getTemplate("response/response_template.tmpl");
+        }
+    }
+
+    private static boolean isBulkResponse(final Ds3Request ds3Request) {
+        //TODO
+        return false;
     }
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
 
         final Request request = getRequest(ds3Request);
-        final Path requestPath = getPath(ds3Request, request);
+        final Path requestPath = getPath(ds3Request, request.getName());
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());
 
@@ -93,11 +129,11 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     }
 
-    private Path getPath(final Ds3Request ds3Request, final Request request) {
+    private Path getPath(final Ds3Request ds3Request, final String fileName) {
         if (ds3Request.getClassification() == Classification.spectrads3) {
-            return destDir.resolve(baseProjectPath.resolve(Paths.get(SPECTRADS3_COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
+            return destDir.resolve(baseProjectPath.resolve(Paths.get(SPECTRADS3_COMMANDS_PACKAGE.replace(".", "/") + "/" + fileName + ".java")));
         } else {
-            return destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + request.getName() + ".java")));
+            return destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + fileName + ".java")));
         }
     }
 
