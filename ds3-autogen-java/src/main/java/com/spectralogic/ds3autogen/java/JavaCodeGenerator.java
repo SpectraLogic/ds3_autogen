@@ -88,17 +88,30 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateClient() throws IOException, TemplateException {
-        final Template tmpl = config.getTemplate("client/ds3client_template.tmpl");
+        final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
         final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE);
-        final Path clientPath = destDir.resolve(baseProjectPath.resolve(
-                Paths.get(ROOT_PACKAGE.replace(".", "/") + "/Ds3Client.java")));
+        final Path clientPath = getClientPath("Ds3Client.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
-            tmpl.process(client, writer);
+            clientTmpl.process(client, writer);
         }
+
+        final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.tmpl");
+        final Path clientImplPath = getClientPath("Ds3ClientImpl.java");
+
+        LOG.info("Getting outputstream for file:" + clientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(clientImplPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            clientImplTmpl.process(client, writer);
+        }
+    }
+
+    private Path getClientPath(final String fileName) {
+        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE.replace(".", "/") + "/" + fileName)));
     }
 
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
