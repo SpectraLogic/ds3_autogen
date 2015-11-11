@@ -2,6 +2,8 @@ package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import org.junit.Test;
 
@@ -207,6 +209,19 @@ public class JavaHelper_Test {
                 new Arguments("Type2", "Arg2"),
                 new Arguments("Type3", "Arg3"));
         final String result = JavaHelper.modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getResponseCodes() {
+        final String expectedResult = "200, 206, 307, 400";
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(400, null));
+
+        final String result = JavaHelper.getResponseCodes(responseCodes);
         assertThat(result, is(expectedResult));
     }
 }
