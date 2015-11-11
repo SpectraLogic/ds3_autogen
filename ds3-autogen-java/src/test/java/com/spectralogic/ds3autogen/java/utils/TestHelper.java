@@ -150,4 +150,10 @@ public class TestHelper {
     public static boolean hasPath(final String path, final String code) {
         return code.contains("return " + path + ";");
     }
+
+    public static boolean hasCommand(final String requestName, final String code) {
+        return code.contains(requestName.replace("Request", "Response")
+                + " " + JavaHelper.uncapFirst(requestName.replace("RequestHandler", ""))
+                + "(" + requestName + " request)");
+    }
 }

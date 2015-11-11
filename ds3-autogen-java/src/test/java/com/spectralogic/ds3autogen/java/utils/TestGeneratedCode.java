@@ -18,8 +18,10 @@ import static org.mockito.Mockito.when;
 public class TestGeneratedCode {
     private final ByteArrayOutputStream requestOutputStream;
     private final ByteArrayOutputStream responseOutputStream;
+    private final ByteArrayOutputStream ds3ClientOutputStream;
     private String requestGeneratedCode;
     private String responseGeneratedCode;
+    private String ds3ClientGeneratedCode;
 
     private enum PathType { REQUEST, RESPONSE }
 
@@ -29,6 +31,7 @@ public class TestGeneratedCode {
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
+        this.ds3ClientOutputStream = setupOutputStream(fileUtils, "./ds3-sdk/src/main/java/com/spectralogic/ds3client/Ds3Client.java");
     }
 
     public void generateCode(
@@ -42,6 +45,7 @@ public class TestGeneratedCode {
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
+        ds3ClientGeneratedCode = new String(ds3ClientOutputStream.toByteArray());
     }
 
     private static ByteArrayOutputStream setupOutputStream(
@@ -73,5 +77,9 @@ public class TestGeneratedCode {
 
     public String getResponseGeneratedCode() {
         return responseGeneratedCode;
+    }
+
+    public String getDs3ClientGeneratedCode() {
+        return ds3ClientGeneratedCode;
     }
 }

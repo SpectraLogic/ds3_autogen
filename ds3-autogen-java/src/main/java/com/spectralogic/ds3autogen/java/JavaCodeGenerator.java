@@ -15,20 +15,21 @@
 
 package com.spectralogic.ds3autogen.java;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
+import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +82,22 @@ public class JavaCodeGenerator implements CodeGenerator {
         for (final Ds3Request request : spec.getRequests()) {
             generateRequest(request);
             generateResponse(request);
+        }
+
+        generateClient();
+    }
+
+    private void generateClient() throws IOException, TemplateException {
+        final Template tmpl = config.getTemplate("client/ds3client_template.tmpl");
+        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE);
+        final Path clientPath = destDir.resolve(baseProjectPath.resolve(
+                Paths.get(ROOT_PACKAGE.replace(".", "/") + "/Ds3Client.java")));
+
+        LOG.info("Getting outputstream for file:" + clientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(client, writer);
         }
     }
 
