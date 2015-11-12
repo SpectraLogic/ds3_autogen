@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.models.Client;
+import com.spectralogic.ds3autogen.java.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
 import freemarker.template.Configuration;
@@ -188,11 +189,32 @@ public class JavaCodeGenerator implements CodeGenerator {
             template = config.getTemplate("get_object_template.tmpl");
         } else if (isCreateObject(ds3Request)) {
             template = config.getTemplate("create_object_template.tmpl");
+        } else if (isDeleteNotificationRequest(ds3Request)) {
+            template = config.getTemplate("delete_notification_request_template.tmpl");
+        } else if (isCreateNotificationRequest(ds3Request)) {
+            template = config.getTemplate("create_notification_request_template.tmpl");
+        } else if (isGetNotificationRequest(ds3Request)) {
+            template = config.getTemplate("get_notification_request_template.tmpl");
         } else {
             template = config.getTemplate("request_template.tmpl");
         }
 
         return template;
+    }
+
+    private static boolean isDeleteNotificationRequest(final Ds3Request ds3Request) {
+        return RequestConverter.isNotificationRequest(ds3Request)
+                && RequestConverter.getNotificationType(ds3Request) == NotificationType.DELETE;
+    }
+
+    private static boolean isCreateNotificationRequest(final Ds3Request ds3Request) {
+        return RequestConverter.isNotificationRequest(ds3Request)
+                && RequestConverter.getNotificationType(ds3Request) == NotificationType.CREATE;
+    }
+
+    private static boolean isGetNotificationRequest(final Ds3Request ds3Request) {
+        return RequestConverter.isNotificationRequest(ds3Request)
+                && RequestConverter.getNotificationType(ds3Request) == NotificationType.GET;
     }
 
     private static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
