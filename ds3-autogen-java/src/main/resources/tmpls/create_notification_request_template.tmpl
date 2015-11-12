@@ -1,0 +1,32 @@
+<#include "copyright.tmpl"/>
+
+package ${packageName};
+<#include "imports.tmpl"/>
+
+public class ${name} extends AbstractCreateNotificationRequest {
+
+    // Variables
+    <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
+    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
+    </#list>
+
+    public ${name}(final String notificationEndPoint) {
+        super(notificationEndPoint);
+    }
+
+    <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
+${javaHelper.createWithConstructor(arg, name)}
+    </#list>
+
+    @Override
+    public String getPath() {
+        return ${path};
+    }
+
+    <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
+    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+
+    </#list>
+}
