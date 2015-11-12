@@ -16,10 +16,16 @@ import java.nio.file.Paths;
 import static org.mockito.Mockito.when;
 
 public class TestGeneratedCode {
+    private final static String CLIENT_PATH = "./ds3-sdk/src/main/java/com/spectralogic/ds3client/";
+
     private final ByteArrayOutputStream requestOutputStream;
     private final ByteArrayOutputStream responseOutputStream;
+    private final ByteArrayOutputStream ds3ClientOutputStream;
+    private final ByteArrayOutputStream ds3ClientImplOutputStream;
     private String requestGeneratedCode;
     private String responseGeneratedCode;
+    private String ds3ClientGeneratedCode;
+    private String ds3ClientImplGeneratedCode;
 
     private enum PathType { REQUEST, RESPONSE }
 
@@ -29,6 +35,8 @@ public class TestGeneratedCode {
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
+        this.ds3ClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.java");
+        this.ds3ClientImplOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3ClientImpl.java");
     }
 
     public void generateCode(
@@ -42,6 +50,8 @@ public class TestGeneratedCode {
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
+        ds3ClientGeneratedCode = new String(ds3ClientOutputStream.toByteArray());
+        ds3ClientImplGeneratedCode = new String(ds3ClientImplOutputStream.toByteArray());
     }
 
     private static ByteArrayOutputStream setupOutputStream(
@@ -73,5 +83,13 @@ public class TestGeneratedCode {
 
     public String getResponseGeneratedCode() {
         return responseGeneratedCode;
+    }
+
+    public String getDs3ClientGeneratedCode() {
+        return ds3ClientGeneratedCode;
+    }
+
+    public String getDs3ClientImplGeneratedCode() {
+        return ds3ClientImplGeneratedCode;
     }
 }

@@ -21,8 +21,10 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
+import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
 import freemarker.template.Configuration;
@@ -82,6 +84,35 @@ public class JavaCodeGenerator implements CodeGenerator {
             generateRequest(request);
             generateResponse(request);
         }
+
+        generateClient();
+    }
+
+    private void generateClient() throws IOException, TemplateException {
+        final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
+        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE);
+        final Path clientPath = getClientPath("Ds3Client.java");
+
+        LOG.info("Getting outputstream for file:" + clientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            clientTmpl.process(client, writer);
+        }
+
+        final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.tmpl");
+        final Path clientImplPath = getClientPath("Ds3ClientImpl.java");
+
+        LOG.info("Getting outputstream for file:" + clientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(clientImplPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            clientImplTmpl.process(client, writer);
+        }
+    }
+
+    private Path getClientPath(final String fileName) {
+        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE.replace(".", "/") + "/" + fileName)));
     }
 
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
