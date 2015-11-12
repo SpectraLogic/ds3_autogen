@@ -23,29 +23,16 @@ public class Client {
 
     private final String packageName;
     private final ImmutableList<Command> commands;
-    private final Helper helper;
-    private final JavaHelper javaHelper;
 
     public Client(
             final String packageName,
             final ImmutableList<Command> commands) {
         this.packageName = packageName;
         this.commands = commands;
-
-        helper = Helper.getInstance();
-        javaHelper = JavaHelper.getInstance();
     }
 
     public ImmutableList<Command> getCommands() {
         return commands;
-    }
-
-    public Helper getHelper() {
-        return helper;
-    }
-
-    public JavaHelper getJavaHelper() {
-        return javaHelper;
     }
 
     public String getPackageName() {
