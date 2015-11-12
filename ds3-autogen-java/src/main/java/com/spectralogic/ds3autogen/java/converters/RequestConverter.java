@@ -77,7 +77,8 @@ public class RequestConverter {
             if (ds3Request.getResource() != null) {
                 builder.append("\"/_rest_/" + ds3Request.getResource().toString().toLowerCase() + "/\"");
                 if (isNotificationRequest(ds3Request)) {
-                    if (getNotificationType(ds3Request) == NotificationType.DELETE) {
+                    if (getNotificationType(ds3Request) == NotificationType.DELETE
+                            || getNotificationType(ds3Request) == NotificationType.GET) {
                         builder.append(" + this.getNotificationId().toString()");
                     }
                 } else if (!queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")) {

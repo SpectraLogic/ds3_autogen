@@ -1,3 +1,30 @@
 <#include "copyright.tmpl"/>
 
 package ${packageName};
+
+import java.util.UUID;
+<#list imports as import>
+<#if import != "java.util.UUID">
+import ${import};
+</#if>
+</#list>
+
+public class ${name} extends AbstractGetNotificationRequest {
+
+    // Variables
+    <#include "variables.tmpl"/>
+
+    // Constructor
+    public ${name}(final UUID notificationId) {
+        super(notificationId);
+    }
+
+    <#include "with_constructors.tmpl"/>
+
+    @Override
+    public String getPath() {
+        return ${path};
+    }
+
+    <#include "getters.tmpl"/>
+}

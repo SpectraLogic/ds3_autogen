@@ -581,6 +581,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasPath("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -620,6 +621,45 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("NamingConvention", "NamingConventionType", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("NotificationHttpMethod", "RequestType", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("JobId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+    }
+
+    @Test
+    public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException {
+        final String requestName = "GetJobCompletedNotificationRegistrationsRequestHandler";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getJobCompletedNotificationRegistrationsRequestHandler.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractGetNotificationRequest", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+
+        assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
+
+        assertTrue(isOptParamOfType("LastPage", "boolean", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("PageLength", "int", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("PageOffset", "int", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("PageStartMarker", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("UserId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(hasCopyright(requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
