@@ -75,7 +75,7 @@ public class Main {
 
         final Ds3ApiSpec spec = parser.getSpec(Files.newInputStream(Paths.get(args.getInputSpec())));
 
-        CodeGenerator generator;
+        final CodeGenerator generator;
         switch (args.getType()) {
             case C:
                 generator = new CCodeGenerator();
@@ -92,7 +92,7 @@ public class Main {
             default:
                 throw new IllegalArgumentException("Unknown generator type " + args.getType().toString());
         }
-        FileUtils fileUtils = new FileUtilsImpl();
+        final FileUtils fileUtils = new FileUtilsImpl();
         generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()));
     }
 }
