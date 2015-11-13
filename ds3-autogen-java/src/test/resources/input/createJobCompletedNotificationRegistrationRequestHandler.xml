@@ -1,0 +1,33 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.CreateJobCompletedNotificationRegistrationRequestHandler">
+                <Request Action="CREATE" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Format" Type="com.spectralogic.util.http.HttpResponseFormatType"/>
+                        <Param Name="JobId" Type="java.util.UUID"/>
+                        <Param Name="NamingConvention" Type="com.spectralogic.util.lang.NamingConventionType"/>
+                        <Param Name="NotificationHttpMethod" Type="com.spectralogic.util.http.RequestType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="NotificationEndPoint" Type="java.lang.String"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.notification.JobCompletedNotificationRegistration"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
