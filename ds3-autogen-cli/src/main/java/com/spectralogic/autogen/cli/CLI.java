@@ -36,12 +36,20 @@ public class CLI {
         final CommandLineParser parser = new BasicParser();
         final CommandLine cmd = parser.parse(options, args);
 
-        final String directory = cmd.getOptionValue("d");
-        final GeneratorType language = Guards.returnIfNull(cmd.getOptionValue("l").toUpperCase(), GeneratorType::valueOf);
-        final String inputSpec = cmd.getOptionValue("i");
-        final boolean help = cmd.hasOption("h");
+        final Arguments arguments = new Arguments();
 
-        final Arguments arguments = new Arguments(directory, language, inputSpec, help);
+        if (cmd.hasOption("d")) {
+            arguments.setTargetDir(cmd.getOptionValue("d"));
+        }
+        if (cmd.hasOption("l")) {
+            arguments.setType(Guards.returnIfNull(cmd.getOptionValue("l").toUpperCase(), GeneratorType::valueOf));
+        }
+        if (cmd.hasOption("i")) {
+            arguments.setInputSpec(cmd.getOptionValue("i"));
+        }
+        if (cmd.hasOption("h")) {
+            arguments.setHelp(true);
+        }
 
         validateArguments(arguments);
 
