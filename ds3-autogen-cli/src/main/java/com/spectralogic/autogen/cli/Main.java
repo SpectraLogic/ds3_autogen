@@ -1,8 +1,30 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.autogen.cli;
 
 import com.spectralogic.d3autogen.Ds3SpecParserImpl;
+import com.spectralogic.d3autogen.FileUtilsImpl;
+import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
+import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.c.CCodeGenerator;
+import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
+import com.spectralogic.ds3autogen.net.NetCodeGenerator;
+import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,5 +75,24 @@ public class Main {
 
         final Ds3ApiSpec spec = parser.getSpec(Files.newInputStream(Paths.get(args.getInputSpec())));
 
+        CodeGenerator generator;
+        switch (args.getType()) {
+            case C:
+                generator = new CCodeGenerator();
+                break;
+            case JAVA:
+                generator = new JavaCodeGenerator();
+                break;
+            case NET:
+                generator = new NetCodeGenerator();
+                break;
+            case PYTHON:
+                generator = new PythonCodeGenerator();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown generator type " + args.getType().toString());
+        }
+        FileUtils fileUtils = new FileUtilsImpl();
+        generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()));
     }
 }
