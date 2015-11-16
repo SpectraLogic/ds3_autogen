@@ -17,12 +17,27 @@ package com.spectralogic.d3autogen;
 
 import com.spectralogic.ds3autogen.api.FileUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
 public class FileUtilsImpl implements FileUtils {
     @Override
-    public OutputStream getOutputFile(final Path path) {
-        return null;
+    public OutputStream getOutputFile(final Path path) throws IOException {
+        createDirectories(path.getParent());
+        return new BufferedOutputStream(
+                Files.newOutputStream(path, CREATE, TRUNCATE_EXISTING));
+    }
+
+    private void createDirectories(final Path path) throws IOException {
+        if (Files.exists(path)) {
+            return;
+        }
+        Files.createDirectories(path);
     }
 }
