@@ -37,7 +37,7 @@ public class CLI {
         final CommandLine cmd = parser.parse(options, args);
 
         final String directory = cmd.getOptionValue("d");
-        final GeneratorType language = Guards.returnIfNull(cmd.getOptionValue("l").toUpperCase(), GeneratorType::valueOf);
+        final GeneratorType language = processLanguageArg(cmd);
         final String inputSpec = cmd.getOptionValue("i");
         final boolean help = cmd.hasOption("h");
 
@@ -46,6 +46,16 @@ public class CLI {
         validateArguments(arguments);
 
         return arguments;
+    }
+
+    private GeneratorType processLanguageArg(final CommandLine cmd) {
+        try {
+            return Guards.returnIfNull(cmd.getOptionValue("l").toUpperCase(), GeneratorType::valueOf);
+        } catch (final NullPointerException e) {
+            return null;
+        } catch (final Exception e) {
+            throw new IllegalArgumentException(cmd.getOptionValue("l") + " is not a supported language");
+        }
     }
 
     private void validateArguments(final Arguments arguments) throws MissingArgumentException {
