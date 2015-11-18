@@ -23,6 +23,8 @@ import com.spectralogic.ds3autogen.java.models.Request;
 
 public class RequestConverter {
 
+    private final static String MODELS_PACKAGE = "com.spectralogic.ds3client.models.";
+
     private final Ds3Request ds3Request;
     private final String packageName;
     private final ImmutableList<Arguments> requiredConstructorArguments;
@@ -203,9 +205,17 @@ public class RequestConverter {
         for (final Ds3Param ds3Param : paramList) {
             if (!ds3Param.getName().equals("Operation")
                     && ds3Param.getType().contains(".")) {
-                importsBuilder.add(ds3Param.getType());
+                importsBuilder.add(convertParamType(ds3Param.getType()));
             }
         }
         return importsBuilder.build();
+    }
+
+    private static String convertParamType(final String type) {
+        if (type.startsWith("com.spectralogic.s3.common.dao.domain")) {
+            final String[] packageParts = type.split("\\.");
+            return MODELS_PACKAGE + packageParts[packageParts.length - 1];
+        }
+        return type;
     }
 }
