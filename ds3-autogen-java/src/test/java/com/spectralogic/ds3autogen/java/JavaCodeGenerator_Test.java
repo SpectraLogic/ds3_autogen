@@ -49,7 +49,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetObjectRequestHandler";
+        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -80,7 +80,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getBucketRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetBucketRequestHandler";
+        final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -130,7 +130,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void modifyBucketRequestHandler() throws IOException, ParserException {
-        final String requestName = "ModifyBucketRequestHandler";
+        final String requestName = "ModifyBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -180,7 +180,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createVerifyJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateVerifyJobRequestHandler";
+        final String requestName = "CreateVerifyJobRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -237,7 +237,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createGetJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateGetJobRequestHandler";
+        final String requestName = "CreateGetJobRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -292,7 +292,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createPutJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreatePutJobRequestHandler";
+        final String requestName = "CreatePutJobRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -347,7 +347,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetPhysicalPlacementForObjectsRequestHandler";
+        final String requestName = "GetPhysicalPlacementForObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -405,7 +405,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "VerifyPhysicalPlacementForObjectsRequestHandler";
+        final String requestName = "VerifyPhysicalPlacementForObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -464,7 +464,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void deleteObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "DeleteObjectsRequestHandler";
+        final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -523,7 +523,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createObjectRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateObjectRequestHandler";
+        final String requestName = "CreateObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -599,7 +599,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getObjectRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetObjectRequestHandler";
+        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -663,7 +663,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "DeleteJobCreatedNotificationRegistrationRequestHandler";
+        final String requestName = "DeleteJobCreatedNotificationRegistrationRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -694,7 +694,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateJobCompletedNotificationRegistrationRequestHandler";
+        final String requestName = "CreateJobCompletedNotificationRegistrationRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -734,7 +734,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetJobCompletedNotificationRegistrationsRequestHandler";
+        final String requestName = "GetJobCompletedNotificationRegistrationsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
