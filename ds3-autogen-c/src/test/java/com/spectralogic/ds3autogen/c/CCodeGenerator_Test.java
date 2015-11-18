@@ -40,8 +40,6 @@ public class CCodeGenerator_Test {
 
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
-        //final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
-
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/requests/DeleteBucket.c");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);

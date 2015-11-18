@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.models.Request;
 
@@ -30,6 +31,7 @@ import java.io.Writer;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import freemarker.core.Environment;
 import freemarker.template.*;
@@ -69,11 +71,11 @@ public class CCodeGenerator implements CodeGenerator {
             generateRequest(request);
         }
 
-        /*
-        for (Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
-            System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue().getName() + "]");
+        if (null != spec.getTypes()) {
+            for ( Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
+                System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
+            }
         }
-        */
     }
 
     public void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
@@ -87,10 +89,12 @@ public class CCodeGenerator implements CodeGenerator {
 
             requestTemplate = config.getTemplate("AmazonS3InitRequestHandler.tmplt");
             System.out.println("Template loaded!");
-        //} else if (ds3Request.getClassification() == Classification.spectrads3) {
-        //    System.out.println("amazonS3 request");
-        //} else if (ds3Request.getClassification() == Classification.spectrainternal) /* && codeGenType != production */ {
-        //    System.out.println("spectra internal request");
+        } else if (ds3Request.getClassification() == Classification.spectrads3) {
+            System.out.println("AmazonS3 request");
+            // TODO
+        } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
+            System.out.println("Spectra internal request");
+            // TODO
         } else {
             throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
         }
