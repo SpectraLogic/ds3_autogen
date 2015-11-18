@@ -16,12 +16,14 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 
 public class NameConverter {
 
     private final static NameConverter nameConverter = new NameConverter();
+    public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
 
     private NameConverter() {}
 
@@ -30,19 +32,20 @@ public class NameConverter {
     }
 
     //Removes "Handler" from all request names within the spec
+    //and namespaces the spectrads3 commands
     public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
 
         for (final Ds3Request request : spec.getRequests()) {
-            builder.add(stripHandlerFromName(request));
+            builder.add(updateRequestName(request));
         }
 
         return new Ds3ApiSpec(builder.build(), spec.getTypes());
     }
 
-    private static Ds3Request stripHandlerFromName(final Ds3Request request) {
+    private static Ds3Request updateRequestName(final Ds3Request request) {
         return new Ds3Request(
-                stripHandlerFromName(request.getName()),
+                processRequestName(request),
                 request.getHttpVerb(),
                 request.getClassification(),
                 request.getBucketRequirement(),
@@ -54,6 +57,14 @@ public class NameConverter {
                 request.getDs3ResponseCodes(),
                 request.getOptionalQueryParams(),
                 request.getRequiredQueryParams());
+    }
+
+    private static String processRequestName(final Ds3Request request) {
+        if (request.getClassification() == Classification.spectrads3) {
+            final String namespacedName = request.getName().replace("Request", SPECTRA_S3_NAMESPACING + "Request");
+            return stripHandlerFromName(namespacedName);
+        }
+        return stripHandlerFromName(request.getName());
     }
 
     private static String stripHandlerFromName(final String requestName) {

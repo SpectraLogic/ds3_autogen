@@ -130,7 +130,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void modifyBucketRequestHandler() throws IOException, ParserException {
-        final String requestName = "ModifyBucketRequest";
+        final String requestName = "ModifyBucketSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -180,7 +180,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createVerifyJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateVerifyJobRequest";
+        final String requestName = "CreateVerifyJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -237,7 +237,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createGetJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateGetJobRequest";
+        final String requestName = "CreateGetJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -292,7 +292,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createPutJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreatePutJobRequest";
+        final String requestName = "CreatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -347,7 +347,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetPhysicalPlacementForObjectsRequest";
+        final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -405,7 +405,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "VerifyPhysicalPlacementForObjectsRequest";
+        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -663,7 +663,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "DeleteJobCreatedNotificationRegistrationRequest";
+        final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -694,7 +694,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateJobCompletedNotificationRegistrationRequest";
+        final String requestName = "CreateJobCompletedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -734,7 +734,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetJobCompletedNotificationRegistrationsRequest";
+        final String requestName = "GetJobCompletedNotificationRegistrationsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
