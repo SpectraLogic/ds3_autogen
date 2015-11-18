@@ -61,7 +61,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         try {
             generateCommands();
-        } catch (TemplateException e) {
+        } catch (final TemplateException e) {
             e.printStackTrace();
         }
     }
@@ -72,7 +72,7 @@ public class CCodeGenerator implements CodeGenerator {
         }
 
         if (null != spec.getTypes()) {
-            for ( Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
+            for (final Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
                 System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
             }
         }
@@ -82,7 +82,6 @@ public class CCodeGenerator implements CodeGenerator {
         Template requestTemplate = null;
         Request request = null;
 
-        System.out.println("Generating Request[" + ds3Request.getName() + "]");
         if (ds3Request.getClassification() == Classification.amazons3) {
             request = RequestConverter.toRequest(ds3Request);
             System.out.println("Loading template AmazonS3InitRequestHandler.tmplt");
@@ -101,12 +100,11 @@ public class CCodeGenerator implements CodeGenerator {
 
         final Path outputPath = getOutputPath(request);
 
-        System.out.println("outputPath[" + outputPath.toString() + "]");
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
         try {
             requestTemplate.process(request, writer);
-        } catch ( NullPointerException e) {
+        } catch (final NullPointerException e) {
             System.out.println("Encountered NullPointerException while processing template " + requestTemplate.getName());
             e.printStackTrace();
         }
