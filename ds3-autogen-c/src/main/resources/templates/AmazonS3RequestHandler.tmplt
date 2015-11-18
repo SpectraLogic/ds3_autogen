@@ -13,16 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api;
+/******************************************************************************
+ THIS FILE IS AUTO GENERATED!!! DO NOT MODIFY!!!
+ *****************************************************************************/
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+ #include "ds3.h"
 
-import java.io.IOException;
+ ds3_error* ds3_${request.name}(const ds3_client* client, const ds3_request* request<#list request.ds3ResponseCodes><#items as ds3ResponseCode><#if ds3ResponseCode.type != "null">, ds3_<$request.name>_response** _response</#if></#items></#list> ) {
 
-import java.nio.file.Path;
-
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException;
-}
+ }
