@@ -2,5 +2,5 @@ dependencies {
     compile     project(':ds3-autogen-api')
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
+    compile     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
 }

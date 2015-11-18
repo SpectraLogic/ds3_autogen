@@ -13,16 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api;
+package com.spectralogic.ds3autogen.utils;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import java.io.IOException;
+public class Helper_Test {
+    @Test
+    public void camelCaseToUnderscore_Test() {
+        assertEquals(Helper.getInstance().camelToUnderscore("BumpyCaseWord"), "bumpy_case_word");
+    }
 
-import java.nio.file.Path;
+    @Test
+    public void removeTrailingRequestHandler_Test() {
+        assertEquals(Helper.getInstance().removeTrailingRequestHandler("SomeRequestHandler"), "Some");
+    }
 
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException;
+    @Test
+    public void unqualifiedName_Test() {
+        assertEquals(Helper.getInstance().unqualifiedName("some.qualified.name"), "name");
+    }
 }

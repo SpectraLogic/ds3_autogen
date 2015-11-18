@@ -13,16 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-
-import java.io.IOException;
-
-import java.nio.file.Path;
-
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException;
+ds3_error* ds3_delete_bucket(const ds3_client* client, const ds3_request* request) {
+    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL);
 }
