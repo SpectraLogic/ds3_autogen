@@ -1,0 +1,25 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.JobsApiBean">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.JobApiBean" Name="Jobs"
+                             Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Jobs"
+                                                       ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode"
+                                                       Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS"
+                                                       ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Job" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

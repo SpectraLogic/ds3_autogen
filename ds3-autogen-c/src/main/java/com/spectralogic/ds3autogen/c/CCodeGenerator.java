@@ -84,10 +84,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         if (ds3Request.getClassification() == Classification.amazons3) {
             request = RequestConverter.toRequest(ds3Request);
-            System.out.println("Loading template AmazonS3InitRequestHandler.tmplt");
-
             requestTemplate = config.getTemplate("AmazonS3InitRequestHandler.tmplt");
-            System.out.println("Template loaded!");
         } else if (ds3Request.getClassification() == Classification.spectrads3) {
             System.out.println("AmazonS3 request");
             // TODO
