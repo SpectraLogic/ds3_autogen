@@ -668,7 +668,7 @@ public class JavaCodeGenerator_Test {
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/notifications/");
 
         testGeneratedCode.generateCode(fileUtils, "/input/deleteJobCreatedNotificationRegistrationRequestHandler.xml");
 
@@ -677,7 +677,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractDeleteNotificationRequest", requestGeneratedCode));
         assertTrue(hasPath("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasCopyright(requestGeneratedCode));
 
@@ -687,9 +687,18 @@ public class JavaCodeGenerator_Test {
 
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test
@@ -699,7 +708,7 @@ public class JavaCodeGenerator_Test {
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/notifications/");
 
         testGeneratedCode.generateCode(fileUtils, "/input/createJobCompletedNotificationRegistrationRequestHandler.xml");
 
@@ -708,7 +717,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractCreateNotificationRequest", requestGeneratedCode));
         assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\"", requestGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.util.http.HttpResponseFormatType", requestGeneratedCode));
@@ -727,9 +736,18 @@ public class JavaCodeGenerator_Test {
 
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test
@@ -739,7 +757,7 @@ public class JavaCodeGenerator_Test {
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/notifications/");
 
         testGeneratedCode.generateCode(fileUtils, "/input/getJobCompletedNotificationRegistrationsRequestHandler.xml");
 
@@ -748,7 +766,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractGetNotificationRequest", requestGeneratedCode));
         assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
 
@@ -765,9 +783,18 @@ public class JavaCodeGenerator_Test {
 
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
-        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test

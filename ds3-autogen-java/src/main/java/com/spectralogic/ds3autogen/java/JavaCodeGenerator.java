@@ -52,7 +52,8 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private static final String ROOT_PACKAGE = "com.spectralogic.ds3client";
     private static final String COMMANDS_PACKAGE = ROOT_PACKAGE + ".commands";
-    private static final String SPECTRADS3_COMMANDS_PACKAGE = COMMANDS_PACKAGE + ".spectrads3";
+    private static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
+    private static final String NOTIFICATION_PACKAGE = ".notifications";
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
@@ -133,11 +134,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Response getResponse(final Ds3Request ds3Request) {
-        if (ds3Request.getClassification() == Classification.spectrads3) {
-            return ResponseConverter.toResponse(ds3Request, SPECTRADS3_COMMANDS_PACKAGE);
-        } else {
-            return ResponseConverter.toResponse(ds3Request, COMMANDS_PACKAGE);
-        }
+        return ResponseConverter.toResponse(ds3Request, getCommandPackage(ds3Request));
     }
 
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
@@ -146,6 +143,18 @@ public class JavaCodeGenerator implements CodeGenerator {
         } else {
             return config.getTemplate("response/response_template.tmpl");
         }
+    }
+
+    private static String getCommandPackage(final Ds3Request ds3Request) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(COMMANDS_PACKAGE);
+        if (ds3Request.getClassification() == Classification.spectrads3) {
+            builder.append(SPECTRA_DS3_PACKAGE);
+        }
+        if (RequestConverter.isNotificationRequest(ds3Request)) {
+            builder.append(NOTIFICATION_PACKAGE);
+        }
+        return builder.toString();
     }
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
@@ -160,23 +169,15 @@ public class JavaCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(request, writer);
         }
-
     }
 
     private Path getPath(final Ds3Request ds3Request, final String fileName) {
-        if (ds3Request.getClassification() == Classification.spectrads3) {
-            return destDir.resolve(baseProjectPath.resolve(Paths.get(SPECTRADS3_COMMANDS_PACKAGE.replace(".", "/") + "/" + fileName + ".java")));
-        } else {
-            return destDir.resolve(baseProjectPath.resolve(Paths.get(COMMANDS_PACKAGE.replace(".", "/") + "/" + fileName + ".java")));
-        }
+        return destDir.resolve(baseProjectPath.resolve(
+                Paths.get(getCommandPackage(ds3Request).replace(".", "/") + "/" + fileName + ".java")));
     }
 
     private Request getRequest(final Ds3Request ds3Request) {
-        if (ds3Request.getClassification() == Classification.spectrads3) {
-            return RequestConverter.toRequest(ds3Request, SPECTRADS3_COMMANDS_PACKAGE);
-        } else {
-            return RequestConverter.toRequest(ds3Request, COMMANDS_PACKAGE);
-        }
+        return RequestConverter.toRequest(ds3Request, getCommandPackage(ds3Request));
     }
 
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
