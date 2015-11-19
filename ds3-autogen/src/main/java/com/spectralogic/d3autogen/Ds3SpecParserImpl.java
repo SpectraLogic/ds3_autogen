@@ -43,10 +43,6 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
 
     @Override
     public Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException {
-        //System.out.println("Ds3ApiSpec::getSpec");
-        //stream.mark(8096);
-        //System.out.println(new String(ByteStreams.toByteArray(stream), Charsets.UTF_8));
-        //stream.reset();
         return toSpec(mapper.readValue(stream, RawSpec.class));
     }
 
