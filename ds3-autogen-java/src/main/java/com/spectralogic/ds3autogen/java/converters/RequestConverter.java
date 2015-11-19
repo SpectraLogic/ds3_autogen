@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.java.models.Request;
 public class RequestConverter {
 
     private final static String MODELS_PACKAGE = "com.spectralogic.ds3client.models.";
+    private final static String CONTRACT_PACKAGE = "com.spectralogic.s3.common.dao.domain";
 
     private final Ds3Request ds3Request;
     private final String packageName;
@@ -212,7 +213,7 @@ public class RequestConverter {
     }
 
     private static String convertParamType(final String type) {
-        if (type.startsWith("com.spectralogic.s3.common.dao.domain")) {
+        if (type.startsWith(CONTRACT_PACKAGE)) {
             final String[] packageParts = type.split("\\.");
             return MODELS_PACKAGE + packageParts[packageParts.length - 1];
         }
