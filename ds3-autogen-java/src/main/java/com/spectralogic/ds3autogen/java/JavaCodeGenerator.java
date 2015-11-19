@@ -42,6 +42,8 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
+
 public class JavaCodeGenerator implements CodeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator.class);
@@ -69,7 +71,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
             final Path destDir) throws IOException {
-        this.spec = spec;
+        this.spec = renameRequests(spec);
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
@@ -231,14 +233,14 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private static boolean isMultiFileDelete(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("DeleteObjectsRequestHandler");
+        return ds3Request.getName().endsWith("DeleteObjectsRequest");
     }
 
     private static boolean isCreateObject(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("CreateObjectRequestHandler");
+        return ds3Request.getName().endsWith("CreateObjectRequest");
     }
 
     private static boolean isGetObject(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("GetObjectRequestHandler");
+        return ds3Request.getName().endsWith("GetObjectRequest");
     }
 }

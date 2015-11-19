@@ -58,7 +58,7 @@ public class ClientConverter {
     }
 
     private static String getCommandName(final String requestName) {
-        return removePath(requestName).replace("RequestHandler", "");
+        return removePath(requestName).replace("Request", "");
     }
 
     private static String getResponseName(final String requestName) {

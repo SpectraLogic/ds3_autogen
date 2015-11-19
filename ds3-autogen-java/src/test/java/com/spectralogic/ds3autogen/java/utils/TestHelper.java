@@ -153,7 +153,7 @@ public class TestHelper {
 
     public static boolean hasCommand(final String requestName, final String code) {
         return code.contains(requestName.replace("Request", "Response")
-                + " " + JavaHelper.uncapFirst(requestName.replace("RequestHandler", ""))
+                + " " + JavaHelper.uncapFirst(requestName.replace("Request", ""))
                 + "(" + requestName + " request)");
     }
 }

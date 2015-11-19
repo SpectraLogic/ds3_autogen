@@ -49,7 +49,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetObjectRequestHandler";
+        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -80,7 +80,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getBucketRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetBucketRequestHandler";
+        final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -130,7 +130,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void modifyBucketRequestHandler() throws IOException, ParserException {
-        final String requestName = "ModifyBucketRequestHandler";
+        final String requestName = "ModifyBucketSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -180,7 +180,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createVerifyJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateVerifyJobRequestHandler";
+        final String requestName = "CreateVerifyJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -198,7 +198,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
@@ -237,7 +237,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createGetJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateGetJobRequestHandler";
+        final String requestName = "CreateGetJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -255,10 +255,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
 
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
@@ -292,7 +292,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createPutJobRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreatePutJobRequestHandler";
+        final String requestName = "CreatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -312,7 +312,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
 
@@ -347,7 +347,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetPhysicalPlacementForObjectsRequestHandler";
+        final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -405,7 +405,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "VerifyPhysicalPlacementForObjectsRequestHandler";
+        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -464,7 +464,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void deleteObjectsRequestHandler() throws IOException, ParserException {
-        final String requestName = "DeleteObjectsRequestHandler";
+        final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -523,7 +523,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createObjectRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateObjectRequestHandler";
+        final String requestName = "CreateObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -599,7 +599,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getObjectRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetObjectRequestHandler";
+        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -663,7 +663,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "DeleteJobCreatedNotificationRegistrationRequestHandler";
+        final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -694,7 +694,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException {
-        final String requestName = "CreateJobCompletedNotificationRegistrationRequestHandler";
+        final String requestName = "CreateJobCompletedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -734,7 +734,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException {
-        final String requestName = "GetJobCompletedNotificationRegistrationsRequestHandler";
+        final String requestName = "GetJobCompletedNotificationRegistrationsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
