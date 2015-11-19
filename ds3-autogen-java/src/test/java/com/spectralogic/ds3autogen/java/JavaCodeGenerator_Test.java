@@ -690,6 +690,15 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test
@@ -730,6 +739,15 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test
@@ -768,6 +786,15 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(hasCommand(requestName, ds3ClientImplGeneratedCode));
     }
 
     @Test
