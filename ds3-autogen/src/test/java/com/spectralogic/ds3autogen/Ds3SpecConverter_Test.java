@@ -13,30 +13,57 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.junit.Test;
 
-public class ParamMap {
+public class Ds3SpecConverter_Test {
 
-    @JsonProperty("Name")
-    private String name;
-    @JsonProperty("Type")
-    private String type;
-
-    public String getType() {
-        return type;
+    @Test
+    public void convertName() {
     }
 
-    public void setType(final String type) {
-        this.type = type;
+    @Test
+    public void convertNameWithDollarSign() {
     }
 
-    public String getName() {
-        return name;
+    @Test
+    public void convertAllAnnotationElements() {
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    @Test
+    public void convertAllAnnotations() {
+    }
+
+    @Test
+    public void convertAllEnumConstants() {
+    }
+
+    @Test
+    public void convertAllProperties() {
+    }
+
+    @Test
+    public void convertAllElements() {
+    }
+
+    @Test
+    public void convertTypes() {
+    }
+
+    @Test
+    public void convertResponseCode() {
+    }
+
+    @Test
+    public void convertAllResponseCodes() {
+    }
+
+    @Test
+    public void convertAllParams() {
+    }
+
+    @Test
+    public void convertRequests() {
     }
 }

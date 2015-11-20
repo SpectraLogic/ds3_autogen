@@ -13,33 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
 
-import java.util.List;
+import java.io.IOException;
 
-public class RequestMap {
-
-    @JsonProperty("Name")
-    private String requestName;
-
-    @JsonProperty("ParamMap")
-    private List<ParamMap> params;
-
-    public String getRequestName() {
-        return requestName;
-    }
-
-    public void setRequestName(final String requestName) {
-        this.requestName = requestName;
-    }
-
-    public List<ParamMap> getParams() {
-        return params;
-    }
-
-    public void setParams(final List<ParamMap> params) {
-        this.params = params;
-    }
+public interface Ds3NameMapperParser {
+    Ds3NameMapper getMap() throws ParserException, IOException;
 }
