@@ -16,12 +16,9 @@
 package com.spectralogic.ds3autogen.api.models;
 
 import com.google.common.collect.ImmutableMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Ds3NameMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Ds3NameMapper.class);
     private final ImmutableMap<String, Ds3NameMap> typeNameMapper;
 
     public Ds3NameMapper(final ImmutableMap<String, Ds3NameMap> typeNameMapper) {
