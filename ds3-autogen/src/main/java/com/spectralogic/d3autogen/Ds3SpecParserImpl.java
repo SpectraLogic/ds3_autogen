@@ -46,10 +46,11 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
         return toSpec(mapper.readValue(stream, RawSpec.class));
     }
 
-    private static Ds3ApiSpec toSpec(final RawSpec contract) {
+    private static Ds3ApiSpec toSpec(final RawSpec contract) throws IOException, ParserException {
+        final NameMapper nameMapper = new NameMapper();
         final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
-                Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests()),
-                Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types()));
+                Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),
+                Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types(), nameMapper));
 
         return ds3ApiSpec;
     }

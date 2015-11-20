@@ -21,10 +21,9 @@ import com.spectralogic.ds3autogen.api.models.*;
 
 public class Ds3SpecConverter {
 
-    private static final NameMapper nameMapper = NameMapper.getInstance();
-
     public static ImmutableList<Ds3Request> convertRequests(
-            final ImmutableList<Ds3Request> requests) {
+            final ImmutableList<Ds3Request> requests,
+            final NameMapper nameMapper) {
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
 
         for (final Ds3Request request : requests) {
@@ -38,16 +37,18 @@ public class Ds3SpecConverter {
                     request.getResource(),
                     request.getResourceType(),
                     request.getOperation(),
-                    convertAllResponseCodes(request.getDs3ResponseCodes()),
-                    convertAllParams(request.getOptionalQueryParams()),
-                    convertAllParams(request.getRequiredQueryParams()));
+                    convertAllResponseCodes(request.getDs3ResponseCodes(), nameMapper),
+                    convertAllParams(request.getOptionalQueryParams(), nameMapper),
+                    convertAllParams(request.getRequiredQueryParams(), nameMapper));
             builder.add(convertedRequest);
         }
 
         return builder.build();
     }
 
-    private static ImmutableList<Ds3Param> convertAllParams(final ImmutableList<Ds3Param> params) {
+    public static ImmutableList<Ds3Param> convertAllParams(
+            final ImmutableList<Ds3Param> params,
+            final NameMapper nameMapper) {
         if (params == null || params.isEmpty()) {
             return params;
         }
@@ -55,36 +56,43 @@ public class Ds3SpecConverter {
         for (final Ds3Param param : params) {
             final Ds3Param convertedParam = new Ds3Param(
                     param.getName(),
-                    convertName(param.getType()));
+                    convertName(param.getType(), nameMapper));
             builder.add(convertedParam);
         }
         return builder.build();
     }
 
-    private static ImmutableList<Ds3ResponseCode> convertAllResponseCodes(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
+    public static ImmutableList<Ds3ResponseCode> convertAllResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes,
+            final NameMapper nameMapper) {
         if (responseCodes == null || responseCodes.isEmpty()) {
             return responseCodes;
         }
         final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            builder.add(convertResponseCode(responseCode));
+            builder.add(convertResponseCode(responseCode, nameMapper));
         }
         return builder.build();
     }
 
-    private static Ds3ResponseCode convertResponseCode(final Ds3ResponseCode responseCode) {
+    public static Ds3ResponseCode convertResponseCode(
+            final Ds3ResponseCode responseCode,
+            final NameMapper nameMapper) {
+        if (responseCode.getDs3ResponseTypes() == null || responseCode.getDs3ResponseTypes().isEmpty()) {
+            return responseCode;
+        }
         final ImmutableList.Builder<Ds3ResponseType> builder = ImmutableList.builder();
         for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
             builder.add(new Ds3ResponseType(
-                    convertName(responseType.getType()),
-                    convertName(responseType.getComponentType())));
+                    convertName(responseType.getType(), nameMapper),
+                    convertName(responseType.getComponentType(), nameMapper)));
         }
         return new Ds3ResponseCode(responseCode.getCode(), builder.build());
     }
 
     public static ImmutableMap<String, Ds3Type> convertTypes(
-            final ImmutableMap<String, Ds3Type> types) {
+            final ImmutableMap<String, Ds3Type> types,
+            final NameMapper nameMapper) {
         if (types == null || types.isEmpty()) {
             return types;
         }
@@ -92,17 +100,18 @@ public class Ds3SpecConverter {
 
         for (final ImmutableMap.Entry<String, Ds3Type> entry : types.entrySet()) {
             final Ds3Type ds3Type = new Ds3Type(
-                    convertName(entry.getValue().getName()),
-                    convertAllElements(entry.getValue().getElements()),
-                    convertAllEnumConstants(entry.getValue().getEnumConstants()));
-            builder.put(convertName(entry.getKey()), ds3Type);
+                    convertName(entry.getValue().getName(), nameMapper),
+                    convertAllElements(entry.getValue().getElements(), nameMapper),
+                    convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
+            builder.put(convertName(convertName(entry.getKey(), nameMapper), nameMapper), ds3Type);
         }
 
         return builder.build();
     }
 
-    private static ImmutableList<Ds3EnumConstant> convertAllEnumConstants(
-            final ImmutableList<Ds3EnumConstant> enumConstants) {
+    public static ImmutableList<Ds3EnumConstant> convertAllEnumConstants(
+            final ImmutableList<Ds3EnumConstant> enumConstants,
+            final NameMapper nameMapper) {
         if (enumConstants == null || enumConstants.isEmpty()) {
             return enumConstants;
         }
@@ -110,14 +119,15 @@ public class Ds3SpecConverter {
         for (final Ds3EnumConstant enumConstant : enumConstants) {
             final Ds3EnumConstant convertedEnumConstant = new Ds3EnumConstant(
                     enumConstant.getName(),
-                    convertAllProperties(enumConstant.getDs3Properties()));
+                    convertAllProperties(enumConstant.getDs3Properties(), nameMapper));
             builder.add(convertedEnumConstant);
         }
         return builder.build();
     }
 
-    private static ImmutableList<Ds3Property> convertAllProperties(
-            final ImmutableList<Ds3Property> properties) {
+    public static ImmutableList<Ds3Property> convertAllProperties(
+            final ImmutableList<Ds3Property> properties,
+            final NameMapper nameMapper) {
         if (properties == null || properties.isEmpty()) {
             return properties;
         }
@@ -126,13 +136,15 @@ public class Ds3SpecConverter {
             final Ds3Property convertedProperty = new Ds3Property(
                     property.getName(),
                     property.getValue(),
-                    convertName(property.getValueType()));
+                    convertName(property.getValueType(), nameMapper));
             builder.add(convertedProperty);
         }
         return builder.build();
     }
 
-    private static ImmutableList<Ds3Element> convertAllElements(final ImmutableList<Ds3Element> elements) {
+    public static ImmutableList<Ds3Element> convertAllElements(
+            final ImmutableList<Ds3Element> elements,
+            final NameMapper nameMapper) {
         if (elements == null || elements.isEmpty()) {
             return elements;
         }
@@ -140,31 +152,33 @@ public class Ds3SpecConverter {
         for (final Ds3Element element : elements) {
             final Ds3Element convertedElement = new Ds3Element(
                     element.getName(),
-                    convertName(element.getType()),
-                    element.getComponentType(),
-                    convertAllAnnotations(element.getDs3Annotations()));
+                    convertName(element.getType(), nameMapper),
+                    convertName(element.getComponentType(), nameMapper),
+                    convertAllAnnotations(element.getDs3Annotations(), nameMapper));
             builder.add(convertedElement);
         }
         return builder.build();
     }
 
-    private static ImmutableList<Ds3Annotation> convertAllAnnotations(
-            final ImmutableList<Ds3Annotation> annotations) {
+    public static ImmutableList<Ds3Annotation> convertAllAnnotations(
+            final ImmutableList<Ds3Annotation> annotations,
+            final NameMapper nameMapper) {
         if (annotations == null || annotations.isEmpty()) {
             return annotations;
         }
         ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
         for (final Ds3Annotation annotation : annotations) {
             final Ds3Annotation convertedAnnotation = new Ds3Annotation(
-                    convertName(annotation.getName()),
-                    convertAllAnnotationElements(annotation.getDs3AnnotationElements()));
+                    convertName(annotation.getName(), nameMapper),
+                    convertAllAnnotationElements(annotation.getDs3AnnotationElements(), nameMapper));
             builder.add(convertedAnnotation);
         }
         return builder.build();
     }
 
-    private static ImmutableList<Ds3AnnotationElement> convertAllAnnotationElements(
-            final ImmutableList<Ds3AnnotationElement> annotationElements) {
+    public static ImmutableList<Ds3AnnotationElement> convertAllAnnotationElements(
+            final ImmutableList<Ds3AnnotationElement> annotationElements,
+            final NameMapper nameMapper) {
         if (annotationElements == null || annotationElements.isEmpty()) {
             return annotationElements;
         }
@@ -172,22 +186,22 @@ public class Ds3SpecConverter {
         for (final Ds3AnnotationElement annotationElement : annotationElements) {
             final Ds3AnnotationElement convertedElement = new Ds3AnnotationElement(
                     annotationElement.getName(),
-                    convertName(annotationElement.getValue()),
-                    convertNameWithDollarSign(annotationElement.getValueType()));
+                    convertName(annotationElement.getValue(), nameMapper),
+                    convertNameWithDollarSign(annotationElement.getValueType(), nameMapper));
             builder.add(convertedElement);
         }
         return builder.build();
     }
 
-    private static String convertNameWithDollarSign(final String name) {
+    public static String convertNameWithDollarSign(final String name, final NameMapper nameMapper) {
         final String[] parts = name.split("\\$");
         if (parts.length < 2) {
-            return convertName(name);
+            return convertName(name, nameMapper);
         }
-        return convertName(parts[0]) + "$" + parts[1];
+        return convertName(parts[0], nameMapper) + "$" + parts[1];
     }
 
-    private static String convertName(final String name) {
+    public static String convertName(final String name, final NameMapper nameMapper) {
         if (nameMapper.containsName(name)) {
             return nameMapper.getConvertedName(name);
         }

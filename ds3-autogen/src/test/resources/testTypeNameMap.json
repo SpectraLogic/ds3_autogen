@@ -1,0 +1,14 @@
+{
+  "TypeNameMap": [
+    {
+      "ContractPath": "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority",
+      "ContractName": "BlobStoreTaskPriority",
+      "SdkName": "TEST_BlobStoreTaskPriority"
+    },
+    {
+      "ContractPath": "com.spectralogic.s3.common.dao.domain.ds3.Bucket",
+      "ContractName": "Bucket",
+      "SdkName": "TEST_Bucket"
+    }
+  ]
+}

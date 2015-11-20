@@ -18,7 +18,8 @@ package com.spectralogic.ds3autogen.api;
 import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public interface Ds3NameMapperParser {
-    Ds3NameMapper getMap() throws ParserException, IOException;
+    Ds3NameMapper getMap(final InputStream stream) throws ParserException, IOException;
 }

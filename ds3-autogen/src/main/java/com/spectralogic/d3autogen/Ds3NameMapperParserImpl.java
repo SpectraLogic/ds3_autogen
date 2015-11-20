@@ -27,26 +27,24 @@ import java.io.InputStream;
 
 public class Ds3NameMapperParserImpl implements Ds3NameMapperParser {
 
-    private final Ds3NameMapper ds3NameMapper;
+    private final ObjectMapper objectMapper;
 
     public Ds3NameMapperParserImpl() throws IOException {
-        this.ds3NameMapper = initDs3NameMapper();
+        this.objectMapper = initDs3NameMapper();
     }
 
-    private static Ds3NameMapper initDs3NameMapper() throws IOException {
+    private static ObjectMapper initDs3NameMapper() {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new GuavaModule());
-        final InputStream inputStream = Ds3NameMapperParserImpl.class.getResourceAsStream("/typeNameMap.json");
-        return toMap(objectMapper.readValue(ByteStreams.toByteArray(inputStream), TypeNameMap.class));
+        return objectMapper;
     }
 
     @Override
-    public Ds3NameMapper getMap() {
-        return this.ds3NameMapper;
+    public Ds3NameMapper getMap(final InputStream stream) throws IOException {
+        return toMap(objectMapper.readValue(ByteStreams.toByteArray(stream), TypeNameMap.class));
     }
 
     private static Ds3NameMapper toMap(final TypeNameMap typeNameMap) {
-        final Ds3NameMapper ds3NameMapper = new Ds3NameMapper(typeNameMap.getTypeMap());
-        return ds3NameMapper;
+        return new Ds3NameMapper(typeNameMap.getTypeMap());
     }
 }

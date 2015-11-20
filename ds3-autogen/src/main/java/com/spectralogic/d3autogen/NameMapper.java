@@ -20,31 +20,25 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class NameMapper {
 
-    private static final NameMapper nameMapper;
+    private static final String DEFAULT_TYPE_NAME_MAP_FILE = "/typeNameMap.json";
     private final Ds3NameMapper ds3NameMapper;
 
-    static {
-        try {
-            nameMapper = new NameMapper();
-        } catch (final IOException|ParserException e) {
-            throw new ExceptionInInitializerError(e);
-        }
+    public NameMapper() throws IOException, ParserException {
+        ds3NameMapper = initNameMapper(DEFAULT_TYPE_NAME_MAP_FILE);
     }
 
-    private NameMapper() throws IOException, ParserException {
-        ds3NameMapper = initNameMapper();
+    public NameMapper(final String typeMapFile) throws IOException, ParserException {
+        ds3NameMapper = initNameMapper(typeMapFile);
     }
 
-    private static Ds3NameMapper initNameMapper() throws IOException, ParserException {
+    private static Ds3NameMapper initNameMapper(final String typeMapFile) throws IOException, ParserException {
+        final InputStream inputStream = Ds3NameMapperParserImpl.class.getResourceAsStream(typeMapFile);
         final Ds3NameMapperParser parser = new Ds3NameMapperParserImpl();
-        return parser.getMap();
-    }
-
-    public static NameMapper getInstance() {
-        return nameMapper;
+        return parser.getMap(inputStream);
     }
 
     public boolean containsName(final String namePath) {
