@@ -46,7 +46,7 @@ public class CCodeGenerator_Test {
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SingleRequestHandler.xml"));
         final CodeGenerator codeGenerator = new CCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, Paths.get("/tmp"));
