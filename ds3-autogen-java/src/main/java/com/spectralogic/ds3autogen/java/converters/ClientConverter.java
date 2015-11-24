@@ -38,9 +38,9 @@ public class ClientConverter {
                 getCommands(ds3Requests));
     }
 
-    private static ImmutableList<Command> getCommands(final ImmutableList<Ds3Request> ds3Requests) {
+    protected static ImmutableList<Command> getCommands(final ImmutableList<Ds3Request> ds3Requests) {
         if (ds3Requests == null || ds3Requests.isEmpty()) {
-            return null;
+            return ImmutableList.of();
         }
         final ImmutableList.Builder<Command> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {

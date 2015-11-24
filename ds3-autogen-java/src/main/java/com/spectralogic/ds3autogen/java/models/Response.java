@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.utils.Helper;
 public class Response {
     private final String packageName;
     private final String name;
-    private final Helper helper;
     private final JavaHelper javaHelper;
     private final ImmutableList<Ds3ResponseCode> responseCodes;
 
@@ -35,7 +34,6 @@ public class Response {
         this.name = name;
         this.responseCodes = responseCodes;
 
-        this.helper = Helper.getInstance();
         this.javaHelper = JavaHelper.getInstance();
     }
 
@@ -49,10 +47,6 @@ public class Response {
 
     public ImmutableList<Ds3ResponseCode> getResponseCodes() {
         return responseCodes;
-    }
-
-    public Helper getHelper() {
-        return helper;
     }
 
     public JavaHelper getJavaHelper() {

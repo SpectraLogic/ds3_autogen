@@ -141,9 +141,6 @@ public class JavaHelper {
 
     private static String indent(final int depth) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (depth <= 0) {
-            return null;
-        }
         for (int i = 0; i < depth; i++) {
             stringBuilder.append(indent);
         }
