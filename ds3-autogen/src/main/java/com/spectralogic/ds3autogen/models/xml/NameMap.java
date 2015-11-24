@@ -13,24 +13,40 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-@JacksonXmlRootElement(namespace = "Data")
-public class RawSpec {
+public class NameMap {
 
-    @JsonProperty("Contract")
-    private Contract contract;
+    @JsonProperty("ContractPath")
+    private String contractPath;
+    @JsonProperty("ContractName")
+    private String contractName;
+    @JsonProperty("SdkName")
+    private String sdkName;
 
-    public Contract getContract() {
-        return contract;
+    public String getContractPath() {
+        return contractPath;
     }
 
-    public void setContract(final Contract contract) {
-        this.contract = contract;
+    public void setContractPath(final String contractPath) {
+        this.contractPath = contractPath;
     }
 
+    public String getContractName() {
+        return contractName;
+    }
 
+    public void setContractName(final String contractName) {
+        this.contractName = contractName;
+    }
+
+    public String getSdkName() {
+        return sdkName;
+    }
+
+    public void setSdkName(final String sdkName) {
+        this.sdkName = sdkName;
+    }
 }

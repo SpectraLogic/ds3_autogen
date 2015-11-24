@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;

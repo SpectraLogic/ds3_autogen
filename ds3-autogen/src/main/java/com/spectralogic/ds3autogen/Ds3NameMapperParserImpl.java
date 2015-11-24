@@ -13,12 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen;
+package com.spectralogic.ds3autogen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.io.ByteStreams;
-import com.spectralogic.d3autogen.models.xml.TypeNameMap;
+import com.spectralogic.ds3autogen.models.xml.TypeNameMap;
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
 import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
 

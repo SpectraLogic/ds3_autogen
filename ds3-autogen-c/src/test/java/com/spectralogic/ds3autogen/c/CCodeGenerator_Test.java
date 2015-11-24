@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.c;
 
-import com.spectralogic.d3autogen.Ds3SpecParserImpl;
+import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;

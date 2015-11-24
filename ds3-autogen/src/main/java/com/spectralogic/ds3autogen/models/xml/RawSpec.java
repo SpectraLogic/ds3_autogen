@@ -13,35 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-public class Param {
+@JacksonXmlRootElement(namespace = "Data")
+public class RawSpec {
 
-    @JacksonXmlProperty(isAttribute = true, localName = "Name")
-    private String name;
+    @JsonProperty("Contract")
+    private Contract contract;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "Type")
-    private String type;
-
-    public String getName() { return name; }
-
-    public void setName(final String name) {
-        this.name = name;
+    public Contract getContract() {
+        return contract;
     }
 
-    public String getType() {
-        return type;
+    public void setContract(final Contract contract) {
+        this.contract = contract;
     }
 
-    public void setType(final String type) {
-        this.type = type;
-    }
 
-    public Ds3Param toDs3Param() {
-        final Ds3Param ds3Param = new Ds3Param(name, type);
-        return ds3Param;
-    }
 }

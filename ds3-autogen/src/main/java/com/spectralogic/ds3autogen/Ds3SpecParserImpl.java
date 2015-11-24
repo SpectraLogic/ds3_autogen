@@ -13,13 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen;
+package com.spectralogic.ds3autogen;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.spectralogic.d3autogen.models.xml.RawSpec;
+import com.spectralogic.ds3autogen.models.xml.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;

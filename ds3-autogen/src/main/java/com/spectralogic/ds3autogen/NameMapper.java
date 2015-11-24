@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen;
+package com.spectralogic.ds3autogen;
 
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
 import com.spectralogic.ds3autogen.api.ParserException;

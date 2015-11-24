@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen;
 
-import com.spectralogic.d3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.*;
