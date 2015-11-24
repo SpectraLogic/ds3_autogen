@@ -13,13 +13,12 @@
  * ****************************************************************************
  */
 
-
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3autogen.api.models.Ds3AnnotationElement;
+import com.spectralogic.ds3autogen.api.models.Ds3Property;
 
-public class AnnotationElement {
+public class Property {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
@@ -54,8 +53,8 @@ public class AnnotationElement {
         this.valueType = valueType;
     }
 
-    public Ds3AnnotationElement toDs3AnnotationElement() {
-        final Ds3AnnotationElement ds3AnnotationElement = new Ds3AnnotationElement(name, value, valueType);
-        return ds3AnnotationElement;
+    public Ds3Property toDs3Property() {
+        final Ds3Property ds3Property = new Ds3Property(name, value, valueType);
+        return ds3Property;
     }
 }

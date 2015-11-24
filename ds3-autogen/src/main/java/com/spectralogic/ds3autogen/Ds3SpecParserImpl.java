@@ -13,13 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen;
+package com.spectralogic.ds3autogen;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.spectralogic.d3autogen.models.xml.RawSpec;
+import com.spectralogic.ds3autogen.models.xml.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -46,10 +46,11 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
         return toSpec(mapper.readValue(stream, RawSpec.class));
     }
 
-    private static Ds3ApiSpec toSpec(final RawSpec contract) {
+    private static Ds3ApiSpec toSpec(final RawSpec contract) throws IOException, ParserException {
+        final NameMapper nameMapper = new NameMapper();
         final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
-                contract.getContract().getDs3Requests(),
-                contract.getContract().getDs3Types());
+                Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),
+                Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types(), nameMapper));
 
         return ds3ApiSpec;
     }

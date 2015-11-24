@@ -13,24 +13,26 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.api.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.collect.ImmutableMap;
 
-@JacksonXmlRootElement(namespace = "Data")
-public class RawSpec {
+public class Ds3NameMapper {
 
-    @JsonProperty("Contract")
-    private Contract contract;
+    private final ImmutableMap<String, Ds3NameMap> typeNameMapper;
 
-    public Contract getContract() {
-        return contract;
+    public Ds3NameMapper(final ImmutableMap<String, Ds3NameMap> typeNameMapper) {
+        this.typeNameMapper = typeNameMapper;
     }
 
-    public void setContract(final Contract contract) {
-        this.contract = contract;
+    public boolean containsType(final String namePath) {
+        return typeNameMapper.containsKey(namePath);
     }
 
-
+    public String getConvertedName(final String namePath) {
+        final Ds3NameMap ds3NameMap = typeNameMapper.get(namePath);
+        return namePath.replace(
+                ds3NameMap.getContractName(),
+                ds3NameMap.getSdkName());
+    }
 }
