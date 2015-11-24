@@ -6,6 +6,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -377,5 +378,26 @@ public class JavaHelper_Test {
     public void convertTypeException() {
         final Element compositeElement = new Element("Tapes", "map", "com.spectralogic.s3.common.dao.domain.tape.Tape");
         JavaHelper.convertType(compositeElement);
+    }
+
+    @Test
+    public void getEnumValues() {
+        final String expectedResult =
+                "    DELETE,\n" +
+                "    GET,\n" +
+                "    HEAD,\n" +
+                "    POST,\n" +
+                "    PUT";
+        final ImmutableList<EnumConstant> enumConstants = ImmutableList.of(
+                new EnumConstant("DELETE"),
+                new EnumConstant("GET"),
+                new EnumConstant("HEAD"),
+                new EnumConstant("POST"),
+                new EnumConstant("PUT"));
+        final String result = JavaHelper.getEnumValues(enumConstants);
+        assertThat(result, is(expectedResult));
+
+        assertThat(JavaHelper.getEnumValues(ImmutableList.of()), is(""));
+        assertThat(JavaHelper.getEnumValues(null), is(""));
     }
 }

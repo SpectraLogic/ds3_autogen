@@ -95,7 +95,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateModel(final Ds3Type ds3Type) throws IOException, TemplateException {
-        final Template modelTmpl = getModelTemplate();
+        final Template modelTmpl = getModelTemplate(ds3Type);
         final Model model = ModelConverter.toModel(ds3Type, getModelPackage());
         final Path modelPath = getModelPath(model.getName());
 
@@ -107,8 +107,15 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
     }
 
-    private Template getModelTemplate() throws IOException {
-        return config.getTemplate("models/model_template.tmpl");
+    private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
+        if (ds3Type.getElements() != null && ds3Type.getEnumConstants() == null) {
+            return config.getTemplate("models/model_template.tmpl");
+        } else if (ds3Type.getElements() == null && ds3Type.getEnumConstants() != null) {
+            return config.getTemplate("models/enum_model_template.tmpl");
+        } else if (ds3Type.getElements() != null && ds3Type.getEnumConstants() != null) {
+            return config.getTemplate(""); //TODO
+        }
+        throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }
 
     private String getModelPackage() {

@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
@@ -320,5 +321,15 @@ public class JavaHelper {
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();
         builder.addAll(sortable);
         return builder.build();
+    }
+
+    public static String getEnumValues(final ImmutableList<EnumConstant> enumConstants) {
+        if (enumConstants == null || enumConstants.isEmpty()) {
+            return "";
+        }
+        return enumConstants
+                .stream()
+                .map(i -> indent(1) + i.getName())
+                .collect(Collectors.joining(",\n"));
     }
 }

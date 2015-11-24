@@ -202,4 +202,12 @@ public class TestHelper {
         return code.contains("public void set" + JavaHelper.capFirst(name)
                 + "(final " + type + " " + JavaHelper.uncapFirst(name) + ") {");
     }
+
+    public static boolean isEnumClass(final String className, final String code) {
+        return code.contains("public enum " + className + " {");
+    }
+
+    public static boolean enumContainsValue(final String value, final String code) {
+        return code.contains("    " + value);
+    }
 }

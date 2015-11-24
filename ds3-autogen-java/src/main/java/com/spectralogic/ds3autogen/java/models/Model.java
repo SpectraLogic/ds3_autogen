@@ -23,6 +23,7 @@ public class Model {
     private final String packageName;
     private final String name;
     private final ImmutableList<Element> elements;
+    private final ImmutableList<EnumConstant> enumConstants;
     private final ImmutableList<String> imports;
 
     private final JavaHelper javaHelper;
@@ -30,10 +31,12 @@ public class Model {
     public Model(final String packageName,
                  final String name,
                  final ImmutableList<Element> elements,
+                 final ImmutableList<EnumConstant> enumConstants,
                  final ImmutableList<String> imports) {
         this.packageName = packageName;
         this.name = name;
         this.elements = elements;
+        this.enumConstants = enumConstants;
         this.imports = imports;
 
         javaHelper = JavaHelper.getInstance();
@@ -57,5 +60,9 @@ public class Model {
 
     public ImmutableList<String> getImports() {
         return imports;
+    }
+
+    public ImmutableList<EnumConstant> getEnumConstants() {
+        return enumConstants;
     }
 }

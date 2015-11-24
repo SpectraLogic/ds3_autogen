@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedModelCode;
+import com.spectralogic.ds3autogen.java.utils.TestHelper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -30,6 +31,7 @@ import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -106,5 +108,30 @@ public class JavaCodeGenerator_Models_Test {
                 new Element("Pools", "array", "Pool"),
                 new Element("Tapes", "array", "Tape"));
         assertTrue(hasModelConstructor(modelName, constructorArgs, modelGeneratedCode));
+    }
+
+    @Test
+    public void requestType() throws IOException, ParserException {
+        final String modelName = "RequestType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/requestType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(TestHelper.isEnumClass(modelName, modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("DELETE", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("GET", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("HEAD", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("POST", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("PUT", modelGeneratedCode));
     }
 }

@@ -18,8 +18,10 @@ package com.spectralogic.ds3autogen.java.converters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Model;
 
 public class ModelConverter {
@@ -40,6 +42,7 @@ public class ModelConverter {
                 packageName,
                 classParts[classParts.length -1],
                 getAllElements(ds3Type),
+                getAllEnumConstants(ds3Type.getEnumConstants()),
                 getAllImports(getAllElements(ds3Type)));
     }
 
@@ -48,6 +51,22 @@ public class ModelConverter {
             final String packageName) {
         final ModelConverter converter = new ModelConverter(ds3Type, packageName);
         return converter.convert();
+    }
+
+    private static ImmutableList<EnumConstant> getAllEnumConstants(
+            final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
+        if (ds3EnumConstants == null || ds3EnumConstants.isEmpty()) {
+            return ImmutableList.of();
+        }
+        ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
+            builder.add(getEnumConstant(ds3EnumConstant));
+        }
+        return builder.build();
+    }
+
+    private static EnumConstant getEnumConstant(final Ds3EnumConstant ds3EnumConstant) {
+        return new EnumConstant(ds3EnumConstant.getName());
     }
 
     private static ImmutableList<String> getAllImports(final ImmutableList<Element> elements) {
