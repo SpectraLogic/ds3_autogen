@@ -13,35 +13,35 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Ds3NameMap;
 
 import java.util.List;
 
-public class TypeMap {
+public class TypeNameMap {
 
-    @JsonProperty("RequestMap")
-    private List<RequestMap> requests;
+    @JsonProperty("TypeNameMap")
+    private List<NameMap> types;
 
-    public List<RequestMap> getRequests() {
-        return requests;
+    public List<NameMap> getTypes() {
+        return types;
     }
 
-    public void setRequests(final List<RequestMap> requests) {
-        this.requests = requests;
+    public void setTypes(final List<NameMap> types) {
+        this.types = types;
     }
 
-    public ImmutableMap<String, ImmutableMap<String, String>> getTypeMap() {
-        final ImmutableMap.Builder<String, ImmutableMap<String, String>> typeMapBuilder = ImmutableMap.builder();
-        for (final RequestMap req : requests) {
-            final ImmutableMap.Builder<String, String> paramBuilder = ImmutableMap.builder();
-            for (final ParamMap param : req.getParams()) {
-                paramBuilder.put(param.getName(), param.getType());
-            }
-            typeMapBuilder.put(req.getRequestName(), paramBuilder.build());
+    public ImmutableMap<String, Ds3NameMap> getTypeMap() {
+        final ImmutableMap.Builder<String, Ds3NameMap> builder = ImmutableMap.builder();
+        for (final NameMap nameMap : types) {
+            final Ds3NameMap ds3NameMap = new Ds3NameMap(
+                    nameMap.getContractName(),
+                    nameMap.getSdkName());
+            builder.put(nameMap.getContractPath(), ds3NameMap);
         }
-        return typeMapBuilder.build();
+        return builder.build();
     }
 }

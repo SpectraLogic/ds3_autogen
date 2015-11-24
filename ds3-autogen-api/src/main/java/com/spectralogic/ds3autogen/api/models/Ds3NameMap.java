@@ -13,30 +13,23 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.api.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class Ds3NameMap {
 
-public class ParamMap {
+    private final String contractName;
+    private final String sdkName;
 
-    @JsonProperty("Name")
-    private String name;
-    @JsonProperty("Type")
-    private String type;
-
-    public String getType() {
-        return type;
+    public Ds3NameMap(final String contractName, final String sdkName) {
+        this.contractName = contractName;
+        this.sdkName = sdkName;
     }
 
-    public void setType(final String type) {
-        this.type = type;
+    public String getContractName() {
+        return contractName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
+    public String getSdkName() {
+        return sdkName;
     }
 }
