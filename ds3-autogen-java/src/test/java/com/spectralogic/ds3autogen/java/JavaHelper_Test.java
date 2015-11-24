@@ -3,8 +3,8 @@ package com.spectralogic.ds3autogen.java;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
+import com.spectralogic.ds3autogen.java.models.Element;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -223,5 +223,85 @@ public class JavaHelper_Test {
 
         final String result = JavaHelper.getResponseCodes(responseCodes);
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable() {
+        final String expectedResult =
+                "    @JsonProperty(\"TestName\")\n"
+                + "    private testType testName;";
+        final Element element = new Element(
+                "testName",
+                "testType",
+                null);
+        final String result = JavaHelper.getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariableWithArrayComponentType() {
+        final String expectedResult =
+                "    @JsonProperty(\"TestName\")\n"
+                + "    @JacksonXmlElementWrapper\n"
+                + "    private List<BlobApiBean> testName;";
+        final Element element = new Element(
+                "testName",
+                "array",
+                "com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        final String result = JavaHelper.getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getModelVariableWithOtherComponentType() {
+        final Element element = new Element(
+                "testName",
+                "map",
+                "com.spectralogic.s3.common.platform.domain.BlobApiBean");
+
+        JavaHelper.getModelVariable(element);
+    }
+
+    @Test
+    public void stripPath() {
+        final String expectedResult = "BlobApiBean";
+        final String result = JavaHelper.stripPath("com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        assertThat(result, is(expectedResult));
+
+        final String result2 = JavaHelper.stripPath("BlobApiBean");
+        assertThat(result2, is(expectedResult));
+    }
+
+    @Test
+    public void getModelConstructorArgs() {
+        final String expectedResult = "final Type1 elmt1, final Type2 elmt2, final List<Type3> elmt3";
+        final ImmutableList<Element> elements = ImmutableList.of(
+                new Element("Elmt2", "Type2", null),
+                new Element("Elmt1", "Type1", null),
+                new Element("Elmt3", "array", "Type3"));
+        final String result = JavaHelper.getModelConstructorArgs(elements);
+        assertThat(result, is(expectedResult));
+
+        final String emptyResult = JavaHelper.getModelConstructorArgs(null);
+        assertThat(emptyResult, is(""));
+    }
+
+    @Test
+    public void sortModelConstructorArgs() {
+        final ImmutableList<Element> expectedResult = ImmutableList.of(
+                new Element("Elmt1", "Type1", null),
+                new Element("Elmt2", "Type2", null),
+                new Element("Elmt3", "array", "Type3"));
+        final ImmutableList<Element> elements = ImmutableList.of(
+                new Element("Elmt2", "Type2", null),
+                new Element("Elmt3", "array", "Type3"),
+                new Element("Elmt1", "Type1", null));
+        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(elements);
+        for (int i = 0; i < elements.size(); i++) {
+            assertTrue(result.get(i).getName().equals(expectedResult.get(i).getName()));
+        }
+
+        final ImmutableList<Element> emptyResult = JavaHelper.sortModelConstructorArgs(null);
+        assertTrue(emptyResult.isEmpty());
     }
 }

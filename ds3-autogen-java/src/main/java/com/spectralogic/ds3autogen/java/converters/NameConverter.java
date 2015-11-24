@@ -34,8 +34,11 @@ public class NameConverter {
     //Removes "Handler" from all request names within the spec
     //and namespaces the spectrads3 commands
     public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
-        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
+        if (spec.getRequests() == null || spec.getRequests().isEmpty()) {
+            return spec;
+        }
 
+        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request request : spec.getRequests()) {
             builder.add(updateRequestName(request));
         }

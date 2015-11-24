@@ -1,13 +1,32 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class JavaHelper {
@@ -177,7 +196,7 @@ public class JavaHelper {
     public static ImmutableList<Arguments> sortConstructorArgs(final ImmutableList<Arguments> arguments) {
         final List<Arguments> sortable = new ArrayList<>();
         sortable.addAll(arguments);
-        Collections.sort(sortable, new CustomComparator());
+        Collections.sort(sortable, new CustomArgumentComparator());
 
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(sortable);
@@ -187,7 +206,7 @@ public class JavaHelper {
     public static String argTypeList(final ImmutableList<Arguments> arguments) {
         return sortConstructorArgs(arguments)
                 .stream()
-                .map(i -> i.getType()).collect(Collectors.joining(", "));
+                .map(Arguments::getType).collect(Collectors.joining(", "));
     }
 
     public static String argsToList(final List<Arguments> arguments) {
@@ -256,5 +275,53 @@ public class JavaHelper {
                 .stream()
                 .map(i -> i)
                 .collect(Collectors.joining(", "));
+    }
+
+    public static String getModelVariable(final Element element) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(indent(1) + "@JsonProperty(\"" + capFirst(element.getName()) + "\")\n");
+        if (element.getComponentType() != null) {
+            builder.append(indent(1) + "@JacksonXmlElementWrapper\n");
+        }
+        builder.append(indent(1) + "private " + convertType(element) + " " + uncapFirst(element.getName()) + ";");
+        return builder.toString();
+    }
+
+    public static String convertType(final Element element) throws IllegalArgumentException {
+        if (element.getComponentType() == null || element.getComponentType().isEmpty()) {
+            return stripPath(element.getType());
+        }
+        if (element.getType().equalsIgnoreCase("array")) {
+            return "List<" + stripPath(element.getComponentType()) + ">";
+        }
+        throw new IllegalArgumentException("Unknown element type: " + element.getType());
+    }
+
+    public static String stripPath(final String str) {
+        final String[] classparts = str.split("\\.");
+        return classparts[classparts.length - 1];
+    }
+
+    public static String getModelConstructorArgs(final ImmutableList<Element> elements) {
+        if (elements == null || elements.isEmpty()) {
+            return "";
+        }
+        return sortModelConstructorArgs(elements)
+                .stream()
+                .map(i -> "final " + convertType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
+    }
+
+    public static ImmutableList<Element> sortModelConstructorArgs(final ImmutableList<Element> elements) {
+        if (elements == null || elements.isEmpty()) {
+            return ImmutableList.of();
+        }
+        final List<Element> sortable = new ArrayList<>();
+        sortable.addAll(elements);
+        Collections.sort(sortable, new CustomElementComparator());
+
+        final ImmutableList.Builder<Element> builder = ImmutableList.builder();
+        builder.addAll(sortable);
+        return builder.build();
     }
 }
