@@ -22,20 +22,16 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 
 public class NameConverter {
 
-    private final static NameConverter nameConverter = new NameConverter();
     public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
-
-    private NameConverter() {}
-
-    public static NameConverter getInstance() {
-        return nameConverter;
-    }
 
     //Removes "Handler" from all request names within the spec
     //and namespaces the spectrads3 commands
     public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
-        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
+        if (spec.getRequests() == null || spec.getRequests().isEmpty()) {
+            return spec;
+        }
 
+        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request request : spec.getRequests()) {
             builder.add(updateRequestName(request));
         }
@@ -67,7 +63,7 @@ public class NameConverter {
         return stripHandlerFromName(request.getName());
     }
 
-    private static String stripHandlerFromName(final String requestName) {
+    protected static String stripHandlerFromName(final String requestName) {
         final String nameEnding = "Handler";
         if (requestName == null || requestName.isEmpty()) {
             return null;

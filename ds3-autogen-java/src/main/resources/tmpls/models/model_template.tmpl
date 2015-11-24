@@ -1,0 +1,24 @@
+<#include "../copyright.tmpl"/>
+
+package ${packageName};
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+<#include "../imports.tmpl"/>
+
+public class ${name} {
+
+    // Variables
+<#list elements as elmt>
+${javaHelper.getModelVariable(elmt)}
+
+</#list>
+    // Constructor
+    public ${name}(${javaHelper.getModelConstructorArgs(elements)}) {
+        <#list elements as elmt>
+        this.${elmt.getName()?uncap_first} = ${elmt.getName()?uncap_first};
+        </#list>
+    }
+
+    // Getters and Setters
+<#include "getters_setters_template.tmpl"/>
+}
