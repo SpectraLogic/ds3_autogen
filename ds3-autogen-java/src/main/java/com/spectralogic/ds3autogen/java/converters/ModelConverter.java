@@ -59,6 +59,12 @@ public class ModelConverter {
             if (element.getType().contains(".")) {
                 builder.add(ConvertType.convertType(element.getType()));
             }
+            if (element.getComponentType() != null
+                    && !element.getComponentType().isEmpty()
+                    && element.getComponentType().contains(".")) {
+                builder.add(ConvertType.convertType(element.getComponentType()));
+                builder.add("java.util.List");
+            }
         }
         return builder.build().asList();
     }
