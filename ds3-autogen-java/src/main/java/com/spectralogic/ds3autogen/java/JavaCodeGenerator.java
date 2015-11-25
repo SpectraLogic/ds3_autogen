@@ -108,12 +108,11 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
-        if (ds3Type.getElements() != null && ds3Type.getEnumConstants() == null) {
-            return config.getTemplate("models/model_template.tmpl");
-        } else if (ds3Type.getElements() == null && ds3Type.getEnumConstants() != null) {
+        if (ds3Type.getEnumConstants() != null && !ds3Type.getEnumConstants().isEmpty()) {
             return config.getTemplate("models/enum_model_template.tmpl");
-        } else if (ds3Type.getElements() != null && ds3Type.getEnumConstants() != null) {
-            return config.getTemplate(""); //TODO
+        }
+        if (ds3Type.getElements() != null && !ds3Type.getElements().isEmpty()) {
+            return config.getTemplate("models/model_template.tmpl");
         }
         throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }

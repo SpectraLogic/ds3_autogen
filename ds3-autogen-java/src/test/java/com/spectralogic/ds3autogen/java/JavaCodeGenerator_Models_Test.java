@@ -31,7 +31,6 @@ import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -134,4 +133,43 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(TestHelper.enumContainsValue("POST", modelGeneratedCode));
         assertTrue(TestHelper.enumContainsValue("PUT", modelGeneratedCode));
     }
+
+    @Test
+    public void blobStoreTaskPriority() throws IOException, ParserException {
+        final String modelName = "BlobStoreTaskPriority";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/blobStoreTaskPriorityType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(TestHelper.isEnumClass(modelName, modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("CRITICAL", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("URGENT", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("HIGH", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("NORMAL", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("LOW", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("BACKGROUND", modelGeneratedCode));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void emptyType() throws IOException, ParserException {
+        final String modelName = "EmptyType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/emptyType.xml");
+    }
+
 }
