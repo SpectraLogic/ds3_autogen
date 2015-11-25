@@ -15,41 +15,15 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.utils.Helper;
+public class EnumConstant {
 
-public class Response {
-    private final String packageName;
     private final String name;
-    private final JavaHelper javaHelper;
-    private final ImmutableList<Ds3ResponseCode> responseCodes;
 
-    public Response(
-            final String packageName,
-            final String name,
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        this.packageName = packageName;
+    public EnumConstant(final String name) {
         this.name = name;
-        this.responseCodes = responseCodes;
-
-        this.javaHelper = JavaHelper.getInstance();
-    }
-
-    public String getPackageName() {
-        return packageName;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ImmutableList<Ds3ResponseCode> getResponseCodes() {
-        return responseCodes;
-    }
-
-    public JavaHelper getJavaHelper() {
-        return javaHelper;
     }
 }
