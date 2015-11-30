@@ -143,7 +143,7 @@ public class JavaCodeGenerator_Models_Test {
                 modelName,
                 "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
 
-        testGeneratedModelCode.generateCode(fileUtils, "/input/blobStoreTaskPriorityType.xml");
+        testGeneratedModelCode.generateCode(fileUtils, "/input/BlobStoreTaskPriorityType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
         LOG.info("Generated code:\n" + modelGeneratedCode);
