@@ -51,6 +51,9 @@ public class Contract {
     }
 
     public ImmutableList<Ds3Request> getDs3Requests() {
+        if (requestHandlers == null) {
+            return null;
+        }
         final ImmutableList.Builder<Ds3Request> ds3RequestBuilder = ImmutableList.builder();
         for (final RequestHandler requestHandler : requestHandlers) {
             ds3RequestBuilder.add(requestHandler.toDs3Request());

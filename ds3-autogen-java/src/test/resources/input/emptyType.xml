@@ -1,0 +1,9 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.EmptyType">
+                <Elements/>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

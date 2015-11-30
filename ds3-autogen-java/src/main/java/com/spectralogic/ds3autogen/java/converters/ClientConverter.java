@@ -20,6 +20,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+
 public class ClientConverter {
 
     private final String packageName;
@@ -38,7 +40,10 @@ public class ClientConverter {
                 getCommands(ds3Requests));
     }
 
-    private static ImmutableList<Command> getCommands(final ImmutableList<Ds3Request> ds3Requests) {
+    protected static ImmutableList<Command> getCommands(final ImmutableList<Ds3Request> ds3Requests) {
+        if (isEmpty(ds3Requests)) {
+            return ImmutableList.of();
+        }
         final ImmutableList.Builder<Command> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {
             builder.add(new Command(
