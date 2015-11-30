@@ -13,33 +13,40 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.d3autogen.models.xml;
+package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+public class NameMap {
 
-public class RequestMap {
+    @JsonProperty("ContractPath")
+    private String contractPath;
+    @JsonProperty("ContractName")
+    private String contractName;
+    @JsonProperty("SdkName")
+    private String sdkName;
 
-    @JsonProperty("Name")
-    private String requestName;
-
-    @JsonProperty("ParamMap")
-    private List<ParamMap> params;
-
-    public String getRequestName() {
-        return requestName;
+    public String getContractPath() {
+        return contractPath;
     }
 
-    public void setRequestName(final String requestName) {
-        this.requestName = requestName;
+    public void setContractPath(final String contractPath) {
+        this.contractPath = contractPath;
     }
 
-    public List<ParamMap> getParams() {
-        return params;
+    public String getContractName() {
+        return contractName;
     }
 
-    public void setParams(final List<ParamMap> params) {
-        this.params = params;
+    public void setContractName(final String contractName) {
+        this.contractName = contractName;
+    }
+
+    public String getSdkName() {
+        return sdkName;
+    }
+
+    public void setSdkName(final String sdkName) {
+        this.sdkName = sdkName;
     }
 }
