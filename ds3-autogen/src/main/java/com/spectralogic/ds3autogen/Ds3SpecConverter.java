@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 
-public class Ds3SpecConverter {
+class Ds3SpecConverter {
 
     protected static ImmutableList<Ds3Request> convertRequests(
             final ImmutableList<Ds3Request> requests,
@@ -115,7 +115,7 @@ public class Ds3SpecConverter {
         if (enumConstants == null || enumConstants.isEmpty()) {
             return enumConstants;
         }
-        ImmutableList.Builder<Ds3EnumConstant> builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3EnumConstant> builder = ImmutableList.builder();
         for (final Ds3EnumConstant enumConstant : enumConstants) {
             final Ds3EnumConstant convertedEnumConstant = new Ds3EnumConstant(
                     enumConstant.getName(),
@@ -131,7 +131,7 @@ public class Ds3SpecConverter {
         if (properties == null || properties.isEmpty()) {
             return properties;
         }
-        ImmutableList.Builder<Ds3Property> builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3Property> builder = ImmutableList.builder();
         for (final Ds3Property property : properties) {
             final Ds3Property convertedProperty = new Ds3Property(
                     property.getName(),
@@ -148,7 +148,7 @@ public class Ds3SpecConverter {
         if (elements == null || elements.isEmpty()) {
             return elements;
         }
-        ImmutableList.Builder<Ds3Element> builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3Element> builder = ImmutableList.builder();
         for (final Ds3Element element : elements) {
             final Ds3Element convertedElement = new Ds3Element(
                     element.getName(),
@@ -166,7 +166,7 @@ public class Ds3SpecConverter {
         if (annotations == null || annotations.isEmpty()) {
             return annotations;
         }
-        ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
         for (final Ds3Annotation annotation : annotations) {
             final Ds3Annotation convertedAnnotation = new Ds3Annotation(
                     convertName(annotation.getName(), nameMapper),
@@ -182,7 +182,7 @@ public class Ds3SpecConverter {
         if (annotationElements == null || annotationElements.isEmpty()) {
             return annotationElements;
         }
-        ImmutableList.Builder<Ds3AnnotationElement> builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3AnnotationElement> builder = ImmutableList.builder();
         for (final Ds3AnnotationElement annotationElement : annotationElements) {
             final Ds3AnnotationElement convertedElement = new Ds3AnnotationElement(
                     annotationElement.getName(),

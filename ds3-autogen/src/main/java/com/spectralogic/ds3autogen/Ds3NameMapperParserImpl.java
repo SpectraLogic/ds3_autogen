@@ -29,7 +29,7 @@ public class Ds3NameMapperParserImpl implements Ds3NameMapperParser {
 
     private final ObjectMapper objectMapper;
 
-    public Ds3NameMapperParserImpl() throws IOException {
+    public Ds3NameMapperParserImpl() {
         this.objectMapper = initDs3NameMapper();
     }
 
