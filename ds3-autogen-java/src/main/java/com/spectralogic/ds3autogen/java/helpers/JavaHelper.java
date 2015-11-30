@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
     private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization");
@@ -286,7 +288,7 @@ public class JavaHelper {
     }
 
     public static String convertType(final Element element) throws IllegalArgumentException {
-        if (element.getComponentType() == null || element.getComponentType().isEmpty()) {
+        if (isEmpty(element.getComponentType())) {
             return stripPath(element.getType());
         }
         if (element.getType().equalsIgnoreCase("array")) {
@@ -301,7 +303,7 @@ public class JavaHelper {
     }
 
     public static String getModelConstructorArgs(final ImmutableList<Element> elements) {
-        if (elements == null || elements.isEmpty()) {
+        if (isEmpty(elements)) {
             return "";
         }
         return sortModelConstructorArgs(elements)
@@ -311,7 +313,7 @@ public class JavaHelper {
     }
 
     public static ImmutableList<Element> sortModelConstructorArgs(final ImmutableList<Element> elements) {
-        if (elements == null || elements.isEmpty()) {
+        if (isEmpty(elements)) {
             return ImmutableList.of();
         }
         final List<Element> sortable = new ArrayList<>();
@@ -324,7 +326,7 @@ public class JavaHelper {
     }
 
     public static String getEnumValues(final ImmutableList<EnumConstant> enumConstants) {
-        if (enumConstants == null || enumConstants.isEmpty()) {
+        if (isEmpty(enumConstants)) {
             return "";
         }
         return enumConstants

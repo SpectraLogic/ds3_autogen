@@ -24,6 +24,9 @@ import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Model;
 
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+
 public class ModelConverter {
 
     private final Ds3Type ds3Type;
@@ -55,10 +58,10 @@ public class ModelConverter {
 
     private static ImmutableList<EnumConstant> getAllEnumConstants(
             final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
-        if (ds3EnumConstants == null || ds3EnumConstants.isEmpty()) {
+        if (isEmpty(ds3EnumConstants)) {
             return ImmutableList.of();
         }
-        ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
         for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
             builder.add(getEnumConstant(ds3EnumConstant));
         }
@@ -70,16 +73,15 @@ public class ModelConverter {
     }
 
     private static ImmutableList<String> getAllImports(final ImmutableList<Element> elements) {
-        if (elements == null || elements.isEmpty()) {
-            return null;
+        if (isEmpty(elements)) {
+            return ImmutableList.of();
         }
-        ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         for (final Element element : elements) {
             if (element.getType().contains(".")) {
                 builder.add(ConvertType.convertType(element.getType()));
             }
-            if (element.getComponentType() != null
-                    && !element.getComponentType().isEmpty()
+            if (hasContent(element.getComponentType())
                     && element.getComponentType().contains(".")) {
                 builder.add(ConvertType.convertType(element.getComponentType()));
                 builder.add("java.util.List");
@@ -89,7 +91,7 @@ public class ModelConverter {
     }
 
     private static ImmutableList<Element> getAllElements(final Ds3Type ds3Type) {
-        if (ds3Type.getElements() == null || ds3Type.getElements().isEmpty()) {
+        if (isEmpty(ds3Type.getElements())) {
             return ImmutableList.of();
         }
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();

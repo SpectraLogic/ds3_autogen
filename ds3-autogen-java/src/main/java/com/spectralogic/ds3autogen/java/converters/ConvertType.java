@@ -15,15 +15,14 @@
 
 package com.spectralogic.ds3autogen.java.converters;
 
+import static com.spectralogic.ds3autogen.java.models.Constants.*;
+
 public class ConvertType {
 
-    private final static String MODELS_PACKAGE = "com.spectralogic.ds3client.models.";
-    private final static String CONTRACT_PACKAGE = "com.spectralogic.s3.common.dao.domain";
-
     public static String convertType(final String type) {
-        if (type.startsWith(CONTRACT_PACKAGE)) {
+        if (type.startsWith(CONTRACT_PACKAGE_PATH)) {
             final String[] packageParts = type.split("\\.");
-            return MODELS_PACKAGE + packageParts[packageParts.length - 1];
+            return MODELS_PACKAGE_PATH + packageParts[packageParts.length - 1];
         }
         return type;
     }

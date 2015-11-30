@@ -13,18 +13,34 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.helpers;
+package com.spectralogic.ds3autogen.java.utils;
 
-import com.spectralogic.ds3autogen.java.models.Element;
+import java.util.List;
+import java.util.Map;
 
-import java.util.Comparator;
+public class ConverterUtil {
 
-public class CustomElementComparator implements Comparator<Element> {
-    /*
-     * Compares elements by name.  This is used to sort elements alphabetically.
-     */
-    @Override
-    public int compare(final Element leftElement, final Element rightElement) {
-        return leftElement.getName().compareToIgnoreCase(rightElement.getName());
+    public static boolean hasContent(final List<?> list) {
+        return !isEmpty(list);
+    }
+
+    public static boolean hasContent(final Map<?,?> map) {
+        return !isEmpty(map);
+    }
+
+    public static boolean hasContent(final String string) {
+        return !isEmpty(string);
+    }
+
+    public static boolean isEmpty(final List<?> list) {
+        return list == null || list.isEmpty();
+    }
+
+    public static boolean isEmpty(final Map<?,?> map) {
+        return map == null || map.isEmpty();
+    }
+
+    public static boolean isEmpty(final String string) {
+        return string == null || string.isEmpty();
     }
 }

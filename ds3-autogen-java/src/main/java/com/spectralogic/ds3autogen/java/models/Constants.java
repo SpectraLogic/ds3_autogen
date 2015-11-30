@@ -13,18 +13,17 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.helpers;
+package com.spectralogic.ds3autogen.java.models;
 
-import com.spectralogic.ds3autogen.java.models.Element;
+public class Constants {
+    public final static String MODELS_PACKAGE_PATH = "com.spectralogic.ds3client.models.";
+    public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic.s3.common.dao.domain";
+    public static final String ROOT_PACKAGE_PATH = "com.spectralogic.ds3client";
+    public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";
 
-import java.util.Comparator;
+    public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
 
-public class CustomElementComparator implements Comparator<Element> {
-    /*
-     * Compares elements by name.  This is used to sort elements alphabetically.
-     */
-    @Override
-    public int compare(final Element leftElement, final Element rightElement) {
-        return leftElement.getName().compareToIgnoreCase(rightElement.getName());
-    }
+    public static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
+    public static final String NOTIFICATION_PACKAGE = ".notifications";
+    public static final String MODELS_PACKAGE = ".models";
 }

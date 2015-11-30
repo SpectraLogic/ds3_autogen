@@ -19,15 +19,21 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.spectralogic.ds3autogen.java.models.Constants.SPECTRA_S3_NAMESPACING;
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
 
 public class NameConverter {
 
-    public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
+    private static final Logger LOG = LoggerFactory.getLogger(NameConverter.class);
 
     //Removes "Handler" from all request names within the spec
     //and namespaces the spectrads3 commands
     public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
-        if (spec.getRequests() == null || spec.getRequests().isEmpty()) {
+        if (isEmpty(spec.getRequests())) {
+            LOG.info("No requests to rename");
             return spec;
         }
 
@@ -65,7 +71,7 @@ public class NameConverter {
 
     protected static String stripHandlerFromName(final String requestName) {
         final String nameEnding = "Handler";
-        if (requestName == null || requestName.isEmpty()) {
+        if (isEmpty(requestName)) {
             return null;
         }
         if (requestName.endsWith(nameEnding)) {

@@ -38,18 +38,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
+import static com.spectralogic.ds3autogen.java.models.Constants.*;
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator.class);
 
     private static final Path baseProjectPath = Paths.get("ds3-sdk/src/main/java/");
-
-    private static final String ROOT_PACKAGE = "com.spectralogic.ds3client";
-    private static final String COMMANDS_PACKAGE = ROOT_PACKAGE + ".commands";
-    private static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
-    private static final String NOTIFICATION_PACKAGE = ".notifications";
-    private static final String MODELS_PACKAGE = ".models";
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
@@ -86,7 +83,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateAllModels() throws IOException, TemplateException {
-        if (spec.getTypes() == null || spec.getTypes().isEmpty()) {
+        if (isEmpty(spec.getTypes())) {
+            LOG.info("There were no models to generate");
             return;
         }
         for (final Ds3Type ds3Type : spec.getTypes().values()) {
@@ -108,17 +106,17 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
-        if (ds3Type.getEnumConstants() != null && !ds3Type.getEnumConstants().isEmpty()) {
+        if (hasContent(ds3Type.getEnumConstants())) {
             return config.getTemplate("models/enum_model_template.tmpl");
         }
-        if (ds3Type.getElements() != null && !ds3Type.getElements().isEmpty()) {
+        if (hasContent(ds3Type.getElements())) {
             return config.getTemplate("models/model_template.tmpl");
         }
         throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }
 
     private String getModelPackage() {
-        return ROOT_PACKAGE + MODELS_PACKAGE;
+        return ROOT_PACKAGE_PATH + MODELS_PACKAGE;
     }
 
     private Path getModelPath(final String fileName) {
@@ -127,7 +125,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateAllRequests() throws IOException, TemplateException {
-        if (spec.getRequests() == null || spec.getRequests().isEmpty()) {
+        if (isEmpty(spec.getRequests())) {
+            LOG.info("There were no requests to generate");
             return;
         }
         for (final Ds3Request request : spec.getRequests()) {
@@ -137,11 +136,12 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateClient() throws IOException, TemplateException {
-        if (spec.getRequests() == null || spec.getRequests().isEmpty()) {
+        if (isEmpty(spec.getRequests())) {
+            LOG.info("Not generating client: no requests.");
             return;
         }
         final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
-        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE);
+        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE_PATH);
         final Path clientPath = getClientPath("Ds3Client.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());
@@ -163,7 +163,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Path getClientPath(final String fileName) {
-        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE.replace(".", "/") + "/" + fileName)));
+        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE_PATH.replace(".", "/") + "/" + fileName)));
     }
 
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
@@ -194,7 +194,7 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private static String getCommandPackage(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(COMMANDS_PACKAGE);
+        builder.append(COMMANDS_PACKAGE_PATH);
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
         }
