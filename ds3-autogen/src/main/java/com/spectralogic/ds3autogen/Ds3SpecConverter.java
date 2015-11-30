@@ -24,6 +24,9 @@ class Ds3SpecConverter {
     protected static ImmutableList<Ds3Request> convertRequests(
             final ImmutableList<Ds3Request> requests,
             final NameMapper nameMapper) {
+        if (requests == null || requests.isEmpty()) {
+            return ImmutableList.of();
+        }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
 
         for (final Ds3Request request : requests) {
