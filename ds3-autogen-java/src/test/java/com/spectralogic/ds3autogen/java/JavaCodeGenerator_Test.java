@@ -47,6 +47,21 @@ public class JavaCodeGenerator_Test {
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
+    private void testDs3Client(final String ds3ClientGeneratedCode) {
+        assertTrue(isOfPackage("com.spectralogic.ds3client", ds3ClientGeneratedCode));
+        assertTrue(extendsInterface("Ds3Client", "Closeable", ds3ClientGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.*", ds3ClientGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.notifications.*", ds3ClientGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.*", ds3ClientGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.notifications.*", ds3ClientGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Node", ds3ClientGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.ConnectionDetails", ds3ClientGeneratedCode));
+        assertTrue(hasImport("java.io.Closeable", ds3ClientGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", ds3ClientGeneratedCode));
+        assertTrue(hasImport("java.security.SignatureException", ds3ClientGeneratedCode));
+    }
+
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
         final String requestName = "GetObjectRequest";
@@ -122,6 +137,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -172,6 +188,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -229,6 +246,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -284,6 +302,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -339,6 +358,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -397,6 +417,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -456,6 +477,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -515,6 +537,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -591,6 +614,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -655,6 +679,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -695,6 +720,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -744,6 +770,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -791,6 +818,7 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         assertTrue(hasCommand(requestName, ds3ClientGeneratedCode));
+        testDs3Client(ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
