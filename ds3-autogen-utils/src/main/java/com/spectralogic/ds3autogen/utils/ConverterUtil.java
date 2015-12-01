@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.utils;
+package com.spectralogic.ds3autogen.utils;
 
 import java.util.List;
 import java.util.Map;

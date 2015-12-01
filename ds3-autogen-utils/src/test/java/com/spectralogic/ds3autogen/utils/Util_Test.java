@@ -13,14 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java;
+package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

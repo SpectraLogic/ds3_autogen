@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
