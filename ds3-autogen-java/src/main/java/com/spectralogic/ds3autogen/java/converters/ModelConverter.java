@@ -85,6 +85,7 @@ public class ModelConverter {
                     && element.getComponentType().contains(".")) {
                 builder.add(ConvertType.convertType(element.getComponentType()));
                 builder.add("java.util.List");
+                builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
             }
         }
         return builder.build().asList();

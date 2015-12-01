@@ -720,9 +720,9 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.util.http.HttpResponseFormatType", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.util.lang.NamingConventionType", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.util.http.RequestType", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.HttpResponseFormatType", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.NamingConventionType", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.RequestType", requestGeneratedCode));
 
         assertTrue(isOptParamOfType("Format", "HttpResponseFormatType", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("NamingConvention", "NamingConventionType", requestName, requestGeneratedCode, false));
