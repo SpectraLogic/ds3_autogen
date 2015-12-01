@@ -161,9 +161,17 @@ public class TestHelper {
     }
 
     public static boolean hasCommand(final String requestName, final String code) {
-        return code.contains(requestName.replace("Request", "Response")
+        return code.contains(commandLine(requestName));
+    }
+
+    public static boolean hasCommand(final String requestName, final Scope scope, final String code) {
+        return code.contains(scope.toString().toLowerCase() + " " + commandLine(requestName));
+    }
+
+    private static String commandLine(final String requestName) {
+        return requestName.replace("Request", "Response")
                 + " " + JavaHelper.uncapFirst(requestName.replace("Request", ""))
-                + "(" + requestName + " request)");
+                + "(" + requestName + " request)";
     }
 
     public static boolean hasModelVariable(final String name, final String type, final String code) {
