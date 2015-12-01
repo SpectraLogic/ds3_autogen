@@ -26,6 +26,10 @@ public class TestHelper {
         return code.contains("public interface " + childClass + " extends " + baseClass);
     }
 
+    public static boolean implementsInterface(final String childClass, final String baseClass, final String code) {
+        return code.contains("public class " + childClass + " implements " + baseClass);
+    }
+
     //Checks if code contains a non-static method.
     public static boolean hasMethod(
             final String methodName,
