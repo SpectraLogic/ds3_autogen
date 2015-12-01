@@ -1,0 +1,45 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                <Elements>
+                    <Element Name="SpecifiableByUser" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+                <EnumConstants>
+                    <EnumConstant Name="CRITICAL">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="URGENT">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="HIGH">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="NORMAL">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="LOW">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="true" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="BACKGROUND">
+                        <Properties>
+                            <Property Name="SpecifiableByUser" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                </EnumConstants>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

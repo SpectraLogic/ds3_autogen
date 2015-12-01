@@ -17,17 +17,12 @@ package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
+import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
-import com.spectralogic.ds3autogen.java.models.Client;
-import com.spectralogic.ds3autogen.java.models.NotificationType;
-import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.java.models.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -43,17 +38,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
+import static com.spectralogic.ds3autogen.java.models.Constants.*;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator.class);
 
     private static final Path baseProjectPath = Paths.get("ds3-sdk/src/main/java/");
-
-    private static final String ROOT_PACKAGE = "com.spectralogic.ds3client";
-    private static final String COMMANDS_PACKAGE = ROOT_PACKAGE + ".commands";
-    private static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
-    private static final String NOTIFICATION_PACKAGE = ".notifications";
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
@@ -84,17 +77,71 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateCommands() throws IOException, TemplateException {
+        generateAllRequests();
+        generateAllModels();
+        generateClient();
+    }
+
+    private void generateAllModels() throws IOException, TemplateException {
+        if (isEmpty(spec.getTypes())) {
+            LOG.info("There were no models to generate");
+            return;
+        }
+        for (final Ds3Type ds3Type : spec.getTypes().values()) {
+            generateModel(ds3Type);
+        }
+    }
+
+    private void generateModel(final Ds3Type ds3Type) throws IOException, TemplateException {
+        final Template modelTmpl = getModelTemplate(ds3Type);
+        final Model model = ModelConverter.toModel(ds3Type, getModelPackage());
+        final Path modelPath = getModelPath(model.getName());
+
+        LOG.info("Getting outputstream for file:" + modelPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(modelPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            modelTmpl.process(model, writer);
+        }
+    }
+
+    private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
+        if (hasContent(ds3Type.getEnumConstants())) {
+            return config.getTemplate("models/enum_model_template.tmpl");
+        }
+        if (hasContent(ds3Type.getElements())) {
+            return config.getTemplate("models/model_template.tmpl");
+        }
+        throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
+    }
+
+    private String getModelPackage() {
+        return ROOT_PACKAGE_PATH + MODELS_PACKAGE;
+    }
+
+    private Path getModelPath(final String fileName) {
+        return destDir.resolve(baseProjectPath.resolve(
+                Paths.get(getModelPackage().replace(".", "/") + "/" + fileName + ".java")));
+    }
+
+    private void generateAllRequests() throws IOException, TemplateException {
+        if (isEmpty(spec.getRequests())) {
+            LOG.info("There were no requests to generate");
+            return;
+        }
         for (final Ds3Request request : spec.getRequests()) {
             generateRequest(request);
             generateResponse(request);
         }
-
-        generateClient();
     }
 
     private void generateClient() throws IOException, TemplateException {
+        if (isEmpty(spec.getRequests())) {
+            LOG.info("Not generating client: no requests.");
+            return;
+        }
         final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
-        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE);
+        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE_PATH);
         final Path clientPath = getClientPath("Ds3Client.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());
@@ -116,7 +163,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Path getClientPath(final String fileName) {
-        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE.replace(".", "/") + "/" + fileName)));
+        return destDir.resolve(baseProjectPath.resolve(Paths.get(ROOT_PACKAGE_PATH.replace(".", "/") + "/" + fileName)));
     }
 
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
@@ -147,7 +194,7 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private static String getCommandPackage(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(COMMANDS_PACKAGE);
+        builder.append(COMMANDS_PACKAGE_PATH);
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
         }
@@ -183,23 +230,23 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         final Template template;
         if (isBulkRequest(ds3Request)) {
-            template = config.getTemplate("bulk_request_template.tmpl");
+            template = config.getTemplate("request/bulk_request_template.tmpl");
         } else if (isPhysicalPlacementRequest(ds3Request)) {
-            template = config.getTemplate("physical_placement_request_template.tmpl");
+            template = config.getTemplate("request/physical_placement_request_template.tmpl");
         } else if (isMultiFileDelete(ds3Request)) {
-            template = config.getTemplate("multi_file_delete_request_template.tmpl");
+            template = config.getTemplate("request/multi_file_delete_request_template.tmpl");
         } else if (isGetObject(ds3Request)) {
-            template = config.getTemplate("get_object_template.tmpl");
+            template = config.getTemplate("request/get_object_template.tmpl");
         } else if (isCreateObject(ds3Request)) {
-            template = config.getTemplate("create_object_template.tmpl");
+            template = config.getTemplate("request/create_object_template.tmpl");
         } else if (isDeleteNotificationRequest(ds3Request)) {
-            template = config.getTemplate("delete_notification_request_template.tmpl");
+            template = config.getTemplate("request/delete_notification_request_template.tmpl");
         } else if (isCreateNotificationRequest(ds3Request)) {
-            template = config.getTemplate("create_notification_request_template.tmpl");
+            template = config.getTemplate("request/create_notification_request_template.tmpl");
         } else if (isGetNotificationRequest(ds3Request)) {
-            template = config.getTemplate("get_notification_request_template.tmpl");
+            template = config.getTemplate("request/get_notification_request_template.tmpl");
         } else {
-            template = config.getTemplate("request_template.tmpl");
+            template = config.getTemplate("request/request_template.tmpl");
         }
 
         return template;

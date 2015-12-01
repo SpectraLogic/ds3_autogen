@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
+import com.spectralogic.ds3autogen.java.models.Element;
 
 public class TestHelper {
 
@@ -49,7 +50,7 @@ public class TestHelper {
         if (!isInherited) {
             return doesConstructorContainParam(paramName, paramType, requestName, code)
                     && code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName))
-                    && code.contains("public " + paramType + " get" + JavaHelper.capFirst(paramName) + "()");
+                    && hasGetter(paramName, paramType, code);
         }
         return doesConstructorContainParam(paramName, paramType, requestName, code);
     }
@@ -65,7 +66,7 @@ public class TestHelper {
         if (!isInherited) {
             return isWithConstructorOfType(paramName, paramType, requestName, code)
                     && code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName))
-                    && code.contains("public " + paramType + " get" + JavaHelper.capFirst(paramName) + "()");
+                    && hasGetter(paramName, paramType, code);
         }
         return isWithConstructorOfType(paramName, paramType, requestName, code);
     }
@@ -155,5 +156,58 @@ public class TestHelper {
         return code.contains(requestName.replace("Request", "Response")
                 + " " + JavaHelper.uncapFirst(requestName.replace("Request", ""))
                 + "(" + requestName + " request)");
+    }
+
+    public static boolean hasModelVariable(final String name, final String type, final String code) {
+        return hasModelVariable(name, type, false, code);
+    }
+
+    public static boolean hasModelVariable(
+            final String name,
+            final String type,
+            final boolean isList,
+            final String code) {
+        return hasModelParam(name, type, isList, code)
+                && hasGetter(name, type, code)
+                && hasSetter(name, type, code);
+    }
+
+    private static boolean hasModelParam(
+            final String name,
+            final String type,
+            final boolean isList,
+            final String code) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("    @JsonProperty(\"" + JavaHelper.capFirst(name) + "\")\n");
+        if (isList) {
+            builder.append("    @JacksonXmlElementWrapper\n");
+        }
+        builder.append("    private " + type + " " + JavaHelper.uncapFirst(name) + ";");
+        return code.contains(builder.toString());
+    }
+
+    public static boolean hasModelConstructor(
+            final String modelName,
+            final ImmutableList<Element> elements,
+            final String code) {
+        final String expected = "public " + modelName + "(" + JavaHelper.getModelConstructorArgs(elements) + ")";
+        return code.contains(expected);
+    }
+
+    private static boolean hasGetter(final String name, final String type, final String code) {
+        return code.contains("public " + type + " get" + JavaHelper.capFirst(name) + "()");
+    }
+
+    private static boolean hasSetter(final String name, final String type, final String code) {
+        return code.contains("public void set" + JavaHelper.capFirst(name)
+                + "(final " + type + " " + JavaHelper.uncapFirst(name) + ") {");
+    }
+
+    public static boolean isEnumClass(final String className, final String code) {
+        return code.contains("public enum " + className + " {");
+    }
+
+    public static boolean enumContainsValue(final String value, final String code) {
+        return code.contains("    " + value);
     }
 }

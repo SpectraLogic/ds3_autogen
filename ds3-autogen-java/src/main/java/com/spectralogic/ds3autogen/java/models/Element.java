@@ -15,41 +15,30 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.utils.Helper;
+public class Element {
 
-public class Response {
-    private final String packageName;
     private final String name;
-    private final JavaHelper javaHelper;
-    private final ImmutableList<Ds3ResponseCode> responseCodes;
+    private final String type;
+    private final String componentType;
 
-    public Response(
-            final String packageName,
+    public Element(
             final String name,
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        this.packageName = packageName;
+            final String type,
+            final String componentType) {
         this.name = name;
-        this.responseCodes = responseCodes;
-
-        this.javaHelper = JavaHelper.getInstance();
-    }
-
-    public String getPackageName() {
-        return packageName;
+        this.type = type;
+        this.componentType = componentType;
     }
 
     public String getName() {
         return name;
     }
 
-    public ImmutableList<Ds3ResponseCode> getResponseCodes() {
-        return responseCodes;
+    public String getType() {
+        return type;
     }
 
-    public JavaHelper getJavaHelper() {
-        return javaHelper;
+    public String getComponentType() {
+        return componentType;
     }
 }
