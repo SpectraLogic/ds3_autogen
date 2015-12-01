@@ -16,10 +16,10 @@
 package com.spectralogic.ds3autogen.java.models;
 
 public class Constants {
-    public final static String MODELS_PACKAGE_PATH = "com.spectralogic.ds3client.models.";
-    public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic.s3.common.dao.domain";
     public static final String ROOT_PACKAGE_PATH = "com.spectralogic.ds3client";
+    public final static String MODELS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".models.";
     public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";
+    public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic.s3.common.dao.domain";
 
     public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
 

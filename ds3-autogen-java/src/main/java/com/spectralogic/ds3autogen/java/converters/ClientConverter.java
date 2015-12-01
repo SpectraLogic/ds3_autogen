@@ -20,7 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
 
 public class ClientConverter {
 

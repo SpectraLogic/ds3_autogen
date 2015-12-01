@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.java.models.Constants.SPECTRA_S3_NAMESPACING;
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
 
 public class NameConverter {
 

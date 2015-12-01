@@ -24,8 +24,8 @@ import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Model;
 
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
 
 public class ModelConverter {
 

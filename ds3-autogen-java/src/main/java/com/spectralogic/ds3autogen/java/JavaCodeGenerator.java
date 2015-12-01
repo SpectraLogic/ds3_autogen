@@ -39,8 +39,8 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.java.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.api.utils.ConverterUtil.isEmpty;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
