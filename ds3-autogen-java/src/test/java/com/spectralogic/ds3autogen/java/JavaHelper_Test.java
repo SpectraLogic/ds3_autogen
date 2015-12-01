@@ -400,4 +400,13 @@ public class JavaHelper_Test {
         assertThat(JavaHelper.getEnumValues(ImmutableList.of()), is(""));
         assertThat(JavaHelper.getEnumValues(null), is(""));
     }
+
+    @Test
+    public void isSpectraDs3() {
+        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
+        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands"));
+
+        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
+        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
+    }
 }
