@@ -339,4 +339,8 @@ public class JavaHelper {
     public static boolean isSpectraDs3(final String packageName) {
         return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
     }
+
+    public static boolean isSpectraDs3OrNotification(final String packageName) {
+        return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
+    }
 }

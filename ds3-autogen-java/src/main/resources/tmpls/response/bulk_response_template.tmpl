@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-<#if javaHelper.isSpectraDs3(packageName)>
+<#if javaHelper.isSpectraDs3OrNotification(packageName)>
 import com.spectralogic.ds3client.commands.BulkResponse;
 </#if>
 import com.spectralogic.ds3client.networking.WebResponse;
