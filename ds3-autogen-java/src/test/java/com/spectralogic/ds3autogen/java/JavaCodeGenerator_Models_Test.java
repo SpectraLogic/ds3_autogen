@@ -173,4 +173,19 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/emptyType.xml");
     }
 
+    @Test
+    public void unusedType() throws IOException, ParserException {
+        final String modelName = "RequestType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/unusedType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+        assertTrue(modelGeneratedCode.isEmpty());
+    }
 }
