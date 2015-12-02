@@ -2,6 +2,9 @@
 
 package ${packageName};
 
+<#if javaHelper.isSpectraDs3(packageName)>
+import com.spectralogic.ds3client.commands.AbstractResponse;
+</#if>
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 
