@@ -363,6 +363,7 @@ public class JavaHelper_Test {
         assertThat(JavaHelper.argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
+        assertThat(JavaHelper.argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
     }
 
     @Test

@@ -160,6 +160,8 @@ public class JavaHelper {
             case "Integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
+            case "int":
+                return "Integer.toString(" + uncapFirst(arg.getName()) + ")";
             default:
                 return uncapFirst(arg.getName()) + ".toString()";
         }
