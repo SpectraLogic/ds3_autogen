@@ -17,12 +17,13 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class Util_Test {
 
@@ -87,5 +88,29 @@ public class Util_Test {
         final String fullString = "Hello World";
         assertTrue(hasContent(fullString));
         assertFalse(isEmpty(fullString));
+    }
+
+    @Test
+    public void removeSpectraInternalRequestsNull() {
+        final ImmutableList<Ds3Request> nullResult = removeSpectraInternalRequests(null);
+        assertTrue(nullResult.isEmpty());
+    }
+
+    @Test
+    public void removeSpectraInternalRequestsEmpty() {
+        final ImmutableList<Ds3Request> emptyResult = removeSpectraInternalRequests(ImmutableList.of());
+        assertTrue(emptyResult.isEmpty());
+    }
+
+    @Test
+    public void removeSpectraInternalRequestsFull() {
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                new Ds3Request("Request1", null, Classification.amazons3, null, null, null, null, null, null, null, null, null),
+                new Ds3Request("Request2", null, Classification.spectrainternal, null, null, null, null, null, null, null, null, null),
+                new Ds3Request("Request3", null, Classification.spectrads3, null, null, null, null, null, null, null, null, null));
+        final ImmutableList<Ds3Request> result = removeSpectraInternalRequests(requests);
+        assertThat(result.size(), is(2));
+        assertTrue(result.get(0).getClassification() != Classification.spectrainternal);
+        assertTrue(result.get(1).getClassification() != Classification.spectrainternal);
     }
 }

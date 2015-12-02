@@ -1,0 +1,21 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.tape.CreateFakeTapeEnvironmentRequestHandler">
+                <Request Action="CREATE" Resource="TAPE_ENVIRONMENT" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D10567FDA4745FDE40A53EDAAE72E5D9</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
