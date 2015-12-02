@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.security.SignatureException;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.notifications.*;
+import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
-class Ds3ClientImpl implements Ds3Client {
+public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
 
     Ds3ClientImpl(final NetworkClient netClient) {
@@ -28,7 +30,7 @@ class Ds3ClientImpl implements Ds3Client {
 
     <#list commands as cmd>
     @Override
-    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException, SignatureException {
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException, SignatureException {
         return new ${cmd.getResponseName()}(this.netClient.getResponse(request));
     }
     </#list>

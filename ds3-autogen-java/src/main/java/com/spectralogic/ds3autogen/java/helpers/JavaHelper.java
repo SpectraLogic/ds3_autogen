@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -159,6 +160,8 @@ public class JavaHelper {
             case "Integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
+            case "int":
+                return "Integer.toString(" + uncapFirst(arg.getName()) + ")";
             default:
                 return uncapFirst(arg.getName()) + ".toString()";
         }
@@ -333,5 +336,13 @@ public class JavaHelper {
                 .stream()
                 .map(i -> indent(1) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    public static boolean isSpectraDs3(final String packageName) {
+        return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
+    }
+
+    public static boolean isSpectraDs3OrNotification(final String packageName) {
+        return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
     }
 }

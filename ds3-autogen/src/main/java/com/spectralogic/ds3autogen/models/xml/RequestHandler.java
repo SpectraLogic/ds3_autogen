@@ -37,6 +37,9 @@ public class RequestHandler {
     @JsonProperty("Request")
     private Request request;
 
+    @JsonProperty("Version")
+    private String version;
+
     @JsonProperty("ResponseCodes")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<ResponseCode> responseCodes;
@@ -110,5 +113,13 @@ public class RequestHandler {
             ds3ParamsBuilder.add(param.toDs3Param());
         }
         return ds3ParamsBuilder.build();
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(final String version) {
+        this.version = version;
     }
 }

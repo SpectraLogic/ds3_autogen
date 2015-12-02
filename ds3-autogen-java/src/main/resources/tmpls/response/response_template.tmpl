@@ -2,8 +2,12 @@
 
 package ${packageName};
 
+<#if javaHelper.isSpectraDs3OrNotification(packageName)>
+import com.spectralogic.ds3client.commands.AbstractResponse;
+</#if>
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ${name} extends AbstractResponse {
 
@@ -19,7 +23,7 @@ public class ${name} extends AbstractResponse {
                 this.result = content.toString();
             }
         } finally {
-            this.getResponse.close();
+            this.getResponse().close();
         }
     }
 

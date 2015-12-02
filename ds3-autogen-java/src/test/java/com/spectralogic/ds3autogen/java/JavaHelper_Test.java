@@ -363,6 +363,7 @@ public class JavaHelper_Test {
         assertThat(JavaHelper.argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
+        assertThat(JavaHelper.argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
     }
 
     @Test
@@ -399,5 +400,23 @@ public class JavaHelper_Test {
 
         assertThat(JavaHelper.getEnumValues(ImmutableList.of()), is(""));
         assertThat(JavaHelper.getEnumValues(null), is(""));
+    }
+
+    @Test
+    public void isSpectraDs3() {
+        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
+        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands"));
+
+        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
+        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
+    }
+
+    @Test
+    public void isSpectraDs3OrNotification() {
+        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
+        assertFalse(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));
+
+        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
+        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
     }
 }

@@ -22,6 +22,14 @@ public class TestHelper {
         return code.contains("public class " + childClass + " extends " + baseClass);
     }
 
+    public static boolean extendsInterface(final String childClass, final String baseClass, final String code) {
+        return code.contains("public interface " + childClass + " extends " + baseClass);
+    }
+
+    public static boolean implementsInterface(final String childClass, final String baseClass, final String code) {
+        return code.contains("public class " + childClass + " implements " + baseClass);
+    }
+
     //Checks if code contains a non-static method.
     public static boolean hasMethod(
             final String methodName,
@@ -153,9 +161,17 @@ public class TestHelper {
     }
 
     public static boolean hasCommand(final String requestName, final String code) {
-        return code.contains(requestName.replace("Request", "Response")
+        return code.contains(commandLine(requestName));
+    }
+
+    public static boolean hasCommand(final String requestName, final Scope scope, final String code) {
+        return code.contains(scope.toString().toLowerCase() + " " + commandLine(requestName));
+    }
+
+    private static String commandLine(final String requestName) {
+        return requestName.replace("Request", "Response")
                 + " " + JavaHelper.uncapFirst(requestName.replace("Request", ""))
-                + "(" + requestName + " request)");
+                + "(" + requestName + " request)";
     }
 
     public static boolean hasModelVariable(final String name, final String type, final String code) {

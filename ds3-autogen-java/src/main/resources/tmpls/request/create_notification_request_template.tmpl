@@ -1,6 +1,10 @@
 <#include "../copyright.tmpl"/>
 
 package ${packageName};
+
+<#if javaHelper.isSpectraDs3(packageName)>
+import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
+</#if>
 <#include "../imports.tmpl"/>
 
 public class ${name} extends AbstractCreateNotificationRequest {

@@ -16,13 +16,16 @@
 package com.spectralogic.ds3autogen.api.models;
 
 public enum Resource {
+    ACTIVE_JOB,
     BLOB_STORE_TASK,
     BEANS_RETRIEVER,
     BUCKET,
     BUCKET_ACL,
     CACHE_FILESYSTEM,
     CACHE_STATE,
+    CANCELED_JOB,
     CAPACITY_SUMMARY,
+    COMPLETED_JOB,
     DATA_PATH,
     DATA_PATH_BACKEND,
     DATA_PERSISTENCE_RULE,
