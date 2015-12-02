@@ -15,6 +15,13 @@
 
 package com.spectralogic.ds3autogen.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +49,46 @@ public class ConverterUtil {
 
     public static boolean isEmpty(final String string) {
         return string == null || string.isEmpty();
+    }
+
+    public static ImmutableMap<String, Ds3Type> removeUnusedTypes(
+            final ImmutableMap<String, Ds3Type> types,
+            final ImmutableList<Ds3Request> requests) {
+        if (isEmpty(types) || isEmpty(requests)) {
+            return ImmutableMap.of();
+        }
+        final ImmutableSet<String> usedTypes = getUsedTypes(requests);
+        final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
+        for (final Map.Entry<String, Ds3Type> entry : types.entrySet()) {
+            if (usedTypes.contains(entry.getKey())) {
+                builder.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return builder.build();
+    }
+
+    protected static ImmutableSet<String> getUsedTypes(final ImmutableList<Ds3Request> requests) {
+        if (isEmpty(requests)) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3Request request : requests) {
+            builder.addAll(getUsedTypesFromParams(request.getRequiredQueryParams()));
+            builder.addAll(getUsedTypesFromParams(request.getOptionalQueryParams()));
+        }
+        return builder.build();
+    }
+
+    protected static ImmutableSet<String> getUsedTypesFromParams(final ImmutableList<Ds3Param> params) {
+        if (isEmpty(params)) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3Param param : params) {
+            if (param.getType().startsWith("com.spectralogic.")) {
+                builder.add(param.getType());
+            }
+        }
+        return builder.build();
     }
 }
