@@ -152,6 +152,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -204,6 +205,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -263,6 +265,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -437,6 +440,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -498,6 +502,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -559,6 +564,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -637,6 +643,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -703,6 +710,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -745,6 +753,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -796,6 +805,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -845,6 +855,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
