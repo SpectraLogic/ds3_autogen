@@ -63,12 +63,12 @@ public class ${name} extends AbstractRequest {
 
     <#include "with_constructors.tmpl"/>
 
-    public PutObjectRequest withChecksum(final Checksum checksum) {
+    public ${name} withChecksum(final Checksum checksum) {
         this.checksum = checksum;
         return this;
     }
 
-	public PutObjectRequest withMetaData(final String key, final String value) {
+	public ${name} withMetaData(final String key, final String value) {
 		final String modifiedKey;
 		if (!key.toLowerCase().startsWith(AMZ_META_HEADER)){
 			modifiedKey = AMZ_META_HEADER + key;
