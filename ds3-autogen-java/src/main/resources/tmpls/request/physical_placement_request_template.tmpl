@@ -31,7 +31,7 @@ public class ${name} extends AbstractRequest {
 
     <#include "with_constructors.tmpl"/>
 
-    public Stream getContentStream() {
+    public InputStream getContentStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 
