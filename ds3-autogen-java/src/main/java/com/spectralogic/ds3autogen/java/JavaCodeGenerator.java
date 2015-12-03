@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.*;
@@ -41,6 +42,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
@@ -83,11 +86,12 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateAllModels() throws IOException, TemplateException {
-        if (isEmpty(spec.getTypes())) {
+        final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(spec.getTypes(), spec.getRequests());
+        if (isEmpty(types)) {
             LOG.info("There were no models to generate");
             return;
         }
-        for (final Ds3Type ds3Type : spec.getTypes().values()) {
+        for (final Ds3Type ds3Type : types.values()) {
             generateModel(ds3Type);
         }
     }

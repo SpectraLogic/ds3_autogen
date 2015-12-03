@@ -17,12 +17,15 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class Util_Test {
@@ -112,5 +115,110 @@ public class Util_Test {
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getClassification() != Classification.spectrainternal);
         assertTrue(result.get(1).getClassification() != Classification.spectrainternal);
+    }
+
+    @Test
+    public void getUsedTypesFromParamsNull() {
+        final ImmutableSet<String> nullResult = getUsedTypesFromParams(null);
+        assertTrue(nullResult.isEmpty());
+    }
+
+    @Test
+    public void getUsedTypesFromParamsEmpty() {
+        final ImmutableSet<String> emptyResult = getUsedTypesFromParams(ImmutableList.of());
+        assertTrue(emptyResult.isEmpty());
+    }
+
+    @Test
+    public void getUsedTypesFromParamsFull() {
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("Type1", "java.util.UUID"),
+                new Ds3Param("Type2", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                new Ds3Param("Type3", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                new Ds3Param("Type4", "long"),
+                new Ds3Param("Type5", "com.spectralogic.s3.common.dao.domain.pool.PoolHealth")
+        );
+        final ImmutableSet<String> fullResult = getUsedTypesFromParams(params);
+        assertThat(fullResult.size(), is(2));
+        assertTrue(fullResult.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"));
+        assertTrue(fullResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"));
+        assertFalse(fullResult.contains("java.util.UUID"));
+        assertFalse(fullResult.contains("long"));
+    }
+
+    @Test
+    public void getUsedTypesNull() {
+        final ImmutableSet<String> nullResult = getUsedTypes(null);
+        assertTrue(nullResult.isEmpty());
+    }
+
+    @Test
+    public void getUsedTypesEmpty() {
+        final ImmutableSet<String> emptyResult = getUsedTypes(ImmutableList.of());
+        assertTrue(emptyResult.isEmpty());
+    }
+
+    @Test
+    public void getUsedTypesFull() {
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                        ImmutableList.of(
+                                new Ds3Param(null, "java.util.UUID"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
+                        ImmutableList.of(
+                                new Ds3Param(null, "long"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
+                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                        ImmutableList.of(
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
+                        ImmutableList.of()));
+        final ImmutableSet<String> result = getUsedTypes(requests);
+        assertThat(result.size(), is(3));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
+        assertFalse(result.contains("java.util.UUID"));
+        assertFalse(result.contains("long"));
+    }
+
+    @Test
+    public void removeUsedTypesEmpty() {
+        assertTrue(removeUnusedTypes(null, null).isEmpty());
+        assertTrue(removeUnusedTypes(ImmutableMap.of(), null).isEmpty());
+        assertTrue(removeUnusedTypes(null, ImmutableList.of()).isEmpty());
+        assertTrue(removeUnusedTypes(ImmutableMap.of(), ImmutableList.of()).isEmpty());
+    }
+
+    @Test
+    public void removeUsedTypesFull() {
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                        ImmutableList.of(
+                                new Ds3Param(null, "java.util.UUID"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
+                        ImmutableList.of(
+                                new Ds3Param(null, "long"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
+                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                        ImmutableList.of(
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
+                        ImmutableList.of()));
+
+        final ImmutableMap<String, Ds3Type> types = ImmutableMap.of(
+                "com.spectralogic.s3.common.dao.domain.tape.TapeState", new Ds3Type(null, null, null),
+                "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission", new Ds3Type(null, null, null),
+                "com.spectralogic.s3.common.dao.domain.pool.PoolState", new Ds3Type(null, null, null),
+                "com.spectralogic.s3.common.dao.domain.tape.TapeType", new Ds3Type(null, null, null),
+                "com.spectralogic.s3.common.dao.domain.pool.PoolHealth", new Ds3Type(null, null, null));
+
+        final ImmutableMap<String, Ds3Type> result = removeUnusedTypes(types, requests);
+        assertThat(result.size(), is(3));
+        assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"));
+        assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"));
+        assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
+        assertFalse(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
+        assertFalse(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeType"));
     }
 }

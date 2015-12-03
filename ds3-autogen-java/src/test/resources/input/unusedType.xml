@@ -1,0 +1,16 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.util.http.RequestType">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="DELETE"/>
+                    <EnumConstant Name="GET"/>
+                    <EnumConstant Name="HEAD"/>
+                    <EnumConstant Name="POST"/>
+                    <EnumConstant Name="PUT"/>
+                </EnumConstants>
+            </Type>
+        </Types>
+    </Contract>
+</Data>
