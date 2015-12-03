@@ -15,6 +15,10 @@
 
 package com.spectralogic.ds3autogen.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +46,19 @@ public class ConverterUtil {
 
     public static boolean isEmpty(final String string) {
         return string == null || string.isEmpty();
+    }
+
+    public static ImmutableList<Ds3Request> removeSpectraInternalRequests(
+            final ImmutableList<Ds3Request> requests) {
+        if (isEmpty(requests)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
+        for (final Ds3Request request : requests) {
+            if (request.getClassification() != Classification.spectrainternal) {
+                builder.add(request);
+            }
+        }
+        return builder.build();
     }
 }

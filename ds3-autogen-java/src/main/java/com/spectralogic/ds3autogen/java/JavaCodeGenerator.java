@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.java;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.*;
@@ -39,8 +40,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
@@ -125,23 +125,25 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateAllRequests() throws IOException, TemplateException {
-        if (isEmpty(spec.getRequests())) {
+        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+        if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
         }
-        for (final Ds3Request request : spec.getRequests()) {
+        for (final Ds3Request request : requests) {
             generateRequest(request);
             generateResponse(request);
         }
     }
 
     private void generateClient() throws IOException, TemplateException {
-        if (isEmpty(spec.getRequests())) {
+        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+        if (isEmpty(requests)) {
             LOG.info("Not generating client: no requests.");
             return;
         }
         final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
-        final Client client = ClientConverter.toClient(spec.getRequests(), ROOT_PACKAGE_PATH);
+        final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH);
         final Path clientPath = getClientPath("Ds3Client.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());

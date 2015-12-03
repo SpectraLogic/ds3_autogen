@@ -869,6 +869,36 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void spectraInternalRequest() throws IOException, ParserException {
+        final String requestName = "CreateFakeTapeEnvironmentRequestHandler";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/spectraInternalRequestHandler.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+        assertTrue(requestGeneratedCode.isEmpty());
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        assertTrue(responseGeneratedCode.isEmpty());
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.isEmpty());
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        assertTrue(ds3ClientImplGeneratedCode.isEmpty());
+    }
+
+    @Test
     public void wholeXmlDoc() throws IOException, ParserException {
         final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
