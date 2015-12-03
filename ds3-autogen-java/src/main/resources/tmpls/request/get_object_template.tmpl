@@ -55,7 +55,7 @@ public class ${name} extends AbstractRequest {
         </#list>
         this.channel = channel;
 
-        this.getQueryParams().put("job", jobId.toString());
+        this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
     }
 
@@ -76,8 +76,8 @@ public class ${name} extends AbstractRequest {
     <#include "getters_verb_path.tmpl"/>
 
     @Override
-    public ContentType getContentType() {
-        return ContentType.APPLICATION_OCTET_STREAM;
+    public String getContentType() {
+        return ContentType.APPLICATION_OCTET_STREAM.toString();
     }
 
     <#include "getters.tmpl"/>
