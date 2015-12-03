@@ -38,7 +38,7 @@ public class ${name} extends BulkRequest {
 ${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
 
-    <#list optionalArguments as arg>
+    <#list javaHelper.removeArgument(optionalArguments, "MaxUploadSize") as arg>
     <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
@@ -48,6 +48,6 @@ ${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
     @Override
     public BulkCommand getCommand() {
-        return bulkCommand.${helper.getBulkVerb(operation)};
+        return BulkCommand.${helper.getBulkVerb(operation)};
     }
 }

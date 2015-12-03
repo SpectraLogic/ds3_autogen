@@ -210,7 +210,7 @@ public class TestHelper {
         return code.contains(expected);
     }
 
-    private static boolean hasGetter(final String name, final String type, final String code) {
+    public static boolean hasGetter(final String name, final String type, final String code) {
         return code.contains("public " + type + " get" + JavaHelper.capFirst(name) + "()");
     }
 

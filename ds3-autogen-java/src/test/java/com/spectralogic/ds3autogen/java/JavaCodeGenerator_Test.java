@@ -356,6 +356,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("MaxUploadSize", "long", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertFalse(hasGetter("MaxUploadSize", "long", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
