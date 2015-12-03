@@ -14,10 +14,10 @@ public class ${name} extends AbstractRequest {
     // Variables
     public final static String AMZ_META_HEADER = "x-amz-meta-";
 
-    private final SeekableByteChannel channel;
     private final InputStream stream;
     private final long size;
     <#include "variables.tmpl"/>
+    private SeekableByteChannel channel;
     private Checksum checksum = Checksum.none();
 
     // Constructor
@@ -36,14 +36,13 @@ public class ${name} extends AbstractRequest {
     }
 
     public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
-        this.channel = channel;
-        this.stream = new SeekableByteChannelInputStream(channel);
-
-        ${name}(${javaHelper.modifiedArgNameList(
+        this(${javaHelper.modifiedArgNameList(
             javaHelper.addArgument(
                 javaHelper.addArgument(
                     javaHelper.addArgument(
-                        requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "this.stream")});
+                        requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
+
+        this.channel = channel;
     }
 
     public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {

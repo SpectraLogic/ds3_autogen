@@ -599,10 +599,11 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
-        assertTrue(isReqParamOfType("Channel", "SeekableByteChannel", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Size", "long", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("withChecksum", requestName, Scope.PUBLIC, requestGeneratedCode));
         assertTrue(hasMethod("withMetaData", requestName, Scope.PUBLIC, requestGeneratedCode));
+        assertTrue(isOptVariable("Channel", "SeekableByteChannel", requestGeneratedCode));
+        assertTrue(hasGetter("Channel", "SeekableByteChannel", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Checksum", requestGeneratedCode));

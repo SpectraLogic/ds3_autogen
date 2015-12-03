@@ -73,10 +73,17 @@ public class TestHelper {
             final boolean isInherited) {
         if (!isInherited) {
             return isWithConstructorOfType(paramName, paramType, requestName, code)
-                    && code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName))
+                    && isOptVariable(paramName, paramType, code)
                     && hasGetter(paramName, paramType, code);
         }
         return isWithConstructorOfType(paramName, paramType, requestName, code);
+    }
+
+    public static boolean isOptVariable(
+            final String paramName,
+            final String paramType,
+            final String code) {
+        return code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName));
     }
 
     private static  boolean isWithConstructorOfType(
