@@ -152,12 +152,14 @@ public class JavaHelper {
     }
 
     public static String argToString(final Arguments arg) {
-        switch (arg.getType()) {
+        switch (arg.getType().toLowerCase()) {
+            case "boolean":
             case "void":
                 return "null";
-            case "String":
+            case "string":
                 return uncapFirst(arg.getName());
-            case "Integer":
+            case "double":
+            case "integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":

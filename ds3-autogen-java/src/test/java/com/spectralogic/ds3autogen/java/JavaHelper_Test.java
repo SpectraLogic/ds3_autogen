@@ -329,7 +329,7 @@ public class JavaHelper_Test {
         final String expectedResultBoolean =
                 "    public RequestName withArgName(final boolean argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName.toString());\n" +
+                "        this.updateQueryParam(\"arg_name\", null);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
@@ -359,11 +359,13 @@ public class JavaHelper_Test {
     @Test
     public void argToString() {
         assertThat(JavaHelper.argToString(new Arguments("void", "ArgName")), is("null"));
+        assertThat(JavaHelper.argToString(new Arguments("boolean", "ArgName")), is("null"));
         assertThat(JavaHelper.argToString(new Arguments("String", "ArgName")), is("argName"));
         assertThat(JavaHelper.argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(JavaHelper.argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(JavaHelper.argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
     }
 
     @Test
