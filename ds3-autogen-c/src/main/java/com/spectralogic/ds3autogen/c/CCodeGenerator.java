@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.c.models.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -73,7 +74,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         if (null != spec.getTypes()) {
             for (final Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
-                System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
+                generateType(typeEntry);
             }
         }
     }
@@ -101,6 +102,23 @@ public class CCodeGenerator implements CodeGenerator {
         final Writer writer = new OutputStreamWriter(outStream);
         try {
             requestTemplate.process(request, writer);
+        } catch (final NullPointerException e) {
+            System.out.println("Encountered NullPointerException while processing template " + requestTemplate.getName());
+            e.printStackTrace();
+        }
+    }
+
+    public void generateType(final Map.Entry<String, Ds3Type> typeEntry) throws IOException {
+        System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
+        Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
+        Type type = config.getTemplate("Type.tmplt");
+
+        final Path outputPath = Paths.get(outputDirectory + "/ds3_c_sdk/src/types.c");
+
+        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
+        final Writer writer = new OutputStreamWriter(outStream);
+        try {
+            typeTemplate.process(typeTemplate, writer);
         } catch (final NullPointerException e) {
             System.out.println("Encountered NullPointerException while processing template " + requestTemplate.getName());
             e.printStackTrace();
