@@ -35,7 +35,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
-    private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization");
+    private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization", "BucketName");
     private final static String indent = "    ";
 
     private JavaHelper() {}
@@ -46,6 +46,19 @@ public class JavaHelper {
 
     public static boolean isBulkRequestArg(final String name) {
         return bulkBaseClassArgs.contains(name);
+    }
+
+    public static String createBulkVariable(final Arguments arg, final boolean isRequired) {
+        if (isBulkRequestArg(arg.getName())) {
+            return "";
+        }
+        final StringBuilder builder = new StringBuilder();
+        builder.append("private ");
+        if (isRequired) {
+            builder.append("final ");
+        }
+        builder.append(getType(arg) + " " + uncapFirst(arg.getName()) + ";");
+        return builder.toString();
     }
 
     public static String createWithConstructor(final Arguments arg, final String requestName) {

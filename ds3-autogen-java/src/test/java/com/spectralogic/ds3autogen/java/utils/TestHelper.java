@@ -57,7 +57,7 @@ public class TestHelper {
             final boolean isInherited) {
         if (!isInherited) {
             return doesConstructorContainParam(paramName, paramType, requestName, code)
-                    && code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName))
+                    && isReqVariable(paramName, paramType, code)
                     && hasGetter(paramName, paramType, code);
         }
         return doesConstructorContainParam(paramName, paramType, requestName, code);
@@ -84,6 +84,13 @@ public class TestHelper {
             final String paramType,
             final String code) {
         return code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName));
+    }
+
+    public static boolean isReqVariable(
+            final String paramName,
+            final String paramType,
+            final String code) {
+        return code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName));
     }
 
     private static  boolean isWithConstructorOfType(

@@ -20,10 +20,11 @@ public class ${name} extends BulkRequest {
     </#if>
     </#list>
 
+    <#list requiredArguments as arg>
+    ${javaHelper.createBulkVariable(arg, true)}
+    </#list>
     <#list optionalArguments as arg>
-    <#if arg.getType() == "void">
-    private boolean ${arg.getName()?uncap_first};
-    </#if>
+    ${javaHelper.createBulkVariable(arg, false)}
     </#list>
 
     // Constructor

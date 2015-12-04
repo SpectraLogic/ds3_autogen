@@ -297,6 +297,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOptParamOfType("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
@@ -357,6 +358,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("MaxUploadSize", "long", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
         assertFalse(hasGetter("MaxUploadSize", "long", requestGeneratedCode));
+        assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));

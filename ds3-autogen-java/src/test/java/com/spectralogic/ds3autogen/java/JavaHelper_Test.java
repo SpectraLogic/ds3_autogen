@@ -311,6 +311,7 @@ public class JavaHelper_Test {
     public void isBulkRequestArg() {
         assertTrue(JavaHelper.isBulkRequestArg("Priority"));
         assertTrue(JavaHelper.isBulkRequestArg("WriteOptimization"));
+        assertTrue(JavaHelper.isBulkRequestArg("BucketName"));
         assertFalse(JavaHelper.isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
     }
 
@@ -420,5 +421,19 @@ public class JavaHelper_Test {
 
         assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
         assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
+    }
+
+    @Test
+    public void createBulkVariable() {
+        final String baseClassExpected = "";
+        final Arguments baseClassArg = new Arguments("BlobStoreTaskPriority", "Priority");
+        assertThat(JavaHelper.createBulkVariable(baseClassArg, true), is(baseClassExpected));
+
+        final String optionalExpected = "private ArgType argName;";
+        final Arguments arg = new Arguments("ArgType", "ArgName");
+        assertThat(JavaHelper.createBulkVariable(arg, false), is(optionalExpected));
+
+        final String requiredExpected = "private final ArgType argName;";
+        assertThat(JavaHelper.createBulkVariable(arg, true), is(requiredExpected));
     }
 }
