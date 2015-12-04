@@ -102,7 +102,7 @@ public class TestHelper {
                 + "(final " + paramType + " " + JavaHelper.uncapFirst(paramName) + ")");
     }
 
-    private static boolean doesConstructorContainParam(
+    public static boolean doesConstructorContainParam(
             final String paramName,
             final String paramType,
             final String requestName,
@@ -239,5 +239,13 @@ public class TestHelper {
 
     public static boolean enumContainsValue(final String value, final String code) {
         return code.contains("    " + value);
+    }
+
+    public static boolean constructorHasVoidQueryParam(final String paramName, final String code) {
+        return code.contains("this.getQueryParams().put(\"" + paramName + "\", null);");
+    }
+
+    public static boolean constructorHasVarAssignment(final String paramName, final String code) {
+        return code.contains("this." + paramName + " = " + paramName + ";");
     }
 }

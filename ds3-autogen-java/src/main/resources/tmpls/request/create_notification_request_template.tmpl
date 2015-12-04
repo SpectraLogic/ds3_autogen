@@ -10,12 +10,17 @@ import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificat
 public class ${name} extends AbstractCreateNotificationRequest {
 
     // Variables
-    <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
-    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
-    </#list>
+<#include "notification_variables.tmpl"/>
 
-    public ${name}(final String notificationEndPoint) {
+    public ${name}(${javaHelper.constructorArgs(
+                          javaHelper.removeVoidArguments(requiredArguments))}) {
         super(notificationEndPoint);
+
+        <#list javaHelper.removeVoidArguments(
+                   javaHelper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+<#include "constructor_get_query_params.tmpl"/>
     }
 
     <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
@@ -27,7 +32,15 @@ ${javaHelper.createWithConstructor(arg, name)}
         return ${path};
     }
 
-    <#list javaHelper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>
+    <#list optionalArguments as arg>
+    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
+        return this.${arg.getName()?uncap_first};
+    }
+
+    </#list>
+
+    <#list javaHelper.removeVoidArguments(
+               javaHelper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }

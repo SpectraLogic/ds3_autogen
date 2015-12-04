@@ -10,7 +10,9 @@
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
                         <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
-                    <RequiredQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Test" Type="void"/>
+                    </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>

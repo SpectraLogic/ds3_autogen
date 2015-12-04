@@ -19,22 +19,19 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     private final List<String> objects;
-    <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
-    private final ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
-    </#list>
-    <#list optionalArguments as arg>
-    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
-    </#list>
+<#include "variables.tmpl"/>
     private boolean quiet = false;
     private long size;
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objects", "List<String>"))}) {
-        <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
+    public ${name}(${javaHelper.constructorArgs(
+                         javaHelper.addArgument(
+                             javaHelper.removeVoidArguments(requiredArguments), "Objects", "List<String>"))}) {
+        <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.objects = objects;
-        this.getQueryParams().put("delete", null);
+<#include "constructor_get_query_params.tmpl"/>
     }
 
     public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
@@ -82,18 +79,7 @@ public class ${name} extends AbstractRequest {
 
     ${javaHelper.createGetter("Quiet", "boolean")}
 
-    <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
-    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
-        return this.${arg.getName()?uncap_first};
-    }
-
-    </#list>
-    <#list optionalArguments as arg>
-    public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
-        return this.${arg.getName()?uncap_first};
-    }
-
-    </#list>
+<#include "getters.tmpl"/>
 
     @Override
     ${javaHelper.createGetter("Size", "long")}

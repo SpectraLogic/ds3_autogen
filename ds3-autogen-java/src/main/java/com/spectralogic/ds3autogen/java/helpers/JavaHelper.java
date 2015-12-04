@@ -262,6 +262,48 @@ public class JavaHelper {
     }
 
     /*
+     * Removes all void arguments from the provided list.  This is used with the required params
+     * list to prevent the unnecessary inclusion of void variables into variable list and constructors.
+     */
+    public static ImmutableList<Arguments> removeVoidArguments(
+            final ImmutableList<Arguments> arguments) {
+        return adjustVoidArguments(arguments, AdjustArgType.REMOVE_VOID);
+    }
+
+    /*
+     * Gets all void arguments from the provided list.  This is used within constructors to add
+     * query parameters that are always required.
+     */
+    public static ImmutableList<Arguments> getVoidArguments(
+            final ImmutableList<Arguments> arguments) {
+        return adjustVoidArguments(arguments, AdjustArgType.SELECT_VOID);
+    }
+
+    protected enum AdjustArgType { SELECT_VOID, REMOVE_VOID }
+
+    protected static ImmutableList<Arguments> adjustVoidArguments(
+            final ImmutableList<Arguments> arguments,
+            final AdjustArgType adjustment) {
+        if (isEmpty(arguments)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        for (final Arguments arg : arguments) {
+            if (addVoidArgument(arg, adjustment)) {
+                builder.add(arg);
+            }
+        }
+        return builder.build();
+    }
+
+    protected static boolean addVoidArgument(final Arguments arg, final AdjustArgType adjustment) {
+        if (adjustment.equals(AdjustArgType.REMOVE_VOID)) {
+            return !arg.getType().equals("void");
+        }
+        return arg.getType().equals("void");
+    }
+
+    /*
      * Creates a comma separated list of argument names, while changing one argument name to a specified value
      */
     public static String modifiedArgNameList(

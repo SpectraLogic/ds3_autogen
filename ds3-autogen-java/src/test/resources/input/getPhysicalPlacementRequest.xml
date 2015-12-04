@@ -8,6 +8,7 @@
                         <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
+                        <Param Name="Test" Type="void"/>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
                     </RequiredQueryParams>
                 </Request>
