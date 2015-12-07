@@ -152,7 +152,58 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void addArgument() {
+     public void addArgumentListsNull() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists1 = JavaHelper.addArgument(arguments, null);
+        assertThat(resultAddLists1.size(), is(2));
+        assertTrue(containsArgName(resultAddLists1, "Arg1"));
+        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists2 = JavaHelper.addArgument(null, arguments);
+        assertThat(resultAddLists2.size(), is(2));
+        assertTrue(containsArgName(resultAddLists2, "Arg1"));
+        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists3 = JavaHelper.addArgument(null, null);
+        assertThat(resultAddLists3.size(), is(0));
+    }
+
+    @Test
+    public void addArgumentListsEmpty() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists1 = JavaHelper.addArgument(arguments, ImmutableList.of());
+        assertThat(resultAddLists1.size(), is(2));
+        assertTrue(containsArgName(resultAddLists1, "Arg1"));
+        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists2 = JavaHelper.addArgument(ImmutableList.of(), arguments);
+        assertThat(resultAddLists2.size(), is(2));
+        assertTrue(containsArgName(resultAddLists2, "Arg1"));
+        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists3 = JavaHelper.addArgument(ImmutableList.of(), ImmutableList.of());
+        assertThat(resultAddLists3.size(), is(0));
+    }
+
+    @Test
+    public void addArgumentElementNullOrEmpty() {
+        final ImmutableList<Arguments> resultAddElementNull = JavaHelper.addArgument(null, "ArgName", "ArgType");
+        assertThat(resultAddElementNull.size(), is(1));
+        assertTrue(containsArgName(resultAddElementNull, "ArgName"));
+
+        final ImmutableList<Arguments> resultAddElementEmpty = JavaHelper.addArgument(ImmutableList.of(), "ArgName", "ArgType");
+        assertThat(resultAddElementEmpty.size(), is(1));
+        assertTrue(containsArgName(resultAddElementEmpty, "ArgName"));
+    }
+
+    @Test
+    public void addArgumentFull() {
         final ImmutableList<Arguments> arguments1 = ImmutableList.of(
                 new Arguments("Type1", "Arg1"),
                 new Arguments("Type2", "Arg2"));
@@ -395,11 +446,36 @@ public class JavaHelper_Test {
                 new EnumConstant("HEAD"),
                 new EnumConstant("POST"),
                 new EnumConstant("PUT"));
-        final String result = JavaHelper.getEnumValues(enumConstants);
+        final String result = JavaHelper.getEnumValues(enumConstants, 1);
         assertThat(result, is(expectedResult));
 
-        assertThat(JavaHelper.getEnumValues(ImmutableList.of()), is(""));
-        assertThat(JavaHelper.getEnumValues(null), is(""));
+        assertThat(JavaHelper.getEnumValues(ImmutableList.of(), 1), is(""));
+        assertThat(JavaHelper.getEnumValues(null, 1), is(""));
+    }
+
+    @Test
+    public void addEnumNull() {
+        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(null, "ONE");
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("ONE"));
+    }
+
+    @Test
+    public void addEnumEmpty() {
+        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(ImmutableList.of(), "ONE");
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("ONE"));
+    }
+
+    @Test
+    public void addEnumFull() {
+        final ImmutableList<EnumConstant> enumConstants = ImmutableList.of(
+                new EnumConstant("ONE"),
+                new EnumConstant("TWO"),
+                new EnumConstant("THREE"));
+        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(enumConstants, "FOUR");
+        assertThat(result.size(), is(4));
+        assertThat(result.get(3).getName(), is("FOUR"));
     }
 
     @Test
