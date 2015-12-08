@@ -106,14 +106,8 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateType(final Map.Entry<String, Ds3Type> typeEntry) throws IOException {
-        System.out.println("Generating Type[" + typeEntry.getKey() + "]");
-
         Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
         Type type = TypeConverter.toType(typeEntry.getValue());
-        System.out.println("type[" + type.getUnqualifiedName() + "]");
-        for ( Ds3EnumConstant currentEnum : type.getEnumConstants()) {
-            System.out.println("  enumConstant["+ currentEnum.getName() + "]");
-        }
 
         final Path outputPath = Paths.get("/tmp/ds3_c_sdk/src/types/TypeEnumConstant.c");
 
