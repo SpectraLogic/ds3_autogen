@@ -18,10 +18,7 @@ package com.spectralogic.ds3autogen.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
@@ -70,6 +67,27 @@ public class Util_Test {
                 "key2", "value2");
         assertTrue(hasContent(fullMap));
         assertFalse(isEmpty(fullMap));
+    }
+
+    @Test
+    public void convertUtilNullSet() {
+        final ImmutableSet<String> nullSet = null;
+        assertTrue(isEmpty(nullSet));
+        assertFalse(hasContent(nullSet));
+    }
+
+    @Test
+    public void convertUtilEmptySet() {
+        final ImmutableSet<String> nullSet = ImmutableSet.of();
+        assertTrue(isEmpty(nullSet));
+        assertFalse(hasContent(nullSet));
+    }
+
+    @Test
+    public void convertUtilEmptyFullSet() {
+        final ImmutableSet<String> fullSet = ImmutableSet.of("One", "two", "three");
+        assertTrue(hasContent(fullSet));
+        assertFalse(isEmpty(fullSet));
     }
 
     @Test
@@ -148,13 +166,13 @@ public class Util_Test {
 
     @Test
     public void getUsedTypesNull() {
-        final ImmutableSet<String> nullResult = getUsedTypes(null);
+        final ImmutableSet<String> nullResult = getUsedTypesFromRequests(null);
         assertTrue(nullResult.isEmpty());
     }
 
     @Test
     public void getUsedTypesEmpty() {
-        final ImmutableSet<String> emptyResult = getUsedTypes(ImmutableList.of());
+        final ImmutableSet<String> emptyResult = getUsedTypesFromRequests(ImmutableList.of());
         assertTrue(emptyResult.isEmpty());
     }
 
@@ -173,7 +191,7 @@ public class Util_Test {
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
                         ImmutableList.of()));
-        final ImmutableSet<String> result = getUsedTypes(requests);
+        final ImmutableSet<String> result = getUsedTypesFromRequests(requests);
         assertThat(result.size(), is(3));
         assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"));
         assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"));
@@ -220,5 +238,141 @@ public class Util_Test {
         assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
         assertFalse(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
         assertFalse(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeType"));
+    }
+
+    @Test
+    public void converterUtilIncludeType() {
+        assertTrue(includeType("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
+        assertFalse(includeType("java.util.UUID"));
+        assertFalse(includeType(""));
+        assertFalse(includeType(null));
+    }
+
+    @Test
+    public void converterUtilIsEnum() {
+        assertFalse(isEnum(new Ds3Type("typeName", null, null)));
+        assertFalse(isEnum(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of())));
+
+        final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
+                new Ds3Element(null, null, null, null),
+                new Ds3Element(null, null, null, null));
+
+        final ImmutableList<Ds3EnumConstant> ds3EnumConstants = ImmutableList.of(
+                new Ds3EnumConstant(null, null),
+                new Ds3EnumConstant(null, null));
+
+        assertTrue(isEnum(new Ds3Type("typeName", ds3Elements, ds3EnumConstants)));
+        assertTrue(isEnum(new Ds3Type("typeName", null, ds3EnumConstants)));
+        assertTrue(isEnum(new Ds3Type("typeName", ImmutableList.of(), ds3EnumConstants)));
+        assertFalse(isEnum(new Ds3Type("typeName", ds3Elements, null)));
+        assertFalse(isEnum(new Ds3Type("typeName", ds3Elements, ImmutableList.of())));
+    }
+
+    @Test
+    public void converterUtilGetUsedTypesFromTypeEmpty() {
+        final ImmutableSet<String> nullResult = getUsedTypesFromType(new Ds3Type("typeName", null, null));
+        assertThat(nullResult.size(), is(0));
+
+        final ImmutableSet<String> emptyResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of()));
+        assertThat(emptyResult.size(), is(0));
+    }
+
+    @Test
+    public void converterUtilGetUsedTypesFromTypeEnumTypes() {
+        final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
+                new Ds3Element(null, "java.util.UUID", null, null),
+                new Ds3Element(null, "com.spectralogic.s3.common.dao.domain.tape.TapeState", null, null),
+                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.pool.PoolState", null),
+                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.tape.TapeState", null));
+
+        final ImmutableList<Ds3EnumConstant> ds3EnumConstants = ImmutableList.of(
+                new Ds3EnumConstant(null, null),
+                new Ds3EnumConstant(null, null));
+
+        final ImmutableSet<String> nullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, ds3EnumConstants));
+        assertThat(nullElementsResult.size(), is(0));
+
+        final ImmutableSet<String> emptyElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), ds3EnumConstants));
+        assertThat(emptyElementsResult.size(), is(0));
+
+        final ImmutableSet<String> fullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, ds3EnumConstants));
+        assertThat(fullElementsResult.size(), is(0));
+    }
+
+    @Test
+    public void converterUtilGetUsedTypesFromType() {
+        final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
+                new Ds3Element(null, "java.util.UUID", null, null),
+                new Ds3Element(null, "com.spectralogic.s3.common.dao.domain.tape.TapeState", null, null),
+                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.pool.PoolState", null),
+                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.tape.TapeState", null));
+
+        final ImmutableSet<String> nullEnumResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, null));
+        assertThat(nullEnumResult.size(), is(2));
+        assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
+        assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
+
+        final ImmutableSet<String> emptyEnumResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, ImmutableList.of()));
+        assertThat(emptyEnumResult.size(), is(2));
+        assertTrue(emptyEnumResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
+        assertTrue(emptyEnumResult.contains("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
+    }
+
+    @Test
+    public void converterUtilGetUsedTypesFromAllTypesEmpty() {
+        final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(
+                "type1", new Ds3Type("type1", null, null),
+                "type2", new Ds3Type("type2", null, null));
+
+        final ImmutableSet nullResult = getUsedTypesFromAllTypes(typeMap, null);
+        assertThat(nullResult.size(), is(0));
+
+        final ImmutableSet emptyResult = getUsedTypesFromAllTypes(typeMap, ImmutableSet.of());
+        assertThat(emptyResult.size(), is(0));
+    }
+
+    @Test
+    public void converterUtilGetUsedTypesFromAllTypes() {
+        final String parentType = "com.spectralogic.s3.common.dao.domain.pool.Parent";
+        final String childType = "com.spectralogic.s3.common.dao.domain.pool.Child";
+        final String grandchildType = "com.spectralogic.s3.common.dao.domain.pool.Grandchild";
+
+        final String tapeState = "com.spectralogic.s3.common.dao.domain.tape.TapeState";
+        final String poolHealth = "com.spectralogic.s3.common.dao.domain.pool.PoolHealth";
+        final String permission = "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission";
+
+        final Ds3Type parentDs3Type = new Ds3Type(
+                parentType,
+                ImmutableList.of(new Ds3Element("Child", childType, null, null)),
+                null);
+        final Ds3Type childDs3Type = new Ds3Type(
+                childType,
+                ImmutableList.of(
+                        new Ds3Element("Grandchild", grandchildType, null, null),
+                        new Ds3Element("TapeState", "array", tapeState, null)),
+                null);
+        final Ds3Type grandchildDs3Type = new Ds3Type(
+                grandchildType,
+                ImmutableList.of(new Ds3Element("PoolHealth", poolHealth, null, null)),
+                null);
+
+        final ImmutableMap.Builder<String, Ds3Type> typeMapBuilder = ImmutableMap.builder();
+        typeMapBuilder.put(parentType, parentDs3Type);
+        typeMapBuilder.put(childType, childDs3Type);
+        typeMapBuilder.put(grandchildType, grandchildDs3Type);
+        typeMapBuilder.put(tapeState, new Ds3Type(tapeState, null, null));
+        typeMapBuilder.put(poolHealth, new Ds3Type(poolHealth, null, null));
+        typeMapBuilder.put(permission, new Ds3Type(permission, null, null));
+
+        final ImmutableSet<String> usedTypes = ImmutableSet.of(parentType);
+        final ImmutableSet<String> result = getUsedTypesFromAllTypes(typeMapBuilder.build(), usedTypes);
+
+        assertThat(result.size(), is(5));
+        assertTrue(result.contains(parentType));
+        assertTrue(result.contains(childType));
+        assertTrue(result.contains(grandchildType));
+        assertTrue(result.contains(tapeState));
+        assertTrue(result.contains(poolHealth));
+        assertFalse(result.contains(permission));
     }
 }

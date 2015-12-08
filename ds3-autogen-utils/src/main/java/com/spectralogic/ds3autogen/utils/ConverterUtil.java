@@ -18,15 +18,15 @@ package com.spectralogic.ds3autogen.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ConverterUtil {
+
+    private static final String CONTRACT_DEFINED_TYPE = "com.spectralogic.";
 
     public static boolean hasContent(final List<?> list) {
         return !isEmpty(list);
@@ -34,6 +34,10 @@ public class ConverterUtil {
 
     public static boolean hasContent(final Map<?,?> map) {
         return !isEmpty(map);
+    }
+
+    public static boolean hasContent(final Set<?> set) {
+        return !isEmpty(set);
     }
 
     public static boolean hasContent(final String string) {
@@ -46,6 +50,10 @@ public class ConverterUtil {
 
     public static boolean isEmpty(final Map<?,?> map) {
         return map == null || map.isEmpty();
+    }
+
+    public static boolean isEmpty(final Set<?> set) {
+        return set == null || set.isEmpty();
     }
 
     public static boolean isEmpty(final String string) {
@@ -72,7 +80,7 @@ public class ConverterUtil {
         if (isEmpty(types) || isEmpty(requests)) {
             return ImmutableMap.of();
         }
-        final ImmutableSet<String> usedTypes = getUsedTypes(requests);
+        final ImmutableSet<String> usedTypes = getUsedTypesFromRequests(requests);
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
         for (final Map.Entry<String, Ds3Type> entry : types.entrySet()) {
             if (usedTypes.contains(entry.getKey())) {
@@ -82,7 +90,51 @@ public class ConverterUtil {
         return builder.build();
     }
 
-    protected static ImmutableSet<String> getUsedTypes(final ImmutableList<Ds3Request> requests) {
+    protected static ImmutableSet<String> getUsedTypesFromAllTypes(
+            final ImmutableMap<String, Ds3Type> typeMap,
+            final ImmutableSet<String> usedTypes) {
+        if (isEmpty(usedTypes)) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        builder.addAll(usedTypes);
+        for (final String type : usedTypes) {
+            final Ds3Type ds3Type = typeMap.get(type);
+            builder.addAll(getUsedTypesFromType(ds3Type));
+        }
+        final ImmutableSet<String> newUsedTypes = builder.build();
+        if (newUsedTypes.size() > usedTypes.size()) {
+            return getUsedTypesFromAllTypes(typeMap, newUsedTypes);
+        }
+        return newUsedTypes;
+    }
+
+    protected static ImmutableSet<String> getUsedTypesFromType(final Ds3Type ds3Type) {
+        if (isEnum(ds3Type) || isEmpty(ds3Type.getElements())) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3Element ds3Element : ds3Type.getElements()) {
+            if (includeType(ds3Element.getType())) {
+                builder.add(ds3Element.getType());
+            }
+            if (hasContent(ds3Element.getComponentType())
+                    && includeType(ds3Element.getComponentType())) {
+                builder.add(ds3Element.getComponentType());
+            }
+        }
+        return builder.build();
+    }
+
+    protected static boolean isEnum(final Ds3Type ds3Type) {
+        return hasContent(ds3Type.getEnumConstants());
+    }
+
+    protected static boolean includeType(final String type) {
+        return hasContent(type) && type.startsWith(CONTRACT_DEFINED_TYPE);
+    }
+
+    protected static ImmutableSet<String> getUsedTypesFromRequests(final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {
             return ImmutableSet.of();
         }
@@ -100,7 +152,7 @@ public class ConverterUtil {
         }
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         for (final Ds3Param param : params) {
-            if (param.getType().startsWith("com.spectralogic.")) {
+            if (includeType(param.getType())) {
                 builder.add(param.getType());
             }
         }
