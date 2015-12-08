@@ -104,6 +104,7 @@ public class JavaHelper_Test {
         assertThat(JavaHelper.getType(new Arguments("Integer", "test")), is("int"));
         assertThat(JavaHelper.getType(new Arguments("long", "test")), is("long"));
         assertThat(JavaHelper.getType(new Arguments(null, "test")), is(""));
+        assertThat(JavaHelper.getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
     }
 
     @Test

@@ -249,6 +249,8 @@ public class JavaHelper {
                 return "boolean";
             case "Integer":
                 return "int";
+            case "ChecksumType":
+                return arg.getType() + ".Type";
             default:
                 return arg.getType();
         }
