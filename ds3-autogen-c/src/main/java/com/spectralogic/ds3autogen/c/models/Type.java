@@ -21,15 +21,28 @@ import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Type {
-    //private final Helper helper;
-    private final ImmutableList<Ds3EnumConstant> enums;
+    private final String name;
+    private final ImmutableList<Ds3EnumConstant> enumConstants;
+    private final Helper helper;
 
-    public Type(final ImmutableList<Ds3EnumConstant> enums) {
-        this.enums = enums;
-        //this.helper = Helper.getInstance();
+
+    public Type(
+            final String name,
+            final ImmutableList<Ds3EnumConstant> enumConstants) {
+        this.name = name;
+        this.enumConstants = enumConstants;
+        this.helper = Helper.getInstance();
     }
 
-    public ImmutableList<Ds3EnumConstant> getEnums() {
-        return enums;
+    public ImmutableList<Ds3EnumConstant> getEnumConstants() {
+        return enumConstants;
+    }
+
+    public String getUnqualifiedName() {
+        return helper.unqualifiedName(name);
+    }
+
+    public String getNameUnderscores() {
+        return helper.camelToUnderscore(getUnqualifiedName());
     }
 }

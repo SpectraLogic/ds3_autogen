@@ -17,10 +17,7 @@ package com.spectralogic.ds3autogen.c;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Type;
@@ -89,8 +86,8 @@ public class CCodeGenerator implements CodeGenerator {
         } else if (ds3Request.getClassification() == Classification.spectrads3) {
             System.out.println("AmazonS3 request");
             // TODO
-        } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
-            System.out.println("Spectra internal request");
+        //} else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
+        //    System.out.println("Spectra internal request");
             // TODO
         } else {
             throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
@@ -109,18 +106,26 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateType(final Map.Entry<String, Ds3Type> typeEntry) throws IOException {
-        System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
-        Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
-        Type type = config.getTemplate("Type.tmplt");
+        System.out.println("Generating Type[" + typeEntry.getKey() + "]");
 
-        final Path outputPath = Paths.get(outputDirectory + "/ds3_c_sdk/src/types.c");
+        Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
+        Type type = TypeConverter.toType(typeEntry.getValue());
+        System.out.println("type[" + type.getUnqualifiedName() + "]");
+        for ( Ds3EnumConstant currentEnum : type.getEnumConstants()) {
+            System.out.println("  enumConstant["+ currentEnum.getName() + "]");
+        }
+
+        final Path outputPath = Paths.get("/tmp/ds3_c_sdk/src/types/TypeEnumConstant.c");
 
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
         try {
-            typeTemplate.process(typeTemplate, writer);
+            typeTemplate.process(type, writer);
         } catch (final NullPointerException e) {
-            System.out.println("Encountered NullPointerException while processing template " + requestTemplate.getName());
+            System.out.println("Encountered NullPointerException while processing template " + typeTemplate.getName());
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            System.out.println("Encountered TemplateException while processing template " + typeTemplate.getName());
             e.printStackTrace();
         }
     }
@@ -128,4 +133,8 @@ public class CCodeGenerator implements CodeGenerator {
     public Path getOutputPath(final Request request) {
         return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRoot() + ".c");
     }
+
+    //public Path getOutputPath(final Type type) {
+    //    return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameRoot() + ".c");
+    //}
 }

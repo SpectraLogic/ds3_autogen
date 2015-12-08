@@ -20,50 +20,25 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.models.*;
 
 public class TypeConverter {
-    private final Ds3EnumConstant ds3EnumConstant;
+    private final Ds3Type ds3Type;
 
-
-    private TypeConverter(final Ds3EnumConstant ds3EnumConstant) {
-        this.ds3EnumConstant = ds3EnumConstant;
+    private TypeConverter(final Ds3Type ds3Type) {
+        this.ds3Type = ds3Type;
     }
 
     private Type convert() {
-        return new Type();
+        return new Type(
+                this.ds3Type.getName(),
+                this.ds3Type.getEnumConstants());
     }
 
-    public static Type toType(final Ds3EnumConstant ds3EnumConstant) {
-        System.out.println("Type::toType[" + ds3EnumConstant.getName() + "]");
-        final TypeConverter converter = new TypeConverter(ds3EnumConstant);
-        System.out.println("  converting...");
+    public static Type toType(final Ds3Type ds3Type) {
+        final TypeConverter converter = new TypeConverter(ds3Type);
         return converter.convert();
     }
 
-    private static ImmutableList<Ds3EnumConstant> getEnums(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
-        System.out.println("Getting required args...");
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-            System.out.println("bucket name REQUIRED.");
-            requiredArgsBuilder.add(new Arguments("String", "bucketName"));
-            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                System.out.println("bucket name REQUIRED.");
-                requiredArgsBuilder.add(new Arguments("String", "objectName"));
-            }
-        }
-
-        System.out.println("Getting required query params...");
-        if (ds3Request.getRequiredQueryParams() != null) {
-            for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-                if (ds3Param == null) {
-                    break;
-                }
-                System.out.println("  query param " + ds3Param.getType().toString());
-                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                System.out.println("param " + paramType + " is required.");
-                requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
-            }
-        }
-
-        System.out.println("Building required args!");
-        return requiredArgsBuilder.build();
+    private static ImmutableList<Ds3EnumConstant> getEnumConstants(final Ds3Type ds3Type) {
+        final ImmutableList.Builder<Ds3EnumConstant> enumsBuilder = ImmutableList.builder();
+        return enumsBuilder.build();
     }
 }
