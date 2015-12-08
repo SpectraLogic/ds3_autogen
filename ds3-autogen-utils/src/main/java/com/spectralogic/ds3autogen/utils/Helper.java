@@ -41,15 +41,13 @@ public final class Helper {
 
         switch (action) {
             case BULK_MODIFY:
-                return "PUT";
             case CREATE:
-                return "PUT";
-            case DELETE:
-                return "DELETE";
-            case LIST:
-                return "GET";
             case MODIFY:
                 return "PUT";
+            case DELETE:
+            case BULK_DELETE:
+                return "DELETE";
+            case LIST:
             case SHOW:
                 return "GET";
             default:
