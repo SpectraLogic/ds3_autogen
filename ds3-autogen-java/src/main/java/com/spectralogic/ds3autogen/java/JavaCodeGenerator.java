@@ -86,7 +86,10 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private void generateAllModels() throws IOException, TemplateException {
-        final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(spec.getTypes(), spec.getRequests());
+        final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(
+                spec.getTypes(),
+                removeSpectraInternalRequests(spec.getRequests()));
+
         if (isEmpty(types)) {
             LOG.info("There were no models to generate");
             return;
