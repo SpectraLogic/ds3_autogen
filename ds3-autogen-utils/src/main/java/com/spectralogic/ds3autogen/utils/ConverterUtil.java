@@ -20,40 +20,31 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 public class ConverterUtil {
 
     private static final String CONTRACT_DEFINED_TYPE = "com.spectralogic.";
 
-    public static boolean hasContent(final List<?> list) {
-        return !isEmpty(list);
+    public static boolean hasContent(final Collection<?> collection) {
+        return !isEmpty(collection);
     }
 
     public static boolean hasContent(final Map<?,?> map) {
         return !isEmpty(map);
     }
 
-    public static boolean hasContent(final Set<?> set) {
-        return !isEmpty(set);
-    }
-
     public static boolean hasContent(final String string) {
         return !isEmpty(string);
     }
 
-    public static boolean isEmpty(final List<?> list) {
-        return list == null || list.isEmpty();
+    public static boolean isEmpty(final Collection<?> collection) {
+        return collection == null || collection.isEmpty();
     }
 
     public static boolean isEmpty(final Map<?,?> map) {
         return map == null || map.isEmpty();
-    }
-
-    public static boolean isEmpty(final Set<?> set) {
-        return set == null || set.isEmpty();
     }
 
     public static boolean isEmpty(final String string) {
