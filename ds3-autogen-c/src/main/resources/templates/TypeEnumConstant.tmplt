@@ -1,0 +1,5 @@
+<#include "CopyrightHeader.tmplt"/>
+
+typedef enum {
+${getEnumConstantsList()}
+}ds3_${getNameUnderscores()};

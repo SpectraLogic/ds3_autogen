@@ -39,14 +39,30 @@ public class CCodeGenerator_Test {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
-    public void singleRequestHandler() throws IOException, ParserException {
+    public void testSingleDeleteRequestHandler() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/requests/DeleteBucket.c");
+        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/requests/delete_bucket.c");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SingleRequestHandler.xml"));
+        final CodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, Paths.get("/tmp"));
+
+        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+    }
+
+    @Test
+    public void testSingleTypeEnumConstant() throws IOException, ParserException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/types/job_status.c");
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
         final CodeGenerator codeGenerator = new CCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, Paths.get("/tmp"));

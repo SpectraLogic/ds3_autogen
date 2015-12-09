@@ -13,5 +13,26 @@
  * ****************************************************************************
  */
 
-/* This Code is Auto-Generated; DO NOT MODIFY! */
+package com.spectralogic.ds3autogen.c.converters;
 
+import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.c.models.*;
+
+public class TypeConverter {
+    private final Ds3Type ds3Type;
+
+    private TypeConverter(final Ds3Type ds3Type) {
+        this.ds3Type = ds3Type;
+    }
+
+    private Type convert() {
+        return new Type(
+                this.ds3Type.getName(),
+                this.ds3Type.getEnumConstants());
+    }
+
+    public static Type toType(final Ds3Type ds3Type) {
+        final TypeConverter converter = new TypeConverter(ds3Type);
+        return converter.convert();
+    }
+}

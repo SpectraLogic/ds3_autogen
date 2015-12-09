@@ -17,12 +17,10 @@ package com.spectralogic.ds3autogen.c;
 
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.c.models.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -72,8 +70,8 @@ public class CCodeGenerator implements CodeGenerator {
         }
 
         if (null != spec.getTypes()) {
-            for (final Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
-                System.out.println("Generating Type[" + typeEntry.getKey() + "][" + typeEntry.getValue() + "]");
+            for (final Ds3Type typeEntry : spec.getTypes().values()) {
+                generateType(typeEntry);
             }
         }
     }
@@ -89,8 +87,8 @@ public class CCodeGenerator implements CodeGenerator {
             System.out.println("AmazonS3 request");
             // TODO
         } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
-            System.out.println("Spectra internal request");
-            // TODO
+            System.out.println("Skipping Spectra internal request");
+            return;
         } else {
             throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
         }
@@ -107,7 +105,30 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
+    public void generateType(final Ds3Type typeEntry) throws IOException {
+        final Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
+        final Type type = TypeConverter.toType(typeEntry);
+
+        final Path outputPath = getOutputPath(type);
+
+        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
+        final Writer writer = new OutputStreamWriter(outStream);
+        try {
+            typeTemplate.process(type, writer);
+        } catch (final NullPointerException e) {
+            System.out.println("Encountered NullPointerException while processing template " + typeTemplate.getName());
+            e.printStackTrace();
+        } catch (final TemplateException e) {
+            System.out.println("Encountered TemplateException while processing template " + typeTemplate.getName());
+            e.printStackTrace();
+        }
+    }
+
     public Path getOutputPath(final Request request) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRoot() + ".c");
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRootUnderscores() + ".c");
+    }
+
+    public Path getOutputPath(final Type type) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".c");
     }
 }
