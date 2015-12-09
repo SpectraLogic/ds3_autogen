@@ -18,9 +18,7 @@ public class ${name} extends AbstractGetNotificationRequest {
     <#include "variables.tmpl"/>
 
     // Constructor
-    public ${name}(final UUID notificationId) {
-        super(notificationId);
-    }
+<#include "notification_constructor.tmpl"/>
 
     <#include "with_constructors.tmpl"/>
 

@@ -9,12 +9,16 @@ import java.util.UUID;
 
 public class ${name} extends AbstractDeleteNotificationRequest {
 
-    public ${name}(final UUID notificationId) {
-        super(notificationId);
-    }
+    //Variables
+<#include "notification_variables.tmpl"/>
+
+    //Constructor
+<#include "notification_constructor.tmpl"/>
 
     @Override
     public String getPath() {
         return ${path};
     }
+
+<#include "getters.tmpl"/>
 }
