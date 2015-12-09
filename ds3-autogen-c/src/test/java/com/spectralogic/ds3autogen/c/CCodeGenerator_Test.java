@@ -57,7 +57,7 @@ public class CCodeGenerator_Test {
     @Test
     public void testSingleTypeEnumConstant() throws IOException, ParserException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/types/TypeEnumConstant.c");
+        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/types/job_status.c");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 

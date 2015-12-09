@@ -86,9 +86,9 @@ public class CCodeGenerator implements CodeGenerator {
         } else if (ds3Request.getClassification() == Classification.spectrads3) {
             System.out.println("AmazonS3 request");
             // TODO
-        //} else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
-        //    System.out.println("Spectra internal request");
-            // TODO
+        } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
+            System.out.println("Skipping Spectra internal request");
+            return;
         } else {
             throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
         }
@@ -109,7 +109,7 @@ public class CCodeGenerator implements CodeGenerator {
         Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
         Type type = TypeConverter.toType(typeEntry.getValue());
 
-        final Path outputPath = Paths.get("/tmp/ds3_c_sdk/src/types/TypeEnumConstant.c");
+        final Path outputPath = getOutputPath(type);
 
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
@@ -128,7 +128,7 @@ public class CCodeGenerator implements CodeGenerator {
         return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRoot() + ".c");
     }
 
-    //public Path getOutputPath(final Type type) {
-    //    return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameRoot() + ".c");
-    //}
+    public Path getOutputPath(final Type type) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".c");
+    }
 }
