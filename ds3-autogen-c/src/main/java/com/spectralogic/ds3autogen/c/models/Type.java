@@ -18,13 +18,14 @@ package com.spectralogic.ds3autogen.c.models;
 import com.google.common.collect.ImmutableList;
 
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.c.helpers.CHelper;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Type {
     private final String name;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
     private final Helper helper;
-
+    private final CHelper cHelper;
 
     public Type(
             final String name,
@@ -32,10 +33,15 @@ public class Type {
         this.name = name;
         this.enumConstants = enumConstants;
         this.helper = Helper.getInstance();
+        this.cHelper = CHelper.getInstance();
     }
 
     public ImmutableList<Ds3EnumConstant> getEnumConstants() {
         return enumConstants;
+    }
+
+    public String getEnumConstantsList() {
+        return cHelper.getEnumValues(enumConstants);
     }
 
     public String getUnqualifiedName() {

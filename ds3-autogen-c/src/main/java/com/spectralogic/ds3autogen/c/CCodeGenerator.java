@@ -70,7 +70,7 @@ public class CCodeGenerator implements CodeGenerator {
         }
 
         if (null != spec.getTypes()) {
-            for (final Map.Entry<String, Ds3Type> typeEntry : spec.getTypes().entrySet()) {
+            for (final Ds3Type typeEntry : spec.getTypes().values()) {
                 generateType(typeEntry);
             }
         }
@@ -105,9 +105,9 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateType(final Map.Entry<String, Ds3Type> typeEntry) throws IOException {
-        Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
-        Type type = TypeConverter.toType(typeEntry.getValue());
+    public void generateType(final Ds3Type typeEntry) throws IOException {
+        final Template typeTemplate = config.getTemplate("TypeEnumConstant.tmplt");
+        final Type type = TypeConverter.toType(typeEntry);
 
         final Path outputPath = getOutputPath(type);
 
@@ -118,14 +118,14 @@ public class CCodeGenerator implements CodeGenerator {
         } catch (final NullPointerException e) {
             System.out.println("Encountered NullPointerException while processing template " + typeTemplate.getName());
             e.printStackTrace();
-        } catch (TemplateException e) {
+        } catch (final TemplateException e) {
             System.out.println("Encountered TemplateException while processing template " + typeTemplate.getName());
             e.printStackTrace();
         }
     }
 
     public Path getOutputPath(final Request request) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRoot() + ".c");
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRootUnderscores() + ".c");
     }
 
     public Path getOutputPath(final Type type) {

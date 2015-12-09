@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.c.converters;
 
-import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.models.*;
 
@@ -35,10 +34,5 @@ public class TypeConverter {
     public static Type toType(final Ds3Type ds3Type) {
         final TypeConverter converter = new TypeConverter(ds3Type);
         return converter.convert();
-    }
-
-    private static ImmutableList<Ds3EnumConstant> getEnumConstants(final Ds3Type ds3Type) {
-        final ImmutableList.Builder<Ds3EnumConstant> enumsBuilder = ImmutableList.builder();
-        return enumsBuilder.build();
     }
 }
