@@ -11,6 +11,7 @@
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="NotificationEndPoint" Type="java.lang.String"/>
+                        <Param Name="Test" Type="void"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>

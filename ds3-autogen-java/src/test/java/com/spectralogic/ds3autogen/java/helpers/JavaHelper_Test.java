@@ -1,4 +1,4 @@
-package com.spectralogic.ds3autogen.java;
+package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
@@ -104,6 +104,7 @@ public class JavaHelper_Test {
         assertThat(JavaHelper.getType(new Arguments("Integer", "test")), is("int"));
         assertThat(JavaHelper.getType(new Arguments("long", "test")), is("long"));
         assertThat(JavaHelper.getType(new Arguments(null, "test")), is(""));
+        assertThat(JavaHelper.getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
     }
 
     @Test
@@ -311,6 +312,7 @@ public class JavaHelper_Test {
     public void isBulkRequestArg() {
         assertTrue(JavaHelper.isBulkRequestArg("Priority"));
         assertTrue(JavaHelper.isBulkRequestArg("WriteOptimization"));
+        assertTrue(JavaHelper.isBulkRequestArg("BucketName"));
         assertFalse(JavaHelper.isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
     }
 
@@ -329,7 +331,7 @@ public class JavaHelper_Test {
         final String expectedResultBoolean =
                 "    public RequestName withArgName(final boolean argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName.toString());\n" +
+                "        this.updateQueryParam(\"arg_name\", null);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
@@ -359,11 +361,13 @@ public class JavaHelper_Test {
     @Test
     public void argToString() {
         assertThat(JavaHelper.argToString(new Arguments("void", "ArgName")), is("null"));
+        assertThat(JavaHelper.argToString(new Arguments("boolean", "ArgName")), is("null"));
         assertThat(JavaHelper.argToString(new Arguments("String", "ArgName")), is("argName"));
         assertThat(JavaHelper.argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(JavaHelper.argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(JavaHelper.argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(JavaHelper.argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
     }
 
     @Test
@@ -418,5 +422,79 @@ public class JavaHelper_Test {
 
         assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
         assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
+    }
+
+    @Test
+    public void createBulkVariable() {
+        final String baseClassExpected = "";
+        final Arguments baseClassArg = new Arguments("BlobStoreTaskPriority", "Priority");
+        assertThat(JavaHelper.createBulkVariable(baseClassArg, true), is(baseClassExpected));
+
+        final String optionalExpected = "private ArgType argName;";
+        final Arguments arg = new Arguments("ArgType", "ArgName");
+        assertThat(JavaHelper.createBulkVariable(arg, false), is(optionalExpected));
+
+        final String requiredExpected = "private final ArgType argName;";
+        assertThat(JavaHelper.createBulkVariable(arg, true), is(requiredExpected));
+    }
+
+    @Test
+    public void addVoidArgument() {
+        final Arguments voidArg = new Arguments("void", "ArgName");
+        assertTrue(JavaHelper.addVoidArgument(voidArg, JavaHelper.AdjustArgType.SELECT_VOID));
+        assertFalse(JavaHelper.addVoidArgument(voidArg, JavaHelper.AdjustArgType.REMOVE_VOID));
+
+        final Arguments intArg = new Arguments("int", "ArgName");
+        assertFalse(JavaHelper.addVoidArgument(intArg, JavaHelper.AdjustArgType.SELECT_VOID));
+        assertTrue(JavaHelper.addVoidArgument(intArg, JavaHelper.AdjustArgType.REMOVE_VOID));
+    }
+
+    @Test
+    public void adjustVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> voidArgs = JavaHelper
+                .adjustVoidArguments(arguments, JavaHelper.AdjustArgType.SELECT_VOID);
+        assertThat(voidArgs.size(), is(2));
+        assertTrue(voidArgs.get(0).getType().equals("void"));
+        assertTrue(voidArgs.get(1).getType().equals("void"));
+
+        final ImmutableList<Arguments> nonVoidArgs = JavaHelper
+                .adjustVoidArguments(arguments, JavaHelper.AdjustArgType.REMOVE_VOID);
+        assertThat(nonVoidArgs.size(), is(2));
+        assertFalse(nonVoidArgs.get(0).getType().equals("void"));
+        assertFalse(nonVoidArgs.get(1).getType().equals("void"));
+    }
+
+    @Test
+     public void getVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> result = JavaHelper.getVoidArguments(arguments);
+        assertThat(result.size(), is(2));
+        assertTrue(result.get(0).getType().equals("void"));
+        assertTrue(result.get(1).getType().equals("void"));
+    }
+
+    @Test
+    public void removeVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> result = JavaHelper.removeVoidArguments(arguments);
+        assertThat(result.size(), is(2));
+        assertFalse(result.get(0).getType().equals("void"));
+        assertFalse(result.get(1).getType().equals("void"));
     }
 }

@@ -61,7 +61,7 @@ public class RequestConverter {
         return converter.convert();
     }
 
-    private static String requestPath(final Ds3Request ds3Request) {
+    protected static String requestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
 
         if (ds3Request.getClassification() == Classification.amazons3) {
@@ -81,7 +81,7 @@ public class RequestConverter {
                             || getNotificationType(ds3Request) == NotificationType.GET) {
                         builder.append(" + this.getNotificationId().toString()");
                     }
-                } else if (!queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")) {
+                } else if (hasBucketNameInPath(ds3Request)) {
                     builder.append(" + this.bucketName");
                 }
             } else {
@@ -90,6 +90,12 @@ public class RequestConverter {
         }
 
         return builder.toString();
+    }
+
+    private static boolean hasBucketNameInPath(final Ds3Request ds3Request) {
+        return !queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")
+                && (ds3Request.getBucketRequirement() == Requirement.REQUIRED
+                    || ds3Request.getResource() == Resource.BUCKET);
     }
 
     public static NotificationType getNotificationType(final Ds3Request ds3Request) {
@@ -120,6 +126,7 @@ public class RequestConverter {
             case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
             case POOL_FAILURE_NOTIFICATION_REGISTRATION:
             case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
+            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
             case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
             case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
             case JOB_CREATED_NOTIFICATION_REGISTRATION:
