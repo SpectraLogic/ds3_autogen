@@ -1,5 +1,24 @@
 <Data>
     <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.PlaceHolderRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Placeholder" Type="com.spectralogic.util.security.ChecksumType"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D14152B32BAE4D9F43B0E7DFE275A88E</Version>
+            </RequestHandler>
+        </RequestHandlers>
         <Types>
             <Type Name="com.spectralogic.util.security.ChecksumType">
                 <Elements>
