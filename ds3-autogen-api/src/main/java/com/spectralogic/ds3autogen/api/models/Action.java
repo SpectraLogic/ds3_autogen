@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.api.models;
 
 public enum Action {
+    BULK_DELETE,
     BULK_MODIFY,
     CREATE,
     DELETE,

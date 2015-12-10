@@ -57,7 +57,7 @@ public class TestHelper {
             final boolean isInherited) {
         if (!isInherited) {
             return doesConstructorContainParam(paramName, paramType, requestName, code)
-                    && code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName))
+                    && isReqVariable(paramName, paramType, code)
                     && hasGetter(paramName, paramType, code);
         }
         return doesConstructorContainParam(paramName, paramType, requestName, code);
@@ -73,10 +73,24 @@ public class TestHelper {
             final boolean isInherited) {
         if (!isInherited) {
             return isWithConstructorOfType(paramName, paramType, requestName, code)
-                    && code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName))
+                    && isOptVariable(paramName, paramType, code)
                     && hasGetter(paramName, paramType, code);
         }
         return isWithConstructorOfType(paramName, paramType, requestName, code);
+    }
+
+    public static boolean isOptVariable(
+            final String paramName,
+            final String paramType,
+            final String code) {
+        return code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName));
+    }
+
+    public static boolean isReqVariable(
+            final String paramName,
+            final String paramType,
+            final String code) {
+        return code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName));
     }
 
     private static  boolean isWithConstructorOfType(
@@ -88,7 +102,7 @@ public class TestHelper {
                 + "(final " + paramType + " " + JavaHelper.uncapFirst(paramName) + ")");
     }
 
-    private static boolean doesConstructorContainParam(
+    public static boolean doesConstructorContainParam(
             final String paramName,
             final String paramType,
             final String requestName,
@@ -210,7 +224,7 @@ public class TestHelper {
         return code.contains(expected);
     }
 
-    private static boolean hasGetter(final String name, final String type, final String code) {
+    public static boolean hasGetter(final String name, final String type, final String code) {
         return code.contains("public " + type + " get" + JavaHelper.capFirst(name) + "()");
     }
 
@@ -225,5 +239,13 @@ public class TestHelper {
 
     public static boolean enumContainsValue(final String value, final String code) {
         return code.contains("    " + value);
+    }
+
+    public static boolean constructorHasVoidQueryParam(final String paramName, final String code) {
+        return code.contains("this.getQueryParams().put(\"" + paramName + "\", null);");
+    }
+
+    public static boolean constructorHasVarAssignment(final String paramName, final String code) {
+        return code.contains("this." + paramName + " = " + paramName + ";");
     }
 }

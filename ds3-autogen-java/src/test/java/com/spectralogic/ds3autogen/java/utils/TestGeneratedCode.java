@@ -29,9 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.mockito.Mockito.when;
+import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
 
 public class TestGeneratedCode {
-    private final static String CLIENT_PATH = "./ds3-sdk/src/main/java/com/spectralogic/ds3client/";
 
     private final ByteArrayOutputStream requestOutputStream;
     private final ByteArrayOutputStream responseOutputStream;
@@ -41,8 +41,6 @@ public class TestGeneratedCode {
     private String responseGeneratedCode;
     private String ds3ClientGeneratedCode;
     private String ds3ClientImplGeneratedCode;
-
-    private enum PathType { REQUEST, RESPONSE }
 
     public TestGeneratedCode(
             final FileUtils fileUtils,
@@ -76,20 +74,6 @@ public class TestGeneratedCode {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
         when(fileUtils.getOutputFile(path)).thenReturn(outputStream);
         return outputStream;
-    }
-
-    private static String getPathName(final String requestName, final String path, final PathType pathType) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(path);
-        switch (pathType) {
-            case REQUEST:
-                builder.append(requestName);
-                break;
-            case RESPONSE:
-                builder.append(requestName.replace("Request", "Response"));
-        }
-        builder.append(".java");
-        return builder.toString();
     }
 
     public String getRequestGeneratedCode() {

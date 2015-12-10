@@ -19,19 +19,22 @@ public class ${name} extends AbstractRequest {
     <#include "variables.tmpl"/>
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(requiredArguments, "Objects", "List<Ds3Object>"))}) {
+    public ${name}(${javaHelper.constructorArgs(
+                         javaHelper.addArgument(
+                             javaHelper.removeVoidArguments(requiredArguments), "Objects", "List<Ds3Object>"))}) {
         this.objects = objects;
-        <#list requiredArguments as arg>
+        <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>
+<#include "constructor_get_query_params.tmpl"/>
     }
 
     <#include "with_constructors.tmpl"/>
 
-    public Stream getContentStream() {
+    public InputStream getContentStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 

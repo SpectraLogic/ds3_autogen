@@ -19,25 +19,31 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     private final List<String> objects;
-    <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
-    private final ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
-    </#list>
-    <#list optionalArguments as arg>
-    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
-    </#list>
+<#include "variables.tmpl"/>
     private boolean quiet = false;
+    private long size;
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objects", "List<String>"))}) {
-        <#list javaHelper.removeArgument(requiredArguments, "Delete") as arg>
+    public ${name}(${javaHelper.constructorArgs(
+                         javaHelper.addArgument(
+                             javaHelper.removeVoidArguments(requiredArguments), "Objects", "List<String>"))}) {
+        <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.objects = objects;
-        this.getQueryParams().put("delete", null);
+<#include "constructor_get_query_params.tmpl"/>
     }
 
     public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
         this(${javaHelper.argsToList(javaHelper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
+    }
+
+    private static List<String> contentsToString(final Iterable<Contents> objs) {
+        final List<String> objKeyList = new ArrayList<>();
+        for (final Contents obj : objs) {
+            objKeyList.add(obj.getKey());
+        }
+        return objKeyList;
     }
 
     <#include "with_constructors.tmpl"/>
@@ -73,5 +79,8 @@ public class ${name} extends AbstractRequest {
 
     ${javaHelper.createGetter("Quiet", "boolean")}
 
-    <#include "getters.tmpl"/>
+<#include "getters.tmpl"/>
+
+    @Override
+    ${javaHelper.createGetter("Size", "long")}
 }

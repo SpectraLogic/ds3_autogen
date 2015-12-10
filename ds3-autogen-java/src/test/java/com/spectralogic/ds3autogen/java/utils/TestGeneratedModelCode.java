@@ -28,18 +28,32 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
 import static org.mockito.Mockito.when;
 
 public class TestGeneratedModelCode {
 
+    private static final String placeHolderName = "PlaceHolderRequest";
+    private static final String placeHolderPath = "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/";
+
     private final ByteArrayOutputStream modelOutputStream;
     private String modelGeneratedCode;
+
+    private final ByteArrayOutputStream requestOutputStream;
+    private final ByteArrayOutputStream responseOutputStream;
+    private final ByteArrayOutputStream ds3ClientOutputStream;
+    private final ByteArrayOutputStream ds3ClientImplOutputStream;
 
     public TestGeneratedModelCode(
             final FileUtils fileUtils,
             final String modelName,
             final String path) throws IOException {
         this.modelOutputStream = setupOutputStream(fileUtils, getPathName(modelName, path));
+
+        this.requestOutputStream = setupOutputStream(fileUtils, TestGeneratedCodeHelper.getPathName(placeHolderName, placeHolderPath, PathType.REQUEST));
+        this.responseOutputStream = setupOutputStream(fileUtils, TestGeneratedCodeHelper.getPathName(placeHolderName, placeHolderPath, PathType.RESPONSE));
+        this.ds3ClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.java");
+        this.ds3ClientImplOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3ClientImpl.java");
     }
 
     private static String getPathName(final String modelName, final String pathName) {

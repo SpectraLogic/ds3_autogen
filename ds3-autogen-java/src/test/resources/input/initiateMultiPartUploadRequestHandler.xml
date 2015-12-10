@@ -1,0 +1,29 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.InitiateMultiPartUploadRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="POST" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Uploads" Type="void"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.InitiateMultipartUploadResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.0F51D6662775BE4F139A8AB49B8FF0B8</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

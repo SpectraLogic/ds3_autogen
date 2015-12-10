@@ -35,7 +35,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
-    private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization");
+    private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization", "BucketName");
     private final static String indent = "    ";
 
     private JavaHelper() {}
@@ -46,6 +46,19 @@ public class JavaHelper {
 
     public static boolean isBulkRequestArg(final String name) {
         return bulkBaseClassArgs.contains(name);
+    }
+
+    public static String createBulkVariable(final Arguments arg, final boolean isRequired) {
+        if (isBulkRequestArg(arg.getName())) {
+            return "";
+        }
+        final StringBuilder builder = new StringBuilder();
+        builder.append("private ");
+        if (isRequired) {
+            builder.append("final ");
+        }
+        builder.append(getType(arg) + " " + uncapFirst(arg.getName()) + ";");
+        return builder.toString();
     }
 
     public static String createWithConstructor(final Arguments arg, final String requestName) {
@@ -152,12 +165,14 @@ public class JavaHelper {
     }
 
     public static String argToString(final Arguments arg) {
-        switch (arg.getType()) {
+        switch (arg.getType().toLowerCase()) {
+            case "boolean":
             case "void":
                 return "null";
-            case "String":
+            case "string":
                 return uncapFirst(arg.getName());
-            case "Integer":
+            case "double":
+            case "integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
@@ -234,6 +249,8 @@ public class JavaHelper {
                 return "boolean";
             case "Integer":
                 return "int";
+            case "ChecksumType":
+                return arg.getType() + ".Type";
             default:
                 return arg.getType();
         }
@@ -244,6 +261,48 @@ public class JavaHelper {
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
+    }
+
+    /*
+     * Removes all void arguments from the provided list.  This is used with the required params
+     * list to prevent the unnecessary inclusion of void variables into variable list and constructors.
+     */
+    public static ImmutableList<Arguments> removeVoidArguments(
+            final ImmutableList<Arguments> arguments) {
+        return adjustVoidArguments(arguments, AdjustArgType.REMOVE_VOID);
+    }
+
+    /*
+     * Gets all void arguments from the provided list.  This is used within constructors to add
+     * query parameters that are always required.
+     */
+    public static ImmutableList<Arguments> getVoidArguments(
+            final ImmutableList<Arguments> arguments) {
+        return adjustVoidArguments(arguments, AdjustArgType.SELECT_VOID);
+    }
+
+    protected enum AdjustArgType { SELECT_VOID, REMOVE_VOID }
+
+    protected static ImmutableList<Arguments> adjustVoidArguments(
+            final ImmutableList<Arguments> arguments,
+            final AdjustArgType adjustment) {
+        if (isEmpty(arguments)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        for (final Arguments arg : arguments) {
+            if (addVoidArgument(arg, adjustment)) {
+                builder.add(arg);
+            }
+        }
+        return builder.build();
+    }
+
+    protected static boolean addVoidArgument(final Arguments arg, final AdjustArgType adjustment) {
+        if (adjustment.equals(AdjustArgType.REMOVE_VOID)) {
+            return !arg.getType().equals("void");
+        }
+        return arg.getType().equals("void");
     }
 
     /*

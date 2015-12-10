@@ -4,7 +4,9 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.DeleteJobCreatedNotificationRegistrationRequestHandler">
                 <Request Action="DELETE" Resource="JOB_CREATED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
-                    <RequiredQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Test" Type="void"/>
+                    </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>

@@ -15,8 +15,13 @@
 
 package com.spectralogic.ds3autogen.utils;
 
+import com.spectralogic.ds3autogen.api.models.Action;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class Helper_Test {
     @Test
@@ -32,5 +37,19 @@ public class Helper_Test {
     @Test
     public void unqualifiedName_Test() {
         assertEquals(Helper.getInstance().unqualifiedName("some.qualified.name"), "name");
+    }
+
+    @Test
+    public void getHttpVerb() {
+        assertThat(Helper.getHttpVerb(HttpVerb.DELETE, null), is("DELETE"));
+        assertThat(Helper.getHttpVerb(HttpVerb.DELETE, Action.CREATE), is("DELETE"));
+        assertThat(Helper.getHttpVerb(null, Action.BULK_MODIFY), is("PUT"));
+        assertThat(Helper.getHttpVerb(null, Action.CREATE), is("PUT"));
+        assertThat(Helper.getHttpVerb(null, Action.DELETE), is("DELETE"));
+        assertThat(Helper.getHttpVerb(null, Action.LIST), is("GET"));
+        assertThat(Helper.getHttpVerb(null, Action.MODIFY), is("PUT"));
+        assertThat(Helper.getHttpVerb(null, Action.SHOW), is("GET"));
+        assertThat(Helper.getHttpVerb(null, Action.BULK_DELETE), is("DELETE"));
+
     }
 }

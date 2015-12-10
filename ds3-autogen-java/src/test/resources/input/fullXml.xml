@@ -1635,6 +1635,36 @@
                 </ResponseCodes>
                 <Version>1.D1378B4F25CDE5B7539D9100BB0ED97D</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ClearAllCanceledJobsRequestHandler">
+                <Request Action="BULK_DELETE" Resource="CANCELED_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.528126CD892785A365881F054FD79B31</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ClearAllCompletedJobsRequestHandler">
+                <Request Action="BULK_DELETE" Resource="COMPLETED_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.1D92EFE8F3689F2E06A8F38D70198272</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler">
                 <Request Action="MODIFY" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -2211,6 +2241,27 @@
                 </ResponseCodes>
                 <Version>1.CEE0020CD5333AACC003BE2DC4C4610E</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.CreateSystemFailureNotificationRegistrationRequestHandler">
+                <Request Action="CREATE" Resource="SYSTEM_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Format" Type="com.spectralogic.util.http.HttpResponseFormatType"/>
+                        <Param Name="NamingConvention" Type="com.spectralogic.util.lang.NamingConventionType"/>
+                        <Param Name="NotificationHttpMethod" Type="com.spectralogic.util.http.RequestType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="NotificationEndPoint" Type="java.lang.String"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.notification.SystemFailureNotificationRegistration"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.B68927ADE7762DD9F26E99D4B230874B</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.CreateTapeFailureNotificationRegistrationRequestHandler">
                 <Request Action="CREATE" Resource="TAPE_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -2363,6 +2414,21 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.4CC7DE8F576075DB93C55A2F7EC56145</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.DeleteSystemFailureNotificationRegistrationRequestHandler">
+                <Request Action="DELETE" Resource="SYSTEM_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.FB4CC76AFA7C112583A1EEDD8DB5D20F</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.DeleteTapeFailureNotificationRegistrationRequestHandler">
                 <Request Action="DELETE" Resource="TAPE_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
@@ -2663,6 +2729,48 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.4ACA2CE94F95B1F60BD15E29818C0D08</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetSystemFailureNotificationRegistrationRequestHandler">
+                <Request Action="SHOW" Resource="SYSTEM_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.notification.SystemFailureNotificationRegistration"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.E50E4A827591E35EBCF59AC710747A96</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetSystemFailureNotificationRegistrationsRequestHandler">
+                <Request Action="LIST" Resource="SYSTEM_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.notification.SystemFailureNotificationRegistration" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.8BDBDFBDDE7030008D5D6DE07EAE0776</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetTapeFailureNotificationRegistrationRequestHandler">
                 <Request Action="SHOW" Resource="TAPE_FAILURE_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
@@ -3633,6 +3741,28 @@
                 </ResponseCodes>
                 <Version>1.478D2C01D7A4EB7F4B604DCF350758F9</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemFailuresRequestHandler">
+                <Request Action="LIST" Resource="SYSTEM_FAILURE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="ErrorMessage" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.SystemFailureType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.SystemFailure" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.73D5BDA7A80F7837A0E10A94BECDC09D</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler">
                 <Request Action="LIST" Resource="SYSTEM_INFORMATION" ResourceType="SINGLETON">
                     <OptionalQueryParams/>
@@ -4457,27 +4587,9 @@
                 </ResponseCodes>
                 <Version>1.23C0AFB0268F2FF436A6D55C0559DD42</Version>
             </RequestHandler>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyTapeLibraryRequestHandler">
-                <Request Action="MODIFY" Resource="TAPE_LIBRARY" ResourceType="NON_SINGLETON">
-                    <OptionalQueryParams>
-                        <Param Name="Name" Type="java.lang.String"/>
-                    </OptionalQueryParams>
-                    <RequiredQueryParams/>
-                </Request>
-                <ResponseCodes>
-                    <ResponseCode>
-                        <Code>200</Code>
-                        <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.tape.TapeLibrary"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                </ResponseCodes>
-                <Version>1.8278E5DA240CDE9DD502E7CBA903C385</Version>
-            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyTapePartitionRequestHandler">
                 <Request Action="MODIFY" Resource="TAPE_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -4496,7 +4608,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.9B3270554267DFC4D3D88EFFA5F17726</Version>
+                <Version>1.641BFDCC9BE737B44C525153F0370A89</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyTapeRequestHandler">
                 <Request Action="MODIFY" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -4853,7 +4965,7 @@
                 <Version>1.94C62F05AA719493E1DD3FFA971F42F7</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.system.QuiesceDataPathToPrepareForShutdownRequestHandler">
-                <Request Action="DELETE" Resource="DATA_PATH" ResourceType="SINGLETON">
+                <Request Action="BULK_DELETE" Resource="DATA_PATH" ResourceType="SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="Force" Type="void"/>
                     </OptionalQueryParams>
@@ -4867,7 +4979,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.132C957C1E7E68DB82B885F1C93BFD11</Version>
+                <Version>1.B15DC1AE562DBA1EA88DFB0FFA135123</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.tape.CreateFakeTapeEnvironmentRequestHandler">
                 <Request Action="CREATE" Resource="TAPE_ENVIRONMENT" ResourceType="SINGLETON">
@@ -6266,6 +6378,37 @@
                     <EnumConstant Name="EXCLUSION_IN_PROGRESS"/>
                 </EnumConstants>
             </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.SystemFailure">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.SystemFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.SystemFailureType">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="RECONCILE_TAPE_ENVIRONMENT_FAILED"/>
+                    <EnumConstant Name="RECONCILE_POOL_ENVIRONMENT_FAILED"/>
+                </EnumConstants>
+            </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.User">
                 <Elements>
                     <Element Name="AuthId" Type="java.lang.String">
@@ -7042,6 +7185,97 @@
                 </Elements>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.notification.StorageDomainFailureNotificationRegistration">
+                <Elements>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Format" Type="com.spectralogic.util.http.HttpResponseFormatType">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LastFailure" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="LastHttpResponseCode" Type="java.lang.Integer">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="LastNotification" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NamingConvention" Type="com.spectralogic.util.lang.NamingConventionType">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="CAMEL_CASE_WITH_FIRST_LETTER_UPPERCASE" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationEndPoint" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationHttpMethod" Type="com.spectralogic.util.http.RequestType">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="POST" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NumberOfFailuresSinceLastSuccess" Type="int">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.notification.SystemFailureNotificationRegistration">
                 <Elements>
                     <Element Name="CreationDate" Type="java.util.Date">
                         <Annotations>
@@ -9930,6 +10164,11 @@
                     </Element>
                 </Elements>
                 <EnumConstants>
+                    <EnumConstant Name="BULK_DELETE">
+                        <Properties>
+                            <Property Name="IdApplicable" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
                     <EnumConstant Name="BULK_MODIFY">
                         <Properties>
                             <Property Name="IdApplicable" Value="false" ValueType="boolean"/>
@@ -10180,6 +10419,16 @@
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="STORAGE_DOMAIN_MEMBER">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="SYSTEM_FAILURE">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="SYSTEM_FAILURE_NOTIFICATION_REGISTRATION">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
