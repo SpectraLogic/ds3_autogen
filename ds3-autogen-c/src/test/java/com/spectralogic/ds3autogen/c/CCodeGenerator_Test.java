@@ -22,12 +22,14 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 
+import com.spectralogic.ds3autogen.c.utils.TestFileUtilImpl;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -40,10 +42,7 @@ public class CCodeGenerator_Test {
 
     @Test
     public void testSingleDeleteRequestHandler() throws IOException, ParserException {
-        final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/requests/delete_bucket.c");
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SingleRequestHandler.xml"));
@@ -51,22 +50,42 @@ public class CCodeGenerator_Test {
 
         codeGenerator.generate(spec, fileUtils, Paths.get("/tmp"));
 
-        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
     }
 
     @Test
     public void testSingleTypeEnumConstant() throws IOException, ParserException {
-        final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("/tmp/ds3_c_sdk/src/types/job_status.c");
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
         final CodeGenerator codeGenerator = new CCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("/tmp"));
+        codeGenerator.generate(spec, fileUtils, null);
 
-        LOG.info("Generated code:\n" + new String(outputStream.toByteArray()));
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+    }
+
+    @Test
+    public void testSingleTypeEnumConstantMatcher() throws IOException, ParserException {
+        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+
     }
 }

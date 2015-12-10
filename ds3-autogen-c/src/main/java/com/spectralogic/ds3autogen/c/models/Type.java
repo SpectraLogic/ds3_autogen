@@ -51,4 +51,26 @@ public class Type {
     public String getNameUnderscores() {
         return helper.camelToUnderscore(getUnqualifiedName());
     }
+
+    public String generateMatcher() {
+        String output = new String();
+        final int numConstants = this.enumConstants.size();
+        for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
+            output += "    ";
+
+            if (currentIndex > 0) {
+                output += "} else ";
+            }
+
+            final String currentEnumString = this.enumConstants.get(currentIndex).getName();
+            output += "if (xmlStrcmp(text, (const xmlChar*) \"" + currentEnumString + "\") == 0) {" + System.lineSeparator();
+            output += "        return " + currentEnumString + ";" + System.lineSeparator();
+        }
+
+        output += "    } else {" + System.lineSeparator(); // Shouldn't need this else, since we are autogenerating from all possible values.
+        output += "        ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown " + getNameUnderscores() + " value of '%s'.  Returning " + getEnumConstants().get(0).getName() + " for safety." + System.lineSeparator();
+        output += "        " + "return " + getEnumConstants().get(0).getName() + ";" + System.lineSeparator(); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        output += "    }" + System.lineSeparator();
+        return output;
+    }
 }

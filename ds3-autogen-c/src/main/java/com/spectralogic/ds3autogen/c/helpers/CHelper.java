@@ -25,7 +25,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CHelper {
     private final static CHelper cHelper = new CHelper();
-    private final static String indent = "    ";
+    private final static String INDENT = "    ";
 
     private CHelper() {}
 
@@ -34,9 +34,9 @@ public class CHelper {
     }
 
     private static String indent(final int depth) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < depth; i++) {
-            stringBuilder.append(indent);
+            stringBuilder.append(INDENT);
         }
         return stringBuilder.toString();
     }
