@@ -25,7 +25,6 @@ public class Type {
     private final String name;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
     private final Helper helper;
-    private final CHelper cHelper;
 
     public Type(
             final String name,
@@ -33,7 +32,6 @@ public class Type {
         this.name = name;
         this.enumConstants = enumConstants;
         this.helper = Helper.getInstance();
-        this.cHelper = CHelper.getInstance();
     }
 
     public ImmutableList<Ds3EnumConstant> getEnumConstants() {
@@ -41,7 +39,7 @@ public class Type {
     }
 
     public String getEnumConstantsList() {
-        return cHelper.getEnumValues(enumConstants);
+        return CHelper.getEnumValues(enumConstants);
     }
 
     public String getUnqualifiedName() {
@@ -53,24 +51,25 @@ public class Type {
     }
 
     public String generateMatcher() {
-        String output = new String();
+        final StringBuilder outputBuilder = new StringBuilder();
         final int numConstants = this.enumConstants.size();
+        final String INDENT = "    ";
         for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
-            output += "    ";
+            outputBuilder.append(INDENT);
 
             if (currentIndex > 0) {
-                output += "} else ";
+                outputBuilder.append("} else ");
             }
 
             final String currentEnumString = this.enumConstants.get(currentIndex).getName();
-            output += "if (xmlStrcmp(text, (const xmlChar*) \"" + currentEnumString + "\") == 0) {" + System.lineSeparator();
-            output += "        return " + currentEnumString + ";" + System.lineSeparator();
+            outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").append(currentEnumString).append("\") == 0) {").append(System.lineSeparator());
+            outputBuilder.append(INDENT).append(INDENT).append("return ").append(currentEnumString).append(";").append(System.lineSeparator());
         }
 
-        output += "    } else {" + System.lineSeparator(); // Shouldn't need this else, since we are autogenerating from all possible values.
-        output += "        ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown " + getNameUnderscores() + " value of '%s'.  Returning " + getEnumConstants().get(0).getName() + " for safety." + System.lineSeparator();
-        output += "        " + "return " + getEnumConstants().get(0).getName() + ";" + System.lineSeparator(); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
-        output += "    }" + System.lineSeparator();
-        return output;
+        outputBuilder.append(INDENT).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
+        outputBuilder.append(INDENT).append(INDENT).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown ").append(getNameUnderscores()).append(" value of '%s'.  Returning ").append(getEnumConstants().get(0).getName()).append(" for safety.").append(System.lineSeparator());
+        outputBuilder.append(INDENT).append(INDENT).append("return ").append(getEnumConstants().get(0).getName()).append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        outputBuilder.append(INDENT).append("}").append(System.lineSeparator());
+        return outputBuilder.toString();
     }
 }
