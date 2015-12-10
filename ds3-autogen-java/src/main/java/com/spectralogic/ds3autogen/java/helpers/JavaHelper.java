@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaHelper {
@@ -196,8 +197,12 @@ public class JavaHelper {
             final ImmutableList<Arguments> arguments,
             final ImmutableList<Arguments> additionalArguments) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(arguments);
-        builder.addAll(additionalArguments);
+        if (hasContent(arguments)) {
+            builder.addAll(arguments);
+        }
+        if (hasContent(additionalArguments)) {
+            builder.addAll(additionalArguments);
+        }
         return builder.build();
     }
 
@@ -206,7 +211,9 @@ public class JavaHelper {
             final String argName,
             final String argType) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(arguments);
+        if (hasContent(arguments)) {
+            builder.addAll(arguments);
+        }
         builder.add(new Arguments(argType, argName));
         return builder.build();
     }
@@ -387,14 +394,27 @@ public class JavaHelper {
         return builder.build();
     }
 
-    public static String getEnumValues(final ImmutableList<EnumConstant> enumConstants) {
+    public static String getEnumValues(
+            final ImmutableList<EnumConstant> enumConstants,
+            final int indent) {
         if (isEmpty(enumConstants)) {
             return "";
         }
         return enumConstants
                 .stream()
-                .map(i -> indent(1) + i.getName())
+                .map(i -> indent(indent) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    public static ImmutableList<EnumConstant> addEnum(
+            final ImmutableList<EnumConstant> enumConstants,
+            final String newEnumValue) {
+        ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        if (hasContent(enumConstants)) {
+            builder.addAll(enumConstants);
+        }
+        builder.add(new EnumConstant(newEnumValue));
+        return builder.build();
     }
 
     public static boolean isSpectraDs3(final String packageName) {
