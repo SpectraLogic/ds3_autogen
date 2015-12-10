@@ -33,7 +33,7 @@ public class CHelper {
         return cHelper;
     }
 
-    private static String indent(final int depth) {
+    public static String indent(final int depth) {
         final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < depth; i++) {
             stringBuilder.append(INDENT);

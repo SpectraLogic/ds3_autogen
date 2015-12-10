@@ -23,7 +23,7 @@ public class TestFileUtilImpl implements FileUtils {
         this.tempFolder = null;
         try {
             this.outputStream = getOutputFile(null);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOG.error("unable to create ByteArrayOutputStream", e);
             e.printStackTrace();
         }

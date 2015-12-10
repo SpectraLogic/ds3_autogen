@@ -53,9 +53,8 @@ public class Type {
     public String generateMatcher() {
         final StringBuilder outputBuilder = new StringBuilder();
         final int numConstants = this.enumConstants.size();
-        final String INDENT = "    ";
         for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
-            outputBuilder.append(INDENT);
+            outputBuilder.append(CHelper.indent(1));
 
             if (currentIndex > 0) {
                 outputBuilder.append("} else ");
@@ -63,13 +62,13 @@ public class Type {
 
             final String currentEnumString = this.enumConstants.get(currentIndex).getName();
             outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").append(currentEnumString).append("\") == 0) {").append(System.lineSeparator());
-            outputBuilder.append(INDENT).append(INDENT).append("return ").append(currentEnumString).append(";").append(System.lineSeparator());
+            outputBuilder.append(CHelper.indent(2)).append("return ").append(currentEnumString).append(";").append(System.lineSeparator());
         }
 
-        outputBuilder.append(INDENT).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
-        outputBuilder.append(INDENT).append(INDENT).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown ").append(getNameUnderscores()).append(" value of '%s'.  Returning ").append(getEnumConstants().get(0).getName()).append(" for safety.").append(System.lineSeparator());
-        outputBuilder.append(INDENT).append(INDENT).append("return ").append(getEnumConstants().get(0).getName()).append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
-        outputBuilder.append(INDENT).append("}").append(System.lineSeparator());
+        outputBuilder.append(CHelper.indent(1)).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
+        outputBuilder.append(CHelper.indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown ").append(getNameUnderscores()).append(" value of '%s'.  Returning ").append(getEnumConstants().get(0).getName()).append(" for safety.").append(System.lineSeparator());
+        outputBuilder.append(CHelper.indent(2)).append("return ").append(getEnumConstants().get(0).getName()).append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        outputBuilder.append(CHelper.indent(1)).append("}").append(System.lineSeparator());
         return outputBuilder.toString();
     }
 }

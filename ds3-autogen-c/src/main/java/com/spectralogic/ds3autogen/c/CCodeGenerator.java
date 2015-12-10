@@ -30,6 +30,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import freemarker.core.Environment;
 import freemarker.template.*;
 
@@ -65,11 +66,13 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     private void generateCommands() throws IOException, TemplateException {
-        for (final Ds3Request request : spec.getRequests()) {
-            generateRequest(request);
+        if (ConverterUtil.hasContent(spec.getRequests())) {
+            for (final Ds3Request request : spec.getRequests()) {
+                generateRequest(request);
+            }
         }
 
-        if (null != spec.getTypes()) {
+        if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type typeEntry : spec.getTypes().values()) {
                 generateType(typeEntry);
                 generateTypeMatcher(typeEntry);
