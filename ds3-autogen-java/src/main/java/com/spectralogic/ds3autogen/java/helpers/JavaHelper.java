@@ -37,7 +37,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 public class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
     private final static List<String> bulkBaseClassArgs = Arrays.asList("Priority", "WriteOptimization", "BucketName");
-    private final static String indent = "    ";
+    private final static String INDENT = "    ";
 
     private JavaHelper() {}
 
@@ -58,7 +58,7 @@ public class JavaHelper {
         if (isRequired) {
             builder.append("final ");
         }
-        builder.append(getType(arg) + " " + uncapFirst(arg.getName()) + ";");
+        builder.append(getType(arg)).append(" ").append(uncapFirst(arg.getName())).append(";");
         return builder.toString();
     }
 
@@ -150,7 +150,7 @@ public class JavaHelper {
             final String objectListName,
             final Operation operation) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("final String " + outputStringName + " = XmlOutput.toXml(" + objectListName + ", ");
+        builder.append("final String ").append(outputStringName).append(" = XmlOutput.toXml(").append(objectListName).append(", ");
         if (operation == Operation.START_BULK_PUT) {
             return builder.append("true);").toString();
         }
@@ -160,7 +160,7 @@ public class JavaHelper {
     private static String indent(final int depth) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < depth; i++) {
-            stringBuilder.append(indent);
+            stringBuilder.append(INDENT);
         }
         return stringBuilder.toString();
     }
@@ -348,11 +348,11 @@ public class JavaHelper {
 
     public static String getModelVariable(final Element element) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(indent(1) + "@JsonProperty(\"" + capFirst(element.getName()) + "\")\n");
+        builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
         if (element.getComponentType() != null) {
-            builder.append(indent(1) + "@JacksonXmlElementWrapper\n");
+            builder.append(indent(1)).append("@JacksonXmlElementWrapper\n");
         }
-        builder.append(indent(1) + "private " + convertType(element) + " " + uncapFirst(element.getName()) + ";");
+        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName())).append(";");
         return builder.toString();
     }
 
