@@ -113,6 +113,9 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
+        if (isChecksum(ds3Type)) {
+            return config.getTemplate("models/checksum_type_template.tmpl");
+        }
         if (hasContent(ds3Type.getEnumConstants())) {
             return config.getTemplate("models/enum_model_template.tmpl");
         }
@@ -120,6 +123,10 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("models/model_template.tmpl");
         }
         throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
+    }
+
+    private boolean isChecksum(final Ds3Type ds3Type) {
+        return ds3Type.getName().endsWith(".ChecksumType");
     }
 
     private String getModelPackage() {

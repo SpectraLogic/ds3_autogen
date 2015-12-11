@@ -136,6 +136,32 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
+    public void checksumType() throws IOException, ParserException {
+        final String modelName = "ChecksumType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/checksumType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+        assertTrue(modelGeneratedCode.contains("public abstract class " + modelName + " {"));
+
+        assertTrue(TestHelper.enumContainsValue("CRC_32", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("CRC_32C", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("MD5", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("SHA_256", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("SHA_512", modelGeneratedCode));
+        assertTrue(TestHelper.enumContainsValue("NONE", modelGeneratedCode));
+    }
+
+    @Test
     public void blobStoreTaskPriority() throws IOException, ParserException {
         final String modelName = "BlobStoreTaskPriority";
         final FileUtils fileUtils = mock(FileUtils.class);

@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class JavaHelper {
@@ -58,7 +59,7 @@ public class JavaHelper {
         if (isRequired) {
             builder.append("final ");
         }
-        builder.append(getType(arg) + " " + uncapFirst(arg.getName()) + ";");
+        builder.append(getType(arg)).append(" ").append(uncapFirst(arg.getName())).append(";");
         return builder.toString();
     }
 
@@ -150,7 +151,7 @@ public class JavaHelper {
             final String objectListName,
             final Operation operation) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("final String " + outputStringName + " = XmlOutput.toXml(" + objectListName + ", ");
+        builder.append("final String ").append(outputStringName).append(" = XmlOutput.toXml(").append(objectListName).append(", ");
         if (operation == Operation.START_BULK_PUT) {
             return builder.append("true);").toString();
         }
@@ -197,8 +198,12 @@ public class JavaHelper {
             final ImmutableList<Arguments> arguments,
             final ImmutableList<Arguments> additionalArguments) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(arguments);
-        builder.addAll(additionalArguments);
+        if (hasContent(arguments)) {
+            builder.addAll(arguments);
+        }
+        if (hasContent(additionalArguments)) {
+            builder.addAll(additionalArguments);
+        }
         return builder.build();
     }
 
@@ -207,7 +212,9 @@ public class JavaHelper {
             final String argName,
             final String argType) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(arguments);
+        if (hasContent(arguments)) {
+            builder.addAll(arguments);
+        }
         builder.add(new Arguments(argType, argName));
         return builder.build();
     }
@@ -342,11 +349,11 @@ public class JavaHelper {
 
     public static String getModelVariable(final Element element) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(indent(1) + "@JsonProperty(\"" + capFirst(element.getName()) + "\")\n");
+        builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
         if (element.getComponentType() != null) {
-            builder.append(indent(1) + "@JacksonXmlElementWrapper\n");
+            builder.append(indent(1)).append("@JacksonXmlElementWrapper\n");
         }
-        builder.append(indent(1) + "private " + convertType(element) + " " + uncapFirst(element.getName()) + ";");
+        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName())).append(";");
         return builder.toString();
     }
 
@@ -388,14 +395,27 @@ public class JavaHelper {
         return builder.build();
     }
 
-    public static String getEnumValues(final ImmutableList<EnumConstant> enumConstants) {
+    public static String getEnumValues(
+            final ImmutableList<EnumConstant> enumConstants,
+            final int indent) {
         if (isEmpty(enumConstants)) {
             return "";
         }
         return enumConstants
                 .stream()
-                .map(i -> indent(1) + i.getName())
+                .map(i -> indent(indent) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    public static ImmutableList<EnumConstant> addEnum(
+            final ImmutableList<EnumConstant> enumConstants,
+            final String newEnumValue) {
+        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        if (hasContent(enumConstants)) {
+            builder.addAll(enumConstants);
+        }
+        builder.add(new EnumConstant(newEnumValue));
+        return builder.build();
     }
 
     public static boolean isSpectraDs3(final String packageName) {
