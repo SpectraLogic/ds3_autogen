@@ -90,7 +90,7 @@ public class RequestConverter {
             LOG.debug("bucket name REQUIRED.");
             requiredArgsBuilder.add(new Arguments("String", "bucketName"));
             if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                LOG.debug("bucket name REQUIRED.");
+                LOG.debug("object name REQUIRED.");
                 requiredArgsBuilder.add(new Arguments("String", "objectName"));
             }
         }
