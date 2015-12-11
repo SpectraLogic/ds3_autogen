@@ -105,7 +105,6 @@ public class CCodeGenerator implements CodeGenerator {
             requestTemplate.process(request, writer);
         } catch (final NullPointerException e) {
             LOG.error("Encountered NullPointerException while processing template " + requestTemplate.getName(), e);
-            e.printStackTrace();
         }
     }
 
@@ -121,10 +120,8 @@ public class CCodeGenerator implements CodeGenerator {
             typeTemplate.process(type, writer);
         } catch (final NullPointerException e) {
             LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-            e.printStackTrace();
         } catch (final TemplateException e) {
             LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-            e.printStackTrace();
         }
     }
 
@@ -140,10 +137,8 @@ public class CCodeGenerator implements CodeGenerator {
             typeTemplate.process(type, writer);
         } catch (final NullPointerException e) {
             LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-            e.printStackTrace();
         } catch (final TemplateException e) {
             LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-            e.printStackTrace();
         }
     }
 

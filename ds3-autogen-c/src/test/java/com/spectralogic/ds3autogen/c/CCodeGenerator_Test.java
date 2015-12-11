@@ -18,31 +18,27 @@ package com.spectralogic.ds3autogen.c;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-
-import com.spectralogic.ds3autogen.c.utils.TestFileUtilImpl;
+import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class CCodeGenerator_Test {
-    private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
+    final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
     public void testSingleDeleteRequestHandler() throws IOException, ParserException {
-        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SingleRequestHandler.xml"));
@@ -58,7 +54,7 @@ public class CCodeGenerator_Test {
 
     @Test
     public void testSingleTypeEnumConstant() throws IOException, ParserException {
-        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
@@ -70,11 +66,17 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
+        assertTrue(output.contains("typedef enum {"));
+        assertTrue(output.contains("    IN_PROGRESS,"));
+        assertTrue(output.contains("    COMPLETED,"));
+        assertTrue(output.contains("    CANCELED"));
+        assertFalse(output.contains("    CANCELED,")); // verify no trailing comma
+        assertTrue(output.contains("}ds3_job_status;"));
     }
 
     @Test
     public void testSingleTypeEnumConstantMatcher() throws IOException, ParserException {
-        final TestFileUtilImpl fileUtils = new TestFileUtilImpl();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
@@ -86,6 +88,14 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
-
+        assertTrue(output.contains("static ds3_job_status _match_ds3_job_status(const ds3_log* log, const xmlChar* text) {"));
+        assertTrue(output.contains("    if (xmlStrcmp(text, (const xmlChar*) \"IN_PROGRESS\") == 0) {"));
+        assertTrue(output.contains("        return IN_PROGRESS;"));
+        assertTrue(output.contains("    } else if (xmlStrcmp(text, (const xmlChar*) \"COMPLETED\") == 0) {"));
+        assertTrue(output.contains("        return COMPLETED;"));
+        assertTrue(output.contains("    } else if (xmlStrcmp(text, (const xmlChar*) \"CANCELED\") == 0) {"));
+        assertTrue(output.contains("        return CANCELED;"));
+        assertTrue(output.contains("    }"));
+        assertTrue(output.contains("}"));
     }
 }

@@ -53,6 +53,7 @@ public class Type {
     public String generateMatcher() {
         final StringBuilder outputBuilder = new StringBuilder();
         final int numConstants = this.enumConstants.size();
+
         for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
             outputBuilder.append(CHelper.indent(1));
 

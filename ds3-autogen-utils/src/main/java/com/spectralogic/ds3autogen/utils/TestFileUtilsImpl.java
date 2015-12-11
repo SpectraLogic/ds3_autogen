@@ -1,4 +1,4 @@
-package com.spectralogic.ds3autogen.c.utils;
+package com.spectralogic.ds3autogen.utils;
 
 import com.spectralogic.ds3autogen.api.FileUtils;
 import org.junit.rules.TemporaryFolder;
@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
-public class TestFileUtilImpl implements FileUtils {
+public class TestFileUtilsImpl implements FileUtils {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TestFileUtilImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(TestFileUtilsImpl.class);
 
     private final TemporaryFolder tempFolder;
 
     private OutputStream outputStream;
 
-    public TestFileUtilImpl() {
+    public TestFileUtilsImpl() {
         this.tempFolder = null;
         try {
             this.outputStream = getOutputFile(null);

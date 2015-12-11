@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen;
+package com.spectralogic.ds3autogen.utils;
 
 import com.spectralogic.ds3autogen.api.FileUtils;
 
