@@ -25,7 +25,6 @@ public class TestFileUtilsImpl implements FileUtils {
             this.outputStream = getOutputFile(null);
         } catch (final IOException e) {
             LOG.error("unable to create ByteArrayOutputStream", e);
-            e.printStackTrace();
         }
     }
 
