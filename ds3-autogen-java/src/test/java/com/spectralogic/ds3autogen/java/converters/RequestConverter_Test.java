@@ -19,11 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
-
 import static com.spectralogic.ds3autogen.java.converters.RequestConverter.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class RequestConverter_Test {
 
@@ -38,12 +36,12 @@ public class RequestConverter_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getArgFromResource_SingletonTest() {
+    public void getArgFromResource_Singleton_Test() {
         getArgFromResource(Resource.SYSTEM_HEALTH);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getArgFromResource_NotificationTest() {
+    public void getArgFromResource_Notification_Test() {
         getArgFromResource(Resource.JOB_COMPLETED_NOTIFICATION_REGISTRATION);
     }
 
@@ -67,7 +65,7 @@ public class RequestConverter_Test {
     }
 
     @Test
-    public void getRequiredArgsFromRequestHeader_SingletonTest() {
+    public void getRequiredArgsFromRequestHeader_Singleton_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
@@ -91,7 +89,7 @@ public class RequestConverter_Test {
     }
 
     @Test
-    public void getRequiredArgsFromRequestHeader_NotificationTest() {
+    public void getRequiredArgsFromRequestHeader_Notification_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
@@ -138,5 +136,131 @@ public class RequestConverter_Test {
         assertThat(result.get(1).getType(), is("String"));
         assertThat(result.get(2).getName(), is("JobId"));
         assertThat(result.get(2).getType(), is("UUID"));
+    }
+
+    @Test
+    public void requestPath_Empty_Test() {
+        final String expectedPath = "\"/\"";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.amazons3,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_Bucket_Test() {
+        final String expectedPath = "\"/\" + this.bucketName";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_BucketAndObject_Test() {
+        final String expectedPath = "\"/\" + this.bucketName + \"/\" + this.objectName";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_SpectraS3_Test() {
+        final String expectedPath = "\"/_rest_/\"";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.spectrads3,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_SpectraS3Resource_Test() {
+        final String expectedPath = "\"/_rest_/active_job/\"";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.spectrads3,
+                null,
+                null,
+                null,
+                Resource.ACTIVE_JOB,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_SpectraS3ResourceWithBucket_Test() {
+        final String expectedPath = "\"/_rest_/bucket/\" + this.bucketName";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.spectrads3,
+                null,
+                null,
+                null,
+                Resource.BUCKET,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
     }
 }
