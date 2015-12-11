@@ -409,7 +409,7 @@ public class JavaHelper {
     public static ImmutableList<EnumConstant> addEnum(
             final ImmutableList<EnumConstant> enumConstants,
             final String newEnumValue) {
-        ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
         if (hasContent(enumConstants)) {
             builder.addAll(enumConstants);
         }
