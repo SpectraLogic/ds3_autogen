@@ -1013,6 +1013,23 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void allocateJobChunkRequestHandler() throws IOException, ParserException {
+        final String requestName = "AllocateJobChunkSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/allocateJobChunkRequestHandler.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        //TODO asserts
+    }
+
+    @Test
     public void spectraInternalRequest() throws IOException, ParserException {
         final String requestName = "CreateFakeTapeEnvironmentRequestHandler";
         final FileUtils fileUtils = mock(FileUtils.class);

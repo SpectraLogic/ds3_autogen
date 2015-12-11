@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.utils.Helper;
 
 public class RequestConverter {
 
@@ -118,22 +119,7 @@ public class RequestConverter {
         if (ds3Request.getResource() == null) {
             return false;
         }
-        switch (ds3Request.getResource()) {
-            case GENERIC_DAO_NOTIFICATION_REGISTRATION:
-            case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
-            case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
-            case OBJECT_LOST_NOTIFICATION_REGISTRATION:
-            case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
-            case POOL_FAILURE_NOTIFICATION_REGISTRATION:
-            case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
-            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
-            case JOB_CREATED_NOTIFICATION_REGISTRATION:
-                return true;
-            default:
-                return false;
-        }
+        return isResourceNotification(ds3Request.getResource());
     }
 
     private static boolean queryParamsContain(
@@ -164,6 +150,92 @@ public class RequestConverter {
 
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
+    }
+
+    //TODO unit test
+    protected static ImmutableList<Arguments> getRequiredArgsFromRequestHeader(
+            final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        if (ds3Request.getBucketRequirement().equals(Requirement.REQUIRED)) {
+            builder.add(new Arguments("String", "BucketName"));
+        }
+        if (ds3Request.getObjectRequirement().equals(Requirement.REQUIRED)) {
+            builder.add(new Arguments("String", "ObjectName"));
+        }
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+            builder.add(getArgFromResource(ds3Request.getResource()));
+        }
+        return builder.build();
+    }
+
+    //TODO unit test
+    protected static boolean isResourceAnArg(final Resource resource, final ResourceType resourceType) {
+        return resource != null
+                && resourceType != null
+                && resourceType == ResourceType.NON_SINGLETON
+                && !isResourceNotification(resource);
+    }
+
+    //TODO unit test
+    protected static Arguments getArgFromResource(final Resource resource) {
+        if (isResourceSingleton(resource)) {
+            throw new IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString());
+        }
+        if (isResourceNotification(resource)) {
+            throw new IllegalArgumentException("Cannot create an argument from a notification resource: " + resource.toString());
+        }
+
+        switch (resource) {
+            case BUCKET:
+            case OBJECT:
+                return new Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name");
+            case ACTIVE_JOB:
+            case JOB:
+            case JOB_CHUNK:
+            case TAPE:
+            case TAPE_DRIVE:
+            case TAPE_LIBRARY:
+            case USER:
+                return new Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id");
+            case FOLDER:
+            case TAPE_PARTITION:
+            default:
+                return new Arguments("String", Helper.underscoreToCamel(resource.toString()));
+        }
+    }
+
+    private static boolean isResourceNotification(final Resource resource) {
+        switch (resource) {
+            case GENERIC_DAO_NOTIFICATION_REGISTRATION:
+            case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
+            case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
+            case OBJECT_LOST_NOTIFICATION_REGISTRATION:
+            case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
+            case POOL_FAILURE_NOTIFICATION_REGISTRATION:
+            case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
+            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
+            case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
+            case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
+            case JOB_CREATED_NOTIFICATION_REGISTRATION:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isResourceSingleton(final Resource resource) {
+        switch (resource) {
+            case CAPACITY_SUMMARY:
+            case DATA_PATH:
+            case DATA_PATH_BACKEND:
+            case POOL_ENVIRONMENT:
+            case SYSTEM_HEALTH:
+            case SYSTEM_INFORMATION:
+            case TAPE_ENVIRONMENT:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static ImmutableList<Arguments> getOptionalArgs(
