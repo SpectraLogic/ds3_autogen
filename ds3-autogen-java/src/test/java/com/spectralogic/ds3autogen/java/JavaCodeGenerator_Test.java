@@ -37,7 +37,6 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 

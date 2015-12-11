@@ -15,22 +15,128 @@
 
 package com.spectralogic.ds3autogen.java.converters;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
+
+import static com.spectralogic.ds3autogen.java.converters.RequestConverter.*;
 
 public class RequestConverter_Test {
 
     @Test
-    public void getRequiredArgsFromRequestHeader_Test() {
-        //TODO
+    public void isResourceAnArg_Test() {
+        assertFalse(isResourceAnArg(null, null));
+        assertFalse(isResourceAnArg(null, ResourceType.NON_SINGLETON));
+        assertFalse(isResourceAnArg(Resource.BUCKET, null));
+        assertFalse(isResourceAnArg(Resource.BUCKET, ResourceType.SINGLETON));
+        assertFalse(isResourceAnArg(Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION, ResourceType.NON_SINGLETON));
+        assertTrue(isResourceAnArg(Resource.BUCKET, ResourceType.NON_SINGLETON));
     }
 
-    @Test
-    public void isResourceAnArg_Test() {
-        //TODO
+    @Test(expected = IllegalArgumentException.class)
+    public void getArgFromResource_SingletonTest() {
+        getArgFromResource(Resource.SYSTEM_HEALTH);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getArgFromResource_NotificationTest() {
+        getArgFromResource(Resource.JOB_COMPLETED_NOTIFICATION_REGISTRATION);
     }
 
     @Test
     public void getArgFromResource_Test() {
-        //TODO
+        final Arguments bucketArg = getArgFromResource(Resource.BUCKET);
+        assertThat(bucketArg.getName(), is("BucketName"));
+        assertThat(bucketArg.getType(), is("String"));
+
+        final Arguments jobChunkArg = getArgFromResource(Resource.JOB_CHUNK);
+        assertThat(jobChunkArg.getName(), is("JobChunkId"));
+        assertThat(jobChunkArg.getType(), is("UUID"));
+
+        final Arguments tapePartitionArg = getArgFromResource(Resource.TAPE_PARTITION);
+        assertThat(tapePartitionArg.getName(), is("TapePartition"));
+        assertThat(tapePartitionArg.getType(), is("String"));
+
+        final Arguments cacheFilesystemArg = getArgFromResource(Resource.CACHE_FILESYSTEM);
+        assertThat(cacheFilesystemArg.getName(), is("CacheFilesystem"));
+        assertThat(cacheFilesystemArg.getType(), is("String"));
+    }
+
+    @Test
+    public void getRequiredArgsFromRequestHeader_SingletonTest() {
+        final Ds3Request ds3Request = new Ds3Request(
+                "RequestName",
+                null,
+                null,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                Resource.CAPACITY_SUMMARY,
+                ResourceType.SINGLETON,
+                null,
+                null,
+                null,
+                null
+        );
+        final ImmutableList<Arguments> result = getRequiredArgsFromRequestHeader(ds3Request);
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("BucketName"));
+        assertThat(result.get(0).getType(), is("String"));
+        assertThat(result.get(1).getName(), is("ObjectName"));
+        assertThat(result.get(1).getType(), is("String"));
+    }
+
+    @Test
+    public void getRequiredArgsFromRequestHeader_NotificationTest() {
+        final Ds3Request ds3Request = new Ds3Request(
+                "RequestName",
+                null,
+                null,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION,
+                ResourceType.NON_SINGLETON,
+                null,
+                null,
+                null,
+                null
+        );
+        final ImmutableList<Arguments> result = getRequiredArgsFromRequestHeader(ds3Request);
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("BucketName"));
+        assertThat(result.get(0).getType(), is("String"));
+        assertThat(result.get(1).getName(), is("ObjectName"));
+        assertThat(result.get(1).getType(), is("String"));
+    }
+
+    @Test
+    public void getRequiredArgsFromRequestHeader_Test() {
+        final Ds3Request ds3Request = new Ds3Request(
+                "RequestName",
+                null,
+                null,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                Resource.JOB,
+                ResourceType.NON_SINGLETON,
+                null,
+                null,
+                null,
+                null
+        );
+        final ImmutableList<Arguments> result = getRequiredArgsFromRequestHeader(ds3Request);
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getName(), is("BucketName"));
+        assertThat(result.get(0).getType(), is("String"));
+        assertThat(result.get(1).getName(), is("ObjectName"));
+        assertThat(result.get(1).getType(), is("String"));
+        assertThat(result.get(2).getName(), is("JobId"));
+        assertThat(result.get(2).getType(), is("UUID"));
     }
 }

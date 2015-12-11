@@ -168,7 +168,6 @@ public class RequestConverter {
         return builder.build();
     }
 
-    //TODO unit test
     protected static boolean isResourceAnArg(final Resource resource, final ResourceType resourceType) {
         return resource != null
                 && resourceType != null
