@@ -1,3 +1,4 @@
 dependencies {
     compile project(':ds3-autogen-api')
+    compile 'junit:junit:4.12'
 }

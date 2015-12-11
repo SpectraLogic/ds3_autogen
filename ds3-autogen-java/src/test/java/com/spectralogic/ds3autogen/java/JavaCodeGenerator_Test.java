@@ -24,7 +24,7 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.utils.TestFileUtilImpl;
+import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +37,6 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -1044,7 +1043,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void wholeXmlDoc() throws IOException, ParserException {
-        final FileUtils fileUtils = new TestFileUtilImpl(tempFolder);
+        final FileUtils fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
