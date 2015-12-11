@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.converters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -76,7 +77,7 @@ public class RequestConverter {
             }
         } else {
             if (ds3Request.getResource() != null) {
-                builder.append("\"/_rest_/" + ds3Request.getResource().toString().toLowerCase() + "/\"");
+                builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
                 if (isNotificationRequest(ds3Request)) {
                     if (getNotificationType(ds3Request) == NotificationType.DELETE
                             || getNotificationType(ds3Request) == NotificationType.GET) {
@@ -84,6 +85,9 @@ public class RequestConverter {
                     }
                 } else if (hasBucketNameInPath(ds3Request)) {
                     builder.append(" + this.bucketName");
+                } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+                    final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
+                    builder.append(" + ").append(JavaHelper.argToString(resourceArg));
                 }
             } else {
                 builder.append("\"/_rest_/\"");
@@ -116,10 +120,7 @@ public class RequestConverter {
     }
 
     public static boolean isNotificationRequest(final Ds3Request ds3Request) {
-        if (ds3Request.getResource() == null) {
-            return false;
-        }
-        return isResourceNotification(ds3Request.getResource());
+        return ds3Request.getResource() != null && isResourceNotification(ds3Request.getResource());
     }
 
     private static boolean queryParamsContain(
@@ -140,26 +141,21 @@ public class RequestConverter {
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
 
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                || ds3Request.getResource() == Resource.BUCKET) {
-            requiredArgs.add(new Arguments("String", "BucketName"));
-            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                requiredArgs.add(new Arguments("String", "ObjectName"));
-            }
-        }
+        requiredArgs.addAll(getRequiredArgsFromRequestHeader(ds3Request));
 
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
 
-    //TODO unit test
     protected static ImmutableList<Arguments> getRequiredArgsFromRequestHeader(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        if (ds3Request.getBucketRequirement().equals(Requirement.REQUIRED)) {
+        if (ds3Request.getBucketRequirement() != null
+                && ds3Request.getBucketRequirement().equals(Requirement.REQUIRED)) {
             builder.add(new Arguments("String", "BucketName"));
         }
-        if (ds3Request.getObjectRequirement().equals(Requirement.REQUIRED)) {
+        if (ds3Request.getObjectRequirement() != null
+                && ds3Request.getObjectRequirement().equals(Requirement.REQUIRED)) {
             builder.add(new Arguments("String", "ObjectName"));
         }
         if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
@@ -175,7 +171,6 @@ public class RequestConverter {
                 && !isResourceNotification(resource);
     }
 
-    //TODO unit test
     protected static Arguments getArgFromResource(final Resource resource) {
         if (isResourceSingleton(resource)) {
             throw new IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString());
@@ -183,11 +178,17 @@ public class RequestConverter {
         if (isResourceNotification(resource)) {
             throw new IllegalArgumentException("Cannot create an argument from a notification resource: " + resource.toString());
         }
+        if (isResourceNamed(resource)) {
+            return new Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name");
+        }
+        if (isResourceId(resource)) {
+            return new Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id");
+        }
+        return new Arguments("String", Helper.underscoreToCamel(resource.toString()));
+    }
 
+    private static boolean isResourceId(final Resource resource) {
         switch (resource) {
-            case BUCKET:
-            case OBJECT:
-                return new Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name");
             case ACTIVE_JOB:
             case JOB:
             case JOB_CHUNK:
@@ -195,11 +196,18 @@ public class RequestConverter {
             case TAPE_DRIVE:
             case TAPE_LIBRARY:
             case USER:
-                return new Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id");
-            case FOLDER:
-            case TAPE_PARTITION:
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean isResourceNamed(final Resource resource) {
+        switch (resource) {
+            case BUCKET:
+            case OBJECT:
+                return true;
             default:
-                return new Arguments("String", Helper.underscoreToCamel(resource.toString()));
+                return false;
         }
     }
 
@@ -268,6 +276,11 @@ public class RequestConverter {
 
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())
+                && isResourceId(ds3Request.getResource())) {
+            importsBuilder.add("java.util.UUID");
+        }
 
         return importsBuilder.build().asList();
     }

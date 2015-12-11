@@ -65,6 +65,26 @@ public class RequestConverter_Test {
     }
 
     @Test
+    public void getRequiredArgsFromRequestHeader_Null_Test() {
+        final Ds3Request ds3Request = new Ds3Request(
+                "RequestName",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        final ImmutableList<Arguments> result = getRequiredArgsFromRequestHeader(ds3Request);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
     public void getRequiredArgsFromRequestHeader_Singleton_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
@@ -113,7 +133,7 @@ public class RequestConverter_Test {
     }
 
     @Test
-    public void getRequiredArgsFromRequestHeader_Test() {
+    public void getRequiredArgsFromRequestHeader_Full_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
@@ -255,6 +275,27 @@ public class RequestConverter_Test {
                 null,
                 Resource.BUCKET,
                 null,
+                null,
+                null,
+                null,
+                null);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_SpectraS3ResourceWithJobChunkId_Test() {
+        final String expectedPath = "\"/_rest_/job_chunk/\" + jobChunkId.toString()";
+        final Ds3Request request = new Ds3Request(
+                "RequestName",
+                null,
+                Classification.spectrads3,
+                null,
+                null,
+                null,
+                Resource.JOB_CHUNK,
+                ResourceType.NON_SINGLETON,
                 null,
                 null,
                 null,
