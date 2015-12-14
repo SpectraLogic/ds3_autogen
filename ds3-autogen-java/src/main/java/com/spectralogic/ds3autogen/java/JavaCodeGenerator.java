@@ -187,7 +187,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template tmpl = getResponseTemplate(ds3Request);
 
         final Response response = getResponse(ds3Request);
-        final Path responsePath = getPath(ds3Request, response.getName());
+        final Path responsePath = getPathFromPackage(ds3Request, response.getName());
 
         LOG.info("Getting outputstream for file:" + responsePath.toString());
 
@@ -225,7 +225,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template tmpl = getRequestTemplate(ds3Request);
 
         final Request request = getRequest(ds3Request);
-        final Path requestPath = getPath(ds3Request, request.getName());
+        final Path requestPath = getPathFromPackage(ds3Request, request.getName());
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());
 
@@ -235,7 +235,10 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
     }
 
-    private Path getPath(final Ds3Request ds3Request, final String fileName) {
+    /**
+     * Returns the file system path for a request given it's package
+     */
+    private Path getPathFromPackage(final Ds3Request ds3Request, final String fileName) {
         return destDir.resolve(baseProjectPath.resolve(
                 Paths.get(getCommandPackage(ds3Request).replace(".", "/") + "/" + fileName + ".java")));
     }

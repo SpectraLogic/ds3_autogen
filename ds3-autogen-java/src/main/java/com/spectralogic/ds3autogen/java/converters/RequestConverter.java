@@ -143,10 +143,6 @@ public class RequestConverter {
         return requiredArgs.build();
     }
 
-
-
-
-
     private static ImmutableList<Arguments> getOptionalArgs(
             final Ds3Request ds3Request) {
         if (ds3Request.getOptionalQueryParams() == null) {
