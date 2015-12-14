@@ -34,6 +34,10 @@ public final class Helper {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
     }
 
+    public static String underscoreToCamel(final String str) {
+        return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, str);
+    }
+
     public static String getHttpVerb(final HttpVerb httpVerb, final Action action) {
         if(httpVerb != null) {
             return httpVerb.toString();

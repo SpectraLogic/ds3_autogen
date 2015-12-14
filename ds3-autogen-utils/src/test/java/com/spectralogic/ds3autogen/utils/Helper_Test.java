@@ -35,6 +35,11 @@ public class Helper_Test {
     }
 
     @Test
+    public void underscoreToCamel_Test() {
+        assertEquals(Helper.underscoreToCamel("DEGRADED_DATA_PERSISTENCE_RULE"), "DegradedDataPersistenceRule");
+    }
+
+    @Test
     public void unqualifiedName_Test() {
         assertEquals(Helper.getInstance().unqualifiedName("some.qualified.name"), "name");
     }

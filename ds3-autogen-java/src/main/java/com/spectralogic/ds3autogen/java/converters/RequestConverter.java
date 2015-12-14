@@ -18,8 +18,10 @@ package com.spectralogic.ds3autogen.java.converters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 
 public class RequestConverter {
 
@@ -75,14 +77,17 @@ public class RequestConverter {
             }
         } else {
             if (ds3Request.getResource() != null) {
-                builder.append("\"/_rest_/" + ds3Request.getResource().toString().toLowerCase() + "/\"");
-                if (isNotificationRequest(ds3Request)) {
+                builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
+                if (RequestConverterUtil.isNotificationRequest(ds3Request)) {
                     if (getNotificationType(ds3Request) == NotificationType.DELETE
                             || getNotificationType(ds3Request) == NotificationType.GET) {
                         builder.append(" + this.getNotificationId().toString()");
                     }
                 } else if (hasBucketNameInPath(ds3Request)) {
                     builder.append(" + this.bucketName");
+                } else if (RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+                    final Arguments resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.getResource());
+                    builder.append(" + ").append(JavaHelper.argToString(resourceArg));
                 }
             } else {
                 builder.append("\"/_rest_/\"");
@@ -114,28 +119,6 @@ public class RequestConverter {
         }
     }
 
-    public static boolean isNotificationRequest(final Ds3Request ds3Request) {
-        if (ds3Request.getResource() == null) {
-            return false;
-        }
-        switch (ds3Request.getResource()) {
-            case GENERIC_DAO_NOTIFICATION_REGISTRATION:
-            case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
-            case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
-            case OBJECT_LOST_NOTIFICATION_REGISTRATION:
-            case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
-            case POOL_FAILURE_NOTIFICATION_REGISTRATION:
-            case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
-            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
-            case JOB_CREATED_NOTIFICATION_REGISTRATION:
-                return true;
-            default:
-                return false;
-        }
-    }
-
     private static boolean queryParamsContain(
             final ImmutableList<Ds3Param> params,
             final String name) {
@@ -154,17 +137,15 @@ public class RequestConverter {
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
 
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                || ds3Request.getResource() == Resource.BUCKET) {
-            requiredArgs.add(new Arguments("String", "BucketName"));
-            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                requiredArgs.add(new Arguments("String", "ObjectName"));
-            }
-        }
+        requiredArgs.addAll(RequestConverterUtil.getRequiredArgsFromRequestHeader(ds3Request));
 
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
+
+
+
+
 
     private static ImmutableList<Arguments> getOptionalArgs(
             final Ds3Request ds3Request) {
@@ -197,6 +178,11 @@ public class RequestConverter {
 
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+
+        if (RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())
+                && RequestConverterUtil.isResourceId(ds3Request.getResource())) {
+            importsBuilder.add("java.util.UUID");
+        }
 
         return importsBuilder.build().asList();
     }

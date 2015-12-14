@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.models.*;
+import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -214,7 +215,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
         }
-        if (RequestConverter.isNotificationRequest(ds3Request)) {
+        if (RequestConverterUtil.isNotificationRequest(ds3Request)) {
             builder.append(NOTIFICATION_PACKAGE);
         }
         return builder.toString();
@@ -269,17 +270,17 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     private static boolean isDeleteNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverter.isNotificationRequest(ds3Request)
+        return RequestConverterUtil.isNotificationRequest(ds3Request)
                 && RequestConverter.getNotificationType(ds3Request) == NotificationType.DELETE;
     }
 
     private static boolean isCreateNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverter.isNotificationRequest(ds3Request)
+        return RequestConverterUtil.isNotificationRequest(ds3Request)
                 && RequestConverter.getNotificationType(ds3Request) == NotificationType.CREATE;
     }
 
     private static boolean isGetNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverter.isNotificationRequest(ds3Request)
+        return RequestConverterUtil.isNotificationRequest(ds3Request)
                 && RequestConverter.getNotificationType(ds3Request) == NotificationType.GET;
     }
 
