@@ -20,7 +20,7 @@ import com.spectralogic.ds3autogen.java.models.Element;
 import java.util.Comparator;
 
 public class CustomElementComparator implements Comparator<Element> {
-    /*
+    /**
      * Compares elements by name.  This is used to sort elements alphabetically.
      */
     @Override

@@ -29,9 +29,11 @@ public class NameConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(NameConverter.class);
 
-    //Removes "Handler" from all request names within the spec
-    //and namespaces the spectrads3 commands
-    public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
+    /**
+     * Removes "Handler" from all request names within the spec
+     * and namespaces the spectrads3 commands
+     */
+     public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
         if (isEmpty(spec.getRequests())) {
             LOG.info("No requests to rename");
             return spec;

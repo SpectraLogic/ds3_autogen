@@ -55,8 +55,8 @@ public class Request {
         this.optionalArguments = optionalArguments;
         this.imports = imports;
 
-        helper = Helper.getInstance();
-        javaHelper = JavaHelper.getInstance();
+        this.helper = Helper.getInstance();
+        this.javaHelper = JavaHelper.getInstance();
     }
 
     public String getPackageName() {

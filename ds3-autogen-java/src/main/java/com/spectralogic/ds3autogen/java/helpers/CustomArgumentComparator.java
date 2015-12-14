@@ -20,7 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import java.util.Comparator;
 
 public class CustomArgumentComparator implements Comparator<Arguments> {
-    /*
+    /**
      * Compares arguments by name. Comparison follows
      *    "BucketName" and "Bucket" are lowest value
      *    "ObjectName" and "Object" are second lowest value

@@ -17,7 +17,11 @@ package com.spectralogic.ds3autogen.java.converters;
 
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 
-public class ConvertType {
+public final class ConvertType {
+
+    private ConvertType() {
+        //pass
+    }
 
     public static String convertType(final String type) {
         if (type.startsWith(CONTRACT_PACKAGE_PATH)) {
