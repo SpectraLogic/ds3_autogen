@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-<#include "import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.tmpl"/>
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ public class ${name} extends AbstractRequest {
 
     private final InputStream stream;
     private final long size;
-    <#include "variables.tmpl"/>
+    <#include "common/variables.tmpl"/>
     private SeekableByteChannel channel;
     private Checksum checksum = Checksum.none();
 
@@ -72,7 +72,7 @@ public class ${name} extends AbstractRequest {
             </#list>
         }
 
-    <#include "with_constructors.tmpl"/>
+    <#include "common/with_constructors.tmpl"/>
 
     public ${name} withChecksum(final Checksum checksum) {
         this.checksum = checksum;
@@ -90,7 +90,7 @@ public class ${name} extends AbstractRequest {
 		return this;
 	}
 
-    <#include "getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.tmpl"/>
 
     @Override
     ${javaHelper.createGetter("Checksum", "Checksum")}
@@ -101,7 +101,7 @@ public class ${name} extends AbstractRequest {
     @Override
     ${javaHelper.createGetter("Stream", "InputStream")}
 
-    <#include "getters.tmpl"/>
+    <#include "common/getters.tmpl"/>
 
     ${javaHelper.createGetter("Channel", "SeekableByteChannel")}
 }
