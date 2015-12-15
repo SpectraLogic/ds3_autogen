@@ -257,11 +257,11 @@ public class JavaCodeGenerator implements CodeGenerator {
             template = config.getTemplate("request/bulk_request_template.tmpl");
         } else if (isPhysicalPlacementRequest(ds3Request)) {
             template = config.getTemplate("request/physical_placement_request_template.tmpl");
-        } else if (isMultiFileDelete(ds3Request)) {
+        } else if (isMultiFileDeleteRequest(ds3Request)) {
             template = config.getTemplate("request/multi_file_delete_request_template.tmpl");
-        } else if (isGetObject(ds3Request)) {
+        } else if (isGetObjectRequest(ds3Request)) {
             template = config.getTemplate("request/get_object_template.tmpl");
-        } else if (isCreateObject(ds3Request)) {
+        } else if (isCreateObjectRequest(ds3Request)) {
             template = config.getTemplate("request/create_object_template.tmpl");
         } else if (isDeleteNotificationRequest(ds3Request)) {
             template = config.getTemplate("request/delete_notification_request_template.tmpl");

@@ -100,7 +100,7 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is a Multi File Delete request, else false
      */
-    public static boolean isMultiFileDelete(final Ds3Request ds3Request) {
+    public static boolean isMultiFileDeleteRequest(final Ds3Request ds3Request) {
         return ds3Request.getHttpVerb() == HttpVerb.POST
                 && ds3Request.getObjectRequirement() != null
                 && ds3Request.getObjectRequirement() == Requirement.NOT_ALLOWED
@@ -115,7 +115,7 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is a Create Object request, else false
      */
-    public static boolean isCreateObject(final Ds3Request ds3Request) {
+    public static boolean isCreateObjectRequest(final Ds3Request ds3Request) {
         return ds3Request.getHttpVerb() == HttpVerb.PUT
                 && ds3Request.getBucketRequirement() == Requirement.REQUIRED
                 && ds3Request.getObjectRequirement() == Requirement.REQUIRED
@@ -130,8 +130,8 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is a Get Object request, else false
      */
-    public static boolean isGetObject(final Ds3Request ds3Request) {
-        return isGetObjectSpectraS3(ds3Request) || isGetObjectAmazonS3(ds3Request);
+    public static boolean isGetObjectRequest(final Ds3Request ds3Request) {
+        return isGetObjectSpectraS3Request(ds3Request) || isGetObjectAmazonS3Request(ds3Request);
     }
 
     /**
@@ -139,7 +139,7 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is a SpectraDs3 Get Object request, else false
      */
-    protected static boolean isGetObjectSpectraS3(final Ds3Request ds3Request) {
+    protected static boolean isGetObjectSpectraS3Request(final Ds3Request ds3Request) {
         return enumsEqual(ds3Request.getClassification(), Classification.spectrads3)
                 && enumsEqual(ds3Request.getAction(), Action.SHOW)
                 && enumsEqual(ds3Request.getResource(), Resource.OBJECT)
@@ -151,7 +151,7 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is an AmazonS3 Get Object request, else false
      */
-    protected static boolean isGetObjectAmazonS3(final Ds3Request ds3Request) {
+    protected static boolean isGetObjectAmazonS3Request(final Ds3Request ds3Request) {
         return enumsEqual(ds3Request.getClassification(), Classification.amazons3)
                 && enumsEqual(ds3Request.getHttpVerb(), HttpVerb.GET)
                 && enumsEqual(ds3Request.getBucketRequirement(), Requirement.REQUIRED)
