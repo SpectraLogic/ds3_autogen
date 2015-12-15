@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-<#include "import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.tmpl"/>
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.delete.Delete;
@@ -19,7 +19,7 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     private final List<String> objects;
-<#include "variables.tmpl"/>
+<#include "common/variables.tmpl"/>
     private boolean quiet = false;
     private long size;
 
@@ -31,7 +31,7 @@ public class ${name} extends AbstractRequest {
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.objects = objects;
-<#include "constructor_get_query_params.tmpl"/>
+<#include "common/constructor_get_query_params.tmpl"/>
     }
 
     public ${name}(${javaHelper.constructorArgs(
@@ -49,7 +49,7 @@ public class ${name} extends AbstractRequest {
         return objKeyList;
     }
 
-    <#include "with_constructors.tmpl"/>
+    <#include "common/with_constructors.tmpl"/>
 
     public ${name} withQuiet(final boolean quiet) {
         this.quiet = quiet;
@@ -76,13 +76,13 @@ public class ${name} extends AbstractRequest {
         return new ByteArrayInputStream(stringBytes);
     }
 
-    <#include "getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.tmpl"/>
 
     ${javaHelper.createGetter("Objects", "List<String>")}
 
     ${javaHelper.createGetter("Quiet", "boolean")}
 
-<#include "getters.tmpl"/>
+<#include "common/getters.tmpl"/>
 
     @Override
     ${javaHelper.createGetter("Size", "long")}

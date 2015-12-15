@@ -36,7 +36,7 @@ public class ${name} extends BulkRequest {
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>
-<#include "constructor_get_query_params.tmpl"/>
+<#include "common/constructor_get_query_params.tmpl"/>
 
     }
 

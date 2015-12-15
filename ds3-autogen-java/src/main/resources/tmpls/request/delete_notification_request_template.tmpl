@@ -10,15 +10,15 @@ import java.util.UUID;
 public class ${name} extends AbstractDeleteNotificationRequest {
 
     //Variables
-<#include "notification_variables.tmpl"/>
+<#include "common/notification_variables.tmpl"/>
 
     //Constructor
-<#include "notification_constructor.tmpl"/>
+<#include "common/notification_constructor.tmpl"/>
 
     @Override
     public String getPath() {
         return ${path};
     }
 
-<#include "getters.tmpl"/>
+<#include "common/getters.tmpl"/>
 }

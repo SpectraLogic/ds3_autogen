@@ -15,17 +15,17 @@ import ${import};
 public class ${name} extends AbstractGetNotificationRequest {
 
     // Variables
-    <#include "variables.tmpl"/>
+    <#include "common/variables.tmpl"/>
 
     // Constructor
-<#include "notification_constructor.tmpl"/>
+<#include "common/notification_constructor.tmpl"/>
 
-    <#include "with_constructors.tmpl"/>
+    <#include "common/with_constructors.tmpl"/>
 
     @Override
     public String getPath() {
         return ${path};
     }
 
-    <#include "getters.tmpl"/>
+    <#include "common/getters.tmpl"/>
 }
