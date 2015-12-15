@@ -23,10 +23,15 @@ public class ${name} extends AbstractRequest {
     // Constructor
 
     /**
-     * @deprecated use {@link #${name}(${javaHelper.argTypeList(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) instead
+     * @deprecated use {@link #${name}(${javaHelper.argTypeList(
+                                         helper.addArgument(
+                                         helper.addArgument(
+                                         helper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) instead
      */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, "Size", "long"), "Channel", "SeekableByteChannel"))}) {
+    public ${name}(${javaHelper.constructorArgs(
+                     helper.addArgument(
+                     helper.addArgument(requiredArguments, "Size", "long"), "Channel", "SeekableByteChannel"))}) {
         <#list requiredArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -35,17 +40,24 @@ public class ${name} extends AbstractRequest {
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
+    public ${name}(${javaHelper.constructorArgs(
+                     helper.addArgument(
+                     helper.addArgument(
+                     helper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
         this(${javaHelper.modifiedArgNameList(
-            javaHelper.addArgument(
-                javaHelper.addArgument(
-                    javaHelper.addArgument(
-                        requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
+               helper.addArgument(
+               helper.addArgument(
+               helper.addArgument(
+                   requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
 
         this.channel = channel;
     }
 
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.addArgument(javaHelper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
+    public ${name}(${javaHelper.constructorArgs(
+                     helper.addArgument(
+                     helper.addArgument(
+                     helper.addArgument(
+                         requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
             <#list requiredArguments as arg>
             this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
             </#list>

@@ -25,17 +25,20 @@ public class ${name} extends AbstractRequest {
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
-                         javaHelper.addArgument(
-                             javaHelper.removeVoidArguments(requiredArguments), "Objects", "List<String>"))}) {
-        <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
+                     helper.addArgument(
+                     helper.removeVoidArguments(requiredArguments), "Objects", "List<String>"))}) {
+        <#list helper.removeVoidArguments(requiredArguments) as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.objects = objects;
 <#include "constructor_get_query_params.tmpl"/>
     }
 
-    public ${name}(${javaHelper.constructorArgs(javaHelper.addArgument(javaHelper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
-        this(${javaHelper.argsToList(javaHelper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
+    public ${name}(${javaHelper.constructorArgs(
+                     helper.addArgument(
+                     helper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
+        this(${javaHelper.argsToList(
+               helper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
     }
 
     private static List<String> contentsToString(final Iterable<Contents> objs) {

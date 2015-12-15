@@ -18,7 +18,7 @@ public class ${name} extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(${javaHelper.getResponseCodes(responseCodes)});
+            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
             try (final InputStream content = getResponse().getResponseStream()) {
                 this.result = content.toString();
             }

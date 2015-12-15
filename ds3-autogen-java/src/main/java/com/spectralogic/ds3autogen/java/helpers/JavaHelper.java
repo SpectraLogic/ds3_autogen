@@ -18,13 +18,11 @@ package com.spectralogic.ds3autogen.java.helpers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +31,12 @@ import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.*;
 
 public final class JavaHelper {
     private final static JavaHelper javaHelper = new JavaHelper();
 
     private final static ImmutableSet<String> bulkBaseClassArgs = ImmutableSet.of("Priority", "WriteOptimization", "BucketName");
-    private final static String INDENT = "    ";
 
     private JavaHelper() {}
 
@@ -158,14 +156,9 @@ public final class JavaHelper {
         return  builder.append("false);").toString();
     }
 
-    private static String indent(final int depth) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            stringBuilder.append(INDENT);
-        }
-        return stringBuilder.toString();
-    }
-
+    /**
+     * Creates the Java code for converting an argument to a String.
+     */
     public static String argToString(final Arguments arg) {
         switch (arg.getType().toLowerCase()) {
             case "boolean":
@@ -184,69 +177,36 @@ public final class JavaHelper {
         }
     }
 
-    public static ImmutableList<Arguments> removeArgument(final List<Arguments> arguments, final String name) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        for (final Arguments arg : arguments) {
-            if (!arg.getName().equals(name)) {
-                builder.add(arg);
-            }
-        }
-        return builder.build();
-    }
-
-    public static ImmutableList<Arguments> addArgument(
-            final ImmutableList<Arguments> arguments,
-            final ImmutableList<Arguments> additionalArguments) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        if (hasContent(arguments)) {
-            builder.addAll(arguments);
-        }
-        if (hasContent(additionalArguments)) {
-            builder.addAll(additionalArguments);
-        }
-        return builder.build();
-    }
-
-    public static ImmutableList<Arguments> addArgument(
-            final ImmutableList<Arguments> arguments,
-            final String argName,
-            final String argType) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        if (hasContent(arguments)) {
-            builder.addAll(arguments);
-        }
-        builder.add(new Arguments(argType, argName));
-        return builder.build();
-    }
-
-    public static ImmutableList<Arguments> sortConstructorArgs(final ImmutableList<Arguments> arguments) {
-        final List<Arguments> sortable = new ArrayList<>();
-        sortable.addAll(arguments);
-        Collections.sort(sortable, new CustomArgumentComparator());
-
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(sortable);
-        return builder.build();
-    }
-
+    /**
+     * Creates a comma separated list of sorted argument types.  This is used in
+     * the generation of javadocs for creating links from depreciated constructors
+     * to supported constructors.
+     * @param arguments List of Arguments
+     * @return Comma separated list of sorted argument types
+     */
     public static String argTypeList(final ImmutableList<Arguments> arguments) {
         return sortConstructorArgs(arguments)
                 .stream()
                 .map(Arguments::getType).collect(Collectors.joining(", "));
     }
 
+    /**
+     * Creates a comma separated list of argument names.
+     * @param arguments List of Arguments
+     * @return Comma separated list of argument names.
+     */
     public static String argsToList(final List<Arguments> arguments) {
-        return arguments.stream().map(i -> uncapFirst(i.getName())).collect(Collectors.joining(", "));
+        return arguments
+                .stream()
+                .map(i -> uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
     }
 
-    public static String capFirst(final String str) {
-        return StringUtils.capitalize(str);
-    }
-
-    public static String uncapFirst(final String str) {
-        return StringUtils.uncapitalize(str);
-    }
-
+    /**
+     * Gets the type of an argument, converting the type from Contract type to Java type.
+     * @param arg An Argument
+     * @return The Java type of the Argument
+     */
     public static String getType(final Arguments arg) {
         if (arg.getType() == null) {
             return "";
@@ -264,6 +224,12 @@ public final class JavaHelper {
         }
     }
 
+    /**
+     * Creates a comma separated parameter list from a list of Arguments.
+     * Used for building Java constructors.
+     * @param requiredArguments List of Arguments
+     * @return Comma separated list of function parameters
+     */
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
         return sortConstructorArgs(requiredArguments)
                 .stream()
@@ -271,49 +237,7 @@ public final class JavaHelper {
                 .collect(Collectors.joining(", "));
     }
 
-    /*
-     * Removes all void arguments from the provided list.  This is used with the required params
-     * list to prevent the unnecessary inclusion of void variables into variable list and constructors.
-     */
-    public static ImmutableList<Arguments> removeVoidArguments(
-            final ImmutableList<Arguments> arguments) {
-        return adjustVoidArguments(arguments, AdjustArgType.REMOVE_VOID);
-    }
-
-    /*
-     * Gets all void arguments from the provided list.  This is used within constructors to add
-     * query parameters that are always required.
-     */
-    public static ImmutableList<Arguments> getVoidArguments(
-            final ImmutableList<Arguments> arguments) {
-        return adjustVoidArguments(arguments, AdjustArgType.SELECT_VOID);
-    }
-
-    protected enum AdjustArgType { SELECT_VOID, REMOVE_VOID }
-
-    protected static ImmutableList<Arguments> adjustVoidArguments(
-            final ImmutableList<Arguments> arguments,
-            final AdjustArgType adjustment) {
-        if (isEmpty(arguments)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        for (final Arguments arg : arguments) {
-            if (addVoidArgument(arg, adjustment)) {
-                builder.add(arg);
-            }
-        }
-        return builder.build();
-    }
-
-    protected static boolean addVoidArgument(final Arguments arg, final AdjustArgType adjustment) {
-        if (adjustment.equals(AdjustArgType.REMOVE_VOID)) {
-            return !arg.getType().equals("void");
-        }
-        return arg.getType().equals("void");
-    }
-
-    /*
+    /**
      * Creates a comma separated list of argument names, while changing one argument name to a specified value
      */
     public static String modifiedArgNameList(
@@ -333,20 +257,9 @@ public final class JavaHelper {
                 .collect(Collectors.joining(", "));
     }
 
-    public static String getResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final List<String> sortable = new ArrayList<>();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            sortable.add(Integer.toString(responseCode.getCode()));
-        }
-        Collections.sort(sortable);
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        builder.addAll(sortable);
-        return builder.build()
-                .stream()
-                .map(i -> i)
-                .collect(Collectors.joining(", "));
-    }
-
+    /**
+     * Creates the template lines for variables within Java generated models
+     */
     public static String getModelVariable(final Element element) {
         final StringBuilder builder = new StringBuilder();
         builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
@@ -357,6 +270,9 @@ public final class JavaHelper {
         return builder.toString();
     }
 
+    /**
+     * Creates the Java type from elements, converting component types into arrays.
+     */
     public static String convertType(final Element element) throws IllegalArgumentException {
         if (isEmpty(element.getComponentType())) {
             return stripPath(element.getType());
@@ -367,11 +283,9 @@ public final class JavaHelper {
         throw new IllegalArgumentException("Unknown element type: " + element.getType());
     }
 
-    public static String stripPath(final String str) {
-        final String[] classparts = str.split("\\.");
-        return classparts[classparts.length - 1];
-    }
-
+    /**
+     * Creates a comma separated list of Elements.  This is used in the Java model generation.
+     */
     public static String getModelConstructorArgs(final ImmutableList<Element> elements) {
         if (isEmpty(elements)) {
             return "";
@@ -382,6 +296,9 @@ public final class JavaHelper {
                 .collect(Collectors.joining(", "));
     }
 
+    /**
+     * Sorts Elements. Used in Java model generation.
+     */
     public static ImmutableList<Element> sortModelConstructorArgs(final ImmutableList<Element> elements) {
         if (isEmpty(elements)) {
             return ImmutableList.of();
@@ -395,6 +312,9 @@ public final class JavaHelper {
         return builder.build();
     }
 
+    /**
+     * Creates a comma separated list of enum constants. Used in Java model generation.
+     */
     public static String getEnumValues(
             final ImmutableList<EnumConstant> enumConstants,
             final int indent) {
@@ -407,6 +327,11 @@ public final class JavaHelper {
                 .collect(Collectors.joining(",\n"));
     }
 
+    /**
+     * Adds an EnumConstant to a list of EnumConstants. Used to include additional enum values, such as NONE.
+     * @param enumConstants List of EnumConstants
+     * @param newEnumValue New enum value
+     */
     public static ImmutableList<EnumConstant> addEnum(
             final ImmutableList<EnumConstant> enumConstants,
             final String newEnumValue) {
@@ -418,10 +343,20 @@ public final class JavaHelper {
         return builder.build();
     }
 
+    /**
+     * Determines of package is SpectraDs3. This is used to determine if request/response handlers
+     * need to include an import to parent class.
+     * @return True if package is part of SpectraDs3, else false
+     */
     public static boolean isSpectraDs3(final String packageName) {
         return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
     }
 
+    /**
+     * Determines if this package is SpectraDs3 and/or a Notification. This is used to determine if
+     * request/response handlers need to include an import to parent class.
+     * @return True if package is either SpectraDs3 and/or a Notification, else false
+     */
     public static boolean isSpectraDs3OrNotification(final String packageName) {
         return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
     }
