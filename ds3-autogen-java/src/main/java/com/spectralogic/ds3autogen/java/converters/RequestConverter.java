@@ -23,7 +23,8 @@ import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.getNotificationType;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
 
 public class RequestConverter {
 
@@ -80,7 +81,7 @@ public class RequestConverter {
         } else {
             if (ds3Request.getResource() != null) {
                 builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
-                if (RequestConverterUtil.isNotificationRequest(ds3Request)) {
+                if (isNotificationRequest(ds3Request)) {
                     if (getNotificationType(ds3Request) == NotificationType.DELETE
                             || getNotificationType(ds3Request) == NotificationType.GET) {
                         builder.append(" + this.getNotificationId().toString()");
