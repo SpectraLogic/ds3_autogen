@@ -2,21 +2,21 @@
 
 package ${packageName};
 
-<#include "import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.tmpl"/>
 import com.spectralogic.ds3client.HttpVerb;
 <#include "../imports.tmpl"/>
 
 public class ${name} extends AbstractRequest {
 
     // Variables
-    <#include "variables.tmpl"/>
+    <#include "common/variables.tmpl"/>
 
     // Constructor
-    <#include "constructor.tmpl"/>
+    <#include "common/constructor.tmpl"/>
 
-    <#include "with_constructors.tmpl"/>
+    <#include "common/with_constructors.tmpl"/>
 
-    <#include "getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.tmpl"/>
 
-    <#include "getters.tmpl"/>
+    <#include "common/getters.tmpl"/>
 }

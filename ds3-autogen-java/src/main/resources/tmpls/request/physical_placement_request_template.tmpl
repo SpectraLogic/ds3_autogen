@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-<#include "import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.tmpl"/>
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
@@ -16,7 +16,7 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     private final List<Ds3Object> objects;
-    <#include "variables.tmpl"/>
+    <#include "common/variables.tmpl"/>
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
@@ -29,10 +29,10 @@ public class ${name} extends AbstractRequest {
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>
-<#include "constructor_get_query_params.tmpl"/>
+<#include "common/constructor_get_query_params.tmpl"/>
     }
 
-    <#include "with_constructors.tmpl"/>
+    <#include "common/with_constructors.tmpl"/>
 
     public InputStream getContentStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
@@ -44,9 +44,9 @@ public class ${name} extends AbstractRequest {
         return new ByteArrayInputStream(stringBytes);
     }
 
-    <#include "getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.tmpl"/>
 
-    <#include "getters.tmpl"/>
+    <#include "common/getters.tmpl"/>
 
     ${javaHelper.createGetter("Objects", "List<Ds3Object>")}
 }
