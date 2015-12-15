@@ -1,10 +1,23 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import org.junit.Test;
@@ -108,26 +121,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void sortConstructorArgs() {
-        final ImmutableList<Arguments> expectedResult = ImmutableList.of(
-                new Arguments("String", "BucketName"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"),
-                new Arguments("Type3", "Arg3"));
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type2", "Arg2"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type3", "Arg3"),
-                new Arguments("String", "BucketName"));
-        final ImmutableList<Arguments> result = JavaHelper.sortConstructorArgs(arguments);
-        for (int i = 0; i < arguments.size(); i++) {
-            assertTrue(result.get(i).getName().equals(expectedResult.get(i).getName()));
-        }
-    }
-
-    @Test
     public void constructorArgs() {
         final String expectedResult = "final String bucketName, final String objectName, final Type1 arg1, final Type2 arg2, final Type3 arg3";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
@@ -153,99 +146,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-     public void addArgumentListsNull() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists1 = JavaHelper.addArgument(arguments, null);
-        assertThat(resultAddLists1.size(), is(2));
-        assertTrue(containsArgName(resultAddLists1, "Arg1"));
-        assertTrue(containsArgName(resultAddLists1, "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists2 = JavaHelper.addArgument(null, arguments);
-        assertThat(resultAddLists2.size(), is(2));
-        assertTrue(containsArgName(resultAddLists2, "Arg1"));
-        assertTrue(containsArgName(resultAddLists2, "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists3 = JavaHelper.addArgument(null, null);
-        assertThat(resultAddLists3.size(), is(0));
-    }
-
-    @Test
-    public void addArgumentListsEmpty() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists1 = JavaHelper.addArgument(arguments, ImmutableList.of());
-        assertThat(resultAddLists1.size(), is(2));
-        assertTrue(containsArgName(resultAddLists1, "Arg1"));
-        assertTrue(containsArgName(resultAddLists1, "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists2 = JavaHelper.addArgument(ImmutableList.of(), arguments);
-        assertThat(resultAddLists2.size(), is(2));
-        assertTrue(containsArgName(resultAddLists2, "Arg1"));
-        assertTrue(containsArgName(resultAddLists2, "Arg2"));
-
-        final ImmutableList<Arguments> resultAddLists3 = JavaHelper.addArgument(ImmutableList.of(), ImmutableList.of());
-        assertThat(resultAddLists3.size(), is(0));
-    }
-
-    @Test
-    public void addArgumentElementNullOrEmpty() {
-        final ImmutableList<Arguments> resultAddElementNull = JavaHelper.addArgument(null, "ArgName", "ArgType");
-        assertThat(resultAddElementNull.size(), is(1));
-        assertTrue(containsArgName(resultAddElementNull, "ArgName"));
-
-        final ImmutableList<Arguments> resultAddElementEmpty = JavaHelper.addArgument(ImmutableList.of(), "ArgName", "ArgType");
-        assertThat(resultAddElementEmpty.size(), is(1));
-        assertTrue(containsArgName(resultAddElementEmpty, "ArgName"));
-    }
-
-    @Test
-    public void addArgumentFull() {
-        final ImmutableList<Arguments> arguments1 = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"));
-        final ImmutableList<Arguments> arguments2 = ImmutableList.of(
-                new Arguments("Type3", "Arg3"),
-                new Arguments("Type4", "Arg4"));
-        final ImmutableList<Arguments> resultAddLists = JavaHelper.addArgument(arguments1, arguments2);
-        assertTrue(containsArgName(resultAddLists, "Arg1"));
-        assertTrue(containsArgName(resultAddLists, "Arg2"));
-        assertTrue(containsArgName(resultAddLists, "Arg3"));
-        assertTrue(containsArgName(resultAddLists, "Arg4"));
-
-        final ImmutableList<Arguments> resultAddSingle = JavaHelper.addArgument(arguments1, "Arg5", "Type5");
-        assertTrue(containsArgName(resultAddSingle, "Arg1"));
-        assertTrue(containsArgName(resultAddSingle, "Arg2"));
-        assertTrue(containsArgName(resultAddSingle, "Arg5"));
-    }
-
-    @Test
-    public void removeArgument() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"),
-                new Arguments("Type3", "Arg3"));
-        final ImmutableList<Arguments> result = JavaHelper.removeArgument(arguments, "Arg2");
-
-        assertFalse(containsArgName(result, "Arg2"));
-        assertTrue(containsArgName(result, "Arg1"));
-        assertTrue(containsArgName(result, "Arg3"));
-    }
-
-    private boolean containsArgName(final ImmutableList<Arguments> arguments, final String argName) {
-        for (final Arguments arg : arguments) {
-            if (arg.getName().equals(argName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Test
     public void createGetter() {
         final String expectedResult = "public String getBucketName() {\n"
                 + "        return this.bucketName;\n"
@@ -263,19 +163,6 @@ public class JavaHelper_Test {
                 new Arguments("Type2", "Arg2"),
                 new Arguments("Type3", "Arg3"));
         final String result = JavaHelper.modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void getResponseCodes() {
-        final String expectedResult = "200, 206, 307, 400";
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(307, null),
-                new Ds3ResponseCode(206, null),
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(400, null));
-
-        final String result = JavaHelper.getResponseCodes(responseCodes);
         assertThat(result, is(expectedResult));
     }
 
@@ -314,16 +201,6 @@ public class JavaHelper_Test {
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
 
         JavaHelper.getModelVariable(element);
-    }
-
-    @Test
-    public void stripPath() {
-        final String expectedResult = "BlobApiBean";
-        final String result = JavaHelper.stripPath("com.spectralogic.s3.common.platform.domain.BlobApiBean");
-        assertThat(result, is(expectedResult));
-
-        final String result2 = JavaHelper.stripPath("BlobApiBean");
-        assertThat(result2, is(expectedResult));
     }
 
     @Test
@@ -512,65 +389,5 @@ public class JavaHelper_Test {
 
         final String requiredExpected = "private final ArgType argName;";
         assertThat(JavaHelper.createBulkVariable(arg, true), is(requiredExpected));
-    }
-
-    @Test
-    public void addVoidArgument() {
-        final Arguments voidArg = new Arguments("void", "ArgName");
-        assertTrue(JavaHelper.addVoidArgument(voidArg, JavaHelper.AdjustArgType.SELECT_VOID));
-        assertFalse(JavaHelper.addVoidArgument(voidArg, JavaHelper.AdjustArgType.REMOVE_VOID));
-
-        final Arguments intArg = new Arguments("int", "ArgName");
-        assertFalse(JavaHelper.addVoidArgument(intArg, JavaHelper.AdjustArgType.SELECT_VOID));
-        assertTrue(JavaHelper.addVoidArgument(intArg, JavaHelper.AdjustArgType.REMOVE_VOID));
-    }
-
-    @Test
-    public void adjustVoidArguments() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("void", "VoidArg1"),
-                new Arguments("void", "VoidArg2"),
-                new Arguments("int", "IntArg"),
-                new Arguments("double", "DoubleArg"));
-
-        final ImmutableList<Arguments> voidArgs = JavaHelper
-                .adjustVoidArguments(arguments, JavaHelper.AdjustArgType.SELECT_VOID);
-        assertThat(voidArgs.size(), is(2));
-        assertTrue(voidArgs.get(0).getType().equals("void"));
-        assertTrue(voidArgs.get(1).getType().equals("void"));
-
-        final ImmutableList<Arguments> nonVoidArgs = JavaHelper
-                .adjustVoidArguments(arguments, JavaHelper.AdjustArgType.REMOVE_VOID);
-        assertThat(nonVoidArgs.size(), is(2));
-        assertFalse(nonVoidArgs.get(0).getType().equals("void"));
-        assertFalse(nonVoidArgs.get(1).getType().equals("void"));
-    }
-
-    @Test
-     public void getVoidArguments() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("void", "VoidArg1"),
-                new Arguments("void", "VoidArg2"),
-                new Arguments("int", "IntArg"),
-                new Arguments("double", "DoubleArg"));
-
-        final ImmutableList<Arguments> result = JavaHelper.getVoidArguments(arguments);
-        assertThat(result.size(), is(2));
-        assertTrue(result.get(0).getType().equals("void"));
-        assertTrue(result.get(1).getType().equals("void"));
-    }
-
-    @Test
-    public void removeVoidArguments() {
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("void", "VoidArg1"),
-                new Arguments("void", "VoidArg2"),
-                new Arguments("int", "IntArg"),
-                new Arguments("double", "DoubleArg"));
-
-        final ImmutableList<Arguments> result = JavaHelper.removeVoidArguments(arguments);
-        assertThat(result.size(), is(2));
-        assertFalse(result.get(0).getType().equals("void"));
-        assertFalse(result.get(1).getType().equals("void"));
     }
 }

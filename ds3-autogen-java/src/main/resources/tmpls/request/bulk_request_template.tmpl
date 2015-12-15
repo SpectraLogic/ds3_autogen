@@ -20,7 +20,7 @@ public class ${name} extends BulkRequest {
     </#if>
     </#list>
 
-    <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
+    <#list helper.removeVoidArguments(requiredArguments) as arg>
     ${javaHelper.createBulkVariable(arg, true)}
     </#list>
     <#list optionalArguments as arg>
@@ -29,8 +29,8 @@ public class ${name} extends BulkRequest {
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
-        javaHelper.removeVoidArguments(
-            javaHelper.addArgument(
+        helper.removeVoidArguments(
+            helper.addArgument(
                 requiredArguments, "Objects", "List<Ds3Object>")))}) throws XmlProcessingException {
         super(bucketName, objects);
         <#if operation??>
@@ -44,7 +44,7 @@ public class ${name} extends BulkRequest {
 ${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
 
-    <#list javaHelper.removeVoidArguments(requiredArguments) as arg>
+    <#list helper.removeVoidArguments(requiredArguments) as arg>
     <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
@@ -52,7 +52,7 @@ ${javaHelper.createWithConstructorBulk(arg, name)}
     </#if>
     </#list>
 
-    <#list javaHelper.removeArgument(optionalArguments, "MaxUploadSize") as arg>
+    <#list helper.removeArgument(optionalArguments, "MaxUploadSize") as arg>
     <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};

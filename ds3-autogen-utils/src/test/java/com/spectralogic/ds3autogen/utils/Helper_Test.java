@@ -15,23 +15,26 @@
 
 package com.spectralogic.ds3autogen.utils;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Action;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class Helper_Test {
     @Test
     public void camelCaseToUnderscore_Test() {
-        assertEquals(Helper.getInstance().camelToUnderscore("BumpyCaseWord"), "bumpy_case_word");
+        assertEquals(Helper.camelToUnderscore("BumpyCaseWord"), "bumpy_case_word");
     }
 
     @Test
     public void removeTrailingRequestHandler_Test() {
-        assertEquals(Helper.getInstance().removeTrailingRequestHandler("SomeRequestHandler"), "Some");
+        assertEquals(Helper.removeTrailingRequestHandler("SomeRequestHandler"), "Some");
     }
 
     @Test
@@ -41,7 +44,7 @@ public class Helper_Test {
 
     @Test
     public void unqualifiedName_Test() {
-        assertEquals(Helper.getInstance().unqualifiedName("some.qualified.name"), "name");
+        assertEquals(Helper.unqualifiedName("some.qualified.name"), "name");
     }
 
     @Test
@@ -56,5 +59,201 @@ public class Helper_Test {
         assertThat(Helper.getHttpVerb(null, Action.SHOW), is("GET"));
         assertThat(Helper.getHttpVerb(null, Action.BULK_DELETE), is("DELETE"));
 
+    }
+
+    @Test
+    public void sortConstructorArgs() {
+        final ImmutableList<Arguments> expectedResult = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"),
+                new Arguments("Type3", "Arg3"));
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type2", "Arg2"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type3", "Arg3"),
+                new Arguments("String", "BucketName"));
+        final ImmutableList<Arguments> result = Helper.sortConstructorArgs(arguments);
+        for (int i = 0; i < arguments.size(); i++) {
+            assertTrue(result.get(i).getName().equals(expectedResult.get(i).getName()));
+        }
+    }
+
+    private boolean containsArgName(final ImmutableList<Arguments> arguments, final String argName) {
+        for (final Arguments arg : arguments) {
+            if (arg.getName().equals(argName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Test
+    public void addArgumentListsNull() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists1 = Helper.addArgument(arguments, null);
+        assertThat(resultAddLists1.size(), CoreMatchers.is(2));
+        assertTrue(containsArgName(resultAddLists1, "Arg1"));
+        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists2 = Helper.addArgument(null, arguments);
+        assertThat(resultAddLists2.size(), CoreMatchers.is(2));
+        assertTrue(containsArgName(resultAddLists2, "Arg1"));
+        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists3 = Helper.addArgument(null, null);
+        assertThat(resultAddLists3.size(), CoreMatchers.is(0));
+    }
+
+    @Test
+    public void addArgumentListsEmpty() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists1 = Helper.addArgument(arguments, ImmutableList.of());
+        assertThat(resultAddLists1.size(), CoreMatchers.is(2));
+        assertTrue(containsArgName(resultAddLists1, "Arg1"));
+        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists2 = Helper.addArgument(ImmutableList.of(), arguments);
+        assertThat(resultAddLists2.size(), CoreMatchers.is(2));
+        assertTrue(containsArgName(resultAddLists2, "Arg1"));
+        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+
+        final ImmutableList<Arguments> resultAddLists3 = Helper.addArgument(ImmutableList.of(), ImmutableList.of());
+        assertThat(resultAddLists3.size(), CoreMatchers.is(0));
+    }
+
+    @Test
+    public void addArgumentElementNullOrEmpty() {
+        final ImmutableList<Arguments> resultAddElementNull = Helper.addArgument(null, "ArgName", "ArgType");
+        assertThat(resultAddElementNull.size(), CoreMatchers.is(1));
+        assertTrue(containsArgName(resultAddElementNull, "ArgName"));
+
+        final ImmutableList<Arguments> resultAddElementEmpty = Helper.addArgument(ImmutableList.of(), "ArgName", "ArgType");
+        assertThat(resultAddElementEmpty.size(), CoreMatchers.is(1));
+        assertTrue(containsArgName(resultAddElementEmpty, "ArgName"));
+    }
+
+    @Test
+    public void addArgumentFull() {
+        final ImmutableList<Arguments> arguments1 = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+        final ImmutableList<Arguments> arguments2 = ImmutableList.of(
+                new Arguments("Type3", "Arg3"),
+                new Arguments("Type4", "Arg4"));
+        final ImmutableList<Arguments> resultAddLists = Helper.addArgument(arguments1, arguments2);
+        assertTrue(containsArgName(resultAddLists, "Arg1"));
+        assertTrue(containsArgName(resultAddLists, "Arg2"));
+        assertTrue(containsArgName(resultAddLists, "Arg3"));
+        assertTrue(containsArgName(resultAddLists, "Arg4"));
+
+        final ImmutableList<Arguments> resultAddSingle = Helper.addArgument(arguments1, "Arg5", "Type5");
+        assertTrue(containsArgName(resultAddSingle, "Arg1"));
+        assertTrue(containsArgName(resultAddSingle, "Arg2"));
+        assertTrue(containsArgName(resultAddSingle, "Arg5"));
+    }
+
+    @Test
+    public void removeArgument() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"),
+                new Arguments("Type3", "Arg3"));
+        final ImmutableList<Arguments> result = Helper.removeArgument(arguments, "Arg2");
+
+        assertFalse(containsArgName(result, "Arg2"));
+        assertTrue(containsArgName(result, "Arg1"));
+        assertTrue(containsArgName(result, "Arg3"));
+    }
+
+    @Test
+    public void getResponseCodes() {
+        final String expectedResult = "200, 206, 307, 400";
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(400, null));
+
+        final String result = Helper.getResponseCodes(responseCodes);
+        assertThat(result, CoreMatchers.is(expectedResult));
+    }
+
+    @Test
+    public void stripPath() {
+        final String expectedResult = "BlobApiBean";
+        final String result = Helper.stripPath("com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        assertThat(result, CoreMatchers.is(expectedResult));
+
+        final String result2 = Helper.stripPath("BlobApiBean");
+        assertThat(result2, CoreMatchers.is(expectedResult));
+    }
+
+    @Test
+    public void addVoidArgument() {
+        final Arguments voidArg = new Arguments("void", "ArgName");
+        assertTrue(Helper.addVoidArgument(voidArg, Helper.SelectRemoveVoidType.SELECT_VOID));
+        assertFalse(Helper.addVoidArgument(voidArg, Helper.SelectRemoveVoidType.REMOVE_VOID));
+
+        final Arguments intArg = new Arguments("int", "ArgName");
+        assertFalse(Helper.addVoidArgument(intArg, Helper.SelectRemoveVoidType.SELECT_VOID));
+        assertTrue(Helper.addVoidArgument(intArg, Helper.SelectRemoveVoidType.REMOVE_VOID));
+    }
+
+    @Test
+    public void adjustVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> voidArgs = Helper
+                .selectOrRemoveVoidArguments(arguments, Helper.SelectRemoveVoidType.SELECT_VOID);
+        assertThat(voidArgs.size(), CoreMatchers.is(2));
+        assertTrue(voidArgs.get(0).getType().equals("void"));
+        assertTrue(voidArgs.get(1).getType().equals("void"));
+
+        final ImmutableList<Arguments> nonVoidArgs = Helper
+                .selectOrRemoveVoidArguments(arguments, Helper.SelectRemoveVoidType.REMOVE_VOID);
+        assertThat(nonVoidArgs.size(), CoreMatchers.is(2));
+        assertFalse(nonVoidArgs.get(0).getType().equals("void"));
+        assertFalse(nonVoidArgs.get(1).getType().equals("void"));
+    }
+
+    @Test
+    public void getVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> result = Helper.getVoidArguments(arguments);
+        assertThat(result.size(), CoreMatchers.is(2));
+        assertTrue(result.get(0).getType().equals("void"));
+        assertTrue(result.get(1).getType().equals("void"));
+    }
+
+    @Test
+    public void removeVoidArguments() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("void", "VoidArg1"),
+                new Arguments("void", "VoidArg2"),
+                new Arguments("int", "IntArg"),
+                new Arguments("double", "DoubleArg"));
+
+        final ImmutableList<Arguments> result = Helper.removeVoidArguments(arguments);
+        assertThat(result.size(), CoreMatchers.is(2));
+        assertFalse(result.get(0).getType().equals("void"));
+        assertFalse(result.get(1).getType().equals("void"));
     }
 }

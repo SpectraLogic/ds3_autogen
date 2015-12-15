@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.helpers;
+package com.spectralogic.ds3autogen.utils.comparators;
 
 import com.spectralogic.ds3autogen.api.models.Arguments;
 

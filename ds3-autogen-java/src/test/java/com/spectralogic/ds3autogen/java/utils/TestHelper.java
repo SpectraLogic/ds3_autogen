@@ -1,3 +1,18 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
@@ -5,18 +20,13 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.utils.Helper;
 
-public class TestHelper {
-
-    private final static TestHelper testHelper = new TestHelper();
+public final class TestHelper {
 
     public enum Scope { PUBLIC, PROTECTED, PRIVATE }
 
     private TestHelper() { }
-
-    public static TestHelper getInstance() {
-        return testHelper;
-    }
 
     public static boolean extendsClass(final String childClass, final String baseClass, final String code) {
         return code.contains("public class " + childClass + " extends " + baseClass);
@@ -83,14 +93,14 @@ public class TestHelper {
             final String paramName,
             final String paramType,
             final String code) {
-        return code.contains("private " + paramType + " " + JavaHelper.uncapFirst(paramName));
+        return code.contains("private " + paramType + " " + Helper.uncapFirst(paramName));
     }
 
     public static boolean isReqVariable(
             final String paramName,
             final String paramType,
             final String code) {
-        return code.contains("private final " + paramType + " " + JavaHelper.uncapFirst(paramName));
+        return code.contains("private final " + paramType + " " + Helper.uncapFirst(paramName));
     }
 
     private static  boolean isWithConstructorOfType(
@@ -98,8 +108,8 @@ public class TestHelper {
             final String paramType,
             final String requestName,
             final String code) {
-        return code.contains("public " + requestName + " with" + JavaHelper.capFirst(paramName)
-                + "(final " + paramType + " " + JavaHelper.uncapFirst(paramName) + ")");
+        return code.contains("public " + requestName + " with" + Helper.capFirst(paramName)
+                + "(final " + paramType + " " + Helper.uncapFirst(paramName) + ")");
     }
 
     public static boolean doesConstructorContainParam(
@@ -108,10 +118,8 @@ public class TestHelper {
             final String requestName,
             final String code) {
         final String constructorLine = getLineContaining(code, "public " + requestName + "(");
-        if (constructorLine == null) {
-            return false;
-        }
-        return constructorLine.contains("final " + paramType + " " + JavaHelper.uncapFirst(paramName));
+        return constructorLine != null
+                && constructorLine.contains("final " + paramType + " " + Helper.uncapFirst(paramName));
     }
 
     private static String getLineContaining(final String input, final String desiredContent) {
@@ -184,7 +192,7 @@ public class TestHelper {
 
     private static String commandLine(final String requestName) {
         return requestName.replace("Request", "Response")
-                + " " + JavaHelper.uncapFirst(requestName.replace("Request", ""))
+                + " " + Helper.uncapFirst(requestName.replace("Request", ""))
                 + "(" + requestName + " request)";
     }
 
@@ -208,11 +216,11 @@ public class TestHelper {
             final boolean isList,
             final String code) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("    @JsonProperty(\"" + JavaHelper.capFirst(name) + "\")\n");
+        builder.append("    @JsonProperty(\"").append(Helper.capFirst(name)).append("\")\n");
         if (isList) {
             builder.append("    @JacksonXmlElementWrapper\n");
         }
-        builder.append("    private " + type + " " + JavaHelper.uncapFirst(name) + ";");
+        builder.append("    private ").append(type).append(" ").append(Helper.uncapFirst(name)).append(";");
         return code.contains(builder.toString());
     }
 
@@ -225,12 +233,12 @@ public class TestHelper {
     }
 
     public static boolean hasGetter(final String name, final String type, final String code) {
-        return code.contains("public " + type + " get" + JavaHelper.capFirst(name) + "()");
+        return code.contains("public " + type + " get" + Helper.capFirst(name) + "()");
     }
 
     private static boolean hasSetter(final String name, final String type, final String code) {
-        return code.contains("public void set" + JavaHelper.capFirst(name)
-                + "(final " + type + " " + JavaHelper.uncapFirst(name) + ") {");
+        return code.contains("public void set" + Helper.capFirst(name)
+                + "(final " + type + " " + Helper.uncapFirst(name) + ") {");
     }
 
     public static boolean isEnumClass(final String className, final String code) {
