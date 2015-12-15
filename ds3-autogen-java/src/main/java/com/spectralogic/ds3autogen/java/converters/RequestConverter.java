@@ -19,9 +19,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.java.models.NotificationType;
+import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.getNotificationType;
 
 public class RequestConverter {
 
@@ -101,22 +103,6 @@ public class RequestConverter {
         return !queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")
                 && (ds3Request.getBucketRequirement() == Requirement.REQUIRED
                     || ds3Request.getResource() == Resource.BUCKET);
-    }
-
-    public static NotificationType getNotificationType(final Ds3Request ds3Request) {
-        switch (ds3Request.getAction()) {
-            case BULK_MODIFY:
-            case CREATE:
-            case MODIFY:
-                return NotificationType.CREATE;
-            case DELETE:
-                return NotificationType.DELETE;
-            case LIST:
-            case SHOW:
-                return NotificationType.GET;
-            default:
-                return NotificationType.NONE;
-        }
     }
 
     private static boolean queryParamsContain(

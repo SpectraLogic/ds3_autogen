@@ -51,6 +51,21 @@ public class ConverterUtil {
         return string == null || string.isEmpty();
     }
 
+    /**
+     * Checks if two enums of the same class have the same value
+     * @param leftEnum An enum
+     * @param rightEnum An enum
+     * @param <E> The class of leftEnum and rightEnum
+     * @return True if both enums are of the same non-null value. False is returned if either
+     *         enum is null or if the enums do not have the same non-null value.
+     */
+    protected static <E extends Enum<E>> boolean enumsEqual(final E leftEnum, final E rightEnum) {
+        if (leftEnum == null || rightEnum == null) {
+            return false;
+        }
+        return leftEnum == rightEnum;
+    }
+
     public static ImmutableList<Ds3Request> removeSpectraInternalRequests(
             final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {

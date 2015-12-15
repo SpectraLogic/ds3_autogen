@@ -13,11 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models;
+package com.spectralogic.ds3autogen.utils;
 
-public enum NotificationType {
-    GET,
-    CREATE,
-    DELETE,
-    NONE
+import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+
+public class Ds3RequestClassificationUtil_Test {
+
+    
 }

@@ -19,13 +19,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
-import com.spectralogic.ds3autogen.java.models.*;
-import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.java.models.Client;
+import com.spectralogic.ds3autogen.java.models.Model;
+import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.java.models.Response;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -43,8 +48,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 public class JavaCodeGenerator implements CodeGenerator {
 
@@ -215,7 +219,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
         }
-        if (RequestConverterUtil.isNotificationRequest(ds3Request)) {
+        if (isNotificationRequest(ds3Request)) {
             builder.append(NOTIFICATION_PACKAGE);
         }
         return builder.toString();
@@ -272,43 +276,5 @@ public class JavaCodeGenerator implements CodeGenerator {
         return template;
     }
 
-    private static boolean isDeleteNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverterUtil.isNotificationRequest(ds3Request)
-                && RequestConverter.getNotificationType(ds3Request) == NotificationType.DELETE;
-    }
 
-    private static boolean isCreateNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverterUtil.isNotificationRequest(ds3Request)
-                && RequestConverter.getNotificationType(ds3Request) == NotificationType.CREATE;
-    }
-
-    private static boolean isGetNotificationRequest(final Ds3Request ds3Request) {
-        return RequestConverterUtil.isNotificationRequest(ds3Request)
-                && RequestConverter.getNotificationType(ds3Request) == NotificationType.GET;
-    }
-
-    private static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null && (
-                ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
-                || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
-                || ds3Request.getOperation() == Operation.START_BULK_VERIFY);
-    }
-
-    private static boolean isBulkRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null && (
-                ds3Request.getOperation() == Operation.START_BULK_GET
-                || ds3Request.getOperation() == Operation.START_BULK_PUT);
-    }
-
-    private static boolean isMultiFileDelete(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("DeleteObjectsRequest");
-    }
-
-    private static boolean isCreateObject(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("CreateObjectRequest");
-    }
-
-    private static boolean isGetObject(final Ds3Request ds3Request) {
-        return ds3Request.getName().endsWith("GetObjectRequest");
-    }
 }

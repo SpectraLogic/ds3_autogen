@@ -17,29 +17,23 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 public class RequestConverterUtil {
 
-    public static boolean isNotificationRequest(final Ds3Request ds3Request) {
-        return ds3Request.getResource() != null && isResourceNotification(ds3Request.getResource());
-    }
-
-    public static boolean isResourceNotification(final Resource resource) {
-        switch (resource) {
-            case GENERIC_DAO_NOTIFICATION_REGISTRATION:
-            case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
-            case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
-            case OBJECT_LOST_NOTIFICATION_REGISTRATION:
-            case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
-            case POOL_FAILURE_NOTIFICATION_REGISTRATION:
-            case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
-            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
-            case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
-            case JOB_CREATED_NOTIFICATION_REGISTRATION:
-                return true;
+    public static NotificationType getNotificationType(final Ds3Request ds3Request) {
+        switch (ds3Request.getAction()) {
+            case BULK_MODIFY:
+            case CREATE:
+            case MODIFY:
+                return NotificationType.CREATE;
+            case DELETE:
+                return NotificationType.DELETE;
+            case LIST:
+            case SHOW:
+                return NotificationType.GET;
             default:
-                return false;
+                return NotificationType.NONE;
         }
     }
 
@@ -116,6 +110,25 @@ public class RequestConverterUtil {
             case SYSTEM_HEALTH:
             case SYSTEM_INFORMATION:
             case TAPE_ENVIRONMENT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static boolean isResourceNotification(final Resource resource) {
+        switch (resource) {
+            case GENERIC_DAO_NOTIFICATION_REGISTRATION:
+            case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
+            case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
+            case OBJECT_LOST_NOTIFICATION_REGISTRATION:
+            case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
+            case POOL_FAILURE_NOTIFICATION_REGISTRATION:
+            case STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION:
+            case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
+            case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
+            case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
+            case JOB_CREATED_NOTIFICATION_REGISTRATION:
                 return true;
             default:
                 return false;
