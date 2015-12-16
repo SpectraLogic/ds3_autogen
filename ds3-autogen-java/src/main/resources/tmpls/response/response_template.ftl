@@ -1,4 +1,4 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
@@ -13,7 +13,7 @@ public class ${name} extends AbstractResponse {
 
     private String result;
 
-<#include "common/response_constructor.tmpl"/>
+<#include "common/response_constructor.ftl"/>
 
     @Override
     protected void processResponse() throws IOException {

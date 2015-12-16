@@ -1,22 +1,22 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
-<#include "common/import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.ftl"/>
 import com.spectralogic.ds3client.HttpVerb;
-<#include "../imports.tmpl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} extends AbstractRequest {
 
     // Variables
-    <#include "common/variables.tmpl"/>
+    <#include "common/variables.ftl"/>
 
     // Constructor
-    <#include "common/constructor.tmpl"/>
+    <#include "common/constructor.ftl"/>
 
-    <#include "common/with_constructors.tmpl"/>
+    <#include "common/with_constructors.ftl"/>
 
-    <#include "common/getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.ftl"/>
 
-    <#include "common/getters.tmpl"/>
+    <#include "common/getters.ftl"/>
 }

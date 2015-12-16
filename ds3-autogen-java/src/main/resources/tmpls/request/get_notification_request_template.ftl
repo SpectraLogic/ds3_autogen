@@ -1,4 +1,4 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
@@ -15,17 +15,17 @@ import ${import};
 public class ${name} extends AbstractGetNotificationRequest {
 
     // Variables
-    <#include "common/variables.tmpl"/>
+    <#include "common/variables.ftl"/>
 
     // Constructor
-<#include "common/notification_constructor.tmpl"/>
+<#include "common/notification_constructor.ftl"/>
 
-    <#include "common/with_constructors.tmpl"/>
+    <#include "common/with_constructors.ftl"/>
 
     @Override
     public String getPath() {
         return ${path};
     }
 
-    <#include "common/getters.tmpl"/>
+    <#include "common/getters.ftl"/>
 }
