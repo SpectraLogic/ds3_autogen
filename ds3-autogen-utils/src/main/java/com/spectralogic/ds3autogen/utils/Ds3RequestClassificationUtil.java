@@ -34,7 +34,8 @@ public final class Ds3RequestClassificationUtil {
      * @return True if the request is a Notification, else false
      */
     public static boolean isNotificationRequest(final Ds3Request ds3Request) {
-        return ds3Request.getResource() != null && isResourceNotification(ds3Request.getResource());
+        return ds3Request.getResource() != null
+                && isResourceNotification(ds3Request.getResource());
     }
 
     /**
@@ -77,8 +78,8 @@ public final class Ds3RequestClassificationUtil {
      *         VERIFY_PHYSICAL_PLACEMENT, or START_BULK_VERIFY. Else it returns false.
      */
     public static boolean isPhysicalPlacementRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null && (
-                ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
+        return ds3Request.getOperation() != null
+                && (ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
                         || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
                         || ds3Request.getOperation() == Operation.START_BULK_VERIFY);
     }
@@ -90,8 +91,8 @@ public final class Ds3RequestClassificationUtil {
      *         START_BULK_PUT. Else it returns false.
      */
     public static boolean isBulkRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null && (
-                ds3Request.getOperation() == Operation.START_BULK_GET
+        return ds3Request.getOperation() != null
+                && (ds3Request.getOperation() == Operation.START_BULK_GET
                         || ds3Request.getOperation() == Operation.START_BULK_PUT);
     }
 
@@ -104,10 +105,7 @@ public final class Ds3RequestClassificationUtil {
         return ds3Request.getHttpVerb() == HttpVerb.POST
                 && ds3Request.getObjectRequirement() != null
                 && ds3Request.getObjectRequirement() == Requirement.NOT_ALLOWED
-                && paramListContainsParam(
-                       ds3Request.getRequiredQueryParams(),
-                       "Delete",
-                       "void");
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Delete", "void");
     }
 
     /**
@@ -119,10 +117,7 @@ public final class Ds3RequestClassificationUtil {
         return ds3Request.getHttpVerb() == HttpVerb.PUT
                 && ds3Request.getBucketRequirement() == Requirement.REQUIRED
                 && ds3Request.getObjectRequirement() == Requirement.REQUIRED
-                && !paramListContainsParam(
-                ds3Request.getRequiredQueryParams(),
-                "PartNumber",
-                "int");
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "PartNumber", "int");
     }
 
     /**
