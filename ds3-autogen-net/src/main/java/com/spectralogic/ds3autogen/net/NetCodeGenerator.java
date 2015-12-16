@@ -19,8 +19,9 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.helpers.RequestConverter;
-import com.spectralogic.ds3autogen.net.model.Request;
+import com.spectralogic.ds3autogen.net.generators.tmplmodel.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.net.generators.tmplmodel.TemplateModelGenerator;
+import com.spectralogic.ds3autogen.net.model.BaseRequest;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,8 +72,8 @@ public class NetCodeGenerator implements CodeGenerator {
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
-
-        final Request request = RequestConverter.toRequest(ds3Request, COMMANDS_NAMESPACE);
+        final TemplateModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        final BaseRequest request = modelGenerator.generate(ds3Request);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".cs")));
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());
@@ -81,6 +82,10 @@ public class NetCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(request, writer);
         }
+    }
+
+    private TemplateModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        return new BaseRequestGenerator();
     }
 
     private Template getRequestTemplate(final Ds3Request request) throws IOException {

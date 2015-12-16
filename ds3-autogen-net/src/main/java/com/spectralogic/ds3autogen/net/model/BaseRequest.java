@@ -13,20 +13,30 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.helpers;
+package com.spectralogic.ds3autogen.net.model;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.model.Request;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
 
-public class RequestConverter {
-    public static Request toRequest(final Ds3Request ds3Request, final String commandsNamespace) {
-        return new Request(getName(ds3Request));
+public class BaseRequest {
+    private final String name;
+    private final String path;
+    private final HttpVerb verb;
+
+    public BaseRequest(final String name, final String path, final HttpVerb verb) {
+        this.name = name;
+        this.path = path;
+        this.verb = verb;
     }
 
-    private static String getName(final Ds3Request ds3Request) {
-        final String name = ds3Request.getName();
-        final int lastIndex = name.lastIndexOf(".");
+    public String getName() {
+        return name;
+    }
 
-        return name.substring(lastIndex + 1);
+    public String getPath() {
+        return path;
+    }
+
+    public HttpVerb getVerb() {
+        return verb;
     }
 }

@@ -284,7 +284,7 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates a comma separated list of Elements.  This is used in the Java model generation.
+     * Creates a comma separated list of Elements.  This is used in the Java tmplmodel generation.
      */
     public static String getModelConstructorArgs(final ImmutableList<Element> elements) {
         if (isEmpty(elements)) {
@@ -297,7 +297,7 @@ public final class JavaHelper {
     }
 
     /**
-     * Sorts Elements. Used in Java model generation.
+     * Sorts Elements. Used in Java tmplmodel generation.
      */
     public static ImmutableList<Element> sortModelConstructorArgs(final ImmutableList<Element> elements) {
         if (isEmpty(elements)) {
@@ -313,7 +313,7 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates a comma separated list of enum constants. Used in Java model generation.
+     * Creates a comma separated list of enum constants. Used in Java tmplmodel generation.
      */
     public static String getEnumValues(
             final ImmutableList<EnumConstant> enumConstants,

@@ -59,6 +59,7 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + generatedCode);
 
         assertTrue(TestHelper.extendsClass("GetObjectRequestHandler", "Ds3Request", generatedCode));
-
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", generatedCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", generatedCode));
     }
 }
