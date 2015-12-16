@@ -19,12 +19,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class RequestConverter {
 
@@ -66,37 +66,68 @@ public class RequestConverter {
         return converter.convert();
     }
 
+    /**
+     * Creates the Java code for the Java SDK request path
+     * @param ds3Request A request
+     * @return The Java code for the request path
+     */
     protected static String requestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
 
         if (ds3Request.getClassification() == Classification.amazons3) {
-            builder.append("\"/\"");
-            if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-                builder.append(" + this.bucketName");
-
-                if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                    builder.append(" + \"/\" + this.objectName");
-                }
-            }
-        } else {
-            if (ds3Request.getResource() != null) {
-                builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
-                if (isNotificationRequest(ds3Request)) {
-                    if (getNotificationType(ds3Request) == NotificationType.DELETE
-                            || getNotificationType(ds3Request) == NotificationType.GET) {
-                        builder.append(" + this.getNotificationId().toString()");
-                    }
-                } else if (hasBucketNameInPath(ds3Request)) {
-                    builder.append(" + this.bucketName");
-                } else if (RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
-                    final Arguments resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.getResource());
-                    builder.append(" + ").append(JavaHelper.argToString(resourceArg));
-                }
-            } else {
-                builder.append("\"/_rest_/\"");
-            }
+            builder.append(getAmazonS3RequestPath(ds3Request));
+        } else if (ds3Request.getClassification() == Classification.spectrads3) {
+            builder.append(getSpectraDs3RequestPath(ds3Request));
         }
 
+        return builder.toString();
+    }
+
+    /**
+     * Creates the Java request path code for an AmazonS3 request
+     * @param ds3Request A request
+     * @return The Java request path code for an AmazonS3 request
+     */
+    protected static String getAmazonS3RequestPath(final Ds3Request ds3Request) {
+        final StringBuilder builder = new StringBuilder();
+        if (ds3Request.getClassification() != Classification.amazons3) {
+            return builder.toString();
+        }
+        builder.append("\"/\"");
+        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
+            builder.append(" + this.bucketName");
+        }
+        if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
+            builder.append(" + \"/\" + this.objectName");
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Creates the Java request path code for a SpectraS3 request
+     * @param ds3Request A request
+     * @return The Java request path code for an SpectraS3 request
+     */
+    protected static String getSpectraDs3RequestPath(final Ds3Request ds3Request) {
+        final StringBuilder builder = new StringBuilder();
+        if (ds3Request.getClassification() != Classification.spectrads3) {
+            return builder.toString();
+        }
+        if (ds3Request.getResource() == null) {
+            return builder.append("\"/_rest_/\"").toString();
+        }
+
+        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
+        if (isNotificationRequest(ds3Request)
+                && (getNotificationType(ds3Request) == NotificationType.DELETE
+                    || getNotificationType(ds3Request) == NotificationType.GET)) {
+            builder.append(" + this.getNotificationId().toString()");
+        } else if (hasBucketNameInPath(ds3Request)) {
+            builder.append(" + this.bucketName");
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+            final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
+            builder.append(" + ").append(JavaHelper.argToString(resourceArg));
+        }
         return builder.toString();
     }
 
@@ -162,7 +193,7 @@ public class RequestConverter {
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())
                 && RequestConverterUtil.isResourceId(ds3Request.getResource())) {
             importsBuilder.add("java.util.UUID");
         }
