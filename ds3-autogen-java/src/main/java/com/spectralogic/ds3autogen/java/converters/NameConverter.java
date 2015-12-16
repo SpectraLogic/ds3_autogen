@@ -25,13 +25,26 @@ import org.slf4j.LoggerFactory;
 import static com.spectralogic.ds3autogen.java.models.Constants.SPECTRA_S3_NAMESPACING;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-public class NameConverter {
+/**
+ * Converts all Ds3Requests within a Ds3ApiSpec to convform to the Java module
+ * naming scheme and name spacing.
+ *
+ * Naming Scheme:
+ * All Ds3Request names should end with "Request" instead of "RequestHandler"
+ * All SpectraDs3 request names should be name spaced to end with "SpectraS3Request" instead of just "Request"
+ */
+public final class NameConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(NameConverter.class);
+
+    private NameConverter() { }
 
     /**
      * Removes "Handler" from all request names within the spec
      * and namespaces the spectrads3 commands
+     * @param spec A Ds3ApiSpec
+     * @return A Ds3ApiSpec where the Ds3Request names now conform to the
+     *        Java module naming schemes and name spacing
      */
      public static Ds3ApiSpec renameRequests(final Ds3ApiSpec spec) {
         if (isEmpty(spec.getRequests())) {
@@ -41,15 +54,21 @@ public class NameConverter {
 
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request request : spec.getRequests()) {
-            builder.add(updateRequestName(request));
+            builder.add(toUpdatedDs3Request(request));
         }
 
         return new Ds3ApiSpec(builder.build(), spec.getTypes());
     }
 
-    private static Ds3Request updateRequestName(final Ds3Request request) {
+    /**
+     * Updates a Ds3Request to include the Java module naming scheme and
+     * name spacing
+     * @param request A Ds3Request
+     * @return The Ds3Request with an updated Request name
+     */
+    private static Ds3Request toUpdatedDs3Request(final Ds3Request request) {
         return new Ds3Request(
-                processRequestName(request),
+                toUpdatedDs3RequestName(request),
                 request.getHttpVerb(),
                 request.getClassification(),
                 request.getBucketRequirement(),
@@ -63,7 +82,13 @@ public class NameConverter {
                 request.getRequiredQueryParams());
     }
 
-    private static String processRequestName(final Ds3Request request) {
+    /**
+     * Gets the new Ds3Request name that conforms to the Java module naming scheme
+     * and name spacing
+     * @param request A Ds3Request
+     * @return The updated Ds3Request name
+     */
+    private static String toUpdatedDs3RequestName(final Ds3Request request) {
         if (request.getClassification() == Classification.spectrads3) {
             final String namespacedName = request.getName().replace("Request", SPECTRA_S3_NAMESPACING + "Request");
             return stripHandlerFromName(namespacedName);
@@ -71,14 +96,19 @@ public class NameConverter {
         return stripHandlerFromName(request.getName());
     }
 
-    protected static String stripHandlerFromName(final String requestName) {
+    /**
+     * Removes any instance of a trailing "Handler" in the Ds3Request name
+     * @param ds3RequestName The name of a Ds3Request
+     * @return The name of the Ds3Request with "Handler" removed from the end
+     */
+    protected static String stripHandlerFromName(final String ds3RequestName) {
         final String nameEnding = "Handler";
-        if (isEmpty(requestName)) {
+        if (isEmpty(ds3RequestName)) {
             return null;
         }
-        if (requestName.endsWith(nameEnding)) {
-            return requestName.substring(0, requestName.length() - nameEnding.length());
+        if (ds3RequestName.endsWith(nameEnding)) {
+            return ds3RequestName.substring(0, ds3RequestName.length() - nameEnding.length());
         }
-        return requestName;
+        return ds3RequestName;
     }
 }

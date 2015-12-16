@@ -17,17 +17,28 @@ package com.spectralogic.ds3autogen.java.converters;
 
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 
+/**
+ * Converts a Ds3Type name into a Model name used for generating the correct
+ * package location of types within the generated code
+ */
 public final class ConvertType {
 
     private ConvertType() {
         //pass
     }
 
-    public static String convertType(final String type) {
-        if (type.startsWith(CONTRACT_PACKAGE_PATH)) {
-            final String[] packageParts = type.split("\\.");
+    /**
+     * Converts a Ds3Type name into a Model name. If the Ds3Type is defined
+     * within the Contract, then the package path is modified from the Contract
+     * package scheme into the Java Model's package scheme.
+     * @param ds3TypeName The name of a Ds3Type
+     * @return The Model name
+     */
+    public static String toModelName(final String ds3TypeName) {
+        if (ds3TypeName.startsWith(CONTRACT_PACKAGE_PATH)) {
+            final String[] packageParts = ds3TypeName.split("\\.");
             return MODELS_PACKAGE_PATH + packageParts[packageParts.length - 1];
         }
-        return type;
+        return ds3TypeName;
     }
 }
