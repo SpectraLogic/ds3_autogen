@@ -19,7 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
-public class RequestConverterUtil {
+public final class RequestConverterUtil {
+
+    private RequestConverterUtil() { }
 
     public static NotificationType getNotificationType(final Ds3Request ds3Request) {
         switch (ds3Request.getAction()) {
