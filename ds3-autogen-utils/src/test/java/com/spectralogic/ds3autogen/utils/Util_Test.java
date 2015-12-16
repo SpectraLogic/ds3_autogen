@@ -28,6 +28,16 @@ import static org.junit.Assert.*;
 public class Util_Test {
 
     @Test
+    public void enumsEqual_test() {
+        assertTrue(enumsEqual(Action.DELETE, Action.DELETE));
+        assertTrue(enumsEqual(HttpVerb.GET, HttpVerb.GET));
+        assertFalse(enumsEqual(Action.DELETE, Action.BULK_DELETE));
+        assertFalse(enumsEqual(null, Action.DELETE));
+        assertFalse(enumsEqual(Action.DELETE, null));
+        assertFalse(enumsEqual(null, null));
+    }
+
+    @Test
     public void converterUtilNullList() {
         final ImmutableList<String> nullList = null;
         assertTrue(isEmpty(nullList));

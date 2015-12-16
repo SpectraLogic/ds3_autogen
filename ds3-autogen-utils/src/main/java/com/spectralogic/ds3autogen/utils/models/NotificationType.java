@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models;
+package com.spectralogic.ds3autogen.utils.models;
 
 public enum NotificationType {
     GET,

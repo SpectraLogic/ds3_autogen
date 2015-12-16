@@ -19,9 +19,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.java.models.NotificationType;
+import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
 
 public class RequestConverter {
 
@@ -78,7 +81,7 @@ public class RequestConverter {
         } else {
             if (ds3Request.getResource() != null) {
                 builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
-                if (RequestConverterUtil.isNotificationRequest(ds3Request)) {
+                if (isNotificationRequest(ds3Request)) {
                     if (getNotificationType(ds3Request) == NotificationType.DELETE
                             || getNotificationType(ds3Request) == NotificationType.GET) {
                         builder.append(" + this.getNotificationId().toString()");
@@ -101,22 +104,6 @@ public class RequestConverter {
         return !queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")
                 && (ds3Request.getBucketRequirement() == Requirement.REQUIRED
                     || ds3Request.getResource() == Resource.BUCKET);
-    }
-
-    public static NotificationType getNotificationType(final Ds3Request ds3Request) {
-        switch (ds3Request.getAction()) {
-            case BULK_MODIFY:
-            case CREATE:
-            case MODIFY:
-                return NotificationType.CREATE;
-            case DELETE:
-                return NotificationType.DELETE;
-            case LIST:
-            case SHOW:
-                return NotificationType.GET;
-            default:
-                return NotificationType.NONE;
-        }
     }
 
     private static boolean queryParamsContain(
