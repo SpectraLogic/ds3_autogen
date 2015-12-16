@@ -1,4 +1,4 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
@@ -9,5 +9,5 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 
 public class ${name} extends BulkResponse {
-<#include "common/response_constructor.tmpl"/>
+<#include "common/response_constructor.ftl"/>
 }

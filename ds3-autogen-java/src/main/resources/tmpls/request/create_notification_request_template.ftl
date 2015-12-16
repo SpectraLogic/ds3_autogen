@@ -1,16 +1,16 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
 <#if javaHelper.isSpectraDs3(packageName)>
 import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
 </#if>
-<#include "../imports.tmpl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} extends AbstractCreateNotificationRequest {
 
     // Variables
-<#include "common/notification_variables.tmpl"/>
+<#include "common/notification_variables.ftl"/>
 
     public ${name}(${javaHelper.constructorArgs(
                           helper.removeVoidArguments(requiredArguments))}) {
@@ -20,7 +20,7 @@ public class ${name} extends AbstractCreateNotificationRequest {
                    helper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
-<#include "common/constructor_get_query_params.tmpl"/>
+<#include "common/constructor_get_query_params.ftl"/>
     }
 
     <#list helper.removeArgument(optionalArguments, "NotificationEndPoint") as arg>

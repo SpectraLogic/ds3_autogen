@@ -1,9 +1,9 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-<#include "../imports.tmpl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} {
 
@@ -20,5 +20,5 @@ ${javaHelper.getModelVariable(elmt)}
     }
 
     // Getters and Setters
-<#include "common/getters_setters_template.tmpl"/>
+<#include "common/getters_setters_template.ftl"/>
 }
