@@ -23,10 +23,15 @@ import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
+/**
+ * Converts a Ds3Request into a Request model used for generating the
+ * request handler Java SDK code.
+ */
 public class RequestConverter {
 
     private final Ds3Request ds3Request;
@@ -40,11 +45,15 @@ public class RequestConverter {
             final String packageName) {
         this.ds3Request = ds3Request;
         this.packageName = packageName;
-        this.requiredConstructorArguments = getRequiredArgs(ds3Request);
-        this.optionalArguments = getOptionalArgs(ds3Request);
-        this.imports = getImports(ds3Request);
+        this.requiredConstructorArguments = toRequiredArgumentsList(ds3Request);
+        this.optionalArguments = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
+        this.imports = getAllImports(ds3Request);
     }
 
+    /**
+     * Converts data sotred within this RequestConvert into a Request model
+     * @return A Request model
+     */
     private Request convert() {
         final String[] classParts = ds3Request.getName().split("\\.");
 
@@ -59,6 +68,12 @@ public class RequestConverter {
                 imports);
     }
 
+    /**
+     * Converts a Ds3Request and a package name into a Request model
+     * @param ds3Request A Ds3Request
+     * @param packageName The name of the Java package for the generated request and response
+     * @return A Request model containing the information of the Ds3Request and package name
+     */
     public static Request toRequest(
             final Ds3Request ds3Request,
             final String packageName) {
@@ -132,35 +147,48 @@ public class RequestConverter {
         return builder.toString();
     }
 
-
-    private static ImmutableList<Arguments> getRequiredArgs(
+    /**
+     * Gets the list of required Arguments from a Ds3Request
+     * @param ds3Request A Ds3Request
+     * @return A list of required Arguments
+     */
+    private static ImmutableList<Arguments> toRequiredArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
-
-        requiredArgs.addAll(RequestConverterUtil.getRequiredArgsFromRequestHeader(ds3Request));
-
-        requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        requiredArgs.addAll(getRequiredArgsFromRequestHeader(ds3Request));
+        requiredArgs.addAll(toArgumentsList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
 
-    private static ImmutableList<Arguments> getOptionalArgs(
-            final Ds3Request ds3Request) {
-        if (ds3Request.getOptionalQueryParams() == null) {
+    /**
+     * Converts a list of optional Ds3Params into a list of optional Arguments
+     * @param optionalDs3Params A list of optional Ds3Params
+     * @return A list of optional Arguments
+     */
+    private static ImmutableList<Arguments> toOptionalArgumentsList(
+            final ImmutableList<Ds3Param> optionalDs3Params) {
+        if (isEmpty(optionalDs3Params)) {
             return ImmutableList.of();
         }
 
         final ImmutableList.Builder<Arguments> optionalArgs = ImmutableList.builder();
-        optionalArgs.addAll(getArgsFromParamList(ds3Request.getOptionalQueryParams()));
+        optionalArgs.addAll(toArgumentsList(optionalDs3Params));
         return optionalArgs.build();
     }
 
-    private static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
-        if(paramList == null) {
+    /**
+     * Converts a list of Ds3Params into a list of Arguments
+     * @param ds3Params A list of Ds3Params
+     * @return A list of Arguments
+     */
+    private static ImmutableList<Arguments> toArgumentsList(
+            final ImmutableList<Ds3Param> ds3Params) {
+        if(isEmpty(ds3Params)) {
             return ImmutableList.of();
         }
 
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : paramList) {
+        for (final Ds3Param ds3Param : ds3Params) {
             if (!ds3Param.getName().equals("Operation")) {
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
@@ -169,7 +197,14 @@ public class RequestConverter {
         return argsBuilder.build();
     }
 
-    private static ImmutableList<String> getImports(final Ds3Request ds3Request) {
+    /**
+     * Gets all the required imports that the Request will need in order to properly
+     * generate the Java request code
+     * @param ds3Request A Ds3Request
+     * @return The list of all imports that the Request requires for generating the
+     *         Java request code
+     */
+    private static ImmutableList<String> getAllImports(final Ds3Request ds3Request) {
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
 
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
@@ -183,16 +218,23 @@ public class RequestConverter {
         return importsBuilder.build().asList();
     }
 
-    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> paramList) {
-        if (paramList == null) {
+    /**
+     * Gets the required imports that are needed to ensure that all generated models
+     * within the this Ds3Param list are included in the request generated Java code
+     * @param ds3Params A list of Ds3Params
+     * @return The list of imports necessary for including all generated models within
+     *         the Ds3Params list
+     */
+    private static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> ds3Params) {
+        if (isEmpty(ds3Params)) {
             return ImmutableSet.of();
         }
 
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
-        for (final Ds3Param ds3Param : paramList) {
+        for (final Ds3Param ds3Param : ds3Params) {
             if (!ds3Param.getName().equals("Operation")
                     && ds3Param.getType().contains(".")) {
-                importsBuilder.add(ConvertType.convertType(ds3Param.getType()));
+                importsBuilder.add(ConvertType.toModelName(ds3Param.getType()));
             }
         }
         return importsBuilder.build();

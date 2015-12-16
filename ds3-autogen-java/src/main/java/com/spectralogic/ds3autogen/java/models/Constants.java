@@ -21,8 +21,6 @@ public class Constants {
     public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";
     public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic";
 
-    public final static String SPECTRA_S3_NAMESPACING = "SpectraS3";
-
     public static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
     public static final String NOTIFICATION_PACKAGE = ".notifications";
     public static final String MODELS_PACKAGE = ".models";
