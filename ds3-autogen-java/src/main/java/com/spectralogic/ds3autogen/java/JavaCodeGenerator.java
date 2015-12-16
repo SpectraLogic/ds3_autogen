@@ -119,13 +119,13 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
         if (isChecksum(ds3Type)) {
-            return config.getTemplate("models/checksum_type_template.tmpl");
+            return config.getTemplate("models/checksum_type_template.ftl");
         }
         if (hasContent(ds3Type.getEnumConstants())) {
-            return config.getTemplate("models/enum_model_template.tmpl");
+            return config.getTemplate("models/enum_model_template.ftl");
         }
         if (hasContent(ds3Type.getElements())) {
-            return config.getTemplate("models/model_template.tmpl");
+            return config.getTemplate("models/model_template.ftl");
         }
         throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }
@@ -161,7 +161,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             LOG.info("Not generating client: no requests.");
             return;
         }
-        final Template clientTmpl = config.getTemplate("client/ds3client_template.tmpl");
+        final Template clientTmpl = config.getTemplate("client/ds3client_template.ftl");
         final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH);
         final Path clientPath = getClientPath("Ds3Client.java");
 
@@ -172,7 +172,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             clientTmpl.process(client, writer);
         }
 
-        final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.tmpl");
+        final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.ftl");
         final Path clientImplPath = getClientPath("Ds3ClientImpl.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());
@@ -207,9 +207,9 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
-            return config.getTemplate("response/bulk_response_template.tmpl");
+            return config.getTemplate("response/bulk_response_template.ftl");
         } else {
-            return config.getTemplate("response/response_template.tmpl");
+            return config.getTemplate("response/response_template.ftl");
         }
     }
 
@@ -254,23 +254,23 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         final Template template;
         if (isBulkRequest(ds3Request)) {
-            template = config.getTemplate("request/bulk_request_template.tmpl");
+            template = config.getTemplate("request/bulk_request_template.ftl");
         } else if (isPhysicalPlacementRequest(ds3Request)) {
-            template = config.getTemplate("request/physical_placement_request_template.tmpl");
+            template = config.getTemplate("request/physical_placement_request_template.ftl");
         } else if (isMultiFileDeleteRequest(ds3Request)) {
-            template = config.getTemplate("request/multi_file_delete_request_template.tmpl");
+            template = config.getTemplate("request/multi_file_delete_request_template.ftl");
         } else if (isGetObjectRequest(ds3Request)) {
-            template = config.getTemplate("request/get_object_template.tmpl");
+            template = config.getTemplate("request/get_object_template.ftl");
         } else if (isCreateObjectRequest(ds3Request)) {
-            template = config.getTemplate("request/create_object_template.tmpl");
+            template = config.getTemplate("request/create_object_template.ftl");
         } else if (isDeleteNotificationRequest(ds3Request)) {
-            template = config.getTemplate("request/delete_notification_request_template.tmpl");
+            template = config.getTemplate("request/delete_notification_request_template.ftl");
         } else if (isCreateNotificationRequest(ds3Request)) {
-            template = config.getTemplate("request/create_notification_request_template.tmpl");
+            template = config.getTemplate("request/create_notification_request_template.ftl");
         } else if (isGetNotificationRequest(ds3Request)) {
-            template = config.getTemplate("request/get_notification_request_template.tmpl");
+            template = config.getTemplate("request/get_notification_request_template.ftl");
         } else {
-            template = config.getTemplate("request/request_template.tmpl");
+            template = config.getTemplate("request/request_template.ftl");
         }
 
         return template;
