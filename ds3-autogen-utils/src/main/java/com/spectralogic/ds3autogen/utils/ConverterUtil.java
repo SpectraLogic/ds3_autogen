@@ -23,9 +23,11 @@ import com.spectralogic.ds3autogen.api.models.*;
 import java.util.Collection;
 import java.util.Map;
 
-public class ConverterUtil {
+public final class ConverterUtil {
 
     private static final String CONTRACT_DEFINED_TYPE = "com.spectralogic.";
+
+    private ConverterUtil() { }
 
     public static boolean hasContent(final Collection<?> collection) {
         return !isEmpty(collection);
