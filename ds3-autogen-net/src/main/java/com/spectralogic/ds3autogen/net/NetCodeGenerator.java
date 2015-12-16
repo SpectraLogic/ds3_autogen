@@ -15,13 +15,14 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.generators.tmplmodel.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.net.generators.tmplmodel.TemplateModelGenerator;
-import com.spectralogic.ds3autogen.net.model.BaseRequest;
+import com.spectralogic.ds3autogen.net.generators.requestmodels.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.net.generators.requestmodels.RequestModelGenerator;
+import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
 
 public class NetCodeGenerator implements CodeGenerator {
 
@@ -53,7 +57,7 @@ public class NetCodeGenerator implements CodeGenerator {
 
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
-        this.spec = spec;
+        this.spec =  spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
@@ -65,6 +69,11 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     private void generateCommands() throws TemplateException, IOException {
+        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+        if (isEmpty(requests)) {
+            LOG.info("There were no requests to generate");
+            return;
+        }
         for (final Ds3Request request : spec.getRequests()) {
             generateRequest(request);
         }
@@ -72,7 +81,7 @@ public class NetCodeGenerator implements CodeGenerator {
 
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
-        final TemplateModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
         final BaseRequest request = modelGenerator.generate(ds3Request);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".cs")));
 
@@ -84,11 +93,11 @@ public class NetCodeGenerator implements CodeGenerator {
         }
     }
 
-    private TemplateModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
         return new BaseRequestGenerator();
     }
 
     private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        return config.getTemplate("request_template.tmpl");
+        return config.getTemplate("request_template.ftl");
     }
 }

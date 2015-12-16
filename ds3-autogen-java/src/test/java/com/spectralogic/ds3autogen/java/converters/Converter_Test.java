@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.utils.NameConverter;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

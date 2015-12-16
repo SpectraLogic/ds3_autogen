@@ -13,19 +13,26 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model;
+package com.spectralogic.ds3autogen.net.model.request;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.net.NetHelper;
 
 public class BaseRequest {
+    private final NetHelper netHelper;
     private final String name;
     private final String path;
     private final HttpVerb verb;
+    private final ImmutableList<Arguments> requiredArgs;
 
-    public BaseRequest(final String name, final String path, final HttpVerb verb) {
+    public BaseRequest(final NetHelper netHelper, final String name, final String path, final HttpVerb verb, final ImmutableList<Arguments> requiredArgs) {
+        this.netHelper = netHelper;
         this.name = name;
         this.path = path;
         this.verb = verb;
+        this.requiredArgs = requiredArgs;
     }
 
     public String getName() {
@@ -38,5 +45,13 @@ public class BaseRequest {
 
     public HttpVerb getVerb() {
         return verb;
+    }
+
+    public NetHelper getNetHelper() {
+        return netHelper;
+    }
+
+    public ImmutableList<Arguments> getRequiredArgs() {
+        return requiredArgs;
     }
 }

@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class RequestConverter {
@@ -131,25 +132,6 @@ public class RequestConverter {
         return builder.toString();
     }
 
-    private static boolean hasBucketNameInPath(final Ds3Request ds3Request) {
-        return !queryParamsContain(ds3Request.getRequiredQueryParams(), "Name")
-                && (ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                    || ds3Request.getResource() == Resource.BUCKET);
-    }
-
-    private static boolean queryParamsContain(
-            final ImmutableList<Ds3Param> params,
-            final String name) {
-        if (params == null) {
-            return false;
-        }
-        for (final Ds3Param param : params) {
-            if (param.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private static ImmutableList<Arguments> getRequiredArgs(
             final Ds3Request ds3Request) {
