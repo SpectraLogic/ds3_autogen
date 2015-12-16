@@ -27,6 +27,9 @@ import com.spectralogic.ds3autogen.java.models.Model;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
+/**
+ * Converts a Ds3Type into a Model used for generating the java models.
+ */
 public class ModelConverter {
 
     private final Ds3Type ds3Type;
@@ -39,16 +42,26 @@ public class ModelConverter {
         this.packageName = packageName;
     }
 
+    /**
+     * Converts data stored within this ModelConverter into a Model
+     * @return A Model
+     */
     private Model convert() {
         final String[] classParts = ds3Type.getName().split("\\.");
         return new Model(
                 packageName,
                 classParts[classParts.length -1],
-                getAllElements(ds3Type),
-                getAllEnumConstants(ds3Type.getEnumConstants()),
-                getAllImports(getAllElements(ds3Type)));
+                toElementList(ds3Type.getElements()),
+                toEnumConstantList(ds3Type.getEnumConstants()),
+                getAllImports(toElementList(ds3Type.getElements())));
     }
 
+    /**
+     * Converts a Ds3Type and package name into a Model
+     * @param ds3Type A Ds3Type
+     * @param packageName The name of the java package for the generated Model
+     * @return A Model containing information of the Ds3Type and package name
+     */
     public static Model toModel(
             final Ds3Type ds3Type,
             final String packageName) {
@@ -56,22 +69,38 @@ public class ModelConverter {
         return converter.convert();
     }
 
-    private static ImmutableList<EnumConstant> getAllEnumConstants(
+    /**
+     * Converts a list of Ds3EnumConstants into a list of EnumConstant models
+     * @param ds3EnumConstants A list of Ds3EnumConstants
+     * @return A list of EnumConstant models
+     */
+    private static ImmutableList<EnumConstant> toEnumConstantList(
             final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
         if (isEmpty(ds3EnumConstants)) {
             return ImmutableList.of();
         }
         final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
         for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
-            builder.add(getEnumConstant(ds3EnumConstant));
+            builder.add(toEnumConstant(ds3EnumConstant));
         }
         return builder.build();
     }
 
-    private static EnumConstant getEnumConstant(final Ds3EnumConstant ds3EnumConstant) {
+    /**
+     * Converts a Ds3EnumConstant into an EnumConstant model
+     * @param ds3EnumConstant A Ds3EnumConstant
+     * @return An EnumConstant model
+     */
+    private static EnumConstant toEnumConstant(final Ds3EnumConstant ds3EnumConstant) {
         return new EnumConstant(ds3EnumConstant.getName());
     }
 
+    /**
+     * Gets all the required imports that the Model will need in order to properly
+     * generate the java model code
+     * @param elements The list of elements within the Ds3Type
+     * @return The list of all imports that the Model requires for generating the model code
+     */
     private static ImmutableList<String> getAllImports(final ImmutableList<Element> elements) {
         if (isEmpty(elements)) {
             return ImmutableList.of();
@@ -79,11 +108,11 @@ public class ModelConverter {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         for (final Element element : elements) {
             if (element.getType().contains(".")) {
-                builder.add(ConvertType.convertType(element.getType()));
+                builder.add(ConvertType.toModelName(element.getType()));
             }
             if (hasContent(element.getComponentType())
                     && element.getComponentType().contains(".")) {
-                builder.add(ConvertType.convertType(element.getComponentType()));
+                builder.add(ConvertType.toModelName(element.getComponentType()));
                 builder.add("java.util.List");
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
             }
@@ -91,18 +120,28 @@ public class ModelConverter {
         return builder.build().asList();
     }
 
-    private static ImmutableList<Element> getAllElements(final Ds3Type ds3Type) {
-        if (isEmpty(ds3Type.getElements())) {
+    /**
+     * Converts a list of Ds3Elements into al ist of Element models
+     * @param ds3Elements A list of Ds3Elements
+     * @return A list of Element models
+     */
+    private static ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements) {
+        if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();
-        for (final Ds3Element ds3Element : ds3Type.getElements()) {
-            builder.add(getElement(ds3Element));
+        for (final Ds3Element ds3Element : ds3Elements) {
+            builder.add(toElement(ds3Element));
         }
         return builder.build();
     }
 
-    private static Element getElement(final Ds3Element ds3Element) {
+    /**
+     * Converts a Ds3Element into an Element model
+     * @param ds3Element A Ds3Element
+     * @return An Element model
+     */
+    private static Element toElement(final Ds3Element ds3Element) {
         return new Element(
                 ds3Element.getName(),
                 ds3Element.getType(),

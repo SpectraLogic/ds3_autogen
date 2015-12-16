@@ -45,26 +45,7 @@ public class ClientConverter {
     private Client convert() {
         return new Client(
                 packageName,
-                toCommands(ds3Requests));
-    }
-
-    /**
-     * Converts a list of Ds3Requests into a list of Commands
-     * @param ds3Requests List of Ds3Requests
-     * @return A list of Commands
-     */
-    protected static ImmutableList<Command> toCommands(final ImmutableList<Ds3Request> ds3Requests) {
-        if (isEmpty(ds3Requests)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Command> builder = ImmutableList.builder();
-        for (final Ds3Request ds3Request : ds3Requests) {
-            builder.add(new Command(
-                    toCommandName(ds3Request.getName()),
-                    removePath(ds3Request.getName()),
-                    toResponseName(ds3Request.getName())));
-        }
-        return builder.build();
+                toCommandList(ds3Requests));
     }
 
     /**
@@ -79,6 +60,25 @@ public class ClientConverter {
         final ClientConverter converter = new ClientConverter(ds3Requests, packageName);
 
         return converter.convert();
+    }
+
+    /**
+     * Converts a list of Ds3Requests into a list of Commands
+     * @param ds3Requests List of Ds3Requests
+     * @return A list of Commands
+     */
+    protected static ImmutableList<Command> toCommandList(final ImmutableList<Ds3Request> ds3Requests) {
+        if (isEmpty(ds3Requests)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Command> builder = ImmutableList.builder();
+        for (final Ds3Request ds3Request : ds3Requests) {
+            builder.add(new Command(
+                    toCommandName(ds3Request.getName()),
+                    removePath(ds3Request.getName()),
+                    toResponseName(ds3Request.getName())));
+        }
+        return builder.build();
     }
 
     /**

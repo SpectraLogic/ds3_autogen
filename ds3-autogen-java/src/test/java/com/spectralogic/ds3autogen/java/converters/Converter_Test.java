@@ -39,7 +39,7 @@ public class Converter_Test {
 
     @Test
     public void clientConverterGetCommands() {
-        assertTrue(ClientConverter.toCommands(null).isEmpty());
-        assertTrue(ClientConverter.toCommands(ImmutableList.of()).isEmpty());
+        assertTrue(ClientConverter.toCommandList(null).isEmpty());
+        assertTrue(ClientConverter.toCommandList(ImmutableList.of()).isEmpty());
     }
 }
