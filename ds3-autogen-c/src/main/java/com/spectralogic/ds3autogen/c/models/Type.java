@@ -17,21 +17,30 @@ package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.helpers.CHelper;
 import com.spectralogic.ds3autogen.utils.Helper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
 
 public class Type {
+    private static final Logger LOG = LoggerFactory.getLogger(Type.class);
+
     private final String name;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
-    private final Helper helper;
+    private final ImmutableList<Ds3Element> elements;
+
 
     public Type(
             final String name,
-            final ImmutableList<Ds3EnumConstant> enumConstants) {
+            final ImmutableList<Ds3EnumConstant> enumConstants,
+            final ImmutableList<Ds3Element> elements) {
         this.name = name;
         this.enumConstants = enumConstants;
-        this.helper = Helper.getInstance();
+        this.elements = elements;
     }
 
     public ImmutableList<Ds3EnumConstant> getEnumConstants() {
@@ -43,11 +52,19 @@ public class Type {
     }
 
     public String getUnqualifiedName() {
-        return helper.unqualifiedName(name);
+        return Helper.unqualifiedName(name);
     }
 
     public String getNameUnderscores() {
-        return helper.camelToUnderscore(getUnqualifiedName());
+        return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(getUnqualifiedName()));
+    }
+
+    public String getResponseTypeName() {
+        final StringBuilder responseName = new StringBuilder();
+        responseName.append("ds3_");
+        responseName.append(getNameUnderscores());
+        responseName.append("_response");
+        return responseName.toString();
     }
 
     public String generateMatcher() {
@@ -72,4 +89,19 @@ public class Type {
         outputBuilder.append(CHelper.indent(1)).append("}").append(System.lineSeparator());
         return outputBuilder.toString();
     }
+
+    public String getTypeElementsList() throws ParseException {
+        final StringBuilder outputBuilder = new StringBuilder();
+        for ( final Ds3Element element : this.elements) {
+            LOG.debug("element[" + element.getName() + "][" + element.getType() + "]");
+            outputBuilder.append(CHelper.indent(1));
+            outputBuilder.append(CHelper.elementTypeToString(element));
+            outputBuilder.append(" ");
+            outputBuilder.append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName())));
+            outputBuilder.append(";");
+            outputBuilder.append(System.lineSeparator());
+        }
+        return outputBuilder.toString();
+    }
+
 }

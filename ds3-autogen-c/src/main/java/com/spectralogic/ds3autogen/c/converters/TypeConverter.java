@@ -28,7 +28,8 @@ public class TypeConverter {
     private Type convert() {
         return new Type(
                 this.ds3Type.getName(),
-                this.ds3Type.getEnumConstants());
+                this.ds3Type.getEnumConstants(),
+                this.ds3Type.getElements());
     }
 
     public static Type toType(final Ds3Type ds3Type) {
