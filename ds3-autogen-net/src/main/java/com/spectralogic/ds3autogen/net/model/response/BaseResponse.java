@@ -13,20 +13,25 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.helpers;
+package com.spectralogic.ds3autogen.net.model.response;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.model.Request;
+import com.google.common.collect.ImmutableList;
 
-public class RequestConverter {
-    public static Request toRequest(final Ds3Request ds3Request, final String commandsNamespace) {
-        return new Request(getName(ds3Request));
+public class BaseResponse {
+
+    private final String name;
+    private final ImmutableList<Integer> expectedStatusCodes;
+
+    public BaseResponse(final String name, final ImmutableList<Integer> expectedStatusCodes) {
+        this.name = name;
+        this.expectedStatusCodes = expectedStatusCodes;
     }
 
-    private static String getName(final Ds3Request ds3Request) {
-        final String name = ds3Request.getName();
-        final int lastIndex = name.lastIndexOf(".");
+    public String getName() {
+        return name;
+    }
 
-        return name.substring(lastIndex + 1);
+    public ImmutableList<Integer> getExpectedStatusCodes() {
+        return expectedStatusCodes;
     }
 }

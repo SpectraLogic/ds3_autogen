@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.converters;
+package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Classification;
@@ -22,7 +22,6 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.spectralogic.ds3autogen.java.models.Constants.SPECTRA_S3_NAMESPACING;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
@@ -90,7 +89,7 @@ public final class NameConverter {
      */
     private static String toUpdatedDs3RequestName(final Ds3Request request) {
         if (request.getClassification() == Classification.spectrads3) {
-            final String namespacedName = request.getName().replace("Request", SPECTRA_S3_NAMESPACING + "Request");
+            final String namespacedName = request.getName().replace("Request", ProjectConstants.SPECTRA_S3_NAMESPACING + "Request");
             return stripHandlerFromName(namespacedName);
         }
         return stripHandlerFromName(request.getName());
@@ -101,7 +100,7 @@ public final class NameConverter {
      * @param ds3RequestName The name of a Ds3Request
      * @return The name of the Ds3Request with "Handler" removed from the end
      */
-    protected static String stripHandlerFromName(final String ds3RequestName) {
+    public static String stripHandlerFromName(final String ds3RequestName) {
         final String nameEnding = "Handler";
         if (isEmpty(ds3RequestName)) {
             return null;

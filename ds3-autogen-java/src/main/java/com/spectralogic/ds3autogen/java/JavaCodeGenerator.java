@@ -45,7 +45,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.spectralogic.ds3autogen.java.converters.NameConverter.renameRequests;
+import static com.spectralogic.ds3autogen.utils.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;

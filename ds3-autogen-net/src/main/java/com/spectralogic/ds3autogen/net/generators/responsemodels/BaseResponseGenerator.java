@@ -13,15 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models;
+package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
-public class Constants {
-    public static final String ROOT_PACKAGE_PATH = "com.spectralogic.ds3client";
-    public final static String MODELS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".models.";
-    public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";
-    public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic";
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 
-    public static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
-    public static final String NOTIFICATION_PACKAGE = ".notifications";
-    public static final String MODELS_PACKAGE = ".models";
+public class BaseResponseGenerator implements ResponseModelGenerator<BaseResponse> {
+    @Override
+    public BaseResponse generate(final Ds3Request request) {
+        return null;
+    }
 }

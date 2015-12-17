@@ -13,16 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model;
+package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
-public class Request {
-    private final String name;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 
-    public Request(final String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+@FunctionalInterface
+public interface RequestModelGenerator<T extends BaseRequest> {
+    T generate(final Ds3Request ds3Request);
 }

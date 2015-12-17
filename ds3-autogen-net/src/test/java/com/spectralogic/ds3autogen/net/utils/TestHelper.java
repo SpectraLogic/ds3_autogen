@@ -15,9 +15,21 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
-public class TestHelper {
+import java.util.regex.Pattern;
+
+public final class TestHelper {
+
+    private TestHelper() {
+        // pass
+    }
+
     public static boolean extendsClass(final String getObjectRequestHandler, final String abstractRequest, final String generatedCode) {
         final String searchString = "public class " + getObjectRequestHandler + " : " + abstractRequest;
         return generatedCode.contains(searchString);
+    }
+
+    public static boolean hasProperty(final String propertyName, final String type, final String generatedCode) {
+        final Pattern searchString = Pattern.compile("(internal\\s)?(override\\s)?" + type + " " + propertyName, Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(generatedCode).find();
     }
 }
