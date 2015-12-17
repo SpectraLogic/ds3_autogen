@@ -119,7 +119,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    ds3_bool backend_activated;"));
         assertTrue(output.contains("    ds3_build_information* build_information;"));
         assertTrue(output.contains("    ds3_str* serial_number;"));
-        assertTrue(output.contains("}"));
+        assertTrue(output.contains("}ds3_get_system_information_response;"));
     }
 
     @Test
