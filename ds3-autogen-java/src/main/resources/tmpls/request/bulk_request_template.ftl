@@ -1,4 +1,4 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
@@ -9,7 +9,7 @@ import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-<#include "../imports.tmpl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} extends BulkRequest {
 
@@ -36,7 +36,7 @@ public class ${name} extends BulkRequest {
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>
-<#include "common/constructor_get_query_params.tmpl"/>
+<#include "common/constructor_get_query_params.ftl"/>
 
     }
 

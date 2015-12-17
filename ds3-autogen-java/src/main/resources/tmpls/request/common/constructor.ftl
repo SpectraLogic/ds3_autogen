@@ -6,6 +6,6 @@
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
         </#if>
-<#include "constructor_get_query_params.tmpl"/>
+<#include "constructor_get_query_params.ftl"/>
 
     }

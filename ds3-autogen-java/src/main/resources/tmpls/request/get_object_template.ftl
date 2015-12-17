@@ -1,12 +1,12 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
-<#include "common/import_abstract_request.tmpl"/>
+<#include "common/import_abstract_request.ftl"/>
 import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
-<#include "../imports.tmpl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} extends AbstractRequest {
 
@@ -29,7 +29,7 @@ public class ${name} extends AbstractRequest {
     }
 
     // Variables
-    <#include "common/variables.tmpl"/>
+    <#include "common/variables.ftl"/>
     private final WritableByteChannel channel;
     private Range byteRange = null;
 
@@ -64,7 +64,7 @@ public class ${name} extends AbstractRequest {
         this.getQueryParams().put("offset", Long.toString(offset));
     }
 
-    <#include "common/with_constructors.tmpl"/>
+    <#include "common/with_constructors.ftl"/>
 
     public ${name} withByteRange(final Range byteRange) {
         this.byteRange = byteRange;
@@ -78,14 +78,14 @@ public class ${name} extends AbstractRequest {
         return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
     }
 
-    <#include "common/getters_verb_path.tmpl"/>
+    <#include "common/getters_verb_path.ftl"/>
 
     @Override
     public String getContentType() {
         return ContentType.APPLICATION_OCTET_STREAM.toString();
     }
 
-    <#include "common/getters.tmpl"/>
+    <#include "common/getters.ftl"/>
 
     ${javaHelper.createGetter("ByteRange", "Range")}
 

@@ -1,4 +1,4 @@
-<#include "../copyright.tmpl"/>
+<#include "../copyright.ftl"/>
 
 package ${packageName};
 
@@ -10,15 +10,15 @@ import java.util.UUID;
 public class ${name} extends AbstractDeleteNotificationRequest {
 
     //Variables
-<#include "common/notification_variables.tmpl"/>
+<#include "common/notification_variables.ftl"/>
 
     //Constructor
-<#include "common/notification_constructor.tmpl"/>
+<#include "common/notification_constructor.ftl"/>
 
     @Override
     public String getPath() {
         return ${path};
     }
 
-<#include "common/getters.tmpl"/>
+<#include "common/getters.ftl"/>
 }

@@ -1,4 +1,4 @@
-<#include "required_getters.tmpl"/>
+<#include "required_getters.ftl"/>
 
     <#list optionalArguments as arg>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
