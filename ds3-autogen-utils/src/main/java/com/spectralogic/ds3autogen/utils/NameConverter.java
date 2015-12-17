@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
- * Converts all Ds3Requests within a Ds3ApiSpec to convform to the Java module
+ * Converts all Ds3Requests within a Ds3ApiSpec to conform to the Java module
  * naming scheme and name spacing.
  *
  * Naming Scheme:
