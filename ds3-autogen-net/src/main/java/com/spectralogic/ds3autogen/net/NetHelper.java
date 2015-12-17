@@ -22,7 +22,7 @@ public final class NetHelper {
     }
 
     /**
-     * Gets the type of an argument, converting the type from Contract type to Java type.
+     * Gets the type of an argument, converting the type from Contract type to a .net type.
      * @param arg An Argument
      * @return The Java type of the Argument
      */
@@ -63,7 +63,7 @@ public final class NetHelper {
             case "long":
                 return  capFirst(arg.getName()) + ".ToString()";
             default:
-                return uncapFirst(arg.getName()) + ".toString()";
+                return uncapFirst(arg.getName()) + ".ToString()";
         }
     }
 

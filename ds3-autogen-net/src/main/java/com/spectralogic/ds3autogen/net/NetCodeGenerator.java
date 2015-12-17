@@ -57,7 +57,7 @@ public class NetCodeGenerator implements CodeGenerator {
 
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
-        this.spec =  spec;
+        this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
