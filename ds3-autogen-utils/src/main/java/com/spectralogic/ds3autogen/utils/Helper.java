@@ -98,16 +98,20 @@ public final class Helper {
     }
 
     /**
-     *
+     * If the given string contains "RequestHandler",
+     * then chop it off and anything after, returning the root substring.
      * @param name - "SomeRequestHandler$SomeRequestApiBean"
      * @return String - "Some"
      */
     public static String removeTrailingRequestHandler(final String name) {
+        if (false == name.contains("RequestHandler")) {
+            return name;
+        }
         return name.substring(0, name.lastIndexOf("RequestHandler"));
     }
 
     /**
-     *
+     * Remove the last part of a string that contains a .
      * @param name - com.spectralogic.blah.SomeRequestHandler
      * @return String - SomeRequestHandler
      */

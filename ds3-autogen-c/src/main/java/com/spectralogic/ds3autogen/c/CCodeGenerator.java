@@ -76,7 +76,7 @@ public class CCodeGenerator implements CodeGenerator {
             // Generate EnumConstant Types, which Element types can be dependant on
             // TODO Determine if dependency matters at code generation time... probably not.
             for (final Ds3Type typeEntry : spec.getTypes().values()) {
-                if (typeEntry.getElements().isEmpty()) {
+                if (ConverterUtil.hasContent(typeEntry.getEnumConstants())) {
                     generateTypeEnumConstant(typeEntry);
                     generateTypeEnumConstantMatcher(typeEntry);
                 }
@@ -84,9 +84,9 @@ public class CCodeGenerator implements CodeGenerator {
 
             // Generate Element Types
             for (final Ds3Type typeEntry : spec.getTypes().values()) {
-                if (!typeEntry.getElements().isEmpty()) {
+                if (ConverterUtil.hasContent(typeEntry.getElements())) {
                     generateTypeElement(typeEntry);
-                    //generateTypeEnumConstantMatcher(typeEntry);
+                    generateFreeTypeElement(typeEntry);
                 }
             }
         }
@@ -171,8 +171,8 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateTypeElementMatcher(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeElementMatcher.ftl");
+    public void generateFreeTypeElement(final Ds3Type typeEntry) throws IOException {
+        final Template typeTemplate = config.getTemplate("FreeTypeElement.ftl");
         final Type type = TypeConverter.toType(typeEntry);
 
         final Path outputPath = getTypeMatcherOutputPath(type);
@@ -193,6 +193,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public Path getTypeOutputPath(final Type type) {
+        LOG.debug("getTypeOutputPath[" + type.getName() + "]");
         return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".h");
     }
 

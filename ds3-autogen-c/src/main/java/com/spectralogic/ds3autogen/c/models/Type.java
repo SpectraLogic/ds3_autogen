@@ -43,6 +43,10 @@ public class Type {
         this.elements = elements;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public ImmutableList<Ds3EnumConstant> getEnumConstants() {
         return enumConstants;
     }
@@ -92,16 +96,32 @@ public class Type {
 
     public String getTypeElementsList() throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
-        for ( final Ds3Element element : this.elements) {
-            LOG.debug("element[" + element.getName() + "][" + element.getType() + "]");
-            outputBuilder.append(CHelper.indent(1));
-            outputBuilder.append(CHelper.elementTypeToString(element));
-            outputBuilder.append(" ");
-            outputBuilder.append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName())));
-            outputBuilder.append(";");
-            outputBuilder.append(System.lineSeparator());
+
+        for (final Ds3Element element : this.elements) {
+            outputBuilder.append(CHelper.indent(1))
+                    .append(CHelper.elementTypeToString(element))
+                    .append(" ")
+                    .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName())))
+                    .append(";")
+                    .append(System.lineSeparator());
         }
+
         return outputBuilder.toString();
     }
 
+    public String generateFreeTypeElementMembers() throws ParseException {
+        final StringBuilder outputBuilder = new StringBuilder();
+
+        for (final Ds3Element element : this.elements) {
+            final String freeFunc = CHelper.elementTypeToFreeFunctionString(element);
+            if (freeFunc.length() == 0) continue;
+
+            outputBuilder.append(CHelper.indent(1))
+                    .append(freeFunc).append("(response_data->")
+                    .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName()))).append(");")
+                    .append(System.lineSeparator());
+        }
+
+        return outputBuilder.toString();
+    }
 }

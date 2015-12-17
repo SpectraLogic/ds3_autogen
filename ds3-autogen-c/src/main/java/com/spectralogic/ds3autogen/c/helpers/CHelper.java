@@ -78,4 +78,34 @@ public class CHelper {
                 //throw new ParseException("Unknown element: " + element, 0);
         }
     }
+    public static String elementTypeToFreeFunctionString(final Ds3Element element) throws ParseException {
+        switch (element.getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "ds3_str_free";
+            // The following primitive types don't require a free
+            case "double":
+                return "";
+            case "java.lang.Long":
+            case "long":
+                return "";
+            case "java.lang.Integer":
+            case "int":
+                return "";
+            case "java.util.Set":
+            case "array":
+                return ""; // TODO ???
+            case "boolean":
+                return "";
+
+            // build the name of the free function for the embedded type
+            default:
+                final StringBuilder elementTypeBuilder = new StringBuilder();
+                elementTypeBuilder.append("ds3_free_")
+                        .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
+                return elementTypeBuilder.toString();
+            //throw new ParseException("Unknown element: " + element, 0);
+        }
+    }
 }
