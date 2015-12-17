@@ -1,7 +1,7 @@
 <Data>
     <Contract>
         <Types>
-
+            <!--
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
                 <Elements>
                     <Element Name="SpecifiableByUser" Type="boolean">
@@ -41,6 +41,7 @@
                     </EnumConstant>
                 </EnumConstants>
             </Type>
+            -->
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission">
                 <Elements/>
                 <EnumConstants>

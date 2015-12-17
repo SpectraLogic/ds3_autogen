@@ -67,13 +67,10 @@ public final class Helper {
 
     /**
      *
-     * @param name - "SomeRequestHandler"
+     * @param name - "SomeRequestHandler$SomeRequestApiBean"
      * @return String - "Some"
      */
     public static String removeTrailingRequestHandler(final String name) {
-        if (false == name.endsWith("RequestHandler")) {
-            return name;
-        }
         return name.substring(0, name.lastIndexOf("RequestHandler"));
     }
 

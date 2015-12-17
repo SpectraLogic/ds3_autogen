@@ -1,4 +1,4 @@
-<#include "CopyrightHeader.tmplt"/>
+<#include "CopyrightHeader.ftl"/>
 
  #include "ds3.h"
 

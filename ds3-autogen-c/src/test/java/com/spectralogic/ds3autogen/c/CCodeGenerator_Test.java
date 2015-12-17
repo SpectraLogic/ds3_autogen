@@ -98,4 +98,27 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("}"));
     }
+
+    @Test
+    public void testSingleTypeElement() throws IOException, ParserException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("typedef enum {"));
+        assertTrue(output.contains("    ds3_str* api_version;"));
+        assertTrue(output.contains("    ds3_bool backend_activated;"));
+        assertTrue(output.contains("    ds3_build_information* build_information;"));
+        assertTrue(output.contains("    ds3_str* serial_number;"));
+        assertTrue(output.contains("}"));
+    }
 }

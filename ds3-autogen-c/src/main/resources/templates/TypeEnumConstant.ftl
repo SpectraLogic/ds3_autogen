@@ -1,4 +1,4 @@
-<#include "CopyrightHeader.tmplt"/>
+<#include "CopyrightHeader.ftl"/>
 
 typedef enum {
 ${getEnumConstantsList()}
