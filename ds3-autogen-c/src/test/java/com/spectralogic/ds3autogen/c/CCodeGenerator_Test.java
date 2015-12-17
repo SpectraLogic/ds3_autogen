@@ -98,4 +98,70 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("}"));
     }
+
+    @Test
+    public void testSingleTypeElement() throws IOException, ParserException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("typedef enum {"));
+        assertTrue(output.contains("    ds3_str* api_version;"));
+        assertTrue(output.contains("    ds3_bool backend_activated;"));
+        assertTrue(output.contains("    ds3_build_information* build_information;"));
+        assertTrue(output.contains("    ds3_str* serial_number;"));
+        assertTrue(output.contains("}ds3_get_system_information_response;"));
+    }
+
+    @Test
+    public void testSingleFreeTypeElementPrototype() throws IOException, ParserException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("void ds3_free_get_system_information(ds3_get_system_information_response* response_data);"));
+    }
+
+    @Test
+    public void testSingleFreeTypeElement() throws IOException, ParserException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("void ds3_free_get_system_information(ds3_get_system_information_response* response_data) {"));
+        assertTrue(output.contains("    if (response_data == NULL) {"));
+        assertTrue(output.contains("        return;"));
+        assertTrue(output.contains("    }"));
+        assertTrue(output.contains("    ds3_str_free(response_data->api_version);"));
+        assertTrue(output.contains("    ds3_free_build_information(response_data->build_information);"));
+        assertTrue(output.contains("    ds3_str_free(response_data->serial_number);"));
+        assertTrue(output.contains("}"));
+    }
 }
