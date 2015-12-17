@@ -17,21 +17,19 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.utils.Helper;
 
+import java.text.ParseException;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CHelper {
-    private final static CHelper cHelper = new CHelper();
     private final static String INDENT = "    ";
 
     private CHelper() {}
-
-    public static CHelper getInstance() {
-        return cHelper;
-    }
 
     public static String indent(final int depth) {
         final StringBuilder stringBuilder = new StringBuilder();
@@ -49,5 +47,35 @@ public class CHelper {
                 .stream()
                 .map(i -> indent(1) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    public static String elementTypeToString(final Ds3Element element) throws ParseException {
+        switch (element.getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "ds3_str*";
+            case "double":
+                return "double";   //? ex: 0.82
+            case "java.lang.Long":
+            case "long":
+                return "uint64_t"; // size_t
+            case "java.lang.Integer":
+            case "int":
+                return "int";
+            case "java.util.Set":
+            case "array":
+                return ""; // TODO ???
+            case "boolean":
+                return "ds3_bool";
+
+            default:
+                final StringBuilder elementTypeBuilder = new StringBuilder();
+                elementTypeBuilder.append("ds3_");
+                elementTypeBuilder.append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
+                elementTypeBuilder.append("*");
+                return elementTypeBuilder.toString();
+                //throw new ParseException("Unknown element: " + element, 0);
+        }
     }
 }

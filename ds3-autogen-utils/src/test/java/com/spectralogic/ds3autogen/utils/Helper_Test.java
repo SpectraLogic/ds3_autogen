@@ -43,6 +43,11 @@ public class Helper_Test {
     }
 
     @Test
+    public void removeTrailingRequestHandlerWithDollarSign_Test() {
+        assertEquals(Helper.getInstance().removeTrailingRequestHandler("SomeRequestHandler$SomeExtensionApiBeanBlah"), "Some");
+    }
+
+    @Test
     public void unqualifiedName_Test() {
         assertEquals(Helper.unqualifiedName("some.qualified.name"), "name");
     }
