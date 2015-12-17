@@ -86,6 +86,7 @@ public class CCodeGenerator implements CodeGenerator {
             for (final Ds3Type typeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(typeEntry.getElements())) {
                     generateTypeElement(typeEntry);
+                    generateFreeTypeElementPrototype(typeEntry);
                     generateFreeTypeElement(typeEntry);
                 }
             }
@@ -159,6 +160,22 @@ public class CCodeGenerator implements CodeGenerator {
         final Type type = TypeConverter.toType(typeEntry);
 
         final Path outputPath = getTypeOutputPath(type);
+
+        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
+        final Writer writer = new OutputStreamWriter(outStream);
+        try {
+            typeTemplate.process(type, writer);
+        } catch (final NullPointerException e) {
+            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
+        } catch (final TemplateException e) {
+            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
+        }
+    }
+    public void generateFreeTypeElementPrototype(final Ds3Type typeEntry) throws IOException {
+        final Template typeTemplate = config.getTemplate("FreeTypeElementPrototype.ftl");
+        final Type type = TypeConverter.toType(typeEntry);
+
+        final Path outputPath = getTypeMatcherOutputPath(type);
 
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
