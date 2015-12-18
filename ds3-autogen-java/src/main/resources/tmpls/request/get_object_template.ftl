@@ -3,35 +3,24 @@
 package ${packageName};
 
 <#include "common/import_abstract_request.ftl"/>
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
+import java.util.Collection;
 <#include "../imports.ftl"/>
+<#include "common/checksum_import.ftl"/>
 
 public class ${name} extends AbstractRequest {
-
-    public static class Range {
-        private final long start;
-        private final long end;
-
-        public Range(final long start, final long end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        public long getStart() {
-            return this.start;
-        }
-
-        public long getEnd() {
-            return this.end;
-        }
-    }
 
     // Variables
     <#include "common/variables.ftl"/>
     private final WritableByteChannel channel;
-    private Range byteRange = null;
+    private ImmutableCollection<Range> byteRanges = null;
+<#include "common/checksum_variables.ftl"/>
 
     // Constructor
 
@@ -66,16 +55,41 @@ public class ${name} extends AbstractRequest {
 
     <#include "common/with_constructors.ftl"/>
 
-    public ${name} withByteRange(final Range byteRange) {
-        this.byteRange = byteRange;
-        if (byteRange != null) {
-            this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
+<#include "common/checksum_constructor_getter.ftl"/>
+
+    /**
+     * Sets a Range of bytes that should be retrieved from the object in the
+     * format: 'Range: bytes=[start]-[end],...'.
+     */
+    public ${name} withByteRanges(final Range... byteRanges) {
+        if (byteRanges != null) {
+            this.setRanges(ImmutableList.copyOf(byteRanges));
         }
         return this;
     }
 
-    private static String buildRangeHeaderText(final Range byteRange) {
-        return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
+    public ${name} withByteRanges(final Collection<Range> byteRanges) {
+        if (byteRanges != null) {
+            this.setRanges(ImmutableList.copyOf(byteRanges));
+        }
+        return this;
+    }
+
+    private void setRanges(final ImmutableList<Range> byteRanges) {
+        this.byteRanges = byteRanges;
+        if (this.getHeaders().containsKey("Range")) {
+            this.getHeaders().removeAll("Range");
+        }
+        this.getHeaders().put("Range", buildRangeHeaderText(byteRanges));
+    }
+
+    private static String buildRangeHeaderText(final ImmutableList<Range> byteRanges) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final Range range : byteRanges) {
+            builder.add(String.format("%d-%d", range.getStart(), range.getEnd()));
+        }
+        final Joiner stringJoiner = Joiner.on(",");
+        return "bytes=" + stringJoiner.join(builder.build());
     }
 
     <#include "common/getters_verb_path.ftl"/>
@@ -87,7 +101,7 @@ public class ${name} extends AbstractRequest {
 
     <#include "common/getters.ftl"/>
 
-    ${javaHelper.createGetter("ByteRange", "Range")}
+    ${javaHelper.createGetter("ByteRanges", "Collection<Range>")}
 
     ${javaHelper.createGetter("Channel", "WritableByteChannel")}
 }

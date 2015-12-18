@@ -81,6 +81,15 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.security.SignatureException", clientCode));
     }
 
+    private void testHasChecksumCode(
+            final String requestGeneratedCode,
+            final String requestName) {
+        assertTrue(hasImport("com.spectralogic.ds3client.models.ChecksumType", requestGeneratedCode));
+        assertTrue(isOptParamOfType("checksum", "ChecksumType", requestName, requestGeneratedCode, true));
+        assertTrue(hasGetter("checksum", "ChecksumType", requestGeneratedCode));
+        assertTrue(hasGetter("checksumType", "ChecksumType.Type", requestGeneratedCode));
+    }
+
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
         final String requestName = "GetObjectRequest";
@@ -614,11 +623,12 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasGetter("Channel", "SeekableByteChannel", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Checksum", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        testHasChecksumCode(requestGeneratedCode, requestName);
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
@@ -688,16 +698,23 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
         assertTrue(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("ByteRange", "Range", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
 
+        assertTrue(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
+        assertTrue(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
+        assertTrue(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Range", requestGeneratedCode));
         assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
+        assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        testHasChecksumCode(requestGeneratedCode, requestName);
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
