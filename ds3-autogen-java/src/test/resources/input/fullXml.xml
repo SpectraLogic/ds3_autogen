@@ -1,5 +1,40 @@
 <Data>
     <Contract>
+        <NotificationPayloadTypes>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.GenericDaoNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.JobCompletedNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.JobCreatedNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.PoolFailureNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsCachedNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsLostNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsPersistedNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.StorageDomainFailureNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.SystemFailureNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.TapeFailureNotificationPayload
+            </NotificationPayloadType>
+            <NotificationPayloadType>
+                com.spectralogic.s3.common.platform.notification.domain.payload.TapePartitionFailureNotificationPayload
+            </NotificationPayloadType>
+        </NotificationPayloadTypes>
         <RequestHandlers>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.AbortMultiPartUploadRequestHandler">
                 <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
@@ -1062,9 +1097,13 @@
                 <Request Action="BULK_MODIFY" Resource="DATA_PATH_BACKEND" ResourceType="SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="Activated" Type="boolean"/>
+                        <Param Name="AllowNewJobsToUseUnavailablePools" Type="boolean"/>
+                        <Param Name="AllowNewJobsToUseUnavailableTapePartitions" Type="boolean"/>
                         <Param Name="AutoActivateTimeoutInMins" Type="java.lang.Integer"/>
                         <Param Name="AutoInspectOnStartup" Type="boolean"/>
                         <Param Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="UnavailablePoolMaxJobRetryInMins" Type="int"/>
+                        <Param Name="UnavailableTapePartitionMaxJobRetryInMins" Type="int"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -1082,7 +1121,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.BADB622C148B8491A82D6470FC9F69C9</Version>
+                <Version>1.254A31590F02C797CE1E2C53B6117499</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.CreateDataPersistenceRuleRequestHandler">
                 <Request Action="CREATE" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -1287,6 +1326,12 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>500</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -1611,6 +1656,25 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.29F0BCFFC7941CE7F0AF1037358B362E</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CancelAllJobsRequestHandler">
+                <Request Action="BULK_DELETE" Resource="JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Force" Type="void"/>
+                        <Param Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.FB9076AE4B315DD6C9ABFE7D3FF00FF3</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CancelJobRequestHandler">
                 <Request Action="DELETE" Resource="JOB" ResourceType="NON_SINGLETON">
@@ -3813,6 +3877,12 @@
                             <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.D8A4486C2E101C08C7734EF0DC32FBEE</Version>
             </RequestHandler>
@@ -3845,6 +3915,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -3881,6 +3957,12 @@
                             <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.1C6AC0CBB4A6000A6D01D3CE5E4E9362</Version>
             </RequestHandler>
@@ -3913,6 +3995,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -4102,8 +4190,43 @@
                             <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.E5B2639FDE6DD57E7744AA3CB3EA1209</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainBlobsRequestHandler">
+                <Request Action="BULK_MODIFY" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Blobs" Type="void"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.5E61772D355B411A2040CA52E8E2B713</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler">
                 <Request Action="BULK_MODIFY" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -4122,6 +4245,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -4172,6 +4301,12 @@
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                     <ResponseCode>
                         <Code>207</Code>
                         <ResponseTypes>
@@ -4496,6 +4631,12 @@
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
                         <Code>207</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
@@ -4540,6 +4681,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -4649,6 +4796,12 @@
                             <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.68E1F2965382AA11B3EAE361F1DE7738</Version>
             </RequestHandler>
@@ -4700,6 +4853,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -5344,6 +5503,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
@@ -5455,6 +5621,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
@@ -5518,6 +5691,24 @@
                     <Element Name="Activated" Type="boolean">
                         <Annotations/>
                     </Element>
+                    <Element Name="AllowNewJobsToUseUnavailablePools" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="AllowNewJobsToUseUnavailableTapePartitions" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="AutoActivateTimeoutInMins" Type="java.lang.Integer">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
@@ -5550,6 +5741,24 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UnavailablePoolMaxJobRetryInMins" Type="int">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultIntegerValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="20" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UnavailableTapePartitionMaxJobRetryInMins" Type="int">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultIntegerValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="20" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
                             </Annotation>
                         </Annotations>
                     </Element>
@@ -5913,6 +6122,13 @@
                                     <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
                             </Annotation>
                         </Annotations>
                     </Element>
@@ -8851,6 +9067,231 @@
                     </Element>
                 </Elements>
             </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.GenericDaoNotificationPayload">
+                <Elements>
+                    <Element Name="DaoType" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="java.util.UUID" Name="Ids" Type="array">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="SqlOperation" Type="com.spectralogic.util.db.lang.SqlOperation">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.JobCompletedNotificationPayload">
+                <Elements>
+                    <Element Name="CancelOccurred" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.common.platform.domain.BlobApiBean" Name="ObjectsNotPersisted" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="ObjectsNotPersisted" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Object" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.JobCreatedNotificationPayload">
+                <Elements>
+                    <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.PoolFailureNotificationPayload">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="PoolId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.pool.PoolFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsCachedNotificationPayload">
+                <Elements>
+                    <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.common.platform.domain.BlobApiBean" Name="Objects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Objects" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Object" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsLostNotificationPayload">
+                <Elements>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.common.platform.domain.BlobApiBean" Name="Objects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Objects" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Object" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.S3ObjectsPersistedNotificationPayload">
+                <Elements>
+                    <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.common.platform.domain.BlobApiBean" Name="Objects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Objects" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Object" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.StorageDomainFailureNotificationPayload">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="StorageDomainId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.StorageDomainFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.SystemFailureNotificationPayload">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.SystemFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.TapeFailureNotificationPayload">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="TapeDriveId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="TapeId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.TapePartitionFailureNotificationPayload">
+                <Elements>
+                    <Element Name="Date" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="NotificationGenerationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="PartitionId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapePartitionFailureType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
             <Type Name="com.spectralogic.s3.common.rpc.dataplanner.domain.BlobStoreTaskInformation">
                 <Elements>
                     <Element Name="DateScheduled" Type="java.util.Date">
@@ -8969,7 +9410,11 @@
             <Type Name="com.spectralogic.s3.common.rpc.dataplanner.domain.CacheEntryInformation">
                 <Elements>
                     <Element Name="Blob" Type="com.spectralogic.s3.common.dao.domain.ds3.Blob">
-                        <Annotations/>
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
                     </Element>
                     <Element Name="State" Type="com.spectralogic.s3.common.rpc.dataplanner.domain.CacheEntryState">
                         <Annotations/>
@@ -10535,6 +10980,35 @@
                 <EnumConstants>
                     <EnumConstant Name="SINGLETON"/>
                     <EnumConstant Name="NON_SINGLETON"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.util.db.lang.SqlOperation">
+                <Elements>
+                    <Element Name="DefaultLogLevel" Type="int">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+                <EnumConstants>
+                    <EnumConstant Name="SELECT">
+                        <Properties>
+                            <Property Name="DefaultLogLevel" Value="10000" ValueType="int"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="INSERT">
+                        <Properties>
+                            <Property Name="DefaultLogLevel" Value="20000" ValueType="int"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="UPDATE">
+                        <Properties>
+                            <Property Name="DefaultLogLevel" Value="20000" ValueType="int"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DELETE">
+                        <Properties>
+                            <Property Name="DefaultLogLevel" Value="20000" ValueType="int"/>
+                        </Properties>
+                    </EnumConstant>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.util.db.manager.DatabasePhysicalSpaceState">

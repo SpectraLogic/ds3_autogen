@@ -26,6 +26,10 @@ import java.util.List;
 
 public class Contract {
 
+    @JsonProperty("NotificationPayloadTypes")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<String> notificationPayloadTypes;
+
     @JsonProperty("RequestHandlers")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<RequestHandler> requestHandlers;
@@ -48,6 +52,14 @@ public class Contract {
 
     public void setTypes(final List<Type> types) {
         this.types = types;
+    }
+
+    public List<String> getNotificationPayloadTypes() {
+        return notificationPayloadTypes;
+    }
+
+    public void setNotificationPayloadTypes(final List<String> notificationPayloadTypes) {
+        this.notificationPayloadTypes = notificationPayloadTypes;
     }
 
     public ImmutableList<Ds3Request> getDs3Requests() {
