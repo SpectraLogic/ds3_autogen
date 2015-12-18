@@ -12,6 +12,7 @@ import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 <#include "../imports.ftl"/>
+<#include "common/checksum_import.ftl"/>
 
 public class ${name} extends AbstractRequest {
 
@@ -19,6 +20,7 @@ public class ${name} extends AbstractRequest {
     <#include "common/variables.ftl"/>
     private final WritableByteChannel channel;
     private ImmutableCollection<Range> byteRanges = null;
+<#include "common/checksum_variables.ftl"/>
 
     // Constructor
 
@@ -52,6 +54,8 @@ public class ${name} extends AbstractRequest {
     }
 
     <#include "common/with_constructors.ftl"/>
+
+<#include "common/checksum_constructor_getter.ftl"/>
 
     /**
      * Sets a Range of bytes that should be retrieved from the object in the

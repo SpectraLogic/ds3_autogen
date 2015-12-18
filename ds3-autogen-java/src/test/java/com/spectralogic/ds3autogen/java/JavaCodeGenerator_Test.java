@@ -81,6 +81,15 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.security.SignatureException", clientCode));
     }
 
+    private void testHasChecksumCode(
+            final String requestGeneratedCode,
+            final String requestName) {
+        assertTrue(hasImport("com.spectralogic.ds3client.models.ChecksumType", requestGeneratedCode));
+        assertTrue(isOptParamOfType("checksum", "ChecksumType", requestName, requestGeneratedCode, true));
+        assertTrue(hasGetter("checksum", "ChecksumType", requestGeneratedCode));
+        assertTrue(hasGetter("checksumType", "ChecksumType.Type", requestGeneratedCode));
+    }
+
     @Test
     public void singleRequestHandler() throws IOException, ParserException {
         final String requestName = "GetObjectRequest";
@@ -703,6 +712,8 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        testHasChecksumCode(requestGeneratedCode, requestName);
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
