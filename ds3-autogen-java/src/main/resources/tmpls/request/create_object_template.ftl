@@ -4,10 +4,10 @@ package ${packageName};
 
 <#include "common/import_abstract_request.ftl"/>
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Checksum;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 <#include "../imports.ftl"/>
+<#include "common/checksum_import.ftl"/>
 
 public class ${name} extends AbstractRequest {
 
@@ -18,7 +18,7 @@ public class ${name} extends AbstractRequest {
     private final long size;
     <#include "common/variables.ftl"/>
     private SeekableByteChannel channel;
-    private Checksum checksum = Checksum.none();
+<#include "common/checksum_variables.ftl"/>
 
     // Constructor
 
@@ -74,10 +74,7 @@ public class ${name} extends AbstractRequest {
 
     <#include "common/with_constructors.ftl"/>
 
-    public ${name} withChecksum(final Checksum checksum) {
-        this.checksum = checksum;
-        return this;
-    }
+<#include "common/checksum_constructor_getter.ftl"/>
 
 	public ${name} withMetaData(final String key, final String value) {
 		final String modifiedKey;
@@ -91,9 +88,6 @@ public class ${name} extends AbstractRequest {
 	}
 
     <#include "common/getters_verb_path.ftl"/>
-
-    @Override
-    ${javaHelper.createGetter("Checksum", "Checksum")}
 
     @Override
     ${javaHelper.createGetter("Size", "long")}

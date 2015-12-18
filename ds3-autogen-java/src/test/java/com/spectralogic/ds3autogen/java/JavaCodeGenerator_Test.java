@@ -623,11 +623,12 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasGetter("Channel", "SeekableByteChannel", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Checksum", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        testHasChecksumCode(requestGeneratedCode, requestName);
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
