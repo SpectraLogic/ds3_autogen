@@ -25,6 +25,8 @@ import com.spectralogic.ds3autogen.c.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3autogen.c.helpers.CHelper.indent;
+
 public class RequestConverter {
     private final Ds3Request ds3Request;
     private final ImmutableList<Arguments> requiredArguments;
@@ -101,7 +103,7 @@ public class RequestConverter {
                 if (ds3Param == null) {
                     break;
                 }
-                LOG.debug("  query param " + ds3Param.getType().toString());
+                LOG.debug("query param " + ds3Param.getType().toString());
                 final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
                 LOG.debug("param " + paramType + " is required.");
                 requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));

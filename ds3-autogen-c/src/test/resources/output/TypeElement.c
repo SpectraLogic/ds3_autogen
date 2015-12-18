@@ -13,12 +13,13 @@
  * ****************************************************************************
  */
 
-/******************************************************************************
- THIS FILE IS AUTO GENERATED!!! DO NOT MODIFY!!!
- *****************************************************************************/
+/* This Code is Auto-Generated; DO NOT MODIFY! */
 
-#include "ds3.h"
 
-ds3_request* ds3_init_${getNameRootUnderscores()}(const char* bucket_name) {
-    return (ds3_request*) _common_request_init(HTTP_${getVerb()}, _build_path(${getPath()}));
-}
+typedef enum {
+    ds3_str* api_version;
+    ds3_bool backend_activated;
+    ds3_build_information* build_information;
+    ds3_str* serial_number;
+
+}ds3_get_system_information_response;
