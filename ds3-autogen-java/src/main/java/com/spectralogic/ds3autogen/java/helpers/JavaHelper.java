@@ -33,7 +33,12 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
 
+/**
+ * Series of static functions that are used within the Java module template files
+ * to help generate the Java SDK code.
+ */
 public final class JavaHelper {
+
     private final static JavaHelper javaHelper = new JavaHelper();
 
     private final static ImmutableSet<String> bulkBaseClassArgs = ImmutableSet.of("Priority", "WriteOptimization", "BucketName");
@@ -44,10 +49,21 @@ public final class JavaHelper {
         return javaHelper;
     }
 
-    public static boolean isBulkRequestArg(final String name) {
-        return bulkBaseClassArgs.contains(name);
+    /**
+     * Determines if the name of an argument is a parameter within the parent class BulkRequest.
+     * This is used to determine if a private variable needs to be created within a bulk child
+     * class or if said variable is inherited from the parent BulkRequest class.
+     */
+    public static boolean isBulkRequestArg(final String argName) {
+        return bulkBaseClassArgs.contains(argName);
     }
 
+    /**
+     * Creates the Java code associated with private class variables for bulk requests. If
+     * the parameter is required, it will be made private and final. If the parameter is
+     * optional, it will only be made private (not final). If the parameter is inherited from
+     * the bulk class, then a class variable isn't needed, and an empty string is returned.
+     */
     public static String createBulkVariable(final Arguments arg, final boolean isRequired) {
         if (isBulkRequestArg(arg.getName())) {
             return "";
@@ -61,6 +77,9 @@ public final class JavaHelper {
         return builder.toString();
     }
 
+    /**
+     * Creates the Java code associated with a With-Constructor used to set optional parameters.
+     */
     public static String createWithConstructor(final Arguments arg, final String requestName) {
         final StringBuilder stringBuilder = new StringBuilder();
         if (arg.getType().equals("void")) {
@@ -73,12 +92,21 @@ public final class JavaHelper {
         return stringBuilder.toString();
     }
 
+    /**
+     * Creates the Java code for a class variable getter function.
+     */
     public static String createGetter(final String argName, final String argType) {
         return "public " + argType + " get" + capFirst(argName) + "() {\n"
                 + indent(2) + "return this." + uncapFirst(argName) + ";\n"
                 + indent(1) + "}\n";
     }
 
+    /**
+     * Creates the Java code for With-Constructors for optional arguments within
+     * bulk request handlers. If said argument is defined within the base BulkRequest
+     * handler, then the With-Constructor is generated with "@Override".  A special
+     * With-Constructor is created for the parameter MaxUploadSize.
+     */
     public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
         final StringBuilder stringBuilder = new StringBuilder();
         if (bulkBaseClassArgs.contains(arg.getName())) {
@@ -95,12 +123,21 @@ public final class JavaHelper {
         return stringBuilder.toString();
     }
 
+    /**
+     * Creates the Java code for a simple With-Constructor that sets the class variable to
+     * the user provided variable, and adds said variable to the query param list.
+     */
     private static String withConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + argAssignmentLine(arg.getName())
                 + indent(2) + updateQueryParamLine(arg.getName(), argToString(arg));
     }
 
+    /**
+     * Creates the Java code for the With-Constructor for the special cased MaxUploadSize
+     * parameter. This constructor ensures that the user defined MaxUploadSize is within
+     * proper min and max bounds before adding it to the query param list.
+     */
     private static String maxUploadSizeWithConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + "if (" + uncapFirst(arg.getName()) + " > MIN_UPLOAD_SIZE_IN_BYTES) {\n"
@@ -110,6 +147,11 @@ public final class JavaHelper {
                 + indent(2) + "}\n";
     }
 
+    /**
+     * Creates the Java code for With-Constructors that take boolean arguments. If the
+     * user passes in true, the constructor adds the argument to the query params list.
+     * However, if the user passes in false, the constructor removes the param from list
+     */
     private static String voidWithConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + "this." + uncapFirst(arg.getName()) + " = " + uncapFirst(arg.getName()) + ";\n"
@@ -120,30 +162,62 @@ public final class JavaHelper {
                 + indent(2) + "}\n";
     }
 
+    /***
+     * Creates the Java code for the first line of a with constructor.
+     * Example: public MyRequestName withMyOptionalParameter(final MyArgType myArg) {
+     */
     private static String withConstructorFirstLine(final Arguments arg, final String requestName) {
         return indent(1) + "public " + requestName + " with" + capFirst(arg.getName()) + "(final " + getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
     }
 
+    /**
+     * Creates the Java code for assigning a class variable to a function
+     * parameter of the same name.
+     * Example: this.myVariable = myVariable;
+     */
     private static String argAssignmentLine(final String name) {
         return "this." + uncapFirst(name) + " = " + uncapFirst(name) + ";\n";
     }
 
+    /**
+     * Creates the Java code for removing a query param from the query params list.
+     * Example: this.getQueryParams().remove(\"myArg\");
+     */
     private static String removeQueryParamLine(final String name) {
         return "this.getQueryParams().remove(\"" + Helper.camelToUnderscore(name) + "\");\n";
     }
 
+    /**
+     * Creates the Java code for putting a query param to the query params lsit.
+     * Example: this.getQueryParams().put("myArg", MyArgType.toString());
+     */
     public static String putQueryParamLine(final Arguments arg) {
         return putQueryParamLine(arg.getName(), argToString(arg));
     }
 
+    /**
+     * Creates the Java code for putting a query param to the query params list.
+     * Example: this.getQueryParams().put("myArg", MyArgType.toString());
+     */
     private static String putQueryParamLine(final String name, final String type) {
         return "this.getQueryParams().put(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");";
     }
 
+    /**
+     * Creates the Java code for updating the query param list.
+     * Example: this.updateQueryParam("myArg", MyArgType.toString());
+     */
     private static String updateQueryParamLine(final String name, final String type) {
         return "this.updateQueryParam(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");\n";
     }
 
+    /**
+     * Creates the Java code for converting an object list into an Xml formatted String.
+     * @param outputStringName The name of the String that will contain the Xml formatted
+     *                         object list
+     * @param objectListName The name of the object list that is being converted
+     * @param operation The Operation of the Ds3Request whose generation utilizes this function
+     */
     public static String toXmlLine(
             final String outputStringName,
             final String objectListName,

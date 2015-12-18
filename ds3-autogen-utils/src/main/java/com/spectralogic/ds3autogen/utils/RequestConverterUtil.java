@@ -19,10 +19,17 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+/**
+ * Series of static utility functions to help in converting Ds3Requests
+ * to language specific request models
+ */
 public final class RequestConverterUtil {
 
     private RequestConverterUtil() { }
 
+    /**
+     * Converts the Action of a Ds3Request into a NotificationType
+     */
     public static NotificationType getNotificationType(final Ds3Request ds3Request) {
         switch (ds3Request.getAction()) {
             case BULK_MODIFY:
@@ -39,6 +46,11 @@ public final class RequestConverterUtil {
         }
     }
 
+    /**
+     * Retrieves a list of required arguments that are described in the Contract's
+     * Request Handlers header information. This includes BucketName, ObjectName,
+     * and arguments described by Resource/ResourceType.
+     */
     public static ImmutableList<Arguments> getRequiredArgsFromRequestHeader(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
@@ -56,13 +68,21 @@ public final class RequestConverterUtil {
         return builder.build();
     }
 
+    /**
+     * Determines if a Ds3Request's Resource/ResourceType combination describes a
+     * required argument or not.
+     */
     public static boolean isResourceAnArg(final Resource resource, final ResourceType resourceType) {
         return resource != null
-                && resourceType != null
                 && resourceType == ResourceType.NON_SINGLETON
                 && !isResourceNotification(resource);
     }
 
+    /**
+     * Creates an argument from a resource. If the resource does not describe a valid argument,
+     * such as it is a singleton or notification resource, an error is thrown.
+     * @param resource A Ds3Request's Resource
+     */
     public static Arguments getArgFromResource(final Resource resource) {
         if (isResourceSingleton(resource)) {
             throw new IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString());
@@ -79,6 +99,9 @@ public final class RequestConverterUtil {
         return new Arguments("String", Helper.underscoreToCamel(resource.toString()));
     }
 
+    /**
+     * Determines if a resource describes an argument of type UUID
+     */
     public static boolean isResourceId(final Resource resource) {
         switch (resource) {
             case ACTIVE_JOB:
@@ -93,6 +116,11 @@ public final class RequestConverterUtil {
         return false;
     }
 
+    /**
+     * Determines if a resource describes an argument of type String and whose
+     * name should be name spaced to include "Name". For example, Resource.BUCKET
+     * describes an argument whose name should be "BucketName" with type String.
+     */
     private static boolean isResourceNamed(final Resource resource) {
         switch (resource) {
             case BUCKET:
@@ -103,6 +131,10 @@ public final class RequestConverterUtil {
         }
     }
 
+    /**
+     * Determines if a resource describes a singleton, meaning that this resource
+     * does not describe a valid argument
+     */
     private static boolean isResourceSingleton(final Resource resource) {
         switch (resource) {
             case CAPACITY_SUMMARY:
@@ -118,6 +150,10 @@ public final class RequestConverterUtil {
         }
     }
 
+    /**
+     * Determines if a resource describes a notification request. This has the additional
+     * meaning that this resource does not describe a valid argument.
+     */
     public static boolean isResourceNotification(final Resource resource) {
         switch (resource) {
             case GENERIC_DAO_NOTIFICATION_REGISTRATION:
