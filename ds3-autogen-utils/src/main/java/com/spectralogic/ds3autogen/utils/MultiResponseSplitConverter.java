@@ -31,7 +31,8 @@ import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 public final class MultiResponseSplitConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MultiResponseSplitConverter.class);
-    private static final String NAMESPACE_FULL_DETAILS = "FullDetails";
+
+    protected static final String NAMESPACE_FULL_DETAILS = "FullDetails";
 
     //Names of known request handlers that have two response types for a given response code
     private static final String GET_PHYSICAL_PLACEMENT_FOR_OBJECTS = "GetPhysicalPlacementForObjectsRequestHandler";
@@ -41,7 +42,6 @@ public final class MultiResponseSplitConverter {
 
     private MultiResponseSplitConverter() { }
 
-    //TODO write unit tests
     /**
      * Splits Ds3Requests with multiple response types for a given response code into
      * distinct Ds3Requests with only one response type for each response code.
@@ -53,7 +53,6 @@ public final class MultiResponseSplitConverter {
                 ds3ApiSpec.getTypes());
     }
 
-    //TODO write unit tests
     /**
      * Splits Ds3Requests with multiple response types for a given response code into
      * distinct Ds3Requests with only one response type for each response code.
@@ -66,14 +65,13 @@ public final class MultiResponseSplitConverter {
             return ImmutableList.of();
         }
 
-        final ImmutableList.Builder builder = ImmutableList.builder();
+        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {
             builder.addAll(splitMultiResponseRequest(ds3Request));
         }
         return builder.build();
     }
 
-    //TODO write unit tests
     /**
      * Splits a Ds3Request into multiple Ds3Requests if there are multiple response types for a
      * given response code. If there exists only one response type for each response code, then
@@ -102,7 +100,6 @@ public final class MultiResponseSplitConverter {
         }
     }
 
-    //TODO write unit tests
     /**
      * Determines if a given Ds3Request contains a response code with more than one
      * response type.
@@ -124,7 +121,6 @@ public final class MultiResponseSplitConverter {
         return false;
     }
 
-    //TODO write unit tests
     /**
      * Splits the GetPhysicalPlacementForObjects request handler into two separate request
      * handlers. One of the request handlers will have FullDetails removed as an optional
@@ -141,7 +137,7 @@ public final class MultiResponseSplitConverter {
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
 
         //Add request without Full Details param with a payload of PhysicalPlacementApiBean
-        builder.add(removeOptionalparam(
+        builder.add(removeOptionalParam(
                 ds3Request,
                 "FullDetails",
                 200,
@@ -160,7 +156,6 @@ public final class MultiResponseSplitConverter {
         return builder.build();
     }
 
-    //TODO write unit tests
     /**
      * Splits the VerifyPhysicalPlacementForObjects request handler into two separate request
      * handlers. One of the request handlers will have FullDetails removed as an optional
@@ -177,7 +172,7 @@ public final class MultiResponseSplitConverter {
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         //Add request without Full Details param with a payload of PhysicalPlacementApiBean
-        builder.add(removeOptionalparam(
+        builder.add(removeOptionalParam(
                 ds3Request,
                 "FullDetails",
                 200,
@@ -196,7 +191,6 @@ public final class MultiResponseSplitConverter {
         return builder.build();
     }
 
-    //TODO write unit tests
     /**
      * Splits the GetTapePartition request handler into two separate request
      * handlers. One of the request handlers will have FullDetails removed as an optional
@@ -212,8 +206,8 @@ public final class MultiResponseSplitConverter {
                     + ": " + ds3Request.getName());
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
-        //Add request without Full Details param with a payload of ??
-        builder.add(removeOptionalparam(
+        //Add request without Full Details param with a payload of TapePartition
+        builder.add(removeOptionalParam(
                 ds3Request,
                 "FullDetails",
                 200,
@@ -226,13 +220,12 @@ public final class MultiResponseSplitConverter {
                 NAMESPACE_FULL_DETAILS,
                 "FullDetails",
                 200,
-                "DetailedTapePartition", //TODO make sure name parsed correctly
+                "DetailedTapePartition",
                 null));
 
         return builder.build();
     }
 
-    //TODO write unit tests
     /**
      * Splits the GetTape request handler into two separate request
      * handlers. One of the request handlers will have FullDetails removed as an optional
@@ -249,7 +242,7 @@ public final class MultiResponseSplitConverter {
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         //Add request without Full Details param with a payload of Tape
-        builder.add(removeOptionalparam(
+        builder.add(removeOptionalParam(
                 ds3Request,
                 "FullDetails",
                 200,
@@ -268,7 +261,6 @@ public final class MultiResponseSplitConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Modifies a Ds3Request to change a specified optional param into a required
      * param, name spacing the request name, and modifying a specified response type.
@@ -280,7 +272,7 @@ public final class MultiResponseSplitConverter {
      * @param optionalParamName The name of the optional parameter being modified
      * @param responseCode The response code to be modified
      * @param responseType The name of the response type to be associated with the response code
-     * @param responseComponentType The name of the componenet type to be associated with the
+     * @param responseComponentType The name of the component type to be associated with the
      *                              the response code. This may be null
      */
     protected static Ds3Request makeRequiredParam(
@@ -314,7 +306,6 @@ public final class MultiResponseSplitConverter {
         );
     }
 
-    //TODO unit tests
     /**
      * Removes a specified optional param from a Ds3Request, as well as modifying
      * the specified response type. The specified response code will have the specified
@@ -327,7 +318,7 @@ public final class MultiResponseSplitConverter {
      * @param responseComponentType The name of the component type to be associated with the
      *                              response code. This may be null
      */
-    protected static Ds3Request removeOptionalparam(
+    protected static Ds3Request removeOptionalParam(
             final Ds3Request ds3Request,
             final String optionalParamName,
             final int responseCode,
@@ -355,7 +346,6 @@ public final class MultiResponseSplitConverter {
         );
     }
 
-    //TODO unit tests
     /**
      * Removes a Ds3Param from a list of Ds3Params by name.
      * @param ds3Params A list of Ds3Params
@@ -377,7 +367,6 @@ public final class MultiResponseSplitConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Retries the specified Ds3Param from a list of Ds3Params, or null if it
      * was not found.
@@ -399,7 +388,6 @@ public final class MultiResponseSplitConverter {
         return null;
     }
 
-    //TODO unit tests
     /**
      * Adds a Ds3Param to a list of Ds3Params.
      * @param ds3Params List of Ds3Params

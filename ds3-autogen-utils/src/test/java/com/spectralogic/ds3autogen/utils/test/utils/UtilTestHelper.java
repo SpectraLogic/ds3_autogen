@@ -41,7 +41,11 @@ public final class UtilTestHelper {
                 Resource.JOB_CREATED_NOTIFICATION_REGISTRATION,
                 ResourceType.NON_SINGLETON,
                 null,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                204,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("null", null)))),
                 null,
                 null
         );
@@ -100,7 +104,7 @@ public final class UtilTestHelper {
      * as described in the Contract, excluding the response codes
      * @return A Physical Placement request
      */
-    public static Ds3Request getRequestPhysicalPlacement() {
+    public static Ds3Request getRequestVerifyPhysicalPlacement() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler",
                 null,
@@ -111,7 +115,16 @@ public final class UtilTestHelper {
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
                 Operation.VERIFY_PHYSICAL_PLACEMENT,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean", null),
+                                        new Ds3ResponseType("com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer", null))),
+                        new Ds3ResponseCode(
+                                404,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
                         new Ds3Param("FullDetails", "void"),
                         new Ds3Param("StorageDomainId", "java.util.UUID")),
