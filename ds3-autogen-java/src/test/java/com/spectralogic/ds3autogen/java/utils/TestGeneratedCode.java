@@ -25,22 +25,20 @@ import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.mockito.Mockito.when;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
 
 public class TestGeneratedCode {
 
-    private final ByteArrayOutputStream requestOutputStream;
-    private final ByteArrayOutputStream responseOutputStream;
-    private final ByteArrayOutputStream ds3ClientOutputStream;
-    private final ByteArrayOutputStream ds3ClientImplOutputStream;
-    private String requestGeneratedCode;
-    private String responseGeneratedCode;
-    private String ds3ClientGeneratedCode;
-    private String ds3ClientImplGeneratedCode;
+    protected final ByteArrayOutputStream requestOutputStream;
+    protected final ByteArrayOutputStream responseOutputStream;
+    protected final ByteArrayOutputStream ds3ClientOutputStream;
+    protected final ByteArrayOutputStream ds3ClientImplOutputStream;
+    protected String requestGeneratedCode;
+    protected String responseGeneratedCode;
+    protected String ds3ClientGeneratedCode;
+    protected String ds3ClientImplGeneratedCode;
 
     public TestGeneratedCode(
             final FileUtils fileUtils,
@@ -65,15 +63,6 @@ public class TestGeneratedCode {
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
         ds3ClientGeneratedCode = new String(ds3ClientOutputStream.toByteArray());
         ds3ClientImplGeneratedCode = new String(ds3ClientImplOutputStream.toByteArray());
-    }
-
-    private static ByteArrayOutputStream setupOutputStream(
-            final FileUtils fileUtils,
-            final String pathName) throws IOException {
-        final Path path = Paths.get(pathName);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(path)).thenReturn(outputStream);
-        return outputStream;
     }
 
     public String getRequestGeneratedCode() {

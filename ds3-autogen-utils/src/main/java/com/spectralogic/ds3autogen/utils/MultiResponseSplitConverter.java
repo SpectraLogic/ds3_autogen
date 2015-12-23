@@ -32,7 +32,7 @@ public final class MultiResponseSplitConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MultiResponseSplitConverter.class);
 
-    protected static final String NAMESPACE_FULL_DETAILS = "FullDetails";
+    public static final String NAMESPACE_FULL_DETAILS = "FullDetails";
 
     //Names of known request handlers that have two response types for a given response code
     private static final String GET_PHYSICAL_PLACEMENT_FOR_OBJECTS = "GetPhysicalPlacementForObjectsRequestHandler";
@@ -283,7 +283,7 @@ public final class MultiResponseSplitConverter {
             final String responseType,
             final String responseComponentType) {
         return new Ds3Request(
-                ds3Request.getName().replace("Request", nameSpacing + "Request"),
+                nameSpaceSplitRequest(ds3Request.getName(), nameSpacing),
                 ds3Request.getHttpVerb(),
                 ds3Request.getClassification(),
                 ds3Request.getBucketRequirement(),
@@ -304,6 +304,17 @@ public final class MultiResponseSplitConverter {
                         ds3Request.getRequiredQueryParams(),
                         getDs3Param(ds3Request.getOptionalQueryParams(), optionalParamName))
         );
+    }
+
+    /**
+     * Namespaces a request.
+     * @param requestName The name of a Ds3Request
+     * @param nameSpacing The name spacing to be applied
+     */
+    public static String nameSpaceSplitRequest(
+            final String requestName,
+            final String nameSpacing) {
+        return requestName.replace("Request", nameSpacing + "Request");
     }
 
     /**

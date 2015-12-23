@@ -25,11 +25,9 @@ import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
-import static org.mockito.Mockito.when;
 
 public class TestGeneratedModelCode {
 
@@ -58,15 +56,6 @@ public class TestGeneratedModelCode {
 
     private static String getPathName(final String modelName, final String pathName) {
         return pathName + modelName + ".java";
-    }
-
-    private static ByteArrayOutputStream setupOutputStream(
-            final FileUtils fileUtils,
-            final String pathName) throws IOException {
-        final Path path = Paths.get(pathName);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(path)).thenReturn(outputStream);
-        return outputStream;
     }
 
     public void generateCode(

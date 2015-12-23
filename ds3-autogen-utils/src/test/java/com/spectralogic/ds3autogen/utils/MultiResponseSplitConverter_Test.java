@@ -31,6 +31,21 @@ import static org.junit.Assert.*;
 public class MultiResponseSplitConverter_Test {
 
     @Test
+    public void namespaceSplitRequest_Test() {
+        assertThat(
+                nameSpaceSplitRequest(
+                        "VerifyPhysicalPlacementForObjectsRequestHandler",
+                        NAMESPACE_FULL_DETAILS),
+                is("VerifyPhysicalPlacementForObjectsFullDetailsRequestHandler"));
+
+        assertThat(
+                nameSpaceSplitRequest(
+                        "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionRequestHandler",
+                        NAMESPACE_FULL_DETAILS),
+                is("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionFullDetailsRequestHandler"));
+    }
+
+    @Test
     public void getTypeNameWithoutPath_Test() {
         assertThat(getTypeNameWithoutPath(null), is(""));
         assertThat(getTypeNameWithoutPath("com.spectralogic.s3.server.domain.TapeApiBean"), is("TapeApiBean"));
