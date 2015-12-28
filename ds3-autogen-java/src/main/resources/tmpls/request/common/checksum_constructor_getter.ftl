@@ -2,7 +2,7 @@
      * Set a MD5 checksum for the request.
      */
     public ${name} withChecksum(final ChecksumType checksum) {
-        return withChecksumType(checksum, ChecksumType.Type.MD5);
+        return withChecksum(checksum, ChecksumType.Type.MD5);
     }
 
     public ${name} withChecksum(final ChecksumType checksum, final ChecksumType.Type checksumType) {
