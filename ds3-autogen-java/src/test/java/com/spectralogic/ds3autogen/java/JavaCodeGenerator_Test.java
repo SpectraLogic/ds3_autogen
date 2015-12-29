@@ -897,7 +897,7 @@ public class JavaCodeGenerator_Test {
     }
     
     @Test
-    public void getObjectSpectraS3RequestHandler() throws IOException, ParserException {
+    public void getObjectSpectraS3RequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetObjectSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
