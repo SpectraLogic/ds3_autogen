@@ -895,6 +895,80 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
         testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
+    
+    @Test
+    public void getObjectSpectraS3RequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetObjectSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getObjectSpectraS3RequestHandler.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
+        assertFalse(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+        assertFalse(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
+        assertTrue(isReqParamOfType("BucketId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
+
+        assertTrue(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
+        assertTrue(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
+        assertTrue(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Range", requestGeneratedCode));
+        assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
+        assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        testHasChecksumCode(requestGeneratedCode, requestName);
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(doesNotHaveOperation(requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/object/\" + objectName", requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("UUID", "BucketId"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("WritableByteChannel", "Channel"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.add(new Arguments("UUID", "Job"));
+        builder.add(new Arguments("long", "Offset"));
+        assertFalse(hasConstructor(requestName, builder.build(), requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
 
     @Test
     public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
