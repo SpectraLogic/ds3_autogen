@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public final class MultiResponseSplitConverter {
      * distinct Ds3Requests with only one response type for each response code.
      * @param ds3ApiSpec A spec containing a list of Ds3ApiRequests to convert
      */
-    public static Ds3ApiSpec splitAllMultiResponseRequests(final Ds3ApiSpec ds3ApiSpec) {
+    public static Ds3ApiSpec splitAllMultiResponseRequests(final Ds3ApiSpec ds3ApiSpec) throws ResponseTypeNotFoundException {
         return new Ds3ApiSpec(
                 splitAllMultiResponseRequests(ds3ApiSpec.getRequests()),
                 ds3ApiSpec.getTypes());
@@ -66,7 +67,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Requests A list of Ds3Requests to be converted
      */
     public static ImmutableList<Ds3Request> splitAllMultiResponseRequests(
-            final ImmutableList<Ds3Request> ds3Requests) {
+            final ImmutableList<Ds3Request> ds3Requests) throws ResponseTypeNotFoundException {
         if (isEmpty(ds3Requests)) {
             LOG.info("No requests to split");
             return ImmutableList.of();
@@ -86,7 +87,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Request A Ds3Request
      * @return A list of Ds3Requests with only one response type per response code.
      */
-    protected static ImmutableList<Ds3Request> splitMultiResponseRequest(final Ds3Request ds3Request) {
+    protected static ImmutableList<Ds3Request> splitMultiResponseRequest(final Ds3Request ds3Request) throws ResponseTypeNotFoundException {
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         if (!hasMultipleResponseTypes(ds3Request)) {
             return builder.add(ds3Request).build();
@@ -136,7 +137,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Request The Get Physical Placement For Objects request handler
      */
     protected static ImmutableList<Ds3Request> splitGetPhysicalPlacementForObjects(
-            final Ds3Request ds3Request) {
+            final Ds3Request ds3Request) throws ResponseTypeNotFoundException {
         if (!stripPath(ds3Request.getName()).equals(GET_PHYSICAL_PLACEMENT_FOR_OBJECTS)) {
             throw new IllegalArgumentException("The Ds3Request is not the expected " + GET_PHYSICAL_PLACEMENT_FOR_OBJECTS
                     + ": " + ds3Request.getName());
@@ -148,8 +149,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request,
                 FULL_DETAILS_PARAM,
                 200,
-                PHYSICAL_PLACEMENT_API_BEAN_PARAM,
-                null));
+                PHYSICAL_PLACEMENT_API_BEAN_PARAM));
 
         //Add request with required Full Details param with a payload of BlobApiBeansContainer
         builder.add(makeRequiredParam(
@@ -157,8 +157,7 @@ public final class MultiResponseSplitConverter {
                 NAMESPACE_FULL_DETAILS,
                 FULL_DETAILS_PARAM,
                 200,
-                BLOB_API_BEANS_CONTAINER_PARAM,
-                null));
+                BLOB_API_BEANS_CONTAINER_PARAM));
 
         return builder.build();
     }
@@ -171,7 +170,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Request The Verify Physical Placement For Objects request handler
      */
     protected static ImmutableList<Ds3Request> splitVerifyPhysicalPlacementForObjects(
-            final Ds3Request ds3Request) {
+            final Ds3Request ds3Request) throws ResponseTypeNotFoundException {
         if (!stripPath(ds3Request.getName()).equals(VERIFY_PHYSICAL_PLACEMENT_FOR_OBJECTS)) {
             throw new IllegalArgumentException("The Ds3Request is not the expected "
                     + VERIFY_PHYSICAL_PLACEMENT_FOR_OBJECTS
@@ -183,8 +182,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request,
                 FULL_DETAILS_PARAM,
                 200,
-                PHYSICAL_PLACEMENT_API_BEAN_PARAM,
-                null));
+                PHYSICAL_PLACEMENT_API_BEAN_PARAM));
 
         //Add request with required Full Details param with a payload of BlobApiBeansContainer
         builder.add(makeRequiredParam(
@@ -192,8 +190,7 @@ public final class MultiResponseSplitConverter {
                 NAMESPACE_FULL_DETAILS,
                 FULL_DETAILS_PARAM,
                 200,
-                BLOB_API_BEANS_CONTAINER_PARAM,
-                null));
+                BLOB_API_BEANS_CONTAINER_PARAM));
 
         return builder.build();
     }
@@ -206,7 +203,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Request The Get Tape Partition request handler
      */
     protected static ImmutableList<Ds3Request> splitGetTapePartition(
-            final Ds3Request ds3Request) {
+            final Ds3Request ds3Request) throws ResponseTypeNotFoundException {
         if (!stripPath(ds3Request.getName()).equals(GET_TAPE_PARTITION)) {
             throw new IllegalArgumentException("The Ds3Request is not the expected "
                     + GET_TAPE_PARTITION
@@ -218,8 +215,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request,
                 FULL_DETAILS_PARAM,
                 200,
-                "TapePartition",
-                null));
+                "TapePartition"));
 
         //Add request with required Full Details param with a payload of DetailedTapePartition
         builder.add(makeRequiredParam(
@@ -227,8 +223,7 @@ public final class MultiResponseSplitConverter {
                 NAMESPACE_FULL_DETAILS,
                 FULL_DETAILS_PARAM,
                 200,
-                "DetailedTapePartition",
-                null));
+                "DetailedTapePartition"));
 
         return builder.build();
     }
@@ -241,7 +236,7 @@ public final class MultiResponseSplitConverter {
      * @param ds3Request The Get Tape request handler
      */
     protected static ImmutableList<Ds3Request> splitGetTape(
-            final Ds3Request ds3Request) {
+            final Ds3Request ds3Request) throws ResponseTypeNotFoundException {
         if (!stripPath(ds3Request.getName()).equals(GET_TAPE)) {
             throw new IllegalArgumentException("The Ds3Request is not the expected "
                     + GET_TAPE
@@ -253,8 +248,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request,
                 FULL_DETAILS_PARAM,
                 200,
-                "Tape",
-                null));
+                "Tape"));
 
         //Add request with required Full Details param with a payload of TapeApiBean
         builder.add(makeRequiredParam(
@@ -262,10 +256,37 @@ public final class MultiResponseSplitConverter {
                 NAMESPACE_FULL_DETAILS,
                 FULL_DETAILS_PARAM,
                 200,
-                "TapeApiBean",
-                null));
+                "TapeApiBean"));
 
         return builder.build();
+    }
+
+    /**
+     * Modifies a Ds3Request to change a specified optional param into a required
+     * param, name spacing the request name, and modifying a specified response type.
+     * The specified response code will have the specified response type with a null
+     * component type.
+     * This is used when splitting a Ds3Request with multiple response payloads
+     * associated with a given response code.
+     * @param ds3Request A Ds3Request
+     * @param nameSpacing The name spacing used to differentiate this request in the split
+     * @param optionalParamName The name of the optional parameter being modified
+     * @param responseCode The response code to be modified
+     * @param responseType The name of the response type to be associated with the response code
+     */
+    protected static Ds3Request makeRequiredParam(
+            final Ds3Request ds3Request,
+            final String nameSpacing,
+            final String optionalParamName,
+            final int responseCode,
+            final String responseType) throws ResponseTypeNotFoundException {
+        return makeRequiredParam(
+                ds3Request,
+                nameSpacing,
+                optionalParamName,
+                responseCode,
+                responseType,
+                null);
     }
 
     /**
@@ -288,7 +309,7 @@ public final class MultiResponseSplitConverter {
             final String optionalParamName,
             final int responseCode,
             final String responseType,
-            final String responseComponentType) {
+            final String responseComponentType) throws ResponseTypeNotFoundException {
         return new Ds3Request(
                 nameSpaceSplitRequest(ds3Request.getName(), nameSpacing),
                 ds3Request.getHttpVerb(),
@@ -327,6 +348,30 @@ public final class MultiResponseSplitConverter {
     /**
      * Removes a specified optional param from a Ds3Request, as well as modifying
      * the specified response type. The specified response code will have the specified
+     * response type. The response component type is assumed to be null.
+     * This is used when splitting a Ds3Request with multiple response
+     * payloads associated with a given response code.
+     * @param ds3Request A Ds3Request
+     * @param optionalParamName The name of the optional parameter to be removed
+     * @param responseCode The response code to be modified
+     * @param responseType The name of the response type to be associated with the response code
+     */
+    protected static Ds3Request removeOptionalParam(
+            final Ds3Request ds3Request,
+            final String optionalParamName,
+            final int responseCode,
+            final String responseType) throws ResponseTypeNotFoundException {
+        return removeOptionalParam(
+                ds3Request,
+                optionalParamName,
+                responseCode,
+                responseType,
+                null);
+    }
+
+    /**
+     * Removes a specified optional param from a Ds3Request, as well as modifying
+     * the specified response type. The specified response code will have the specified
      * response type. This is used when splitting a Ds3Request with multiple response
      * payloads associated with a given response code.
      * @param ds3Request A Ds3Request
@@ -341,7 +386,7 @@ public final class MultiResponseSplitConverter {
             final String optionalParamName,
             final int responseCode,
             final String responseType,
-            final String responseComponentType) {
+            final String responseComponentType) throws ResponseTypeNotFoundException {
         return new Ds3Request(
                 ds3Request.getName(),
                 ds3Request.getHttpVerb(),
@@ -439,7 +484,7 @@ public final class MultiResponseSplitConverter {
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final int code,
             final String responseType,
-            final String componentType) {
+            final String componentType) throws ResponseTypeNotFoundException {
         if (isEmpty(ds3ResponseCodes)) {
             LOG.debug("Attempting to modify empty list of response codes");
             return ImmutableList.of();
@@ -449,7 +494,7 @@ public final class MultiResponseSplitConverter {
             if (ds3ResponseCode.getCode() == code) {
                 builder.add(new Ds3ResponseCode(
                         ds3ResponseCode.getCode(),
-                        modifyResponseType(
+                        getSpecifiedResponseType(
                                 ds3ResponseCode.getDs3ResponseTypes(),
                                 responseType,
                                 componentType)));
@@ -469,25 +514,20 @@ public final class MultiResponseSplitConverter {
      * @param componentType The name of the component type, or null if a component type
      *                      does not exist for this type
      */
-    protected static ImmutableList<Ds3ResponseType> modifyResponseType(
+    protected static ImmutableList<Ds3ResponseType> getSpecifiedResponseType(
             final ImmutableList<Ds3ResponseType> ds3ResponseTypes,
             final String responseType,
-            final String componentType) {
+            final String componentType) throws ResponseTypeNotFoundException {
         if (isEmpty(ds3ResponseTypes)) {
-            LOG.error("Attempting to modify empty list of response types");
+            LOG.error("Attempting to retrieve response from empty list");
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Ds3ResponseType> builder = ImmutableList.builder();
         for (final Ds3ResponseType ds3ResponseType : ds3ResponseTypes) {
             if (isSpecifiedDs3ResponseType(ds3ResponseType, responseType, componentType)) {
-                builder.add(ds3ResponseType);
+                return ImmutableList.of(ds3ResponseType);
             }
         }
-        //Check that there is exactly one response type
-        if (builder.build().size() != 1) {
-            LOG.error("The modified response type list is not of size 1, but of size " + builder.build().size());
-        }
-        return builder.build();
+        throw new ResponseTypeNotFoundException(responseType);
     }
 
     /**

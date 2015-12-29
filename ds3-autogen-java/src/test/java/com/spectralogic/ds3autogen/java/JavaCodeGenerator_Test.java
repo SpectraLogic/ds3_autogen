@@ -17,10 +17,7 @@ package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
@@ -93,7 +90,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void singleRequestHandler() throws IOException, ParserException {
+    public void singleRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -124,7 +121,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getBucketRequestHandler() throws IOException, ParserException {
+    public void getBucketRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -177,7 +174,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void modifyBucketRequestHandler() throws IOException, ParserException {
+    public void modifyBucketRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "ModifyBucketSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -230,7 +227,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void createVerifyJobRequestHandler() throws IOException, ParserException {
+    public void createVerifyJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreateVerifyJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -290,7 +287,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void createGetJobRequestHandler() throws IOException, ParserException {
+    public void createGetJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreateGetJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -349,7 +346,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void createPutJobRequestHandler() throws IOException, ParserException {
+    public void createPutJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -409,7 +406,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
+    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
@@ -476,7 +473,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException {
+    public void getPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
@@ -548,7 +545,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException {
+    public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
@@ -612,7 +609,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException {
+    public void verifyPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
@@ -681,7 +678,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void deleteObjectsRequestHandler() throws IOException, ParserException {
+    public void deleteObjectsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -743,7 +740,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void createObjectRequestHandler() throws IOException, ParserException {
+    public void createObjectRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreateObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -826,7 +823,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getObjectRequestHandler() throws IOException, ParserException {
+    public void getObjectRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -900,7 +897,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException {
+    public void deleteJobCreatedNotificationRegistrationRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -947,7 +944,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException {
+    public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreateJobCompletedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1003,7 +1000,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException {
+    public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetJobCompletedNotificationRegistrationsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1057,7 +1054,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void replicatePutJobRequest() throws IOException, ParserException {
+    public void replicatePutJobRequest() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "ReplicatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1118,7 +1115,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void initiateMultiPartUploadRequest() throws IOException, ParserException {
+    public void initiateMultiPartUploadRequest() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "InitiateMultiPartUploadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1174,7 +1171,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void allocateJobChunkRequestHandler() throws IOException, ParserException {
+    public void allocateJobChunkRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "AllocateJobChunkSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1226,7 +1223,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void spectraInternalRequest() throws IOException, ParserException {
+    public void spectraInternalRequest() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "CreateFakeTapeEnvironmentRequestHandler";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
@@ -1256,7 +1253,7 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void wholeXmlDoc() throws IOException, ParserException {
+    public void wholeXmlDoc() throws IOException, ParserException, ResponseTypeNotFoundException {
         final FileUtils fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));

@@ -31,6 +31,7 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -83,7 +84,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     public void generate(
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
-            final Path destDir) throws IOException {
+            final Path destDir) throws IOException, ResponseTypeNotFoundException {
         this.spec = renameRequests( //Rename requests from RequestHandler to Request
                 splitAllMultiResponseRequests(spec)); //Split requests with multiple response codes
         this.fileUtils = fileUtils;

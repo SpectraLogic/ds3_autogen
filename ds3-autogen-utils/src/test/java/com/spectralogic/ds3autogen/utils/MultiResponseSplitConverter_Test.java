@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
@@ -79,37 +80,37 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void modifyResponseType_Test() {
+    public void modifyResponseType_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseType> responseTypes = getPopulatedDs3ResponseTypeList();
 
-        final ImmutableList<Ds3ResponseType> tapePartition = modifyResponseType(responseTypes, "TapePartition", null);
+        final ImmutableList<Ds3ResponseType> tapePartition = getSpecifiedResponseType(responseTypes, "TapePartition", null);
         assertThat(tapePartition.size(), is(1));
         assertTrue(tapePartition.get(0).getType().endsWith(".TapePartition"));
         assertThat(tapePartition.get(0).getComponentType(), is(nullValue()));
     }
 
     @Test
-    public void modifyResponseType_TypeWithDollarSign_Test() {
+    public void modifyResponseType_TypeWithDollarSign_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseType> responseTypes = getPopulatedDs3ResponseTypeList();
 
-        final ImmutableList<Ds3ResponseType> detailedTapePartition = modifyResponseType(responseTypes, "DetailedTapePartition", null);
+        final ImmutableList<Ds3ResponseType> detailedTapePartition = getSpecifiedResponseType(responseTypes, "DetailedTapePartition", null);
         assertThat(detailedTapePartition.size(), is(1));
         assertTrue(detailedTapePartition.get(0).getType().endsWith("$DetailedTapePartition"));
         assertThat(detailedTapePartition.get(0).getComponentType(), is(nullValue()));
     }
 
     @Test
-    public void modifyResponseType_TypeWithComponent_Test() {
+    public void modifyResponseType_TypeWithComponent_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseType> responseTypes = getPopulatedDs3ResponseTypeList();
 
-        final ImmutableList<Ds3ResponseType> tapePartitionArray = modifyResponseType(responseTypes, "TapePartition", "array");
+        final ImmutableList<Ds3ResponseType> tapePartitionArray = getSpecifiedResponseType(responseTypes, "TapePartition", "array");
         assertThat(tapePartitionArray.size(), is(1));
         assertTrue(tapePartitionArray.get(0).getType().endsWith(".TapePartition"));
         assertThat(tapePartitionArray.get(0).getComponentType(), is("array"));
     }
 
     @Test
-    public void modifyResponseCode_Test() {
+    public void modifyResponseCode_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseCode> responseCodes = getPopulatedDs3ResponseCodeList();
 
         final ImmutableList<Ds3ResponseCode> result = modifyResponseCode(responseCodes, 200, "TapePartition", null);
@@ -125,7 +126,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void modifyResponseCode_TypeWithDollarSign_Test() {
+    public void modifyResponseCode_TypeWithDollarSign_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseCode> responseCodes = getPopulatedDs3ResponseCodeList();
 
         final ImmutableList<Ds3ResponseCode> result = modifyResponseCode(responseCodes, 200, "DetailedTapePartition", null);
@@ -141,7 +142,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void modifyResponseCode_TypeWithComponent_Test() {
+    public void modifyResponseCode_TypeWithComponent_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseCode> responseCodes = getPopulatedDs3ResponseCodeList();
 
         final ImmutableList<Ds3ResponseCode> result = modifyResponseCode(responseCodes, 200, "TapePartition", "array");
@@ -203,6 +204,7 @@ public class MultiResponseSplitConverter_Test {
     @Test
     public void getDs3Param_Test() {
         final Ds3Param result = getDs3Param(getPopulatedDs3ParamList(), "FullDetails");
+        assert result != null;
         assertThat(result.getName(), is("FullDetails"));
         assertThat(result.getType(), is("void"));
     }
@@ -237,7 +239,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void removeOptionalParam_Test() {
+    public void removeOptionalParam_Test() throws ResponseTypeNotFoundException {
         final Ds3Request result = removeOptionalParam(
                 getRequestVerifyPhysicalPlacement(),
                 "FullDetails",
@@ -252,7 +254,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void makeRequiredParam_Test() {
+    public void makeRequiredParam_Test() throws ResponseTypeNotFoundException {
         final Ds3Request result = makeRequiredParam(
                 getRequestVerifyPhysicalPlacement(),
                 NAMESPACE_FULL_DETAILS,
@@ -275,12 +277,12 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void splitGetTape_WrongRequest_Test() {
+    public void splitGetTape_WrongRequest_Test() throws ResponseTypeNotFoundException {
         splitGetTape(getRequestVerifyPhysicalPlacement());
     }
 
     @Test
-    public void splitGetTape_Test() {
+    public void splitGetTape_Test() throws ResponseTypeNotFoundException {
         final Ds3Request getTapeRequest = getRequestGetTape();
 
         final ImmutableList<Ds3Request> result = splitGetTape(getTapeRequest);
@@ -304,12 +306,12 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void splitGetTapePartition_WrongRequest_Test() {
+    public void splitGetTapePartition_WrongRequest_Test() throws ResponseTypeNotFoundException {
         splitGetTapePartition(getRequestVerifyPhysicalPlacement());
     }
 
     @Test
-    public void splitGetTapePartition_Test() {
+    public void splitGetTapePartition_Test() throws ResponseTypeNotFoundException {
         final Ds3Request getTapePartitionRequest = getRequestGetTapePartition();
 
         final ImmutableList<Ds3Request> result = splitGetTapePartition(getTapePartitionRequest);
@@ -333,12 +335,12 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void splitVerifyPhysicalPlacementForObjects_WrongRequest_Test() {
+    public void splitVerifyPhysicalPlacementForObjects_WrongRequest_Test() throws ResponseTypeNotFoundException {
         splitVerifyPhysicalPlacementForObjects(getRequestGetNotification());
     }
 
     @Test
-    public void splitVerifyPhysicalPlacementForObjects_Test() {
+    public void splitVerifyPhysicalPlacementForObjects_Test() throws ResponseTypeNotFoundException {
         final Ds3Request verifyPhysicalRequest = getRequestVerifyPhysicalPlacement();
 
         final ImmutableList<Ds3Request> result = splitVerifyPhysicalPlacementForObjects(verifyPhysicalRequest);
@@ -366,12 +368,12 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void splitGetPhysicalPlacementForObjects_WrongRequest_Test() {
+    public void splitGetPhysicalPlacementForObjects_WrongRequest_Test() throws ResponseTypeNotFoundException {
         splitGetPhysicalPlacementForObjects(getRequestVerifyPhysicalPlacement());
     }
 
     @Test
-    public void splitGetPhysicalPlacementForObjects_Test() {
+    public void splitGetPhysicalPlacementForObjects_Test() throws ResponseTypeNotFoundException {
         final Ds3Request getPhysicalRequest = getRequestGetPhysicalPlacementForObjects();
 
         final ImmutableList<Ds3Request> result = splitGetPhysicalPlacementForObjects(getPhysicalRequest);
@@ -406,13 +408,13 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitMultiResponseRequest_WrongRequest_Test() {
+    public void splitMultiResponseRequest_WrongRequest_Test() throws ResponseTypeNotFoundException {
         ImmutableList<Ds3Request> result = splitMultiResponseRequest(getRequestDeleteNotification());
         assertThat(result.size(), is(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void splitMultiResponseRequest_UnknownRequest_Test() {
+    public void splitMultiResponseRequest_UnknownRequest_Test() throws ResponseTypeNotFoundException {
         final Ds3Request unknownRequest = new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.UnknownRequestHandler",
                 null,
@@ -437,7 +439,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitMultiResponseRequest_GetPhysicalPlacement_Test() {
+    public void splitMultiResponseRequest_GetPhysicalPlacement_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> result = splitMultiResponseRequest(getRequestGetPhysicalPlacementForObjects());
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getName().endsWith(".GetPhysicalPlacementForObjectsRequestHandler"));
@@ -445,7 +447,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitMultiResponseRequest_VerifyPhysicalPlacement_Test() {
+    public void splitMultiResponseRequest_VerifyPhysicalPlacement_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> result = splitMultiResponseRequest(getRequestVerifyPhysicalPlacement());
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getName().endsWith(".VerifyPhysicalPlacementForObjectsRequestHandler"));
@@ -453,7 +455,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitMultiResponseRequest_GetTapePartition_Test() {
+    public void splitMultiResponseRequest_GetTapePartition_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> result = splitMultiResponseRequest(getRequestGetTapePartition());
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getName().endsWith(".GetTapePartitionRequestHandler"));
@@ -461,7 +463,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitMultiResponseRequest_GetTape_Test() {
+    public void splitMultiResponseRequest_GetTape_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> result = splitMultiResponseRequest(getRequestGetTape());
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getName().endsWith(".GetTapeRequestHandler"));
@@ -469,7 +471,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitAllMultiResponseRequests_RequestList_Test() {
+    public void splitAllMultiResponseRequests_RequestList_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestGetTape(),
                 getRequestGetTapePartition(),
@@ -482,7 +484,7 @@ public class MultiResponseSplitConverter_Test {
     }
 
     @Test
-    public void splitAllMultiResponseRequests_Api_Test() {
+    public void splitAllMultiResponseRequests_Api_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestGetTape(),
                 getRequestGetTapePartition(),

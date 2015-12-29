@@ -16,10 +16,7 @@
 package com.spectralogic.ds3autogen.java.utils;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 
@@ -60,7 +57,7 @@ public class TestGeneratedModelCode {
 
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedModelCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
