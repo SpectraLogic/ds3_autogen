@@ -24,6 +24,7 @@ public class ${name} extends AbstractRequest {
 
     // Constructor
 
+<#if helper.containsArgument(optionalArguments, "Job")>
     /**
      * @deprecated use {@link #${name}(${javaHelper.argTypeList(
                                          helper.addArgument(
@@ -37,6 +38,7 @@ public class ${name} extends AbstractRequest {
         </#list>
         this.channel = channel;
     }
+</#if>
 
     public ${name}(${javaHelper.constructorArgs(
                      helper.addArgument(
@@ -49,8 +51,12 @@ public class ${name} extends AbstractRequest {
         </#list>
         this.channel = channel;
 
+        <#if helper.containsArgument(optionalArguments, "Job")>
         this.getQueryParams().put("job", job.toString());
+        </#if>
+        <#if helper.containsArgument(optionalArguments, "Offset")>
         this.getQueryParams().put("offset", Long.toString(offset));
+        </#if>
     }
 
     <#include "common/with_constructors.ftl"/>

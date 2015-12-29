@@ -44,7 +44,7 @@ public class Helper_Test {
 
     @Test
     public void removeTrailingRequestHandlerWithDollarSign_Test() {
-        assertEquals(Helper.getInstance().removeTrailingRequestHandler("SomeRequestHandler$SomeExtensionApiBeanBlah"), "Some");
+        assertEquals(Helper.removeTrailingRequestHandler("SomeRequestHandler$SomeExtensionApiBeanBlah"), "Some");
     }
 
     @Test
@@ -86,13 +86,31 @@ public class Helper_Test {
         }
     }
 
-    private boolean containsArgName(final ImmutableList<Arguments> arguments, final String argName) {
-        for (final Arguments arg : arguments) {
-            if (arg.getName().equals(argName)) {
-                return true;
-            }
-        }
-        return false;
+    @Test
+    public void containsArgument_NullList_Test() {
+        assertFalse(Helper.containsArgument(null, "ArgName"));
+        assertFalse(Helper.containsArgument(null, ""));
+        assertFalse(Helper.containsArgument(null, null));
+    }
+
+    @Test
+    public void containsArgument_EmptyList_Test() {
+        assertFalse(Helper.containsArgument(ImmutableList.of(), "ArgName"));
+        assertFalse(Helper.containsArgument(ImmutableList.of(), ""));
+        assertFalse(Helper.containsArgument(ImmutableList.of(), null));
+    }
+
+    @Test
+    public void containsArgument_FullList_Test() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("Type1", "Arg1"),
+                new Arguments("Type2", "Arg2"));
+        assertTrue(Helper.containsArgument(arguments, "Arg1"));
+        assertTrue(Helper.containsArgument(arguments, "Arg2"));
+
+        assertFalse(Helper.containsArgument(arguments, "Arg3"));
+        assertFalse(Helper.containsArgument(arguments, ""));
+        assertFalse(Helper.containsArgument(arguments, null));
     }
 
     @Test
@@ -103,13 +121,13 @@ public class Helper_Test {
 
         final ImmutableList<Arguments> resultAddLists1 = Helper.addArgument(arguments, null);
         assertThat(resultAddLists1.size(), CoreMatchers.is(2));
-        assertTrue(containsArgName(resultAddLists1, "Arg1"));
-        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddLists1, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddLists1, "Arg2"));
 
         final ImmutableList<Arguments> resultAddLists2 = Helper.addArgument(null, arguments);
         assertThat(resultAddLists2.size(), CoreMatchers.is(2));
-        assertTrue(containsArgName(resultAddLists2, "Arg1"));
-        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddLists2, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddLists2, "Arg2"));
 
         final ImmutableList<Arguments> resultAddLists3 = Helper.addArgument(null, null);
         assertThat(resultAddLists3.size(), CoreMatchers.is(0));
@@ -123,13 +141,13 @@ public class Helper_Test {
 
         final ImmutableList<Arguments> resultAddLists1 = Helper.addArgument(arguments, ImmutableList.of());
         assertThat(resultAddLists1.size(), CoreMatchers.is(2));
-        assertTrue(containsArgName(resultAddLists1, "Arg1"));
-        assertTrue(containsArgName(resultAddLists1, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddLists1, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddLists1, "Arg2"));
 
         final ImmutableList<Arguments> resultAddLists2 = Helper.addArgument(ImmutableList.of(), arguments);
         assertThat(resultAddLists2.size(), CoreMatchers.is(2));
-        assertTrue(containsArgName(resultAddLists2, "Arg1"));
-        assertTrue(containsArgName(resultAddLists2, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddLists2, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddLists2, "Arg2"));
 
         final ImmutableList<Arguments> resultAddLists3 = Helper.addArgument(ImmutableList.of(), ImmutableList.of());
         assertThat(resultAddLists3.size(), CoreMatchers.is(0));
@@ -139,11 +157,11 @@ public class Helper_Test {
     public void addArgumentElementNullOrEmpty() {
         final ImmutableList<Arguments> resultAddElementNull = Helper.addArgument(null, "ArgName", "ArgType");
         assertThat(resultAddElementNull.size(), CoreMatchers.is(1));
-        assertTrue(containsArgName(resultAddElementNull, "ArgName"));
+        assertTrue(Helper.containsArgument(resultAddElementNull, "ArgName"));
 
         final ImmutableList<Arguments> resultAddElementEmpty = Helper.addArgument(ImmutableList.of(), "ArgName", "ArgType");
         assertThat(resultAddElementEmpty.size(), CoreMatchers.is(1));
-        assertTrue(containsArgName(resultAddElementEmpty, "ArgName"));
+        assertTrue(Helper.containsArgument(resultAddElementEmpty, "ArgName"));
     }
 
     @Test
@@ -155,15 +173,15 @@ public class Helper_Test {
                 new Arguments("Type3", "Arg3"),
                 new Arguments("Type4", "Arg4"));
         final ImmutableList<Arguments> resultAddLists = Helper.addArgument(arguments1, arguments2);
-        assertTrue(containsArgName(resultAddLists, "Arg1"));
-        assertTrue(containsArgName(resultAddLists, "Arg2"));
-        assertTrue(containsArgName(resultAddLists, "Arg3"));
-        assertTrue(containsArgName(resultAddLists, "Arg4"));
+        assertTrue(Helper.containsArgument(resultAddLists, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddLists, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddLists, "Arg3"));
+        assertTrue(Helper.containsArgument(resultAddLists, "Arg4"));
 
         final ImmutableList<Arguments> resultAddSingle = Helper.addArgument(arguments1, "Arg5", "Type5");
-        assertTrue(containsArgName(resultAddSingle, "Arg1"));
-        assertTrue(containsArgName(resultAddSingle, "Arg2"));
-        assertTrue(containsArgName(resultAddSingle, "Arg5"));
+        assertTrue(Helper.containsArgument(resultAddSingle, "Arg1"));
+        assertTrue(Helper.containsArgument(resultAddSingle, "Arg2"));
+        assertTrue(Helper.containsArgument(resultAddSingle, "Arg5"));
     }
 
     @Test
@@ -174,9 +192,9 @@ public class Helper_Test {
                 new Arguments("Type3", "Arg3"));
         final ImmutableList<Arguments> result = Helper.removeArgument(arguments, "Arg2");
 
-        assertFalse(containsArgName(result, "Arg2"));
-        assertTrue(containsArgName(result, "Arg1"));
-        assertTrue(containsArgName(result, "Arg3"));
+        assertFalse(Helper.containsArgument(result, "Arg2"));
+        assertTrue(Helper.containsArgument(result, "Arg1"));
+        assertTrue(Helper.containsArgument(result, "Arg3"));
     }
 
     @Test
