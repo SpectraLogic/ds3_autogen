@@ -32,7 +32,14 @@ public final class MultiResponseSplitConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MultiResponseSplitConverter.class);
 
+    //Used to namespace requests when they are split due to having multiple payloads
+    //based on the full details parameter
     public static final String NAMESPACE_FULL_DETAILS = "FullDetails";
+
+    //Names of common parameters
+    private static final String BLOB_API_BEANS_CONTAINER_PARAM = "BlobApiBeansContainer";
+    private static final String PHYSICAL_PLACEMENT_API_BEAN_PARAM = "PhysicalPlacementApiBean";
+    private static final String FULL_DETAILS_PARAM = "FullDetails";
 
     //Names of known request handlers that have two response types for a given response code
     private static final String GET_PHYSICAL_PLACEMENT_FOR_OBJECTS = "GetPhysicalPlacementForObjectsRequestHandler";
@@ -61,7 +68,7 @@ public final class MultiResponseSplitConverter {
     public static ImmutableList<Ds3Request> splitAllMultiResponseRequests(
             final ImmutableList<Ds3Request> ds3Requests) {
         if (isEmpty(ds3Requests)) {
-            LOG.info("No requests");
+            LOG.info("No requests to split");
             return ImmutableList.of();
         }
 
@@ -139,18 +146,18 @@ public final class MultiResponseSplitConverter {
         //Add request without Full Details param with a payload of PhysicalPlacementApiBean
         builder.add(removeOptionalParam(
                 ds3Request,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
-                "PhysicalPlacementApiBean",
+                PHYSICAL_PLACEMENT_API_BEAN_PARAM,
                 null));
 
         //Add request with required Full Details param with a payload of BlobApiBeansContainer
         builder.add(makeRequiredParam(
                 ds3Request,
                 NAMESPACE_FULL_DETAILS,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
-                "BlobApiBeansContainer",
+                BLOB_API_BEANS_CONTAINER_PARAM,
                 null));
 
         return builder.build();
@@ -174,18 +181,18 @@ public final class MultiResponseSplitConverter {
         //Add request without Full Details param with a payload of PhysicalPlacementApiBean
         builder.add(removeOptionalParam(
                 ds3Request,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
-                "PhysicalPlacementApiBean",
+                PHYSICAL_PLACEMENT_API_BEAN_PARAM,
                 null));
 
         //Add request with required Full Details param with a payload of BlobApiBeansContainer
         builder.add(makeRequiredParam(
                 ds3Request,
                 NAMESPACE_FULL_DETAILS,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
-                "BlobApiBeansContainer",
+                BLOB_API_BEANS_CONTAINER_PARAM,
                 null));
 
         return builder.build();
@@ -209,7 +216,7 @@ public final class MultiResponseSplitConverter {
         //Add request without Full Details param with a payload of TapePartition
         builder.add(removeOptionalParam(
                 ds3Request,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
                 "TapePartition",
                 null));
@@ -218,7 +225,7 @@ public final class MultiResponseSplitConverter {
         builder.add(makeRequiredParam(
                 ds3Request,
                 NAMESPACE_FULL_DETAILS,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
                 "DetailedTapePartition",
                 null));
@@ -244,7 +251,7 @@ public final class MultiResponseSplitConverter {
         //Add request without Full Details param with a payload of Tape
         builder.add(removeOptionalParam(
                 ds3Request,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
                 "Tape",
                 null));
@@ -253,7 +260,7 @@ public final class MultiResponseSplitConverter {
         builder.add(makeRequiredParam(
                 ds3Request,
                 NAMESPACE_FULL_DETAILS,
-                "FullDetails",
+                FULL_DETAILS_PARAM,
                 200,
                 "TapeApiBean",
                 null));
@@ -514,6 +521,9 @@ public final class MultiResponseSplitConverter {
     /**
      * Gets the name of a type. Any path is stripped, and if there is a '$' character
      * in the name, then the type name is taken from what occurs after the dollar sign.
+     * Example:
+     *   Input: com.spectralogic.tape.GetTapePartitionRequest$DetailedTapePartition
+     *   Return: DetailedTapePartition
      * @param typeName The name of a type or component type
      */
     protected static String getTypeNameWithoutPath(final String typeName) {
