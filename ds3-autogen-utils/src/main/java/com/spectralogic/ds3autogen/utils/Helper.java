@@ -174,6 +174,26 @@ public final class Helper {
     }
 
     /**
+     * Determines if a an argument exists within a list of arguments.
+     * @param arguments A list of Arguments
+     * @param argName The name of the Argument being searched for
+     */
+    public static boolean containsArgument(
+            final ImmutableList<Arguments> arguments,
+            final String argName) {
+        if (isEmpty(arguments) || isEmpty(argName)) {
+            return false;
+        }
+
+        for (final Arguments arg : arguments) {
+            if (arg.getName().equalsIgnoreCase(argName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Sorts a list of Arguments by name.  Used for sorting constructor arguments for consistency.
      * @param arguments List of Arguments
      * @return Sorted list of Arguments
