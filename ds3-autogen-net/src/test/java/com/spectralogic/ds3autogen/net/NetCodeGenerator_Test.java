@@ -42,7 +42,7 @@ public class NetCodeGenerator_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void simpleRequest() throws IOException, ParserException {
+    public void simpleRequest() throws IOException, ParserException, ResponseTypeNotFoundException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final Path requestPath = Paths.get("./Ds3/Calls/GetObjectRequestHandler.cs");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);

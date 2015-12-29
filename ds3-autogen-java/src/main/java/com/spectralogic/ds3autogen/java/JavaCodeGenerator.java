@@ -31,6 +31,7 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -45,10 +46,11 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.spectralogic.ds3autogen.utils.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.splitAllMultiResponseRequests;
+import static com.spectralogic.ds3autogen.utils.NameConverter.renameRequests;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -82,8 +84,9 @@ public class JavaCodeGenerator implements CodeGenerator {
     public void generate(
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
-            final Path destDir) throws IOException {
-        this.spec = renameRequests(spec);
+            final Path destDir) throws IOException, ResponseTypeNotFoundException {
+        this.spec = renameRequests( //Rename requests from RequestHandler to Request
+                splitAllMultiResponseRequests(spec)); //Split requests with multiple response codes
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 

@@ -15,14 +15,8 @@
 
 package com.spectralogic.ds3autogen.api;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-
-import java.io.IOException;
-
-import java.nio.file.Path;
-
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException, ResponseTypeNotFoundException;
+public class ResponseTypeNotFoundException extends Exception {
+    public ResponseTypeNotFoundException(final String responseType) {
+        super("Response Type was not found: " + responseType);
+    }
 }

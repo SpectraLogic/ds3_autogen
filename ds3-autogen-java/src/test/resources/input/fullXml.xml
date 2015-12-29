@@ -1465,7 +1465,6 @@
                     <ResponseCode>
                         <Code>204</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                             <ResponseType Type="null"/>
                         </ResponseTypes>
                     </ResponseCode>
@@ -5729,7 +5728,7 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="ABORT" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="Value" Value="CANCEL" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -8080,7 +8079,7 @@
             <Type Name="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode">
                 <Elements/>
                 <EnumConstants>
-                    <EnumConstant Name="ABORT"/>
+                    <EnumConstant Name="CANCEL"/>
                     <EnumConstant Name="ACCEPT_MOST_RECENT"/>
                     <EnumConstant Name="ACCEPT_HIGHEST_VERSION"/>
                     <EnumConstant Name="ACCEPT_IMPORT"/>
@@ -8098,7 +8097,7 @@
             <Type Name="com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode">
                 <Elements/>
                 <EnumConstants>
-                    <EnumConstant Name="ABORT"/>
+                    <EnumConstant Name="CANCEL"/>
                     <EnumConstant Name="ACCEPT_SOURCE"/>
                     <EnumConstant Name="ACCEPT_TARGET"/>
                     <EnumConstant Name="ACCEPT_MOST_RECENT"/>

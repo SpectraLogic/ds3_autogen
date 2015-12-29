@@ -16,31 +16,26 @@
 package com.spectralogic.ds3autogen.java.utils;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.mockito.Mockito.when;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
 
 public class TestGeneratedCode {
 
-    private final ByteArrayOutputStream requestOutputStream;
-    private final ByteArrayOutputStream responseOutputStream;
-    private final ByteArrayOutputStream ds3ClientOutputStream;
-    private final ByteArrayOutputStream ds3ClientImplOutputStream;
-    private String requestGeneratedCode;
-    private String responseGeneratedCode;
-    private String ds3ClientGeneratedCode;
-    private String ds3ClientImplGeneratedCode;
+    protected final ByteArrayOutputStream requestOutputStream;
+    protected final ByteArrayOutputStream responseOutputStream;
+    protected final ByteArrayOutputStream ds3ClientOutputStream;
+    protected final ByteArrayOutputStream ds3ClientImplOutputStream;
+    protected String requestGeneratedCode;
+    protected String responseGeneratedCode;
+    protected String ds3ClientGeneratedCode;
+    protected String ds3ClientImplGeneratedCode;
 
     public TestGeneratedCode(
             final FileUtils fileUtils,
@@ -54,7 +49,7 @@ public class TestGeneratedCode {
 
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
@@ -65,15 +60,6 @@ public class TestGeneratedCode {
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
         ds3ClientGeneratedCode = new String(ds3ClientOutputStream.toByteArray());
         ds3ClientImplGeneratedCode = new String(ds3ClientImplOutputStream.toByteArray());
-    }
-
-    private static ByteArrayOutputStream setupOutputStream(
-            final FileUtils fileUtils,
-            final String pathName) throws IOException {
-        final Path path = Paths.get(pathName);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(path)).thenReturn(outputStream);
-        return outputStream;
     }
 
     public String getRequestGeneratedCode() {

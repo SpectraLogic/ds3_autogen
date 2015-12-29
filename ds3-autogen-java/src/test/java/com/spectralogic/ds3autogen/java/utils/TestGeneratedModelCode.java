@@ -16,20 +16,15 @@
 package com.spectralogic.ds3autogen.java.utils;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.*;
-import static org.mockito.Mockito.when;
 
 public class TestGeneratedModelCode {
 
@@ -60,18 +55,9 @@ public class TestGeneratedModelCode {
         return pathName + modelName + ".java";
     }
 
-    private static ByteArrayOutputStream setupOutputStream(
-            final FileUtils fileUtils,
-            final String pathName) throws IOException {
-        final Path path = Paths.get(pathName);
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
-        when(fileUtils.getOutputFile(path)).thenReturn(outputStream);
-        return outputStream;
-    }
-
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedModelCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();

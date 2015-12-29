@@ -19,6 +19,7 @@ import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class CCodeGenerator_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
-    public void testSingleDeleteRequestHandler() throws IOException, ParserException {
+    public void testSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -53,7 +54,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeEnumConstant() throws IOException, ParserException {
+    public void testSingleTypeEnumConstant() throws IOException, ParserException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
