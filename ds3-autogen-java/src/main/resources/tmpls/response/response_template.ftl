@@ -11,16 +11,24 @@ import java.io.InputStream;
 
 public class ${name} extends AbstractResponse {
 
-    private String result;
+${javaHelper.createAllResponseResultClassVars(
+  javaHelper.removeErrorResponseCodes(responseCodes))}
 
 <#include "common/response_constructor.ftl"/>
 
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
-            try (final InputStream content = getResponse().getResponseStream()) {
-                this.result = content.toString();
+            this.checkStatusCode(${helper.getResponseCodes(
+                                   javaHelper.removeErrorResponseCodes(responseCodes))});
+
+            switch (this.getStatusCode()) {
+            <#list javaHelper.removeErrorResponseCodes(responseCodes) as responseCode>
+            case ${responseCode.getCode()}:
+                ${javaHelper.processResponseCodeLines(responseCode, 4)}
+            </#list>
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
         } finally {
             this.getResponse().close();

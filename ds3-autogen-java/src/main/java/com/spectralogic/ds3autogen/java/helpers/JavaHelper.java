@@ -16,8 +16,11 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
@@ -27,6 +30,7 @@ import com.spectralogic.ds3autogen.utils.Helper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
@@ -344,17 +348,25 @@ public final class JavaHelper {
         return builder.toString();
     }
 
+    //TODO unit tests for refactor
     /**
-     * Creates the Java type from elements, converting component types into arrays.
+     * Creates the Java type from elements, converting component types into a List.
      */
     public static String convertType(final Element element) throws IllegalArgumentException {
-        if (isEmpty(element.getComponentType())) {
-            return stripPath(element.getType());
+        return convertType(element.getType(), element.getComponentType());
+    }
+
+    /**
+     * Creates the Java type from elements, converting component types into a List.
+     */
+    public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
+        if (isEmpty(componentType)) {
+            return stripPath(type);
         }
-        if (element.getType().equalsIgnoreCase("array")) {
-            return "List<" + stripPath(element.getComponentType()) + ">";
+        if (type.equalsIgnoreCase("array")) {
+            return "List<" + stripPath(componentType) + ">";
         }
-        throw new IllegalArgumentException("Unknown element type: " + element.getType());
+        throw new IllegalArgumentException("Unknown element type: " + type);
     }
 
     /**
@@ -433,5 +445,104 @@ public final class JavaHelper {
      */
     public static boolean isSpectraDs3OrNotification(final String packageName) {
         return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
+    }
+
+    //TODO unit tests
+    /**
+     * Creates the Java code associated with processing a given response code
+     * @param responseCode A Ds3ResponseCode
+     * @param indent The level of indentation needed to properly align the generated code
+     */
+    public static String processResponseCodeLines(final Ds3ResponseCode responseCode, final int indent) {
+        final Ds3ResponseType ds3ResponseType = responseCode.getDs3ResponseTypes().get(0);
+        final String responseType = stripPath(ds3ResponseType.getType());
+        if (responseType.equalsIgnoreCase("null")) {
+            return "//Do nothing, payload is null\n"
+                    + indent(indent) + "break;";
+        }
+
+        return "try (final InputStream content = getResponse().getResponseStream()) {\n"
+                + indent(indent + 1) + "this." + uncapFirst(responseType) + "Result = XmlOutput.fromXml(content, "
+                + responseType + ".class);\n"
+                + indent(indent) + "}";
+    }
+
+    //TODO unit tests
+    /**
+     * Creates the Java code for the class parameters associated with the response payloads
+     * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into
+     *                      class parameters
+     */
+    public static String createAllResponseResultClassVars(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return "";
+        }
+        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
+            builder.add("final " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
+                            + " " + entry.getKey() + ";");
+        }
+        return builder.build()
+                .stream()
+                .map(i -> indent(1) + i)
+                .collect(Collectors.joining("\n"));
+    }
+
+    //TODO unit tests
+    /**
+     * Creates a map containing all unique Ds3Response types found within a list of
+     * response codes. The map key consists of the response type parameter names,
+     * and values are the Ds3ResponseType associated with that parameter name.
+     */
+    protected static ImmutableMap<String, Ds3ResponseType> createUniqueDs3ResponseTypesMap(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        final ImmutableMap.Builder<String, Ds3ResponseType> builder = ImmutableMap.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                final String responseParamName = createDs3ResponseTypeParamName(responseType);
+                if (hasContent(responseParamName)
+                        && !builder.build().containsKey(responseParamName)) {
+                    builder.put(responseParamName, responseType);
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    //todo unit tests
+    /**
+     * Creates the parameter name associated with a response type. Example:
+     *   Type is null: ""
+     *   Simple Type (no component type): myTypeResult
+     *   Component Type (with component type): myTypeListResult
+     */
+    protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
+        if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
+            return "";
+        }
+        if (hasContent(responseType.getComponentType())) {
+            return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
+        }
+        return uncapFirst(stripPath(responseType.getType())) + "Result";
+    }
+
+    //TODO unit test
+    /**
+     * Removes response codes that are associated with errors from the list.
+     * Error response codes are associated with values greater or equal to 400.
+     */
+    public static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (responseCode.getCode() < 400) {
+                builder.add(responseCode);
+            }
+        }
+        return builder.build();
     }
 }
