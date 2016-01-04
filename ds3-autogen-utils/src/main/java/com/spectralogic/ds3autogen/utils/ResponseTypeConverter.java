@@ -194,9 +194,7 @@ public final class ResponseTypeConverter {
                         new Ds3Element(
                                 stripPath(componentType),
                                 "array",
-                                componentType,
-                                null)),
-                null);
+                                componentType)));
     }
 
     /**
