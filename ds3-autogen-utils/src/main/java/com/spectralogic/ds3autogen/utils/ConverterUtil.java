@@ -68,6 +68,9 @@ public final class ConverterUtil {
         return leftEnum == rightEnum;
     }
 
+    /**
+     * Removes all Spectra Internal requests form a list of Ds3Requests
+     */
     public static ImmutableList<Ds3Request> removeSpectraInternalRequests(
             final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {
@@ -82,6 +85,13 @@ public final class ConverterUtil {
         return builder.build();
     }
 
+    /**
+     * Removes all unused types from the Ds3Type map. Types are considered to be used if
+     * they are used within a Ds3Request, and/or if they are used within another type that
+     * is also used.
+     * @param types A Ds3Type map
+     * @param requests A list of Ds3Requests
+     */
     public static ImmutableMap<String, Ds3Type> removeUnusedTypes(
             final ImmutableMap<String, Ds3Type> types,
             final ImmutableList<Ds3Request> requests) {
@@ -98,6 +108,9 @@ public final class ConverterUtil {
         return builder.build();
     }
 
+    /**
+     * Gets a set of type names used within a list of Ds3Types
+     */
     protected static ImmutableSet<String> getUsedTypesFromAllTypes(
             final ImmutableMap<String, Ds3Type> typeMap,
             final ImmutableSet<String> usedTypes) {
@@ -117,6 +130,9 @@ public final class ConverterUtil {
         return newUsedTypes;
     }
 
+    /**
+     * Gets a set of type names used within a Ds3Type
+     */
     protected static ImmutableSet<String> getUsedTypesFromType(final Ds3Type ds3Type) {
         if (isEnum(ds3Type) || isEmpty(ds3Type.getElements())) {
             return ImmutableSet.of();
@@ -134,14 +150,24 @@ public final class ConverterUtil {
         return builder.build();
     }
 
+    /**
+     * Determines if a Ds3Type is describing an Enum
+     */
     protected static boolean isEnum(final Ds3Type ds3Type) {
         return hasContent(ds3Type.getEnumConstants());
     }
 
+    /**
+     * Determines if a type name is a Spectra defined type
+     */
     protected static boolean includeType(final String type) {
         return hasContent(type) && type.startsWith(CONTRACT_DEFINED_TYPE);
     }
 
+    /**
+     * Gets a set of type names used within a list of Ds3Requests. This includes all Spectra defined
+     * parameter types and response types used within the requests.
+     */
     protected static ImmutableSet<String> getUsedTypesFromRequests(final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {
             return ImmutableSet.of();
@@ -150,10 +176,14 @@ public final class ConverterUtil {
         for (final Ds3Request request : requests) {
             builder.addAll(getUsedTypesFromParams(request.getRequiredQueryParams()));
             builder.addAll(getUsedTypesFromParams(request.getOptionalQueryParams()));
+            builder.addAll(getUsedTypesFromResponseCodes(request.getDs3ResponseCodes()));
         }
         return builder.build();
     }
 
+    /**
+     * Gets a set of type names used within a list of Ds3Params
+     */
     protected static ImmutableSet<String> getUsedTypesFromParams(final ImmutableList<Ds3Param> params) {
         if (isEmpty(params)) {
             return ImmutableSet.of();
@@ -165,5 +195,58 @@ public final class ConverterUtil {
             }
         }
         return builder.build();
+    }
+
+    /**
+     * Gets a set of type names used within a list of Ds3ResponseCodes
+     */
+    protected static ImmutableSet<String> getUsedTypesFromResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes){
+        if (isEmpty(responseCodes)) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (hasContent(responseCode.getDs3ResponseTypes())) {
+                builder.addAll(getUsedTypesFromResponseTypes(responseCode.getDs3ResponseTypes()));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Gets a set of type names used within a list of Ds3ResponseTypes
+     */
+    protected static ImmutableSet<String> getUsedTypesFromResponseTypes(final ImmutableList<Ds3ResponseType> responseTypes) {
+        if (isEmpty(responseTypes)) {
+            return ImmutableSet.of();
+        }
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3ResponseType responseType : responseTypes) {
+            if (includeResponseType(responseType)) {
+                builder.add(getTypeFromResponseType(responseType));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Determines if a Response Type contains a Spectra defined type.
+     */
+    protected static boolean includeResponseType(final Ds3ResponseType responseType) {
+        return includeType(responseType.getType()) || includeType(responseType.getComponentType());
+    }
+
+    /**
+     * Retrieves the Spectra defined type within the Response Type. Throws an error if
+     * neither type nor component type is a Spectra defined type.
+     */
+    protected static String getTypeFromResponseType(final Ds3ResponseType responseType) {
+        if (includeType(responseType.getType())) {
+            return responseType.getType();
+        }
+        if (includeType(responseType.getComponentType())) {
+            return responseType.getComponentType();
+        }
+        throw new IllegalArgumentException("Cannot get Spectra type name if neither the Response Type nor the Response Component Type is a Spectra defined type");
     }
 }

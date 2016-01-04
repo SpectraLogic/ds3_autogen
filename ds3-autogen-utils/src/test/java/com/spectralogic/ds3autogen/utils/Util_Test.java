@@ -22,6 +22,8 @@ import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
+import static com.spectralogic.ds3autogen.utils.test.utils.ResponseTypeConverterHelper.createPopulatedDs3ResponseCodeList;
+import static com.spectralogic.ds3autogen.utils.test.utils.ResponseTypeConverterHelper.createPopulatedDs3ResponseTypeList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -175,21 +177,22 @@ public class Util_Test {
     }
 
     @Test
-    public void getUsedTypesNull() {
+    public void getUsedTypesFromRequests_NullList_Test() {
         final ImmutableSet<String> nullResult = getUsedTypesFromRequests(null);
         assertTrue(nullResult.isEmpty());
     }
 
     @Test
-    public void getUsedTypesEmpty() {
+    public void getUsedTypesFromRequests_EmptyList_Test() {
         final ImmutableSet<String> emptyResult = getUsedTypesFromRequests(ImmutableList.of());
         assertTrue(emptyResult.isEmpty());
     }
 
     @Test
-    public void getUsedTypesFull() {
+    public void getUsedTypesFromRequests_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null,
+                        createPopulatedDs3ResponseCodeList("_v1", "_v2"),
                         ImmutableList.of(
                                 new Ds3Param(null, "java.util.UUID"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
@@ -202,12 +205,16 @@ public class Util_Test {
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
                         ImmutableList.of()));
         final ImmutableSet<String> result = getUsedTypesFromRequests(requests);
-        assertThat(result.size(), is(3));
+
+        assertThat(result.size(), is(7));
         assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"));
         assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"));
         assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
-        assertFalse(result.contains("java.util.UUID"));
-        assertFalse(result.contains("long"));
+
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.tape.TapePartition_v1"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.tape.TapePartition_v2"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v1"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v2"));
     }
 
     @Test
@@ -384,5 +391,76 @@ public class Util_Test {
         assertTrue(result.contains(tapeState));
         assertTrue(result.contains(poolHealth));
         assertFalse(result.contains(permission));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getTypeFromResponseType_SimpleType_Test() {
+        getTypeFromResponseType(new Ds3ResponseType("SimpleType", null));
+    }
+
+    @Test
+    public void getTypeFromResponseType_SpectraType_Test() {
+        final String result = getTypeFromResponseType(
+                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null));
+        assertThat(result, is("com.spectralogic.s3.server.domain.HttpErrorResultApiBean"));
+    }
+    @Test
+    public void getTypeFromResponseType_SpectraComponentType_Test() {
+        final String result = getTypeFromResponseType(
+                new Ds3ResponseType("array", "com.spectralogic.s3.server.domain.HttpErrorResultApiBean"));
+        assertThat(result, is("com.spectralogic.s3.server.domain.HttpErrorResultApiBean"));
+    }
+
+    @Test
+    public void includeResponseType_Test() {
+        assertTrue(includeResponseType(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)));
+        assertTrue(includeResponseType(new Ds3ResponseType("array", "com.spectralogic.s3.server.domain.HttpErrorResultApiBean")));
+        assertFalse(includeResponseType(new Ds3ResponseType("SimpleType", null)));
+        assertFalse(includeResponseType(new Ds3ResponseType("SimpleType", "ComponentType")));
+    }
+
+    @Test
+    public void getUsedTypesFromResponseTypes_NullList_Test() {
+        final ImmutableSet<String> result = getUsedTypesFromResponseTypes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getUsedTypesFromResponseTypes_EmptyList_Test() {
+        final ImmutableSet<String> result = getUsedTypesFromResponseTypes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getUsedTypesFromResponseTypes_FullList_Test() {
+        final ImmutableList<Ds3ResponseType> responseTypes = createPopulatedDs3ResponseTypeList("");
+        final ImmutableSet<String> result = getUsedTypesFromResponseTypes(responseTypes);
+        assertThat(result.size(), is(2));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.tape.TapePartition"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl"));
+    }
+
+    @Test
+    public void getUsedTypesFromResponses_NullList_Test() {
+        final ImmutableSet<String> result = getUsedTypesFromResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getUsedTypesFromResponses_EmptyList_Test() {
+        final ImmutableSet<String> result = getUsedTypesFromResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getUsedTypesFromResponses_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = createPopulatedDs3ResponseCodeList("_v1", "_v2");
+        final ImmutableSet<String> result = getUsedTypesFromResponseCodes(responseCodes);
+
+        assertThat(result.size(), is(4));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.tape.TapePartition_v1"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.tape.TapePartition_v2"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v1"));
+        assertTrue(result.contains("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v2"));
     }
 }

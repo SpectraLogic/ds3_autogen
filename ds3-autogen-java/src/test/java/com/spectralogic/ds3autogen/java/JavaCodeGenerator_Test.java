@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedSplitRequestCode;
 import com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
@@ -1077,10 +1078,11 @@ public class JavaCodeGenerator_Test {
     public void getJobCompletedNotificationRegistrationsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetJobCompletedNotificationRegistrationsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+        final TestGeneratedComponentResponseCode testGeneratedCode = new TestGeneratedComponentResponseCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/notifications/");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/notifications/",
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/JobCompletedNotificationRegistrationList.java");
 
         testGeneratedCode.generateCode(fileUtils, "/input/getJobCompletedNotificationRegistrationsRequestHandler.xml");
 
