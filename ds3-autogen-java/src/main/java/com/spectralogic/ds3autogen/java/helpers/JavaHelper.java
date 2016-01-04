@@ -263,6 +263,9 @@ public final class JavaHelper {
      * @return Comma separated list of sorted argument types
      */
     public static String argTypeList(final ImmutableList<Arguments> arguments) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         return sortConstructorArgs(arguments)
                 .stream()
                 .map(Arguments::getType).collect(Collectors.joining(", "));
@@ -274,6 +277,9 @@ public final class JavaHelper {
      * @return Comma separated list of argument names.
      */
     public static String argsToList(final List<Arguments> arguments) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         return arguments
                 .stream()
                 .map(i -> uncapFirst(i.getName()))
@@ -309,6 +315,9 @@ public final class JavaHelper {
      * @return Comma separated list of function parameters
      */
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
+        if (isEmpty(requiredArguments)) {
+            return "";
+        }
         return sortConstructorArgs(requiredArguments)
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
@@ -320,7 +329,11 @@ public final class JavaHelper {
      */
     public static String modifiedArgNameList(
             final ImmutableList<Arguments> arguments,
-            final String modifyArgName, final String toArgName) {
+            final String modifyArgName,
+            final String toArgName) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
         for (final Arguments arg : arguments) {
             if (arg.getName().equals(modifyArgName)) {

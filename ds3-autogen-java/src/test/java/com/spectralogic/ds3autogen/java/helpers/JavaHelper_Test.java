@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class JavaHelper_Test {
 
     @Test
-    public void bulkWithPriorityConstructor() {
+    public void createWithConstructorBulk_PriorityParam_Test() {
         final String expectedResult =
                         "    @Override\n" +
                         "    public CreatePutJobRequestHandler withPriority(final Priority priority) {\n" +
@@ -44,7 +44,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void bulkWithMaxUploadSizeConstructor() {
+    public void createWithConstructorBulk_MaxUploadSizeParam_Test() {
         final String expectedResult =
                 "    public CreatePutJobRequestHandler withMaxUploadSize(final long maxUploadSize) {\n" +
                 "        if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
@@ -60,7 +60,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void withVoidConstructor() {
+    public void createWithConstructorBulk_VoidParam_Test() {
         final String expectedResult =
                 "    public GetJobsRequestHandler withFullDetails(final boolean fullDetails) {\n" +
                 "        this.fullDetails = fullDetails;\n" +
@@ -77,7 +77,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void argTypeList() {
+    public void argTypeList_NullList_Test() {
+        final String result = JavaHelper.argTypeList(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void argTypeList_EmptyList_Test() {
+        final String result = JavaHelper.argTypeList(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void argTypeList_FullList_Test() {
         final String expectedResult = "Type1, Type2, Type3";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
                 new Arguments("Type2", "arg2"),
@@ -88,7 +100,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void withConstructor() {
+    public void createWithConstructorBulk_Test() {
         final String expectedResult =
                 "    public GetBucketRequestHandler withDelimiter(final String delimiter) {\n" +
                 "        this.delimiter = delimiter;\n" +
@@ -101,7 +113,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void argsToList() {
+    public void argsToList_NullList_Test() {
+        final String result = JavaHelper.argsToList(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void argsToList_EmptyList_Test() {
+        final String result = JavaHelper.argsToList(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void argsToList_FullList_Test() {
         final String expectedResult = "arg1, arg2, arg3";
         final List<Arguments> arguments = Arrays.asList(
                 new Arguments("type1", "Arg1"),
@@ -112,7 +136,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void getType() {
+    public void getType_Test() {
         assertThat(JavaHelper.getType(new Arguments("void", "test")), is("boolean"));
         assertThat(JavaHelper.getType(new Arguments("Integer", "test")), is("int"));
         assertThat(JavaHelper.getType(new Arguments("long", "test")), is("long"));
@@ -121,7 +145,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void constructorArgs() {
+    public void constructorArgs_NullList_Test() {
+        final String result = JavaHelper.constructorArgs(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void constructorArgs_EmptyList_Test() {
+        final String result = JavaHelper.constructorArgs(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void constructorArgs_FullList_Test() {
         final String expectedResult = "final String bucketName, final String objectName, final Type1 arg1, final Type2 arg2, final Type3 arg3";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
                 new Arguments("Type1", "Arg1"),
@@ -134,7 +170,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void constructorArgs2() {
+    public void constructorArgs_FullList_Test2() {
         final String expectedResult = "final String bucketName, final String objectName, final SeekableByteChannel channel, final long size";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
                 new Arguments("SeekableByteChannel", "Channel"),
@@ -146,7 +182,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void createGetter() {
+    public void createGetter_Test() {
         final String expectedResult = "public String getBucketName() {\n"
                 + "        return this.bucketName;\n"
                 + "    }\n";
@@ -156,7 +192,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void modifiedArgNameList() {
+    public void modifiedArgNameList_NullList_Test() {
+        final String result = JavaHelper.modifiedArgNameList(null, "Arg1", "Integer.toString(arg1)");
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void modifiedArgNameList_EmptyList_Test() {
+        final String result = JavaHelper.modifiedArgNameList(ImmutableList.of(), "Arg1", "Integer.toString(arg1)");
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void modifiedArgNameList_FullList_Test() {
         final String expectedResult = "Integer.toString(arg1), arg2, arg3";
         final ImmutableList<Arguments> arguments = ImmutableList.of(
                 new Arguments("Type1", "Arg1"),
@@ -167,7 +215,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void getModelVariable() {
+    public void getModelVariable_SimpleType_Test() {
         final String expectedResult =
                 "    @JsonProperty(\"TestName\")\n"
                 + "    private testType testName;";
@@ -180,7 +228,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void getModelVariableWithArrayComponentType() {
+    public void getModelVariable_ArrayComponentType_Test() {
         final String expectedResult =
                 "    @JsonProperty(\"TestName\")\n"
                 + "    @JacksonXmlElementWrapper\n"
@@ -194,7 +242,7 @@ public class JavaHelper_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getModelVariableWithOtherComponentType() {
+    public void getModelVariable_NonArrayComponentType_Test() {
         final Element element = new Element(
                 "testName",
                 "map",
@@ -204,7 +252,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void getModelConstructorArgs() {
+    public void getModelConstructorArgs_NullList_Test() {
+        final String result = JavaHelper.getModelConstructorArgs(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getModelConstructorArgs_EmptyList_Test() {
+        final String result = JavaHelper.getModelConstructorArgs(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getModelConstructorArgs_FullList_Test() {
         final String expectedResult = "final Type1 elmt1, final Type2 elmt2, final List<Type3> elmt3";
         final ImmutableList<Element> elements = ImmutableList.of(
                 new Element("Elmt2", "Type2", null),
@@ -218,7 +278,19 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void sortModelConstructorArgs() {
+    public void sortModelConstructorArgs_NullList_Test() {
+        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void sortModelConstructorArgs_EmptyList_Test() {
+        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void sortModelConstructorArgs_FullList_Test() {
         final ImmutableList<Element> expectedResult = ImmutableList.of(
                 new Element("Elmt1", "Type1", null),
                 new Element("Elmt2", "Type2", null),
@@ -237,7 +309,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void isBulkRequestArg() {
+    public void isBulkRequestArg_Test() {
         assertTrue(JavaHelper.isBulkRequestArg("Priority"));
         assertTrue(JavaHelper.isBulkRequestArg("WriteOptimization"));
         assertTrue(JavaHelper.isBulkRequestArg("BucketName"));
@@ -245,7 +317,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void createWithConstructor() {
+    public void createWithConstructor_Test() {
         final String expectedResult =
                 "    public RequestName withArgName(final ArgType argName) {\n" +
                 "        this.argName = argName;\n" +
@@ -268,7 +340,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void putQueryParamLine() {
+    public void putQueryParamLine_Test() {
         final String expectedResult = "this.getQueryParams().put(\"arg_name\", argName.toString());";
         final Arguments argument = new Arguments("ArgType", "ArgName");
         final String result = JavaHelper.putQueryParamLine(argument);
@@ -276,7 +348,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void toXmlLine() {
+    public void toXmlLine_Test() {
         final String bulkPutExpectedResult = "final String OutputStringName = XmlOutput.toXml(ObjectListName, true);";
         final String bulkPutResult = JavaHelper.toXmlLine("OutputStringName", "ObjectListName", Operation.START_BULK_PUT);
         assertThat(bulkPutResult, is(bulkPutExpectedResult));
@@ -287,7 +359,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void argToString() {
+    public void argToString_Test() {
         assertThat(JavaHelper.argToString(new Arguments("void", "ArgName")), is("null"));
         assertThat(JavaHelper.argToString(new Arguments("boolean", "ArgName")), is("null"));
         assertThat(JavaHelper.argToString(new Arguments("String", "ArgName")), is("argName"));
@@ -299,7 +371,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void convertType() {
+    public void convertType_Test() {
         final Element element = new Element("Length", "long", "");
         assertThat(JavaHelper.convertType(element), is("long"));
 
@@ -308,13 +380,25 @@ public class JavaHelper_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void convertTypeException() {
+    public void convertType_Exception_Test() {
         final Element compositeElement = new Element("Tapes", "map", "com.spectralogic.s3.common.dao.domain.tape.Tape");
         JavaHelper.convertType(compositeElement);
     }
 
     @Test
-    public void getEnumValues() {
+    public void getEnumValues_NullList_Test() {
+        final String result = JavaHelper.getEnumValues(null, 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getEnumValues_EmptyList_Test() {
+        final String result = JavaHelper.getEnumValues(ImmutableList.of(), 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getEnumValues_FullList_Test() {
         final String expectedResult =
                 "    DELETE,\n" +
                 "    GET,\n" +
@@ -335,21 +419,21 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void addEnumNull() {
+    public void addEnum_NullList_Test() {
         final ImmutableList<EnumConstant> result = JavaHelper.addEnum(null, "ONE");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("ONE"));
     }
 
     @Test
-    public void addEnumEmpty() {
+    public void addEnum_EmptyList_Test() {
         final ImmutableList<EnumConstant> result = JavaHelper.addEnum(ImmutableList.of(), "ONE");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("ONE"));
     }
 
     @Test
-    public void addEnumFull() {
+    public void addEnum_FullList_Test() {
         final ImmutableList<EnumConstant> enumConstants = ImmutableList.of(
                 new EnumConstant("ONE"),
                 new EnumConstant("TWO"),
@@ -360,7 +444,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void isSpectraDs3() {
+    public void isSpectraDs3_Test() {
         assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
         assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands"));
 
@@ -369,7 +453,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void isSpectraDs3OrNotification() {
+    public void isSpectraDs3OrNotification_Test() {
         assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
         assertFalse(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));
 
@@ -378,7 +462,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void createBulkVariable() {
+    public void createBulkVariable_Test() {
         final String baseClassExpected = "";
         final Arguments baseClassArg = new Arguments("BlobStoreTaskPriority", "Priority");
         assertThat(JavaHelper.createBulkVariable(baseClassArg, true), is(baseClassExpected));
