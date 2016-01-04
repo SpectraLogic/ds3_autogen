@@ -499,7 +499,6 @@ public final class JavaHelper {
                 .collect(Collectors.joining("\n"));
     }
 
-    //TODO unit tests
     /**
      * Creates a map containing all unique Ds3Response types found within a list of
      * response codes. The map key consists of the response type parameter names,
@@ -507,6 +506,9 @@ public final class JavaHelper {
      */
     protected static ImmutableMap<String, Ds3ResponseType> createUniqueDs3ResponseTypesMap(
             final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableMap.of();
+        }
         final ImmutableMap.Builder<String, Ds3ResponseType> builder = ImmutableMap.builder();
         for (final Ds3ResponseCode responseCode : responseCodes) {
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
@@ -520,7 +522,6 @@ public final class JavaHelper {
         return builder.build();
     }
 
-    //todo unit tests
     /**
      * Creates the parameter name associated with a response type. Example:
      *   Type is null: ""
@@ -537,7 +538,6 @@ public final class JavaHelper {
         return uncapFirst(stripPath(responseType.getType())) + "Result";
     }
 
-    //TODO unit test
     /**
      * Removes response codes that are associated with errors from the list.
      * Error response codes are associated with values greater or equal to 400.

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -41,7 +43,7 @@ public class JavaHelper_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("Priority", "Priority");
-        final String result = JavaHelper.createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
+        final String result = createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -57,7 +59,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("long", "MaxUploadSize");
-        final String result = JavaHelper.createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
+        final String result = createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -74,19 +76,19 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("void", "FullDetails");
-        final String result = JavaHelper.createWithConstructorBulk(arg, "GetJobsRequestHandler");
+        final String result = createWithConstructorBulk(arg, "GetJobsRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void argTypeList_NullList_Test() {
-        final String result = JavaHelper.argTypeList(null);
+        final String result = argTypeList(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void argTypeList_EmptyList_Test() {
-        final String result = JavaHelper.argTypeList(ImmutableList.of());
+        final String result = argTypeList(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -97,7 +99,7 @@ public class JavaHelper_Test {
                 new Arguments("Type2", "arg2"),
                 new Arguments("Type1", "arg1"),
                 new Arguments("Type3", "arg3"));
-        final String result = JavaHelper.argTypeList(arguments);
+        final String result = argTypeList(arguments);
         assertThat(result, is(expectedResult));
     }
 
@@ -110,19 +112,19 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments arg = new Arguments("String", "Delimiter");
-        final String result = JavaHelper.createWithConstructorBulk(arg, "GetBucketRequestHandler");
+        final String result = createWithConstructorBulk(arg, "GetBucketRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void argsToList_NullList_Test() {
-        final String result = JavaHelper.argsToList(null);
+        final String result = argsToList(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void argsToList_EmptyList_Test() {
-        final String result = JavaHelper.argsToList(ImmutableList.of());
+        final String result = argsToList(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -133,28 +135,28 @@ public class JavaHelper_Test {
                 new Arguments("type1", "Arg1"),
                 new Arguments("type1", "Arg2"),
                 new Arguments("type1", "Arg3"));
-        final String result = JavaHelper.argsToList(arguments);
+        final String result = argsToList(arguments);
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void getType_Test() {
-        assertThat(JavaHelper.getType(new Arguments("void", "test")), is("boolean"));
-        assertThat(JavaHelper.getType(new Arguments("Integer", "test")), is("int"));
-        assertThat(JavaHelper.getType(new Arguments("long", "test")), is("long"));
-        assertThat(JavaHelper.getType(new Arguments(null, "test")), is(""));
-        assertThat(JavaHelper.getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
+        assertThat(getType(new Arguments("void", "test")), is("boolean"));
+        assertThat(getType(new Arguments("Integer", "test")), is("int"));
+        assertThat(getType(new Arguments("long", "test")), is("long"));
+        assertThat(getType(new Arguments(null, "test")), is(""));
+        assertThat(getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
     }
 
     @Test
     public void constructorArgs_NullList_Test() {
-        final String result = JavaHelper.constructorArgs(null);
+        final String result = constructorArgs(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void constructorArgs_EmptyList_Test() {
-        final String result = JavaHelper.constructorArgs(ImmutableList.of());
+        final String result = constructorArgs(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -167,7 +169,7 @@ public class JavaHelper_Test {
                 new Arguments("String", "ObjectName"),
                 new Arguments("Type2", "Arg2"),
                 new Arguments("String", "BucketName"));
-        final String result = JavaHelper.constructorArgs(arguments);
+        final String result = constructorArgs(arguments);
         assertThat(result, is(expectedResult));
     }
 
@@ -179,7 +181,7 @@ public class JavaHelper_Test {
                 new Arguments("long", "Size"),
                 new Arguments("String", "bucketName"),
                 new Arguments("String", "objectName"));
-        final String result = JavaHelper.constructorArgs(arguments);
+        final String result = constructorArgs(arguments);
         assertThat(result, is(expectedResult));
     }
 
@@ -189,19 +191,19 @@ public class JavaHelper_Test {
                 + "        return this.bucketName;\n"
                 + "    }\n";
 
-        final String result = JavaHelper.createGetter("BucketName", "String");
+        final String result = createGetter("BucketName", "String");
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void modifiedArgNameList_NullList_Test() {
-        final String result = JavaHelper.modifiedArgNameList(null, "Arg1", "Integer.toString(arg1)");
+        final String result = modifiedArgNameList(null, "Arg1", "Integer.toString(arg1)");
         assertThat(result, is(""));
     }
 
     @Test
     public void modifiedArgNameList_EmptyList_Test() {
-        final String result = JavaHelper.modifiedArgNameList(ImmutableList.of(), "Arg1", "Integer.toString(arg1)");
+        final String result = modifiedArgNameList(ImmutableList.of(), "Arg1", "Integer.toString(arg1)");
         assertThat(result, is(""));
     }
 
@@ -212,7 +214,7 @@ public class JavaHelper_Test {
                 new Arguments("Type1", "Arg1"),
                 new Arguments("Type2", "Arg2"),
                 new Arguments("Type3", "Arg3"));
-        final String result = JavaHelper.modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
+        final String result = modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
         assertThat(result, is(expectedResult));
     }
 
@@ -225,7 +227,7 @@ public class JavaHelper_Test {
                 "testName",
                 "testType",
                 null);
-        final String result = JavaHelper.getModelVariable(element);
+        final String result = getModelVariable(element);
         assertThat(result, is(expectedResult));
     }
 
@@ -239,7 +241,7 @@ public class JavaHelper_Test {
                 "testName",
                 "array",
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
-        final String result = JavaHelper.getModelVariable(element);
+        final String result = getModelVariable(element);
         assertThat(result, is(expectedResult));
     }
 
@@ -250,18 +252,18 @@ public class JavaHelper_Test {
                 "map",
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
 
-        JavaHelper.getModelVariable(element);
+        getModelVariable(element);
     }
 
     @Test
     public void getModelConstructorArgs_NullList_Test() {
-        final String result = JavaHelper.getModelConstructorArgs(null);
+        final String result = getModelConstructorArgs(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void getModelConstructorArgs_EmptyList_Test() {
-        final String result = JavaHelper.getModelConstructorArgs(ImmutableList.of());
+        final String result = getModelConstructorArgs(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -272,22 +274,22 @@ public class JavaHelper_Test {
                 new Element("Elmt2", "Type2", null),
                 new Element("Elmt1", "Type1", null),
                 new Element("Elmt3", "array", "Type3"));
-        final String result = JavaHelper.getModelConstructorArgs(elements);
+        final String result = getModelConstructorArgs(elements);
         assertThat(result, is(expectedResult));
 
-        final String emptyResult = JavaHelper.getModelConstructorArgs(null);
+        final String emptyResult = getModelConstructorArgs(null);
         assertThat(emptyResult, is(""));
     }
 
     @Test
     public void sortModelConstructorArgs_NullList_Test() {
-        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(null);
+        final ImmutableList<Element> result = sortModelConstructorArgs(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void sortModelConstructorArgs_EmptyList_Test() {
-        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(ImmutableList.of());
+        final ImmutableList<Element> result = sortModelConstructorArgs(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
@@ -301,21 +303,21 @@ public class JavaHelper_Test {
                 new Element("Elmt2", "Type2", null),
                 new Element("Elmt3", "array", "Type3"),
                 new Element("Elmt1", "Type1", null));
-        final ImmutableList<Element> result = JavaHelper.sortModelConstructorArgs(elements);
+        final ImmutableList<Element> result = sortModelConstructorArgs(elements);
         for (int i = 0; i < elements.size(); i++) {
             assertTrue(result.get(i).getName().equals(expectedResult.get(i).getName()));
         }
 
-        final ImmutableList<Element> emptyResult = JavaHelper.sortModelConstructorArgs(null);
+        final ImmutableList<Element> emptyResult = sortModelConstructorArgs(null);
         assertTrue(emptyResult.isEmpty());
     }
 
     @Test
     public void isBulkRequestArg_Test() {
-        assertTrue(JavaHelper.isBulkRequestArg("Priority"));
-        assertTrue(JavaHelper.isBulkRequestArg("WriteOptimization"));
-        assertTrue(JavaHelper.isBulkRequestArg("BucketName"));
-        assertFalse(JavaHelper.isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
+        assertTrue(isBulkRequestArg("Priority"));
+        assertTrue(isBulkRequestArg("WriteOptimization"));
+        assertTrue(isBulkRequestArg("BucketName"));
+        assertFalse(isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
     }
 
     @Test
@@ -327,7 +329,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments argument = new Arguments("ArgType", "ArgName");
-        final String result = JavaHelper.createWithConstructor(argument, "RequestName");
+        final String result = createWithConstructor(argument, "RequestName");
         assertThat(result, is(expectedResult));
 
         final String expectedResultBoolean =
@@ -337,7 +339,7 @@ public class JavaHelper_Test {
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
-        final String booleanResult = JavaHelper.createWithConstructor(booleanArgument, "RequestName");
+        final String booleanResult = createWithConstructor(booleanArgument, "RequestName");
         assertThat(booleanResult, is(expectedResultBoolean));
     }
 
@@ -345,64 +347,64 @@ public class JavaHelper_Test {
     public void putQueryParamLine_Test() {
         final String expectedResult = "this.getQueryParams().put(\"arg_name\", argName.toString());";
         final Arguments argument = new Arguments("ArgType", "ArgName");
-        final String result = JavaHelper.putQueryParamLine(argument);
+        final String result = putQueryParamLine(argument);
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void toXmlLine_Test() {
         final String bulkPutExpectedResult = "final String OutputStringName = XmlOutput.toXml(ObjectListName, true);";
-        final String bulkPutResult = JavaHelper.toXmlLine("OutputStringName", "ObjectListName", Operation.START_BULK_PUT);
+        final String bulkPutResult = toXmlLine("OutputStringName", "ObjectListName", Operation.START_BULK_PUT);
         assertThat(bulkPutResult, is(bulkPutExpectedResult));
 
         final String bulkGetExpectedResult = "final String OutputStringName = XmlOutput.toXml(ObjectListName, false);";
-        final String bulkGetResult = JavaHelper.toXmlLine("OutputStringName", "ObjectListName", Operation.START_BULK_GET);
+        final String bulkGetResult = toXmlLine("OutputStringName", "ObjectListName", Operation.START_BULK_GET);
         assertThat(bulkGetResult, is(bulkGetExpectedResult));
     }
 
     @Test
     public void argToString_Test() {
-        assertThat(JavaHelper.argToString(new Arguments("void", "ArgName")), is("null"));
-        assertThat(JavaHelper.argToString(new Arguments("boolean", "ArgName")), is("null"));
-        assertThat(JavaHelper.argToString(new Arguments("String", "ArgName")), is("argName"));
-        assertThat(JavaHelper.argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
-        assertThat(JavaHelper.argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
-        assertThat(JavaHelper.argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
-        assertThat(JavaHelper.argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
-        assertThat(JavaHelper.argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
+        assertThat(argToString(new Arguments("void", "ArgName")), is("null"));
+        assertThat(argToString(new Arguments("boolean", "ArgName")), is("null"));
+        assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
+        assertThat(argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
+        assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
+        assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
     }
 
     @Test
     public void convertType_String_Test() {
-        assertThat(JavaHelper.convertType("long", null), is("long"));
-        assertThat(JavaHelper.convertType("long", ""), is("long"));
-        assertThat(JavaHelper.convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+        assertThat(convertType("long", null), is("long"));
+        assertThat(convertType("long", ""), is("long"));
+        assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
     }
 
     @Test
     public void convertType_Element_Test() {
         final Element element = new Element("Length", "long", "");
-        assertThat(JavaHelper.convertType(element), is("long"));
+        assertThat(convertType(element), is("long"));
 
         final Element compositeElement = new Element("Tapes", "array", "com.spectralogic.s3.common.dao.domain.tape.Tape");
-        assertThat(JavaHelper.convertType(compositeElement), is("List<Tape>"));
+        assertThat(convertType(compositeElement), is("List<Tape>"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void convertType_Exception_Test() {
         final Element compositeElement = new Element("Tapes", "map", "com.spectralogic.s3.common.dao.domain.tape.Tape");
-        JavaHelper.convertType(compositeElement);
+        convertType(compositeElement);
     }
 
     @Test
     public void getEnumValues_NullList_Test() {
-        final String result = JavaHelper.getEnumValues(null, 1);
+        final String result = getEnumValues(null, 1);
         assertThat(result, is(""));
     }
 
     @Test
     public void getEnumValues_EmptyList_Test() {
-        final String result = JavaHelper.getEnumValues(ImmutableList.of(), 1);
+        final String result = getEnumValues(ImmutableList.of(), 1);
         assertThat(result, is(""));
     }
 
@@ -420,23 +422,23 @@ public class JavaHelper_Test {
                 new EnumConstant("HEAD"),
                 new EnumConstant("POST"),
                 new EnumConstant("PUT"));
-        final String result = JavaHelper.getEnumValues(enumConstants, 1);
+        final String result = getEnumValues(enumConstants, 1);
         assertThat(result, is(expectedResult));
 
-        assertThat(JavaHelper.getEnumValues(ImmutableList.of(), 1), is(""));
-        assertThat(JavaHelper.getEnumValues(null, 1), is(""));
+        assertThat(getEnumValues(ImmutableList.of(), 1), is(""));
+        assertThat(getEnumValues(null, 1), is(""));
     }
 
     @Test
     public void addEnum_NullList_Test() {
-        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(null, "ONE");
+        final ImmutableList<EnumConstant> result = addEnum(null, "ONE");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("ONE"));
     }
 
     @Test
     public void addEnum_EmptyList_Test() {
-        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(ImmutableList.of(), "ONE");
+        final ImmutableList<EnumConstant> result = addEnum(ImmutableList.of(), "ONE");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("ONE"));
     }
@@ -447,41 +449,41 @@ public class JavaHelper_Test {
                 new EnumConstant("ONE"),
                 new EnumConstant("TWO"),
                 new EnumConstant("THREE"));
-        final ImmutableList<EnumConstant> result = JavaHelper.addEnum(enumConstants, "FOUR");
+        final ImmutableList<EnumConstant> result = addEnum(enumConstants, "FOUR");
         assertThat(result.size(), is(4));
         assertThat(result.get(3).getName(), is("FOUR"));
     }
 
     @Test
     public void isSpectraDs3_Test() {
-        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
-        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands"));
+        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
+        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands"));
 
-        assertTrue(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
-        assertFalse(JavaHelper.isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
+        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
+        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
     }
 
     @Test
     public void isSpectraDs3OrNotification_Test() {
-        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
-        assertFalse(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));
+        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
+        assertFalse(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));
 
-        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
-        assertTrue(JavaHelper.isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
+        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
+        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
     }
 
     @Test
     public void createBulkVariable_Test() {
         final String baseClassExpected = "";
         final Arguments baseClassArg = new Arguments("BlobStoreTaskPriority", "Priority");
-        assertThat(JavaHelper.createBulkVariable(baseClassArg, true), is(baseClassExpected));
+        assertThat(createBulkVariable(baseClassArg, true), is(baseClassExpected));
 
         final String optionalExpected = "private ArgType argName;";
         final Arguments arg = new Arguments("ArgType", "ArgName");
-        assertThat(JavaHelper.createBulkVariable(arg, false), is(optionalExpected));
+        assertThat(createBulkVariable(arg, false), is(optionalExpected));
 
         final String requiredExpected = "private final ArgType argName;";
-        assertThat(JavaHelper.createBulkVariable(arg, true), is(requiredExpected));
+        assertThat(createBulkVariable(arg, true), is(requiredExpected));
     }
 
     @Test
@@ -495,7 +497,7 @@ public class JavaHelper_Test {
                 ImmutableList.of(
                         new Ds3ResponseType("null", null)));
 
-        final String result = JavaHelper.processResponseCodeLines(responseCode, 0);
+        final String result = processResponseCodeLines(responseCode, 0);
         assertThat(result, is(expectedResult));
     }
 
@@ -511,19 +513,19 @@ public class JavaHelper_Test {
                 ImmutableList.of(
                         new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
 
-        final String result = JavaHelper.processResponseCodeLines(responseCode, 0);
+        final String result = processResponseCodeLines(responseCode, 0);
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void createAllResponseResultClassVars_NullList_Test() {
-        final String result = JavaHelper.createAllResponseResultClassVars(null);
+        final String result = createAllResponseResultClassVars(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void createAllResponseResultClassVars_EmptyList_Test() {
-        final String result = JavaHelper.createAllResponseResultClassVars(ImmutableList.of());
+        final String result = createAllResponseResultClassVars(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -553,10 +555,99 @@ public class JavaHelper_Test {
                 new Ds3ResponseCode(
                         400,
                         ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))
-        );
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))));
 
-        final String result = JavaHelper.createAllResponseResultClassVars(responseCodes);
+        final String result = createAllResponseResultClassVars(responseCodes);
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createUniqueDs3ResponseTypesMap_NullList_Test() {
+        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void createUniqueDs3ResponseTypesMap_EmptyList_Test() {
+        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void createUniqueDs3ResponseTypesMap_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(
+                        200,
+                        ImmutableList.of(
+                                new Ds3ResponseType("null", null))),
+                new Ds3ResponseCode(
+                        206,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
+                new Ds3ResponseCode(
+                        208,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
+                new Ds3ResponseCode(
+                        307,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                new Ds3ResponseCode(
+                        400,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))));
+
+        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(responseCodes);
+        assertThat(result.size(), is(2));
+        assertTrue(result.containsKey("httpErrorResultApiBeanResult"));
+        assertTrue(result.containsKey("bucketObjectsApiBeanResult"));
+    }
+
+    @Test
+    public void createDs3ResponseTypeParamName_Test() {
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("null", null)),
+                is(""));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl", null)),
+                is("bucketAclResult"));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("array", "SimpleComponentType")),
+                is("simpleComponentTypeListResult"));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
+                is("bucketAclListResult"));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_NullList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_EmptyList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(400, null),
+                new Ds3ResponseCode(503, null));
+
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(responseCodes);
+
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getCode(), is(200));
+        assertThat(result.get(1).getCode(), is(206));
+        assertThat(result.get(2).getCode(), is(307));
     }
 }
