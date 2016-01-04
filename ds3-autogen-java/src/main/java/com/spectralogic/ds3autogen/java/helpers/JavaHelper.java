@@ -361,7 +361,6 @@ public final class JavaHelper {
         return builder.toString();
     }
 
-    //TODO unit tests for refactor
     /**
      * Creates the Java type from elements, converting component types into a List.
      */
@@ -460,7 +459,6 @@ public final class JavaHelper {
         return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
     }
 
-    //TODO unit tests
     /**
      * Creates the Java code associated with processing a given response code
      * @param responseCode A Ds3ResponseCode
@@ -480,7 +478,6 @@ public final class JavaHelper {
                 + indent(indent) + "}";
     }
 
-    //TODO unit tests
     /**
      * Creates the Java code for the class parameters associated with the response payloads
      * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into

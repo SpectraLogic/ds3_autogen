@@ -17,6 +17,8 @@ package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
@@ -371,7 +373,14 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void convertType_Test() {
+    public void convertType_String_Test() {
+        assertThat(JavaHelper.convertType("long", null), is("long"));
+        assertThat(JavaHelper.convertType("long", ""), is("long"));
+        assertThat(JavaHelper.convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+    }
+
+    @Test
+    public void convertType_Element_Test() {
         final Element element = new Element("Length", "long", "");
         assertThat(JavaHelper.convertType(element), is("long"));
 
@@ -473,5 +482,81 @@ public class JavaHelper_Test {
 
         final String requiredExpected = "private final ArgType argName;";
         assertThat(JavaHelper.createBulkVariable(arg, true), is(requiredExpected));
+    }
+
+    @Test
+    public void processResponseCodeLines_NullType_Test() {
+        final String expectedResult =
+                "//Do nothing, payload is null\n" +
+                "break;";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("null", null)));
+
+        final String result = JavaHelper.processResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void processResponseCodeLines_Test() {
+        final String expectedResult =
+                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
+                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
+                "}";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
+
+        final String result = JavaHelper.processResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createAllResponseResultClassVars_NullList_Test() {
+        final String result = JavaHelper.createAllResponseResultClassVars(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void createAllResponseResultClassVars_EmptyList_Test() {
+        final String result = JavaHelper.createAllResponseResultClassVars(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void createAllResponseResultClassVars_FullList_Test() {
+        final String expectedResult =
+                "    final BucketObjectsApiBean bucketObjectsApiBeanResult;\n" +
+                "    final HttpErrorResultApiBean httpErrorResultApiBeanResult;";
+
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(
+                        200,
+                        ImmutableList.of(
+                                new Ds3ResponseType("null", null))),
+                new Ds3ResponseCode(
+                        206,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
+                new Ds3ResponseCode(
+                        208,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
+                new Ds3ResponseCode(
+                        307,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                new Ds3ResponseCode(
+                        400,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))
+        );
+
+        final String result = JavaHelper.createAllResponseResultClassVars(responseCodes);
+        assertThat(result, is(expectedResult));
     }
 }
