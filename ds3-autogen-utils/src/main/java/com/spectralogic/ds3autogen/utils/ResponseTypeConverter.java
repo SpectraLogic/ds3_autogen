@@ -40,7 +40,6 @@ public final class ResponseTypeConverter {
 
     private ResponseTypeConverter() { }
 
-    //TODO unit tests
     /**
      * Converts a Ds3ApiSpec to use updated response types. This includes
      * updating all response types that have component types to new types
@@ -56,7 +55,6 @@ public final class ResponseTypeConverter {
                         ds3ApiSpec.getTypes()));
     }
 
-    //TODO unit tests
     /**
      * Updates all Ds3ResponseTypes that have component types within the
      * list of Ds3Requests
@@ -75,7 +73,6 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Updates all Ds3ResponseTypes that have component types within a Ds3Request
      */
@@ -96,7 +93,6 @@ public final class ResponseTypeConverter {
                 request.getRequiredQueryParams());
     }
 
-    //TODO unit tests
     /**
      * Updates all Ds3ResponseTypes that have component types within the
      * list of Ds3ResponseCodes
@@ -118,7 +114,6 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Updates all Ds3ResponseTypes that have component types
      */
@@ -136,7 +131,6 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Updates a Ds3ResponseType so that it will not have a component type. If
      * there is currently a component type, then the type is replaced with a
@@ -154,7 +148,6 @@ public final class ResponseTypeConverter {
                 null);
     }
 
-    //TODO unit tests
     /**
      * Creates new types for generating encapsulating models. This occurs when a response
      * handler has a return type with a component type. This is done to ensure that all
@@ -177,7 +170,9 @@ public final class ResponseTypeConverter {
             return types;
         }
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
-        builder.putAll(types);
+        if (hasContent(types)) {
+            builder.putAll(types);
+        }
         for (final String componentType : componentTypes) {
             final Ds3Type ds3Type = toDs3Type(componentType);
             builder.put(ds3Type.getName(), ds3Type);
@@ -185,12 +180,14 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Converts a response Component Type into a simple Ds3Type that contains a
      * list of the given component type, and where the new Ds3Type is namespaced.
      */
     protected static Ds3Type toDs3Type(final String componentType) {
+        if (isEmpty(componentType)) {
+            throw new IllegalArgumentException("Cannot generate Ds3Type from empty response component type");
+        }
         return new Ds3Type(
                 componentType + NAMESPACE_ARRAY_RESPONSE_TYPES,
                 ImmutableList.of(
@@ -202,7 +199,6 @@ public final class ResponseTypeConverter {
                 null);
     }
 
-    //TODO unit tests
     /**
      * Gets a list of response Component Types that are being converted into new models
      * that are within the Ds3Requests list.
@@ -221,7 +217,6 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Gets a list of response Component Types that are being converted into new models
      * that are within the Ds3ResponseCodes list.
@@ -240,7 +235,6 @@ public final class ResponseTypeConverter {
         return builder.build();
     }
 
-    //TODO unit tests
     /**
      * Gets a list of response Component Types that are being converted into new models
      * that are within the Ds3ResponseTypes list.
