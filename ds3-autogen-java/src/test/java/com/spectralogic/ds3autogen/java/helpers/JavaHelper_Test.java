@@ -512,6 +512,22 @@ public class JavaHelper_Test {
     }
 
     @Test
+    public void processResponseCodeLines_ResponseTypeWithDollarSign_Test() {
+        final String expectedResult =
+                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
+                        "    this.twoResult = XmlOutput.fromXml(content, Two.class);\n" +
+                        "}";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.test.package.One$Two", null)));
+
+        final String result = processResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
     public void processResponseCodeLines_Test() {
         final String expectedResult =
                 "try (final InputStream content = getResponse().getResponseStream()) {\n" +

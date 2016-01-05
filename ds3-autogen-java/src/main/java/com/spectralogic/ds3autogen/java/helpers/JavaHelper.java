@@ -498,14 +498,17 @@ public final class JavaHelper {
      */
     public static String processResponseCodeLines(final Ds3ResponseCode responseCode, final int indent) {
         final Ds3ResponseType ds3ResponseType = responseCode.getDs3ResponseTypes().get(0);
-        final String responseType = stripPath(ds3ResponseType.getType());
+        final String responseType = stripPath(
+                convertType(ds3ResponseType.getType(), ds3ResponseType.getComponentType()));
         if (responseType.equalsIgnoreCase("null")) {
             return "//Do nothing, payload is null\n"
                     + indent(indent) + "break;";
         }
 
         return "try (final InputStream content = getResponse().getResponseStream()) {\n"
-                + indent(indent + 1) + "this." + uncapFirst(responseType) + "Result = XmlOutput.fromXml(content, "
+                + indent(indent + 1) + "this."
+                + uncapFirst(responseType)
+                + "Result = XmlOutput.fromXml(content, "
                 + responseType + ".class);\n"
                 + indent(indent) + "}";
     }
