@@ -32,6 +32,12 @@ public class Ds3Type {
         this.enumConstants = enumConstants;
     }
 
+    public Ds3Type(
+            final String name,
+            final ImmutableList<Ds3Element> elements) {
+        this(name, elements, null);
+    }
+
     public String getName() {
         return name;
     }

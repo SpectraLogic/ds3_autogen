@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
@@ -31,7 +32,6 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -51,6 +51,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.splitAllMultiResponseRequests;
 import static com.spectralogic.ds3autogen.utils.NameConverter.renameRequests;
+import static com.spectralogic.ds3autogen.utils.ResponseTypeConverter.convertResponseTypes;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -86,7 +87,8 @@ public class JavaCodeGenerator implements CodeGenerator {
             final FileUtils fileUtils,
             final Path destDir) throws IOException, ResponseTypeNotFoundException {
         this.spec = renameRequests( //Rename requests from RequestHandler to Request
-                splitAllMultiResponseRequests(spec)); //Split requests with multiple response codes
+                splitAllMultiResponseRequests( //Split requests with multiple response codes
+                        convertResponseTypes(spec))); //Converts response types with components into new encapsulating types
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 

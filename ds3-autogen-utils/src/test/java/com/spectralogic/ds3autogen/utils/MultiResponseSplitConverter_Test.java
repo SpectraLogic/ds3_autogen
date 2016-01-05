@@ -103,10 +103,10 @@ public class MultiResponseSplitConverter_Test {
     public void modifyResponseType_TypeWithComponent_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseType> responseTypes = getPopulatedDs3ResponseTypeList();
 
-        final ImmutableList<Ds3ResponseType> tapePartitionArray = getSpecifiedResponseType(responseTypes, "TapePartition", "array");
+        final ImmutableList<Ds3ResponseType> tapePartitionArray = getSpecifiedResponseType(responseTypes, "array", "TapePartition");
         assertThat(tapePartitionArray.size(), is(1));
-        assertTrue(tapePartitionArray.get(0).getType().endsWith(".TapePartition"));
-        assertThat(tapePartitionArray.get(0).getComponentType(), is("array"));
+        assertThat(tapePartitionArray.get(0).getType(), is("array"));
+        assertTrue(tapePartitionArray.get(0).getComponentType().endsWith(".TapePartition"));
     }
 
     @Test
@@ -145,13 +145,13 @@ public class MultiResponseSplitConverter_Test {
     public void modifyResponseCode_TypeWithComponent_Test() throws ResponseTypeNotFoundException {
         final ImmutableList<Ds3ResponseCode> responseCodes = getPopulatedDs3ResponseCodeList();
 
-        final ImmutableList<Ds3ResponseCode> result = modifyResponseCode(responseCodes, 200, "TapePartition", "array");
+        final ImmutableList<Ds3ResponseCode> result = modifyResponseCode(responseCodes, 200, "array", "TapePartition");
         assertThat(result.size(), is(3));
 
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(0).getDs3ResponseTypes().size(), is(1));
-        assertTrue(result.get(0).getDs3ResponseTypes().get(0).getType().endsWith(".TapePartition"));
-        assertThat(result.get(0).getDs3ResponseTypes().get(0).getComponentType(), is("array"));
+        assertThat(result.get(0).getDs3ResponseTypes().get(0).getType(), is("array"));
+        assertTrue(result.get(0).getDs3ResponseTypes().get(0).getComponentType().endsWith(".TapePartition"));
 
         assertThat(result.get(1).getDs3ResponseTypes().size(), is(3));
         assertThat(result.get(2).getDs3ResponseTypes().size(), is(1));

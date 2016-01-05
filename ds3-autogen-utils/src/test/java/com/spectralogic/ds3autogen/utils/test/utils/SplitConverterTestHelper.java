@@ -37,7 +37,7 @@ public final class SplitConverterTestHelper {
         return ImmutableList.of(
                 new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.TapePartition", null),
                 new Ds3ResponseType("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionRequestHandler$DetailedTapePartition", null),
-                new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.TapePartition", "array"));
+                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.tape.TapePartition"));
     }
 
     /**

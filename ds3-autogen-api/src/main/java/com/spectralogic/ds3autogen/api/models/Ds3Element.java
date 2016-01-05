@@ -35,6 +35,13 @@ public class Ds3Element {
         this.ds3Annotations = ds3Annotations;
     }
 
+    public Ds3Element(
+            final String name,
+            final String type,
+            final String componentType) {
+        this(name, type, componentType, null);
+    }
+
     public String getName() {
         return name;
     }
