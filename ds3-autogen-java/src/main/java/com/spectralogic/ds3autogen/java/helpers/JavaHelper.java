@@ -373,12 +373,44 @@ public final class JavaHelper {
      */
     public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
         if (isEmpty(componentType)) {
-            return stripPath(type);
+            return stripPath(
+                    renameTypeWithDollarSign(type));
         }
         if (type.equalsIgnoreCase("array")) {
-            return "List<" + stripPath(componentType) + ">";
+            return "List<" + stripPath(
+                    renameTypeWithDollarSign(componentType)) + ">";
         }
         throw new IllegalArgumentException("Unknown element type: " + type);
+    }
+
+    /**
+     * Renames a given type if it contains a '$' character. The path will remain the same,
+     * but the type name will be changed to what is located after the '$' character. This
+     * is used to create proper type names within the generated code.
+     * Example:
+     *   input:  com.test.package.One$Two
+     *   output: com.test.package.Two
+     */
+    protected static String renameTypeWithDollarSign(final String typeName) {
+        if (isEmpty(typeName)) {
+            return "";
+        }
+        if (!typeName.contains("$")) {
+            return typeName;
+        }
+        return getPathOfType(typeName, '.') + typeName.substring(typeName.lastIndexOf('$') + 1);
+    }
+
+    /**
+     * Gets the path from a string. This is used to get the path associated with types.
+     * @param typeName The Type Name, which may include a path
+     * @param pathDelimiter The path delimiter character
+     */
+    protected static String getPathOfType(final String typeName, final char pathDelimiter) {
+        if (isEmpty(typeName)) {
+            return "";
+        }
+        return typeName.substring(0, typeName.lastIndexOf(pathDelimiter) + 1);
     }
 
     /**
@@ -479,6 +511,41 @@ public final class JavaHelper {
     }
 
     /**
+     * Creates the Java code for getter functions for all response results
+     */
+    public static String createAllResponseResultGetters(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return "";
+        }
+        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
+            builder.add(createResponseResultGetter(entry.getKey(), entry.getValue()));
+        }
+        return builder.build()
+                .stream()
+                .map(i -> i)
+                .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Creates the Java code for the getter function for a response result
+     * @param paramName The name of the response result param
+     * @param responseType The response type
+     */
+    protected static String createResponseResultGetter(
+            final String paramName,
+            final Ds3ResponseType responseType) {
+        if (isEmpty(paramName) || isEmpty(responseType.getType())) {
+            return "";
+        }
+        final String returnType = convertType(responseType.getType(), responseType.getComponentType());
+        return indent(1) + "public " +  returnType + " get" + capFirst(paramName) + "() {\n" +
+                indent(2) + "return this." + paramName + ";\n" +
+                indent(1) + "}\n";
+    }
+
+    /**
      * Creates the Java code for the class parameters associated with the response payloads
      * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into
      *                      class parameters
@@ -523,19 +590,25 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates the parameter name associated with a response type. Example:
-     *   Type is null: ""
-     *   Simple Type (no component type): myTypeResult
-     *   Component Type (with component type): myTypeListResult
+     * Creates the parameter name associated with a response type. Component types contain
+     * name spacing of "List", and all type names end with "Result"
+     * Example:
+     *   Type is null:  null -> ""
+     *   No Component Type:  MyType -> myTypeResult
+     *   With Component Type:  MyComponentType -> myComponentTypeListResult
      */
     protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
         if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
             return "";
         }
         if (hasContent(responseType.getComponentType())) {
-            return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
+            return uncapFirst(
+                    stripPath(
+                            renameTypeWithDollarSign(responseType.getComponentType()))) + "ListResult";
         }
-        return uncapFirst(stripPath(responseType.getType())) + "Result";
+        return uncapFirst(
+                stripPath(
+                        renameTypeWithDollarSign(responseType.getType()))) + "Result";
     }
 
     /**

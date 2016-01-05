@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -379,6 +380,9 @@ public class JavaHelper_Test {
         assertThat(convertType("long", null), is("long"));
         assertThat(convertType("long", ""), is("long"));
         assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+
+        assertThat(convertType("com.test.package.One$Two", null), is("Two"));
+        assertThat(convertType("array", "com.test.package.One$Two"), is("List<Two>"));
     }
 
     @Test
@@ -388,6 +392,12 @@ public class JavaHelper_Test {
 
         final Element compositeElement = new Element("Tapes", "array", "com.spectralogic.s3.common.dao.domain.tape.Tape");
         assertThat(convertType(compositeElement), is("List<Tape>"));
+
+        final Element elementWithDollarSign = new Element("MyArg", "com.test.package.One$Two", null);
+        assertThat(convertType(elementWithDollarSign), is("Two"));
+
+        final Element compositeElementWithDollarSign = new Element("MyArg", "array", "com.test.package.One$Two");
+        assertThat(convertType(compositeElementWithDollarSign), is("List<Two>"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -533,6 +543,7 @@ public class JavaHelper_Test {
     public void createAllResponseResultClassVars_FullList_Test() {
         final String expectedResult =
                 "    final BucketObjectsApiBean bucketObjectsApiBeanResult;\n" +
+                "    final TapeFailuresApiBean tapeFailuresApiBeanResult;\n" +
                 "    final HttpErrorResultApiBean httpErrorResultApiBeanResult;";
 
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
@@ -544,6 +555,10 @@ public class JavaHelper_Test {
                         206,
                         ImmutableList.of(
                                 new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
+                new Ds3ResponseCode(
+                        207,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean", null))),
                 new Ds3ResponseCode(
                         208,
                         ImmutableList.of(
@@ -620,6 +635,13 @@ public class JavaHelper_Test {
         assertThat(
                 createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
                 is("bucketAclListResult"));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("com.test.package.One$Two", null)),
+                is("twoResult"));
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.test.package.One$Two")),
+                is("twoListResult"));
     }
 
     @Test
@@ -649,5 +671,153 @@ public class JavaHelper_Test {
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(1).getCode(), is(206));
         assertThat(result.get(2).getCode(), is(307));
+    }
+
+    @Test
+    public void getPathOfType_Test() {
+        assertThat(getPathOfType(null, '.'), is(""));
+        assertThat(getPathOfType("", '.'), is(""));
+        assertThat(getPathOfType("SimpleType", '.'), is(""));
+
+        assertThat(
+                getPathOfType("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure", '.'),
+                is("com.spectralogic.s3.common.dao.domain.ds3."));
+        assertThat(
+                getPathOfType("com/spectralogic/s3/common/dao/domain/ds3/SystemFailure", '/'),
+                is("com/spectralogic/s3/common/dao/domain/ds3/"));
+        assertThat(
+                getPathOfType("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean", '.'),
+                is("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape."));
+    }
+
+    @Test
+    public void renameTypeWithDollarSign_Test() {
+        assertThat(renameTypeWithDollarSign(null), is(""));
+        assertThat(renameTypeWithDollarSign(""), is(""));
+        assertThat(renameTypeWithDollarSign("SimpleType"), is("SimpleType"));
+
+        assertThat(
+                renameTypeWithDollarSign("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure"),
+                is("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure"));
+        assertThat(
+                renameTypeWithDollarSign("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"),
+                is("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresApiBean"));
+    }
+
+    @Test
+    public void createResponseResultGetter_NullParam_Test() {
+        final Ds3ResponseType responseType = new Ds3ResponseType("Arg", "Type");
+        final String result = createResponseResultGetter(null, responseType);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void createResponseResultGetter_EmptyParam_Test() {
+        final Ds3ResponseType responseType = new Ds3ResponseType("Arg", "Type");
+        final String result = createResponseResultGetter("", responseType);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void createResponseResultGetter_SimpleParam_Test() {
+        final String expectedResult =
+                "    public SystemFailure getSystemFailureResult() {\n" +
+                "        return this.systemFailureResult;\n" +
+                "    }\n";
+        final Ds3ResponseType responseType = new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure", null);
+        final String result = createResponseResultGetter("systemFailureResult", responseType);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createResponseResultGetter_ComponentParam_Test() {
+        final String expectedResult =
+                "    public List<SystemFailure> getSystemFailureListResult() {\n" +
+                "        return this.systemFailureListResult;\n" +
+                "    }\n";
+        final Ds3ResponseType responseType = new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.SystemFailure");
+        final String result = createResponseResultGetter("systemFailureListResult", responseType);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createResponseResultGetter_DollarSignParam_Test() {
+        final String expectedResult =
+                "    public Two getTwoResult() {\n" +
+                "        return this.twoResult;\n" +
+                "    }\n";
+        final Ds3ResponseType responseType = new Ds3ResponseType("com.test.package.One$Two", null);
+        final String result = createResponseResultGetter("twoResult", responseType);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createResponseResultGetter_ComponentDollarSignParam_Test() {
+        final String expectedResult =
+                "    public List<Two> getTwoListResult() {\n" +
+                "        return this.twoListResult;\n" +
+                "    }\n";
+        final Ds3ResponseType responseType = new Ds3ResponseType("array", "com.test.package.One$Two");
+        final String result = createResponseResultGetter("twoListResult", responseType);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void createAllResponseResultGetters_NullList_Test() {
+        final String result = createAllResponseResultGetters(null);
+        assertTrue(isEmpty(result));
+    }
+
+    @Test
+    public void createAllResponseResultGetters_EmptyList_Test() {
+        final String result = createAllResponseResultGetters(ImmutableList.of());
+        assertTrue(isEmpty(result));
+    }
+
+    @Test
+    public void createAllResponseResultGetters_List_Test() {
+        final String getterOne =
+                "    public SystemFailure getSystemFailureResult() {\n" +
+                "        return this.systemFailureResult;\n" +
+                "    }\n";
+
+        final String getterTwo =
+                "    public List<SystemFailure> getSystemFailureListResult() {\n" +
+                "        return this.systemFailureListResult;\n" +
+                "    }\n";
+
+        final String getterThree =
+                "    public Two getTwoResult() {\n" +
+                "        return this.twoResult;\n" +
+                "    }\n";
+
+        final String getterFour =
+                "    public List<Two> getTwoListResult() {\n" +
+                "        return this.twoListResult;\n" +
+                "    }\n";
+
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(
+                        100,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure", null))),
+                new Ds3ResponseCode(
+                        100,
+                        ImmutableList.of(
+                                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.SystemFailure"))),
+                new Ds3ResponseCode(
+                        100,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.test.package.One$Two", null))),
+                new Ds3ResponseCode(
+                        100,
+                        ImmutableList.of(
+                                new Ds3ResponseType("array", "com.test.package.One$Two"))));
+
+        final String result = createAllResponseResultGetters(responseCodes);
+        assertTrue(result.contains(getterOne));
+        assertTrue(result.contains(getterTwo));
+        assertTrue(result.contains(getterThree));
+        assertTrue(result.contains(getterFour));
     }
 }

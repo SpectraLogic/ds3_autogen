@@ -35,7 +35,6 @@ ${javaHelper.createAllResponseResultClassVars(
         }
     }
 
-    public String getResult() {
-        return result;
-    }
+${javaHelper.createAllResponseResultGetters(
+  javaHelper.removeErrorResponseCodes(responseCodes))}
 }
