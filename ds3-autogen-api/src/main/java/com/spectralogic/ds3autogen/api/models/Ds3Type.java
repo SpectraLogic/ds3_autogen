@@ -35,9 +35,7 @@ public class Ds3Type {
     public Ds3Type(
             final String name,
             final ImmutableList<Ds3Element> elements) {
-        this.name = name;
-        this.elements = elements;
-        this.enumConstants = null;
+        this(name, elements, null);
     }
 
     public String getName() {

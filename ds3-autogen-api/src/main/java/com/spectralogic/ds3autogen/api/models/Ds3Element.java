@@ -39,10 +39,7 @@ public class Ds3Element {
             final String name,
             final String type,
             final String componentType) {
-        this.name = name;
-        this.type = type;
-        this.componentType = componentType;
-        this.ds3Annotations = null;
+        this(name, type, componentType, null);
     }
 
     public String getName() {
