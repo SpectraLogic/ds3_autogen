@@ -88,7 +88,7 @@ public class Ds3Type {
                 || leftCollection.size() != rightCollection.size()) {
             return false;
         }
-        Set<E> set = new HashSet<E>(leftCollection);
+        final Set<E> set = new HashSet<>(leftCollection);
         for (final E element : rightCollection) {
             if (set.contains(element)) {
                 set.remove(element);

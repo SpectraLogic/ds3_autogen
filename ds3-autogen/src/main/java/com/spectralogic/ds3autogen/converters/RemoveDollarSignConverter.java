@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -36,7 +36,6 @@ public class RemoveDollarSignConverter {
 
     private RemoveDollarSignConverter() { }
 
-    //todo
     /**
      * Removes all instances of '$' from type names within the Ds3ApiSpec
      */
@@ -284,7 +283,6 @@ public class RemoveDollarSignConverter {
                 removeDollarSignFromName(annotationElement.getValueType()));
     }
 
-    //TODO refactor same function out of JavaHelper (and related unit tests)
     /**
      * Renames a given type if it contains a '$' character. The path will remain the same,
      * but the type name will be changed to what is located after the '$' character. This
@@ -300,7 +298,6 @@ public class RemoveDollarSignConverter {
         return getPathOfType(typeName, '.') + typeName.substring(typeName.lastIndexOf('$') + 1);
     }
 
-    //TODO refactor same function out of JavaHelper (and related unit tests)
     /**
      * Gets the path from a string. This is used to get the path associated with types.
      * @param typeName The Type Name, which may include a path

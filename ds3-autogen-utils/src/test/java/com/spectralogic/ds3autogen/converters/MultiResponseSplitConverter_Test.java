@@ -13,14 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.*;
+import static com.spectralogic.ds3autogen.MultiResponseSplitConverter.*;
 import static com.spectralogic.ds3autogen.utils.test.utils.SplitConverterTestHelper.*;
 import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.getRequestDeleteNotification;
 import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.getRequestGetNotification;

@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
+import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
@@ -32,6 +33,7 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.ConverterInterface;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -49,9 +51,6 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.splitAllMultiResponseRequests;
-import static com.spectralogic.ds3autogen.utils.NameConverter.renameRequests;
-import static com.spectralogic.ds3autogen.utils.ResponseTypeConverter.convertResponseTypes;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -85,10 +84,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     public void generate(
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
-            final Path destDir) throws IOException, ResponseTypeNotFoundException {
-        this.spec = renameRequests( //Rename requests from RequestHandler to Request
-                splitAllMultiResponseRequests( //Split requests with multiple response codes
-                        convertResponseTypes(spec))); //Converts response types with components into new encapsulating types
+            final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+        this.spec = ConverterInterface.convertSpec(spec);
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 

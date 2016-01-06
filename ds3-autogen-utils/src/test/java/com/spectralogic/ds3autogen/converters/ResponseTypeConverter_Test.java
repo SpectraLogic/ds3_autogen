@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -22,7 +22,7 @@ import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.ResponseTypeConverter.*;
+import static com.spectralogic.ds3autogen.ResponseTypeConverter.*;
 import static com.spectralogic.ds3autogen.utils.test.utils.ResponseTypeConverterHelper.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
