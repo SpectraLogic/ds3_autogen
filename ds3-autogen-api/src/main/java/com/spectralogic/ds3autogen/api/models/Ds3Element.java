@@ -17,6 +17,8 @@ package com.spectralogic.ds3autogen.api.models;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.Objects;
+
 public class Ds3Element {
 
     private final String name;
@@ -56,5 +58,30 @@ public class Ds3Element {
 
     public String getComponentType() {
         return componentType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getType(), getComponentType());
+    }
+
+    /**
+     * Compares the name, type, and component type. Does not compare the Ds3Annotation list
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Ds3Element)) {
+            return false;
+        }
+        final Ds3Element element = (Ds3Element) obj;
+        if (this.getName().equals(element.getName())
+                && this.getType().equals(element.getType())
+                && this.getComponentType().equals(element.getComponentType())) {
+            return true;
+        }
+        return false;
     }
 }
