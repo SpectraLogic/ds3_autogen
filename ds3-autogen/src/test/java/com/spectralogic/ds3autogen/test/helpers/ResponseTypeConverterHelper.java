@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils.test.utils;
+package com.spectralogic.ds3autogen.test.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -108,15 +108,15 @@ public class ResponseTypeConverterHelper {
             final ImmutableList<Ds3ResponseType> updatedResponseTypes,
             final ImmutableList<Ds3ResponseType> originalResponseTypes,
             final String variation) {
-        assertThat(updatedResponseTypes.size(), is(4));
-        assertThat(updatedResponseTypes.get(0), is(originalResponseTypes.get(0)));
-        assertThat(updatedResponseTypes.get(2), is(originalResponseTypes.get(2)));
+        assertThat(updatedResponseTypes.size(), Matchers.is(4));
+        assertThat(updatedResponseTypes.get(0), Matchers.is(originalResponseTypes.get(0)));
+        assertThat(updatedResponseTypes.get(2), Matchers.is(originalResponseTypes.get(2)));
 
         assertThat(updatedResponseTypes.get(1).getType(),
-                is("SimpleComponentType" + variation + "List"));
-        assertThat(updatedResponseTypes.get(1).getComponentType(), is(nullValue()));
+                Matchers.is("SimpleComponentType" + variation + "List"));
+        assertThat(updatedResponseTypes.get(1).getComponentType(), Matchers.is(Matchers.nullValue()));
         assertThat(updatedResponseTypes.get(3).getType(),
-                is("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl" + variation + "List"));
-        assertThat(updatedResponseTypes.get(3).getComponentType(), is(nullValue()));
+                Matchers.is("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl" + variation + "List"));
+        assertThat(updatedResponseTypes.get(3).getComponentType(), Matchers.is(Matchers.nullValue()));
     }
 }

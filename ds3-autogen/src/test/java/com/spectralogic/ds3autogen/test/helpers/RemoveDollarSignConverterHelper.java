@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils.test.utils;
+package com.spectralogic.ds3autogen.test.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -96,9 +96,9 @@ public class RemoveDollarSignConverterHelper {
      * list generation.
      */
     public static void checkAutoPopulatedParams(final ImmutableList<Ds3Param> params, final String variation) {
-        assertThat(params.size(), is(2));
-        assertThat(params.get(0).getType(), is("com.test.package.TypeOne" + variation));
-        assertThat(params.get(1).getType(), is("com.test.package.TypeTwo" + variation));
+        assertThat(params.size(), Matchers.is(2));
+        assertThat(params.get(0).getType(), Matchers.is("com.test.package.TypeOne" + variation));
+        assertThat(params.get(1).getType(), Matchers.is("com.test.package.TypeTwo" + variation));
     }
 
     /**
@@ -124,21 +124,21 @@ public class RemoveDollarSignConverterHelper {
      * function has successfully changed all type names by removing the '$' symbol
      */
     public static void checkAutoPopulatedResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        assertThat(responseCodes.size(), is(2));
+        assertThat(responseCodes.size(), Matchers.is(2));
 
         final ImmutableList<Ds3ResponseType> firstResponseTypes = responseCodes.get(0).getDs3ResponseTypes();
-        assertThat(firstResponseTypes.size(), is(2));
-        assertThat(firstResponseTypes.get(0).getType(), is("com.test.package.Type1"));
-        assertThat(firstResponseTypes.get(0).getComponentType(), is("com.test.package.Type2"));
-        assertThat(firstResponseTypes.get(1).getType(), is("com.test.package.Type3"));
-        assertThat(firstResponseTypes.get(1).getComponentType(), is("com.test.package.Type4"));
+        assertThat(firstResponseTypes.size(), Matchers.is(2));
+        assertThat(firstResponseTypes.get(0).getType(), Matchers.is("com.test.package.Type1"));
+        assertThat(firstResponseTypes.get(0).getComponentType(), Matchers.is("com.test.package.Type2"));
+        assertThat(firstResponseTypes.get(1).getType(), Matchers.is("com.test.package.Type3"));
+        assertThat(firstResponseTypes.get(1).getComponentType(), Matchers.is("com.test.package.Type4"));
 
         final ImmutableList<Ds3ResponseType> secondResponseTypes = responseCodes.get(1).getDs3ResponseTypes();
-        assertThat(secondResponseTypes.size(), is(2));
-        assertThat(secondResponseTypes.get(0).getType(), is("com.test.package.Type1"));
-        assertThat(secondResponseTypes.get(0).getComponentType(), is("com.test.package.Type2"));
-        assertThat(secondResponseTypes.get(1).getType(), is("com.test.package.Type3"));
-        assertThat(secondResponseTypes.get(1).getComponentType(), is("com.test.package.Type4"));
+        assertThat(secondResponseTypes.size(), Matchers.is(2));
+        assertThat(secondResponseTypes.get(0).getType(), Matchers.is("com.test.package.Type1"));
+        assertThat(secondResponseTypes.get(0).getComponentType(), Matchers.is("com.test.package.Type2"));
+        assertThat(secondResponseTypes.get(1).getType(), Matchers.is("com.test.package.Type3"));
+        assertThat(secondResponseTypes.get(1).getComponentType(), Matchers.is("com.test.package.Type4"));
     }
 
     /**
@@ -181,7 +181,7 @@ public class RemoveDollarSignConverterHelper {
      * successfully changed all type names by removing the '$' symbol
      */
     public static void checkAutoPopulatedMap(final ImmutableMap<String, Ds3Type> map) {
-        assertThat(map.size(), is(2));
+        assertThat(map.size(), Matchers.is(2));
         assertTrue(map.containsKey("com.test.package.Ds3Type_v1"));
         assertTrue(map.containsKey("com.test.package.Ds3Type_v2"));
 
@@ -205,9 +205,9 @@ public class RemoveDollarSignConverterHelper {
      * the specified variation matches the variation used during type generation
      */
     public static void checkAutoPopulatedType(final Ds3Type type, final String variation) {
-        assertThat(type.getName(), is("com.test.package.Ds3Type" + variation));
-        assertThat(type.getElements().size(), is(2));
-        assertThat(type.getElements().get(0).getType(), is("com.test.package.Two"));
-        assertThat(type.getElements().get(0).getComponentType(), is("com.test.package.Four"));
+        assertThat(type.getName(), Matchers.is("com.test.package.Ds3Type" + variation));
+        assertThat(type.getElements().size(), Matchers.is(2));
+        assertThat(type.getElements().get(0).getType(), Matchers.is("com.test.package.Two"));
+        assertThat(type.getElements().get(0).getComponentType(), Matchers.is("com.test.package.Four"));
     }
 }

@@ -13,17 +13,44 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils.test.utils;
+package com.spectralogic.ds3autogen.testutil;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 
 /**
- * This class provides utilities for testing the ds3-autogen-utils package
+ * This class provides a series of fixtures that auto-populate Ds3 Models.
+ * This is used for testing
  */
-public final class UtilTestHelper {
+public class Ds3ModelFixtures {
 
-    private UtilTestHelper() { }
+    /**
+     * Creates a populated list of Ds3ResponseTypes with the ability to set a variation to append
+     * to type and component type names to ensure name uniqueness.
+     */
+    public static ImmutableList<Ds3ResponseType> createPopulatedDs3ResponseTypeList(final String variation) {
+        return ImmutableList.of(
+                new Ds3ResponseType("SimpleType" + variation, null),
+                new Ds3ResponseType("array", "SimpleComponentType" + variation),
+                new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.TapePartition" + variation, null),
+                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl" + variation));
+    }
+
+    /**
+     * Creates a populated list of Ds3ResponseCodes utilizing the createPopulatedDs3ResponseTypeList
+     * to generate some of the data.
+     */
+    public static ImmutableList<Ds3ResponseCode> createPopulatedDs3ResponseCodeList(
+            final String firstVariation,
+            final String secondVariation) {
+        return ImmutableList.of(
+                new Ds3ResponseCode(
+                        200,
+                        createPopulatedDs3ResponseTypeList(firstVariation)),
+                new Ds3ResponseCode(
+                        205,
+                        createPopulatedDs3ResponseTypeList(secondVariation)));
+    }
 
     /**
      * Creates the SpectraDs3 Delete Notification request DeleteJobCreatedNotificationRegistrationRequestHandler
@@ -47,8 +74,7 @@ public final class UtilTestHelper {
                                 ImmutableList.of(
                                         new Ds3ResponseType("null", null)))),
                 null,
-                null
-        );
+                null);
     }
 
     /**
@@ -73,8 +99,7 @@ public final class UtilTestHelper {
                         new Ds3Param("NamingConvention", "com.spectralogic.util.lang.NamingConventionType"),
                         new Ds3Param("NotificationHttpMethod", "com.spectralogic.util.http.RequestType")),
                 ImmutableList.of(
-                        new Ds3Param("NotificationEndPoint","java.lang.String"))
-        );
+                        new Ds3Param("NotificationEndPoint","java.lang.String")));
     }
 
     /**
@@ -95,8 +120,7 @@ public final class UtilTestHelper {
                 null,
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
-                null
-        );
+                null);
     }
 
     /**
@@ -129,8 +153,7 @@ public final class UtilTestHelper {
                         new Ds3Param("FullDetails", "void"),
                         new Ds3Param("StorageDomainId", "java.util.UUID")),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"))
-        );
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
     }
 
     /**
@@ -154,8 +177,7 @@ public final class UtilTestHelper {
                         new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"))
-        );
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
     }
 
     /**
@@ -178,8 +200,7 @@ public final class UtilTestHelper {
                 ImmutableList.of(
                         new Ds3Param("RollBack", "void")),
                 ImmutableList.of(
-                        new Ds3Param("Delete", "void"))
-        );
+                        new Ds3Param("Delete", "void")));
     }
 
     /**
@@ -202,8 +223,7 @@ public final class UtilTestHelper {
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID"),
                         new Ds3Param("Offset", "long")),
-                null
-        );
+                null);
     }
 
     /**
@@ -226,8 +246,7 @@ public final class UtilTestHelper {
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID"),
                         new Ds3Param("Offset", "long")),
-                null
-        );
+                null);
     }
 
     /**
@@ -249,7 +268,6 @@ public final class UtilTestHelper {
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 ImmutableList.of(
-                        new Ds3Param("BucketId", "java.util.UUID"))
-        );
+                        new Ds3Param("BucketId", "java.util.UUID")));
     }
 }
