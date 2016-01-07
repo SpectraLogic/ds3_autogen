@@ -15,8 +15,15 @@
 
 package com.spectralogic.ds3autogen.java.converters;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.models.Response;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
  * Converts a Ds3Request into a Response model used for generating
@@ -42,7 +49,8 @@ public class ResponseConverter {
         return new Response(
                 packageName,
                 toResponseName(ds3Request.getName()),
-                ds3Request.getDs3ResponseCodes());
+                ds3Request.getDs3ResponseCodes(),
+                getAllImports(ds3Request.getDs3ResponseCodes()));
     }
 
     /**
@@ -64,8 +72,53 @@ public class ResponseConverter {
      * @param ds3RequestName
      * @return The response name
      */
-    private static String toResponseName(final String ds3RequestName) {
+    protected static String toResponseName(final String ds3RequestName) {
         final String[] classParts = ds3RequestName.split("\\.");
         return classParts[classParts.length - 1].replace("Request", "Response");
+    }
+
+    /**
+     * Gets all the imports associated with response types that the response will
+     * need in order to properly generate the Java request code
+     */
+    protected static ImmutableList<String> getAllImports(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            final String curImport = getImportFromResponseCode(responseCode);
+            if (hasContent(curImport)) {
+                builder.add(curImport);
+            }
+        }
+        //If a response type has an associated import, then the XmlOutput import is also needed
+        if (builder.build().size() > 0) {
+            builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
+        }
+        return builder.build().asList();
+    }
+
+    /**
+     * Gets the import associated with this response code if one exists, else it returns an
+     * empty string. This assumes that there is only one response type associated with a
+     * given response code.
+     */
+    protected static String getImportFromResponseCode(final Ds3ResponseCode responseCode) {
+        if (isEmpty(responseCode.getDs3ResponseTypes())) {
+            return "";
+        }
+        for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+            if (hasContent(responseType.getComponentType())) {
+                throw new IllegalArgumentException("Response type should not have a component type: " + responseType.getComponentType());
+            }
+            if (hasContent(responseType.getType())
+                    && responseType.getType().contains(".")
+                    && responseCode.getCode() < 400) {
+                return responseType.getType();
+            }
+        }
+        return "";
     }
 }

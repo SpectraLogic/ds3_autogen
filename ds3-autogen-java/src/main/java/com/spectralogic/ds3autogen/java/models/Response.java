@@ -26,14 +26,17 @@ public class Response {
     private final Helper helper;
     private final JavaHelper javaHelper;
     private final ImmutableList<Ds3ResponseCode> responseCodes;
+    private final ImmutableList<String> imports;
 
     public Response(
             final String packageName,
             final String name,
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
+            final ImmutableList<Ds3ResponseCode> responseCodes,
+            final ImmutableList<String> imports) {
         this.packageName = packageName;
         this.name = name;
         this.responseCodes = responseCodes;
+        this.imports = imports;
 
         this.helper = Helper.getInstance();
         this.javaHelper = JavaHelper.getInstance();
@@ -57,5 +60,9 @@ public class Response {
 
     public Helper getHelper() {
         return helper;
+    }
+
+    public ImmutableList<String> getImports() {
+        return imports;
     }
 }
