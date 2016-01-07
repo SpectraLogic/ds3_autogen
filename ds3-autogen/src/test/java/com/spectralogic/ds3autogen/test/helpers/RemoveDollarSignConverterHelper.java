@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * This class provides utilities for testing the Remove Dollar Sign Converter utility
  */
-public class RemoveDollarSignConverterHelper {
+public final class RemoveDollarSignConverterHelper {
 
     private RemoveDollarSignConverterHelper() { }
 
