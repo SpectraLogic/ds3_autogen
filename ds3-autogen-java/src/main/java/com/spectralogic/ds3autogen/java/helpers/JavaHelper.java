@@ -16,8 +16,11 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
@@ -27,6 +30,7 @@ import com.spectralogic.ds3autogen.utils.Helper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
@@ -259,6 +263,9 @@ public final class JavaHelper {
      * @return Comma separated list of sorted argument types
      */
     public static String argTypeList(final ImmutableList<Arguments> arguments) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         return sortConstructorArgs(arguments)
                 .stream()
                 .map(Arguments::getType).collect(Collectors.joining(", "));
@@ -270,6 +277,9 @@ public final class JavaHelper {
      * @return Comma separated list of argument names.
      */
     public static String argsToList(final List<Arguments> arguments) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         return arguments
                 .stream()
                 .map(i -> uncapFirst(i.getName()))
@@ -305,6 +315,9 @@ public final class JavaHelper {
      * @return Comma separated list of function parameters
      */
     public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
+        if (isEmpty(requiredArguments)) {
+            return "";
+        }
         return sortConstructorArgs(requiredArguments)
                 .stream()
                 .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
@@ -316,7 +329,11 @@ public final class JavaHelper {
      */
     public static String modifiedArgNameList(
             final ImmutableList<Arguments> arguments,
-            final String modifyArgName, final String toArgName) {
+            final String modifyArgName,
+            final String toArgName) {
+        if (isEmpty(arguments)) {
+            return "";
+        }
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
         for (final Arguments arg : arguments) {
             if (arg.getName().equals(modifyArgName)) {
@@ -345,16 +362,55 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates the Java type from elements, converting component types into arrays.
+     * Creates the Java type from elements, converting component types into a List.
      */
     public static String convertType(final Element element) throws IllegalArgumentException {
-        if (isEmpty(element.getComponentType())) {
-            return stripPath(element.getType());
+        return convertType(element.getType(), element.getComponentType());
+    }
+
+    /**
+     * Creates the Java type from elements, converting component types into a List.
+     */
+    public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
+        if (isEmpty(componentType)) {
+            return stripPath(
+                    renameTypeWithDollarSign(type));
         }
-        if (element.getType().equalsIgnoreCase("array")) {
-            return "List<" + stripPath(element.getComponentType()) + ">";
+        if (type.equalsIgnoreCase("array")) {
+            return "List<" + stripPath(
+                    renameTypeWithDollarSign(componentType)) + ">";
         }
-        throw new IllegalArgumentException("Unknown element type: " + element.getType());
+        throw new IllegalArgumentException("Unknown element type: " + type);
+    }
+
+    /**
+     * Renames a given type if it contains a '$' character. The path will remain the same,
+     * but the type name will be changed to what is located after the '$' character. This
+     * is used to create proper type names within the generated code.
+     * Example:
+     *   input:  com.test.package.One$Two
+     *   output: com.test.package.Two
+     */
+    protected static String renameTypeWithDollarSign(final String typeName) {
+        if (isEmpty(typeName)) {
+            return "";
+        }
+        if (!typeName.contains("$")) {
+            return typeName;
+        }
+        return getPathOfType(typeName, '.') + typeName.substring(typeName.lastIndexOf('$') + 1);
+    }
+
+    /**
+     * Gets the path from a string. This is used to get the path associated with types.
+     * @param typeName The Type Name, which may include a path
+     * @param pathDelimiter The path delimiter character
+     */
+    protected static String getPathOfType(final String typeName, final char pathDelimiter) {
+        if (isEmpty(typeName)) {
+            return "";
+        }
+        return typeName.substring(0, typeName.lastIndexOf(pathDelimiter) + 1);
     }
 
     /**
@@ -433,5 +489,146 @@ public final class JavaHelper {
      */
     public static boolean isSpectraDs3OrNotification(final String packageName) {
         return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
+    }
+
+    /**
+     * Creates the Java code associated with processing a given response code
+     * @param responseCode A Ds3ResponseCode
+     * @param indent The level of indentation needed to properly align the generated code
+     */
+    public static String processResponseCodeLines(final Ds3ResponseCode responseCode, final int indent) {
+        final Ds3ResponseType ds3ResponseType = responseCode.getDs3ResponseTypes().get(0);
+        final String responseType = stripPath(
+                convertType(ds3ResponseType.getType(), ds3ResponseType.getComponentType()));
+        if (responseType.equalsIgnoreCase("null")) {
+            return "//Do nothing, payload is null\n"
+                    + indent(indent) + "break;";
+        }
+
+        return "try (final InputStream content = getResponse().getResponseStream()) {\n"
+                + indent(indent + 1) + "this."
+                + uncapFirst(responseType)
+                + "Result = XmlOutput.fromXml(content, "
+                + responseType + ".class);\n"
+                + indent(indent) + "}";
+    }
+
+    /**
+     * Creates the Java code for getter functions for all response results
+     */
+    public static String createAllResponseResultGetters(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return "";
+        }
+        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
+            builder.add(createResponseResultGetter(entry.getKey(), entry.getValue()));
+        }
+        return builder.build()
+                .stream()
+                .map(i -> i)
+                .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Creates the Java code for the getter function for a response result
+     * @param paramName The name of the response result param
+     * @param responseType The response type
+     */
+    protected static String createResponseResultGetter(
+            final String paramName,
+            final Ds3ResponseType responseType) {
+        if (isEmpty(paramName) || isEmpty(responseType.getType())) {
+            return "";
+        }
+        final String returnType = convertType(responseType.getType(), responseType.getComponentType());
+        return indent(1) + "public " +  returnType + " get" + capFirst(paramName) + "() {\n" +
+                indent(2) + "return this." + paramName + ";\n" +
+                indent(1) + "}\n";
+    }
+
+    /**
+     * Creates the Java code for the class parameters associated with the response payloads
+     * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into
+     *                      class parameters
+     */
+    public static String createAllResponseResultClassVars(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return "";
+        }
+        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
+            builder.add("final " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
+                            + " " + entry.getKey() + ";");
+        }
+        return builder.build()
+                .stream()
+                .map(i -> indent(1) + i)
+                .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Creates a map containing all unique Ds3Response types found within a list of
+     * response codes. The map key consists of the response type parameter names,
+     * and values are the Ds3ResponseType associated with that parameter name.
+     */
+    protected static ImmutableMap<String, Ds3ResponseType> createUniqueDs3ResponseTypesMap(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableMap.of();
+        }
+        final ImmutableMap.Builder<String, Ds3ResponseType> builder = ImmutableMap.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                final String responseParamName = createDs3ResponseTypeParamName(responseType);
+                if (hasContent(responseParamName)
+                        && !builder.build().containsKey(responseParamName)) {
+                    builder.put(responseParamName, responseType);
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Creates the parameter name associated with a response type. Component types contain
+     * name spacing of "List", and all type names end with "Result"
+     * Example:
+     *   Type is null:  null -> ""
+     *   No Component Type:  MyType -> myTypeResult
+     *   With Component Type:  MyComponentType -> myComponentTypeListResult
+     */
+    protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
+        if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
+            return "";
+        }
+        if (hasContent(responseType.getComponentType())) {
+            return uncapFirst(
+                    stripPath(
+                            renameTypeWithDollarSign(responseType.getComponentType()))) + "ListResult";
+        }
+        return uncapFirst(
+                stripPath(
+                        renameTypeWithDollarSign(responseType.getType()))) + "Result";
+    }
+
+    /**
+     * Removes response codes that are associated with errors from the list.
+     * Error response codes are associated with values greater or equal to 400.
+     */
+    public static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (responseCode.getCode() < 400) {
+                builder.add(responseCode);
+            }
+        }
+        return builder.build();
     }
 }
