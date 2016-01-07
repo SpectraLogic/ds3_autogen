@@ -373,44 +373,12 @@ public final class JavaHelper {
      */
     public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
         if (isEmpty(componentType)) {
-            return stripPath(
-                    renameTypeWithDollarSign(type));
+            return stripPath(type);
         }
         if (type.equalsIgnoreCase("array")) {
-            return "List<" + stripPath(
-                    renameTypeWithDollarSign(componentType)) + ">";
+            return "List<" + stripPath(componentType) + ">";
         }
         throw new IllegalArgumentException("Unknown element type: " + type);
-    }
-
-    /**
-     * Renames a given type if it contains a '$' character. The path will remain the same,
-     * but the type name will be changed to what is located after the '$' character. This
-     * is used to create proper type names within the generated code.
-     * Example:
-     *   input:  com.test.package.One$Two
-     *   output: com.test.package.Two
-     */
-    protected static String renameTypeWithDollarSign(final String typeName) {
-        if (isEmpty(typeName)) {
-            return "";
-        }
-        if (!typeName.contains("$")) {
-            return typeName;
-        }
-        return getPathOfType(typeName, '.') + typeName.substring(typeName.lastIndexOf('$') + 1);
-    }
-
-    /**
-     * Gets the path from a string. This is used to get the path associated with types.
-     * @param typeName The Type Name, which may include a path
-     * @param pathDelimiter The path delimiter character
-     */
-    protected static String getPathOfType(final String typeName, final char pathDelimiter) {
-        if (isEmpty(typeName)) {
-            return "";
-        }
-        return typeName.substring(0, typeName.lastIndexOf(pathDelimiter) + 1);
     }
 
     /**
@@ -605,13 +573,9 @@ public final class JavaHelper {
             return "";
         }
         if (hasContent(responseType.getComponentType())) {
-            return uncapFirst(
-                    stripPath(
-                            renameTypeWithDollarSign(responseType.getComponentType()))) + "ListResult";
+            return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
         }
-        return uncapFirst(
-                stripPath(
-                        renameTypeWithDollarSign(responseType.getType()))) + "Result";
+        return uncapFirst(stripPath(responseType.getType())) + "Result";
     }
 
     /**
