@@ -13,12 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils.test.utils;
+package com.spectralogic.ds3autogen.test.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -29,33 +30,6 @@ import static org.junit.Assert.assertThat;
 public class ResponseTypeConverterHelper {
 
     private ResponseTypeConverterHelper() { }
-
-    /**
-     * Creates a populated list of Ds3ResponseTypes with the ability to set a variation to append
-     * to type and component type names to ensure name uniqueness.
-     */
-    public static ImmutableList<Ds3ResponseType> createPopulatedDs3ResponseTypeList(final String variation) {
-        return ImmutableList.of(
-                new Ds3ResponseType("SimpleType" + variation, null),
-                new Ds3ResponseType("array", "SimpleComponentType" + variation),
-                new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.TapePartition" + variation, null),
-                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl" + variation));
-    }
-
-    /**
-     * Creates a populated list of Ds3ResponseCodes
-     */
-    public static ImmutableList<Ds3ResponseCode> createPopulatedDs3ResponseCodeList(
-            final String firstVariation,
-            final String secondVariation) {
-        return ImmutableList.of(
-                new Ds3ResponseCode(
-                        200,
-                        createPopulatedDs3ResponseTypeList(firstVariation)),
-                new Ds3ResponseCode(
-                        205,
-                        createPopulatedDs3ResponseTypeList(secondVariation)));
-    }
 
     /**
      * Creates a populated Ds3Request. This request is empty except for having

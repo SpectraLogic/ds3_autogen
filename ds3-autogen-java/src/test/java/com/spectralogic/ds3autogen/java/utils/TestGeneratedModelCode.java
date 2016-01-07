@@ -57,7 +57,7 @@ public class TestGeneratedModelCode {
 
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedModelCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();

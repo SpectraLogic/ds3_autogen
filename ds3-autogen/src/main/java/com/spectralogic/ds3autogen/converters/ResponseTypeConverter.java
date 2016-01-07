@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

@@ -33,7 +33,7 @@ public class TestGeneratedComponentResponseCode extends TestGeneratedCode {
     @Override
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ResponseTypeNotFoundException, ParserException {
+            final String inputFileName) throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();

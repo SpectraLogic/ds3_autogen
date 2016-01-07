@@ -42,9 +42,9 @@ public class NetCodeGenerator_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void simpleRequest() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void simpleRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./Ds3/Calls/GetObjectRequestHandler.cs");
+        final Path requestPath = Paths.get("./Ds3/Calls/GetObjectRequest.cs");
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
 
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
@@ -58,7 +58,7 @@ public class NetCodeGenerator_Test {
         final String generatedCode = new String(outputStream.toByteArray());
         LOG.info("Generated code:\n" + generatedCode);
 
-        assertTrue(TestHelper.extendsClass("GetObjectRequestHandler", "Ds3Request", generatedCode));
+        assertTrue(TestHelper.extendsClass("GetObjectRequest", "Ds3Request", generatedCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", generatedCode));
         assertTrue(TestHelper.hasProperty("Path", "string", generatedCode));
     }

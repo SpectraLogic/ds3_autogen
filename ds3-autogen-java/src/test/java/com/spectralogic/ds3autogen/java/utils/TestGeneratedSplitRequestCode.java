@@ -24,9 +24,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.converters.MultiResponseSplitConverter.nameSpaceSplitRequest;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.getPathName;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.setupOutputStream;
-import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.nameSpaceSplitRequest;
 import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAMESPACING;
 
 /**
@@ -64,7 +64,7 @@ public class TestGeneratedSplitRequestCode extends TestGeneratedCode {
     @Override
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedSplitRequestCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
