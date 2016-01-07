@@ -24,9 +24,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.converters.MultiResponseSplitConverter.nameSpaceSplitRequest;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.getPathName;
 import static com.spectralogic.ds3autogen.java.utils.TestGeneratedCodeHelper.setupOutputStream;
-import static com.spectralogic.ds3autogen.MultiResponseSplitConverter.nameSpaceSplitRequest;
 import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAMESPACING;
 
 /**

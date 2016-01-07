@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedSplitRequestCode;
-import com.spectralogic.ds3autogen.MultiResponseSplitConverter;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
 import org.junit.Rule;
@@ -414,7 +413,7 @@ public class JavaCodeGenerator_Test {
                 fileUtils,
                 requestName,
                 "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                MultiResponseSplitConverter.NAMESPACE_FULL_DETAILS);
+                "FullDetails");
 
         testGeneratedCode.generateCode(fileUtils, "/input/getPhysicalPlacementRequest.xml");
 
@@ -481,7 +480,7 @@ public class JavaCodeGenerator_Test {
                 fileUtils,
                 requestName,
                 "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                MultiResponseSplitConverter.NAMESPACE_FULL_DETAILS);
+                "FullDetails");
 
         testGeneratedCode.generateCode(fileUtils, "/input/getPhysicalPlacementRequest.xml");
 
@@ -553,7 +552,7 @@ public class JavaCodeGenerator_Test {
                 fileUtils,
                 requestName,
                 "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                MultiResponseSplitConverter.NAMESPACE_FULL_DETAILS);
+                "FullDetails");
 
         testGeneratedCode.generateCode(fileUtils, "/input/verifyPhysicalPlacementRequest.xml");
 
@@ -617,7 +616,7 @@ public class JavaCodeGenerator_Test {
                 fileUtils,
                 requestName,
                 "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                MultiResponseSplitConverter.NAMESPACE_FULL_DETAILS);
+                "FullDetails");
 
         testGeneratedCode.generateCode(fileUtils, "/input/verifyPhysicalPlacementRequest.xml");
 

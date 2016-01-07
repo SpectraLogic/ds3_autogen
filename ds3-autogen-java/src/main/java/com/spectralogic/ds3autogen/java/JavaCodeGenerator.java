@@ -33,7 +33,6 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
-import com.spectralogic.ds3autogen.ConverterInterface;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -85,7 +84,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
             final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        this.spec = ConverterInterface.convertSpec(spec);
+        this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 

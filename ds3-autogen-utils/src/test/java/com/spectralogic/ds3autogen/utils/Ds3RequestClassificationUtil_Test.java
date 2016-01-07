@@ -19,8 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

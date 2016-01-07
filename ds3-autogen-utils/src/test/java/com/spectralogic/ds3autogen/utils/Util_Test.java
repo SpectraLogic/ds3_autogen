@@ -21,9 +21,9 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseTypeList;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
-import static com.spectralogic.ds3autogen.utils.test.utils.ResponseTypeConverterHelper.createPopulatedDs3ResponseCodeList;
-import static com.spectralogic.ds3autogen.utils.test.utils.ResponseTypeConverterHelper.createPopulatedDs3ResponseTypeList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 

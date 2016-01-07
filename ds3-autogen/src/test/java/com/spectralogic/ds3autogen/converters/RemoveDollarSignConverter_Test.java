@@ -21,8 +21,8 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.RemoveDollarSignConverter.*;
-import static com.spectralogic.ds3autogen.utils.test.utils.RemoveDollarSignConverterHelper.*;
+import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.*;
+import static com.spectralogic.ds3autogen.test.helpers.RemoveDollarSignConverterHelper.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
