@@ -116,7 +116,7 @@ public class ResponseConverter {
             if (hasContent(responseType.getType())
                     && responseType.getType().contains(".")
                     && responseCode.getCode() < 400) {
-                return responseType.getType();
+                return ConvertType.toModelName(responseType.getType());
             }
         }
         return "";

@@ -121,7 +121,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.BucketObjectsApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BucketObjectsApiBean", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
@@ -176,7 +176,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.Bucket", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Bucket", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
@@ -238,7 +238,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.JobWithChunksContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
@@ -429,7 +429,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.platform.lang.PhysicalPlacementApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacementApiBean", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -504,7 +504,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.platform.lang.BlobApiBeansContainer", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobApiBeansContainer", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -569,7 +569,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.platform.lang.PhysicalPlacementApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacementApiBean", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -641,7 +641,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.platform.lang.BlobApiBeansContainer", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobApiBeansContainer", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -705,7 +705,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.DeleteResultApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.DeleteResultApiBean", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -865,7 +865,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.HttpErrorResultApiBean", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -940,7 +940,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.ds3.S3Object", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.S3Object", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
         //Test the Ds3Client
@@ -1047,7 +1047,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.notification.JobCompletedNotificationRegistration", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistration", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1104,7 +1104,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.common.dao.domain.notification.JobCompletedNotificationRegistrationList", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistrationList", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1224,7 +1224,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.InitiateMultipartUploadResultApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.InitiateMultipartUploadResultApiBean", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1278,7 +1278,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.s3.server.domain.JobChunkContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkContainerApiBean", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

@@ -533,8 +533,8 @@ public class JavaHelper_Test {
     @Test
     public void createAllResponseResultClassVars_FullList_Test() {
         final String expectedResult =
-                "    final BucketObjectsApiBean bucketObjectsApiBeanResult;\n" +
-                "    final HttpErrorResultApiBean httpErrorResultApiBeanResult;";
+                "    private BucketObjectsApiBean bucketObjectsApiBeanResult;\n" +
+                "    private HttpErrorResultApiBean httpErrorResultApiBeanResult;";
 
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
                 new Ds3ResponseCode(

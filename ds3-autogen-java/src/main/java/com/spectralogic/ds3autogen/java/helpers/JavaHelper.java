@@ -528,7 +528,7 @@ public final class JavaHelper {
         final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
         for (Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
-            builder.add("final " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
+            builder.add("private " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
                             + " " + entry.getKey() + ";");
         }
         return builder.build()

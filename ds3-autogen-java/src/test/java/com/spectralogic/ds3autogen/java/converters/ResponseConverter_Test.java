@@ -32,7 +32,7 @@ public class ResponseConverter_Test {
     public void getImportFromResponseCode_Test() {
         final Ds3ResponseCode responseCode = createPopulatedResponseCode("");
         final String result = getImportFromResponseCode(responseCode);
-        assertThat(result, is("com.spectralogic.Test.Type"));
+        assertThat(result, is("com.spectralogic.ds3client.models.Type"));
     }
 
     @Test
@@ -79,8 +79,8 @@ public class ResponseConverter_Test {
 
         final ImmutableList<String> result = getAllImports(responseCodes);
         assertThat(result.size(), is(3));
-        assertTrue(result.contains("com.spectralogic.Test.Type_v1"));
-        assertTrue(result.contains("com.spectralogic.Test.Type_v2"));
+        assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
+        assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
     }
 
