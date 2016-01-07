@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
  * This class provides utilities for the functional testing
  * of the Java Code Generator
  */
-public class JavaCodeGeneratorTestHelper {
+public final class JavaCodeGeneratorTestHelper {
 
     /**
      * Checks that the generated Java Ds3Client is of correct syntax and contains the specified request
