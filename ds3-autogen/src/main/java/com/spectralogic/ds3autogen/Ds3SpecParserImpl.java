@@ -54,6 +54,6 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
                 Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),
                 Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types(), nameMapper));
 
-        return ConverterInterface.convertSpec(ds3ApiSpec);
+        return Ds3SpecNormalizer.convertSpec(ds3ApiSpec);
     }
 }

@@ -77,11 +77,8 @@ public class Ds3Element {
             return false;
         }
         final Ds3Element element = (Ds3Element) obj;
-        if (this.getName().equals(element.getName())
+        return this.getName().equals(element.getName())
                 && this.getType().equals(element.getType())
-                && this.getComponentType().equals(element.getComponentType())) {
-            return true;
-        }
-        return false;
+                && this.getComponentType().equals(element.getComponentType());
     }
 }

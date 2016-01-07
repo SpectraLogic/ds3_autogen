@@ -30,7 +30,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  * Converts all param and response type names within the Ds3ApiSpec to
  * remove all instances of the dollar symbol '$'
  */
-public class RemoveDollarSignConverter {
+public final class RemoveDollarSignConverter {
 
     private static final Logger LOG = LoggerFactory.getLogger(RemoveDollarSignConverter.class);
 
@@ -165,7 +165,7 @@ public class RemoveDollarSignConverter {
             return ImmutableMap.of();
         }
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
-        for (Map.Entry<String, Ds3Type> entry : map.entrySet()) {
+        for (final Map.Entry<String, Ds3Type> entry : map.entrySet()) {
             final String typeName = removeDollarSignFromName(entry.getKey());
             final Ds3Type type = removeDollarSignFromType(entry.getValue());
             if (!containsType(typeName, entry.getValue(), builder.build())) {

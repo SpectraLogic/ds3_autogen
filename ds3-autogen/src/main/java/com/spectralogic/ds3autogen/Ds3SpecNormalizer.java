@@ -29,9 +29,9 @@ import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.conve
  * Creates a simple interface from which to launch the various Ds3ApiSpec converters
  * with guaranteed proper order of execution.
  */
-public class ConverterInterface {
+public final class Ds3SpecNormalizer {
 
-    private ConverterInterface() { }
+    private Ds3SpecNormalizer() { }
 
     public static Ds3ApiSpec convertSpec(final Ds3ApiSpec spec) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
         return renameRequests( //Rename requests from RequestHandler to Request
