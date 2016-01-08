@@ -75,9 +75,9 @@ public class CHelper {
                 elementTypeBuilder.append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
                 elementTypeBuilder.append("*");
                 return elementTypeBuilder.toString();
-                //throw new ParseException("Unknown element: " + element, 0);
         }
     }
+
     public static String elementTypeToFreeFunctionString(final Ds3Element element) throws ParseException {
         switch (element.getType()) {
             case "java.lang.String":
@@ -105,7 +105,50 @@ public class CHelper {
                 elementTypeBuilder.append("ds3_free_")
                         .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
                 return elementTypeBuilder.toString();
-            //throw new ParseException("Unknown element: " + element, 0);
+        }
+    }
+
+
+    public static String elementTypeToParseFunction(final Ds3Element element) throws ParseException {
+        switch (element.getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "xml_get_string";
+            case "double":
+            case "java.lang.Long":
+            case "long":
+                return "xml_get_uint64";
+            case "java.lang.Integer":
+            case "int":
+                return "xml_get_uint16";
+            case "boolean":
+                return "xml_get_bool";
+
+            case "java.util.Set":
+            case "array":
+            default:
+                throw new ParseException("Unknown element type" + element.getType(), 0);
+        }
+    }
+
+    public static boolean isBasicElementType(final Ds3Element element) {
+        switch (element.getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+            case "double":
+            case "java.lang.Long":
+            case "long":
+            case "java.lang.Integer":
+            case "int":
+            case "boolean":
+                return true;
+            case "java.util.Set":
+            case "array":
+            default:
+                // any complex sub element such as "com.spectralogic.s3.server.domain.UserApiBean"
+                return false;
         }
     }
 }

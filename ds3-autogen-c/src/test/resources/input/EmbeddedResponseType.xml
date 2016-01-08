@@ -1,0 +1,54 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.BucketsApiBean">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.BucketApiBean" Name="Buckets" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Buckets" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Bucket" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Owner" Type="com.spectralogic.s3.server.domain.UserApiBean">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.server.domain.BucketApiBean">
+                <Elements>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.server.domain.UserApiBean">
+                <Elements>
+                    <Element Name="DisplayName" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value=""
+                                                       ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED"
+                                                       ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="iD" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

@@ -1,6 +1,6 @@
 <#include "CopyrightHeader.ftl"/>
 
-void ds3_free_${getNameUnderscores()}(${getResponseTypeName()}* response_data) {
+void ${getResponseTypeName()}_free(${getResponseTypeName()}* response_data) {
     if (response_data == NULL) {
         return;
     }
