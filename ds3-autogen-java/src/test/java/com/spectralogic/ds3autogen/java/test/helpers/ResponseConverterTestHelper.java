@@ -11,7 +11,6 @@ public final class ResponseConverterTestHelper {
 
     /**
      * Creates a populated Ds3ResponseCode with a non-error response code
-     * @return
      */
     public static Ds3ResponseCode createPopulatedResponseCode(final String variation) {
         return new Ds3ResponseCode(
@@ -22,7 +21,6 @@ public final class ResponseConverterTestHelper {
 
     /**
      * Creates a populated Ds3ResponseCode with a null response type
-     * @return
      */
     public static Ds3ResponseCode createPopulatedNullResponseCode() {
         return new Ds3ResponseCode(
