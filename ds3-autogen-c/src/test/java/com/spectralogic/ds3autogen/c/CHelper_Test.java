@@ -97,4 +97,14 @@ public class CHelper_Test {
         Ds3Element testElement = new Ds3Element("ds3Element", "com.spectralogic.s3.common.platform.lang.BuildInformation", null, null);
         assertThat(CHelper.elementTypeToString(testElement), is("ds3_build_information*"));
     }
+    @Test
+    public void testIsBasicType() {
+        Ds3Element testElement = new Ds3Element("basicElement", "boolean", null, null);
+        assertThat(CHelper.isBasicElementType(testElement), is(true));
+    }
+    @Test
+    public void testIsBasicTypeNegative() {
+        Ds3Element testElement = new Ds3Element("basicElement", "com.spectralogic.s3.server.domain.UserApiBean", null, null);
+        assertThat(CHelper.isBasicElementType(testElement), is(false));
+    }
 }

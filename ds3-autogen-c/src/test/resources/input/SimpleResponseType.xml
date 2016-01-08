@@ -1,0 +1,26 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.UserApiBean">
+                <Elements>
+                    <Element Name="DisplayName" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value=""
+                                                       ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED"
+                                                       ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="iD" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>
