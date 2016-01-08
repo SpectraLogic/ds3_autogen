@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.Set;
 
 public class Type {
     private static final Logger LOG = LoggerFactory.getLogger(Type.class);
@@ -123,5 +124,63 @@ public class Type {
         }
 
         return outputBuilder.toString();
+    }
+
+    public String generateResponseParser() throws ParseException {
+        final StringBuilder outputBuilder = new StringBuilder();
+
+        //if (freeFunc.length() == 0) continue;
+
+        int numElements = this.elements.size();
+        LOG.debug("generateResponseParser() " + numElements);
+
+        for (int currentIndex = 0; currentIndex < numElements; currentIndex++) {
+            outputBuilder.append(CHelper.indent(1));
+
+            if (currentIndex > 0) {
+                outputBuilder.append(CHelper.indent(2)).append("} else ");
+            }
+
+            final String currentElementName = this.elements.get(currentIndex).getName();
+            LOG.debug("generateResponseParser() " + currentElementName);
+            outputBuilder.append("if (element_equal(child_node, \"").append(currentElementName).append("\")) {").append(System.lineSeparator());
+            outputBuilder.append(CHelper.indent(4)).
+                    append(getResponseTypeName()).
+                    append("->").
+                    append(Helper.camelToUnderscore(currentElementName)).
+                    append(" = ").
+                    append(CHelper.elementTypeToParseFunction(this.elements.get(currentIndex))).
+                    append("(doc, child_node);").append(System.lineSeparator());
+        }
+        outputBuilder.append(CHelper.indent(3)).append("} else {").append(System.lineSeparator());
+        outputBuilder.append(CHelper.indent(4)).
+                append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append(System.lineSeparator());
+        outputBuilder.append(CHelper.indent(3)).append("}").append(System.lineSeparator());
+
+        return outputBuilder.toString();
+    }
+
+    public boolean isBasicType() {
+        for (final Ds3Element element : this.elements) {
+            if (CHelper.isBasicElementType(element)) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean containsExistingElements(final Set<String> existingElements) {
+        for (final Ds3Element element : this.elements) {
+            if (element.getType().equals("array")) {
+                if (!existingElements.contains(element.getComponentType())) {
+                    return false;
+                }
+            } else if (!existingElements.contains(element.getType())) {
+                    return false;
+            }
+        }
+        return true;
     }
 }
