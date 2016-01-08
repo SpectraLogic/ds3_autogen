@@ -15,8 +15,15 @@
 
 package com.spectralogic.ds3autogen.converters;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequests;
+import static com.spectralogic.ds3autogen.converters.NameConverter.toUpdatedDs3Request;
+import static com.spectralogic.ds3autogen.converters.NameConverter.toUpdatedDs3RequestName;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -24,7 +31,7 @@ import static org.junit.Assert.assertThat;
 public class NameConverter_Test {
 
     @Test
-    public void nameConverterStripHandlerFromName() {
+    public void stripHandlerFromName_Test() {
         assertThat(NameConverter.stripHandlerFromName("com.spectralogic.ds3client.commands.GetBucketRequestHandler"),
                 is("com.spectralogic.ds3client.commands.GetBucketRequest"));
 
@@ -33,5 +40,76 @@ public class NameConverter_Test {
 
         assertThat(NameConverter.stripHandlerFromName(null), is(nullValue()));
         assertThat(NameConverter.stripHandlerFromName(""), is(nullValue()));
+    }
+
+    @Test
+    public void toUpdatedDs3RequestName_SpectraS3_Test() {
+        final String result = toUpdatedDs3RequestName(
+                "com.spectralogic.test.MyTestRequestHandler",
+                Classification.spectrads3);
+        assertThat(result, is("com.spectralogic.test.MyTestSpectraS3Request"));
+    }
+
+    @Test
+    public void toUpdatedDs3RequestName_AmazonS3_Test() {
+        final String result = toUpdatedDs3RequestName(
+                "com.spectralogic.test.MyTestRequestHandler",
+                Classification.amazons3);
+        assertThat(result, is("com.spectralogic.test.MyTestRequest"));
+    }
+
+    @Test
+    public void toUpdatedDs3Request_SpectraS3_Test() {
+        final Ds3Request request = new Ds3Request(
+                "com.spectralogic.test.MyTestRequestHandler",
+                null,
+                Classification.spectrads3,
+                null, null, null, null, null, null, null, null, null);
+        final Ds3Request result = toUpdatedDs3Request(request);
+        assertThat(result.getName(), is("com.spectralogic.test.MyTestSpectraS3Request"));
+    }
+
+    @Test
+    public void toUpdatedDs3Request_AmazonS3_Test() {
+        final Ds3Request request = new Ds3Request(
+                "com.spectralogic.test.MyTestRequestHandler",
+                null,
+                Classification.amazons3,
+                null, null, null, null, null, null, null, null, null);
+        final Ds3Request result = toUpdatedDs3Request(request);
+        assertThat(result.getName(), is("com.spectralogic.test.MyTestRequest"));
+    }
+
+    @Test
+    public void renameRequests_NullList_Test() {
+        final Ds3ApiSpec result = renameRequests(new Ds3ApiSpec(null, null));
+        assertThat(result.getRequests(), is(nullValue()));
+    }
+
+    @Test
+    public void renameRequests_EmptyList_Test() {
+        final Ds3ApiSpec result = renameRequests(new Ds3ApiSpec(ImmutableList.of(), null));
+        assertThat(result.getRequests().size(), is(0));
+    }
+
+    @Test
+    public void renameRequests_FullList_Test() {
+        final Ds3ApiSpec spec = new Ds3ApiSpec(
+                ImmutableList.of(
+                        new Ds3Request(
+                                "com.spectralogic.test.MyTestOneRequestHandler",
+                                null,
+                                Classification.spectrads3,
+                                null, null, null, null, null, null, null, null, null),
+                        new Ds3Request(
+                                "com.spectralogic.test.MyTestTwoRequestHandler",
+                                null,
+                                Classification.amazons3,
+                                null, null, null, null, null, null, null, null, null)),
+                null);
+        final Ds3ApiSpec result = renameRequests(spec);
+        assertThat(result.getRequests().size(), is(2));
+        assertThat(result.getRequests().get(0).getName(), is("com.spectralogic.test.MyTestOneSpectraS3Request"));
+        assertThat(result.getRequests().get(1).getName(), is("com.spectralogic.test.MyTestTwoRequest"));
     }
 }
