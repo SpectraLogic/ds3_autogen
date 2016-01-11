@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
+import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedModelCode;
 import com.spectralogic.ds3autogen.java.utils.TestHelper;
@@ -43,7 +44,7 @@ public class JavaCodeGenerator_Models_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void bucketAclType() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void bucketAclType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "BucketAcl";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -80,7 +81,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "PhysicalPlacementApiBean";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -112,7 +113,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void requestType() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void requestType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "RequestType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -137,7 +138,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void checksumType() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void checksumType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "ChecksumType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -163,7 +164,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "BlobStoreTaskPriority";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -189,7 +190,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "EmptyType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -201,7 +202,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void unusedType() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void unusedType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "RequestType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(

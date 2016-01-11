@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
+import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.models.xml.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
@@ -42,16 +44,16 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
     }
 
     @Override
-    public Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException {
+    public Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         return toSpec(mapper.readValue(stream, RawSpec.class));
     }
 
-    private static Ds3ApiSpec toSpec(final RawSpec contract) throws IOException, ParserException {
+    private static Ds3ApiSpec toSpec(final RawSpec contract) throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final NameMapper nameMapper = new NameMapper();
         final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
                 Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),
                 Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types(), nameMapper));
 
-        return ds3ApiSpec;
+        return Ds3SpecNormalizer.convertSpec(ds3ApiSpec);
     }
 }

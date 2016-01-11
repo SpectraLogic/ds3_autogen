@@ -15,14 +15,8 @@
 
 package com.spectralogic.ds3autogen.api;
 
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-
-import java.io.IOException;
-
-import java.nio.file.Path;
-
-public interface CodeGenerator {
-    void generate(final Ds3ApiSpec spec,
-                  final FileUtils fileUtils,
-                  final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException;
+public class TypeRenamingConflictException extends Exception {
+    public TypeRenamingConflictException(final String typeName) {
+        super("Renamed type conflicts with existing type: " + typeName);
+    }
 }

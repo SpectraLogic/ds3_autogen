@@ -13,18 +13,15 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.converters;
+package com.spectralogic.ds3autogen.converters;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.utils.NameConverter;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
-public class Converter_Test {
+public class NameConverter_Test {
 
     @Test
     public void nameConverterStripHandlerFromName() {
@@ -36,11 +33,5 @@ public class Converter_Test {
 
         assertThat(NameConverter.stripHandlerFromName(null), is(nullValue()));
         assertThat(NameConverter.stripHandlerFromName(""), is(nullValue()));
-    }
-
-    @Test
-    public void clientConverterGetCommands() {
-        assertTrue(ClientConverter.toCommandList(null).isEmpty());
-        assertTrue(ClientConverter.toCommandList(ImmutableList.of()).isEmpty());
     }
 }

@@ -13,18 +13,20 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.MultiResponseSplitConverter.*;
-import static com.spectralogic.ds3autogen.utils.test.utils.SplitConverterTestHelper.*;
-import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.getRequestDeleteNotification;
-import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.getRequestGetNotification;
-import static com.spectralogic.ds3autogen.utils.test.utils.UtilTestHelper.getRequestVerifyPhysicalPlacement;
+import static com.spectralogic.ds3autogen.converters.MultiResponseSplitConverter.*;
+import static com.spectralogic.ds3autogen.converters.MultiResponseSplitConverter.getTypeNameWithoutPath;
+import static com.spectralogic.ds3autogen.converters.MultiResponseSplitConverter.nameSpaceSplitRequest;
+import static com.spectralogic.ds3autogen.test.helpers.SplitConverterTestHelper.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestDeleteNotification;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestGetNotification;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestVerifyPhysicalPlacement;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;

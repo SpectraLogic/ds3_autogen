@@ -17,6 +17,8 @@ package com.spectralogic.ds3autogen.api.models;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.Objects;
+
 public class Ds3EnumConstant {
 
     private final String name;
@@ -35,5 +37,25 @@ public class Ds3EnumConstant {
 
     public ImmutableList<Ds3Property> getDs3Properties() {
         return ds3Properties;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
+
+    /**
+     * Compares the name of Ds3EnumConstant. Does not compare the Ds3Property list
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Ds3EnumConstant)) {
+            return false;
+        }
+        final Ds3EnumConstant enumConstant = (Ds3EnumConstant) obj;
+        return this.getName().equals(enumConstant.getName());
     }
 }

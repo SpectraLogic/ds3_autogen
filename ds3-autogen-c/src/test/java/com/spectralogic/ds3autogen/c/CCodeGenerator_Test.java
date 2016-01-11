@@ -16,10 +16,7 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.CodeGenerator;
-import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
+import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Test;
@@ -38,7 +35,7 @@ public class CCodeGenerator_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
-    public void testSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void testSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -54,7 +51,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeEnumConstant() throws IOException, ParserException, ResponseTypeNotFoundException {
+    public void testSingleTypeEnumConstant() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -76,7 +73,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeEnumConstantMatcher() throws IOException, ParserException {
+    public void testSingleTypeEnumConstantMatcher() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -101,7 +98,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeElement() throws IOException, ParserException {
+    public void testSingleTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -120,11 +117,11 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    ds3_bool backend_activated;"));
         assertTrue(output.contains("    ds3_build_information* build_information;"));
         assertTrue(output.contains("    ds3_str* serial_number;"));
-        assertTrue(output.contains("}ds3_get_system_information_response;"));
+        assertTrue(output.contains("}ds3_system_information_api_bean_response;"));
     }
 
     @Test
-    public void testSingleFreeTypeElementPrototype() throws IOException, ParserException {
+    public void testSingleFreeTypeElementPrototype() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -138,11 +135,11 @@ public class CCodeGenerator_Test {
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_free_get_system_information(ds3_get_system_information_response* response_data);"));
+        assertTrue(output.contains("void ds3_free_system_information_api_bean(ds3_system_information_api_bean_response* response_data);"));
     }
 
     @Test
-    public void testSingleFreeTypeElement() throws IOException, ParserException {
+    public void testSingleFreeTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -156,7 +153,7 @@ public class CCodeGenerator_Test {
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_free_get_system_information(ds3_get_system_information_response* response_data) {"));
+        assertTrue(output.contains("void ds3_free_system_information_api_bean(ds3_system_information_api_bean_response* response_data) {"));
         assertTrue(output.contains("    if (response_data == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
