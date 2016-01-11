@@ -1,6 +1,6 @@
 <#include "CopyrightHeader.ftl"/>
 
-void ${getResponseTypeName()}_free(${getResponseTypeName()}* response_data) {
+void ${getFreeFunctionName()}(${getResponseTypeName()}* response_data) {
     if (response_data == NULL) {
         return;
     }

@@ -17,11 +17,8 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.utils.Helper;
 
-import java.text.ParseException;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -49,106 +46,6 @@ public class CHelper {
                 .collect(Collectors.joining(",\n"));
     }
 
-    public static String elementTypeToString(final Ds3Element element) throws ParseException {
-        switch (element.getType()) {
-            case "java.lang.String":
-            case "java.util.Date":
-            case "java.util.UUID":
-                return "ds3_str*";
-            case "double":
-                return "double";   //? ex: 0.82
-            case "java.lang.Long":
-            case "long":
-                return "uint64_t"; // size_t
-            case "java.lang.Integer":
-            case "int":
-                return "int";
-            case "java.util.Set":
-            case "array":
-                return ""; // TODO ???
-            case "boolean":
-                return "ds3_bool";
-
-            default:
-                final StringBuilder elementTypeBuilder = new StringBuilder();
-                elementTypeBuilder.append("ds3_");
-                elementTypeBuilder.append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
-                elementTypeBuilder.append("*");
-                return elementTypeBuilder.toString();
-        }
-    }
-
-    public static String elementTypeToFreeFunctionString(final Ds3Element element) throws ParseException {
-        switch (element.getType()) {
-            case "java.lang.String":
-            case "java.util.Date":
-            case "java.util.UUID":
-                return "ds3_str_free";
-            // The following primitive types don't require a free
-            case "double":
-                return "";
-            case "java.lang.Long":
-            case "long":
-                return "";
-            case "java.lang.Integer":
-            case "int":
-                return "";
-            case "java.util.Set":
-            case "array":
-                return ""; // TODO ???
-            case "boolean":
-                return "";
-
-            // build the name of the free function for the embedded type
-            default:
-                final StringBuilder elementTypeBuilder = new StringBuilder();
-                elementTypeBuilder.append("ds3_free_")
-                        .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getType())));
-                return elementTypeBuilder.toString();
-        }
-    }
 
 
-    public static String elementTypeToParseFunction(final Ds3Element element) throws ParseException {
-        switch (element.getType()) {
-            case "java.lang.String":
-            case "java.util.Date":
-            case "java.util.UUID":
-                return "xml_get_string";
-            case "double":
-            case "java.lang.Long":
-            case "long":
-                return "xml_get_uint64";
-            case "java.lang.Integer":
-            case "int":
-                return "xml_get_uint16";
-            case "boolean":
-                return "xml_get_bool";
-
-            case "java.util.Set":
-            case "array":
-            default:
-                throw new ParseException("Unknown element type" + element.getType(), 0);
-        }
-    }
-
-    public static boolean isBasicElementType(final Ds3Element element) {
-        switch (element.getType()) {
-            case "java.lang.String":
-            case "java.util.Date":
-            case "java.util.UUID":
-            case "double":
-            case "java.lang.Long":
-            case "long":
-            case "java.lang.Integer":
-            case "int":
-            case "boolean":
-                return true;
-            case "java.util.Set":
-            case "array":
-            default:
-                // any complex sub element such as "com.spectralogic.s3.server.domain.UserApiBean"
-                return false;
-        }
-    }
 }

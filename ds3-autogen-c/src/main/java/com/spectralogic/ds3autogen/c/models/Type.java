@@ -32,7 +32,7 @@ public class Type {
 
     private final String name;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
-    private final ImmutableList<Ds3Element> elements;
+    private final ImmutableList<Element> elements;
 
 
     public Type(
@@ -41,7 +41,7 @@ public class Type {
             final ImmutableList<Ds3Element> elements) {
         this.name = name;
         this.enumConstants = enumConstants;
-        this.elements = elements;
+        this.elements = convertDs3Elements(elements);
     }
 
     public String getName() {
@@ -64,12 +64,55 @@ public class Type {
         return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(getUnqualifiedName()));
     }
 
+    public String getDs3Type() {
+        return "ds3_" + getNameUnderscores();
+    }
+
     public String getResponseTypeName() {
-        final StringBuilder responseName = new StringBuilder();
-        responseName.append("ds3_");
-        responseName.append(getNameUnderscores());
-        responseName.append("_response");
-        return responseName.toString();
+        return getDs3Type() + "_response";
+    }
+
+    public String getParserFunctionName() {
+        return "_parse_" + getResponseTypeName();
+    }
+
+    public String getFreeFunctionName() {
+        return getResponseTypeName() + "_free";
+    }
+
+    public String getElementFreeFunction(final Element element) throws ParseException {
+        switch (element.getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "ds3_str_free";
+            // The following primitive types don't require a free
+            case "double":
+                return "";
+            case "java.lang.Long":
+            case "long":
+                return "";
+            case "java.lang.Integer":
+            case "int":
+                return "";
+            case "java.util.Set":
+            case "array":
+                return ""; // TODO ???
+            case "boolean":
+                return "";
+
+            // build the name of the free function for the embedded type
+            default:
+                return element.getFreeFunctionName();
+        }
+    }
+
+    public ImmutableList<Element> convertDs3Elements(ImmutableList<Ds3Element> elements) {
+        final ImmutableList.Builder<Element> builder = ImmutableList.builder();
+        for (final Ds3Element currentElement : elements) {
+            builder.add(new Element(currentElement.getName(), currentElement.getType(), currentElement.getComponentType(), currentElement.getDs3Annotations()));
+        }
+        return builder.build();
     }
 
     public String generateMatcher() {
@@ -98,11 +141,11 @@ public class Type {
     public String getTypeElementsList() throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
-        for (final Ds3Element element : this.elements) {
+        for (final Element element : this.elements) {
             outputBuilder.append(CHelper.indent(1))
-                    .append(CHelper.elementTypeToString(element))
+                    .append(element.getDs3Type())
                     .append(" ")
-                    .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName())))
+                    .append(element.getNameUnderscores())
                     .append(";")
                     .append(System.lineSeparator());
         }
@@ -113,13 +156,13 @@ public class Type {
     public String generateFreeTypeElementMembers() throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
-        for (final Ds3Element element : this.elements) {
-            final String freeFunc = CHelper.elementTypeToFreeFunctionString(element);
+        for (final Element element : this.elements) {
+            final String freeFunc = getElementFreeFunction(element);
             if (freeFunc.length() == 0) continue;
 
             outputBuilder.append(CHelper.indent(1))
                     .append(freeFunc).append("(response_data->")
-                    .append(Helper.camelToUnderscore(Helper.unqualifiedName(element.getName()))).append(");")
+                    .append(element.getNameUnderscores()).append(");")
                     .append(System.lineSeparator());
         }
 
@@ -129,12 +172,7 @@ public class Type {
     public String generateResponseParser() throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
-        //if (freeFunc.length() == 0) continue;
-
-        int numElements = this.elements.size();
-        LOG.debug("generateResponseParser() " + numElements);
-
-        for (int currentIndex = 0; currentIndex < numElements; currentIndex++) {
+        for (int currentIndex = 0; currentIndex < this.elements.size(); currentIndex++) {
             outputBuilder.append(CHelper.indent(1));
 
             if (currentIndex > 0) {
@@ -142,15 +180,14 @@ public class Type {
             }
 
             final String currentElementName = this.elements.get(currentIndex).getName();
-            LOG.debug("generateResponseParser() " + currentElementName);
+
             outputBuilder.append("if (element_equal(child_node, \"").append(currentElementName).append("\")) {").append(System.lineSeparator());
             outputBuilder.append(CHelper.indent(4)).
                     append(getResponseTypeName()).
                     append("->").
                     append(Helper.camelToUnderscore(currentElementName)).
                     append(" = ").
-                    append(CHelper.elementTypeToParseFunction(this.elements.get(currentIndex))).
-                    append("(doc, child_node);").append(System.lineSeparator());
+                    append(this.elements.get(currentIndex).getParser()).append(System.lineSeparator());
         }
         outputBuilder.append(CHelper.indent(3)).append("} else {").append(System.lineSeparator());
         outputBuilder.append(CHelper.indent(4)).
@@ -160,11 +197,9 @@ public class Type {
         return outputBuilder.toString();
     }
 
-    public boolean isBasicType() {
-        for (final Ds3Element element : this.elements) {
-            if (CHelper.isBasicElementType(element)) {
-                continue;
-            } else {
+    public boolean isPrimitiveType() {
+        for (final Element element : this.elements) {
+            if (!element.isPrimitiveType()) {
                 return false;
             }
         }
@@ -172,7 +207,7 @@ public class Type {
     }
 
     public boolean containsExistingElements(final Set<String> existingElements) {
-        for (final Ds3Element element : this.elements) {
+        for (final Element element : this.elements) {
             if (element.getType().equals("array")) {
                 if (!existingElements.contains(element.getComponentType())) {
                     return false;

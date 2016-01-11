@@ -115,7 +115,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("typedef enum {"));
         assertTrue(output.contains("    ds3_str* api_version;"));
         assertTrue(output.contains("    ds3_bool backend_activated;"));
-        assertTrue(output.contains("    ds3_build_information* build_information;"));
+        assertTrue(output.contains("    ds3_build_information_response* build_information;"));
         assertTrue(output.contains("    ds3_str* serial_number;"));
         assertTrue(output.contains("}ds3_system_information_api_bean_response;"));
     }
@@ -135,7 +135,7 @@ public class CCodeGenerator_Test {
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_free_system_information_api_bean(ds3_system_information_api_bean_response* response_data);"));
+        assertTrue(output.contains("void ds3_system_information_api_bean_response_free(ds3_system_information_api_bean_response* response_data);"));
     }
 
     @Test
@@ -153,23 +153,22 @@ public class CCodeGenerator_Test {
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_free_system_information_api_bean(ds3_system_information_api_bean_response* response_data) {"));
+        assertTrue(output.contains("void ds3_system_information_api_bean_response_free(ds3_system_information_api_bean_response* response_data) {"));
         assertTrue(output.contains("    if (response_data == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    ds3_str_free(response_data->api_version);"));
-        assertTrue(output.contains("    ds3_free_build_information(response_data->build_information);"));
+        assertTrue(output.contains("    ds3_build_information_response_free(response_data->build_information);"));
         assertTrue(output.contains("    ds3_str_free(response_data->serial_number);"));
         assertTrue(output.contains("}"));
     }
 
        @Test
-    public void testSimpleElementResponseParser() throws IOException, ParserException {
+    public void testSimpleElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleResponseType.xml"));
-        //final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/EmbeddedResponseType.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, null);

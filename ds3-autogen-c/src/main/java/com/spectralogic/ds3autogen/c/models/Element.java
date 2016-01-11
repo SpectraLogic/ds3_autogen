@@ -1,10 +1,8 @@
-/*package com.spectralogic.ds3autogen.c.models;
+package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.c.helpers.CHelper;
+import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,14 +14,17 @@ public class Element {
 
     private final String name;
     private final String type;
+    private final String componentType;
     private final ImmutableList<Ds3Annotation> annotations;
 
     public Element(
             final String name,
             final String type,
+            final String componentType,
             final ImmutableList<Ds3Annotation> annotations) {
         this.name = name;
         this.type = type;
+        this.componentType = componentType;
         this.annotations = annotations;
     }
 
@@ -35,34 +36,105 @@ public class Element {
         return this.type;
     }
 
+    public String getComponentType() {
+        return this.componentType;
+    }
 
-    public String generateResponseParser() throws ParseException {
-        final StringBuilder outputBuilder = new StringBuilder();
+    public String getUnqualifiedName() {
+        return Helper.unqualifiedName(name);
+    }
 
-        for (final Ds3Element element : this.elements) {
-            final String freeFunc = CHelper.elementTypeToParseFunction(element);
+    public String getNameUnderscores() {
+        return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(getUnqualifiedName()));
+    }
 
-            if (freeFunc.length() == 0) continue;
+    public String getParserName() {
+        return "_parse_" + getNameUnderscores() + "_response";
+    }
 
-            for (int currentIndex = 0; currentIndex < element.; currentIndex++) {
-                outputBuilder.append(CHelper.indent(1));
+    public String getDs3TypeName() {
+        return "ds3_" + getNameUnderscores();
+    }
 
-                if (currentIndex > 0) {
-                    outputBuilder.append("} else ");
-                }
+    public String getResponseTypeName() {
+        return getDs3TypeName() + "_response";
+    }
 
-                final String currentEnumString = this.enumConstants.get(currentIndex).getName();
-                outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").append(currentEnumString).append("\") == 0) {").append(System.lineSeparator());
-                outputBuilder.append(CHelper.indent(2)).append("return ").append(currentEnumString).append(";").append(System.lineSeparator());
-            }
+    public String getFreeFunctionName() {
+        return getResponseTypeName() + "_free";
+    }
 
-            outputBuilder.append(CHelper.indent(1)).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
-            outputBuilder.append(CHelper.indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown ").append(getNameUnderscores()).append(" value of '%s'.  Returning ").append(getEnumConstants().get(0).getName()).append(" for safety.").append(System.lineSeparator());
-            outputBuilder.append(CHelper.indent(2)).append("return ").append(getEnumConstants().get(0).getName()).append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
-            outputBuilder.append(CHelper.indent(1)).append("}").append(System.lineSeparator());
+    public ImmutableList<Ds3Annotation> getAnnotations() {
+        return this.annotations;
+    }
+
+    public String getDs3Type() throws ParseException {
+        switch (getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "ds3_str*";
+            case "double":
+                return "double";   //? ex: 0.82
+            case "java.lang.Long":
+            case "long":
+                return "uint64_t"; // size_t
+            case "java.lang.Integer":
+            case "int":
+                return "int";
+            case "java.util.Set":
+            case "array":
+                return ""; // TODO ???
+            case "boolean":
+                return "ds3_bool";
+
+            default:
+                return getResponseTypeName() + "*";
         }
+    }
 
-        return outputBuilder.toString();
+    public String getParser() throws ParseException {
+        switch (getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+                return "xml_get_string(doc, child_node);";
+            case "double":
+            case "java.lang.Long":
+            case "long":
+                return "xml_get_uint64(doc, child_node);";
+            case "java.lang.Integer":
+            case "int":
+                return "xml_get_uint16(doc, child_node);";
+            case "boolean":
+                return "xml_get_bool(doc, child_node);";
+
+            case "java.util.Set":
+            case "array":
+                throw new ParseException("Unknown element type" + getType(), 0);
+
+            default:
+                return getParserName() + "(log, doc, child_node);";
+        }
+    }
+
+    public boolean isPrimitiveType() {
+        switch (getType()) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+            case "double":
+            case "java.lang.Long":
+            case "long":
+            case "java.lang.Integer":
+            case "int":
+            case "boolean":
+                return true;
+            case "java.util.Set":
+            case "array":
+            default:
+                // any complex sub element such as "com.spectralogic.s3.server.domain.UserApiBean"
+                return false;
+        }
     }
 }
-*/
