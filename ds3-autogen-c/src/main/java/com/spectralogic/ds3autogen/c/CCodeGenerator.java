@@ -30,12 +30,10 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import freemarker.core.Environment;
-import freemarker.core.ParseException;
 import freemarker.template.*;
 
 import org.slf4j.Logger;
@@ -80,18 +78,16 @@ public class CCodeGenerator implements CodeGenerator {
             }
 
             // Generate TypeResponse parsers
-            final Set<String> generatedTypesResponses = new HashSet();
+            final HashSet generatedTypesResponses = new HashSet();
             int depth = 0;
             while (generatedTypesResponses.size() != spec.getTypes().values().size() && depth++ < 10) {
                 for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                     if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
                         final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                        if (typeEntry.isBasicType() || typeEntry.containsExistingElements(generatedTypesResponses)) {
+                        if (typeEntry.isPrimitiveType() || typeEntry.containsExistingElements(generatedTypesResponses)) {
                             generatedTypesResponses.add(typeEntry.getName());
                         }
                     }
-                    LOG.debug(generatedTypesResponses.toString());
-                    LOG.debug("depth[" + depth + "]\n\n");
                 }
             }
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {

@@ -2,4 +2,4 @@
 
 typedef enum {
 ${getEnumConstantsList()}
-}ds3_${getNameUnderscores()};
+}${getDs3Type()};

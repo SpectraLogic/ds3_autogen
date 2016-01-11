@@ -1,6 +1,6 @@
 <#include "CopyrightHeader.ftl"/>
 
-static ${getResponseTypeName()}* _parse_${getResponseTypeName()}(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {
+static ${getResponseTypeName()}* ${getParserFunctionName()}(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {
     xmlNodePtr child_node;
     ${getResponseTypeName()}* ${getResponseTypeName()} = g_new0(${getResponseTypeName()}, 1);
 
