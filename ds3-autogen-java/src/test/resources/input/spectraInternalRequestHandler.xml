@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.tape.CreateFakeTapeEnvironmentRequestHandler">
-                <Request Action="CREATE" Resource="TAPE_ENVIRONMENT" ResourceType="SINGLETON">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="TAPE_ENVIRONMENT" ResourceType="SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams/>
                 </Request>
@@ -14,7 +14,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D10567FDA4745FDE40A53EDAAE72E5D9</Version>
+                <Version>1.BB98871AF82585B0C646B6954309CBC3</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

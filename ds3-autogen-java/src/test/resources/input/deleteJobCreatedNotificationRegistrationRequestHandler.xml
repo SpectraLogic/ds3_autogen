@@ -2,11 +2,9 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.DeleteJobCreatedNotificationRegistrationRequestHandler">
-                <Request Action="DELETE" Resource="JOB_CREATED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="JOB_CREATED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
-                    <RequiredQueryParams>
-                        <Param Name="Test" Type="void"/>
-                    </RequiredQueryParams>
+                    <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
@@ -16,6 +14,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.BF2D067D7C365D5CD381837F5376FBCC</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

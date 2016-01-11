@@ -43,6 +43,7 @@ class Ds3SpecConverter {
                     request.getResource(),
                     request.getResourceType(),
                     request.getOperation(),
+                    request.includeIdInPath(),
                     convertAllResponseCodes(request.getDs3ResponseCodes(), nameMapper),
                     convertAllParams(request.getOptionalQueryParams(), nameMapper),
                     convertAllParams(request.getRequiredQueryParams(), nameMapper));

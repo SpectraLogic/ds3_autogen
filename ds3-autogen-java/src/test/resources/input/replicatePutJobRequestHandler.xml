@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ReplicatePutJobRequestHandler">
-                <Request Action="MODIFY" Operation="START_BULK_PUT" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_PUT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
@@ -26,7 +26,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D890F27A6AF49E5250E880C18C007010</Version>
+                <Version>1.92183B3AB123832B01E23ECC06BF35FE</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

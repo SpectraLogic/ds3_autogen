@@ -101,6 +101,7 @@ public final class SplitConverterTestHelper {
                 Resource.TAPE,
                 ResourceType.NON_SINGLETON,
                 null,
+                true,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 200,
@@ -126,6 +127,7 @@ public final class SplitConverterTestHelper {
                 Resource.TAPE_PARTITION,
                 ResourceType.NON_SINGLETON,
                 null,
+                true,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 200,
@@ -151,6 +153,7 @@ public final class SplitConverterTestHelper {
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
                 Operation.GET_PHYSICAL_PLACEMENT,
+                true,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 200,

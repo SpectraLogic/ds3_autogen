@@ -42,7 +42,9 @@ public class ResponseTypeConverterHelper {
             final String secondVariation
     ) {
         return new Ds3Request(null, null, null, null, null, null, null, null, null,
-                createPopulatedDs3ResponseCodeList(firstVariation, secondVariation), null, null);
+                false,
+                createPopulatedDs3ResponseCodeList(firstVariation, secondVariation),
+                null, null);
     }
 
     /**

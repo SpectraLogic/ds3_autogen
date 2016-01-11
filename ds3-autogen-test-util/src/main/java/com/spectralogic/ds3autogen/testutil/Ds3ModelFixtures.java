@@ -68,6 +68,7 @@ public class Ds3ModelFixtures {
                 Resource.JOB_CREATED_NOTIFICATION_REGISTRATION,
                 ResourceType.NON_SINGLETON,
                 null,
+                true,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 204,
@@ -93,6 +94,7 @@ public class Ds3ModelFixtures {
                 Resource.JOB_CREATED_NOTIFICATION_REGISTRATION,
                 ResourceType.NON_SINGLETON,
                 null,
+                false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("Format", "com.spectralogic.util.http.HttpResponseFormatType"),
@@ -118,6 +120,7 @@ public class Ds3ModelFixtures {
                 Resource.JOB_COMPLETED_NOTIFICATION_REGISTRATION,
                 ResourceType.NON_SINGLETON,
                 null,
+                true,
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 null);
@@ -139,6 +142,7 @@ public class Ds3ModelFixtures {
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
                 Operation.VERIFY_PHYSICAL_PLACEMENT,
+                true,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 200,
@@ -172,6 +176,7 @@ public class Ds3ModelFixtures {
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
                 Operation.START_BULK_GET,
+                true,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"),
@@ -196,6 +201,7 @@ public class Ds3ModelFixtures {
                 null,
                 null,
                 null,
+                false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("RollBack", "void")),
@@ -219,6 +225,7 @@ public class Ds3ModelFixtures {
                 null,
                 null,
                 null,
+                false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID"),
@@ -242,6 +249,7 @@ public class Ds3ModelFixtures {
                 null,
                 null,
                 null,
+                false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID"),
@@ -265,6 +273,7 @@ public class Ds3ModelFixtures {
                 Resource.OBJECT,
                 ResourceType.NON_SINGLETON,
                 null,
+                true,
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 ImmutableList.of(

@@ -64,7 +64,7 @@ public class NameConverter_Test {
                 "com.spectralogic.test.MyTestRequestHandler",
                 null,
                 Classification.spectrads3,
-                null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, false, null, null, null);
         final Ds3Request result = toUpdatedDs3Request(request);
         assertThat(result.getName(), is("com.spectralogic.test.MyTestSpectraS3Request"));
     }
@@ -75,7 +75,7 @@ public class NameConverter_Test {
                 "com.spectralogic.test.MyTestRequestHandler",
                 null,
                 Classification.amazons3,
-                null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, false, null, null, null);
         final Ds3Request result = toUpdatedDs3Request(request);
         assertThat(result.getName(), is("com.spectralogic.test.MyTestRequest"));
     }
@@ -100,12 +100,12 @@ public class NameConverter_Test {
                                 "com.spectralogic.test.MyTestOneRequestHandler",
                                 null,
                                 Classification.spectrads3,
-                                null, null, null, null, null, null, null, null, null),
+                                null, null, null, null, null, null, false, null, null, null),
                         new Ds3Request(
                                 "com.spectralogic.test.MyTestTwoRequestHandler",
                                 null,
                                 Classification.amazons3,
-                                null, null, null, null, null, null, null, null, null)),
+                                null, null, null, null, null, null, false, null, null, null)),
                 null);
         final Ds3ApiSpec result = renameRequests(spec);
         assertThat(result.getRequests().size(), is(2));

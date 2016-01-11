@@ -138,9 +138,9 @@ public class Util_Test {
     @Test
     public void removeSpectraInternalRequests_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request("Request1", null, Classification.amazons3, null, null, null, null, null, null, null, null, null),
-                new Ds3Request("Request2", null, Classification.spectrainternal, null, null, null, null, null, null, null, null, null),
-                new Ds3Request("Request3", null, Classification.spectrads3, null, null, null, null, null, null, null, null, null));
+                new Ds3Request("Request1", null, Classification.amazons3, null, null, null, null, null, null, false, null, null, null),
+                new Ds3Request("Request2", null, Classification.spectrainternal, null, null, null, null, null, null, false, null, null, null),
+                new Ds3Request("Request3", null, Classification.spectrads3, null, null, null, null, null, null, false, null, null, null));
         final ImmutableList<Ds3Request> result = removeSpectraInternalRequests(requests);
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getClassification() != Classification.spectrainternal);
@@ -191,7 +191,7 @@ public class Util_Test {
     @Test
     public void getUsedTypesFromRequests_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null, false,
                         createPopulatedDs3ResponseCodeList("_v1", "_v2"),
                         ImmutableList.of(
                                 new Ds3Param(null, "java.util.UUID"),
@@ -199,7 +199,8 @@ public class Util_Test {
                         ImmutableList.of(
                                 new Ds3Param(null, "long"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null, false,
+                        null,
                         ImmutableList.of(
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
@@ -228,14 +229,16 @@ public class Util_Test {
     @Test
     public void removeUnusedTypes_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null, false,
+                        null,
                         ImmutableList.of(
                                 new Ds3Param(null, "java.util.UUID"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
                         ImmutableList.of(
                                 new Ds3Param(null, "long"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null, false,
+                        null,
                         ImmutableList.of(
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
                                 new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
@@ -278,7 +281,8 @@ public class Util_Test {
                 null);
 
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                new Ds3Request(null, null, null, null, null, null, null, null, null, false,
+                        null,
                         ImmutableList.of(
                                 new Ds3Param(null, "java.util.UUID"),
                                 new Ds3Param(null, parentType)),

@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.CreateJobCompletedNotificationRegistrationRequestHandler">
-                <Request Action="CREATE" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="Format" Type="com.spectralogic.util.http.HttpResponseFormatType"/>
                         <Param Name="JobId" Type="java.util.UUID"/>
@@ -11,7 +11,6 @@
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="NotificationEndPoint" Type="java.lang.String"/>
-                        <Param Name="Test" Type="void"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -28,6 +27,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.F6F99FB1D96FAAB52761A4A6F9C007F4</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

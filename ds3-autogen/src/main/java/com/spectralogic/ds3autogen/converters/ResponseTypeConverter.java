@@ -87,6 +87,7 @@ public final class ResponseTypeConverter {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
+                request.includeIdInPath(),
                 toUpdatedDs3ResponseCodeList(
                         request.getDs3ResponseCodes()),
                 request.getOptionalQueryParams(),

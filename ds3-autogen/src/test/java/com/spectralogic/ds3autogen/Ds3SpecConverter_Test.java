@@ -200,6 +200,7 @@ public class Ds3SpecConverter_Test {
                         Resource.BEANS_RETRIEVER,
                         ResourceType.NON_SINGLETON,
                         Operation.ALLOCATE,
+                        false,
                         null,
                         null,
                         null));

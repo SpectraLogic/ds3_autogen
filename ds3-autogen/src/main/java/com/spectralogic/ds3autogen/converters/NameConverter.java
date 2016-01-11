@@ -77,6 +77,7 @@ public final class NameConverter {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
+                request.includeIdInPath(),
                 request.getDs3ResponseCodes(),
                 request.getOptionalQueryParams(),
                 request.getRequiredQueryParams());

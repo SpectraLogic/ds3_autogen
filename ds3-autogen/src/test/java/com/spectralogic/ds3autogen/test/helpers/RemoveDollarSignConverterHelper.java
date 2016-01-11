@@ -149,6 +149,7 @@ public final class RemoveDollarSignConverterHelper {
         return new Ds3Request(
                 "com.test.package.Base$RequestType" + variation,
                 null, null, null, null, null, null, null, null,
+                false,
                 createPopulatedResponseCodes(),
                 createPopulatedParams(variation),
                 createPopulatedParams(variation));

@@ -37,6 +37,7 @@ public class RequestConverter_Test {
                 null,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -58,6 +59,7 @@ public class RequestConverter_Test {
                 null,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -79,6 +81,7 @@ public class RequestConverter_Test {
                 null,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -100,6 +103,7 @@ public class RequestConverter_Test {
                 null,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -121,6 +125,7 @@ public class RequestConverter_Test {
                 Resource.ACTIVE_JOB,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -142,6 +147,7 @@ public class RequestConverter_Test {
                 Resource.BUCKET,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null);
@@ -163,6 +169,7 @@ public class RequestConverter_Test {
                 Resource.JOB_CHUNK,
                 ResourceType.NON_SINGLETON,
                 null,
+                false,
                 null,
                 null,
                 null);

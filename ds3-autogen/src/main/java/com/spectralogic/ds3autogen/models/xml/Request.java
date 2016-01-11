@@ -45,6 +45,9 @@ public class Request {
     @JacksonXmlProperty(isAttribute = true, localName = "Operation")
     private Operation operation;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "IncludeIdInPath")
+    private boolean includeIdInPath;
+
     @JsonProperty("OptionalQueryParams")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Param> optionalQueryParams;
@@ -122,5 +125,13 @@ public class Request {
 
     public void setOperation(final Operation operation) {
         this.operation = operation;
+    }
+
+    public boolean includeIdInPath() {
+        return includeIdInPath;
+    }
+
+    public void setIncludeIdInPath(boolean includeIdInPath) {
+        this.includeIdInPath = includeIdInPath;
     }
 }

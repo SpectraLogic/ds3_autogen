@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCompletedNotificationRegistrationsRequestHandler">
-                <Request Action="LIST" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="JOB_COMPLETED_NOTIFICATION_REGISTRATION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="LastPage" Type="void"/>
                         <Param Name="PageLength" Type="int"/>
@@ -10,9 +10,7 @@
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
                         <Param Name="UserId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
-                    <RequiredQueryParams>
-                        <Param Name="Test" Type="void"/>
-                    </RequiredQueryParams>
+                    <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
@@ -22,6 +20,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.89699929828B8EC5AE4F1F41003A1293</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
