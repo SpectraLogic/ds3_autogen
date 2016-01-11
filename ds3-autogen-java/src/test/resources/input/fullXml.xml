@@ -1097,11 +1097,10 @@
                 <Request Action="BULK_MODIFY" Resource="DATA_PATH_BACKEND" ResourceType="SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="Activated" Type="boolean"/>
-                        <Param Name="AllowNewJobsToUseUnavailablePools" Type="boolean"/>
-                        <Param Name="AllowNewJobsToUseUnavailableTapePartitions" Type="boolean"/>
                         <Param Name="AutoActivateTimeoutInMins" Type="java.lang.Integer"/>
-                        <Param Name="AutoInspectOnStartup" Type="boolean"/>
+                        <Param Name="AutoInspect" Type="com.spectralogic.s3.common.dao.domain.ds3.AutoInspectMode"/>
                         <Param Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="UnavailableMediaPolicy" Type="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy"/>
                         <Param Name="UnavailablePoolMaxJobRetryInMins" Type="int"/>
                         <Param Name="UnavailableTapePartitionMaxJobRetryInMins" Type="int"/>
                     </OptionalQueryParams>
@@ -1121,7 +1120,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.254A31590F02C797CE1E2C53B6117499</Version>
+                <Version>1.5623FEB2573C5CEEC68699108CC389BA</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.CreateDataPersistenceRuleRequestHandler">
                 <Request Action="CREATE" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -3555,6 +3554,7 @@
                         <Param Name="MaxTapeFragmentationPercent" Type="int"/>
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
+                        <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -3581,7 +3581,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.E92ACFFBA8159E35249DFA34D9A361F6</Version>
+                <Version>1.F9726900AB715DC2E53D53FBD0791B44</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.CreateTapeStorageDomainMemberRequestHandler">
                 <Request Action="CREATE" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
@@ -3784,6 +3784,7 @@
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -3802,7 +3803,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.478D2C01D7A4EB7F4B604DCF350758F9</Version>
+                <Version>1.F4333334B3D20B96EF7D18D95AAA63C8</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemFailuresRequestHandler">
                 <Request Action="LIST" Resource="SYSTEM_FAILURE" ResourceType="NON_SINGLETON">
@@ -5228,6 +5229,14 @@
                     </Element>
                 </Elements>
             </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.AutoInspectMode">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="NEVER"/>
+                    <EnumConstant Name="MINIMAL"/>
+                    <EnumConstant Name="DEFAULT"/>
+                </EnumConstants>
+            </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.Blob">
                 <Elements>
                     <Element Name="ByteOffset" Type="long">
@@ -5512,6 +5521,15 @@
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="OriginalSizeInBytes" Type="long">
                         <Annotations/>
                     </Element>
@@ -5630,6 +5648,15 @@
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="OriginalSizeInBytes" Type="long">
                         <Annotations/>
                     </Element>
@@ -5690,24 +5717,6 @@
                     <Element Name="Activated" Type="boolean">
                         <Annotations/>
                     </Element>
-                    <Element Name="AllowNewJobsToUseUnavailablePools" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="AllowNewJobsToUseUnavailableTapePartitions" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
                     <Element Name="AutoActivateTimeoutInMins" Type="java.lang.Integer">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
@@ -5715,11 +5724,11 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="AutoInspectOnStartup" Type="boolean">
+                    <Element Name="AutoInspect" Type="com.spectralogic.s3.common.dao.domain.ds3.AutoInspectMode">
                         <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -5740,6 +5749,15 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UnavailableMediaPolicy" Type="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DISCOURAGED" ValueType="java.lang.String"/>
+                                </AnnotationElements>
                             </Annotation>
                         </Annotations>
                     </Element>
@@ -6134,6 +6152,15 @@
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="OriginalSizeInBytes" Type="long">
                         <Annotations/>
                     </Element>
@@ -6433,6 +6460,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
@@ -6463,6 +6497,12 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
                             </Annotation>
                         </Annotations>
                     </Element>
@@ -6600,6 +6640,12 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
                         </Annotations>
                     </Element>
                     <Element Name="ErrorMessage" Type="java.lang.String">
@@ -6622,6 +6668,14 @@
                 <EnumConstants>
                     <EnumConstant Name="RECONCILE_TAPE_ENVIRONMENT_FAILED"/>
                     <EnumConstant Name="RECONCILE_POOL_ENVIRONMENT_FAILED"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="ALLOW"/>
+                    <EnumConstant Name="DISCOURAGED"/>
+                    <EnumConstant Name="DISALLOW"/>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.User">
@@ -8314,6 +8368,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="VerifyPending" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="WriteProtected" Type="boolean">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
@@ -8690,6 +8751,12 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
                         </Annotations>
                     </Element>
                     <Element Name="ErrorMessage" Type="java.lang.String">
@@ -8749,10 +8816,13 @@
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.tape.TapeState">
                 <Elements>
-                    <Element Name="AllowedToBeLoadedIntoDrive" Type="boolean">
+                    <Element Name="CancellableToPreviousState" Type="boolean">
                         <Annotations/>
                     </Element>
-                    <Element Name="CancellableToPreviousState" Type="boolean">
+                    <Element Name="InspectionAllowed" Type="boolean">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LoadIntoDriveAllowed" Type="boolean">
                         <Annotations/>
                     </Element>
                     <Element Name="PhysicallyPresent" Type="boolean">
@@ -8761,174 +8831,219 @@
                     <Element Name="PreviousStateTracked" Type="boolean">
                         <Annotations/>
                     </Element>
+                    <Element Name="TapeCommandAllowed" Type="boolean">
+                        <Annotations/>
+                    </Element>
                 </Elements>
                 <EnumConstants>
                     <EnumConstant Name="NORMAL">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="OFFLINE">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="false" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="ONLINE_PENDING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="ONLINE_IN_PROGRESS">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="PENDING_INSPECTION">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="UNKNOWN">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="DATA_CHECKPOINT_FAILURE">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="DATA_CHECKPOINT_MISSING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="LTFS_WITH_FOREIGN_DATA">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="FOREIGN">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="true" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="IMPORT_PENDING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="true" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="IMPORT_IN_PROGRESS">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="LOST">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="false" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="BAD">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="SERIAL_NUMBER_MISMATCH">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="true" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="BAR_CODE_MISSING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="FORMAT_PENDING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="true" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="FORMAT_IN_PROGRESS">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="true" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="true" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="true" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="EJECT_TO_EE_IN_PROGRESS">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="false" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="EJECT_FROM_EE_PENDING">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="false" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="EJECTED">
                         <Properties>
-                            <Property Name="AllowedToBeLoadedIntoDrive" Value="false" ValueType="boolean"/>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
                             <Property Name="PhysicallyPresent" Value="false" ValueType="boolean"/>
                             <Property Name="PreviousStateTracked" Value="true" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
                 </EnumConstants>
@@ -10393,6 +10508,13 @@
                                     <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="2" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="VerifyPending" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
                             </Annotation>
                         </Annotations>
                     </Element>
