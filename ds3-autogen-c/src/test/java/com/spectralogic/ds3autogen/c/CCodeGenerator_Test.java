@@ -162,4 +162,37 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    ds3_str_free(response_data->serial_number);"));
         assertTrue(output.contains("}"));
     }
+
+       @Test
+    public void testSimpleElementResponseParser() throws IOException, ParserException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleResponseType.xml"));
+        //final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/EmbeddedResponseType.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
+        assertTrue(output.contains("static ds3_user_api_bean_response* _parse_ds3_user_api_bean_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
+        assertTrue(output.contains("    xmlNodePtr child_node;"));
+        assertTrue(output.contains("    ds3_user_api_bean_response* ds3_user_api_bean_response = g_new0(ds3_user_api_bean_response, 1);"));
+
+        assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("        if (element_equal(child_node, \"DisplayName\")) {"));
+        assertTrue(output.contains("            ds3_user_api_bean_response->display_name = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
+        assertTrue(output.contains("            ds3_user_api_bean_response->id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("        } else {"));
+        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        }"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return ds3_user_api_bean_response;"));
+        assertTrue(output.contains("}"));
+    }
 }
