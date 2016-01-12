@@ -163,7 +163,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("}"));
     }
 
-       @Test
+    @Test
     public void testSimpleElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
@@ -193,5 +193,21 @@ public class CCodeGenerator_Test {
 
         assertTrue(output.contains("    return ds3_user_api_bean_response;"));
         assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testEmbeddedElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/EmbeddedResponseType.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+
+        codeGenerator.generate(spec, fileUtils, null);
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        LOG.info("Generated code:\n" + output);
     }
 }

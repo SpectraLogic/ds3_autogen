@@ -70,12 +70,14 @@ public class Element {
 
     public String getDs3Type() throws ParseException {
         switch (getType()) {
+            case "boolean":
+                return "ds3_bool";
             case "java.lang.String":
             case "java.util.Date":
             case "java.util.UUID":
                 return "ds3_str*";
             case "double":
-                return "double";   //? ex: 0.82
+                return "double";   // ex: 0.82
             case "java.lang.Long":
             case "long":
                 return "uint64_t"; // size_t
@@ -84,9 +86,7 @@ public class Element {
                 return "int";
             case "java.util.Set":
             case "array":
-                return ""; // TODO ???
-            case "boolean":
-                return "ds3_bool";
+                return getResponseTypeName() + "**";
 
             default:
                 return getResponseTypeName() + "*";
@@ -111,7 +111,8 @@ public class Element {
 
             case "java.util.Set":
             case "array":
-                throw new ParseException("Unknown element type" + getType(), 0);
+                //throw new ParseException("Unknown element type" + getType(), 0);
+                return "Skipping Array / Set Element";
 
             default:
                 return getParserName() + "(log, doc, child_node);";
