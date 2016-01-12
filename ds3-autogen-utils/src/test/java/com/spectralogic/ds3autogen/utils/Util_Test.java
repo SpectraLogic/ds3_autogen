@@ -24,13 +24,14 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseTypeList;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class Util_Test {
 
     @Test
-    public void enumsEqual_test() {
+    public void enumsEqual_Test() {
         assertTrue(enumsEqual(Action.DELETE, Action.DELETE));
         assertTrue(enumsEqual(HttpVerb.GET, HttpVerb.GET));
         assertFalse(enumsEqual(Action.DELETE, Action.BULK_DELETE));
@@ -40,40 +41,40 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilNullList() {
+    public void converterUtil_NullList_Test() {
         final ImmutableList<String> nullList = null;
         assertTrue(isEmpty(nullList));
         assertFalse(hasContent(nullList));
     }
 
     @Test
-    public void convertUtilEmptyList() {
+    public void convertUtil_EmptyList_Test() {
         final ImmutableList<String> emptyList = ImmutableList.of();
         assertTrue(isEmpty(emptyList));
         assertFalse(hasContent(emptyList));
     }
     @Test
-    public void convertUtilFullList() {
+    public void convertUtil_FullList_Test() {
         final ImmutableList<String> fullList = ImmutableList.of("One", "Two", "Three");
         assertTrue(hasContent(fullList));
         assertFalse(isEmpty(fullList));
     }
 
     @Test
-    public void convertUtilNullMap() {
+    public void convertUtil_NullMap_Test() {
         final ImmutableMap<String, String> nullMap = null;
         assertTrue(isEmpty(nullMap));
         assertFalse(hasContent(nullMap));
     }
     @Test
-    public void convertUtilEmptyMap() {
+    public void convertUtil_EmptyMap_Test() {
         final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
         assertTrue(isEmpty(emptyMap));
         assertFalse(hasContent(emptyMap));
     }
 
     @Test
-    public void convertUtilFullMap() {
+    public void convertUtil_FullMap_Test() {
         final ImmutableMap<String, String> fullMap = ImmutableMap.of(
                 "key1", "value1",
                 "key2", "value2");
@@ -82,65 +83,65 @@ public class Util_Test {
     }
 
     @Test
-    public void convertUtilNullSet() {
+    public void convertUtil_NullSet_Test() {
         final ImmutableSet<String> nullSet = null;
         assertTrue(isEmpty(nullSet));
         assertFalse(hasContent(nullSet));
     }
 
     @Test
-    public void convertUtilEmptySet() {
+    public void convertUtil_EmptySet_Test() {
         final ImmutableSet<String> nullSet = ImmutableSet.of();
         assertTrue(isEmpty(nullSet));
         assertFalse(hasContent(nullSet));
     }
 
     @Test
-    public void convertUtilEmptyFullSet() {
+    public void convertUtil_FullSet_Test() {
         final ImmutableSet<String> fullSet = ImmutableSet.of("One", "two", "three");
         assertTrue(hasContent(fullSet));
         assertFalse(isEmpty(fullSet));
     }
 
     @Test
-    public void convertUtilNullString() {
+    public void convertUtil_NullString_Test() {
         final String nullString = null;
         assertTrue(isEmpty(nullString));
         assertFalse(hasContent(nullString));
     }
 
     @Test
-    public void convertUtilEmptyString() {
+    public void convertUtil_EmptyString_Test() {
         final String emptyString = "";
         assertTrue(isEmpty(emptyString));
         assertFalse(hasContent(emptyString));
     }
 
     @Test
-    public void convertUtilFullString() {
+    public void convertUtil_FullString_Test() {
         final String fullString = "Hello World";
         assertTrue(hasContent(fullString));
         assertFalse(isEmpty(fullString));
     }
 
     @Test
-    public void removeSpectraInternalRequestsNull() {
+    public void removeSpectraInternalRequests_NullList_Test() {
         final ImmutableList<Ds3Request> nullResult = removeSpectraInternalRequests(null);
         assertTrue(nullResult.isEmpty());
     }
 
     @Test
-    public void removeSpectraInternalRequestsEmpty() {
+    public void removeSpectraInternalRequests_EmptyList_Test() {
         final ImmutableList<Ds3Request> emptyResult = removeSpectraInternalRequests(ImmutableList.of());
         assertTrue(emptyResult.isEmpty());
     }
 
     @Test
-    public void removeSpectraInternalRequestsFull() {
+    public void removeSpectraInternalRequests_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request("Request1", null, Classification.amazons3, null, null, null, null, null, null, null, null, null),
-                new Ds3Request("Request2", null, Classification.spectrainternal, null, null, null, null, null, null, null, null, null),
-                new Ds3Request("Request3", null, Classification.spectrads3, null, null, null, null, null, null, null, null, null));
+                createDs3RequestTestData("Request1", Classification.amazons3),
+                createDs3RequestTestData("Request2", Classification.spectrainternal),
+                createDs3RequestTestData("Request3", Classification.spectrads3));
         final ImmutableList<Ds3Request> result = removeSpectraInternalRequests(requests);
         assertThat(result.size(), is(2));
         assertTrue(result.get(0).getClassification() != Classification.spectrainternal);
@@ -148,19 +149,19 @@ public class Util_Test {
     }
 
     @Test
-    public void getUsedTypesFromParamsNull() {
+    public void getUsedTypesFromParams_NullList_Test() {
         final ImmutableSet<String> nullResult = getUsedTypesFromParams(null);
         assertTrue(nullResult.isEmpty());
     }
 
     @Test
-    public void getUsedTypesFromParamsEmpty() {
+    public void getUsedTypesFromParams_EmptyList_Test() {
         final ImmutableSet<String> emptyResult = getUsedTypesFromParams(ImmutableList.of());
         assertTrue(emptyResult.isEmpty());
     }
 
     @Test
-    public void getUsedTypesFromParamsFull() {
+    public void getUsedTypesFromParams_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("Type1", "java.util.UUID"),
                 new Ds3Param("Type2", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
@@ -191,19 +192,23 @@ public class Util_Test {
     @Test
     public void getUsedTypesFromRequests_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null,
+                createDs3RequestTestData(
+                        false,
                         createPopulatedDs3ResponseCodeList("_v1", "_v2"),
                         ImmutableList.of(
-                                new Ds3Param(null, "java.util.UUID"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
+                                createDs3ParamTestData("java.util.UUID"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
                         ImmutableList.of(
-                                new Ds3Param(null, "long"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                                createDs3ParamTestData("long"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
+                createDs3RequestTestData(
+                        false,
                         ImmutableList.of(
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
-                        ImmutableList.of()));
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.pool.PoolState")),
+                        ImmutableList.of())
+                );
+
         final ImmutableSet<String> result = getUsedTypesFromRequests(requests);
 
         assertThat(result.size(), is(7));
@@ -218,7 +223,7 @@ public class Util_Test {
     }
 
     @Test
-    public void removeUsedTypesEmpty() {
+    public void removeUnusedTypes_EmptyList_Test() {
         assertTrue(removeUnusedTypes(null, null).isEmpty());
         assertTrue(removeUnusedTypes(ImmutableMap.of(), null).isEmpty());
         assertTrue(removeUnusedTypes(null, ImmutableList.of()).isEmpty());
@@ -226,27 +231,30 @@ public class Util_Test {
     }
 
     @Test
-    public void removeUsedTypesFull() {
+    public void removeUnusedTypes_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                createDs3RequestTestData(
+                        false,
                         ImmutableList.of(
-                                new Ds3Param(null, "java.util.UUID"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
+                                createDs3ParamTestData("java.util.UUID"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission")),
                         ImmutableList.of(
-                                new Ds3Param(null, "long"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
-                new Ds3Request(null, null, null, null, null, null, null, null, null, null,
+                                createDs3ParamTestData("long"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.pool.PoolHealth"))),
+                createDs3RequestTestData(
+                        false,
                         ImmutableList.of(
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
-                                new Ds3Param(null, "com.spectralogic.s3.common.dao.domain.pool.PoolState")),
-                        ImmutableList.of()));
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
+                                createDs3ParamTestData("com.spectralogic.s3.common.dao.domain.pool.PoolState")),
+                        ImmutableList.of())
+                );
 
         final ImmutableMap<String, Ds3Type> types = ImmutableMap.of(
-                "com.spectralogic.s3.common.dao.domain.tape.TapeState", new Ds3Type(null, null, null),
-                "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission", new Ds3Type(null, null, null),
-                "com.spectralogic.s3.common.dao.domain.pool.PoolState", new Ds3Type(null, null, null),
-                "com.spectralogic.s3.common.dao.domain.tape.TapeType", new Ds3Type(null, null, null),
-                "com.spectralogic.s3.common.dao.domain.pool.PoolHealth", new Ds3Type(null, null, null));
+                "com.spectralogic.s3.common.dao.domain.tape.TapeState", createEmptyDs3Type(),
+                "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission", createEmptyDs3Type(),
+                "com.spectralogic.s3.common.dao.domain.pool.PoolState", createEmptyDs3Type(),
+                "com.spectralogic.s3.common.dao.domain.tape.TapeType", createEmptyDs3Type(),
+                "com.spectralogic.s3.common.dao.domain.pool.PoolHealth", createEmptyDs3Type());
 
         final ImmutableMap<String, Ds3Type> result = removeUnusedTypes(types, requests);
         assertThat(result.size(), is(3));
@@ -258,7 +266,42 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilIncludeType() {
+    public void removeUnusedTypes_EncapsulatingTypes_Test() {
+        final String parentType = "com.spectralogic.Test.Parent";
+        final String childType = "com.spectralogic.Test.Child";
+        final String grandchildType = "com.spectralogic.Test.Grandchild";
+
+        final Ds3Type parentDs3Type = createDs3TypeTestData(
+                parentType,
+                createDs3ElementListTestData("Child", childType));
+        final Ds3Type childDs3Type = createDs3TypeTestData(
+                childType,
+                createDs3ElementListTestData("Grandchild", grandchildType));
+        final Ds3Type grandchildDs3Type = createDs3TypeTestData(grandchildType);
+
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                createDs3RequestTestData(
+                        false,
+                        ImmutableList.of(
+                                createDs3ParamTestData("java.util.UUID"),
+                                new Ds3Param(null, parentType)),
+                        null));
+
+        final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(
+                parentType, parentDs3Type,
+                childType, childDs3Type,
+                grandchildType, grandchildDs3Type,
+                "com.spectralogic.Test.UnusedType", createEmptyDs3Type());
+
+        final ImmutableMap<String, Ds3Type> result = removeUnusedTypes(typeMap, requests);
+        assertThat(result.size(), is(3));
+        assertTrue(result.containsKey(parentType));
+        assertTrue(result.containsKey(childType));
+        assertTrue(result.containsKey(grandchildType));
+    }
+
+    @Test
+    public void includeType_Test() {
         assertTrue(includeType("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
         assertFalse(includeType("java.util.UUID"));
         assertFalse(includeType(""));
@@ -266,28 +309,20 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilIsEnum() {
-        assertFalse(isEnum(new Ds3Type("typeName", null, null)));
+    public void isEnum_Test() {
+        assertFalse(isEnum(createDs3TypeTestData("typeName")));
         assertFalse(isEnum(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of())));
 
-        final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element(null, null, null, null),
-                new Ds3Element(null, null, null, null));
-
-        final ImmutableList<Ds3EnumConstant> ds3EnumConstants = ImmutableList.of(
-                new Ds3EnumConstant(null, null),
-                new Ds3EnumConstant(null, null));
-
-        assertTrue(isEnum(new Ds3Type("typeName", ds3Elements, ds3EnumConstants)));
-        assertTrue(isEnum(new Ds3Type("typeName", null, ds3EnumConstants)));
-        assertTrue(isEnum(new Ds3Type("typeName", ImmutableList.of(), ds3EnumConstants)));
-        assertFalse(isEnum(new Ds3Type("typeName", ds3Elements, null)));
-        assertFalse(isEnum(new Ds3Type("typeName", ds3Elements, ImmutableList.of())));
+        assertTrue(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), createEmptyDs3EnumConstantList())));
+        assertTrue(isEnum(new Ds3Type("typeName", null, createEmptyDs3EnumConstantList())));
+        assertTrue(isEnum(new Ds3Type("typeName", ImmutableList.of(), createEmptyDs3EnumConstantList())));
+        assertFalse(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), null)));
+        assertFalse(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), ImmutableList.of())));
     }
 
     @Test
-    public void converterUtilGetUsedTypesFromTypeEmpty() {
-        final ImmutableSet<String> nullResult = getUsedTypesFromType(new Ds3Type("typeName", null, null));
+    public void getUsedTypesFromType_EmptyType_Test() {
+        final ImmutableSet<String> nullResult = getUsedTypesFromType(createDs3TypeTestData("typeName"));
         assertThat(nullResult.size(), is(0));
 
         final ImmutableSet<String> emptyResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of()));
@@ -295,36 +330,32 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilGetUsedTypesFromTypeEnumTypes() {
+    public void getUsedTypesFromType_EnumTypes_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element(null, "java.util.UUID", null, null),
-                new Ds3Element(null, "com.spectralogic.s3.common.dao.domain.tape.TapeState", null, null),
-                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.pool.PoolState", null),
-                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.tape.TapeState", null));
+                createDs3ElementTestData("java.util.UUID"),
+                createDs3ElementTestData("com.spectralogic.s3.common.dao.domain.tape.TapeState"),
+                createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.pool.PoolState"),
+                createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.tape.TapeState"));
 
-        final ImmutableList<Ds3EnumConstant> ds3EnumConstants = ImmutableList.of(
-                new Ds3EnumConstant(null, null),
-                new Ds3EnumConstant(null, null));
-
-        final ImmutableSet<String> nullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, ds3EnumConstants));
+        final ImmutableSet<String> nullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, createEmptyDs3EnumConstantList()));
         assertThat(nullElementsResult.size(), is(0));
 
-        final ImmutableSet<String> emptyElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), ds3EnumConstants));
+        final ImmutableSet<String> emptyElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), createEmptyDs3EnumConstantList()));
         assertThat(emptyElementsResult.size(), is(0));
 
-        final ImmutableSet<String> fullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, ds3EnumConstants));
+        final ImmutableSet<String> fullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, createEmptyDs3EnumConstantList()));
         assertThat(fullElementsResult.size(), is(0));
     }
 
     @Test
-    public void converterUtilGetUsedTypesFromType() {
+    public void getUsedTypesFromType_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element(null, "java.util.UUID", null, null),
-                new Ds3Element(null, "com.spectralogic.s3.common.dao.domain.tape.TapeState", null, null),
-                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.pool.PoolState", null),
-                new Ds3Element(null, "array", "com.spectralogic.s3.common.dao.domain.tape.TapeState", null));
+                createDs3ElementTestData("java.util.UUID"),
+                createDs3ElementTestData("com.spectralogic.s3.common.dao.domain.tape.TapeState"),
+                createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.pool.PoolState"),
+                createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.tape.TapeState"));
 
-        final ImmutableSet<String> nullEnumResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, null));
+        final ImmutableSet<String> nullEnumResult = getUsedTypesFromType(createDs3TypeTestData("typeName", ds3Elements));
         assertThat(nullEnumResult.size(), is(2));
         assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
         assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
@@ -336,10 +367,10 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilGetUsedTypesFromAllTypesEmpty() {
+    public void getUsedTypesFromAllTypes_EmptySet_Test() {
         final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(
-                "type1", new Ds3Type("type1", null, null),
-                "type2", new Ds3Type("type2", null, null));
+                "type1", createDs3TypeTestData("type1"),
+                "type2", createDs3TypeTestData("type2"));
 
         final ImmutableSet nullResult = getUsedTypesFromAllTypes(typeMap, null);
         assertThat(nullResult.size(), is(0));
@@ -349,7 +380,7 @@ public class Util_Test {
     }
 
     @Test
-    public void converterUtilGetUsedTypesFromAllTypes() {
+    public void getUsedTypesFromAllTypes_FullSet_Test() {
         final String parentType = "com.spectralogic.s3.common.dao.domain.pool.Parent";
         final String childType = "com.spectralogic.s3.common.dao.domain.pool.Child";
         final String grandchildType = "com.spectralogic.s3.common.dao.domain.pool.Grandchild";
@@ -358,28 +389,25 @@ public class Util_Test {
         final String poolHealth = "com.spectralogic.s3.common.dao.domain.pool.PoolHealth";
         final String permission = "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission";
 
-        final Ds3Type parentDs3Type = new Ds3Type(
+        final Ds3Type parentDs3Type = createDs3TypeTestData(
                 parentType,
-                ImmutableList.of(new Ds3Element("Child", childType, null, null)),
-                null);
-        final Ds3Type childDs3Type = new Ds3Type(
+                ImmutableList.of(createDs3ElementTestData("Child", childType)));
+        final Ds3Type childDs3Type = createDs3TypeTestData(
                 childType,
                 ImmutableList.of(
-                        new Ds3Element("Grandchild", grandchildType, null, null),
-                        new Ds3Element("TapeState", "array", tapeState, null)),
-                null);
-        final Ds3Type grandchildDs3Type = new Ds3Type(
+                        createDs3ElementTestData("Grandchild", grandchildType),
+                        createDs3ElementTestData("TapeState", "array", tapeState)));
+        final Ds3Type grandchildDs3Type = createDs3TypeTestData(
                 grandchildType,
-                ImmutableList.of(new Ds3Element("PoolHealth", poolHealth, null, null)),
-                null);
+                ImmutableList.of(createDs3ElementTestData("PoolHealth", poolHealth)));
 
         final ImmutableMap.Builder<String, Ds3Type> typeMapBuilder = ImmutableMap.builder();
         typeMapBuilder.put(parentType, parentDs3Type);
         typeMapBuilder.put(childType, childDs3Type);
         typeMapBuilder.put(grandchildType, grandchildDs3Type);
-        typeMapBuilder.put(tapeState, new Ds3Type(tapeState, null, null));
-        typeMapBuilder.put(poolHealth, new Ds3Type(poolHealth, null, null));
-        typeMapBuilder.put(permission, new Ds3Type(permission, null, null));
+        typeMapBuilder.put(tapeState, createDs3TypeTestData(tapeState));
+        typeMapBuilder.put(poolHealth, createDs3TypeTestData(poolHealth));
+        typeMapBuilder.put(permission, createDs3TypeTestData(permission));
 
         final ImmutableSet<String> usedTypes = ImmutableSet.of(parentType);
         final ImmutableSet<String> result = getUsedTypesFromAllTypes(typeMapBuilder.build(), usedTypes);

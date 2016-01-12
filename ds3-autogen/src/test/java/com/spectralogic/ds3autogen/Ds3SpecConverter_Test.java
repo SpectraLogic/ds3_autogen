@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -136,7 +137,7 @@ public class Ds3SpecConverter_Test {
     public void convertTypes() throws IOException, ParserException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
-        final Ds3Type type = new Ds3Type("com.spectralogic.s3.common.dao.domain.ds3.Bucket", null, null);
+        final Ds3Type type = createDs3TypeTestData("com.spectralogic.s3.common.dao.domain.ds3.Bucket");
         final ImmutableMap.Builder<String, Ds3Type> input = ImmutableMap.builder();
         input.put("com.spectralogic.s3.common.dao.domain.ds3.Bucket", type);
         final ImmutableMap<String, Ds3Type> result = Ds3SpecConverter.convertTypes(input.build(), nameMapper);
@@ -200,6 +201,7 @@ public class Ds3SpecConverter_Test {
                         Resource.BEANS_RETRIEVER,
                         ResourceType.NON_SINGLETON,
                         Operation.ALLOCATE,
+                        false,
                         null,
                         null,
                         null));

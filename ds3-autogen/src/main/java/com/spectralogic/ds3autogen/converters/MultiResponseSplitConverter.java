@@ -320,6 +320,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request.getResource(),
                 ds3Request.getResourceType(),
                 ds3Request.getOperation(),
+                ds3Request.includeIdInPath(),
                 modifyResponseCode(
                         ds3Request.getDs3ResponseCodes(),
                         responseCode,
@@ -397,6 +398,7 @@ public final class MultiResponseSplitConverter {
                 ds3Request.getResource(),
                 ds3Request.getResourceType(),
                 ds3Request.getOperation(),
+                ds3Request.includeIdInPath(),
                 modifyResponseCode(
                         ds3Request.getDs3ResponseCodes(),
                         responseCode,

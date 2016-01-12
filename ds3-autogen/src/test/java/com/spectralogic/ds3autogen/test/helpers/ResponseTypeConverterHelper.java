@@ -20,6 +20,8 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Type;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -41,8 +43,10 @@ public class ResponseTypeConverterHelper {
             final String firstVariation,
             final String secondVariation
     ) {
-        return new Ds3Request(null, null, null, null, null, null, null, null, null,
-                createPopulatedDs3ResponseCodeList(firstVariation, secondVariation), null, null);
+        return createDs3RequestTestData(
+                false,
+                createPopulatedDs3ResponseCodeList(firstVariation, secondVariation),
+                null, null);
     }
 
     /**
@@ -67,8 +71,8 @@ public class ResponseTypeConverterHelper {
      */
     public static ImmutableMap<String, Ds3Type> createPopulatedDs3TypeMap() {
         return ImmutableMap.of(
-                "com.spectralogic.s3.common.dao.domain.tape.TapePartition", new Ds3Type(null, null, null),
-                "com.spectralogic.s3.common.dao.domain.tape.TapeDriveType", new Ds3Type(null, null, null));
+                "com.spectralogic.s3.common.dao.domain.tape.TapePartition", createEmptyDs3Type(),
+                "com.spectralogic.s3.common.dao.domain.tape.TapeDriveType", createEmptyDs3Type());
     }
 
     /**

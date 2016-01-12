@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.InitiateMultiPartUploadRequestHandler">
-                <Request BucketRequirement="REQUIRED" HttpVerb="POST" ObjectRequirement="REQUIRED">
+                <Request BucketRequirement="REQUIRED" HttpVerb="POST" IncludeIdInPath="false" ObjectRequirement="REQUIRED">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
                         <Param Name="Uploads" Type="void"/>
@@ -22,7 +22,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.0F51D6662775BE4F139A8AB49B8FF0B8</Version>
+                <Version>1.871E6F61ED03FE40EECFD0AAD53AAA34</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

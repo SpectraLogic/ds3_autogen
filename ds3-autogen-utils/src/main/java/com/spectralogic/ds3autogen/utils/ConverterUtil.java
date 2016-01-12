@@ -19,12 +19,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
 
 public final class ConverterUtil {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ConverterUtil.class);
     private static final String CONTRACT_DEFINED_TYPE = "com.spectralogic.";
 
     private ConverterUtil() { }
@@ -98,7 +101,12 @@ public final class ConverterUtil {
         if (isEmpty(types) || isEmpty(requests)) {
             return ImmutableMap.of();
         }
-        final ImmutableSet<String> usedTypes = getUsedTypesFromRequests(requests);
+
+        final ImmutableSet.Builder<String> usedTypesBuilder = ImmutableSet.builder();
+        usedTypesBuilder.addAll(getUsedTypesFromRequests(requests));
+        usedTypesBuilder.addAll(getUsedTypesFromAllTypes(types, usedTypesBuilder.build()));
+        final ImmutableSet<String> usedTypes = usedTypesBuilder.build();
+
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
         for (final Map.Entry<String, Ds3Type> entry : types.entrySet()) {
             if (usedTypes.contains(entry.getKey())) {
@@ -114,14 +122,20 @@ public final class ConverterUtil {
     protected static ImmutableSet<String> getUsedTypesFromAllTypes(
             final ImmutableMap<String, Ds3Type> typeMap,
             final ImmutableSet<String> usedTypes) {
-        if (isEmpty(usedTypes)) {
+        if (isEmpty(usedTypes) || isEmpty(typeMap)) {
             return ImmutableSet.of();
         }
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         builder.addAll(usedTypes);
         for (final String type : usedTypes) {
             final Ds3Type ds3Type = typeMap.get(type);
-            builder.addAll(getUsedTypesFromType(ds3Type));
+            if (ds3Type != null) {
+                builder.addAll(getUsedTypesFromType(ds3Type));
+            } else {
+                //Log but do not throw an exception because there are cases where a type
+                //doesn't need to be generated. Especially true during testing.
+                LOG.error("Could not find used type in Type Map: " + type);
+            }
         }
         final ImmutableSet<String> newUsedTypes = builder.build();
         if (newUsedTypes.size() > usedTypes.size()) {

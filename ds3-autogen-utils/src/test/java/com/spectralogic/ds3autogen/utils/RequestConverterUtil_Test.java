@@ -78,6 +78,7 @@ public class RequestConverterUtil_Test {
                 null,
                 null,
                 null,
+                false,
                 null,
                 null,
                 null
@@ -98,6 +99,7 @@ public class RequestConverterUtil_Test {
                 Resource.CAPACITY_SUMMARY,
                 ResourceType.SINGLETON,
                 null,
+                false,
                 null,
                 null,
                 null
@@ -122,6 +124,7 @@ public class RequestConverterUtil_Test {
                 Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION,
                 ResourceType.NON_SINGLETON,
                 null,
+                false,
                 null,
                 null,
                 null
@@ -146,6 +149,7 @@ public class RequestConverterUtil_Test {
                 Resource.JOB,
                 ResourceType.NON_SINGLETON,
                 null,
+                false,
                 null,
                 null,
                 null

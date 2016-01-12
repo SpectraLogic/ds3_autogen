@@ -19,6 +19,7 @@ import com.spectralogic.ds3autogen.api.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.converters.RequestConverter.requestPath;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -27,19 +28,9 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_Empty_Test() {
         final String expectedPath = "\"/\"";
-        final Ds3Request request = new Ds3Request(
+        final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
-                null,
-                Classification.amazons3,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+                Classification.amazons3);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -48,18 +39,10 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_Bucket_Test() {
         final String expectedPath = "\"/\" + this.bucketName";
-        final Ds3Request request = new Ds3Request(
+        final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
-                null,
                 Classification.amazons3,
                 Requirement.REQUIRED,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
                 null);
 
         final String requestPath = requestPath(request);
@@ -69,19 +52,11 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_BucketAndObject_Test() {
         final String expectedPath = "\"/\" + this.bucketName + \"/\" + this.objectName";
-        final Ds3Request request = new Ds3Request(
+        final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
-                null,
                 Classification.amazons3,
                 Requirement.REQUIRED,
-                Requirement.REQUIRED,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+                Requirement.REQUIRED);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -90,19 +65,9 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_SpectraS3_Test() {
         final String expectedPath = "\"/_rest_/\"";
-        final Ds3Request request = new Ds3Request(
+        final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
-                null,
-                Classification.spectrads3,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+                Classification.spectrads3);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -111,19 +76,11 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_SpectraS3Resource_Test() {
         final String expectedPath = "\"/_rest_/active_job/\"";
-        final Ds3Request request = new Ds3Request(
-                "RequestName",
-                null,
-                Classification.spectrads3,
-                null,
-                null,
-                null,
+        final Ds3Request request = createDs3RequestTestData(
                 Resource.ACTIVE_JOB,
                 null,
-                null,
-                null,
-                null,
-                null);
+                "RequestName",
+                Classification.spectrads3);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -132,19 +89,11 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_SpectraS3ResourceWithBucket_Test() {
         final String expectedPath = "\"/_rest_/bucket/\" + this.bucketName";
-        final Ds3Request request = new Ds3Request(
-                "RequestName",
-                null,
-                Classification.spectrads3,
-                null,
-                null,
-                null,
+        final Ds3Request request = createDs3RequestTestData(
                 Resource.BUCKET,
                 null,
-                null,
-                null,
-                null,
-                null);
+                "RequestName",
+                Classification.spectrads3);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -153,19 +102,11 @@ public class RequestConverter_Test {
     @Test
     public void requestPath_SpectraS3ResourceWithJobChunkId_Test() {
         final String expectedPath = "\"/_rest_/job_chunk/\" + jobChunkId.toString()";
-        final Ds3Request request = new Ds3Request(
-                "RequestName",
-                null,
-                Classification.spectrads3,
-                null,
-                null,
-                null,
+        final Ds3Request request = createDs3RequestTestData(
                 Resource.JOB_CHUNK,
                 ResourceType.NON_SINGLETON,
-                null,
-                null,
-                null,
-                null);
+                "RequestName",
+                Classification.spectrads3);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));

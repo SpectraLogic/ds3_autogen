@@ -74,6 +74,7 @@ public final class RemoveDollarSignConverter {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
+                request.includeIdInPath(),
                 removeDollarSignFromAllResponseCodes(request.getDs3ResponseCodes()),
                 removeDollarSignFromAllParams(request.getOptionalQueryParams()),
                 removeDollarSignFromAllParams(request.getRequiredQueryParams()));

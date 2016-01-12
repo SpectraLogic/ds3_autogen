@@ -2,8 +2,9 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler">
-                <Request Action="MODIFY" Operation="START_BULK_VERIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_VERIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -36,6 +37,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.637CBB98B086D340D14A0518AAE4C8E6</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

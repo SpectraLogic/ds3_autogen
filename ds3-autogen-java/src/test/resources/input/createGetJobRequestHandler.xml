@@ -2,9 +2,10 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler">
-                <Request Action="MODIFY" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
+                        <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -37,6 +38,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>12.F5D855B92D35D52FD4C2EDADAA0FD689</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

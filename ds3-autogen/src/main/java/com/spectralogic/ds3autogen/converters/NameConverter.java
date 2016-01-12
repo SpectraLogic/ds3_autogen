@@ -66,9 +66,9 @@ public final class NameConverter {
      * @param request A Ds3Request
      * @return The Ds3Request with an updated Request name
      */
-    private static Ds3Request toUpdatedDs3Request(final Ds3Request request) {
+    protected static Ds3Request toUpdatedDs3Request(final Ds3Request request) {
         return new Ds3Request(
-                toUpdatedDs3RequestName(request),
+                toUpdatedDs3RequestName(request.getName(), request.getClassification()),
                 request.getHttpVerb(),
                 request.getClassification(),
                 request.getBucketRequirement(),
@@ -77,6 +77,7 @@ public final class NameConverter {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
+                request.includeIdInPath(),
                 request.getDs3ResponseCodes(),
                 request.getOptionalQueryParams(),
                 request.getRequiredQueryParams());
@@ -85,15 +86,13 @@ public final class NameConverter {
     /**
      * Gets the new Ds3Request name that conforms to the Java module naming scheme
      * and name spacing
-     * @param request A Ds3Request
-     * @return The updated Ds3Request name
      */
-    private static String toUpdatedDs3RequestName(final Ds3Request request) {
-        if (request.getClassification() == Classification.spectrads3) {
-            final String namespacedName = request.getName().replace("Request", ProjectConstants.SPECTRA_S3_NAMESPACING + "Request");
+    protected static String toUpdatedDs3RequestName(final String requestName, final Classification classification) {
+        if (classification == Classification.spectrads3) {
+            final String namespacedName = requestName.replace("Request", ProjectConstants.SPECTRA_S3_NAMESPACING + "Request");
             return stripHandlerFromName(namespacedName);
         }
-        return stripHandlerFromName(request.getName());
+        return stripHandlerFromName(requestName);
     }
 
     /**

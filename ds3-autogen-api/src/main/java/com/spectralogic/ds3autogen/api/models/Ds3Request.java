@@ -28,6 +28,7 @@ public class Ds3Request {
     private final Resource resource;
     private final ResourceType resourceType;
     private final Operation operation;
+    private final boolean includeIdInPath;
 
     private final ImmutableList<Ds3ResponseCode> ds3ResponseCodes;
     private final ImmutableList<Ds3Param> optionalQueryParams;
@@ -43,6 +44,7 @@ public class Ds3Request {
             final Resource resource,
             final ResourceType resourceType,
             final Operation operation,
+            final boolean includeIdInPath,
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final ImmutableList<Ds3Param> optionalQueryParams,
             final ImmutableList<Ds3Param> requiredQueryParams) {
@@ -55,6 +57,7 @@ public class Ds3Request {
         this.resource = resource;
         this.resourceType = resourceType;
         this.operation = operation;
+        this.includeIdInPath = includeIdInPath;
         this.ds3ResponseCodes = ds3ResponseCodes;
         this.requiredQueryParams = requiredQueryParams;
         this.optionalQueryParams = optionalQueryParams;
@@ -92,5 +95,9 @@ public class Ds3Request {
 
     public Operation getOperation() {
         return operation;
+    }
+
+    public boolean includeIdInPath() {
+        return includeIdInPath;
     }
 }

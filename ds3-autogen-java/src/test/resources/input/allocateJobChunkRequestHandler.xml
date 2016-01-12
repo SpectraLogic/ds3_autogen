@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.AllocateJobChunkRequestHandler">
-                <Request Action="MODIFY" Operation="ALLOCATE" Resource="JOB_CHUNK" ResourceType="NON_SINGLETON">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="ALLOCATE" Resource="JOB_CHUNK" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -28,7 +28,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.29F0BCFFC7941CE7F0AF1037358B362E</Version>
+                <Version>1.4DB23DDC56235578526ECD74A1E1D151</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

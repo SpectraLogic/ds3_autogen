@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler">
-                <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="NOT_ALLOWED">
+                <Request BucketRequirement="REQUIRED" HttpVerb="GET" IncludeIdInPath="false" ObjectRequirement="NOT_ALLOWED">
                     <OptionalQueryParams>
                         <Param Name="Delimiter" Type="java.lang.String"/>
                         <Param Name="Marker" Type="java.lang.String"/>
@@ -19,6 +19,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.3A8DB55ED9BC0A138E7E63E96E6EF55F</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

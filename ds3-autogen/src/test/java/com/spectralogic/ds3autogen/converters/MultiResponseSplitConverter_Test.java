@@ -427,6 +427,7 @@ public class MultiResponseSplitConverter_Test {
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
                 Operation.GET_PHYSICAL_PLACEMENT,
+                false,
                 ImmutableList.of(
                         new Ds3ResponseCode(
                                 200,

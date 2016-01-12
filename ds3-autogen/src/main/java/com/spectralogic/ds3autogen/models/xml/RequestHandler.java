@@ -87,6 +87,7 @@ public class RequestHandler {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
+                request.includeIdInPath(),
                 toDs3ResponseCodes(),
                 toDs3Params(request.getOptionalQueryParams()),
                 toDs3Params(request.getRequiredQueryParams()));

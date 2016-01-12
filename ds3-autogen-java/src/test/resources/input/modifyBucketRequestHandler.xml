@@ -2,7 +2,7 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.ModifyBucketRequestHandler">
-                <Request Action="MODIFY" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="DataPolicyId" Type="java.util.UUID"/>
                         <Param Name="UserId" Type="java.util.UUID"/>
@@ -23,6 +23,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
+                <Version>1.0EB0673D4EFC79596617FFE680876C1F</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
