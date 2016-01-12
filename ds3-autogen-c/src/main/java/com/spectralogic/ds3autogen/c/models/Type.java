@@ -16,7 +16,7 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.helpers.CHelper;
@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.Set;
 
 public class Type {
     private static final Logger LOG = LoggerFactory.getLogger(Type.class);
@@ -95,19 +94,18 @@ public class Type {
             case "java.lang.Integer":
             case "int":
                 return "";
-            case "java.util.Set":
-            case "array":
-                return ""; // TODO ???
             case "boolean":
                 return "";
 
             // build the name of the free function for the embedded type
+            case "java.util.Set":
+            case "array":
             default:
                 return element.getFreeFunctionName();
         }
     }
 
-    public ImmutableList<Element> convertDs3Elements(ImmutableList<Ds3Element> elements) {
+    public ImmutableList<Element> convertDs3Elements(final ImmutableList<Ds3Element> elements) {
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elements) {
             builder.add(new Element(currentElement.getName(), currentElement.getType(), currentElement.getComponentType(), currentElement.getDs3Annotations()));
@@ -206,7 +204,7 @@ public class Type {
         return true;
     }
 
-    public boolean containsExistingElements(final Set<String> existingElements) {
+    public boolean containsExistingElements(final ImmutableSet<String> existingElements) {
         for (final Element element : this.elements) {
             if (element.getType().equals("array")) {
                 if (!existingElements.contains(element.getComponentType())) {

@@ -31,7 +31,7 @@ public class Type_Test {
         Type testType = new Type("testType", null, builder.build());
         assertThat(testType.isPrimitiveType(), is(false));
     }
-    /*
+    /* Commented out until functionality for Arrays and Sets is implemented.
     @Test
     public void testElementTypeArrayToString() throws ParseException {
         Element stringElement = new Element("arrayElement", "array", null, null);

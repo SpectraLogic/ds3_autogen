@@ -15,29 +15,33 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.*;
-import com.spectralogic.ds3autogen.c.converters.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.RequestConverter;
+import com.spectralogic.ds3autogen.c.converters.TypeConverter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Type;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import freemarker.core.Environment;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import freemarker.core.Environment;
-import freemarker.template.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.text.ParseException;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -64,10 +68,12 @@ public class CCodeGenerator implements CodeGenerator {
             generateCommands();
         } catch (final TemplateException e) {
             e.printStackTrace();
+        } catch (final ParseException e) {
+            e.printStackTrace();
         }
     }
 
-    private void generateCommands() throws IOException, TemplateException {
+    private void generateCommands() throws IOException, TemplateException, ParseException {
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
@@ -78,21 +84,25 @@ public class CCodeGenerator implements CodeGenerator {
             }
 
             // Generate TypeResponse parsers
-            final HashSet generatedTypesResponses = new HashSet();
-            int depth = 0;
-            while (generatedTypesResponses.size() != spec.getTypes().values().size() && depth++ < 10) {
+            final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
+            for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
                 for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                     if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
                         final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                        if (typeEntry.isPrimitiveType() || typeEntry.containsExistingElements(generatedTypesResponses)) {
+                        if (generatedTypesResponses.build().contains(typeEntry.getName())) {
+                            continue;
+                        }
+
+                        if (typeEntry.isPrimitiveType() || typeEntry.containsExistingElements(generatedTypesResponses.build())) {
+                            generateElementResponseParser(typeEntry);
                             generatedTypesResponses.add(typeEntry.getName());
                         }
                     }
                 }
-            }
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                generateElementResponseParser(typeEntry);
+                if (depth > 10) {
+                    LOG.error("Infinite loop detected while generating ResponseParsers.");
+                    throw new ParseException("Encountered infinite loop while generating ResponseParsers", 0);
+                }
             }
 
             // Generate Element Types
@@ -242,7 +252,6 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public Path getTypeOutputPath(final Type type) {
-        LOG.debug("getTypeOutputPath[" + type.getName() + "]");
         return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".h");
     }
 
