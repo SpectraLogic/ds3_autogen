@@ -24,6 +24,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.TypeConverter;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Type;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
@@ -41,7 +43,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -58,6 +59,18 @@ public class CCodeGenerator implements CodeGenerator {
         config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
     }
 
+    public Path getRequestOutputPath(final Request request) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + RequestHelper.getNameRootUnderscores(request.getName()) + ".c");
+    }
+
+    public Path getTypeOutputPath(final Type type) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + ".h");
+    }
+
+    public Path getTypeMatcherOutputPath(final Type type) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + "_matcher.c");
+    }
+
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
         this.spec = spec;
@@ -68,12 +81,10 @@ public class CCodeGenerator implements CodeGenerator {
             generateCommands();
         } catch (final TemplateException e) {
             e.printStackTrace();
-        } catch (final ParseException e) {
-            e.printStackTrace();
         }
     }
 
-    private void generateCommands() throws IOException, TemplateException, ParseException {
+    private void generateCommands() throws IOException, TemplateException {
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
@@ -84,6 +95,7 @@ public class CCodeGenerator implements CodeGenerator {
             }
 
             // Generate TypeResponse parsers
+            //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
             final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
             for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
                 for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
@@ -93,15 +105,15 @@ public class CCodeGenerator implements CodeGenerator {
                             continue;
                         }
 
-                        if (typeEntry.isPrimitiveType() || typeEntry.containsExistingElements(generatedTypesResponses.build())) {
+                        if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
                             generateElementResponseParser(typeEntry);
                             generatedTypesResponses.add(typeEntry.getName());
                         }
                     }
                 }
-                if (depth > 10) {
-                    LOG.error("Infinite loop detected while generating ResponseParsers.");
-                    throw new ParseException("Encountered infinite loop while generating ResponseParsers", 0);
+                if (depth > 6) {
+                    LOG.warn("generating ResponseParsers up to depth " + depth + ", warning for potential infinite loop.");
+                    break;
                 }
             }
 
@@ -245,17 +257,5 @@ public class CCodeGenerator implements CodeGenerator {
         } catch (final TemplateException e) {
             LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
         }
-    }
-
-    public Path getRequestOutputPath(final Request request) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRootUnderscores() + ".c");
-    }
-
-    public Path getTypeOutputPath(final Type type) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".h");
-    }
-
-    public Path getTypeMatcherOutputPath(final Type type) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + "_matcher.c");
     }
 }

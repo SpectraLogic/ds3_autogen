@@ -15,25 +15,26 @@
 
 package com.spectralogic.ds3autogen.c.converters;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.c.models.Type;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.c.models.Element;
 
-public class TypeConverter {
-    private final Ds3Type ds3Type;
+public class ElementConverter {
+    private final Ds3Element ds3Element;
 
-    private TypeConverter(final Ds3Type ds3Type) {
-        this.ds3Type = ds3Type;
+    private ElementConverter(final Ds3Element ds3Element) {
+        this.ds3Element = ds3Element;
     }
 
-    private Type convert() {
-        return new Type(
-                this.ds3Type.getName(),
-                this.ds3Type.getEnumConstants(),
-                this.ds3Type.getElements());
+    private Element convert() {
+        return new Element(
+                this.ds3Element.getName(),
+                this.ds3Element.getType(),
+                this.ds3Element.getComponentType(),
+                this.ds3Element.getDs3Annotations());
     }
 
-    public static Type toType(final Ds3Type ds3Type) {
-        final TypeConverter converter = new TypeConverter(ds3Type);
+    public static Element toElement(final Ds3Element ds3Type) {
+        final ElementConverter converter = new ElementConverter(ds3Type);
         return converter.convert();
     }
 }
