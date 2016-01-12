@@ -17,12 +17,14 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
 import com.spectralogic.ds3autogen.c.models.Type;
 import org.junit.Test;
 
 import java.text.ParseException;
 
-import static org.hamcrest.CoreMatchers.is;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 public class TypeHelper_Test {
     @Test
@@ -33,7 +35,7 @@ public class TypeHelper_Test {
         builder.add(testElement1);
         builder.add(testElement2);
         Type testType = new Type("testType", null, builder.build());
-        assertThat(testType.isPrimitiveType(), is(true));
+        assertTrue(TypeHelper.isPrimitiveType(testType));
     }
     @Test
     public void testTypeIsNotPrimitive() throws ParseException {
@@ -43,7 +45,7 @@ public class TypeHelper_Test {
         builder.add(testElement1);
         builder.add(testElement2);
         Type testType = new Type("testType", null, builder.build());
-        assertThat(testType.isPrimitiveType(), is(false));
+        assertFalse(TypeHelper.isPrimitiveType(testType));
     }
 
     /* Commented out until functionality for Arrays and Sets is implemented.
