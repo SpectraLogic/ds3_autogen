@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -47,17 +46,6 @@ public class Request {
         return name;
     }
 
-    public String getUnqualifiedName() {
-        return helper.unqualifiedName(name);
-    }
-
-    public String getNameRoot() {
-        return helper.removeTrailingRequestHandler(getUnqualifiedName());
-    }
-
-    public String getNameRootUnderscores() {
-        return helper.camelToUnderscore(getNameRoot());
-    }
 
     public HttpVerb getVerb() {
         return verb;

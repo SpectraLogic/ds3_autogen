@@ -288,4 +288,25 @@ public final class Helper {
         final String[] classparts = str.split("\\.");
         return classparts[classparts.length - 1];
     }
+
+
+    public static boolean isPrimitiveType(final String type) {
+        switch (type) {
+            case "java.lang.String":
+            case "java.util.Date":
+            case "java.util.UUID":
+            case "double":
+            case "java.lang.Long":
+            case "long":
+            case "java.lang.Integer":
+            case "int":
+            case "boolean":
+                return true;
+            case "java.util.Set":
+            case "array":
+            default:
+                // any complex sub element such as "com.spectralogic.s3.server.domain.UserApiBean"
+                return false;
+        }
+    }
 }

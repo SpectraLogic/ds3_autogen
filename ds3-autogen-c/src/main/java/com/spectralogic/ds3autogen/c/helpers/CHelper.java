@@ -18,15 +18,48 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CHelper {
-    private final static String INDENT = "    ";
+    private static Helper helper;
+    private static RequestHelper requestHelper;
+    private static TypeHelper typeHelper;
+    private static ElementHelper elementHelper;
 
-    private CHelper() {}
+    private final static CHelper cHelper = new CHelper();
+
+    private CHelper() {
+        helper = Helper.getInstance();
+        requestHelper = RequestHelper.getInstance();
+        typeHelper = TypeHelper.getInstance();
+        elementHelper = ElementHelper.getInstance();
+    }
+
+    public static CHelper getInstance() {
+        return cHelper;
+    }
+
+    public static Helper getHelper() {
+        return helper;
+    }
+
+    public static RequestHelper getRequestHelper() {
+        return requestHelper;
+    }
+
+    public static TypeHelper getTypeHelper() {
+        return typeHelper;
+    }
+
+    public static ElementHelper getElementHelper() {
+        return elementHelper;
+    }
+
+    private final static String INDENT = "    ";
 
     public static String indent(final int depth) {
         final StringBuilder stringBuilder = new StringBuilder();
@@ -45,7 +78,4 @@ public class CHelper {
                 .map(i -> indent(1) + i.getName())
                 .collect(Collectors.joining(",\n"));
     }
-
-
-
 }
