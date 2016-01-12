@@ -105,10 +105,11 @@ public final class ConverterUtil {
         final ImmutableSet.Builder<String> usedTypesBuilder = ImmutableSet.builder();
         usedTypesBuilder.addAll(getUsedTypesFromRequests(requests));
         usedTypesBuilder.addAll(getUsedTypesFromAllTypes(types, usedTypesBuilder.build()));
+        final ImmutableSet<String> usedTypes = usedTypesBuilder.build();
 
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
         for (final Map.Entry<String, Ds3Type> entry : types.entrySet()) {
-            if (usedTypesBuilder.build().contains(entry.getKey())) {
+            if (usedTypes.contains(entry.getKey())) {
                 builder.put(entry.getKey(), entry.getValue());
             }
         }

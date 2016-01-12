@@ -131,7 +131,7 @@ public class Request {
         return includeIdInPath;
     }
 
-    public void setIncludeIdInPath(boolean includeIdInPath) {
+    public void setIncludeIdInPath(final boolean includeIdInPath) {
         this.includeIdInPath = includeIdInPath;
     }
 }
