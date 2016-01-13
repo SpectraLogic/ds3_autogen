@@ -478,7 +478,8 @@ public final class JavaHelper {
                 + uncapFirst(responseType)
                 + "Result = XmlOutput.fromXml(content, "
                 + responseType + ".class);\n"
-                + indent(indent) + "}";
+                + indent(indent) + "}\n"
+                + indent(indent) + "break;";
     }
 
     /**
