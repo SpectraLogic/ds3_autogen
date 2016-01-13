@@ -48,6 +48,10 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_request* ds3_init_delete_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_DELETE, _build_path(\"/\", bucket_name, NULL));"));
+        assertTrue(output.contains("}"));
     }
 
     @Test

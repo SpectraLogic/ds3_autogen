@@ -1,6 +1,6 @@
 
 <#include "CopyrightHeader.ftl"/>
 
-static ds3_${getNameUnderscores()} _match_ds3_${getNameUnderscores()}(const ds3_log* log, const xmlChar* text) {
-${generateMatcher()}
+static ds3_${getChelper().getTypeHelper().getNameUnderscores(name)} _match_ds3_${getChelper().getTypeHelper().getNameUnderscores(name)}(const ds3_log* log, const xmlChar* text) {
+${getChelper().getTypeHelper().generateMatcher(getEnumConstants())}
 }

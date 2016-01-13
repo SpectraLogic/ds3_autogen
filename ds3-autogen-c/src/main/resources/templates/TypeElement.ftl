@@ -1,5 +1,5 @@
 <#include "CopyrightHeader.ftl"/>
 
 typedef enum {
-${getTypeElementsList()}
-}${getResponseTypeName()};
+${getChelper().getTypeHelper().getTypeElementsList(getElements())}
+}${getChelper().getTypeHelper().getResponseTypeName(name)};

@@ -97,6 +97,7 @@ public class CCodeGenerator implements CodeGenerator {
             // Generate TypeResponse parsers
             //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
             final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
+            LOG.debug(generatedTypesResponses.build().size() + " vs " + spec.getTypes().values().size());
             for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
                 for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                     if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
@@ -181,6 +182,9 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateTypeEnumConstantMatcher(final Type typeEntry) throws IOException {
+        LOG.debug("type " + typeEntry.getName());
+        LOG.debug("  " + typeEntry.getEnumConstants().toString());
+
         final Template typeTemplate = config.getTemplate("TypeEnumConstantMatcher.ftl");
 
         final Path outputPath = getTypeMatcherOutputPath(typeEntry);
