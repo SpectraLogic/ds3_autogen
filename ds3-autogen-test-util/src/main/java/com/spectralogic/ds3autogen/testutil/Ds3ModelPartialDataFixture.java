@@ -78,13 +78,15 @@ public final class Ds3ModelPartialDataFixture {
 
     /**
      * Creates a Ds3Request that is empty except for having the specified request name, classification,
-     * resource, and resource type
+     * resource, resource type, and whether the id should be included in the path
      */
     public static Ds3Request createDs3RequestTestData(
+            final String requestName,
+            final Classification classification,
             final Resource resource,
             final ResourceType resourceType,
-            final String requestName,
-            final Classification classification) {
+            final boolean includeIdInPath
+    ) {
         return new Ds3Request(
                 requestName,
                 null,
@@ -92,7 +94,9 @@ public final class Ds3ModelPartialDataFixture {
                 null, null, null,
                 resource,
                 resourceType,
-                null, false, null, null, null);
+                null,
+                includeIdInPath,
+                null, null, null);
     }
 
     /**

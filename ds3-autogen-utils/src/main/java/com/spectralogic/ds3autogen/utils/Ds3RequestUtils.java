@@ -20,9 +20,8 @@ public final class Ds3RequestUtils {
      *         else it returns false.
      */
     public static boolean hasBucketNameInPath(final Ds3Request ds3Request) {
-        return !hasQueryParam(ds3Request.getRequiredQueryParams(), "Name")
-                && (ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                || ds3Request.getResource() == Resource.BUCKET);
+        return ds3Request.getBucketRequirement() == Requirement.REQUIRED
+                || (ds3Request.getResource() == Resource.BUCKET && ds3Request.includeIdInPath());
     }
 
     /**
