@@ -1353,7 +1353,6 @@ public class JavaCodeGenerator_Test {
         testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
-    //TODO finish test
     @Test
     public void headBucketRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "HeadBucketRequest";
@@ -1366,14 +1365,48 @@ public class JavaCodeGenerator_Test {
         testGeneratedCode.generateCode(fileUtils, "/input/headBucketRequest.xml");
 
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
-        //LOG.info("Generated code:\n" + requestGeneratedCode); //TODO add request test
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+
+        assertTrue(doesNotHaveOperation(requestGeneratedCode));
+        assertTrue(hasPath("\"/\" + this.bucketName", requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
+
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
+        assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
+
+        assertTrue(hasMethod("setStatus", "void", Scope.PRIVATE, responseGeneratedCode));
+        assertTrue(responseGeneratedCode.contains("public enum Status"));
+        assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN"));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
-    //TODO finish test
     @Test
     public void headObjectRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "HeadObjectRequest";
@@ -1386,13 +1419,48 @@ public class JavaCodeGenerator_Test {
         testGeneratedCode.generateCode(fileUtils, "/input/headObjectRequest.xml");
 
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
-        //LOG.info("Generated code:\n" + requestGeneratedCode); //TODO add request test
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
+
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+
+        assertTrue(doesNotHaveOperation(requestGeneratedCode));
+        assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
-    }
 
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
+        assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
+
+        assertTrue(hasMethod("setStatus", "void", Scope.PRIVATE, responseGeneratedCode));
+        assertTrue(responseGeneratedCode.contains("public enum Status"));
+        assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, UNKNOWN"));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
 
     @Test
     public void spectraInternalRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
