@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.c.models;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.c.helpers.CHelper;
 import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class Type {
     private final String name;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
     private final ImmutableList<Element> elements;
-    private final CHelper cHelper;
+    private final TypeHelper typeHelper;
 
     public Type(
             final String name,
@@ -38,7 +37,7 @@ public class Type {
         this.name = name;
         this.enumConstants = enumConstants;
         this.elements = TypeHelper.convertDs3Elements(elements);
-        this.cHelper = CHelper.getInstance();
+        this.typeHelper = TypeHelper.getInstance();
     }
 
     public String getName() {
@@ -53,7 +52,7 @@ public class Type {
         return elements;
     }
 
-    public CHelper getChelper() {
-        return cHelper;
+    public TypeHelper getTypeHelper() {
+        return typeHelper;
     }
 }

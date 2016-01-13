@@ -53,14 +53,4 @@ public class CHelper {
     public static ElementHelper getElementHelper() {
         return elementHelper;
     }
-
-    private final static String INDENT = "    ";
-
-    public static String indent(final int depth) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            stringBuilder.append(INDENT);
-        }
-        return stringBuilder.toString();
-    }
 }

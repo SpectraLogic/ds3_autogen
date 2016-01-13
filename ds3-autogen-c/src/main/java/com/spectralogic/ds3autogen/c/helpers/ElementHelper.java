@@ -20,7 +20,7 @@ import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.text.ParseException;
 
-public class ElementHelper {
+public final class ElementHelper {
     private ElementHelper() {}
 
     private final static ElementHelper elementHelper = new ElementHelper();

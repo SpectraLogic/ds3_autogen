@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.c.helpers.CHelper.indent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
-public class TypeHelper {
+public final class TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(TypeHelper.class);
     private TypeHelper() {}
 
@@ -96,7 +96,7 @@ public class TypeHelper {
         }
 
         for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
-            outputBuilder.append(CHelper.indent(1));
+            outputBuilder.append(indent(1));
 
             if (currentIndex > 0) {
                 outputBuilder.append("} else ");

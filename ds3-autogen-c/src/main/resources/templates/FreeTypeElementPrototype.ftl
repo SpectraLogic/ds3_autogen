@@ -1,1 +1,1 @@
-void ${getChelper().getTypeHelper().getFreeFunctionName(name)}(${getChelper().getTypeHelper().getResponseTypeName(name)}* response_data);
+void ${getTypeHelper().getFreeFunctionName(name)}(${getTypeHelper().getResponseTypeName(name)}* response_data);

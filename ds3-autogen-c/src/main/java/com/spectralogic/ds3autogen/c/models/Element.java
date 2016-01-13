@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
-import com.spectralogic.ds3autogen.c.helpers.CHelper;
+import com.spectralogic.ds3autogen.c.helpers.ElementHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ public class Element {
     private final String type;
     private final String componentType;
     private final ImmutableList<Ds3Annotation> annotations;
-    private final CHelper cHelper;
+    private final ElementHelper elementHelper;
 
     public Element(
             final String name,
@@ -39,7 +39,7 @@ public class Element {
         this.type = type;
         this.componentType = componentType;
         this.annotations = annotations;
-        this.cHelper = CHelper.getInstance();
+        this.elementHelper = ElementHelper.getInstance();
     }
 
     public String getName() {
@@ -58,7 +58,7 @@ public class Element {
         return annotations;
     }
 
-    public CHelper getChelper() {
-        return cHelper;
+    public ElementHelper getElementHelper() {
+        return elementHelper;
     }
 }

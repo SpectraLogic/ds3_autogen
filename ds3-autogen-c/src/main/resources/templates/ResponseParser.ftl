@@ -1,12 +1,12 @@
 <#include "CopyrightHeader.ftl"/>
 
-static ${getChelper().getTypeHelper().getResponseTypeName(name)}* ${getChelper().getTypeHelper().getParserFunctionName(name)}(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {
+static ${getTypeHelper().getResponseTypeName(name)}* ${getTypeHelper().getParserFunctionName(name)}(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {
     xmlNodePtr child_node;
-    ${getChelper().getTypeHelper().getResponseTypeName(name)}* ${getChelper().getTypeHelper().getResponseTypeName(name)} = g_new0(${getChelper().getTypeHelper().getResponseTypeName(name)}, 1);
+    ${getTypeHelper().getResponseTypeName(name)}* ${getTypeHelper().getResponseTypeName(name)} = g_new0(${getTypeHelper().getResponseTypeName(name)}, 1);
 
     for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-        ${getChelper().getTypeHelper().generateResponseParser(getName(), getElements())}
+        ${getTypeHelper().generateResponseParser(getName(), getElements())}
     }
 
-    return ${getChelper().getTypeHelper().getResponseTypeName(name)};
+    return ${getTypeHelper().getResponseTypeName(name)};
 }

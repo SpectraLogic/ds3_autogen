@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.spectralogic.ds3autogen.utils.Helper;
 
-public class RequestHelper {
+public final class RequestHelper {
     private final static RequestHelper requestHelper = new RequestHelper();
 
     public static RequestHelper getInstance() {
