@@ -1280,7 +1280,9 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkContainerApiBean", responseGeneratedCode));
 
-        //TODO add testing for special case
+        assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
+        assertTrue(responseGeneratedCode.contains("public enum Status"));
+        assertTrue(responseGeneratedCode.contains("ALLOCATED, RETRYLATER"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1292,7 +1294,6 @@ public class JavaCodeGenerator_Test {
         testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
-    //TODO finish test
     @Test
     public void getJobChunksReadyForClientProcessingRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetJobChunksReadyForClientProcessingSpectraS3Request";
@@ -1305,11 +1306,51 @@ public class JavaCodeGenerator_Test {
         testGeneratedCode.generateCode(fileUtils, "/input/getJobChunksReadyForClientProcessingRequest.xml");
 
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
-        //LOG.info("Generated code:\n" + requestGeneratedCode); TODO add back in
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        assertTrue(isReqParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
+
+        assertTrue(doesNotHaveOperation(requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_chunk/\"", requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("UUID", "Job"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
+
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+
+        assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
+        assertTrue(responseGeneratedCode.contains("public enum Status"));
+        assertTrue(responseGeneratedCode.contains("AVAILABLE, RETRYLATER"));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
     @Test
