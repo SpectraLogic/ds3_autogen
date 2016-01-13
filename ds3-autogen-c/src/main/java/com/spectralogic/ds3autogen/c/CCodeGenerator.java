@@ -67,10 +67,6 @@ public class CCodeGenerator implements CodeGenerator {
         return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + ".h");
     }
 
-    public Path getTypeMatcherOutputPath(final Type type) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + "_matcher.c");
-    }
-
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
         this.spec = spec;
@@ -89,8 +85,8 @@ public class CCodeGenerator implements CodeGenerator {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
                 if (ConverterUtil.hasContent(typeEntry.getEnumConstants())) {
-                    generateTypeEnumConstant(typeEntry);
-                    generateTypeEnumConstantMatcher(typeEntry);
+                    generateTypeTemplate(typeEntry, "TypeEnumConstant.ftl");
+                    generateTypeTemplate(typeEntry, "TypeEnumConstantMatcher.ftl");
                 }
             }
 
@@ -107,7 +103,7 @@ public class CCodeGenerator implements CodeGenerator {
                         }
 
                         if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
-                            generateElementResponseParser(typeEntry);
+                            generateTypeTemplate(typeEntry, "ResponseParser.ftl");
                             generatedTypesResponses.add(typeEntry.getName());
                         }
                     }
@@ -122,9 +118,9 @@ public class CCodeGenerator implements CodeGenerator {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
                     final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                    generateTypeElement(typeEntry);
-                    generateFreeTypeElementPrototype(typeEntry);
-                    generateFreeTypeElement(typeEntry);
+                    generateTypeTemplate(typeEntry, "TypeElement.ftl");
+                    generateTypeTemplate(typeEntry, "FreeTypeElementPrototype.ftl");
+                    generateTypeTemplate(typeEntry, "FreeTypeElement.ftl");
                 }
             }
         }
@@ -165,92 +161,10 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateTypeEnumConstant(final Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeEnumConstant.ftl");
+    public void generateTypeTemplate(final Type typeEntry, final String templateName) throws IOException {
+        final Template typeTemplate = config.getTemplate(templateName);
 
         final Path outputPath = getTypeOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateTypeEnumConstantMatcher(final Type typeEntry) throws IOException {
-        LOG.debug("type " + typeEntry.getName());
-        LOG.debug("  " + typeEntry.getEnumConstants().toString());
-
-        final Template typeTemplate = config.getTemplate("TypeEnumConstantMatcher.ftl");
-
-        final Path outputPath = getTypeMatcherOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateTypeElement(final Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeElement.ftl");
-
-        final Path outputPath = getTypeOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-    public void generateFreeTypeElementPrototype(final Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("FreeTypeElementPrototype.ftl");
-
-        final Path outputPath = getTypeMatcherOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateFreeTypeElement(final Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("FreeTypeElement.ftl");
-
-        final Path outputPath = getTypeMatcherOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateElementResponseParser(final Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("ResponseParser.ftl");
-
-        final Path outputPath = getTypeMatcherOutputPath(typeEntry);
 
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
