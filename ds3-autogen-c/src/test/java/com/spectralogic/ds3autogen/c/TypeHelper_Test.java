@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
 import com.spectralogic.ds3autogen.c.models.Type;
 import org.junit.Test;
@@ -25,8 +26,24 @@ import java.text.ParseException;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TypeHelper_Test {
+    @Test
+    public void testGetEnumValues() {
+        Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
+        Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
+        final ImmutableList.Builder<Ds3EnumConstant> builder = ImmutableList.builder();
+        builder.add(alpha);
+        builder.add(bravo);
+        final ImmutableList<Ds3EnumConstant> enumConstants = builder.build();
+        final String expectedResult =
+                "    ALPHA,\n" +
+                        "    BRAVO";
+        final String result = TypeHelper.getEnumValues(enumConstants);
+        assertThat(result, is(expectedResult));
+    }
     @Test
     public void testTypeIsPrimitive() throws ParseException {
         Ds3Element testElement1 = new Ds3Element("intElement", "int", null, null);

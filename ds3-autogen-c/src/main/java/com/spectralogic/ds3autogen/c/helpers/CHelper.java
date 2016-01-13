@@ -16,13 +16,8 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
 
-import java.util.stream.Collectors;
-
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CHelper {
     private static Helper helper;
@@ -67,15 +62,5 @@ public class CHelper {
             stringBuilder.append(INDENT);
         }
         return stringBuilder.toString();
-    }
-
-    public static String getEnumValues(final ImmutableList<Ds3EnumConstant> enumConstants) {
-        if (isEmpty(enumConstants)) {
-            return "";
-        }
-        return enumConstants
-                .stream()
-                .map(i -> indent(1) + i.getName())
-                .collect(Collectors.joining(",\n"));
     }
 }
