@@ -3,10 +3,9 @@
 package ${packageName};
 
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
-import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.models.NodeApiBean;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.Closeable;
@@ -22,5 +21,5 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     </#list>
 
-    Ds3Client newForNode(Node node);
+    Ds3Client newForNode(final NodeApiBean node);
 }
