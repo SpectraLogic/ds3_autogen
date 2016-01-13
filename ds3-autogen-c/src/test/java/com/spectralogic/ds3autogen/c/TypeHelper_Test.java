@@ -32,36 +32,36 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class TypeHelper_Test {
     @Test
     public void testGetEnumValues() {
-        Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
-        Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
         final ImmutableList.Builder<Ds3EnumConstant> builder = ImmutableList.builder();
         builder.add(alpha);
         builder.add(bravo);
         final ImmutableList<Ds3EnumConstant> enumConstants = builder.build();
         final String expectedResult =
                 "    ALPHA,\n" +
-                        "    BRAVO";
+                "    BRAVO";
         final String result = TypeHelper.getEnumValues(enumConstants);
         assertThat(result, is(expectedResult));
     }
     @Test
     public void testTypeIsPrimitive() throws ParseException {
-        Ds3Element testElement1 = new Ds3Element("intElement", "int", null, null);
-        Ds3Element testElement2 = new Ds3Element("boolElement", "boolean", null, null);
+        final Ds3Element testElement1 = new Ds3Element("intElement", "int", null, null);
+        final Ds3Element testElement2 = new Ds3Element("boolElement", "boolean", null, null);
         final ImmutableList.Builder<Ds3Element> builder = ImmutableList.builder();
         builder.add(testElement1);
         builder.add(testElement2);
-        Type testType = new Type("testType", null, builder.build());
+        final Type testType = new Type("testType", null, builder.build());
         assertTrue(TypeHelper.isPrimitiveType(testType));
     }
     @Test
     public void testTypeIsNotPrimitive() throws ParseException {
-        Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null, null);
-        Ds3Element testElement2 = new Ds3Element("complexElement", "com.spectralogic.s3.server.domain.UserApiBean", null, null);
+        final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null, null);
+        final Ds3Element testElement2 = new Ds3Element("complexElement", "com.spectralogic.s3.server.domain.UserApiBean", null, null);
         final ImmutableList.Builder<Ds3Element> builder = ImmutableList.builder();
         builder.add(testElement1);
         builder.add(testElement2);
-        Type testType = new Type("testType", null, builder.build());
+        final Type testType = new Type("testType", null, builder.build());
         assertFalse(TypeHelper.isPrimitiveType(testType));
     }
 

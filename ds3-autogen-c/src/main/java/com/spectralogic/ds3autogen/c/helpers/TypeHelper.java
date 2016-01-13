@@ -91,35 +91,36 @@ public class TypeHelper {
         final StringBuilder outputBuilder = new StringBuilder();
         final int numConstants = enumConstants.size();
 
-        if (numConstants > 0) {
-            for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
-                outputBuilder.append(CHelper.indent(1));
+        if (numConstants <= 0) {
+            return "";
+        }
 
-                if (currentIndex > 0) {
-                    outputBuilder.append("} else ");
-                }
+        for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
+            outputBuilder.append(CHelper.indent(1));
 
-                final String currentEnumName = enumConstants.get(currentIndex).getName();
-                outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").
-                        append(currentEnumName).
-                        append("\") == 0) {").append(System.lineSeparator());
-                outputBuilder.append(indent(2)).append("return ").
-                        append(currentEnumName).
-                        append(";").append(System.lineSeparator());
+            if (currentIndex > 0) {
+                outputBuilder.append("} else ");
             }
 
-            final String enumName = enumConstants.get(0).getName();
-            outputBuilder.append(indent(1)).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
-            outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").
-                    append(enumName).
-                    append(" for safety.").append(System.lineSeparator());
+            final String currentEnumName = enumConstants.get(currentIndex).getName();
+            outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").
+                    append(currentEnumName).
+                    append("\") == 0) {").append(System.lineSeparator());
             outputBuilder.append(indent(2)).append("return ").
-                    append(enumName).
-                    append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
-            outputBuilder.append(indent(1)).append("}").append(System.lineSeparator());
-            return outputBuilder.toString();
+                    append(currentEnumName).
+                    append(";").append(System.lineSeparator());
         }
-        return "";
+
+        final String enumName = enumConstants.get(0).getName();
+        outputBuilder.append(indent(1)).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
+        outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").
+                append(enumName).
+                append(" for safety.").append(System.lineSeparator());
+        outputBuilder.append(indent(2)).append("return ").
+                append(enumName).
+                append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        outputBuilder.append(indent(1)).append("}").append(System.lineSeparator());
+        return outputBuilder.toString();
     }
 
     public static String generateFreeTypeElementMembers(final ImmutableList<Element> elements) throws ParseException {
