@@ -29,12 +29,12 @@ public class RequestConverterUtil_Test {
 
     @Test
     public void isResourceAnArg_Test() {
-        assertFalse(isResourceAnArg(null, null));
-        assertFalse(isResourceAnArg(null, ResourceType.NON_SINGLETON));
-        assertFalse(isResourceAnArg(Resource.BUCKET, null));
-        assertFalse(isResourceAnArg(Resource.BUCKET, ResourceType.SINGLETON));
-        assertFalse(isResourceAnArg(Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION, ResourceType.NON_SINGLETON));
-        assertTrue(isResourceAnArg(Resource.BUCKET, ResourceType.NON_SINGLETON));
+        assertFalse(isResourceAnArg(null, false));
+        assertFalse(isResourceAnArg(null, true));
+        assertFalse(isResourceAnArg(Resource.BUCKET, false));
+        assertTrue(isResourceAnArg(Resource.BUCKET, true));
+        assertFalse(isResourceAnArg(Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION, true));
+        assertFalse(isResourceAnArg(Resource.GENERIC_DAO_NOTIFICATION_REGISTRATION, false));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -147,9 +147,9 @@ public class RequestConverterUtil_Test {
                 Requirement.REQUIRED,
                 null,
                 Resource.JOB,
-                ResourceType.NON_SINGLETON,
                 null,
-                false,
+                null,
+                true,
                 null,
                 null,
                 null
