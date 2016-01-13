@@ -292,11 +292,37 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
             return config.getTemplate("response/get_job_chunks_ready_response_template.ftl");
         }
+        if (isHeadBucketRequest(ds3Request)) {
+            return config.getTemplate("response/head_bucket_response_template.ftl");
+        }
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("response/head_object_response_template.ftl");
+        }
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response_template.ftl");
         } else {
             return config.getTemplate("response/response_template.ftl");
         }
+    }
+
+    /**
+     * Determines if a Ds3Request is Head Bucket Request
+     */
+    private static boolean isHeadBucketRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.HEAD
+                && request.getObjectRequirement() == Requirement.NOT_ALLOWED;
+    }
+
+    /**
+     * Determines if a Ds3Request is Head Object Request
+     */
+    private static boolean isHeadObjectRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.HEAD
+                && request.getObjectRequirement() == Requirement.REQUIRED;
     }
 
     /**

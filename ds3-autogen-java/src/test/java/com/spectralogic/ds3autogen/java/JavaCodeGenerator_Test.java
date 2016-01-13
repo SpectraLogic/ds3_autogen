@@ -1353,6 +1353,47 @@ public class JavaCodeGenerator_Test {
         testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
+    //TODO finish test
+    @Test
+    public void headBucketRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "HeadBucketRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/headBucketRequest.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        //LOG.info("Generated code:\n" + requestGeneratedCode); //TODO add request test
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+    }
+
+    //TODO finish test
+    @Test
+    public void headObjectRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "HeadObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/headObjectRequest.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        //LOG.info("Generated code:\n" + requestGeneratedCode); //TODO add request test
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+    }
+
+
     @Test
     public void spectraInternalRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String requestName = "CreateFakeTapeEnvironmentRequestHandler";
