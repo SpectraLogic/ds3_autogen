@@ -21,10 +21,7 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
@@ -289,11 +286,38 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return config.getTemplate("response/allocate_job_chunk_response_template.ftl");
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("response/get_job_chunks_ready_response_template.ftl");
+        }
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response_template.ftl");
         } else {
             return config.getTemplate("response/response_template.ftl");
         }
+    }
+
+    /**
+     * Determines if a Ds3Request is Allocate Job Chunk Request
+     */
+    private static boolean isAllocateJobChunkRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getResource() == Resource.JOB_CHUNK
+                && request.getAction() == Action.MODIFY
+                && request.getHttpVerb() == HttpVerb.PUT
+                && request.getOperation() == Operation.ALLOCATE;
+    }
+
+    /**
+     * Determines if a Ds3Request is Get Job Chunks Ready For Client Processing Request
+     */
+    private static boolean isGetJobChunksReadyForClientProcessingRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getResource() == Resource.JOB_CHUNK
+                && request.getAction() == Action.LIST
+                && request.getHttpVerb() == HttpVerb.GET;
     }
 
     /**
