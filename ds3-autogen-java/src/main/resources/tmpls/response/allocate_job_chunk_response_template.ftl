@@ -3,6 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
+import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class ${name} extends AbstractResponse {
 
@@ -19,12 +20,12 @@ ${javaHelper.createAllResponseResultClassVars(
 
     @Override
     protected void processResponse() throws IOException {
-        try {
+        try (final WebResponse response = this.getResponse()) {
             this.checkStatusCode(200, 403);
 
             switch (this.getStatusCode()) {
             case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
+                try (final InputStream content = response.getResponseStream()) {
                     this.jobChunkContainerApiBeanResult = XmlOutput.fromXml(content, JobChunkContainerApiBean.class);
                     this.status = Status.ALLOCATED;
                 }

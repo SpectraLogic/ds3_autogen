@@ -3,6 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
+import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class ${name} extends AbstractResponse {
 
@@ -19,7 +20,7 @@ ${javaHelper.createAllResponseResultClassVars(
 
     @Override
     protected void processResponse() throws IOException {
-        try {
+        try (final WebResponse webResponse = this.getResponse()) {
             this.checkStatusCode(200);
 
             switch (this.getStatusCode()) {
