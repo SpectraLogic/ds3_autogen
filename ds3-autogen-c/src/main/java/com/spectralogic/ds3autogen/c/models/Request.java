@@ -16,10 +16,9 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 
 public class Request {
     private final String name;
@@ -27,7 +26,7 @@ public class Request {
     private final String path;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
-    private final Helper helper;
+    private final RequestHelper requestHelper;
 
     public Request(
             final String name,
@@ -40,23 +39,11 @@ public class Request {
         this.path = path;
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
-        this.helper = Helper.getInstance();
+        this.requestHelper = RequestHelper.getInstance();
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getUnqualifiedName() {
-        return helper.unqualifiedName(name);
-    }
-
-    public String getNameRoot() {
-        return helper.removeTrailingRequestHandler(getUnqualifiedName());
-    }
-
-    public String getNameRootUnderscores() {
-        return helper.camelToUnderscore(getNameRoot());
     }
 
     public HttpVerb getVerb() {
@@ -73,5 +60,9 @@ public class Request {
 
     public ImmutableList<Arguments> getOptionalArguments() {
         return optionalArguments;
+    }
+
+    public RequestHelper getRequestHelper() {
+        return requestHelper;
     }
 }

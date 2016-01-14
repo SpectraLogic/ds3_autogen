@@ -16,16 +16,10 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Requirement;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.c.models.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.spectralogic.ds3autogen.c.helpers.CHelper.indent;
 
 public class RequestConverter {
     private final Ds3Request ds3Request;
