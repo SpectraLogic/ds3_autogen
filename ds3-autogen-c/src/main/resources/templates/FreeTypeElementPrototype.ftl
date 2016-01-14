@@ -1,1 +1,1 @@
-void ds3_free_${getNameUnderscores()}(${getResponseTypeName()}* response_data);
+void ${getTypeHelper().getFreeFunctionName(name)}(${getTypeHelper().getResponseTypeName(name)}* response_data);

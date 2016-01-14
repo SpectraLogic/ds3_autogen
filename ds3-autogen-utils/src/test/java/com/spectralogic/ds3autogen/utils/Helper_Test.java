@@ -279,4 +279,15 @@ public class Helper_Test {
         assertFalse(result.get(0).getType().equals("void"));
         assertFalse(result.get(1).getType().equals("void"));
     }
+    @Test
+    public void testIsBasicType() {
+        final String testString = "boolean";
+        assertThat(Helper.isPrimitiveType(testString), is(true));
+    }
+    @Test
+    public void testIsBasicTypeNegative() {
+
+        final String testString = "com.spectralogic.s3.server.domain.UserApiBean";
+        assertThat(Helper.isPrimitiveType(testString), is(false));
+    }
 }

@@ -13,27 +13,22 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.c.converters;
+package com.spectralogic.ds3autogen.c.helpers;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.c.models.Type;
+import com.spectralogic.ds3autogen.utils.Helper;
 
-public class TypeConverter {
-    private final Ds3Type ds3Type;
+public final class RequestHelper {
+    private final static RequestHelper requestHelper = new RequestHelper();
 
-    private TypeConverter(final Ds3Type ds3Type) {
-        this.ds3Type = ds3Type;
+    public static RequestHelper getInstance() {
+        return requestHelper;
     }
 
-    private Type convert() {
-        return new Type(
-                this.ds3Type.getName(),
-                this.ds3Type.getEnumConstants(),
-                this.ds3Type.getElements());
+    public static String getNameRoot(final String name) {
+        return Helper.removeTrailingRequestHandler(Helper.unqualifiedName(name));
     }
 
-    public static Type toType(final Ds3Type ds3Type) {
-        final TypeConverter converter = new TypeConverter(ds3Type);
-        return converter.convert();
+    public static String getNameRootUnderscores(final String name) {
+        return Helper.camelToUnderscore(getNameRoot(name));
     }
 }

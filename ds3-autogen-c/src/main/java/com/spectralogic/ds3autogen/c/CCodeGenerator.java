@@ -15,27 +15,34 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.*;
-import com.spectralogic.ds3autogen.c.converters.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.RequestConverter;
+import com.spectralogic.ds3autogen.c.converters.TypeConverter;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Type;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import freemarker.core.Environment;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import freemarker.core.Environment;
-import freemarker.template.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -52,6 +59,14 @@ public class CCodeGenerator implements CodeGenerator {
         config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
     }
 
+    public Path getRequestOutputPath(final Request request) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + RequestHelper.getNameRootUnderscores(request.getName()) + ".c");
+    }
+
+    public Path getTypeOutputPath(final Type type) {
+        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + ".h");
+    }
+
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
         this.spec = spec;
@@ -66,29 +81,54 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     private void generateCommands() throws IOException, TemplateException {
-        if (ConverterUtil.hasContent(spec.getRequests())) {
-            for (final Ds3Request request : spec.getRequests()) {
-                generateRequest(request);
-            }
-        }
-
         if (ConverterUtil.hasContent(spec.getTypes())) {
-            // Generate EnumConstant Types, which Element types can be dependant on
-            // TODO Determine if dependency matters at code generation time... probably not.
-            for (final Ds3Type typeEntry : spec.getTypes().values()) {
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
                 if (ConverterUtil.hasContent(typeEntry.getEnumConstants())) {
-                    generateTypeEnumConstant(typeEntry);
-                    generateTypeEnumConstantMatcher(typeEntry);
+                    generateTypeTemplate(typeEntry, "TypeEnumConstant.ftl");
+                    generateTypeTemplate(typeEntry, "TypeEnumConstantMatcher.ftl");
+                }
+            }
+
+            // Generate TypeResponse parsers
+            //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
+            final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
+            LOG.debug(generatedTypesResponses.build().size() + " vs " + spec.getTypes().values().size());
+            for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
+                for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                    if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
+                        final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
+                        if (generatedTypesResponses.build().contains(typeEntry.getName())) {
+                            continue;
+                        }
+
+                        if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
+                            generateTypeTemplate(typeEntry, "ResponseParser.ftl");
+                            generatedTypesResponses.add(typeEntry.getName());
+                        }
+                    }
+                }
+                if (depth > 6) {
+                    LOG.warn("generating ResponseParsers up to depth " + depth + ", warning for potential infinite loop.");
+                    break;
                 }
             }
 
             // Generate Element Types
-            for (final Ds3Type typeEntry : spec.getTypes().values()) {
-                if (ConverterUtil.hasContent(typeEntry.getElements())) {
-                    generateTypeElement(typeEntry);
-                    generateFreeTypeElementPrototype(typeEntry);
-                    generateFreeTypeElement(typeEntry);
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
+                    final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
+                    generateTypeTemplate(typeEntry, "TypeElement.ftl");
+                    generateTypeTemplate(typeEntry, "FreeTypeElementPrototype.ftl");
+                    generateTypeTemplate(typeEntry, "FreeTypeElement.ftl");
                 }
+            }
+        }
+
+        // Generate Requests last because they depend on the code generated above
+        if (ConverterUtil.hasContent(spec.getRequests())) {
+            for (final Ds3Request request : spec.getRequests()) {
+                generateRequest(request);
             }
         }
     }
@@ -121,100 +161,19 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateTypeEnumConstant(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeEnumConstant.ftl");
-        final Type type = TypeConverter.toType(typeEntry);
+    public void generateTypeTemplate(final Type typeEntry, final String templateName) throws IOException {
+        final Template typeTemplate = config.getTemplate(templateName);
 
-        final Path outputPath = getTypeOutputPath(type);
+        final Path outputPath = getTypeOutputPath(typeEntry);
 
         final OutputStream outStream = fileUtils.getOutputFile(outputPath);
         final Writer writer = new OutputStreamWriter(outStream);
         try {
-            typeTemplate.process(type, writer);
+            typeTemplate.process(typeEntry, writer);
         } catch (final NullPointerException e) {
             LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
         } catch (final TemplateException e) {
             LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
         }
-    }
-
-    public void generateTypeEnumConstantMatcher(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeEnumConstantMatcher.ftl");
-        final Type type = TypeConverter.toType(typeEntry);
-
-        final Path outputPath = getTypeMatcherOutputPath(type);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(type, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateTypeElement(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("TypeElement.ftl");
-        final Type type = TypeConverter.toType(typeEntry);
-
-        final Path outputPath = getTypeOutputPath(type);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(type, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-    public void generateFreeTypeElementPrototype(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("FreeTypeElementPrototype.ftl");
-        final Type type = TypeConverter.toType(typeEntry);
-
-        final Path outputPath = getTypeMatcherOutputPath(type);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(type, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public void generateFreeTypeElement(final Ds3Type typeEntry) throws IOException {
-        final Template typeTemplate = config.getTemplate("FreeTypeElement.ftl");
-        final Type type = TypeConverter.toType(typeEntry);
-
-        final Path outputPath = getTypeMatcherOutputPath(type);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(type, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
-        }
-    }
-
-    public Path getRequestOutputPath(final Request request) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + request.getNameRootUnderscores() + ".c");
-    }
-
-    public Path getTypeOutputPath(final Type type) {
-        LOG.debug("getTypeOutputPath[" + type.getName() + "]");
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + ".h");
-    }
-
-    public Path getTypeMatcherOutputPath(final Type type) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + type.getNameUnderscores() + "_matcher.c");
     }
 }

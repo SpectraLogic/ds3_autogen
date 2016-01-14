@@ -16,43 +16,49 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
+import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
+import com.spectralogic.ds3autogen.c.helpers.ElementHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Type {
-    private static final Logger LOG = LoggerFactory.getLogger(Type.class);
+public class Element {
+    private static final Logger LOG = LoggerFactory.getLogger(Element.class);
 
     private final String name;
-    private final ImmutableList<Ds3EnumConstant> enumConstants;
-    private final ImmutableList<Element> elements;
-    private final TypeHelper typeHelper;
+    private final String type;
+    private final String componentType;
+    private final ImmutableList<Ds3Annotation> annotations;
+    private final ElementHelper elementHelper;
 
-    public Type(
+    public Element(
             final String name,
-            final ImmutableList<Ds3EnumConstant> enumConstants,
-            final ImmutableList<Ds3Element> elements) {
+            final String type,
+            final String componentType,
+            final ImmutableList<Ds3Annotation> annotations) {
         this.name = name;
-        this.enumConstants = enumConstants;
-        this.elements = TypeHelper.convertDs3Elements(elements);
-        this.typeHelper = TypeHelper.getInstance();
+        this.type = type;
+        this.componentType = componentType;
+        this.annotations = annotations;
+        this.elementHelper = ElementHelper.getInstance();
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public ImmutableList<Ds3EnumConstant> getEnumConstants() {
-        return enumConstants;
+    public String getType() {
+        return type;
     }
 
-    public ImmutableList<Element> getElements() {
-        return elements;
+    public String getComponentType() {
+        return componentType;
     }
 
-    public TypeHelper getTypeHelper() {
-        return typeHelper;
+    public ImmutableList<Ds3Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public ElementHelper getElementHelper() {
+        return elementHelper;
     }
 }
