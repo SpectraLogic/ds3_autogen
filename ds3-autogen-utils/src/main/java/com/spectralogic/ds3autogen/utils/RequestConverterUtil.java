@@ -62,7 +62,7 @@ public final class RequestConverterUtil {
                 && ds3Request.getObjectRequirement().equals(Requirement.REQUIRED)) {
             builder.add(new Arguments("String", "ObjectName"));
         }
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             builder.add(getArgFromResource(ds3Request.getResource()));
         }
         return builder.build();
@@ -72,9 +72,11 @@ public final class RequestConverterUtil {
      * Determines if a Ds3Request's Resource/ResourceType combination describes a
      * required argument or not.
      */
-    public static boolean isResourceAnArg(final Resource resource, final ResourceType resourceType) {
+    public static boolean isResourceAnArg(
+            final Resource resource,
+            final boolean includeIdInPath) {
         return resource != null
-                && resourceType == ResourceType.NON_SINGLETON
+                && includeIdInPath
                 && !isResourceNotification(resource);
     }
 

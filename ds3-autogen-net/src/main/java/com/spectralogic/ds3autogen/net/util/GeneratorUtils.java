@@ -86,7 +86,7 @@ public final class GeneratorUtils {
             builder.append(" + NotificationId.ToString()");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append(" + BucketName");
-        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
             builder.append(" + ").append(NetHelper.argToString(resourceArg));
         }

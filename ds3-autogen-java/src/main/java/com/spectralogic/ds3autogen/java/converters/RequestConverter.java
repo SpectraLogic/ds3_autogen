@@ -140,7 +140,7 @@ public class RequestConverter {
             builder.append(" + this.getNotificationId().toString()");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append(" + this.bucketName");
-        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())) {
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
             builder.append(" + ").append(JavaHelper.argToString(resourceArg));
         }
@@ -210,7 +210,7 @@ public class RequestConverter {
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         importsBuilder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getResourceType())
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())
                 && RequestConverterUtil.isResourceId(ds3Request.getResource())) {
             importsBuilder.add("java.util.UUID");
         }
