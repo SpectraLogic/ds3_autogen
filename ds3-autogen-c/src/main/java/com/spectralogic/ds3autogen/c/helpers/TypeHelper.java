@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.c.helpers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.converters.ElementConverter;
 import com.spectralogic.ds3autogen.c.models.Element;
 import com.spectralogic.ds3autogen.c.models.Type;
@@ -27,9 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class TypeHelper {
@@ -62,6 +59,7 @@ public final class TypeHelper {
         return getResponseTypeName(name) + "_free";
     }
 
+    /*
     public static String getEnumValues(final ImmutableList<Ds3EnumConstant> enumConstants) {
         if (isEmpty(enumConstants)) {
             return "";
@@ -71,7 +69,9 @@ public final class TypeHelper {
                 .map(i -> indent(1) + i.getName())
                 .collect(Collectors.joining(",\n"));
     }
+    */
 
+    /*
     public static String getTypeElementsList(final ImmutableList<Element> elements) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
@@ -81,12 +81,14 @@ public final class TypeHelper {
                     append(" ").
                     append(ElementHelper.getNameUnderscores(element.getName())).
                     append(";").
-                    append(System.lineSeparator());
+                    append("\n");
         }
 
         return outputBuilder.toString();
     }
+    */
 
+    /*
     public static String generateMatcher(final ImmutableList<Ds3EnumConstant> enumConstants) {
         final StringBuilder outputBuilder = new StringBuilder();
         final int numConstants = enumConstants.size();
@@ -105,23 +107,24 @@ public final class TypeHelper {
             final String currentEnumName = enumConstants.get(currentIndex).getName();
             outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").
                     append(currentEnumName).
-                    append("\") == 0) {").append(System.lineSeparator());
+                    append("\") == 0) {").append("\n");
             outputBuilder.append(indent(2)).append("return ").
                     append(currentEnumName).
-                    append(";").append(System.lineSeparator());
+                    append(";").append("\n");
         }
 
         final String enumName = enumConstants.get(0).getName();
-        outputBuilder.append(indent(1)).append("} else {").append(System.lineSeparator()); // Shouldn't need this else, since we are autogenerating from all possible values.
+        outputBuilder.append(indent(1)).append("} else {").append("\n"); // Shouldn't need this else, since we are autogenerating from all possible values.
         outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").
                 append(enumName).
-                append(" for safety.").append(System.lineSeparator());
+                append(" for safety.").append("\n");
         outputBuilder.append(indent(2)).append("return ").
                 append(enumName).
-                append(";").append(System.lineSeparator()); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
-        outputBuilder.append(indent(1)).append("}").append(System.lineSeparator());
+                append(";").append("\n"); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        outputBuilder.append(indent(1)).append("}").append("\n");
         return outputBuilder.toString();
     }
+    */
 
     public static String generateFreeTypeElementMembers(final ImmutableList<Element> elements) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
@@ -135,7 +138,7 @@ public final class TypeHelper {
                     append("(response_data->").
                     append(ElementHelper.getNameUnderscores(element.getName())).
                     append(");").
-                    append(System.lineSeparator());
+                    append("\n");
         }
 
         return outputBuilder.toString();
@@ -153,18 +156,18 @@ public final class TypeHelper {
 
             final String currentElementName = elements.get(currentIndex).getName();
 
-            outputBuilder.append("if (element_equal(child_node, \"").append(currentElementName).append("\")) {").append(System.lineSeparator());
+            outputBuilder.append("if (element_equal(child_node, \"").append(currentElementName).append("\")) {").append("\n");
             outputBuilder.append(indent(4)).
                     append(TypeHelper.getResponseTypeName(typeName)).
                     append("->").
                     append(Helper.camelToUnderscore(currentElementName)).
                     append(" = ").
-                    append(ElementHelper.getParser(elements.get(currentIndex))).append(System.lineSeparator());
+                    append(ElementHelper.getParser(elements.get(currentIndex))).append("\n");
         }
-        outputBuilder.append(indent(3)).append("} else {").append(System.lineSeparator());
+        outputBuilder.append(indent(3)).append("} else {").append("\n");
         outputBuilder.append(indent(4)).
-                append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append(System.lineSeparator());
-        outputBuilder.append(indent(3)).append("}").append(System.lineSeparator());
+                append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
+        outputBuilder.append(indent(3)).append("}").append("\n");
 
         return outputBuilder.toString();
     }
