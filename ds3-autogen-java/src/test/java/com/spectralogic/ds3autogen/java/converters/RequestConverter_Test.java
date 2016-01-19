@@ -75,7 +75,7 @@ public class RequestConverter_Test {
 
     @Test
     public void requestPath_SpectraS3Resource_Test() {
-        final String expectedPath = "\"/_rest_/active_job/\"";
+        final String expectedPath = "\"/_rest_/active_job\"";
         final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
                 Classification.spectrads3,
@@ -117,7 +117,7 @@ public class RequestConverter_Test {
 
     @Test
     public void requestPath_SpectraS3ResourceWithJobChunkId_NotInclude_Test() {
-        final String expectedPath = "\"/_rest_/job_chunk/\"";
+        final String expectedPath = "\"/_rest_/job_chunk\"";
         final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
                 Classification.spectrads3,

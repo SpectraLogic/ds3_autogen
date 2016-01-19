@@ -133,16 +133,18 @@ public class RequestConverter {
             return builder.append("\"/_rest_/\"").toString();
         }
 
-        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
+        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                     || getNotificationType(ds3Request) == NotificationType.GET)) {
-            builder.append(" + this.getNotificationId().toString()");
+            builder.append("/\"").append(" + this.getNotificationId().toString()");
         } else if (hasBucketNameInPath(ds3Request)) {
-            builder.append(" + this.bucketName");
+            builder.append("/\"").append(" + this.bucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
-            builder.append(" + ").append(JavaHelper.argToString(resourceArg));
+            builder.append("/\"").append(" + ").append(JavaHelper.argToString(resourceArg));
+        } else {
+            builder.append("\"");
         }
         return builder.toString();
     }
