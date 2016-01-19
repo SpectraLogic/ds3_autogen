@@ -1,6 +1,5 @@
-    public ${name}(${javaHelper.constructorArgs(
-                         helper.removeVoidArguments(requiredArguments))}) {
-        <#list helper.removeVoidArguments(requiredArguments) as arg>
+    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         <#if operation??>

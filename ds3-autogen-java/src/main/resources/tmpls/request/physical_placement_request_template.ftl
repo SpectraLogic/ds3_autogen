@@ -20,10 +20,9 @@ public class ${name} extends AbstractRequest {
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.removeVoidArguments(requiredArguments), "Objects", "List<Ds3Object>"))}) {
+                     helper.addArgument(constructorArguments, "Objects", "List<Ds3Object>"))}) {
         this.objects = objects;
-        <#list helper.removeVoidArguments(requiredArguments) as arg>
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         <#if operation??>

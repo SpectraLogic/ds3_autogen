@@ -464,7 +464,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"fullDetails\", null)"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
@@ -604,7 +604,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"fullDetails\", null)"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));

@@ -25,9 +25,8 @@ public class ${name} extends AbstractRequest {
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.removeVoidArguments(requiredArguments), "Objects", "List<String>"))}) {
-        <#list helper.removeVoidArguments(requiredArguments) as arg>
+                     helper.addArgument(constructorArguments, "Objects", "List<String>"))}) {
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.objects = objects;
@@ -36,9 +35,9 @@ public class ${name} extends AbstractRequest {
 
     public ${name}(${javaHelper.constructorArgs(
                      helper.addArgument(
-                     helper.removeArgument(requiredArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
+                     helper.removeArgument(constructorArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
         this(${javaHelper.argsToList(
-               helper.removeArgument(requiredArguments, "Delete"))}, contentsToString(objs));
+               helper.removeArgument(constructorArguments, "Delete"))}, contentsToString(objs));
     }
 
     private static List<String> contentsToString(final Iterable<Contents> objs) {

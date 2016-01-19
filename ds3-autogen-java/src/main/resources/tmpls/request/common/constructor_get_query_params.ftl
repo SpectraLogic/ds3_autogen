@@ -1,3 +1,3 @@
-        <#list helper.getVoidArguments(requiredArguments) as arg>
-        this.getQueryParams().put("${arg.getName()?uncap_first}", null);
+        <#list requiredArguments as arg>
+        ${javaHelper.putQueryParamLine(arg)}
         </#list>

@@ -12,12 +12,10 @@ public class ${name} extends AbstractCreateNotificationRequest {
     // Variables
 <#include "common/notification_variables.ftl"/>
 
-    public ${name}(${javaHelper.constructorArgs(
-                          helper.removeVoidArguments(requiredArguments))}) {
+    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
         super(notificationEndPoint);
 
-        <#list helper.removeVoidArguments(
-                   helper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
+        <#list helper.removeArgument(constructorArguments, "NotificationEndPoint") as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
 <#include "common/constructor_get_query_params.ftl"/>
@@ -39,8 +37,7 @@ ${javaHelper.createWithConstructor(arg, name)}
 
     </#list>
 
-    <#list helper.removeVoidArguments(
-               helper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
+    <#list helper.removeArgument(constructorArguments, "NotificationEndPoint") as arg>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
     }
