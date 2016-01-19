@@ -13,10 +13,8 @@ ${javaHelper.getModelVariable(elmt)}
 
 </#list>
     // Constructor
-    public ${name}(${javaHelper.getModelConstructorArgs(elements)}) {
-        <#list elements as elmt>
-        this.${elmt.getName()?uncap_first} = ${elmt.getName()?uncap_first};
-        </#list>
+    public ${name}() {
+        //pass
     }
 
     // Getters and Setters

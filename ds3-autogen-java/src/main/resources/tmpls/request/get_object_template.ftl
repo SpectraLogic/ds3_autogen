@@ -28,12 +28,12 @@ public class ${name} extends AbstractRequest {
     /**
      * @deprecated use {@link #${name}(${javaHelper.argTypeList(
                                          helper.addArgument(
-                                         helper.addArgument(requiredArguments, optionalArguments), "Channel", "WritableByteChannel"))})} instead
+                                         helper.addArgument(constructorArguments, optionalArguments), "Channel", "WritableByteChannel"))})} instead
      */
     @Deprecated
     public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(requiredArguments, "Channel", "WritableByteChannel"))}) {
-        <#list requiredArguments as arg>
+                     helper.addArgument(constructorArguments, "Channel", "WritableByteChannel"))}) {
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.channel = channel;
@@ -42,8 +42,8 @@ public class ${name} extends AbstractRequest {
 
     public ${name}(${javaHelper.constructorArgs(
                      helper.addArgument(
-                     helper.addArgument(requiredArguments, optionalArguments), "Channel", "WritableByteChannel"))}) {
-        <#list requiredArguments as arg>
+                     helper.addArgument(constructorArguments, optionalArguments), "Channel", "WritableByteChannel"))}) {
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         <#list optionalArguments as arg>

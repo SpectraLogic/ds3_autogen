@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
+import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 /**
@@ -38,6 +39,7 @@ public class RequestConverter {
     private final String packageName;
     private final ImmutableList<Arguments> requiredConstructorArguments;
     private final ImmutableList<Arguments> optionalArguments;
+    private final ImmutableList<Arguments> constructorArguments;
     private final ImmutableList<String> imports;
 
     private RequestConverter(
@@ -47,11 +49,12 @@ public class RequestConverter {
         this.packageName = packageName;
         this.requiredConstructorArguments = toRequiredArgumentsList(ds3Request);
         this.optionalArguments = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
+        this.constructorArguments = toConstructorArgumentsList(ds3Request);
         this.imports = getAllImports(ds3Request);
     }
 
     /**
-     * Converts data sotred within this RequestConvert into a Request model
+     * Converts data sorted within this RequestConvert into a Request model
      * @return A Request model
      */
     private Request convert() {
@@ -65,6 +68,7 @@ public class RequestConverter {
                 ds3Request.getAction(),
                 requiredConstructorArguments,
                 optionalArguments,
+                constructorArguments,
                 imports);
     }
 
@@ -133,18 +137,33 @@ public class RequestConverter {
             return builder.append("\"/_rest_/\"").toString();
         }
 
-        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
+        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                     || getNotificationType(ds3Request) == NotificationType.GET)) {
-            builder.append(" + this.getNotificationId().toString()");
+            builder.append("/\"").append(" + this.getNotificationId().toString()");
         } else if (hasBucketNameInPath(ds3Request)) {
-            builder.append(" + this.bucketName");
+            builder.append("/\"").append(" + this.bucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
-            builder.append(" + ").append(JavaHelper.argToString(resourceArg));
+            builder.append("/\"").append(" + ").append(JavaHelper.argToString(resourceArg));
+        } else {
+            builder.append("\"");
         }
         return builder.toString();
+    }
+
+    /**
+     * Gets the list of Arguments needed to create the request constructor. This
+     * includes all non-void required parameters, and arguments described within
+     * the request header.
+     */
+    protected static ImmutableList<Arguments> toConstructorArgumentsList(
+            final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
+        builder.addAll(removeVoidArguments(toArgumentsList(ds3Request.getRequiredQueryParams())));
+        return builder.build();
     }
 
     /**
@@ -155,7 +174,6 @@ public class RequestConverter {
     private static ImmutableList<Arguments> toRequiredArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
-        requiredArgs.addAll(getRequiredArgsFromRequestHeader(ds3Request));
         requiredArgs.addAll(toArgumentsList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }

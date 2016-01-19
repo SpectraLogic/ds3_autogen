@@ -464,7 +464,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"fullDetails\", null)"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
@@ -604,7 +604,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"fullDetails\", null)"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
@@ -1016,7 +1016,7 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
         assertTrue(extendsClass(requestName, "AbstractCreateNotificationRequest", requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\"", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration\"", requestGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
@@ -1319,7 +1319,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_chunk/\"", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_chunk\"", requestGeneratedCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "Job"));
