@@ -77,7 +77,8 @@ public class JavaCodeGenerator_Models_Test {
                 new Element("Id", "UUID", ""),
                 new Element("Permission", "BucketAclPermission", ""),
                 new Element("UserId", "UUID", ""));
-        assertTrue(hasModelConstructor(modelName, constructorArgs, modelGeneratedCode));
+        assertFalse(hasModelConstructor(modelName, constructorArgs, modelGeneratedCode));
+        assertTrue(hasModelConstructor(modelName, ImmutableList.<Element>of(), modelGeneratedCode));
     }
 
     @Test
@@ -109,7 +110,8 @@ public class JavaCodeGenerator_Models_Test {
         final ImmutableList<Element> constructorArgs = ImmutableList.of(
                 new Element("Pools", "array", "Pool"),
                 new Element("Tapes", "array", "Tape"));
-        assertTrue(hasModelConstructor(modelName, constructorArgs, modelGeneratedCode));
+        assertFalse(hasModelConstructor(modelName, constructorArgs, modelGeneratedCode));
+        assertTrue(hasModelConstructor(modelName, ImmutableList.<Element>of(), modelGeneratedCode));
     }
 
     @Test
