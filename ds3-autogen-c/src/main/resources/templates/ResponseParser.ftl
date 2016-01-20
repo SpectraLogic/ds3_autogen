@@ -3,7 +3,7 @@ static ${getStructHelper().getResponseTypeName(name)}* ${getStructHelper().getPa
     ${getStructHelper().getResponseTypeName(name)}* ${getStructHelper().getResponseTypeName(name)} = g_new0(${getStructHelper().getResponseTypeName(name)}, 1);
 
     for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-${getStructHelper().generateResponseParser(getName(), getElements())}
+${getStructHelper().generateResponseParser(getName(), getVariables())}
     }
 
     return ${getStructHelper().getResponseTypeName(name)};

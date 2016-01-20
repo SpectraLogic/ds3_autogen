@@ -127,7 +127,7 @@ public class StructHelper_Test {
         final ImmutableList<Ds3Element> elementsList = ds3ElementBuilder.build();
 
         final Struct testStruct = new Struct("testStruct", StructHelper.convertDs3Elements(elementsList));
-        final String output = StructHelper.generateResponseParser(testStruct);
+        final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getVariables());
         assertTrue(output.contains("        if (element_equal(child_node, \"BoolElement\")) {"));
         assertTrue(output.contains("            ds3_test_struct_response->bool_element = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"BeanElement\")) {"));

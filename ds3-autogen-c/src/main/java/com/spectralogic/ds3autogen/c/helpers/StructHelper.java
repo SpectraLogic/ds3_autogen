@@ -174,25 +174,25 @@ public class StructHelper {
         return outputBuilder.toString();
     }
 
-    public static String generateResponseParser(final Struct struct) throws ParseException {
+    public static String generateResponseParser(final String name, final ImmutableList<StructMember> variables) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
-        for (int currentStructMember = 0; currentStructMember < struct.getVariables().size(); currentStructMember++) {
+        for (int currentStructMember = 0; currentStructMember < variables.size(); currentStructMember++) {
             outputBuilder.append(indent(3));
 
             if (currentStructMember > 0) {
-                outputBuilder.append(indent(2)).append("} else ");
+                outputBuilder.append("} else ");
             }
 
-            final String currentStructMemberName = struct.getVariables().get(currentStructMember).getName();
+            final String currentStructMemberName = variables.get(currentStructMember).getName();
 
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMemberName)).append("\")) {").append("\n");
             outputBuilder.append(indent(4)).
-                    append(getResponseTypeName(struct.getName())).
+                    append(getResponseTypeName(name)).
                     append("->").
                     append(Helper.camelToUnderscore(currentStructMemberName)).
                     append(" = ").
-                    append(getParser(struct.getVariables().get(currentStructMember))).append("\n");
+                    append(getParser(variables.get(currentStructMember))).append("\n");
         }
         // TODO Leaving the catch case commented out unless needed.
         /*

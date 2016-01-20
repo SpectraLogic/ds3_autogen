@@ -150,7 +150,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleFreeTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+    public void testSingleFreeTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -177,21 +177,22 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("}"));
     }
 
-    /*
     @Test
-    public void testSimpleElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void testSimpleTypdefStructResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateResponseStructParsers(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
+
         assertTrue(output.contains("static ds3_user_api_bean_response* _parse_ds3_user_api_bean_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_user_api_bean_response* ds3_user_api_bean_response = g_new0(ds3_user_api_bean_response, 1);"));
@@ -201,15 +202,19 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            ds3_user_api_bean_response->display_name = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
         assertTrue(output.contains("            ds3_user_api_bean_response->id = xml_get_string(doc, child_node);"));
+        /*
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        */
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    return ds3_user_api_bean_response;"));
         assertTrue(output.contains("}"));
+
     }
 
+    /*
     @Test
     public void testEmbeddedElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();

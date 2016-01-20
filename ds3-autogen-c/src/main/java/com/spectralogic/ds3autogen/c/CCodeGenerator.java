@@ -84,60 +84,6 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    private Queue<Struct> getAllStructs() throws ParseException {
-        Queue<Struct> allStructs = new LinkedList<Struct>();
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                allStructs.add(StructConverter.toStruct(ds3TypeEntry));
-            }
-        }
-        return allStructs;
-    }
-
-    // Generate TypeResponse parsers
-    //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-    public Queue<Struct> getStructParsersOrderedList() throws ParseException {
-        Queue<Struct> orderedStructs = new LinkedList();
-        Queue<Struct> allStructs = getAllStructs();
-        while (!allStructs.isEmpty()) {
-            Struct structEntry = allStructs.peek();
-            if (ConverterUtil.hasContent(structEntry.getVariables())) {
-                if (orderedStructs.contains(structEntry)) {
-                    continue;
-                }
-
-                if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, orderedStructs)) {
-                    orderedStructs.add(allStructs.remove());
-                }
-            }
-        }
-
-        return orderedStructs;
-    }
-
-    /*
-    final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
-    LOG.debug(generatedTypesResponses.build().size() + " vs " + spec.getTypes().values().size());
-    for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
-        for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                if (generatedTypesResponses.build().contains(typeEntry.getName())) {
-                    continue;
-                }
-
-                if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
-                    generateTypeTemplate(typeEntry, "ResponseParser.ftl");
-                    generatedTypesResponses.add(typeEntry.getName());
-                }
-            }
-        }
-        if (depth > 6) {
-            LOG.warn("generating ResponseParsers up to depth " + depth + ", warning for potential infinite loop.");
-            break;
-        }
-    }
-    */
 
 
     public void generateDs3_H() throws IOException, ParseException {
@@ -228,11 +174,65 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateInitRequests(final OutputStream outputStream) {
-
+    public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
+        if (ConverterUtil.hasContent(spec.getTypes())) {
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
+                if (ConverterUtil.hasContent(structEntry.getVariables())) {
+                    processTemplate(structEntry, "FreeStruct.ftl", outputStream);
+                }
+            }
+        }
     }
 
-    public void generateResponseStructParsers(final OutputStream outputStream) {
+    private Queue<Struct> getAllStructs() throws ParseException {
+        Queue<Struct> allStructs = new LinkedList<Struct>();
+        if (ConverterUtil.hasContent(spec.getTypes())) {
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                allStructs.add(StructConverter.toStruct(ds3TypeEntry));
+            }
+        }
+        return allStructs;
+    }
+
+    // Generate TypeResponse parsers
+    //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
+    private int size;
+    private int counter;
+    private Queue<Struct> getStructParsersOrderedList() throws ParseException {
+        Queue<Struct> orderedStructs = new LinkedList();
+        Queue<Struct> allStructs = getAllStructs();
+        size = allStructs.size();
+        while (!allStructs.isEmpty()) {
+            counter = 0;
+            Struct structEntry = allStructs.peek();
+            if (ConverterUtil.hasContent(structEntry.getVariables())) {
+                if (orderedStructs.contains(structEntry)) {
+                    continue;
+                }
+
+                if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, orderedStructs)) {
+                    orderedStructs.add(allStructs.remove());
+                }
+            }
+            counter++;
+            if (counter > size) {
+                LOG.error("Iterated through all remaining structs and made no progress, aborting.");
+                break;
+            }
+        }
+
+        return orderedStructs;
+    }
+
+    public void generateResponseStructParsers(final OutputStream outputStream) throws ParseException, IOException {
+        Queue<Struct> orderedParsersList = getStructParsersOrderedList();
+        for (final Struct structEntry : orderedParsersList) {
+            processTemplate(structEntry, "ResponseParser.ftl", outputStream);
+        }
+    }
+
+    public void generateInitRequests(final OutputStream outputStream) {
 
     }
 
@@ -260,17 +260,6 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
-                if (ConverterUtil.hasContent(structEntry.getVariables())) {
-                    processTemplate(structEntry, "FreeStruct.ftl", outputStream);
-                }
-            }
-        }
-    }
-
     public void processTemplate(final Object obj, final String templateName, final OutputStream outputStream) throws IOException {
         final Template template = config.getTemplate(templateName);
 
@@ -283,54 +272,4 @@ public class CCodeGenerator implements CodeGenerator {
             LOG.error("Encountered TemplateException while processing template " + templateName, e);
         }
     }
-
-    /*
-    private void generateCommands() throws IOException, TemplateException {
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                if (ConverterUtil.hasContent(typeEntry.getEnumConstants())) {
-                    generateTypeTemplate(typeEntry, "TypedefEnum.ftl");
-                    generateTypeTemplate(typeEntry, "TypedefEnumMatcher.ftl");
-                }
-            }
-
-            // Generate TypeResponse parsers
-            //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-            final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
-            LOG.debug(generatedTypesResponses.build().size() + " vs " + spec.getTypes().values().size());
-            for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
-                for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                    if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                        final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                        if (generatedTypesResponses.build().contains(typeEntry.getName())) {
-                            continue;
-                        }
-
-                        if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
-                            generateTypeTemplate(typeEntry, "ResponseParser.ftl");
-                            generatedTypesResponses.add(typeEntry.getName());
-                        }
-                    }
-                }
-                if (depth > 6) {
-                    LOG.warn("generating ResponseParsers up to depth " + depth + ", warning for potential infinite loop.");
-                    break;
-                }
-            }
-
-            // Generate Element Types
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                    final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                    generateTypeTemplate(typeEntry, "TypedefStruct.ftl");
-                    generateTypeTemplate(typeEntry, "FreeStructPrototype.ftl");
-                    generateTypeTemplate(typeEntry, "FreeStruct.ftl");
-                }
-            }
-        }
-
-        // Generate Requests last because they depend on the code generated above
-    }
-    */
 }
