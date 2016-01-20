@@ -24,12 +24,10 @@ import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
-import com.spectralogic.ds3autogen.c.converters.TypeConverter;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Struct;
-import com.spectralogic.ds3autogen.c.models.Type;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
@@ -45,6 +43,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -62,6 +61,14 @@ public class CCodeGenerator implements CodeGenerator {
         config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
     }
 
+    public void setFileUtils(final FileUtils fileUtils) {
+        this.fileUtils = fileUtils;
+    }
+
+    public void setSpec(final Ds3ApiSpec spec) {
+        this.spec = spec;
+    }
+
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
         this.spec = spec;
@@ -72,10 +79,12 @@ public class CCodeGenerator implements CodeGenerator {
             generateDs3_C();
         } catch (final TemplateException e) {
             e.printStackTrace();
+        } catch (final ParseException e) {
+            e.printStackTrace();
         }
     }
 
-    private Queue<Struct> getAllStructs() {
+    private Queue<Struct> getAllStructs() throws ParseException {
         Queue<Struct> allStructs = new LinkedList<Struct>();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
@@ -87,7 +96,7 @@ public class CCodeGenerator implements CodeGenerator {
 
     // Generate TypeResponse parsers
     //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-    public Queue<Struct> getStructParsersOrderedList() {
+    public Queue<Struct> getStructParsersOrderedList() throws ParseException {
         Queue<Struct> orderedStructs = new LinkedList();
         Queue<Struct> allStructs = getAllStructs();
         while (!allStructs.isEmpty()) {
@@ -131,7 +140,7 @@ public class CCodeGenerator implements CodeGenerator {
     */
 
 
-    private void generateDs3_H() throws IOException {
+    public void generateDs3_H() throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
@@ -139,7 +148,7 @@ public class CCodeGenerator implements CodeGenerator {
         generateEnums(outputStream);
 
         // ResponseStructs
-        generateResponseStructs(outputStream);
+        generateTypedefStructs(outputStream);
 
         // InitFunctionPrototypes
         generateInitRequestPrototypes(outputStream);
@@ -151,30 +160,28 @@ public class CCodeGenerator implements CodeGenerator {
         generateFreeResponseStructPrototypes(outputStream);
     }
 
-    private void generateEnums(final OutputStream outputStream) throws IOException {
+    public void generateEnums(final OutputStream outputStream) throws IOException {
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
                 if (ConverterUtil.hasContent(enumEntry.getValues())) {
                     processTemplate(enumEntry, "TypedefEnum.ftl", outputStream);
-                    //generateTypeTemplate(typeEntry, "TypedefEnumMatcher.ftl");
                 }
             }
         }
     }
 
-    private void generateResponseStructs(final OutputStream outputStream) throws IOException {
+    public void generateTypedefStructs(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
             if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                processTemplate(typeEntry, "TypedefStruct.ftl", outputStream);
-                //generateTypeTemplate(typeEntry, "FreeStruct.ftl");
+                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
+                processTemplate(structEntry, "TypedefStruct.ftl", outputStream);
             }
         }
 
     }
 
-    private void generateInitRequestPrototypes(final OutputStream outputStream) {
+    public void generateInitRequestPrototypes(final OutputStream outputStream) {
 
     }
 
@@ -182,7 +189,7 @@ public class CCodeGenerator implements CodeGenerator {
 
     }
 
-    private void generateFreeResponseStructPrototypes(final OutputStream outputStream) throws IOException {
+    public void generateFreeResponseStructPrototypes(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
             if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
                 final Struct struct = StructConverter.toStruct(ds3TypeEntry);
@@ -191,7 +198,7 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    private void generateDs3_C() throws IOException, TemplateException {
+    public void generateDs3_C() throws IOException, TemplateException, ParseException {
         final Path path = Paths.get("src/ds3.c");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
@@ -210,7 +217,7 @@ public class CCodeGenerator implements CodeGenerator {
         generateStructFreeFunctions(outputStream);
     }
 
-    private void generateEnumMatchers(final OutputStream outputStream) throws IOException {
+    public void generateEnumMatchers(final OutputStream outputStream) throws IOException {
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
@@ -221,15 +228,15 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    private void generateInitRequests(final OutputStream outputStream) {
+    public void generateInitRequests(final OutputStream outputStream) {
 
     }
 
-    private void generateResponseStructParsers(final OutputStream outputStream) {
+    public void generateResponseStructParsers(final OutputStream outputStream) {
 
     }
 
-    private void generateRequests(final OutputStream outputStream) throws IOException, TemplateException {
+    public void generateRequests(final OutputStream outputStream) throws IOException, TemplateException {
         if (ConverterUtil.hasContent(spec.getRequests())) {
             for (final Ds3Request ds3Request : spec.getRequests()) {
                 String requestTemplateName = null;
@@ -253,12 +260,12 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    private void generateStructFreeFunctions(final OutputStream outputStream) throws IOException {
+    public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
-                if (ConverterUtil.hasContent(enumEntry.getValues())) {
-                    processTemplate(enumEntry, "FreeStruct.ftl", outputStream);
+                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
+                if (ConverterUtil.hasContent(structEntry.getVariables())) {
+                    processTemplate(structEntry, "FreeStruct.ftl", outputStream);
                 }
             }
         }

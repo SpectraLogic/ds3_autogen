@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.ParseException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -35,7 +36,7 @@ public class CCodeGenerator_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
-    public void testSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void testGenerateSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -55,19 +56,21 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeEnumConstant() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void testGenerateSingleTypedefEnum() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
-        final CodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypedefEnum.xml"));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateEnums(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
+
         assertTrue(output.contains("typedef enum {"));
         assertTrue(output.contains("    IN_PROGRESS,"));
         assertTrue(output.contains("    COMPLETED,"));
@@ -77,19 +80,21 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeEnumConstantMatcher() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void testGenerateSingleTypeEnumConstantMatcher() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeEnumConstant.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypedefEnum.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateEnumMatchers(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
+
         assertTrue(output.contains("static ds3_job_status _match_ds3_job_status(const ds3_log* log, const xmlChar* text) {"));
         assertTrue(output.contains("    if (xmlStrcmp(text, (const xmlChar*) \"IN_PROGRESS\") == 0) {"));
         assertTrue(output.contains("        return IN_PROGRESS;"));
@@ -102,21 +107,22 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void testGenerateSimpleTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateTypedefStructs(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("typedef enum {"));
+        assertTrue(output.contains("typedef struct {"));
         assertTrue(output.contains("    ds3_str* api_version;"));
         assertTrue(output.contains("    ds3_bool backend_activated;"));
         assertTrue(output.contains("    ds3_build_information_response* build_information;"));
@@ -125,54 +131,59 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSingleFreeTypeElementPrototype() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void testSingleFreeStructPrototype() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateFreeResponseStructPrototypes(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_system_information_api_bean_response_free(ds3_system_information_api_bean_response* response_data);"));
+        assertTrue(output.contains("void ds3_user_api_bean_response_free(ds3_user_api_bean_response* response_data);"));
     }
 
     @Test
-    public void testSingleFreeTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void testSingleFreeTypeElement() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/TypeElement.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-
-        codeGenerator.generate(spec, fileUtils, null);
+        codeGenerator.setFileUtils(fileUtils);
+        codeGenerator.setSpec(spec);
+        codeGenerator.generateStructFreeFunctions(fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_system_information_api_bean_response_free(ds3_system_information_api_bean_response* response_data) {"));
+        assertTrue(output.contains("void ds3_user_api_bean_response_free(ds3_user_api_bean_response* response_data) {"));
         assertTrue(output.contains("    if (response_data == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
-        assertTrue(output.contains("    ds3_str_free(response_data->api_version);"));
-        assertTrue(output.contains("    ds3_build_information_response_free(response_data->build_information);"));
-        assertTrue(output.contains("    ds3_str_free(response_data->serial_number);"));
+
+        assertTrue(output.contains("    ds3_str_free(response_data->display_name);"));
+        assertTrue(output.contains("    ds3_str_free(response_data->id);"));
+
+        assertTrue(output.contains("    g_free(response_data);"));
         assertTrue(output.contains("}"));
     }
 
+    /*
     @Test
     public void testSimpleElementResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleResponseType.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/SimpleTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, null);
@@ -204,7 +215,7 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/EmbeddedResponseType.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/ComplexTypedefStruct.xml"));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, null);
@@ -214,4 +225,5 @@ public class CCodeGenerator_Test {
 
         LOG.info("Generated code:\n" + output);
     }
+    */
 }

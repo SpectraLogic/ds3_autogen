@@ -1,0 +1,15 @@
+<Data>
+   <Contract>
+       <Types>
+           <Type Name="com.spectralogic.s3.server.domain.JobStatus">
+               <Elements/>
+               <EnumConstants>
+                   <EnumConstant Name="IN_PROGRESS"/>
+                   <EnumConstant Name="COMPLETED"/>
+                   <EnumConstant Name="CANCELED"/>
+               </EnumConstants>
+           </Type>
+       </Types>
+   </Contract>
+</Data>
+

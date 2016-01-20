@@ -1,5 +1,3 @@
-<#include "CopyrightHeader.ftl"/>
-
-typedef enum {
-${getTypeHelper().getTypeElementsList(getElements())}
-}${getTypeHelper().getResponseTypeName(name)};
+typedef struct {
+${getStructHelper().generateStructMembers(variables)}
+}${getStructHelper().getResponseTypeName(name)};

@@ -6,6 +6,8 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 
+import java.text.ParseException;
+
 public class StructConverter {
     private final Ds3Type ds3Type;
 
@@ -13,14 +15,14 @@ public class StructConverter {
         this.ds3Type = ds3Type;
     }
 
-    private Struct convert() {
+    private Struct convert() throws ParseException {
         ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(this.ds3Type.getElements());
         return new Struct(
                 this.ds3Type.getName(),
                 variablesList);
     }
 
-    public static Struct toStruct(final Ds3Type ds3Type) {
+    public static Struct toStruct(final Ds3Type ds3Type) throws ParseException {
         final StructConverter converter = new StructConverter(ds3Type);
         return converter.convert();
     }

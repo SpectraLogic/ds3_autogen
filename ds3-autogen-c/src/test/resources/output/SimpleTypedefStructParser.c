@@ -7,8 +7,6 @@
              owner->name = xml_get_string(doc, child_node);
          } else if (element_equal(child_node, "ID")) {
              owner->id = xml_get_string(doc, child_node);
-         } else {
-             ds3_log_message(log, DS3_ERROR, "Unknown element: (%s)\n", child_node->name);
          }
      }
 

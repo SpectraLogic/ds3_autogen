@@ -2,6 +2,8 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,14 @@ public class EnumHelper {
         return enumHelper;
     }
 
+    public static String getNameUnderscores(final String name) {
+        return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(Helper.unqualifiedName(name)));
+    }
+
+    public static String getDs3Type(final String name) {
+        return "ds3_" + getNameUnderscores(name);
+    }
+
     public static String getEnumValues(final ImmutableList<String> enumValues) {
         if (isEmpty(enumValues)) {
             return "";
@@ -31,29 +41,31 @@ public class EnumHelper {
     }
 
     public static ImmutableList<String> convertDs3EnumConstants(final ImmutableList<Ds3EnumConstant> enums) {
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Ds3EnumConstant currentEnum : enums) {
-            builder.add(currentEnum.getName());
+        final ImmutableList.Builder<String> stringListBuilder = ImmutableList.builder();
+        if (ConverterUtil.hasContent(enums)) {
+            for (final Ds3EnumConstant currentEnum : enums) {
+                stringListBuilder.add(currentEnum.getName());
+            }
         }
-        return builder.build();
+        return stringListBuilder.build();
     }
 
     public static String generateMatcher(final ImmutableList<String> enumValues) {
         final StringBuilder outputBuilder = new StringBuilder();
-        final int numConstants = enumValues.size();
+        final int numEnumValues = enumValues.size();
 
-        if (numConstants <= 0) {
+        if (numEnumValues <= 0) {
             return "";
         }
 
-        for (int currentIndex = 0; currentIndex < numConstants; currentIndex++) {
+        for (int currentEnum = 0; currentEnum < numEnumValues; currentEnum++) {
             outputBuilder.append(indent(1));
 
-            if (currentIndex > 0) {
+            if (currentEnum > 0) {
                 outputBuilder.append("} else ");
             }
 
-            final String currentEnumName = enumValues.get(currentIndex);
+            final String currentEnumName = enumValues.get(currentEnum);
             outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").
                     append(currentEnumName).
                     append("\") == 0) {").append("\n");
@@ -62,14 +74,19 @@ public class EnumHelper {
                     append(";").append("\n");
         }
 
+        //  Shouldn't need this else, since we are autogenerating from all possible values.
+        //    Leaving these lines commented out until we're sure we don't need to deal with this situation.
+        /*
         final String enumName = enumValues.get(0);
-        outputBuilder.append(indent(1)).append("} else {").append("\n"); // Shouldn't need this else, since we are autogenerating from all possible values.
+        outputBuilder.append(indent(1)).append("} else {").append("\n");
         outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").
                 append(enumName).
                 append(" for safety.").append("\n");
         outputBuilder.append(indent(2)).append("return ").
                 append(enumName).
                 append(";").append("\n"); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+        */
+
         outputBuilder.append(indent(1)).append("}").append("\n");
         return outputBuilder.toString();
     }

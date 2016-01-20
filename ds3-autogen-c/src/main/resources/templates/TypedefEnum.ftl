@@ -1,5 +1,3 @@
-<#include "CopyrightHeader.ftl"/>
-
 typedef enum {
-${getTypeHelper().getEnumValues(enumConstants)}
-}${getTypeHelper().getDs3Type(name)};
+${getEnumHelper().getEnumValues(values)}
+}${getEnumHelper().getDs3Type(name)};

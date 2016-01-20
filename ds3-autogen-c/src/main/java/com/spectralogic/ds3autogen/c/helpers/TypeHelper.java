@@ -77,7 +77,7 @@ public final class TypeHelper {
 
         for (final Element element : elements) {
             outputBuilder.append(indent(1)).
-                    append(ElementHelper.getDs3Type(element)).
+                    append(ElementHelper.getDs3TypeName(element)).
                     append(" ").
                     append(ElementHelper.getNameUnderscores(element.getName())).
                     append(";").

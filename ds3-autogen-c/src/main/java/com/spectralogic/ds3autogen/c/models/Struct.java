@@ -16,7 +16,7 @@ public class Struct {
             final String name,
             final ImmutableList<StructMember> variables) {
         this.name = name;
-        this.variables = variables; //StructHelper.convertDs3Elements(elements);
+        this.variables = variables;
         this.structHelper = StructHelper.getInstance();
     }
 

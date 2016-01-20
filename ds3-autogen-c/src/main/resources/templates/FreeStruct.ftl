@@ -1,11 +1,9 @@
-<#include "CopyrightHeader.ftl"/>
-
-void ${getTypeHelper().getFreeFunctionName(name)}(${getTypeHelper().getResponseTypeName(name)}* response_data) {
+void ${getStructHelper().getFreeFunctionName(name)}(${getStructHelper().getResponseTypeName(name)}* response_data) {
     if (response_data == NULL) {
         return;
     }
 
-${getTypeHelper().generateFreeTypeElementMembers(getElements())}
+${getStructHelper().generateFreeStructMembers(getVariables())}
 
     g_free(response_data);
 }
