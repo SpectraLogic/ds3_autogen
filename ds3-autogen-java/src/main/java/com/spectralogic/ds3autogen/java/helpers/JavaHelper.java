@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
+import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.isBulkRequestArg;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
@@ -45,21 +47,10 @@ public final class JavaHelper {
 
     private final static JavaHelper javaHelper = new JavaHelper();
 
-    private final static ImmutableSet<String> bulkBaseClassArgs = ImmutableSet.of("Priority", "WriteOptimization", "BucketName");
-
     private JavaHelper() {}
 
     public static JavaHelper getInstance() {
         return javaHelper;
-    }
-
-    /**
-     * Determines if the name of an argument is a parameter within the parent class BulkRequest.
-     * This is used to determine if a private variable needs to be created within a bulk child
-     * class or if said variable is inherited from the parent BulkRequest class.
-     */
-    public static boolean isBulkRequestArg(final String argName) {
-        return bulkBaseClassArgs.contains(argName);
     }
 
     /**
@@ -113,7 +104,7 @@ public final class JavaHelper {
      */
     public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
         final StringBuilder stringBuilder = new StringBuilder();
-        if (bulkBaseClassArgs.contains(arg.getName())) {
+        if (isBulkRequestArg(arg.getName())) {
             stringBuilder.append(indent(1)).append("@Override\n").append(withConstructorFirstLine(arg, requestName)).append(indent(2)).append("super.with").append(capFirst(arg.getName())).append("(").append(uncapFirst(arg.getName())).append(");\n");
         } else if (arg.getName().equals("MaxUploadSize")) {
             stringBuilder.append(maxUploadSizeWithConstructor(arg, requestName));
@@ -284,6 +275,16 @@ public final class JavaHelper {
                 .stream()
                 .map(i -> uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Gets the type of a variable, converting the type from Contract type to Java type.
+     * @param var A variable
+     * @return The Java type of the Variable
+     */
+    public static String getType(final Variable var) {
+        final Arguments arg = new Arguments(var.getType(), var.getName());
+        return getType(arg);
     }
 
     /**

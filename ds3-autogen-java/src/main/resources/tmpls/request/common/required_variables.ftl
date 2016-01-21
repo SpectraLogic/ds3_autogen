@@ -1,3 +1,3 @@
-    <#list constructorArguments as arg>
-    private final ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
+    <#list classVariables as var>
+    private <#if var.isRequired() == true>final </#if>${javaHelper.getType(var)} ${var.getName()?uncap_first};
     </#list>
