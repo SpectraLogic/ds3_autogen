@@ -90,7 +90,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport());
+            builder.add(getParentImport(ds3Request));
         }
 
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
@@ -109,7 +109,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * Returns the import for the parent class for standard requests, which
      * is AbstractRequest
      */
-    protected String getParentImport() {
+    protected String getParentImport(final Ds3Request ds3Request) {
         return ABSTRACT_REQUEST_IMPORT;
     }
 
@@ -156,7 +156,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * @param ds3Request A Ds3Request
      * @return A list of required Arguments
      */
-    protected static ImmutableList<Arguments> toRequiredArgumentsList(
+    protected ImmutableList<Arguments> toRequiredArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
         requiredArgs.addAll(toArgumentsList(ds3Request.getRequiredQueryParams()));

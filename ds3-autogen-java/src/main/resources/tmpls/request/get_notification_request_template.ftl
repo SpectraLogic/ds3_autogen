@@ -2,15 +2,7 @@
 
 package ${packageName};
 
-<#if javaHelper.isSpectraDs3(packageName)>
-import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
-</#if>
-import java.util.UUID;
-<#list imports as import>
-<#if import != "java.util.UUID">
-import ${import};
-</#if>
-</#list>
+<#include "../imports.ftl"/>
 
 public class ${name} extends AbstractGetNotificationRequest {
 

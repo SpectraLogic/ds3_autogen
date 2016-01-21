@@ -41,7 +41,7 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * Returns the import for the parent class for bulk requests, which is BulkRequest
      */
     @Override
-    protected String getParentImport() {
+    protected String getParentImport(final Ds3Request ds3Request) {
         return BULK_REQUEST_IMPORT;
     }
 

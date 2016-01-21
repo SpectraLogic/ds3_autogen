@@ -25,9 +25,7 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
-import com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator;
-import com.spectralogic.ds3autogen.java.generators.requestmodels.RequestModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -422,12 +420,10 @@ public class JavaCodeGenerator implements CodeGenerator {
             //return config.getTemplate("request/get_object_template.ftl");
         } else if (isCreateObjectRequest(ds3Request)) {
             //return config.getTemplate("request/create_object_template.ftl");
-        } else if (isDeleteNotificationRequest(ds3Request)) {
-            //return config.getTemplate("request/delete_notification_request_template.ftl");
         } else if (isCreateNotificationRequest(ds3Request)) {
-            //return config.getTemplate("request/create_notification_request_template.ftl");
-        } else if (isGetNotificationRequest(ds3Request)) {
-            //return config.getTemplate("request/get_notification_request_template.ftl");
+            return new CreateNotificationRequestGenerator();
+        } else if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
+            return new NotificationRequestGenerator();
         } else {
             //return config.getTemplate("request/request_template.ftl");
         }

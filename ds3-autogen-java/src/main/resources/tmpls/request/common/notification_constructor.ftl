@@ -6,4 +6,5 @@
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
 <#include "constructor_get_query_params.ftl"/>
+
     }
