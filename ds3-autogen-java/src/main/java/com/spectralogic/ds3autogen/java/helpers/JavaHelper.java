@@ -335,7 +335,7 @@ public final class JavaHelper {
             return "";
         }
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Arguments arg : arguments) {
+        for (final Arguments arg : sortConstructorArgs(arguments)) {
             if (arg.getName().equals(modifyArgName)) {
                 builder.add(toArgName);
             } else {
