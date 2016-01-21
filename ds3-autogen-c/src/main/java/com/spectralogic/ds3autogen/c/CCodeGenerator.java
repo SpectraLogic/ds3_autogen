@@ -204,7 +204,7 @@ public class CCodeGenerator implements CodeGenerator {
         int count = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
-            Struct structEntry = allStructs.peek();
+            final Struct structEntry = allStructs.peek();
             if (orderedStructs.contains(structEntry)) {
                 continue;
             }
@@ -233,7 +233,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateResponseStructParsers(final OutputStream outputStream) throws ParseException, IOException {
-        Queue<Struct> orderedParsersList = getStructParsersOrderedList();
+        final Queue<Struct> orderedParsersList = getStructParsersOrderedList();
         for (final Struct structEntry : orderedParsersList) {
             processTemplate(structEntry, "ResponseParser.ftl", outputStream);
         }
