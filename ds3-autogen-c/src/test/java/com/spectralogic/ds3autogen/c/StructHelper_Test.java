@@ -21,6 +21,8 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
@@ -30,6 +32,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StructHelper_Test {
+    final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
+
     @Test
     public void testStructMemberTypeStringToString() throws ParseException {
         final Ds3Element testElement = new Ds3Element("stringElement", "java.lang.String", null);
@@ -128,11 +132,12 @@ public class StructHelper_Test {
 
         final Struct testStruct = new Struct("testStruct", StructHelper.convertDs3Elements(elementsList));
         final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getVariables());
-        assertTrue(output.contains("        if (element_equal(child_node, \"BoolElement\")) {"));
-        assertTrue(output.contains("            ds3_test_struct_response->bool_element = xml_get_bool(doc, child_node);"));
-        assertTrue(output.contains("        } else if (element_equal(child_node, \"BeanElement\")) {"));
-        assertTrue(output.contains("            ds3_test_struct_response->bean_element = _parse_ds3_bean_element_response(log, doc, child_node);"));
-        assertTrue(output.contains("        }"));
+        LOG.info("Generated code:\n" + output);
+        assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
+        assertTrue(output.contains("        response->bool_element = xml_get_bool(doc, child_node);"));
+        assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
+        assertTrue(output.contains("        response->bean_element = _parse_ds3_bean_element_response(log, doc, child_node);"));
+        assertTrue(output.contains("    }"));
     }
 
     /* Commented out until functionality for Arrays and Sets is implemented.
