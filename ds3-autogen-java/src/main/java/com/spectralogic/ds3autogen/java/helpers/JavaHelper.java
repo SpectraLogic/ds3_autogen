@@ -596,4 +596,24 @@ public final class JavaHelper {
         }
         return builder.build();
     }
+
+    /**
+     * Removes a specified variable from a list of variables
+     */
+    public static ImmutableList<Variable> removeVariable(
+            final ImmutableList<Variable> vars,
+            final String varName) {
+        if (isEmpty(vars)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
+
+        for (final Variable var : vars) {
+            if (!var.getName().equals(varName)) {
+                builder.add(var);
+            }
+        }
+        return builder.build();
+    }
 }

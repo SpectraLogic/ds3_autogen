@@ -710,7 +710,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void createAllResponseResultGetters_List_Test() {
+    public void createAllResponseResultGetters_FullList_Test() {
         final String getterSimpleType =
                 "    public SystemFailure getSystemFailureResult() {\n" +
                 "        return this.systemFailureResult;\n" +
@@ -734,5 +734,34 @@ public class JavaHelper_Test {
         final String result = createAllResponseResultGetters(responseCodes);
         assertTrue(result.contains(getterSimpleType));
         assertTrue(result.contains(getterCompositeType));
+    }
+
+    @Test
+    public void removeVariable_NullList_Test() {
+        final ImmutableList<Variable> result = removeVariable(null, "test");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVariable_EmptyList_Test() {
+        final ImmutableList<Variable> result = removeVariable(ImmutableList.of(), "test");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVariable_FullList_Test() {
+        final ImmutableList<Variable> variables = ImmutableList.of(
+                new Variable("Name", "Type", false),
+                new Variable("Name2", "Type2", false));
+
+        final ImmutableList<Variable> nullVarName = removeVariable(variables, null);
+        assertThat(nullVarName.size(), is(2));
+
+        final ImmutableList<Variable> emptyVarName = removeVariable(variables, "");
+        assertThat(emptyVarName.size(), is(2));
+
+        final ImmutableList<Variable> result = removeVariable(variables, "Name");
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("Name2"));
     }
 }

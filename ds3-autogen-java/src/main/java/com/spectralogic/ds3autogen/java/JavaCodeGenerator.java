@@ -413,19 +413,17 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         } else if (isPhysicalPlacementRequest(ds3Request)) {
-            //return config.getTemplate("request/physical_placement_request_template.ftl");
+            return new PhysicalPlacementRequestGenerator();
         } else if (isMultiFileDeleteRequest(ds3Request)) {
             //return config.getTemplate("request/multi_file_delete_request_template.ftl");
         } else if (isGetObjectRequest(ds3Request)) {
             //return config.getTemplate("request/get_object_template.ftl");
         } else if (isCreateObjectRequest(ds3Request)) {
-            //return config.getTemplate("request/create_object_template.ftl");
+            return new CreateObjectRequestGenerator();
         } else if (isCreateNotificationRequest(ds3Request)) {
             return new CreateNotificationRequestGenerator();
         } else if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
             return new NotificationRequestGenerator();
-        } else {
-            //return config.getTemplate("request/request_template.ftl");
         }
         return new BaseRequestGenerator();
     }
