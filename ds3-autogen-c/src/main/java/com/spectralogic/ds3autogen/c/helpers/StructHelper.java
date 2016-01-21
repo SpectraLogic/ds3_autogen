@@ -5,11 +5,12 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.Queue;
+import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
@@ -41,28 +42,6 @@ public class StructHelper {
 
     public static String getFreeFunctionName(final String name) {
         return getResponseTypeName(name) + "_free";
-    }
-
-    public static String getParser(final StructMember structMember) throws ParseException {
-        switch (structMember.getType()) {
-            case "ds3_str*":
-                return "xml_get_string(doc, child_node);";
-            case "double":
-            case "long":
-                return "xml_get_uint64(doc, child_node);";
-            case "int":
-                return "xml_get_uint16(doc, child_node);";
-            case "ds3_bool":
-                return "xml_get_bool(doc, child_node);";
-
-            case "java.util.Set":
-            case "array":
-                //throw new ParseException("Unknown element type" + getType(), 0);
-                return "Skipping Array / Set Element";
-
-            default:
-                return getParserFunctionName(structMember.getName()) + "(log, doc, child_node);";
-        }
     }
 
     public static String getFreeFunction(final StructMember structMember) throws ParseException {
@@ -106,7 +85,7 @@ public class StructHelper {
                 return "int";
             case "java.util.Set":
             case "array":
-                return getResponseTypeName(element.getType()) + "**";
+                return getResponseTypeName(element.getComponentType()) + "**";
 
             default:
                 return getResponseTypeName(element.getType()) + "*";
@@ -139,20 +118,15 @@ public class StructHelper {
     public static ImmutableList<StructMember> convertDs3Elements(ImmutableList<Ds3Element> elementsList) throws ParseException {
         final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elementsList) {
-            String type;
-            if (currentElement.getType().equals("array")) {
-                type = currentElement.getComponentType();
-            } else {
-                type = currentElement.getType();
-            }
             builder.add(new StructMember(convertDs3ElementType(currentElement), getNameUnderscores(currentElement.getName())));
         }
         return builder.build();
     }
 
-    public static boolean containsExistingStructs(final Struct struct, final Queue existingStructs) {
+    public static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
         for (final StructMember structMember: struct.getVariables()) {
-            if (!existingStructs.contains(structMember.getType())) {
+            final String testType = StringUtils.stripEnd(structMember.getType(), "*");
+            if (!existingStructs.contains(testType)) {
                 return false;
             }
         }
@@ -174,25 +148,60 @@ public class StructHelper {
         return outputBuilder.toString();
     }
 
-    public static String generateResponseParser(final String name, final ImmutableList<StructMember> variables) throws ParseException {
+    public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
+        final StringBuilder outputBuilder = new StringBuilder();
+        outputBuilder.append(indent(3)).
+                append("response->").
+                append(Helper.camelToUnderscore(structMember.getName())).
+                append(" = ").
+                append(parserFunction).append("\n");
+        return outputBuilder.toString();
+    }
+
+
+    public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
+        final StringBuilder outputBuilder = new StringBuilder();
+        outputBuilder.append(indent(3)).append("GPtrArray* ").append(structMember.getName()).append("_array = _parse_").append(structResponseTypeName).append("(log, doc, child_node);\n").
+                append(indent(3)).append("response").append("->").append(structMember.getName()).append(" = (").append(structMember.getType()).append(")").append(structMember.getName()).append("_array->pdata;\n").
+                append(indent(3)).append("response").append("->num_").append(structMember.getName()).append(" = ").append(structMember.getName()).append("_array->len;\n").
+                append(indent(3)).append("g_ptr_array_free(").append(structMember.getName()).append("_array, FALSE);\n");
+        return outputBuilder.toString();
+    }
+
+    public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
+        switch (structMember.getType()) {
+            case "ds3_str*":
+                return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
+            case "double":
+            case "long":
+                return generateStructMemberParserLine(structMember, "xml_get_uint64(doc, child_node);");
+            case "int":
+                return generateStructMemberParserLine(structMember, "xml_get_uint16(doc, child_node);");
+            case "ds3_bool":
+                return generateStructMemberParserLine(structMember, "xml_get_bool(doc, child_node);");
+
+            default:
+                if (structMember.getType().endsWith("**")) { // array of another type
+                    return generateStructMemberArrayParserBlock(getResponseTypeName(structName), structMember);
+                }
+                return generateStructMemberParserLine(structMember, getParserFunctionName(structMember.getName()) + "(log, doc, child_node);");
+        }
+    }
+
+    public static String generateResponseParser(final String structName, final ImmutableList<StructMember> variables) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
-        for (int currentStructMember = 0; currentStructMember < variables.size(); currentStructMember++) {
-            outputBuilder.append(indent(3));
+        for (int structMemberIndex = 0; structMemberIndex < variables.size(); structMemberIndex++) {
+            outputBuilder.append(indent(2));
 
-            if (currentStructMember > 0) {
+            if (structMemberIndex > 0) {
                 outputBuilder.append("} else ");
             }
 
-            final String currentStructMemberName = variables.get(currentStructMember).getName();
+            final StructMember currentStructMember = variables.get(structMemberIndex);
 
-            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMemberName)).append("\")) {").append("\n");
-            outputBuilder.append(indent(4)).
-                    append(getResponseTypeName(name)).
-                    append("->").
-                    append(Helper.camelToUnderscore(currentStructMemberName)).
-                    append(" = ").
-                    append(getParser(variables.get(currentStructMember))).append("\n");
+            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
+            outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember));
         }
         // TODO Leaving the catch case commented out unless needed.
         /*
@@ -200,7 +209,7 @@ public class StructHelper {
         outputBuilder.append(indent(4)).
                 append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
         */
-        outputBuilder.append(indent(3)).append("}").append("\n");
+        outputBuilder.append(indent(2)).append("}").append("\n");
 
         return outputBuilder.toString();
     }

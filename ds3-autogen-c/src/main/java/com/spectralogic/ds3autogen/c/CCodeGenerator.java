@@ -44,8 +44,10 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -83,8 +85,6 @@ public class CCodeGenerator implements CodeGenerator {
             e.printStackTrace();
         }
     }
-
-
 
     public void generateDs3_H() throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
@@ -197,28 +197,38 @@ public class CCodeGenerator implements CodeGenerator {
 
     // Generate TypeResponse parsers
     //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-    private int size;
-    private int counter;
     private Queue<Struct> getStructParsersOrderedList() throws ParseException {
-        Queue<Struct> orderedStructs = new LinkedList();
+        Queue<Struct> orderedStructs = new LinkedList<>();
         Queue<Struct> allStructs = getAllStructs();
-        size = allStructs.size();
+        Set<String> existingTypes = new HashSet<>();
+        int count = 0;
         while (!allStructs.isEmpty()) {
-            counter = 0;
+            final int allStructsSize = allStructs.size();
             Struct structEntry = allStructs.peek();
-            if (ConverterUtil.hasContent(structEntry.getVariables())) {
-                if (orderedStructs.contains(structEntry)) {
-                    continue;
-                }
-
-                if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, orderedStructs)) {
-                    orderedStructs.add(allStructs.remove());
-                }
+            if (orderedStructs.contains(structEntry)) {
+                LOG.debug("skipping " + structEntry.getName());
+                continue;
             }
-            counter++;
-            if (counter > size) {
-                LOG.error("Iterated through all remaining structs and made no progress, aborting.");
-                break;
+
+            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypes)) {
+                LOG.debug("adding " + structEntry.getName());
+                existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
+                orderedStructs.add(allStructs.remove());
+            } else {  // move to end to come back to
+                LOG.debug("coming back to " + structEntry.getName());
+                allStructs.add(allStructs.remove());
+            }
+
+            if (allStructsSize == allStructs.size()) {
+                count++;
+                if (count == allStructsSize) {
+                    LOG.warn("Unable to progress on remaining structs, aborting!");
+                    LOG.warn("  Remaining structs[" + allStructs.size() + "]");
+                    for (final Struct struct : allStructs) {
+                        LOG.warn("    " + struct.getName());
+                    }
+                    break;
+                }
             }
         }
 
