@@ -206,16 +206,13 @@ public class CCodeGenerator implements CodeGenerator {
             final int allStructsSize = allStructs.size();
             Struct structEntry = allStructs.peek();
             if (orderedStructs.contains(structEntry)) {
-                LOG.debug("skipping " + structEntry.getName());
                 continue;
             }
 
             if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypes)) {
-                LOG.debug("adding " + structEntry.getName());
                 existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructs.add(allStructs.remove());
             } else {  // move to end to come back to
-                LOG.debug("coming back to " + structEntry.getName());
                 allStructs.add(allStructs.remove());
             }
 
