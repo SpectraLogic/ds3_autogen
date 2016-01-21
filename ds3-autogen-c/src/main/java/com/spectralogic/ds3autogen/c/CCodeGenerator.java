@@ -79,9 +79,7 @@ public class CCodeGenerator implements CodeGenerator {
         try {
             generateDs3_H();
             generateDs3_C();
-        } catch (final TemplateException e) {
-            e.printStackTrace();
-        } catch (final ParseException e) {
+        } catch (final TemplateException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -90,57 +88,51 @@ public class CCodeGenerator implements CodeGenerator {
         final Path path = Paths.get("src/ds3.h");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
-        // Enums
         generateEnums(outputStream);
 
-        // ResponseStructs
         generateTypedefStructs(outputStream);
 
-        // InitFunctionPrototypes
         generateInitRequestPrototypes(outputStream);
 
-        // request prototypes
         generateRequestPrototypes(outputStream);
 
-        // Free ResponseStruct prototypes
         generateFreeResponseStructPrototypes(outputStream);
     }
 
     public void generateEnums(final OutputStream outputStream) throws IOException {
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
-                if (ConverterUtil.hasContent(enumEntry.getValues())) {
-                    processTemplate(enumEntry, "TypedefEnum.ftl", outputStream);
-                }
+        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+
+        for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+            final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
+            if (ConverterUtil.hasContent(enumEntry.getValues())) {
+                processTemplate(enumEntry, "TypedefEnum.ftl", outputStream);
             }
         }
     }
 
     public void generateTypedefStructs(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
-                processTemplate(structEntry, "TypedefStruct.ftl", outputStream);
-            }
-        }
+            if (!ConverterUtil.hasContent(ds3TypeEntry.getElements())) continue;
 
+            final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
+            processTemplate(structEntry, "TypedefStruct.ftl", outputStream);
+        }
     }
 
     public void generateInitRequestPrototypes(final OutputStream outputStream) {
-
+        // TODO
     }
 
     private void generateRequestPrototypes(final OutputStream outputStream) {
-
+        // TODO
     }
 
     public void generateFreeResponseStructPrototypes(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                final Struct struct = StructConverter.toStruct(ds3TypeEntry);
-                processTemplate(struct, "FreeStructPrototype.ftl", outputStream);
-            }
+            if (!ConverterUtil.hasContent(ds3TypeEntry.getElements())) continue;
+
+            final Struct struct = StructConverter.toStruct(ds3TypeEntry);
+            processTemplate(struct, "FreeStructPrototype.ftl", outputStream);
         }
     }
 
@@ -148,40 +140,35 @@ public class CCodeGenerator implements CodeGenerator {
         final Path path = Paths.get("src/ds3.c");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
-        // EnumMatchers
         generateEnumMatchers(outputStream);
 
-        // InitRequests functions
         generateInitRequests(outputStream);
 
-        // ResponseStruct parsers
         generateResponseStructParsers(outputStream);
 
-        // Requests
         generateRequests(outputStream);
 
         generateStructFreeFunctions(outputStream);
     }
 
     public void generateEnumMatchers(final OutputStream outputStream) throws IOException {
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
-                if (ConverterUtil.hasContent(enumEntry.getValues())) {
-                    processTemplate(enumEntry, "TypedefEnumMatcher.ftl", outputStream);
-                }
-            }
+        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+
+        for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+            final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
+            if (!ConverterUtil.hasContent(enumEntry.getValues())) continue;
+
+            processTemplate(enumEntry, "TypedefEnumMatcher.ftl", outputStream);
         }
     }
 
     public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
-        if (ConverterUtil.hasContent(spec.getTypes())) {
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
-                if (ConverterUtil.hasContent(structEntry.getVariables())) {
-                    processTemplate(structEntry, "FreeStruct.ftl", outputStream);
-                }
-            }
+        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+        for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+            final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
+            if (!ConverterUtil.hasContent(structEntry.getVariables())) continue;
+
+            processTemplate(structEntry, "FreeStruct.ftl", outputStream);
         }
     }
 
@@ -240,30 +227,30 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateInitRequests(final OutputStream outputStream) {
-
+        // TODO
     }
 
     public void generateRequests(final OutputStream outputStream) throws IOException, TemplateException {
-        if (ConverterUtil.hasContent(spec.getRequests())) {
-            for (final Ds3Request ds3Request : spec.getRequests()) {
-                String requestTemplateName = null;
-                Request request = null;
+        if (!ConverterUtil.hasContent(spec.getRequests())) return;
 
-                if (ds3Request.getClassification() == Classification.amazons3) {
-                    request = RequestConverter.toRequest(ds3Request);
-                    requestTemplateName = "AmazonS3InitRequestHandler.ftl";
-                } else if (ds3Request.getClassification() == Classification.spectrads3) {
-                    LOG.info("AmazonS3 request");
-                    // TODO
-                } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
-                    LOG.debug("Skipping Spectra internal request");
-                    continue;
-                } else {
-                    throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
-                }
+        for (final Ds3Request ds3Request : spec.getRequests()) {
+            String requestTemplateName = null;
+            Request request = null;
 
-                processTemplate(request, requestTemplateName, outputStream);
+            if (ds3Request.getClassification() == Classification.amazons3) {
+                request = RequestConverter.toRequest(ds3Request);
+                requestTemplateName = "AmazonS3InitRequestHandler.ftl";
+            } else if (ds3Request.getClassification() == Classification.spectrads3) {
+                LOG.info("AmazonS3 request");
+                // TODO
+            } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
+                LOG.debug("Skipping Spectra internal request");
+                continue;
+            } else {
+                throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
             }
+
+            processTemplate(request, requestTemplateName, outputStream);
         }
     }
 

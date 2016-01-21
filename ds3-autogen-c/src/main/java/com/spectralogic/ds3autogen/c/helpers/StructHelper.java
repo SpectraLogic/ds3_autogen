@@ -51,11 +51,8 @@ public class StructHelper {
             // The following primitive types don't require a free
             case "uint64_t":
             case "double":
-                return "";
             case "long":
-                return "";
             case "int":
-                return "";
             case "ds3_bool":
                 return "";
 

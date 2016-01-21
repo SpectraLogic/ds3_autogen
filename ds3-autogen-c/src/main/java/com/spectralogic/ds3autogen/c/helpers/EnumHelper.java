@@ -84,7 +84,7 @@ public class EnumHelper {
                 append(" for safety.").append("\n");
         outputBuilder.append(indent(2)).append("return ").
                 append(enumName).
-                append(";").append("\n"); // Special case? How do we determine default "safe" response enum?  Probably not always element 0
+                append(";").append("\n");
         */
 
         outputBuilder.append(indent(1)).append("}").append("\n");

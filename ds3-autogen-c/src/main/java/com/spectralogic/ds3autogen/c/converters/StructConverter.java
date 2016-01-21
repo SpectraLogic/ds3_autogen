@@ -16,7 +16,7 @@ public class StructConverter {
     }
 
     private Struct convert() throws ParseException {
-        ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(this.ds3Type.getElements());
+        final ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(this.ds3Type.getElements());
         return new Struct(
                 this.ds3Type.getName(),
                 variablesList);

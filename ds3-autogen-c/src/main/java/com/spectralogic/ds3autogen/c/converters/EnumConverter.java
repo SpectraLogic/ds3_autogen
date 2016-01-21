@@ -13,7 +13,7 @@ public class EnumConverter {
     }
 
     private Enum convert() {
-        ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(this.ds3Type.getEnumConstants());
+        final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(this.ds3Type.getEnumConstants());
         return new Enum(
                 this.ds3Type.getName(),
                 valuesList);
