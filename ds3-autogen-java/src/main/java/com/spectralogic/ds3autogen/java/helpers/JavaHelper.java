@@ -192,7 +192,7 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates the Java code for putting a query param to the query params lsit.
+     * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
      */
     public static String putQueryParamLine(final Arguments arg) {
@@ -478,7 +478,8 @@ public final class JavaHelper {
                 + uncapFirst(responseType)
                 + "Result = XmlOutput.fromXml(content, "
                 + responseType + ".class);\n"
-                + indent(indent) + "}";
+                + indent(indent) + "}\n"
+                + indent(indent) + "break;";
     }
 
     /**

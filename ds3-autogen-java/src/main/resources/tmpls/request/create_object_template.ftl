@@ -26,13 +26,13 @@ public class ${name} extends AbstractRequest {
      * @deprecated use {@link #${name}(${javaHelper.argTypeList(
                                          helper.addArgument(
                                          helper.addArgument(
-                                         helper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) instead
+                                         helper.addArgument(constructorArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) instead
      */
     @Deprecated
     public ${name}(${javaHelper.constructorArgs(
                      helper.addArgument(
-                     helper.addArgument(requiredArguments, "Size", "long"), "Channel", "SeekableByteChannel"))}) {
-        <#list requiredArguments as arg>
+                     helper.addArgument(constructorArguments, "Size", "long"), "Channel", "SeekableByteChannel"))}) {
+        <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
         this.size = size;
@@ -43,12 +43,12 @@ public class ${name} extends AbstractRequest {
     public ${name}(${javaHelper.constructorArgs(
                      helper.addArgument(
                      helper.addArgument(
-                     helper.addArgument(requiredArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
+                     helper.addArgument(constructorArguments, optionalArguments), "Size", "long"), "Channel", "SeekableByteChannel"))}) {
         this(${javaHelper.modifiedArgNameList(
                helper.addArgument(
                helper.addArgument(
                helper.addArgument(
-                   requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
+                   constructorArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
 
         this.channel = channel;
     }
@@ -57,8 +57,8 @@ public class ${name} extends AbstractRequest {
                      helper.addArgument(
                      helper.addArgument(
                      helper.addArgument(
-                         requiredArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
-            <#list requiredArguments as arg>
+                         constructorArguments, optionalArguments), "Size", "long"), "Stream", "InputStream"))}) {
+            <#list constructorArguments as arg>
             this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
             </#list>
             <#list optionalArguments as arg>

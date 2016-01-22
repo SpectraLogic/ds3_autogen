@@ -1,5 +1,4 @@
-    <#list helper.removeVoidArguments(
-               helper.removeArgument(requiredArguments, "NotificationEndPoint")) as arg>
+    <#list helper.removeArgument(constructorArguments, "NotificationEndPoint") as arg>
     private final ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
     </#list>
 

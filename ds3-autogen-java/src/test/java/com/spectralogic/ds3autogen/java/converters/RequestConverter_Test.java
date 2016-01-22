@@ -75,12 +75,13 @@ public class RequestConverter_Test {
 
     @Test
     public void requestPath_SpectraS3Resource_Test() {
-        final String expectedPath = "\"/_rest_/active_job/\"";
+        final String expectedPath = "\"/_rest_/active_job\"";
         final Ds3Request request = createDs3RequestTestData(
+                "RequestName",
+                Classification.spectrads3,
                 Resource.ACTIVE_JOB,
                 null,
-                "RequestName",
-                Classification.spectrads3);
+                false);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -90,10 +91,11 @@ public class RequestConverter_Test {
     public void requestPath_SpectraS3ResourceWithBucket_Test() {
         final String expectedPath = "\"/_rest_/bucket/\" + this.bucketName";
         final Ds3Request request = createDs3RequestTestData(
+                "RequestName",
+                Classification.spectrads3,
                 Resource.BUCKET,
                 null,
-                "RequestName",
-                Classification.spectrads3);
+                true);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));
@@ -103,10 +105,25 @@ public class RequestConverter_Test {
     public void requestPath_SpectraS3ResourceWithJobChunkId_Test() {
         final String expectedPath = "\"/_rest_/job_chunk/\" + jobChunkId.toString()";
         final Ds3Request request = createDs3RequestTestData(
+                "RequestName",
+                Classification.spectrads3,
                 Resource.JOB_CHUNK,
                 ResourceType.NON_SINGLETON,
+                true);
+
+        final String requestPath = requestPath(request);
+        assertThat(requestPath, is(expectedPath));
+    }
+
+    @Test
+    public void requestPath_SpectraS3ResourceWithJobChunkId_NotInclude_Test() {
+        final String expectedPath = "\"/_rest_/job_chunk\"";
+        final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
-                Classification.spectrads3);
+                Classification.spectrads3,
+                Resource.JOB_CHUNK,
+                ResourceType.NON_SINGLETON,
+                false);
 
         final String requestPath = requestPath(request);
         assertThat(requestPath, is(expectedPath));

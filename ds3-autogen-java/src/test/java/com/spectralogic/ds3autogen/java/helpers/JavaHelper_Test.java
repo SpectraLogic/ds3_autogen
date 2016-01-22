@@ -507,7 +507,8 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "try (final InputStream content = getResponse().getResponseStream()) {\n" +
                 "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
-                "}";
+                "}\n" +
+                "break;";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,

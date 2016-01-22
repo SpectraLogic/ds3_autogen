@@ -2,5 +2,5 @@ dependencies {
     compile project(':ds3-autogen-api')
     compile project(':ds3-autogen-utils')
 
-    testCompile project(':ds3-autogen')
+    testCompile project(':ds3-autogen-parser')
 }

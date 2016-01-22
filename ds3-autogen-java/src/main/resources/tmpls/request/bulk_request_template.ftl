@@ -20,7 +20,7 @@ public class ${name} extends BulkRequest {
     </#if>
     </#list>
 
-    <#list helper.removeVoidArguments(requiredArguments) as arg>
+    <#list constructorArguments as arg>
     ${javaHelper.createBulkVariable(arg, true)}
     </#list>
     <#list optionalArguments as arg>
@@ -29,9 +29,8 @@ public class ${name} extends BulkRequest {
 
     // Constructor
     public ${name}(${javaHelper.constructorArgs(
-        helper.removeVoidArguments(
             helper.addArgument(
-                requiredArguments, "Objects", "List<Ds3Object>")))}) throws XmlProcessingException {
+                constructorArguments, "Objects", "List<Ds3Object>"))}) throws XmlProcessingException {
         super(bucketName, objects);
         <#if operation??>
         this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
@@ -44,7 +43,7 @@ public class ${name} extends BulkRequest {
 ${javaHelper.createWithConstructorBulk(arg, name)}
     </#list>
 
-    <#list helper.removeVoidArguments(requiredArguments) as arg>
+    <#list constructorArguments as arg>
     <#if javaHelper.isBulkRequestArg(arg.getName()) == false>
     public ${javaHelper.getType(arg)} get${arg.getName()?cap_first}() {
         return this.${arg.getName()?uncap_first};
