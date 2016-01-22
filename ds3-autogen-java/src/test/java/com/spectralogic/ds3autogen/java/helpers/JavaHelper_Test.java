@@ -464,15 +464,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void isSpectraDs3_Test() {
-        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
-        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands"));
-
-        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
-        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
-    }
-
-    @Test
     public void isSpectraDs3OrNotification_Test() {
         assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
         assertFalse(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));

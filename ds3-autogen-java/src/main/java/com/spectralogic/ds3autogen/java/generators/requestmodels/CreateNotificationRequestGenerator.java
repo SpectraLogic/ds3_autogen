@@ -24,7 +24,6 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
 
     private final static String ABSTRACT_CREATE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest";
 
-    //TODO write unit test
     /**
      * Returns the import for the parent class for the create notification request,
      * which is AbstractCreateNotificationRequest
@@ -34,7 +33,6 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
         return ABSTRACT_CREATE_NOTIFICATION_REQUEST_IMPORT;
     }
 
-    //TODO write unit test
     /**
      * Gets the list of required Arguments from a Ds3Request, excluding the parameter
      * passed to the abstract class: NotificationEndPoint. This is done to prevent it
@@ -55,7 +53,6 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Gets all the class variables to properly generate the variables and their
      * getter functions, excluding the NotificationEndPoint variable
@@ -77,6 +74,4 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
         }
         return builder.build();
     }
-
-
 }

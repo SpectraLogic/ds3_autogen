@@ -18,39 +18,15 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
-public class BulkRequestGenerator_Test {
+public class CreateObjectRequestGenerator_Test {
 
-    private final static BulkRequestGenerator generator = new BulkRequestGenerator();
-
-    @Test
-    public void isBulkRequestArg_Test() {
-        assertTrue(isBulkRequestArg("Priority"));
-        assertTrue(isBulkRequestArg("WriteOptimization"));
-        assertTrue(isBulkRequestArg("BucketName"));
-        assertFalse(isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
-    }
-
-    @Test
-    public void toClassVariableArguments_Test() {
-        final Ds3Request request = createSimpleTestDs3Request();
-
-        final ImmutableList<Variable> result = generator.toClassVariableArguments(request);
-        assertThat(result.size(), is(4));
-        assertThat(result.get(0).getName(), is("ObjectName"));
-        assertThat(result.get(1).getName(), is("JobId"));
-        assertThat(result.get(2).getName(), is("NotificationEndPoint"));
-        assertThat(result.get(3).getName(), is("RequestType"));
-    }
+    private final static CreateObjectRequestGenerator generator = new CreateObjectRequestGenerator();
 
     @Test
     public void toConstructorArgumentsList_Test() {
@@ -63,12 +39,7 @@ public class BulkRequestGenerator_Test {
         assertThat(result.get(2).getName(), is("JobId"));
         assertThat(result.get(3).getName(), is("Priority"));
         assertThat(result.get(4).getName(), is("NotificationEndPoint"));
-        assertThat(result.get(5).getName(), is("Objects"));
-        assertThat(result.get(5).getType(), is("List<Ds3Object>"));
-    }
-
-    @Test
-    public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.BulkRequest"));
+        assertThat(result.get(5).getName(), is("Size"));
+        assertThat(result.get(5).getType(), is("long"));
     }
 }

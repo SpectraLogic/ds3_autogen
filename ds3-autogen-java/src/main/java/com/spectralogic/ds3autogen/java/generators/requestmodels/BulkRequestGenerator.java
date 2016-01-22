@@ -36,7 +36,6 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
             "BucketName",
             "Objects");
 
-    //TODO unit test
     /**
      * Returns the import for the parent class for bulk requests, which is BulkRequest
      */
@@ -45,7 +44,6 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
         return BULK_REQUEST_IMPORT;
     }
 
-    //TODO unit test
     /**
      * Gets the list of Arguments need to create the request constructor. This includes
      * all non-void required parameters, arguments described within the request header
@@ -62,7 +60,6 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Gets all the class variables to properly generate the variables and their
      * getter functions. This includes all arguments described within the optional
@@ -86,7 +83,6 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Determines if the name of an argument is a parameter within the parent class BulkRequest.
      * This is used to determine if a private variable needs to be created within a bulk child

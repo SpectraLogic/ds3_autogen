@@ -24,7 +24,6 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequired
 
 public class CreateObjectRequestGenerator extends BaseRequestGenerator {
 
-    //TODO move unit test
     /**
      * Gets the list of Arguments needed to create the request constructor. This
      * includes all non-void required parameters, and arguments described within

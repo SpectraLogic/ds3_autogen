@@ -1,3 +1,18 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
@@ -12,7 +27,6 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
     private final static String ABSTRACT_DELETE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest";
     private final static String ABSTRACT_GET_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest";
 
-    //TODO write unit test
     /**
      * Returns the import for the parent class for standard requests, which
      * is AbstractRequest
@@ -28,7 +42,6 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
         throw new IllegalArgumentException("This generator only supports delete and get notification request handlers: " + ds3Request.getName());
     }
 
-    //TODO write unit tests
     /**
      * Gets all the required imports that the Request will need in order to properly
      * generate the Java request code, always including UUID
@@ -49,6 +62,4 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
 
         return builder.build().asList();
     }
-
-
 }

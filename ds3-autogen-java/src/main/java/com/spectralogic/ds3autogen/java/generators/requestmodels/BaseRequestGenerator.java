@@ -52,7 +52,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
                 ds3Request.getHttpVerb(),
                 requestPath,
                 ds3Request.getOperation(),
-                ds3Request.getAction(),  //TODO remove?
+                ds3Request.getAction(),
                 requiredArguments,
                 optionalArguments,
                 constructorArguments,
@@ -60,10 +60,10 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
                 imports);
     }
 
-    //TODO unit test
     /**
      * Gets all the class variables to properly generate the variables and their
-     * getter functions.
+     * getter functions. This consists of all constructor arguments and optional
+     * arguments being converted into variables.
      */
     protected ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
@@ -76,7 +76,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.build();
     }
 
-    //TODO move unit tests
     /**
      * Gets all the required imports that the Request will need in order to properly
      * generate the Java request code
@@ -104,7 +103,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.build().asList();
     }
 
-    //TODO write unit test
     /**
      * Returns the import for the parent class for standard requests, which
      * is AbstractRequest
@@ -113,7 +111,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return ABSTRACT_REQUEST_IMPORT;
     }
 
-    //TODO write unit test
     /**
      * Gets the required imports that are needed to ensure that all generated models
      * within the this Ds3Param list are included in the request generated Java code
@@ -129,14 +126,14 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         final ImmutableSet.Builder<String> importsBuilder = ImmutableSet.builder();
         for (final Ds3Param ds3Param : ds3Params) {
             if (!ds3Param.getName().equals("Operation")
-                    && ds3Param.getType().contains(".")) {
+                    && ds3Param.getType().contains(".")
+                    && !ds3Param.getType().equals("java.lang.String")) {
                 importsBuilder.add(ConvertType.toModelName(ds3Param.getType()));
             }
         }
         return importsBuilder.build();
     }
 
-    //TODO move unit test
     /**
      * Gets the list of Arguments needed to create the request constructor. This
      * includes all non-void required parameters, and arguments described within
@@ -150,7 +147,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.build();
     }
 
-    //TODO move unit test
     /**
      * Gets the list of required Arguments from a Ds3Request
      * @param ds3Request A Ds3Request
@@ -163,7 +159,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return requiredArgs.build();
     }
 
-    //TODO move unit test
     /**
      * Converts a list of optional Ds3Params into a list of optional Arguments
      * @param optionalDs3Params A list of optional Ds3Params
@@ -180,7 +175,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return optionalArgs.build();
     }
 
-    //TODO move unit test
     /**
      * Converts a list of Ds3Params into a list of Arguments
      * @param ds3Params A list of Ds3Params
@@ -202,7 +196,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return argsBuilder.build();
     }
 
-    //TODO move unit test
     /**
      * Creates the Java code for the Java SDK request path
      * @param ds3Request A request
@@ -220,7 +213,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.toString();
     }
 
-    //TODO move unit test
     /**
      * Creates the Java request path code for an AmazonS3 request
      * @param ds3Request A request
@@ -241,7 +233,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.toString();
     }
 
-    //TODO move unit test
     /**
      * Creates the Java request path code for a SpectraS3 request
      * @param ds3Request A request
@@ -272,16 +263,17 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
         return builder.toString();
     }
 
-    //TODO write unit tests
     /**
      * Retrieves the request name without the request path
      */
     protected static String getRequestName(final String requestName) {
+        if (isEmpty(requestName)) {
+            return "";
+        }
         final String[] classParts = requestName.split("\\.");
         return classParts[classParts.length - 1];
     }
 
-    //TODO move unit tests and REMOVE from JavaHelper
     /**
      * Determines of package is SpectraDs3. This is used to determine if request/response handlers
      * need to include an import to parent class.

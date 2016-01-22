@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.isBulkRequestArg;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -439,15 +440,6 @@ public final class JavaHelper {
         }
         builder.add(new EnumConstant(newEnumValue));
         return builder.build();
-    }
-
-    /**
-     * Determines of package is SpectraDs3. This is used to determine if request/response handlers
-     * need to include an import to parent class.
-     * @return True if package is part of SpectraDs3, else false
-     */
-    public static boolean isSpectraDs3(final String packageName) {
-        return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
     }
 
     /**
