@@ -8,22 +8,19 @@ import com.spectralogic.ds3autogen.c.models.StructMember;
 
 import java.text.ParseException;
 
-public class StructConverter {
-    private final Ds3Type ds3Type;
+public final class StructConverter {
+    private StructConverter() {}
 
-    private StructConverter(final Ds3Type ds3Type) {
-        this.ds3Type = ds3Type;
-    }
+    private final static StructConverter structConverter = new StructConverter();
 
-    private Struct convert() throws ParseException {
-        final ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(this.ds3Type.getElements());
+    private Struct convert(final Ds3Type ds3Type) throws ParseException {
+        final ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(ds3Type.getElements());
         return new Struct(
-                this.ds3Type.getName(),
+                ds3Type.getName(),
                 variablesList);
     }
 
     public static Struct toStruct(final Ds3Type ds3Type) throws ParseException {
-        final StructConverter converter = new StructConverter(ds3Type);
-        return converter.convert();
+        return structConverter.convert(ds3Type);
     }
 }

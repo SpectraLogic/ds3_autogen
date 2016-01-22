@@ -1,11 +1,6 @@
 package com.spectralogic.ds3autogen.c.models;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class StructMember {
-    private static final Logger LOG = LoggerFactory.getLogger(StructMember.class);
-
     private final String type;
     private final String name;
 

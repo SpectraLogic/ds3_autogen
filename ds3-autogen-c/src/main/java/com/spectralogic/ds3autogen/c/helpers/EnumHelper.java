@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
-public class EnumHelper {
+public final class EnumHelper {
     private static final Logger LOG = LoggerFactory.getLogger(EnumHelper.class);
     private EnumHelper() {}
 

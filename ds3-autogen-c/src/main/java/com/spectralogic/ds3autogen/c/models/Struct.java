@@ -2,12 +2,8 @@ package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Struct {
-    private static final Logger LOG = LoggerFactory.getLogger(Struct.class);
-
     private final String name;
     private final ImmutableList<StructMember> variables; // members?
     private final StructHelper structHelper;

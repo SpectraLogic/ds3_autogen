@@ -77,14 +77,14 @@ public class CCodeGenerator implements CodeGenerator {
         this.fileUtils = fileUtils;
 
         try {
-            generateDs3_H();
-            generateDs3_C();
+            generateHeader();
+            generateSource();
         } catch (final TemplateException | ParseException e) {
-            e.printStackTrace();
+            LOG.error("Caught exception: ", e);
         }
     }
 
-    public void generateDs3_H() throws IOException, ParseException {
+    public void generateHeader() throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
@@ -136,7 +136,7 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateDs3_C() throws IOException, TemplateException, ParseException {
+    public void generateSource() throws IOException, TemplateException, ParseException {
         final Path path = Paths.get("src/ds3.c");
         final OutputStream outputStream = fileUtils.getOutputFile(path);
 
@@ -173,7 +173,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     private Queue<Struct> getAllStructs() throws ParseException {
-        Queue<Struct> allStructs = new LinkedList<Struct>();
+        final Queue<Struct> allStructs = new LinkedList<>();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 allStructs.add(StructConverter.toStruct(ds3TypeEntry));
@@ -185,10 +185,10 @@ public class CCodeGenerator implements CodeGenerator {
     // Generate TypeResponse parsers
     //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
     private Queue<Struct> getStructParsersOrderedList() throws ParseException {
-        Queue<Struct> orderedStructs = new LinkedList<>();
-        Queue<Struct> allStructs = getAllStructs();
-        Set<String> existingTypes = new HashSet<>();
-        int count = 0;
+        final Queue<Struct> orderedStructs = new LinkedList<>();
+        final Queue<Struct> allStructs = getAllStructs();
+        final Set<String> existingTypes = new HashSet<>();
+        int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.peek();
@@ -204,8 +204,8 @@ public class CCodeGenerator implements CodeGenerator {
             }
 
             if (allStructsSize == allStructs.size()) {
-                count++;
-                if (count == allStructsSize) {
+                skippedStructsCount++;
+                if (skippedStructsCount == allStructsSize) {
                     LOG.warn("Unable to progress on remaining structs, aborting!");
                     LOG.warn("  Remaining structs[" + allStructs.size() + "]");
                     for (final Struct struct : allStructs) {

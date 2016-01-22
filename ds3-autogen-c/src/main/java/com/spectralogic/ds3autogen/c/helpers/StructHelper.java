@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
-public class StructHelper {
+public final class StructHelper {
     private static final Logger LOG = LoggerFactory.getLogger(StructHelper.class);
     private StructHelper() {}
 
@@ -112,7 +112,7 @@ public class StructHelper {
         return true;
     }
 
-    public static ImmutableList<StructMember> convertDs3Elements(ImmutableList<Ds3Element> elementsList) throws ParseException {
+    public static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList) throws ParseException {
         final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elementsList) {
             builder.add(new StructMember(convertDs3ElementType(currentElement), getNameUnderscores(currentElement.getName())));
@@ -146,23 +146,15 @@ public class StructHelper {
     }
 
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
-        final StringBuilder outputBuilder = new StringBuilder();
-        outputBuilder.append(indent(3)).
-                append("response->").
-                append(Helper.camelToUnderscore(structMember.getName())).
-                append(" = ").
-                append(parserFunction).append("\n");
-        return outputBuilder.toString();
+        return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
 
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
-        final StringBuilder outputBuilder = new StringBuilder();
-        outputBuilder.append(indent(3)).append("GPtrArray* ").append(structMember.getName()).append("_array = _parse_").append(structResponseTypeName).append("(log, doc, child_node);\n").
-                append(indent(3)).append("response").append("->").append(structMember.getName()).append(" = (").append(structMember.getType()).append(")").append(structMember.getName()).append("_array->pdata;\n").
-                append(indent(3)).append("response").append("->num_").append(structMember.getName()).append(" = ").append(structMember.getName()).append("_array->len;\n").
-                append(indent(3)).append("g_ptr_array_free(").append(structMember.getName()).append("_array, FALSE);\n");
-        return outputBuilder.toString();
+        return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "(log, doc, child_node);\n"
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType() + ")" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
+             + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
