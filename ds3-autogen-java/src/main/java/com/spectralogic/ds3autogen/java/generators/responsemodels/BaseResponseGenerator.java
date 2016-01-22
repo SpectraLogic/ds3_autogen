@@ -13,77 +13,98 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.converters;
+package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Response;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.isSpectraDs3;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-/**
- * Converts a Ds3Request into a Response model used for generating
- * the Java SDK response handler code
- */
-public class ResponseConverter {
+public class BaseResponseGenerator implements ResponseModelGenerator {
 
-    private final Ds3Request ds3Request;
-    private final String packageName;
+    private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.AbstractResponse";
 
-    private ResponseConverter(
-            final Ds3Request ds3Request,
-            final String packageName) {
-        this.ds3Request = ds3Request;
-        this.packageName = packageName;
-    }
+    @Override
+    public Response generate(final Ds3Request ds3Request, final String packageName) {
+        final String responseName = toResponseName(ds3Request.getName());
+        final ImmutableList<Ds3ResponseCode> responseCodes = toResponseCodes(ds3Request);
+        final ImmutableList<String> imports = getAllImports(responseCodes, packageName);
 
-    /**
-     * Converts data stored within this ResponseConverter into a Response model
-     * @return A Response model
-     */
-    private Response convert() {
         return new Response(
                 packageName,
-                toResponseName(ds3Request.getName()),
-                ds3Request.getDs3ResponseCodes(),
-                getAllImports(ds3Request.getDs3ResponseCodes()));
-    }
-
-    /**
-     * Converts a Ds3Request and package name into a Response model
-     * @param ds3Request A Ds3Request
-     * @param packageName The name of the java package for the response generated code
-     * @return A Response model containing information from the Ds3Request and package name
-     */
-    public static Response toResponse(
-            final Ds3Request ds3Request,
-            final String packageName) {
-        final ResponseConverter converter = new ResponseConverter(ds3Request, packageName);
-        return converter.convert();
+                responseName,
+                responseCodes,
+                imports);
     }
 
     /**
      * Converts the Ds3Request name into a Response name by removing the path and
      * changing the name ending from "Request" into "Response"
-     * @param ds3RequestName
-     * @return The response name
      */
-    protected static String toResponseName(final String ds3RequestName) {
+    protected String toResponseName(final String ds3RequestName) {
+        if (isEmpty(ds3RequestName)) {
+            return "";
+        }
         final String[] classParts = ds3RequestName.split("\\.");
         return classParts[classParts.length - 1].replace("Request", "Response");
+    }
+
+    /**
+     * Gets the response codes required to generate this response
+     */
+    protected ImmutableList<Ds3ResponseCode> toResponseCodes(
+            final Ds3Request request) {
+        return request.getDs3ResponseCodes();
+    }
+
+    /**
+     * Returns the import for the parent class for standard requests, which
+     * is AbstractRequest
+     */
+    protected String getParentImport() {
+        return ABSTRACT_RESPONSE_IMPORT;
     }
 
     /**
      * Gets all the imports associated with response types that the response will
      * need in order to properly generate the Java request code
      */
-    protected static ImmutableList<String> getAllImports(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    protected ImmutableList<String> getAllImports(
+            final ImmutableList<Ds3ResponseCode> responseCodes,
+            final String packageName) {
         if (isEmpty(responseCodes)) {
             return ImmutableList.of();
+        }
+
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+
+        builder.addAll(getAllImportsFromResponseCodes(responseCodes));
+        //If a response type has an associated import, then the XmlOutput import is also needed
+        if (builder.build().size() > 0) {
+            builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
+        }
+
+        if (isSpectraDs3(packageName)) {
+            builder.add(getParentImport());
+        }
+
+        return builder.build().asList();
+    }
+
+    /**
+     * Gets the imports associated with the payloads of a response code list
+     */
+    protected static ImmutableSet<String> getAllImportsFromResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableSet.of();
         }
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
@@ -93,11 +114,7 @@ public class ResponseConverter {
                 builder.add(curImport);
             }
         }
-        //If a response type has an associated import, then the XmlOutput import is also needed
-        if (builder.build().size() > 0) {
-            builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
-        }
-        return builder.build().asList();
+        return builder.build();
     }
 
     /**

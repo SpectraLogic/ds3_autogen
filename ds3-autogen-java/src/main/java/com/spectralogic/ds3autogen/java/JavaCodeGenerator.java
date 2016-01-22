@@ -25,7 +25,8 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
-import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -275,7 +276,16 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Response
      */
     private Response toResponse(final Ds3Request ds3Request) {
-        return ResponseConverter.toResponse(ds3Request, getCommandPackage(ds3Request));
+        final ResponseModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+    }
+
+    //TODO
+    /**
+     * Retrieves the associated response generator for the specified Ds3Request
+     */
+    private ResponseModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        return new BaseResponseGenerator();
     }
 
     /**

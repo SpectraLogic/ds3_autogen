@@ -13,20 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.converters;
+package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.converters.ResponseConverter.*;
-import static com.spectralogic.ds3autogen.java.test.helpers.ResponseConverterTestHelper.*;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getAllImportsFromResponseCodes;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getImportFromResponseCode;
+import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class ResponseConverter_Test {
+public class BaseResponseGenerator_Test {
+
+    private static final BaseResponseGenerator generator = new BaseResponseGenerator();
 
     @Test
     public void getImportFromResponseCode_Test() {
@@ -60,13 +64,17 @@ public class ResponseConverter_Test {
 
     @Test
     public void getAllImports_NullList_Test() {
-        final ImmutableList<String> result = getAllImports(null);
+        final ImmutableList<String> result = generator.getAllImports(
+                null,
+                "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void getAllImports_EmptyList_Test() {
-        final ImmutableList<String> result = getAllImports(ImmutableList.of());
+        final ImmutableList<String> result = generator.getAllImports(
+                ImmutableList.of(),
+                "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
     }
 
@@ -77,16 +85,59 @@ public class ResponseConverter_Test {
                 createPopulatedResponseCode("_v2"),
                 createPopulatedErrorResponseCode("_v3"));
 
-        final ImmutableList<String> result = getAllImports(responseCodes);
-        assertThat(result.size(), is(3));
+        final ImmutableList<String> result = generator.getAllImports(
+                responseCodes,
+                "com.spectralogic.ds3client.commands.spectrads3");
+        assertThat(result.size(), is(4));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractResponse"));
+    }
+
+    @Test
+    public void toResponseName_NullString_Test() {
+        assertThat(generator.toResponseName(null), is(""));
+    }
+
+    @Test
+    public void toResponseName_EmptyString_Test() {
+        assertThat(generator.toResponseName(""), is(""));
     }
 
     @Test
     public void toResponseName_Test() {
-        final String result = toResponseName("com.spectralogic.s3.server.handler.reqhandler.amazons3.HeadObjectRequest");
+        final String result = generator.toResponseName("com.spectralogic.s3.server.handler.reqhandler.amazons3.HeadObjectRequest");
         assertThat(result, is("HeadObjectResponse"));
+    }
+
+    @Test
+    public void getParentImport_Test() {
+        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.AbstractResponse"));
+    }
+
+    @Test
+    public void getAllImportsFromResponseCodes_NullList_Test() {
+        final ImmutableSet<String> result = getAllImportsFromResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllImportsFromResponseCodes_EmptyList_Test() {
+        final ImmutableSet<String> result = getAllImportsFromResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllImportsFromResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                createPopulatedResponseCode("_v1"),
+                createPopulatedResponseCode("_v2"),
+                createPopulatedErrorResponseCode("_v3"));
+
+        final ImmutableSet<String> result = getAllImportsFromResponseCodes(responseCodes);
+        assertThat(result.size(), is(2));
+        assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
+        assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
     }
 }
