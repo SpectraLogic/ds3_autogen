@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Classification;
@@ -44,10 +45,8 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -100,7 +99,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateEnums(final OutputStream outputStream) throws IOException {
-        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+        if (ConverterUtil.isEmpty(spec.getTypes())) return;
 
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
             final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
@@ -112,7 +111,7 @@ public class CCodeGenerator implements CodeGenerator {
 
     public void generateTypedefStructs(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            if (!ConverterUtil.hasContent(ds3TypeEntry.getElements())) continue;
+            if (ConverterUtil.isEmpty(ds3TypeEntry.getElements())) continue;
 
             final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
             processTemplate(structEntry, "TypedefStruct.ftl", outputStream);
@@ -129,7 +128,7 @@ public class CCodeGenerator implements CodeGenerator {
 
     public void generateFreeResponseStructPrototypes(final OutputStream outputStream) throws IOException, ParseException {
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            if (!ConverterUtil.hasContent(ds3TypeEntry.getElements())) continue;
+            if (ConverterUtil.isEmpty(ds3TypeEntry.getElements())) continue;
 
             final Struct struct = StructConverter.toStruct(ds3TypeEntry);
             processTemplate(struct, "FreeStructPrototype.ftl", outputStream);
@@ -152,7 +151,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateEnumMatchers(final OutputStream outputStream) throws IOException {
-        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+        if (ConverterUtil.isEmpty(spec.getTypes())) return;
 
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
             final Enum enumEntry = EnumConverter.toEnum(ds3TypeEntry);
@@ -163,7 +162,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
-        if (!ConverterUtil.hasContent(spec.getTypes())) return;
+        if (ConverterUtil.isEmpty(spec.getTypes())) return;
         for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
             final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
             if (!ConverterUtil.hasContent(structEntry.getVariables())) continue;
@@ -187,7 +186,7 @@ public class CCodeGenerator implements CodeGenerator {
     private Queue<Struct> getStructParsersOrderedList() throws ParseException {
         final Queue<Struct> orderedStructs = new LinkedList<>();
         final Queue<Struct> allStructs = getAllStructs();
-        final Set<String> existingTypes = new HashSet<>();
+        final ImmutableSet.Builder<String> existingTypesBuilder = ImmutableSet.builder();
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
@@ -196,8 +195,8 @@ public class CCodeGenerator implements CodeGenerator {
                 continue;
             }
 
-            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypes)) {
-                existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
+            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypesBuilder.build())) {
+                existingTypesBuilder.add(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructs.add(allStructs.remove());
             } else {  // move to end to come back to
                 allStructs.add(allStructs.remove());
@@ -231,7 +230,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateRequests(final OutputStream outputStream) throws IOException, TemplateException {
-        if (!ConverterUtil.hasContent(spec.getRequests())) return;
+        if (ConverterUtil.isEmpty(spec.getRequests())) return;
 
         for (final Ds3Request ds3Request : spec.getRequests()) {
             String requestTemplateName = null;
