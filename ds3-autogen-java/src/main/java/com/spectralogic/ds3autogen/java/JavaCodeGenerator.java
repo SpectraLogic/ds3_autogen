@@ -405,7 +405,6 @@ public class JavaCodeGenerator implements CodeGenerator {
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
     }
 
-    //TODO
     /**
      * Retrieves the associated request generator for the specified Ds3Request
      */
@@ -414,10 +413,6 @@ public class JavaCodeGenerator implements CodeGenerator {
             return new BulkRequestGenerator();
         } else if (isPhysicalPlacementRequest(ds3Request)) {
             return new PhysicalPlacementRequestGenerator();
-        } else if (isMultiFileDeleteRequest(ds3Request)) {
-            //return config.getTemplate("request/multi_file_delete_request_template.ftl");
-        } else if (isGetObjectRequest(ds3Request)) {
-            //return config.getTemplate("request/get_object_template.ftl");
         } else if (isCreateObjectRequest(ds3Request)) {
             return new CreateObjectRequestGenerator();
         } else if (isCreateNotificationRequest(ds3Request)) {
