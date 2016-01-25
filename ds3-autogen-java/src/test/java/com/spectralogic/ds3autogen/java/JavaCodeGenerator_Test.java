@@ -21,10 +21,9 @@ import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
-import com.spectralogic.ds3autogen.java.utils.TestGeneratedSplitRequestCode;
-import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
+import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
+import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -34,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.testDs3Client;
-import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.testDs3ClientImpl;
-import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.testHasChecksumCode;
+import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -377,11 +374,10 @@ public class JavaCodeGenerator_Test {
     public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                "FullDetails");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
 
         testGeneratedCode.generateCode(fileUtils, "/input/getPhysicalPlacementRequest.xml");
 
@@ -444,32 +440,30 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
+        final String requestName = "GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                "FullDetails");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
 
-        testGeneratedCode.generateCode(fileUtils, "/input/getPhysicalPlacementRequest.xml");
+        testGeneratedCode.generateCode(fileUtils, "/input/getPhysicalPlacementFullDetailsRequest.xml");
 
-        final String fullDetailsRequestName = "GetPhysicalPlacementForObjectsFullDetailsSpectraS3Request";
-        final String requestGeneratedCode = testGeneratedCode.getSplitRequestGeneratedCode();
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
-        assertTrue(extendsClass(fullDetailsRequestName, "AbstractRequest", requestGeneratedCode));
-        assertTrue(isReqParamOfType("BucketName", "String", fullDetailsRequestName, requestGeneratedCode, false));
-        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", fullDetailsRequestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
-        assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
+        assertFalse(doesConstructorContainParam("FullDetails", "void", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
 
-        assertFalse(doesConstructorContainParam("Test", "boolean", fullDetailsRequestName, requestGeneratedCode));
+        assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
 
@@ -491,12 +485,12 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
                 new Arguments("List<Ds3Object>", "Objects"));
-        assertTrue(hasConstructor(fullDetailsRequestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
-        final String responseGeneratedCode = testGeneratedCode.getSplitResponseGeneratedCode();
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
-        final String responseName = fullDetailsRequestName.replace("Request", "Response");
+        final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
@@ -509,22 +503,21 @@ public class JavaCodeGenerator_Test {
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
-        testDs3Client(fullDetailsRequestName, ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
-        testDs3ClientImpl(fullDetailsRequestName, ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
     @Test
     public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                "FullDetails");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
 
         testGeneratedCode.generateCode(fileUtils, "/input/verifyPhysicalPlacementRequest.xml");
 
@@ -584,28 +577,26 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsRequestHandler_FullDetails() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
+        final String requestName = "VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final TestGeneratedSplitRequestCode testGeneratedCode = new TestGeneratedSplitRequestCode(
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
                 requestName,
-                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
-                "FullDetails");
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
 
-        testGeneratedCode.generateCode(fileUtils, "/input/verifyPhysicalPlacementRequest.xml");
+        testGeneratedCode.generateCode(fileUtils, "/input/verifyPhysicalPlacementFullDetailsRequest.xml");
 
-        final String fullDetailsRequestName = "VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Request";
-        final String requestGeneratedCode = testGeneratedCode.getSplitRequestGeneratedCode();
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
-        assertTrue(extendsClass(fullDetailsRequestName, "AbstractRequest", requestGeneratedCode));
-        assertTrue(isReqParamOfType("BucketName", "String", fullDetailsRequestName, requestGeneratedCode, false));
-        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", fullDetailsRequestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", fullDetailsRequestName, requestGeneratedCode, false));
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
-        assertFalse(doesConstructorContainParam("FullDetails", "void", fullDetailsRequestName, requestGeneratedCode));
+        assertFalse(doesConstructorContainParam("FullDetails", "void", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
 
@@ -628,12 +619,12 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
                 new Arguments("List<Ds3Object>", "Objects"));
-        assertTrue(hasConstructor(fullDetailsRequestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
-        final String responseGeneratedCode = testGeneratedCode.getSplitResponseGeneratedCode();
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
-        final String responseName = fullDetailsRequestName.replace("Request", "Response");
+        final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
@@ -646,11 +637,11 @@ public class JavaCodeGenerator_Test {
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
-        testDs3Client(fullDetailsRequestName, ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
-        testDs3ClientImpl(fullDetailsRequestName, ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
     @Test

@@ -204,6 +204,7 @@ public final class RemoveDollarSignConverter {
     public static Ds3Type removeDollarSignFromType(final Ds3Type type) {
         return new Ds3Type(
                 removeDollarSignFromName(type.getName()),
+                type.getNameToMarshal(),
                 removeDollarSignFromAllElements(type.getElements()),
                 type.getEnumConstants());
     }
