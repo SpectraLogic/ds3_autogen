@@ -44,8 +44,8 @@ public final class StructHelper {
         return getResponseTypeName(name) + "_free";
     }
 
-    public static String getFreeFunction(final StructMember structMember) throws ParseException {
-        switch (structMember.getType()) {
+    public static String getFreeFunction(final String structMemberType) throws ParseException {
+        switch (structMemberType) {
             case "ds3_str*":
                 return "ds3_str_free";
             // The following primitive types don't require a free
@@ -60,7 +60,7 @@ public final class StructHelper {
             case "java.util.Set":
             case "array":
             default:
-                return getFreeFunctionName(structMember.getType());
+                return structMemberType.replace("*", "") + "_free";
         }
     }
 
@@ -140,6 +140,10 @@ public final class StructHelper {
                     append(member.getName()).
                     append(";").
                     append("\n");
+
+            if (member.getType().endsWith("**")) {
+                outputBuilder.append(indent(1)).append("size_t").append(" num_").append(member.getName()).append(";\n");
+            }
         }
 
         return outputBuilder.toString();
@@ -203,19 +207,32 @@ public final class StructHelper {
         return outputBuilder.toString();
     }
 
+    public static String generateFreeArrayStructMember(final StructMember structMember) {
+        final StringBuilder outputBuilder = new StringBuilder();
+        outputBuilder.append(indent(1)).append("for (index = 0; index < response->num_").append(structMember.getName()).append("; index++) {\n");
+        outputBuilder.append(indent(2)).append(structMember.getType().replace("*","")).append("_free(response_data->").append(structMember.getName()).append("[index]);\n");
+        outputBuilder.append(indent(1)).append("}\n");
+        outputBuilder.append(indent(1)).append("g_free(response_data->").append(structMember.getName()).append(");\n\n");
+        return outputBuilder.toString();
+    }
+
     public static String generateFreeStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (final StructMember structMember : structMembers) {
-            final String freeFunc = getFreeFunction(structMember);
+            final String freeFunc = getFreeFunction(structMember.getType());
             if (freeFunc.length() == 0) continue;
 
-            outputBuilder.append(indent(1)).
-                    append(freeFunc).
-                    append("(response_data->").
-                    append(StructHelper.getNameUnderscores(structMember.getName())).
-                    append(");").
-                    append("\n");
+            if (structMember.getType().contains("**")) {
+                outputBuilder.append(generateFreeArrayStructMember(structMember));
+            } else {
+                outputBuilder.append(indent(1)).
+                        append(freeFunc).
+                        append("(response_data->").
+                        append(structMember.getType().replace("*", "")).
+                        append(");").
+                        append("\n");
+            }
         }
 
         return outputBuilder.toString();

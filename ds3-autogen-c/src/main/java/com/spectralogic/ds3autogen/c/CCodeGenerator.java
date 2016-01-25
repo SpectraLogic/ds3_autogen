@@ -161,16 +161,6 @@ public class CCodeGenerator implements CodeGenerator {
         }
     }
 
-    public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
-        if (ConverterUtil.isEmpty(spec.getTypes())) return;
-        for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-            final Struct structEntry = StructConverter.toStruct(ds3TypeEntry);
-            if (!ConverterUtil.hasContent(structEntry.getVariables())) continue;
-
-            processTemplate(structEntry, "FreeStruct.ftl", outputStream);
-        }
-    }
-
     private Queue<Struct> getAllStructs() throws ParseException {
         final Queue<Struct> allStructs = new LinkedList<>();
         if (ConverterUtil.hasContent(spec.getTypes())) {
@@ -181,9 +171,8 @@ public class CCodeGenerator implements CodeGenerator {
         return allStructs;
     }
 
-    // Generate TypeResponse parsers
-    //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-    private Queue<Struct> getStructParsersOrderedList() throws ParseException {
+    // return structs which contain only primitive types first, and then cascade for structs that contain other structs
+    private Queue<Struct> getStructsOrderedList() throws ParseException {
         final Queue<Struct> orderedStructs = new LinkedList<>();
         final Queue<Struct> allStructs = getAllStructs();
         final ImmutableSet.Builder<String> existingTypesBuilder = ImmutableSet.builder();
@@ -218,15 +207,43 @@ public class CCodeGenerator implements CodeGenerator {
         return orderedStructs;
     }
 
+    public void generateStructFreeFunctions(final OutputStream outputStream) throws IOException, ParseException {
+        final Queue<Struct> orderedStructsList = getStructsOrderedList();
+        for (final Struct structEntry : orderedStructsList) {
+            processTemplate(structEntry, "FreeStruct.ftl", outputStream);
+        }
+    }
+
     public void generateResponseStructParsers(final OutputStream outputStream) throws ParseException, IOException {
-        final Queue<Struct> orderedParsersList = getStructParsersOrderedList();
+        final Queue<Struct> orderedParsersList = getStructsOrderedList();
         for (final Struct structEntry : orderedParsersList) {
             processTemplate(structEntry, "ResponseParser.ftl", outputStream);
         }
     }
 
-    public void generateInitRequests(final OutputStream outputStream) {
-        // TODO
+    public void generateInitRequests(final OutputStream outputStream) throws TemplateException, IOException {
+        if (ConverterUtil.isEmpty(spec.getRequests())) return;
+
+        for (final Ds3Request ds3Request : spec.getRequests()) {
+            String requestTemplateName = null;
+            Request request = null;
+
+            if (ds3Request.getClassification() == Classification.amazons3) {
+                LOG.info("AmazonS3 request");
+                request = RequestConverter.toRequest(ds3Request);
+                requestTemplateName = "AmazonS3InitRequestHandler.ftl";
+            } else if (ds3Request.getClassification() == Classification.spectrads3) {
+                LOG.info("SpectraDS3 request");
+                // TODO
+            } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
+                LOG.debug("Skipping SpectraDS3 internal request");
+                continue;
+            } else {
+                throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
+            }
+
+            processTemplate(request, requestTemplateName, outputStream);
+        }
     }
 
     public void generateRequests(final OutputStream outputStream) throws IOException, TemplateException {
@@ -237,10 +254,11 @@ public class CCodeGenerator implements CodeGenerator {
             Request request = null;
 
             if (ds3Request.getClassification() == Classification.amazons3) {
-                request = RequestConverter.toRequest(ds3Request);
-                requestTemplateName = "AmazonS3InitRequestHandler.ftl";
-            } else if (ds3Request.getClassification() == Classification.spectrads3) {
                 LOG.info("AmazonS3 request");
+                request = RequestConverter.toRequest(ds3Request);
+                requestTemplateName = "AmazonS3RequestHandler.ftl";
+            } else if (ds3Request.getClassification() == Classification.spectrads3) {
+                LOG.info("SpectraDS3 request");
                 // TODO
             } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
                 LOG.debug("Skipping Spectra internal request");

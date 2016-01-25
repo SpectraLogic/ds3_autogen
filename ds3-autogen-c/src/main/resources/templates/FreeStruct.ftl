@@ -1,3 +1,4 @@
+
 void ${getStructHelper().getFreeFunctionName(name)}(${getStructHelper().getResponseTypeName(name)}* response_data) {
     if (response_data == NULL) {
         return;
