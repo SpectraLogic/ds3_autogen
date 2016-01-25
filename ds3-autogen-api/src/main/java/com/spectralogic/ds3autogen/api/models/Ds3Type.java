@@ -25,14 +25,17 @@ import java.util.Set;
 public class Ds3Type {
 
     private final String name;
+    private final String nameToMarshal;
     private final ImmutableList<Ds3Element> elements;
     private final ImmutableList<Ds3EnumConstant> enumConstants;
 
     public Ds3Type(
             final String name,
+            final String nameToMarshal,
             final ImmutableList<Ds3Element> elements,
             final ImmutableList<Ds3EnumConstant> enumConstants) {
         this.name = name;
+        this.nameToMarshal = nameToMarshal;
         this.elements = elements;
         this.enumConstants = enumConstants;
     }
@@ -40,7 +43,7 @@ public class Ds3Type {
     public Ds3Type(
             final String name,
             final ImmutableList<Ds3Element> elements) {
-        this(name, elements, null);
+        this(name, null, elements, null);
     }
 
     public String getName() {
@@ -100,5 +103,9 @@ public class Ds3Type {
     //TODO remove (temporary until dependencies decided)
     public static boolean isEmpty(final Collection<?> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    public String getNameToMarshal() {
+        return nameToMarshal;
     }
 }

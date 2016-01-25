@@ -108,6 +108,7 @@ class Ds3SpecConverter {
         for (final ImmutableMap.Entry<String, Ds3Type> entry : types.entrySet()) {
             final Ds3Type ds3Type = new Ds3Type(
                     convertName(entry.getValue().getName(), nameMapper),
+                    entry.getValue().getNameToMarshal(),
                     convertAllElements(entry.getValue().getElements(), nameMapper),
                     convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
             builder.put(convertName(convertName(entry.getKey(), nameMapper), nameMapper), ds3Type);
