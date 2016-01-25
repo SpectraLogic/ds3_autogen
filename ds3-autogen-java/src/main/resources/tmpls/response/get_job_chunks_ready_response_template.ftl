@@ -7,8 +7,7 @@ import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class ${name} extends AbstractResponse {
 
-${javaHelper.createAllResponseResultClassVars(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultClassVars(responseCodes)}
 
     public enum Status {
         AVAILABLE, RETRYLATER
@@ -45,7 +44,6 @@ ${javaHelper.createAllResponseResultClassVars(
 
 <#include "common/parse_retry_after.ftl"/>
 
-${javaHelper.createAllResponseResultGetters(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultGetters(responseCodes)}
 
 }

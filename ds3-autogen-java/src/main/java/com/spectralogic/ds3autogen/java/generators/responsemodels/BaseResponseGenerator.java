@@ -61,12 +61,12 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
      */
     protected ImmutableList<Ds3ResponseCode> toResponseCodes(
             final Ds3Request request) {
-        return request.getDs3ResponseCodes();
+        return removeErrorResponseCodes(request.getDs3ResponseCodes());
     }
 
     /**
-     * Returns the import for the parent class for standard requests, which
-     * is AbstractRequest
+     * Returns the import for the parent class for standard response, which
+     * is AbstractResponse
      */
     protected String getParentImport() {
         return ABSTRACT_RESPONSE_IMPORT;
@@ -137,5 +137,23 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
             }
         }
         return "";
+    }
+
+    /**
+     * Removes response codes that are associated with errors from the list.
+     * Error response codes are associated with values greater or equal to 400.
+     */
+    protected static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (responseCode.getCode() < 400) {
+                builder.add(responseCode);
+            }
+        }
+        return builder.build();
     }
 }

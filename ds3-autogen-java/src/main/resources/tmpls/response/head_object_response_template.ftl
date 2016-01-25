@@ -23,15 +23,14 @@ public class ${name} extends AbstractResponse {
     ${javaHelper.createGetter("Metadata", "Metadata")}
     ${javaHelper.createGetter("ObjectSize", "long")}
 
-${javaHelper.createAllResponseResultClassVars(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultClassVars(responseCodes)}
 
 <#include "common/response_constructor.ftl"/>
 
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
+            this.checkStatusCode(200, 404);
             this.metadata = new MetadataImpl(this.getResponse().getHeaders());
             this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
             this.setStatus(this.getStatusCode());
@@ -52,6 +51,5 @@ ${javaHelper.createAllResponseResultClassVars(
         }
     }
 
-${javaHelper.createAllResponseResultGetters(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultGetters(responseCodes)}
 }

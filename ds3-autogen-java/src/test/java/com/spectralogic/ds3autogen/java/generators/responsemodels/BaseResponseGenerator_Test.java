@@ -17,13 +17,16 @@ package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getAllImportsFromResponseCodes;
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getImportFromResponseCode;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.removeErrorResponseCodes;
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -139,5 +142,52 @@ public class BaseResponseGenerator_Test {
         assertThat(result.size(), is(2));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_NullList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_EmptyList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeErrorResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(400, null),
+                new Ds3ResponseCode(503, null));
+
+        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(responseCodes);
+
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getCode(), is(200));
+        assertThat(result.get(1).getCode(), is(206));
+        assertThat(result.get(2).getCode(), is(307));
+    }
+
+    @Test
+    public void toResponseCodes_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(400, null),
+                new Ds3ResponseCode(503, null));
+
+        final Ds3Request request = createDs3RequestTestData(true, responseCodes, null, null);
+        final ImmutableList<Ds3ResponseCode> result = generator.toResponseCodes(request);
+
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getCode(), is(200));
+        assertThat(result.get(1).getCode(), is(206));
+        assertThat(result.get(2).getCode(), is(307));
     }
 }

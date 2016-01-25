@@ -579,6 +579,7 @@ public final class JavaHelper {
         return uncapFirst(stripPath(responseType.getType())) + "Result";
     }
 
+    //TODO DELETE (moved to response generator)
     /**
      * Removes response codes that are associated with errors from the list.
      * Error response codes are associated with values greater or equal to 400.

@@ -26,6 +26,8 @@ import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
@@ -285,6 +287,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated response generator for the specified Ds3Request
      */
     private ResponseModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isAllocateJobChunkRequest(ds3Request)
+                || isHeadObjectRequest(ds3Request)
+                || isHeadBucketRequest(ds3Request)) {
+            return new CodesResponseGenerator();
+        }
+        if (isBulkRequest(ds3Request)) {
+            return new BulkResponseGenerator();
+        }
         return new BaseResponseGenerator();
     }
 
@@ -315,46 +325,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
     }
 
-    /**
-     * Determines if a Ds3Request is Head Bucket Request
-     */
-    private static boolean isHeadBucketRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.amazons3
-                && request.getBucketRequirement() == Requirement.REQUIRED
-                && request.getHttpVerb() == HttpVerb.HEAD
-                && request.getObjectRequirement() == Requirement.NOT_ALLOWED;
-    }
 
-    /**
-     * Determines if a Ds3Request is Head Object Request
-     */
-    private static boolean isHeadObjectRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.amazons3
-                && request.getBucketRequirement() == Requirement.REQUIRED
-                && request.getHttpVerb() == HttpVerb.HEAD
-                && request.getObjectRequirement() == Requirement.REQUIRED;
-    }
-
-    /**
-     * Determines if a Ds3Request is Allocate Job Chunk Request
-     */
-    private static boolean isAllocateJobChunkRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.spectrads3
-                && request.getResource() == Resource.JOB_CHUNK
-                && request.getAction() == Action.MODIFY
-                && request.getHttpVerb() == HttpVerb.PUT
-                && request.getOperation() == Operation.ALLOCATE;
-    }
-
-    /**
-     * Determines if a Ds3Request is Get Job Chunks Ready For Client Processing Request
-     */
-    private static boolean isGetJobChunksReadyForClientProcessingRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.spectrads3
-                && request.getResource() == Resource.JOB_CHUNK
-                && request.getAction() == Action.LIST
-                && request.getHttpVerb() == HttpVerb.GET;
-    }
 
     /**
      * Gets the command package suitable for the given Ds3Request. SpectraDs3 commands
