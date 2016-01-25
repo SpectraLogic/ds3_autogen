@@ -68,21 +68,21 @@ public class CodesResponseGenerator_Test {
     @Test
     public void hasExpectedResponseCodes_NullList_Test() {
         assertFalse(hasExpectedResponseCodes(
-                CodesResponseGenerator.EXPECTED_RESPONSE_CODES,
+                CodesResponseGenerator.ALLOCATE_JOB_CHUNK_EXPECTED_RESPONSE_CODES,
                 null));
     }
 
     @Test
     public void hasExpectedResponseCodes_EmptyList_Test() {
         assertFalse(hasExpectedResponseCodes(
-                CodesResponseGenerator.EXPECTED_RESPONSE_CODES,
+                CodesResponseGenerator.ALLOCATE_JOB_CHUNK_EXPECTED_RESPONSE_CODES,
                 ImmutableList.of()));
     }
 
     @Test
     public void hasExpectedResponseCodes_FullList_Test() {
         assertTrue(hasExpectedResponseCodes(
-                CodesResponseGenerator.EXPECTED_RESPONSE_CODES,
+                CodesResponseGenerator.ALLOCATE_JOB_CHUNK_EXPECTED_RESPONSE_CODES,
                 getTestResponseCodes()));
     }
 

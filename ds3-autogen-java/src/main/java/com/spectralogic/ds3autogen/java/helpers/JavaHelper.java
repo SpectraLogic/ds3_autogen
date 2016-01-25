@@ -578,23 +578,4 @@ public final class JavaHelper {
         }
         return uncapFirst(stripPath(responseType.getType())) + "Result";
     }
-
-    //TODO DELETE (moved to response generator)
-    /**
-     * Removes response codes that are associated with errors from the list.
-     * Error response codes are associated with values greater or equal to 400.
-     */
-    public static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (responseCode.getCode() < 400) {
-                builder.add(responseCode);
-            }
-        }
-        return builder.build();
-    }
 }
