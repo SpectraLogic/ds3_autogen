@@ -30,6 +30,9 @@ public class Type {
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "NameToMarshal")
+    private String nameToMarshal;
+
     @JsonProperty("Elements")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Element> elements;
@@ -65,6 +68,7 @@ public class Type {
     public Ds3Type toDs3Type() {
         final Ds3Type ds3Type = new Ds3Type(
                 name,
+                nameToMarshal,
                 toDs3Elements(),
                 toDs3EnumConstant());
 
@@ -91,5 +95,13 @@ public class Type {
             ds3EnumConstantBuilder.add(enumConstant.toDs3EnumConstant());
         }
         return ds3EnumConstantBuilder.build();
+    }
+
+    public String getNameToMarshal() {
+        return nameToMarshal;
+    }
+
+    public void setNameToMarshal(final String nameToMarshal) {
+        this.nameToMarshal = nameToMarshal;
     }
 }
