@@ -1,12 +1,13 @@
 <Data>
     <Contract>
         <RequestHandlers>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler">
-                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="GET_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
+                        <Param Name="FullDetails" Type="void"/>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
                     </RequiredQueryParams>
                 </Request>
@@ -14,17 +15,17 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
-                        <Code>400</Code>
+                        <Code>404</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.8677D16DE53C2800647C7DB609C6EE44</Version>
+                <Version>1.833E8B67365C5B36D6B3E2C048660EEB</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
