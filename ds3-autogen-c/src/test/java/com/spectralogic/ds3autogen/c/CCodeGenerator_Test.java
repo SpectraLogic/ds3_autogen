@@ -223,7 +223,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    g_free(response_data->buckets);"));
 
-        assertTrue(output.contains("    ds3_user_api_bean_response_free(response_data->ds3_user_api_bean_response);"));
+        assertTrue(output.contains("    ds3_user_api_bean_response_free(response_data->owner);"));
 
         assertTrue(output.contains("    g_free(response_data);"));
         assertTrue(output.contains("}"));

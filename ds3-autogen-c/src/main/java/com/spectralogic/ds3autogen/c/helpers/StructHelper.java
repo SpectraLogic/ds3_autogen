@@ -229,7 +229,7 @@ public final class StructHelper {
                 outputBuilder.append(indent(1)).
                         append(freeFunc).
                         append("(response_data->").
-                        append(structMember.getType().replace("*", "")).
+                        append(structMember.getName().replace("*", "")).
                         append(");").
                         append("\n");
             }
