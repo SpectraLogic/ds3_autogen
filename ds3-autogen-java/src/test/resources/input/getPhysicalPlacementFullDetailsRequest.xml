@@ -1,12 +1,13 @@
 <Data>
     <Contract>
         <RequestHandlers>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler">
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsWithFullDetailsRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="GET_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
+                        <Param Name="FullDetails" Type="void"/>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
                     </RequiredQueryParams>
                 </Request>
@@ -14,7 +15,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
@@ -24,7 +25,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.8677D16DE53C2800647C7DB609C6EE44</Version>
+                <Version>1.67D1B7BB3E64E9C05C62F59054DF73DE</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

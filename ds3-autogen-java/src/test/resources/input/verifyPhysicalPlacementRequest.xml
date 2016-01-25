@@ -4,7 +4,6 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="FullDetails" Type="void"/>
                         <Param Name="StorageDomainId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -16,7 +15,6 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean"/>
-                            <ResponseType Type="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
@@ -26,7 +24,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.5F77AE6E429837ACEFC1731C7BD321BB</Version>
+                <Version>1.867574E65E9156E31D51517D17DDE283</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
