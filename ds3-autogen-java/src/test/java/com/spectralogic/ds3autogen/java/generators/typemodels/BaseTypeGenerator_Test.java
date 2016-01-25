@@ -144,6 +144,7 @@ public class BaseTypeGenerator_Test {
 
         final Ds3Type enumType = new Ds3Type(
                 "TypeName",
+                null,
                 ds3Elements,
                 ds3EnumConstants);
 
@@ -160,6 +161,7 @@ public class BaseTypeGenerator_Test {
 
         final Ds3Type ds3Type = new Ds3Type(
                 "TypeName",
+                null,
                 ds3Elements,
                 null);
 

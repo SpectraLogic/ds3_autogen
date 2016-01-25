@@ -38,6 +38,7 @@ public class ChecksumTypeGenerator_Test {
 
         final Ds3Type ds3Type = new Ds3Type(
                 "TypeName",
+                null,
                 ds3Elements,
                 null);
 
