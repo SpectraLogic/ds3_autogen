@@ -281,8 +281,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final ResponseModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
     }
-
-    //TODO
+    
     /**
      * Retrieves the associated response generator for the specified Ds3Request
      */
