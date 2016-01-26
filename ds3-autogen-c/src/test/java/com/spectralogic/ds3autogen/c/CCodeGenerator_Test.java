@@ -21,8 +21,8 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.c.models.Header;
+import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -48,9 +48,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Request request : source.getRequests()) {
-                codeGenerator.processTemplate(request, "AmazonS3InitRequestHandler.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "AmazonS3InitRequestHandler.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -73,9 +71,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Enum enumEntry : header.getEnums()) {
-                codeGenerator.processTemplate(enumEntry, "TypedefEnum.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(header, "TypedefEnum.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -101,9 +97,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Enum enumEntry : source.getEnums()) {
-                codeGenerator.processTemplate(enumEntry, "TypedefEnumMatcher.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "TypedefEnumMatcher.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -132,9 +126,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : header.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "TypedefStruct.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -158,9 +150,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : header.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "TypedefStruct.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -185,9 +175,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : header.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "FreeStructPrototype.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(header, "FreeStructPrototype.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -208,9 +196,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : source.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "FreeStruct.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -240,9 +226,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : source.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "FreeStruct.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -276,9 +260,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : source.getStructs()) {
-                codeGenerator.processTemplate(structEntry, "ResponseParser.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());
@@ -316,10 +298,7 @@ public class CCodeGenerator_Test {
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         try {
             final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Struct structEntry : source.getStructs()) {
-                LOG.debug("Entry[" + structEntry.getName() + "]\n");
-                codeGenerator.processTemplate(structEntry, "ResponseParser.ftl", fileUtils.getOutputStream());
-            }
+            codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
 
             final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
             final String output = new String(bstream.toByteArray());

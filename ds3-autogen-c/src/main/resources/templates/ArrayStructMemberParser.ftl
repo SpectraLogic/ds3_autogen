@@ -1,6 +1,6 @@
 
 
-static GPtrArray* ${getStructHelper().getParserFunctionName(name)}(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {
+static GPtrArray* ${structEntry.getStructHelper().getParserFunctionName(structEntry.getName())}(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {
     xmlNodePtr child_node;
 
     GPtrArray* ${structMember.getName()}_array = g_ptr_array_new();
