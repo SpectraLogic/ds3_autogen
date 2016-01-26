@@ -8,16 +8,10 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 public final class EnumConverter {
     private EnumConverter() {}
 
-    private final static EnumConverter enumConverter = new EnumConverter();
-
-    private Enum convert(final Ds3Type ds3Type) {
+    public static Enum toEnum(final Ds3Type ds3Type) {
         final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(ds3Type.getEnumConstants());
         return new Enum(
                 ds3Type.getName(),
                 valuesList);
-    }
-
-    public static Enum toEnum(final Ds3Type ds3Type) {
-        return enumConverter.convert(ds3Type);
     }
 }

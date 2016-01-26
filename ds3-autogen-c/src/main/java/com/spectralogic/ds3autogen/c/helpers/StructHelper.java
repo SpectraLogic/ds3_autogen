@@ -208,12 +208,10 @@ public final class StructHelper {
     }
 
     public static String generateFreeArrayStructMember(final StructMember structMember) {
-        final StringBuilder outputBuilder = new StringBuilder();
-        outputBuilder.append(indent(1)).append("for (index = 0; index < response->num_").append(structMember.getName()).append("; index++) {\n");
-        outputBuilder.append(indent(2)).append(structMember.getType().replace("*","")).append("_free(response_data->").append(structMember.getName()).append("[index]);\n");
-        outputBuilder.append(indent(1)).append("}\n");
-        outputBuilder.append(indent(1)).append("g_free(response_data->").append(structMember.getName()).append(");\n\n");
-        return outputBuilder.toString();
+        return indent(1) + "for (index = 0; index < response->num_" + structMember.getName() + "; index++) {\n"
+             + indent(2) + structMember.getType().replace("*", "") + "_free(response_data->" + structMember.getName() + "[index]);\n"
+             + indent(1) + "}\n"
+             + indent(1) + "g_free(response_data->" + structMember.getName() + ");\n\n";
     }
 
     public static String generateFreeStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {

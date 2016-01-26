@@ -105,12 +105,16 @@ typedef struct _ds3_client {
 
 <#-- **************************************** -->
 <#-- Generate all "Models" from EnumConstants -->
-
+<#list getEnums() as enumEntry>
+    <#include "TypedefEnum.ftl">
+</#list>
 <#-- **************************************** -->
 
 <#-- ********************************************* -->
-<#-- Generate all "FreeModel" functions prototypes -->
-
+<#-- Generate all "FreeStruct" functions prototypes -->
+<#list getStructs() as structEntry>
+    <#include "FreeStructPrototype.ftl">
+</#list>
 <#-- ********************************************* -->
 
 
@@ -134,10 +138,13 @@ LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
 
 <#-- **************************************** -->
 <#-- Generate all "RequestHandler" prototypes -->
-<#-- PUTs                                     -->
-<#-- SETs                                     -->
-<#-- GETs                                     -->
-<#-- Misc                                     -->
+
+<#-- Template not implemented yet
+<#list getRequests() as requestEntry>
+    <#include "RequestHandlerPrototype.ftl">
+</#list>
+-->
+
 <#-- **************************************** -->
 
 
