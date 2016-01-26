@@ -103,7 +103,7 @@ public final class Ds3ModelPartialDataFixture {
      * Creates an empty Ds3Type
      */
     public static Ds3Type createEmptyDs3Type() {
-        return new Ds3Type(null, null, null);
+        return new Ds3Type(null, null, null, null);
     }
 
     /**
@@ -149,7 +149,7 @@ public final class Ds3ModelPartialDataFixture {
      * Creates a Ds3Type that has a name and elements
      */
     public static Ds3Type createDs3TypeTestData(final String typeName, final ImmutableList<Ds3Element> elements) {
-        return new Ds3Type(typeName, elements, null);
+        return new Ds3Type(typeName, null, elements, null);
     }
 
     /**

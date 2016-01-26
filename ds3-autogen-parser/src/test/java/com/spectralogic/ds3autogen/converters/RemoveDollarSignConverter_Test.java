@@ -190,22 +190,24 @@ public class RemoveDollarSignConverter_Test {
 
     @Test
     public void containsType_NullMap_Test() throws TypeRenamingConflictException {
-        assertFalse(containsType("typeName", new Ds3Type("", null, null), null));
+        assertFalse(containsType("typeName", new Ds3Type("", null, null, null), null));
     }
 
     @Test
     public void containsType_EmptyMap_Test() throws TypeRenamingConflictException {
-        assertFalse(containsType("typeName", new Ds3Type("", null, null), ImmutableMap.of()));
+        assertFalse(containsType("typeName", new Ds3Type("", null, null, null), ImmutableMap.of()));
     }
 
     @Test
     public void containsType_FullMap_Test() throws TypeRenamingConflictException {
         final Ds3Type type1 =  new Ds3Type(
                 "com.test.package.Type1",
+                null,
                 createElementsForMap(""),
                 createEnumConstantsForMap(""));
         final Ds3Type type2 = new Ds3Type(
                 "com.test.package.Type2",
+                null,
                 createElementsForMap("_v1"),
                 createEnumConstantsForMap("_v1"));
 
@@ -218,6 +220,7 @@ public class RemoveDollarSignConverter_Test {
 
         final Ds3Type type3 = new Ds3Type(
                 "com.test.package.Type3",
+                null,
                 createElementsForMap("_v2"),
                 createEnumConstantsForMap("_v2"));
 
@@ -228,6 +231,7 @@ public class RemoveDollarSignConverter_Test {
     public void containsType_Exception_Test() throws TypeRenamingConflictException {
         final Ds3Type type =  new Ds3Type(
                 "com.test.package.Type",
+                null,
                 createElementsForMap(""),
                 createEnumConstantsForMap(""));
 
@@ -235,6 +239,7 @@ public class RemoveDollarSignConverter_Test {
 
         final Ds3Type typeWithSameName =  new Ds3Type(
                 "com.test.package.Type",
+                null,
                 createElementsForMap("_v1"),
                 createEnumConstantsForMap("_v1"));
 
@@ -264,10 +269,12 @@ public class RemoveDollarSignConverter_Test {
     public void removeDollarSignFromTypeMap_Exception_Test() throws TypeRenamingConflictException {
         final Ds3Type type1 =  new Ds3Type(
                 "com.test.package.Type",
+                null,
                 createElementsForMap("_v1"),
                 createEnumConstantsForMap("_v1"));
         final Ds3Type type2 = new Ds3Type(
                 "com.test.package.Base$Type",
+                null,
                 createElementsForMap("_v2"),
                 createEnumConstantsForMap("_v2"));
 

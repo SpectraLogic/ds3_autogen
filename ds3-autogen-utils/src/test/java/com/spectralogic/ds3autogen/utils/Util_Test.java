@@ -311,13 +311,13 @@ public class Util_Test {
     @Test
     public void isEnum_Test() {
         assertFalse(isEnum(createDs3TypeTestData("typeName")));
-        assertFalse(isEnum(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of())));
+        assertFalse(isEnum(new Ds3Type("typeName", null, ImmutableList.of(), ImmutableList.of())));
 
-        assertTrue(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), createEmptyDs3EnumConstantList())));
-        assertTrue(isEnum(new Ds3Type("typeName", null, createEmptyDs3EnumConstantList())));
-        assertTrue(isEnum(new Ds3Type("typeName", ImmutableList.of(), createEmptyDs3EnumConstantList())));
-        assertFalse(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), null)));
-        assertFalse(isEnum(new Ds3Type("typeName", createEmptyDs3ElementList(), ImmutableList.of())));
+        assertTrue(isEnum(new Ds3Type("typeName", null, createEmptyDs3ElementList(), createEmptyDs3EnumConstantList())));
+        assertTrue(isEnum(new Ds3Type("typeName", null, null, createEmptyDs3EnumConstantList())));
+        assertTrue(isEnum(new Ds3Type("typeName", null, ImmutableList.of(), createEmptyDs3EnumConstantList())));
+        assertFalse(isEnum(new Ds3Type("typeName", null, createEmptyDs3ElementList(), null)));
+        assertFalse(isEnum(new Ds3Type("typeName", null, createEmptyDs3ElementList(), ImmutableList.of())));
     }
 
     @Test
@@ -325,7 +325,7 @@ public class Util_Test {
         final ImmutableSet<String> nullResult = getUsedTypesFromType(createDs3TypeTestData("typeName"));
         assertThat(nullResult.size(), is(0));
 
-        final ImmutableSet<String> emptyResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), ImmutableList.of()));
+        final ImmutableSet<String> emptyResult = getUsedTypesFromType(new Ds3Type("typeName", null, ImmutableList.of(), ImmutableList.of()));
         assertThat(emptyResult.size(), is(0));
     }
 
@@ -337,13 +337,13 @@ public class Util_Test {
                 createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.pool.PoolState"),
                 createDs3ElementTestData("array", "com.spectralogic.s3.common.dao.domain.tape.TapeState"));
 
-        final ImmutableSet<String> nullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, createEmptyDs3EnumConstantList()));
+        final ImmutableSet<String> nullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, null, createEmptyDs3EnumConstantList()));
         assertThat(nullElementsResult.size(), is(0));
 
-        final ImmutableSet<String> emptyElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ImmutableList.of(), createEmptyDs3EnumConstantList()));
+        final ImmutableSet<String> emptyElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, ImmutableList.of(), createEmptyDs3EnumConstantList()));
         assertThat(emptyElementsResult.size(), is(0));
 
-        final ImmutableSet<String> fullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, createEmptyDs3EnumConstantList()));
+        final ImmutableSet<String> fullElementsResult = getUsedTypesFromType(new Ds3Type("typeName", null, ds3Elements, createEmptyDs3EnumConstantList()));
         assertThat(fullElementsResult.size(), is(0));
     }
 
@@ -360,7 +360,7 @@ public class Util_Test {
         assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
         assertTrue(nullEnumResult.contains("com.spectralogic.s3.common.dao.domain.tape.TapeState"));
 
-        final ImmutableSet<String> emptyEnumResult = getUsedTypesFromType(new Ds3Type("typeName", ds3Elements, ImmutableList.of()));
+        final ImmutableSet<String> emptyEnumResult = getUsedTypesFromType(new Ds3Type("typeName", null, ds3Elements, ImmutableList.of()));
         assertThat(emptyEnumResult.size(), is(2));
         assertTrue(emptyEnumResult.contains("com.spectralogic.s3.common.dao.domain.pool.PoolState"));
         assertTrue(emptyEnumResult.contains("com.spectralogic.s3.common.dao.domain.tape.TapeState"));

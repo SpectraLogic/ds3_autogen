@@ -120,13 +120,14 @@ public class ModelEquals_Test {
                 new Ds3EnumConstant("Name1", null),
                 new Ds3EnumConstant("Name2", null));
 
-        final Ds3Type type = new Ds3Type("Name", elements, enumConstants);
+        final Ds3Type type = new Ds3Type("Name", null, elements, enumConstants);
         assertTrue(type.equals(type));
         assertFalse(type.equals(null));
         assertFalse(type.equals(new Ds3Element("Name", "Type", "ComponentType")));
 
         final Ds3Type typeJumbled = new Ds3Type(
                 "Name",
+                null,
                 ImmutableList.of(
                         new Ds3Element("Name2", "Type2", "ComponentType2"),
                         new Ds3Element("Name1", "Type1", "ComponentType1")),
@@ -134,12 +135,13 @@ public class ModelEquals_Test {
         assertTrue(type.equals(typeJumbled));
         assertTrue(typeJumbled.equals(type));
 
-        final Ds3Type typeDiffName = new Ds3Type("NameDiff", elements, enumConstants);
+        final Ds3Type typeDiffName = new Ds3Type("NameDiff", null, elements, enumConstants);
         assertFalse(type.equals(typeDiffName));
         assertFalse(typeDiffName.equals(type));
 
         final Ds3Type typeDiffElements = new Ds3Type(
                 "Name",
+                null,
                 ImmutableList.of(
                         new Ds3Element("Name2", "Type2", "ComponentType2"),
                         new Ds3Element("Name3", "Type3", "ComponentType3")),
