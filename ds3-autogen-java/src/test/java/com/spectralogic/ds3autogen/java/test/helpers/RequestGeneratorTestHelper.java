@@ -20,6 +20,8 @@ import com.spectralogic.ds3autogen.api.models.*;
 
 public final class RequestGeneratorTestHelper {
 
+    private RequestGeneratorTestHelper() { }
+
     /**
      * Creates a populated Ds3Request to be used by the Java generators
      * for testing.
