@@ -197,28 +197,30 @@ public final class TestHelper {
     }
 
     public static boolean hasModelVariable(final String name, final String type, final String code) {
-        return hasModelVariable(name, type, false, code);
+        return hasModelVariable(name, name, type, false, code);
     }
 
     public static boolean hasModelVariable(
             final String name,
+            final String xmlName,
             final String type,
             final boolean isList,
             final String code) {
-        return hasModelParam(name, type, isList, code)
+        return hasModelParam(name, xmlName, type, isList, code)
                 && hasGetter(name, type, code)
                 && hasSetter(name, type, code);
     }
 
     private static boolean hasModelParam(
             final String name,
+            final String xmlName,
             final String type,
             final boolean isList,
             final String code) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("    @JsonProperty(\"").append(Helper.capFirst(name)).append("\")\n");
+        builder.append("    @JsonProperty(\"").append(Helper.capFirst(xmlName)).append("\")\n");
         if (isList) {
-            builder.append("    @JacksonXmlElementWrapper\n");
+            builder.append("    @JacksonXmlElementWrapper(useWrapping = false)\n");
         }
         builder.append("    private ").append(type).append(" ").append(Helper.uncapFirst(name)).append(";");
         return code.contains(builder.toString());

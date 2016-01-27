@@ -22,6 +22,7 @@ public class Model {
 
     private final String packageName;
     private final String name;
+    private final String nameToMarshal;
     private final ImmutableList<Element> elements;
     private final ImmutableList<EnumConstant> enumConstants;
     private final ImmutableList<String> imports;
@@ -30,11 +31,13 @@ public class Model {
 
     public Model(final String packageName,
                  final String name,
+                 final String nameToMarshal,
                  final ImmutableList<Element> elements,
                  final ImmutableList<EnumConstant> enumConstants,
                  final ImmutableList<String> imports) {
         this.packageName = packageName;
         this.name = name;
+        this.nameToMarshal = nameToMarshal;
         this.elements = elements;
         this.enumConstants = enumConstants;
         this.imports = imports;
@@ -64,5 +67,9 @@ public class Model {
 
     public ImmutableList<EnumConstant> getEnumConstants() {
         return enumConstants;
+    }
+
+    public String getNameToMarshal() {
+        return nameToMarshal;
     }
 }

@@ -18,16 +18,29 @@ package com.spectralogic.ds3autogen.java.models;
 public class Element {
 
     private final String name;
+    private final String xmlTagName;
+    private final boolean asAttribute;
     private final String type;
     private final String componentType;
 
     public Element(
             final String name,
+            final String xmlTagName,
+            final boolean asAttribute,
             final String type,
             final String componentType) {
         this.name = name;
+        this.xmlTagName = xmlTagName;
+        this.asAttribute = asAttribute;
         this.type = type;
         this.componentType = componentType;
+    }
+
+    public Element(
+            final String name,
+            final String type,
+            final String componentType) {
+        this(name, null, false, type, componentType);
     }
 
     public String getName() {
@@ -40,5 +53,13 @@ public class Element {
 
     public String getComponentType() {
         return componentType;
+    }
+
+    public String getXmlTagName() {
+        return xmlTagName;
+    }
+
+    public boolean isAsAttribute() {
+        return asAttribute;
     }
 }
