@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.ChecksumTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.JobsApiBeanTypeGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
@@ -159,6 +160,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isChecksum(ds3Type)) {
             return new ChecksumTypeGenerator();
         }
+        if (isJobsApiBean(ds3Type)) {
+            return new JobsApiBeanTypeGenerator();
+        }
         return new BaseTypeGenerator();
     }
 
@@ -188,6 +192,13 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isChecksum(final Ds3Type ds3Type) {
         return ds3Type.getName().endsWith(".ChecksumType");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the JobsApiBean type
+     */
+    private boolean isJobsApiBean(final Ds3Type ds3Type) {
+        return ds3Type.getName().endsWith(".JobsApiBean");
     }
 
     /**

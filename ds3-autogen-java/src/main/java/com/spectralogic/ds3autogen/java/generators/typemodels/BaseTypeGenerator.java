@@ -48,12 +48,12 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * Gets the NameToMarshal value that describes this Ds3Type. This refers to
      * the xml encapsulating tag for the payload described by this model
      */
-    public static String toNameToMarshal(final Ds3Type ds3Type) {
+    protected String toNameToMarshal(final Ds3Type ds3Type) {
         if (ds3Type.getNameToMarshal() == null) {
             return "Data";
         }
         if (ds3Type.getNameToMarshal().equals("")) {
-            return ds3Type.getName();
+            return null;
         }
         return ds3Type.getNameToMarshal();
     }
@@ -74,7 +74,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * @param ds3Elements A list of Ds3Elements
      * @return A list of Element models
      */
-    protected static ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements) {
+    protected ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements) {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
@@ -90,7 +90,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * @param ds3Element A Ds3Element
      * @return An Element model
      */
-    protected static Element toElement(final Ds3Element ds3Element) {
+    protected Element toElement(final Ds3Element ds3Element) {
         return new Element(
                 ds3Element.getName(),
                 getXmlTagName(ds3Element),
@@ -99,7 +99,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
                 ds3Element.getType(),
                 ds3Element.getComponentType());
     }
-    
+
     /**
      * Determines if the element associated with this list of annotations
      * has an Xml wrapper

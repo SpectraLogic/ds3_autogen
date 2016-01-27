@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class BaseTypeGenerator_Test {
@@ -64,7 +65,7 @@ public class BaseTypeGenerator_Test {
     @Test
     public void toElement_Test() {
         final Ds3Element ds3Element = new Ds3Element("Name", "Type", "ComponentType");
-        final Element result = toElement(ds3Element);
+        final Element result = generator.toElement(ds3Element);
         assertThat(result.getName(), is("Name"));
         assertThat(result.getType(), is("Type"));
         assertThat(result.getComponentType(), is("ComponentType"));
@@ -72,13 +73,13 @@ public class BaseTypeGenerator_Test {
 
     @Test
     public void toElementList_NullList_Test() {
-        final ImmutableList<Element> result = toElementList(null);
+        final ImmutableList<Element> result = generator.toElementList(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toElementList_EmptyList_Test() {
-        final ImmutableList<Element> result = toElementList(ImmutableList.of());
+        final ImmutableList<Element> result = generator.toElementList(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
@@ -89,7 +90,7 @@ public class BaseTypeGenerator_Test {
                 new Ds3Element("Name2", "Type2", "ComponentType2")
         );
 
-        final ImmutableList<Element> result = toElementList(ds3Elements);
+        final ImmutableList<Element> result = generator.toElementList(ds3Elements);
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getName(), is("Name1"));
         assertThat(result.get(1).getName(), is("Name2"));
@@ -260,21 +261,21 @@ public class BaseTypeGenerator_Test {
     @Test
     public void toNameToMarshal_NullValue_Test() {
         final Ds3Type type = new Ds3Type("Name", null, null, null);
-        final String result = toNameToMarshal(type);
+        final String result = generator.toNameToMarshal(type);
         assertThat(result, is("Data"));
     }
 
     @Test
     public void toNameToMarshal_EmptyValue_Test() {
         final Ds3Type type = new Ds3Type("Name", "", null, null);
-        final String result = toNameToMarshal(type);
-        assertThat(result, is("Name"));
+        final String result = generator.toNameToMarshal(type);
+        assertThat(result, is(nullValue()));
     }
 
     @Test
     public void toNameToMarshal_Value_Test() {
         final Ds3Type type = new Ds3Type("Name", "Objects", null, null);
-        final String result = toNameToMarshal(type);
+        final String result = generator.toNameToMarshal(type);
         assertThat(result, is("Objects"));
     }
 
