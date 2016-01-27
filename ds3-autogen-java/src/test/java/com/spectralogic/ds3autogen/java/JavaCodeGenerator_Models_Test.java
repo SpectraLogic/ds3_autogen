@@ -98,8 +98,8 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
 
-        assertTrue(hasModelVariable("Pools", "Pool", "List<Pool>", true, modelGeneratedCode));
-        assertTrue(hasModelVariable("Tapes", "Tape", "List<Tape>", true, modelGeneratedCode));
+        assertTrue(hasModelVariable("Pools", "Pools", "List<Pool>", true, modelGeneratedCode));
+        assertTrue(hasModelVariable("Tapes", "Tapes", "List<Tape>", true, modelGeneratedCode));
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
         assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper", modelGeneratedCode));

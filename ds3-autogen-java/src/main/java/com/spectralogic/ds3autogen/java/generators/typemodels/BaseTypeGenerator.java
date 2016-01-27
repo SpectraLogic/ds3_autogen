@@ -95,8 +95,45 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
                 ds3Element.getName(),
                 getXmlTagName(ds3Element),
                 toElementAsAttribute(ds3Element.getDs3Annotations()),
+                hasWrapperAnnotations(ds3Element.getDs3Annotations()),
                 ds3Element.getType(),
                 ds3Element.getComponentType());
+    }
+    
+    /**
+     * Determines if the element associated with this list of annotations
+     * has an Xml wrapper
+     */
+    protected static boolean hasWrapperAnnotations(
+            final ImmutableList<Ds3Annotation> annotations) {
+        if (isEmpty(annotations)) {
+            return false;
+        }
+        for (final Ds3Annotation annotation : annotations) {
+            if (annotation.getName().endsWith("CustomMarshaledName")
+                    && hasWrapperAnnotationElements(annotation.getDs3AnnotationElements())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determines if the element associated with this list of annotation elements
+     * has an Xml wrapper
+     */
+    protected static boolean hasWrapperAnnotationElements(
+            final ImmutableList<Ds3AnnotationElement> annotationElements) {
+        if (isEmpty(annotationElements)) {
+            return false;
+        }
+        for (final Ds3AnnotationElement annotationElement : annotationElements) {
+            if (annotationElement.getName().equals("CollectionValue")
+                    && hasContent(annotationElement.getValue())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

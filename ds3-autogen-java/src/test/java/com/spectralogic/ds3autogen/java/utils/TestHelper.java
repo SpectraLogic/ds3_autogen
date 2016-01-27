@@ -220,7 +220,8 @@ public final class TestHelper {
         final StringBuilder builder = new StringBuilder();
         builder.append("    @JsonProperty(\"").append(Helper.capFirst(xmlName)).append("\")\n");
         if (isList) {
-            builder.append("    @JacksonXmlElementWrapper(useWrapping = false)\n");
+            builder.append("    @JacksonXmlElementWrapper(useWrapping = " +
+                    Boolean.toString(name.equals(xmlName)).toLowerCase() + ")\n");
         }
         builder.append("    private ").append(type).append(" ").append(Helper.uncapFirst(name)).append(";");
         return code.contains(builder.toString());

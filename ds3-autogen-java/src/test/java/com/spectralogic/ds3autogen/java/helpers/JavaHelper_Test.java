@@ -228,6 +228,7 @@ public class JavaHelper_Test {
                 "testName",
                 "xmlName",
                 false,
+                false,
                 "testType",
                 null);
         final String result = getModelVariable(element);
@@ -243,6 +244,7 @@ public class JavaHelper_Test {
                 "testName",
                 "xmlName",
                 true,
+                false,
                 "testType",
                 null);
         final String result = getModelVariable(element);
@@ -259,6 +261,24 @@ public class JavaHelper_Test {
                 "testName",
                 "xmlName",
                 false,
+                false,
+                "array",
+                "com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        final String result = getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable_ComponentType_Wrapper_Test() {
+        final String expectedResult =
+                "    @JsonProperty(\"TestName\")\n"
+                        + "    @JacksonXmlElementWrapper(useWrapping = true)\n"
+                        + "    private List<BlobApiBean> testName;";
+        final Element element = new Element(
+                "testName",
+                "xmlName",
+                false,
+                true,
                 "array",
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
         final String result = getModelVariable(element);

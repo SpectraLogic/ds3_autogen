@@ -347,7 +347,7 @@ public final class JavaHelper {
                 .map(i -> i)
                 .collect(Collectors.joining(", "));
     }
-    
+
     /**
      * Creates the template lines for variables within Java generated models
      */
@@ -359,7 +359,12 @@ public final class JavaHelper {
                     .append("@JacksonXmlProperty(isAttribute = true, localName = \"")
                     .append(element.getXmlTagName())
                     .append("\")\n");
-        } else {
+        } else if (element.hasWrapper() == true) {
+            builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
+            if (element.getComponentType() != null) {
+                builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = true)\n");
+            }
+        } else if (element.hasWrapper() == false) {
             builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getXmlTagName())).append("\")\n");
             if (element.getComponentType() != null) {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");

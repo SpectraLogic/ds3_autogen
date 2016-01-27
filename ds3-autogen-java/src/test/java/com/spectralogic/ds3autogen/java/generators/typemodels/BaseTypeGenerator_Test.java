@@ -303,4 +303,80 @@ public class BaseTypeGenerator_Test {
                 createSimpleNameAnnotation());
         assertThat(toElementAsAttribute(annotations), is(false));
     }
+
+    @Test
+    public void hasWrapperAnnotationElements_NullList_Test() {
+        assertThat(hasWrapperAnnotationElements(null), is(false));
+    }
+
+    @Test
+    public void hasWrapperAnnotationElements_EmptyList_Test() {
+        assertThat(hasWrapperAnnotationElements(ImmutableList.of()), is(false));
+    }
+
+    @Test
+    public void hasWrapperAnnotationElements_HasWrapper_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotationElements = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "Nodes", "java.lang.String"),
+                new Ds3AnnotationElement(
+                        "CollectionValueRenderingMode",
+                        "SINGLE_BLOCK_FOR_ALL_ELEMENTS",
+                        "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "Node", "java.lang.String"));
+        assertThat(hasWrapperAnnotationElements(annotationElements), is(true));
+    }
+
+    @Test
+    public void hasWrapperAnnotationElements_NoWrapper_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotationElements = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "", "java.lang.String"),
+                new Ds3AnnotationElement(
+                        "CollectionValueRenderingMode",
+                        "UNDEFINED",
+                        "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "object", "java.lang.String"));
+        assertThat(hasWrapperAnnotationElements(annotationElements), is(false));
+    }
+
+    @Test
+    public void hasWrapperAnnotations_NullList_Test() {
+        assertThat(hasWrapperAnnotations(null), is(false));
+    }
+
+    @Test
+    public void hasWrapperAnnotations_EmptyList_Test() {
+        assertThat(hasWrapperAnnotations(ImmutableList.of()), is(false));
+    }
+
+    @Test
+    public void hasWrapperAnnotations_HasWrapper_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotationElements = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "Nodes", "java.lang.String"),
+                new Ds3AnnotationElement(
+                        "CollectionValueRenderingMode",
+                        "SINGLE_BLOCK_FOR_ALL_ELEMENTS",
+                        "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "Node", "java.lang.String"));
+
+        final ImmutableList<Ds3Annotation> annotations = ImmutableList.of(
+                new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName", annotationElements));
+
+        assertThat(hasWrapperAnnotations(annotations), is(true));
+    }
+
+    @Test
+    public void hasWrapperAnnotations_NoWrapper_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotationElements = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "", "java.lang.String"),
+                new Ds3AnnotationElement(
+                        "CollectionValueRenderingMode",
+                        "UNDEFINED",
+                        "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "object", "java.lang.String"));
+
+        final ImmutableList<Ds3Annotation> annotations = ImmutableList.of(
+                new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName", annotationElements));
+
+        assertThat(hasWrapperAnnotations(annotations), is(false));
+    }
 }
