@@ -25,7 +25,7 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = response.getResponseStream()) {
-                    this.jobChunkContainerApiBeanResult = XmlOutput.fromXml(content, JobChunkContainerApiBean.class);
+                    this.jobChunkApiBeanResult = XmlOutput.fromXml(content, JobChunkApiBean.class);
                     this.status = Status.ALLOCATED;
                 }
                 break;
