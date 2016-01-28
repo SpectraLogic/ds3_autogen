@@ -24,8 +24,8 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
-import com.spectralogic.ds3autogen.java.converters.RequestConverter;
 import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
+import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -401,7 +401,26 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Request model
      */
     private Request toRequest(final Ds3Request ds3Request) {
-        return RequestConverter.toRequest(ds3Request, getCommandPackage(ds3Request));
+        final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+    }
+
+    /**
+     * Retrieves the associated request generator for the specified Ds3Request
+     */
+    private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isBulkRequest(ds3Request)) {
+            return new BulkRequestGenerator();
+        } else if (isPhysicalPlacementRequest(ds3Request)) {
+            return new PhysicalPlacementRequestGenerator();
+        } else if (isCreateObjectRequest(ds3Request)) {
+            return new CreateObjectRequestGenerator();
+        } else if (isCreateNotificationRequest(ds3Request)) {
+            return new CreateNotificationRequestGenerator();
+        } else if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
+            return new NotificationRequestGenerator();
+        }
+        return new BaseRequestGenerator();
     }
 
     /**

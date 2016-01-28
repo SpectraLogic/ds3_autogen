@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
+import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -141,12 +142,27 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void getType_Test() {
+    public void getType_Argument_Test() {
         assertThat(getType(new Arguments("void", "test")), is("boolean"));
         assertThat(getType(new Arguments("Integer", "test")), is("int"));
         assertThat(getType(new Arguments("long", "test")), is("long"));
         assertThat(getType(new Arguments(null, "test")), is(""));
         assertThat(getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
+    }
+
+    @Test
+    public void getType_Variable_Test() {
+        assertThat(getType(new Variable("test", "void", true)), is("boolean"));
+        assertThat(getType(new Variable("test", "Integer", true)), is("int"));
+        assertThat(getType(new Variable("test", "long", true)), is("long"));
+        assertThat(getType(new Variable("test", null, true)), is(""));
+        assertThat(getType(new Variable("test", "ChecksumType", true)), is("ChecksumType.Type"));
+
+        assertThat(getType(new Variable("test", "void", false)), is("boolean"));
+        assertThat(getType(new Variable("test", "Integer", false)), is("int"));
+        assertThat(getType(new Variable("test", "long", false)), is("long"));
+        assertThat(getType(new Variable("test", null, false)), is(""));
+        assertThat(getType(new Variable("test", "ChecksumType", false)), is("ChecksumType.Type"));
     }
 
     @Test
@@ -314,14 +330,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void isBulkRequestArg_Test() {
-        assertTrue(isBulkRequestArg("Priority"));
-        assertTrue(isBulkRequestArg("WriteOptimization"));
-        assertTrue(isBulkRequestArg("BucketName"));
-        assertFalse(isBulkRequestArg("ChunkClientProcessingOrderGuarantee"));
-    }
-
-    @Test
     public void createWithConstructor_Test() {
         final String expectedResult =
                 "    public RequestName withArgName(final ArgType argName) {\n" +
@@ -453,15 +461,6 @@ public class JavaHelper_Test {
         final ImmutableList<EnumConstant> result = addEnum(enumConstants, "FOUR");
         assertThat(result.size(), is(4));
         assertThat(result.get(3).getName(), is("FOUR"));
-    }
-
-    @Test
-    public void isSpectraDs3_Test() {
-        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3"));
-        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands"));
-
-        assertTrue(isSpectraDs3("com.spectralogic.ds3client.commands.spectrads3.notifications"));
-        assertFalse(isSpectraDs3("com.spectralogic.ds3client.commands.notifications"));
     }
 
     @Test
@@ -702,7 +701,7 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void createAllResponseResultGetters_List_Test() {
+    public void createAllResponseResultGetters_FullList_Test() {
         final String getterSimpleType =
                 "    public SystemFailure getSystemFailureResult() {\n" +
                 "        return this.systemFailureResult;\n" +
@@ -726,5 +725,34 @@ public class JavaHelper_Test {
         final String result = createAllResponseResultGetters(responseCodes);
         assertTrue(result.contains(getterSimpleType));
         assertTrue(result.contains(getterCompositeType));
+    }
+
+    @Test
+    public void removeVariable_NullList_Test() {
+        final ImmutableList<Variable> result = removeVariable(null, "test");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVariable_EmptyList_Test() {
+        final ImmutableList<Variable> result = removeVariable(ImmutableList.of(), "test");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVariable_FullList_Test() {
+        final ImmutableList<Variable> variables = ImmutableList.of(
+                new Variable("Name", "Type", false),
+                new Variable("Name2", "Type2", false));
+
+        final ImmutableList<Variable> nullVarName = removeVariable(variables, null);
+        assertThat(nullVarName.size(), is(2));
+
+        final ImmutableList<Variable> emptyVarName = removeVariable(variables, "");
+        assertThat(emptyVarName.size(), is(2));
+
+        final ImmutableList<Variable> result = removeVariable(variables, "Name");
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("Name2"));
     }
 }
