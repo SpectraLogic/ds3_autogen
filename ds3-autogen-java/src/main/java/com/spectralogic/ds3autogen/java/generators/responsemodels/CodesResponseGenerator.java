@@ -41,7 +41,7 @@ public class CodesResponseGenerator extends BaseResponseGenerator {
      * contains the expected response codes.
      */
     @Override
-    protected ImmutableList<Ds3ResponseCode> toResponseCodes(
+    public ImmutableList<Ds3ResponseCode> toResponseCodes(
             final Ds3Request request) {
         if (!isAllocateJobChunkRequest(request)
                 && !isHeadObjectRequest(request)

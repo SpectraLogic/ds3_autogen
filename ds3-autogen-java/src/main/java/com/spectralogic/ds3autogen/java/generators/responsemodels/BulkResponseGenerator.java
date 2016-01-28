@@ -31,7 +31,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
      * is BulkResponse
      */
     @Override
-    protected String getParentImport() {
+    public String getParentImport() {
         return BULK_RESPONSE_IMPORT;
     }
 
@@ -40,7 +40,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
      * Spectra S3 command.
      */
     @Override
-    protected ImmutableList<String> getAllImports(
+    public ImmutableList<String> getAllImports(
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final String packageName) {
         if (isEmpty(responseCodes)) {

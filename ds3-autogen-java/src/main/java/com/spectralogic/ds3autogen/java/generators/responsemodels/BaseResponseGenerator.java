@@ -27,7 +27,7 @@ import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.isSpectraDs3;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-public class BaseResponseGenerator implements ResponseModelGenerator {
+public class BaseResponseGenerator implements ResponseModelGenerator<Response>, ResponseGeneratorUtil {
 
     private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.AbstractResponse";
 
@@ -48,7 +48,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
      * Converts the Ds3Request name into a Response name by removing the path and
      * changing the name ending from "Request" into "Response"
      */
-    protected String toResponseName(final String ds3RequestName) {
+    protected static String toResponseName(final String ds3RequestName) {
         if (isEmpty(ds3RequestName)) {
             return "";
         }
@@ -59,7 +59,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
     /**
      * Gets the response codes required to generate this response
      */
-    protected ImmutableList<Ds3ResponseCode> toResponseCodes(
+    @Override
+    public ImmutableList<Ds3ResponseCode> toResponseCodes(
             final Ds3Request request) {
         return removeErrorResponseCodes(request.getDs3ResponseCodes());
     }
@@ -68,7 +69,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
      * Returns the import for the parent class for standard response, which
      * is AbstractResponse
      */
-    protected String getParentImport() {
+    @Override
+    public String getParentImport() {
         return ABSTRACT_RESPONSE_IMPORT;
     }
 
@@ -76,7 +78,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator {
      * Gets all the imports associated with response types that the response will
      * need in order to properly generate the Java request code
      */
-    protected ImmutableList<String> getAllImports(
+    @Override
+    public ImmutableList<String> getAllImports(
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final String packageName) {
         if (isEmpty(responseCodes)) {
