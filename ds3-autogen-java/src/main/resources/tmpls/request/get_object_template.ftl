@@ -2,7 +2,6 @@
 
 package ${packageName};
 
-<#include "common/import_abstract_request.ftl"/>
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
