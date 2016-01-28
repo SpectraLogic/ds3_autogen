@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -27,9 +26,7 @@ import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.Header;
-import com.spectralogic.ds3autogen.c.models.Request;
-import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -45,8 +42,10 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -68,34 +67,33 @@ public class CCodeGenerator implements CodeGenerator {
         this.fileUtils = fileUtils;
 
         try {
-            generateHeader();
-            generateSource();
-        } catch (final TemplateException | ParseException e) {
+            final ImmutableList<Enum> allEnums = getAllEnums(spec);
+            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec);
+            final ImmutableList<Request> allRequests = getAllRequests(spec);
+
+            generateHeader(allEnums, allStructs, allRequests);
+            generateSource(allEnums, allStructs, allRequests);
+        } catch (final ParseException e) {
             LOG.error("Caught exception: ", e);
         }
     }
 
-    public void generateHeader() throws IOException, ParseException {
+    public void generateHeader(
+            final ImmutableList<Enum> allEnums,
+            final ImmutableList<Struct> allOrderedStructs,
+            final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
-        final OutputStream outputStream = fileUtils.getOutputFile(path);
-
-        final ImmutableList<Enum> allEnums = getAllEnums(spec);
-        final ImmutableList<Struct> allStructs = getStructsOrderedList(spec);
-        final ImmutableList<Request> allRequests = getAllRequests(spec);
-
-        final Header header = new Header(allEnums,allStructs,allRequests);
-        processTemplate(header, "ds3_h.ftl", outputStream);
+        final Header header = new Header(allEnums,allOrderedStructs,allRequests);
+        processTemplate(header, "ds3_h.ftl", fileUtils.getOutputFile(path));
     }
 
-    public void generateSource() throws IOException, TemplateException, ParseException {
+    public void generateSource(
+        final ImmutableList<Enum> allEnums,
+        final ImmutableList<Struct> allOrderedStructs,
+        final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.c");
-        final OutputStream outputStream = fileUtils.getOutputFile(path);
-        final ImmutableList<Enum> allEnums = getAllEnums(spec);
-        final ImmutableList<Struct> allStructs = getStructsOrderedList(spec);
-        final ImmutableList<Request> allRequests = getAllRequests(spec);
-
-        final Header header = new Header(allEnums,allStructs,allRequests);
-        processTemplate(header, "ds3_h.ftl", outputStream);
+        final Source source = new Source(allEnums,allOrderedStructs,allRequests);
+        processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
 
     }
 
@@ -119,21 +117,26 @@ public class CCodeGenerator implements CodeGenerator {
         return allStructsBuilder.build();
     }
 
-    // return structs which contain only primitive types first, and then cascade for structs that contain other structs
+    /**
+     * Return structs which contain only primitive types first, and then cascade for structs that contain other structs
+     *
+     * @throws java.text.ParseException
+     */
     public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
-        final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec).asList());
-        final ImmutableSet.Builder<String> existingTypesBuilder = ImmutableSet.builder();
+        final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec));
+        final Set<String> existingTypes = new HashSet<>();
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.peek();
             if (orderedStructsBuilder.build().contains(structEntry)) {
+                LOG.warn("Skipping structEntry " + structEntry.getName());
                 continue;
             }
 
-            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypesBuilder.build())) {
-                existingTypesBuilder.add(StructHelper.getResponseTypeName(structEntry.getName()));
+            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypes)) {
+                existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructsBuilder.add(allStructs.remove());
             } else {  // move to end to come back to
                 allStructs.add(allStructs.remove());
@@ -155,7 +158,7 @@ public class CCodeGenerator implements CodeGenerator {
         return orderedStructsBuilder.build();
     }
 
-    public static ImmutableList<Request> getAllRequests(Ds3ApiSpec spec) throws ParseException {
+    public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
         final ImmutableList.Builder<Request> allRequestsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getRequests())) {
             for (final Ds3Request ds3Request: spec.getRequests()) {
@@ -171,10 +174,8 @@ public class CCodeGenerator implements CodeGenerator {
         final Writer writer = new OutputStreamWriter(outputStream);
         try {
             template.process(obj, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + templateName, e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + templateName, e);
+        } catch (final NullPointerException | TemplateException e) {
+            LOG.error("Unable to process template " + templateName, e);
         }
     }
 }

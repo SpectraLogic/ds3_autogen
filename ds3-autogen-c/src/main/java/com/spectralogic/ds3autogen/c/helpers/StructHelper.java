@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
@@ -26,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
@@ -135,7 +135,7 @@ public final class StructHelper {
         return builder.build();
     }
 
-    public static boolean containsExistingStructs(final Struct struct, final ImmutableSet<String> existingStructs) {
+    public static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
         for (final StructMember structMember: struct.getVariables()) {
             final String testType = StringUtils.stripEnd(structMember.getType(), "*");
             if (!existingStructs.contains(testType)) {

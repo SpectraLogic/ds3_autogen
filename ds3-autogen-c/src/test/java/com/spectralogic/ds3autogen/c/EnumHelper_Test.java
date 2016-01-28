@@ -43,10 +43,7 @@ public class EnumHelper_Test {
     public void testConvertDs3EnumConstants() {
         final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
         final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
-        final ImmutableList.Builder<Ds3EnumConstant> enumsBuilder = ImmutableList.builder();
-        enumsBuilder.add(alpha);
-        enumsBuilder.add(bravo);
-        final ImmutableList<Ds3EnumConstant> enumConstants = enumsBuilder.build();
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
 
         final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
         assertFalse(stringsList.isEmpty());
@@ -58,10 +55,7 @@ public class EnumHelper_Test {
     public void testGetEnumValues() {
         final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
         final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
-        final ImmutableList.Builder<Ds3EnumConstant> enumsBuilder = ImmutableList.builder();
-        enumsBuilder.add(alpha);
-        enumsBuilder.add(bravo);
-        final ImmutableList<Ds3EnumConstant> enumConstants = enumsBuilder.build();
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
 
         final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
 
