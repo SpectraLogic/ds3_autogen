@@ -26,7 +26,7 @@ public class JobsApiBeanTypeGenerator extends BaseTypeGenerator {
      * the contract
      */
     @Override
-    protected String toNameToMarshal(final Ds3Type ds3Type) {
+    public String toNameToMarshal(final Ds3Type ds3Type) {
         return "Jobs";
     }
 
@@ -35,7 +35,7 @@ public class JobsApiBeanTypeGenerator extends BaseTypeGenerator {
      * the Jobs element, then its hasWrapper property is set to false.
      */
     @Override
-    protected Element toElement(final Ds3Element ds3Element) {
+    public Element toElement(final Ds3Element ds3Element) {
         final Boolean hasWrapper;
         if (ds3Element.getName().equals("Jobs")) {
             hasWrapper = false;

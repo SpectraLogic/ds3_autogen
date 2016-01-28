@@ -16,40 +16,38 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-
-public class ChecksumTypeGenerator extends BaseTypeGenerator {
+public interface TypeGeneratorUtil {
 
     /**
-     * Returns an empty list as the ChecksumType does not have any imports
+     * Gets the NameToMarshal value that describes this Ds3Type. This refers to
+     * the xml encapsulating tag for the payload described by this model
      */
-    @Override
-    public ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
-        return ImmutableList.of();
-    }
+    String toNameToMarshal(final Ds3Type ds3Type);
+
+    /**
+     * Converts a list of Ds3Elements into al ist of Element models
+     */
+    ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements);
+
+    /**
+     * Converts a Ds3Element into an Element model
+     */
+    Element toElement(final Ds3Element ds3Element);
 
     /**
      * Converts a list of Ds3EnumConstants into a list of EnumConstant models
-     * @param ds3EnumConstants A list of Ds3EnumConstants
-     * @return A list of EnumConstant models
      */
-    @Override
-    public ImmutableList<EnumConstant> toEnumConstantList(
-            final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
-        if (isEmpty(ds3EnumConstants)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
-        for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
-            builder.add(toEnumConstant(ds3EnumConstant));
-        }
+    ImmutableList<EnumConstant> toEnumConstantList(final ImmutableList<Ds3EnumConstant> ds3EnumConstants);
 
-        builder.add(new EnumConstant("NONE"));
-
-        return builder.build();
-    }
+    /**
+     * Gets all the required imports that the Model will need in order to properly
+     * generate the java model code
+     */
+    ImmutableList<String> getAllImports(final Ds3Type ds3Type);
 }

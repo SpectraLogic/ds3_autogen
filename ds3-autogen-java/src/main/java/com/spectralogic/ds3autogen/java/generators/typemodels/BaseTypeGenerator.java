@@ -26,7 +26,7 @@ import com.spectralogic.ds3autogen.java.models.Model;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-public class BaseTypeGenerator implements TypeModelGenerator<Model> {
+public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGeneratorUtil {
 
     @Override
     public Model generate(final Ds3Type ds3Type, final String packageName) {
@@ -48,7 +48,8 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * Gets the NameToMarshal value that describes this Ds3Type. This refers to
      * the xml encapsulating tag for the payload described by this model
      */
-    protected String toNameToMarshal(final Ds3Type ds3Type) {
+    @Override
+    public String toNameToMarshal(final Ds3Type ds3Type) {
         if (ds3Type.getNameToMarshal() == null) {
             return "Data";
         }
@@ -74,7 +75,8 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * @param ds3Elements A list of Ds3Elements
      * @return A list of Element models
      */
-    protected ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements) {
+    @Override
+    public ImmutableList<Element> toElementList(final ImmutableList<Ds3Element> ds3Elements) {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
@@ -90,7 +92,8 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * @param ds3Element A Ds3Element
      * @return An Element model
      */
-    protected Element toElement(final Ds3Element ds3Element) {
+    @Override
+    public Element toElement(final Ds3Element ds3Element) {
         return new Element(
                 ds3Element.getName(),
                 getXmlTagName(ds3Element),
@@ -215,7 +218,8 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * @param ds3EnumConstants A list of Ds3EnumConstants
      * @return A list of EnumConstant models
      */
-    protected ImmutableList<EnumConstant> toEnumConstantList(
+    @Override
+    public ImmutableList<EnumConstant> toEnumConstantList(
             final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
         if (isEmpty(ds3EnumConstants)) {
             return ImmutableList.of();
@@ -240,7 +244,8 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model> {
      * Gets all the required imports that the Model will need in order to properly
      * generate the java model code
      */
-    protected ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
+    @Override
+    public ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
         //If this is an enum, then there are no imports
         if (hasContent(ds3Type.getEnumConstants())) {
             return ImmutableList.of();
