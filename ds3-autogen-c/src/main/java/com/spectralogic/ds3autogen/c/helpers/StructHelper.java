@@ -211,12 +211,10 @@ public final class StructHelper {
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
             outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember));
         }
-        // TODO Leaving the catch case commented out unless needed.
-        /*
-        outputBuilder.append(indent(3)).append("} else {").append("\n");
-        outputBuilder.append(indent(4)).
+
+        outputBuilder.append(indent(2)).append("} else {").append("\n");
+        outputBuilder.append(indent(3)).
                 append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
-        */
         outputBuilder.append(indent(2)).append("}").append("\n");
 
         return outputBuilder.toString();

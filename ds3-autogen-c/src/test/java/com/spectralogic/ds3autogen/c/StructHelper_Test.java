@@ -127,6 +127,8 @@ public class StructHelper_Test {
         assertTrue(output.contains("        response->bool_element = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
         assertTrue(output.contains("        response->bean_element = _parse_ds3_bean_element_response(log, doc, child_node);"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("    }"));
     }
 
