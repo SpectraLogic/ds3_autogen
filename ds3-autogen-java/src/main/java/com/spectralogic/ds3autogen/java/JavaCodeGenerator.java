@@ -21,10 +21,13 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.converters.ModelConverter;
-import com.spectralogic.ds3autogen.java.converters.RequestConverter;
+import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
@@ -278,14 +281,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Response
      */
     private Response toResponse(final Ds3Request ds3Request) {
-        final ResponseModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        final ResponseModelGenerator<?> modelGenerator = getResponseTemplateModelGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
     }
     
     /**
      * Retrieves the associated response generator for the specified Ds3Request
      */
-    private ResponseModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    private ResponseModelGenerator<?> getResponseTemplateModelGenerator(final Ds3Request ds3Request) {
         if (isAllocateJobChunkRequest(ds3Request)
                 || isHeadObjectRequest(ds3Request)
                 || isHeadBucketRequest(ds3Request)) {
@@ -381,7 +384,26 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Request model
      */
     private Request toRequest(final Ds3Request ds3Request) {
-        return RequestConverter.toRequest(ds3Request, getCommandPackage(ds3Request));
+        final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+    }
+
+    /**
+     * Retrieves the associated request generator for the specified Ds3Request
+     */
+    private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isBulkRequest(ds3Request)) {
+            return new BulkRequestGenerator();
+        } else if (isPhysicalPlacementRequest(ds3Request)) {
+            return new PhysicalPlacementRequestGenerator();
+        } else if (isCreateObjectRequest(ds3Request)) {
+            return new CreateObjectRequestGenerator();
+        } else if (isCreateNotificationRequest(ds3Request)) {
+            return new CreateNotificationRequestGenerator();
+        } else if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
+            return new NotificationRequestGenerator();
+        }
+        return new BaseRequestGenerator();
     }
 
     /**

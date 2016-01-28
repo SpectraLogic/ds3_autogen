@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
@@ -25,6 +24,7 @@ import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
+import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.ArrayList;
@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.isBulkRequestArg;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
@@ -45,21 +47,10 @@ public final class JavaHelper {
 
     private final static JavaHelper javaHelper = new JavaHelper();
 
-    private final static ImmutableSet<String> bulkBaseClassArgs = ImmutableSet.of("Priority", "WriteOptimization", "BucketName");
-
     private JavaHelper() {}
 
     public static JavaHelper getInstance() {
         return javaHelper;
-    }
-
-    /**
-     * Determines if the name of an argument is a parameter within the parent class BulkRequest.
-     * This is used to determine if a private variable needs to be created within a bulk child
-     * class or if said variable is inherited from the parent BulkRequest class.
-     */
-    public static boolean isBulkRequestArg(final String argName) {
-        return bulkBaseClassArgs.contains(argName);
     }
 
     /**
@@ -113,7 +104,7 @@ public final class JavaHelper {
      */
     public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
         final StringBuilder stringBuilder = new StringBuilder();
-        if (bulkBaseClassArgs.contains(arg.getName())) {
+        if (isBulkRequestArg(arg.getName())) {
             stringBuilder.append(indent(1)).append("@Override\n").append(withConstructorFirstLine(arg, requestName)).append(indent(2)).append("super.with").append(capFirst(arg.getName())).append("(").append(uncapFirst(arg.getName())).append(");\n");
         } else if (arg.getName().equals("MaxUploadSize")) {
             stringBuilder.append(maxUploadSizeWithConstructor(arg, requestName));
@@ -287,6 +278,16 @@ public final class JavaHelper {
     }
 
     /**
+     * Gets the type of a variable, converting the type from Contract type to Java type.
+     * @param var A variable
+     * @return The Java type of the Variable
+     */
+    public static String getType(final Variable var) {
+        final Arguments arg = new Arguments(var.getType(), var.getName());
+        return getType(arg);
+    }
+
+    /**
      * Gets the type of an argument, converting the type from Contract type to Java type.
      * @param arg An Argument
      * @return The Java type of the Argument
@@ -335,7 +336,7 @@ public final class JavaHelper {
             return "";
         }
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Arguments arg : arguments) {
+        for (final Arguments arg : sortConstructorArgs(arguments)) {
             if (arg.getName().equals(modifyArgName)) {
                 builder.add(toArgName);
             } else {
@@ -439,15 +440,6 @@ public final class JavaHelper {
         }
         builder.add(new EnumConstant(newEnumValue));
         return builder.build();
-    }
-
-    /**
-     * Determines of package is SpectraDs3. This is used to determine if request/response handlers
-     * need to include an import to parent class.
-     * @return True if package is part of SpectraDs3, else false
-     */
-    public static boolean isSpectraDs3(final String packageName) {
-        return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
     }
 
     /**
@@ -577,5 +569,43 @@ public final class JavaHelper {
             return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
         }
         return uncapFirst(stripPath(responseType.getType())) + "Result";
+    }
+
+    /**
+     * Removes response codes that are associated with errors from the list.
+     * Error response codes are associated with values greater or equal to 400.
+     */
+    public static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
+            final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (responseCode.getCode() < 400) {
+                builder.add(responseCode);
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Removes a specified variable from a list of variables
+     */
+    public static ImmutableList<Variable> removeVariable(
+            final ImmutableList<Variable> vars,
+            final String varName) {
+        if (isEmpty(vars)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
+
+        for (final Variable var : vars) {
+            if (!var.getName().equals(varName)) {
+                builder.add(var);
+            }
+        }
+        return builder.build();
     }
 }

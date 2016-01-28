@@ -23,7 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Response;
 
-import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.isSpectraDs3;
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 

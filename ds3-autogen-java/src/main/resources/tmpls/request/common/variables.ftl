@@ -1,5 +1,3 @@
-<#include "required_variables.ftl"/>
-
-    <#list optionalArguments as arg>
-    private ${javaHelper.getType(arg)} ${arg.getName()?uncap_first};
+    <#list classVariables as var>
+    private <#if var.isRequired() == true>final </#if>${javaHelper.getType(var)} ${var.getName()?uncap_first};
     </#list>
