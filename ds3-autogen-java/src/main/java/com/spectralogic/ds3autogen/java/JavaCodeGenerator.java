@@ -408,7 +408,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the associated request generator for the specified Ds3Request
      */
-    private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         } else if (isPhysicalPlacementRequest(ds3Request)) {

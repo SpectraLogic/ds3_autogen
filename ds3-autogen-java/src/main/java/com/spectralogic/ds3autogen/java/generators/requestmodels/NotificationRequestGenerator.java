@@ -32,7 +32,7 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
      * is AbstractRequest
      */
     @Override
-    protected String getParentImport(final Ds3Request ds3Request) {
+    public String getParentImport(final Ds3Request ds3Request) {
         if (isDeleteNotificationRequest(ds3Request)) {
             return ABSTRACT_DELETE_NOTIFICATION_REQUEST_IMPORT;
         }
@@ -47,7 +47,7 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
      * generate the Java request code, always including UUID
      */
     @Override
-    protected ImmutableList<String> getAllImports(
+    public ImmutableList<String> getAllImports(
             final Ds3Request ds3Request,
             final String packageName) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();

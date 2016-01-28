@@ -29,7 +29,7 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      * which is AbstractCreateNotificationRequest
      */
     @Override
-    protected String getParentImport(final Ds3Request ds3Request) {
+    public String getParentImport(final Ds3Request ds3Request) {
         return ABSTRACT_CREATE_NOTIFICATION_REQUEST_IMPORT;
     }
 
@@ -41,7 +41,7 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      * @return A list of required Arguments
      */
     @Override
-    protected ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
+    public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
 
         for (final Arguments arg : toArgumentsList(ds3Request.getRequiredQueryParams())) {
@@ -59,7 +59,7 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      */
 
     @Override
-    protected ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
+    public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
 
         for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {

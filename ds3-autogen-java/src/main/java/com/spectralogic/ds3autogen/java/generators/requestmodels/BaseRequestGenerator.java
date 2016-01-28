@@ -32,7 +32,7 @@ import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInP
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
-public class BaseRequestGenerator implements RequestModelGenerator<Request> {
+public class BaseRequestGenerator implements RequestModelGenerator<Request>, RequestGeneratorUtils {
 
     private final static String ABSTRACT_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.AbstractRequest";
 
@@ -65,7 +65,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * getter functions. This consists of all constructor arguments and optional
      * arguments being converted into variables.
      */
-    protected ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
+    @Override
+    public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
         for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {
             builder.add(new Variable(arg.getName(), arg.getType(), true));
@@ -83,7 +84,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * @return The list of all imports that the Request requires for generating the
      *         Java request code
      */
-    protected ImmutableList<String> getAllImports(
+    @Override
+    public ImmutableList<String> getAllImports(
             final Ds3Request ds3Request,
             final String packageName) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
@@ -107,7 +109,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * Returns the import for the parent class for standard requests, which
      * is AbstractRequest
      */
-    protected String getParentImport(final Ds3Request ds3Request) {
+    @Override
+    public String getParentImport(final Ds3Request ds3Request) {
         return ABSTRACT_REQUEST_IMPORT;
     }
 
@@ -139,7 +142,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * includes all non-void required parameters, and arguments described within
      * the request header.
      */
-    protected ImmutableList<Arguments> toConstructorArgumentsList(
+    @Override
+    public ImmutableList<Arguments> toConstructorArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
@@ -152,7 +156,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request> {
      * @param ds3Request A Ds3Request
      * @return A list of required Arguments
      */
-    protected ImmutableList<Arguments> toRequiredArgumentsList(
+    @Override
+    public ImmutableList<Arguments> toRequiredArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
         requiredArgs.addAll(toArgumentsList(ds3Request.getRequiredQueryParams()));

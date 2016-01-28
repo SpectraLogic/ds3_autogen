@@ -40,7 +40,7 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * Returns the import for the parent class for bulk requests, which is BulkRequest
      */
     @Override
-    protected String getParentImport(final Ds3Request ds3Request) {
+    public String getParentImport(final Ds3Request ds3Request) {
         return BULK_REQUEST_IMPORT;
     }
 
@@ -50,7 +50,7 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * information, and a list of Ds3Objects called Objects.
      */
     @Override
-    protected ImmutableList<Arguments> toConstructorArgumentsList(final Ds3Request ds3Request) {
+    public ImmutableList<Arguments> toConstructorArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(super.toConstructorArgumentsList(ds3Request));
 
@@ -67,7 +67,7 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * defined within the parent class BulkRequest
      */
     @Override
-    protected ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
+    public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
 
         for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {

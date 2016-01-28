@@ -18,24 +18,34 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.Variable;
 
-import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
-
-public class PhysicalPlacementRequestGenerator extends BaseRequestGenerator {
+public interface RequestGeneratorUtils {
 
     /**
-     * Gets the list of Arguments needed to create the request constructor. This
-     * includes all non-void required parameters, and arguments described within
-     * the request header. This includes a list of Ds3Objects.
+     * Gets all the class variables to properly generate the variables and their
+     * getter functions.
      */
-    @Override
-    public ImmutableList<Arguments> toConstructorArgumentsList(
-            final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
-        builder.addAll(removeVoidArguments(toArgumentsList(ds3Request.getRequiredQueryParams())));
-        builder.add(new Arguments("List<Ds3Object>", "Objects"));
-        return builder.build();
-    }
+    ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request);
+
+    /**
+     * Gets all the required imports that the Request will need in order to properly
+     * generate the Java request code
+     */
+    ImmutableList<String> getAllImports(final Ds3Request ds3Request, final String packageName);
+
+    /**
+     * Returns the import for the parent class for the request
+     */
+    String getParentImport(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of Arguments needed to create the request constructor
+     */
+    ImmutableList<Arguments> toConstructorArgumentsList(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of required Arguments from a Ds3Request
+     */
+    ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request);
 }

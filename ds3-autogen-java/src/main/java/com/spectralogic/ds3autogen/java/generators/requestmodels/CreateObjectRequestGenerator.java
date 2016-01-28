@@ -29,7 +29,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * includes all non-void required parameters, and arguments described within
      * the request header.
      */
-    protected ImmutableList<Arguments> toConstructorArgumentsList(
+    public ImmutableList<Arguments> toConstructorArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
