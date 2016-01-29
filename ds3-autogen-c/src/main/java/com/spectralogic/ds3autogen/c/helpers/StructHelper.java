@@ -135,16 +135,6 @@ public final class StructHelper {
         return builder.build();
     }
 
-    public static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
-        for (final StructMember structMember: struct.getVariables()) {
-            final String testType = StringUtils.stripEnd(structMember.getType(), "*");
-            if (!existingStructs.contains(testType)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static String generateStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 

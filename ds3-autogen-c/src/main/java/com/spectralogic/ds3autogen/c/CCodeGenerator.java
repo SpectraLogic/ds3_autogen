@@ -32,6 +32,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,16 @@ public class CCodeGenerator implements CodeGenerator {
         return allStructsBuilder.build();
     }
 
+    private static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
+        for (final StructMember structMember: struct.getVariables()) {
+            final String testType = StringUtils.stripEnd(structMember.getType(), "*");
+            if (!existingStructs.contains(testType)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Return structs which contain only primitive types first, and then cascade for structs that contain other structs
      *
@@ -135,7 +146,7 @@ public class CCodeGenerator implements CodeGenerator {
                 continue;
             }
 
-            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypes)) {
+            if (StructHelper.isPrimitive(structEntry) || containsExistingStructs(structEntry, existingTypes)) {
                 existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructsBuilder.add(allStructs.remove());
             } else {  // move to end to come back to
