@@ -13,11 +13,32 @@
  * ****************************************************************************
  */
 
-/* This Code is Auto-Generated; DO NOT MODIFY! */
+package com.spectralogic.ds3autogen.c.models;
 
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
-typedef enum {
-    IN_PROGRESS,
-    COMPLETED,
-    CANCELED
-}ds3_job_status;
+public class StructMember {
+    private final String type;
+    private final String name;
+    private final StructHelper structHelper;
+
+    public StructMember(
+            final String type,
+            final String name) {
+        this.type = type;
+        this.name = name;
+        this.structHelper = StructHelper.getInstance();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public StructHelper getStructHelper() {
+        return structHelper;
+    }
+}
