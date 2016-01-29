@@ -17,46 +17,27 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     <#include "common/variables.ftl"/>
-    private final WritableByteChannel channel;
     private ImmutableCollection<Range> byteRanges = null;
 <#include "common/checksum_variables.ftl"/>
 
     // Constructor
-
-<#if helper.containsArgument(optionalArguments, "Job")>
-    /**
-     * @deprecated use {@link #${name}(${javaHelper.argTypeList(
-                                         helper.addArgument(
-                                         helper.addArgument(constructorArguments, optionalArguments), "Channel", "WritableByteChannel"))})} instead
-     */
+    <#list constructors as constructor>
+    <#if constructor.isDeprecated() == true>
+    /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(constructorArguments, "Channel", "WritableByteChannel"))}) {
-        <#list constructorArguments as arg>
+    </#if>
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
+        <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
-        this.channel = channel;
-    }
-</#if>
+        <#list constructor.getAdditionalLines() as line>
+        ${line}
+        </#list>
+        <#include "common/add_query_params.ftl"/>
 
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.addArgument(constructorArguments, optionalArguments), "Channel", "WritableByteChannel"))}) {
-        <#list constructorArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        <#list optionalArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        this.channel = channel;
-
-        <#if helper.containsArgument(optionalArguments, "Job")>
-        this.getQueryParams().put("job", job.toString());
-        </#if>
-        <#if helper.containsArgument(optionalArguments, "Offset")>
-        this.getQueryParams().put("offset", Long.toString(offset));
-        </#if>
     }
+
+    </#list>
 
     <#include "common/with_constructors.ftl"/>
 
@@ -108,5 +89,4 @@ public class ${name} extends AbstractRequest {
 
     ${javaHelper.createGetter("ByteRanges", "Collection<Range>")}
 
-    ${javaHelper.createGetter("Channel", "WritableByteChannel")}
 }

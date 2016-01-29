@@ -9,15 +9,17 @@ public class ${name} extends AbstractCreateNotificationRequest {
     // Variables
 <#include "common/variables.ftl"/>
 
-    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
+    <#list constructors as constructor>
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(notificationEndPoint);
 
-        <#list helper.removeArgument(constructorArguments, "NotificationEndPoint") as arg>
+        <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
-<#include "common/constructor_get_query_params.ftl"/>
+        <#include "common/add_query_params.ftl"/>
 
     }
+    </#list>
 
 <#include "common/with_constructors.ftl"/>
 

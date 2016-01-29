@@ -18,7 +18,10 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
 
@@ -72,6 +75,51 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
                 builder.add(new Variable(arg.getName(), arg.getType(), false));
             }
         }
+        return builder.build();
+    }
+
+    /**
+     * Gets the list of constructor models from a Ds3Request
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArguments = toConstructorArgumentsList(ds3Request);
+        final RequestConstructor constructor = new RequestConstructor(
+                constructorArguments,
+                toConstructorAssignmentList(constructorArguments),
+                toQueryParamsList(ds3Request));
+
+        return ImmutableList.of(constructor);
+    }
+
+    /**
+     * Gets the list of constructor arguments that need to be assigned within the
+     * constructor. This excludes the argument NotificationEndPoint which is passed
+     * to the super constructor
+     */
+    protected static ImmutableList<Arguments> toConstructorAssignmentList(
+            final ImmutableList<Arguments> constructorArguments) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        if (isEmpty(constructorArguments)) {
+            return builder.build();
+        }
+        for (final Arguments arg : constructorArguments) {
+            if (!arg.getName().equalsIgnoreCase("NotificationEndPoint")) {
+                builder.add(arg);
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Creates the list of arguments that are added to the query params within
+     * the constructors
+     */
+    @Override
+    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(toRequiredArgumentsList(ds3Request));
+        builder.add(new Arguments("String", "NotificationEndPoint"));
         return builder.build();
     }
 }

@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
@@ -38,4 +39,107 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
+    /**
+     * Creates the list of arguments that are added to the query params within
+     * the constructors, which is composed of optional query params
+     */
+    @Override
+    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
+        return toArgumentsList(ds3Request.getOptionalQueryParams());
+    }
+
+    /**
+     * Gets the list of constructor models from a Ds3Request. For the base request, the
+     * constructor list will be of size one.
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
+        final ImmutableList<Arguments> optionalArgs = toArgumentsList(ds3Request.getOptionalQueryParams());
+        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+
+        final RequestConstructor depreciatedConstructor = createDeprecatedConstructor(
+                constructorArgs,
+                ImmutableList.of());
+
+        final RequestConstructor channelConstructor = createChannelConstructor(
+                constructorArgs,
+                optionalArgs,
+                queryParams);
+
+        final RequestConstructor inputStreamConstructor = createInputStreamConstructor(
+                constructorArgs,
+                optionalArgs,
+                queryParams);
+
+        return ImmutableList.of(
+                depreciatedConstructor,
+                channelConstructor,
+                inputStreamConstructor);
+    }
+
+    /**
+     * Creates the create object request constructor that has the required
+     * parameters Stream
+     */
+    protected static RequestConstructor createInputStreamConstructor(
+            final ImmutableList<Arguments> constructorArgs,
+            final ImmutableList<Arguments> optionalArgs,
+            final ImmutableList<Arguments> queryParams) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.addAll(optionalArgs);
+        builder.add(new Arguments("InputStream", "Stream"));
+
+        return new RequestConstructor(
+                builder.build(),
+                builder.build(),
+                queryParams);
+    }
+
+    /**
+     * Creates the create object request constructor that has the required
+     * parameters Channel
+     */
+    protected static RequestConstructor createChannelConstructor(
+            final ImmutableList<Arguments> constructorArgs,
+            final ImmutableList<Arguments> optionalArgs,
+            final ImmutableList<Arguments> queryParams) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.addAll(optionalArgs);
+        builder.add(new Arguments("SeekableByteChannel", "Channel"));
+
+        final ImmutableList<String> additionalLines = ImmutableList.of(
+                "this.stream = new SeekableByteChannelInputStream(channel);");
+
+        return new RequestConstructor(
+                false,
+                additionalLines,
+                builder.build(),
+                builder.build(),
+                queryParams);
+    }
+
+    /**
+     * Creates the create deprecated object request constructor that
+     * uses the Channel parameter
+     */
+    protected static RequestConstructor createDeprecatedConstructor(
+            final ImmutableList<Arguments> constructorArgs,
+            final ImmutableList<Arguments> queryParams) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.add(new Arguments("SeekableByteChannel", "Channel"));
+
+        final ImmutableList<String> additionalLines = ImmutableList.of(
+                "this.stream = new SeekableByteChannelInputStream(channel);");
+
+        return new RequestConstructor(
+                true,
+                additionalLines,
+                builder.build(),
+                builder.build(),
+                queryParams);
+    }
 }
