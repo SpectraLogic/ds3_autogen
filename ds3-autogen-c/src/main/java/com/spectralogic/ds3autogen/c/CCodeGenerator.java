@@ -141,7 +141,7 @@ public class CCodeGenerator implements CodeGenerator {
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.peek();
-            if (orderedStructsBuilder.build().contains(structEntry)) {
+            if (existingTypes.contains(structEntry)) {
                 LOG.warn("Skipping structEntry " + structEntry.getName());
                 continue;
             }
