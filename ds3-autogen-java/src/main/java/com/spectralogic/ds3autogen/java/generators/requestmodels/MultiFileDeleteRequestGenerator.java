@@ -50,9 +50,10 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
         builder.addAll(constructorArgs);
         builder.add(new Arguments("List<String>", "Objects"));
 
+        final ImmutableList<Arguments> updatedArgs = builder.build();
         return new RequestConstructor(
-                builder.build(),
-                builder.build(),
+                updatedArgs,
+                updatedArgs,
                 queryParams);
     }
 

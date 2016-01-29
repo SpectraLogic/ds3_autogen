@@ -90,7 +90,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
             final ImmutableList<Arguments> queryParams) {
-        final ImmutableList.Builder constructorArgBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<Arguments> constructorArgBuilder = ImmutableList.builder();
         constructorArgBuilder.addAll(constructorArgs);
         constructorArgBuilder.addAll(optionalArgs);
 
@@ -98,9 +98,10 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         queryParamsBuilder.addAll(queryParams);
         queryParamsBuilder.addAll(optionalArgs);
 
+        final ImmutableList<Arguments> updatedConstructorArgs = constructorArgBuilder.build();
         return new RequestConstructor(
-                constructorArgBuilder.build(),
-                constructorArgBuilder.build(),
+                updatedConstructorArgs,
+                updatedConstructorArgs,
                 queryParamsBuilder.build());
     }
 }

@@ -66,8 +66,8 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
     }
 
     /**
-     * Gets the list of constructor models from a Ds3Request. For the base request, the
-     * constructor list will be of size one.
+     * Gets the list of constructor models from a Ds3Request. The notification
+     * constructor will have the parameter NotificationId
      */
     @Override
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {

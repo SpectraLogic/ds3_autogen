@@ -21,8 +21,8 @@ public class ${name} extends AbstractRequest {
     // Constructor
     <#list constructors as constructor>
     <#if constructor.isDeprecated() == true>
-    @Deprecated
     /** @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
+    @Deprecated
     </#if>
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         <#list constructor.getAssignments() as arg>

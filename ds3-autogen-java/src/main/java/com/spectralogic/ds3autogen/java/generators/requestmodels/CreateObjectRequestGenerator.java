@@ -49,8 +49,9 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     }
 
     /**
-     * Gets the list of constructor models from a Ds3Request. For the base request, the
-     * constructor list will be of size one.
+     * Gets the list of constructor models from a Ds3Request. This includes the
+     * Create Object deprecated constructor, a constructor that uses the parameter
+     * Channel, and a constructor that has an InputStream parameter
      */
     @Override
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
@@ -59,8 +60,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
 
         final RequestConstructor depreciatedConstructor = createDeprecatedConstructor(
-                constructorArgs,
-                ImmutableList.of());
+                constructorArgs);
 
         final RequestConstructor channelConstructor = createChannelConstructor(
                 constructorArgs,
@@ -91,9 +91,10 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         builder.addAll(optionalArgs);
         builder.add(new Arguments("InputStream", "Stream"));
 
+        final ImmutableList<Arguments> updatedArgs = builder.build();
         return new RequestConstructor(
-                builder.build(),
-                builder.build(),
+                updatedArgs,
+                updatedArgs,
                 queryParams);
     }
 
@@ -113,11 +114,12 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         final ImmutableList<String> additionalLines = ImmutableList.of(
                 "this.stream = new SeekableByteChannelInputStream(channel);");
 
+        final ImmutableList<Arguments> updatedArgs = builder.build();
         return new RequestConstructor(
                 false,
                 additionalLines,
-                builder.build(),
-                builder.build(),
+                updatedArgs,
+                updatedArgs,
                 queryParams);
     }
 
@@ -126,8 +128,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * uses the Channel parameter
      */
     protected static RequestConstructor createDeprecatedConstructor(
-            final ImmutableList<Arguments> constructorArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<Arguments> constructorArgs) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.add(new Arguments("SeekableByteChannel", "Channel"));
@@ -135,11 +136,12 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         final ImmutableList<String> additionalLines = ImmutableList.of(
                 "this.stream = new SeekableByteChannelInputStream(channel);");
 
+        final ImmutableList<Arguments> updatedArgs = builder.build();
         return new RequestConstructor(
                 true,
                 additionalLines,
-                builder.build(),
-                builder.build(),
-                queryParams);
+                updatedArgs,
+                updatedArgs,
+                ImmutableList.of());
     }
 }

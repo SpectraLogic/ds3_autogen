@@ -216,8 +216,7 @@ public class CreateObjectRequestGenerator_Test {
     @Test
     public void createDeprecatedConstructor_Test() {
         final RequestConstructor result = createDeprecatedConstructor(
-                ImmutableList.of(new Arguments("Type", "Arg1")),
-                ImmutableList.of(new Arguments("Type", "Arg2")));
+                ImmutableList.of(new Arguments("Type", "Arg1")));
 
         assertThat(result.isDeprecated(), is(true));
         assertThat(result.getAdditionalLines().size(), is(1));
@@ -236,7 +235,6 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(assignments.get(1).getName(), is("Channel"));
 
         final ImmutableList<Arguments> queryParams = result.getQueryParams();
-        assertThat(queryParams.size(), is(1));
-        assertThat(queryParams.get(0).getName(), is("Arg2"));
+        assertThat(queryParams.size(), is(0));
     }
 }

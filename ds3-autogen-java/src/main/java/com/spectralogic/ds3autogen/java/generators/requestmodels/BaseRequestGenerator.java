@@ -67,9 +67,10 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      */
     @Override
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
         final RequestConstructor constructor = new RequestConstructor(
-                toConstructorArgumentsList(ds3Request),
-                toConstructorArgumentsList(ds3Request),
+                constructorArgs,
+                constructorArgs,
                 toQueryParamsList(ds3Request));
 
         return ImmutableList.of(constructor);
