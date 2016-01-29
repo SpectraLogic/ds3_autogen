@@ -13,28 +13,33 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.c.converters;
+package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.c.models.Element;
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
-public class ElementConverter {
-    private final Ds3Element ds3Element;
+public class Struct {
+    private final String name;
+    private final ImmutableList<StructMember> variables; // members?
+    private final StructHelper structHelper;
 
-    private ElementConverter(final Ds3Element ds3Element) {
-        this.ds3Element = ds3Element;
+    public Struct(
+            final String name,
+            final ImmutableList<StructMember> variables) {
+        this.name = name;
+        this.variables = variables;
+        this.structHelper = StructHelper.getInstance();
     }
 
-    private Element convert() {
-        return new Element(
-                this.ds3Element.getName(),
-                this.ds3Element.getType(),
-                this.ds3Element.getComponentType(),
-                this.ds3Element.getDs3Annotations());
+    public String getName() {
+        return this.name;
     }
 
-    public static Element toElement(final Ds3Element ds3Type) {
-        final ElementConverter converter = new ElementConverter(ds3Type);
-        return converter.convert();
+    public ImmutableList<StructMember> getVariables() {
+        return variables;
+    }
+
+    public StructHelper getStructHelper() {
+        return structHelper;
     }
 }
