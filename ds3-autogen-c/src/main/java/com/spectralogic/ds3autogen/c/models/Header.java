@@ -13,8 +13,33 @@
  * ****************************************************************************
  */
 
-/* This Code is Auto-Generated; DO NOT MODIFY! */
+package com.spectralogic.ds3autogen.c.models;
 
-ds3_request* ds3_init_delete_bucket(const char* bucket_name) {
-    return (ds3_request*) _common_request_init(HTTP_DELETE, _build_path("/", bucket_name, NULL));
+import com.google.common.collect.ImmutableList;
+
+public class Header {
+    final ImmutableList<Enum> enums;
+    final ImmutableList<Struct> structs;
+    final ImmutableList<Request> requests;
+
+    public Header(
+            final ImmutableList<Enum> enums,
+            final ImmutableList<Struct> structs,
+            final ImmutableList<Request> requests) {
+        this.enums = enums;
+        this.structs = structs;
+        this.requests = requests;
+    }
+
+    public ImmutableList<Enum> getEnums() {
+        return enums;
+    }
+
+    public ImmutableList<Struct> getStructs() {
+        return structs;
+    }
+
+    public ImmutableList<Request> getRequests() {
+        return requests;
+    }
 }

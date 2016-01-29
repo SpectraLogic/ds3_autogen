@@ -15,25 +15,24 @@
 
 package com.spectralogic.ds3autogen.c;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
-import com.spectralogic.ds3autogen.c.converters.TypeConverter;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
-import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
-import com.spectralogic.ds3autogen.c.models.Request;
-import com.spectralogic.ds3autogen.c.models.Type;
+import com.spectralogic.ds3autogen.c.converters.StructConverter;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Enum;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +42,11 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -51,7 +55,6 @@ public class CCodeGenerator implements CodeGenerator {
 
     private Ds3ApiSpec spec;
     private FileUtils fileUtils;
-    private Path outputDirectory;
 
     public CCodeGenerator() {
         config.setDefaultEncoding("UTF-8");
@@ -59,121 +62,131 @@ public class CCodeGenerator implements CodeGenerator {
         config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
     }
 
-    public Path getRequestOutputPath(final Request request) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/requests/" + RequestHelper.getNameRootUnderscores(request.getName()) + ".c");
-    }
-
-    public Path getTypeOutputPath(final Type type) {
-        return Paths.get(outputDirectory + "/ds3_c_sdk/src/types/" + TypeHelper.getNameUnderscores(type.getName()) + ".h");
-    }
-
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
         this.spec = spec;
         this.fileUtils = fileUtils;
-        this.outputDirectory = destDir;
 
         try {
-            generateCommands();
-        } catch (final TemplateException e) {
-            e.printStackTrace();
+            final ImmutableList<Enum> allEnums = getAllEnums(spec);
+            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec);
+            final ImmutableList<Request> allRequests = getAllRequests(spec);
+
+            generateHeader(allEnums, allStructs, allRequests);
+            generateSource(allEnums, allStructs, allRequests);
+        } catch (final ParseException e) {
+            LOG.error("Caught exception: ", e);
         }
     }
 
-    private void generateCommands() throws IOException, TemplateException {
+    public void generateHeader(
+            final ImmutableList<Enum> allEnums,
+            final ImmutableList<Struct> allOrderedStructs,
+            final ImmutableList<Request> allRequests) throws IOException, ParseException {
+        final Path path = Paths.get("src/ds3.h");
+        final Header header = new Header(allEnums,allOrderedStructs,allRequests);
+        processTemplate(header, "ds3_h.ftl", fileUtils.getOutputFile(path));
+    }
+
+    public void generateSource(
+        final ImmutableList<Enum> allEnums,
+        final ImmutableList<Struct> allOrderedStructs,
+        final ImmutableList<Request> allRequests) throws IOException, ParseException {
+        final Path path = Paths.get("src/ds3.c");
+        final Source source = new Source(allEnums,allOrderedStructs,allRequests);
+        processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
+
+    }
+
+    public static ImmutableList<Enum> getAllEnums(final Ds3ApiSpec spec) throws ParseException {
+        final ImmutableList.Builder<Enum> allEnumsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                if (ConverterUtil.hasContent(typeEntry.getEnumConstants())) {
-                    generateTypeTemplate(typeEntry, "TypeEnumConstant.ftl");
-                    generateTypeTemplate(typeEntry, "TypeEnumConstantMatcher.ftl");
-                }
+                allEnumsBuilder.add(EnumConverter.toEnum(ds3TypeEntry));
+            }
+        }
+        return allEnumsBuilder.build();
+    }
+
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec) throws ParseException {
+        final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
+        if (ConverterUtil.hasContent(spec.getTypes())) {
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry));
+            }
+        }
+        return allStructsBuilder.build();
+    }
+
+    private static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
+        for (final StructMember structMember: struct.getVariables()) {
+            final String testType = StringUtils.stripEnd(structMember.getType(), "*");
+            if (!existingStructs.contains(testType)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Return structs which contain only primitive types first, and then cascade for structs that contain other structs
+     *
+     * @throws java.text.ParseException
+     */
+    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
+        final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
+        final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec));
+        final Set<String> existingTypes = new HashSet<>();
+        int skippedStructsCount = 0;
+        while (!allStructs.isEmpty()) {
+            final int allStructsSize = allStructs.size();
+            final Struct structEntry = allStructs.remove();
+            if (existingTypes.contains(structEntry)) {
+                LOG.warn("Skipping structEntry " + structEntry.getName());
+                continue;
             }
 
-            // Generate TypeResponse parsers
-            //   ensure that parsers for primitives are generated first, and then cascade for types that contain other types
-            final ImmutableSet.Builder<String> generatedTypesResponses = new ImmutableSet.Builder<>();
-            LOG.debug(generatedTypesResponses.build().size() + " vs " + spec.getTypes().values().size());
-            for (int depth = 0; generatedTypesResponses.build().size() < spec.getTypes().values().size(); depth++) {
-                for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                    if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                        final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                        if (generatedTypesResponses.build().contains(typeEntry.getName())) {
-                            continue;
-                        }
+            if (StructHelper.isPrimitive(structEntry) || containsExistingStructs(structEntry, existingTypes)) {
+                existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
+                orderedStructsBuilder.add(structEntry);
+            } else {  // move to end to come back to
+                allStructs.add(structEntry);
+            }
 
-                        if (TypeHelper.isPrimitiveType(typeEntry) || TypeHelper.containsExistingElements(typeEntry, generatedTypesResponses.build())) {
-                            generateTypeTemplate(typeEntry, "ResponseParser.ftl");
-                            generatedTypesResponses.add(typeEntry.getName());
-                        }
+            if (allStructsSize == allStructs.size()) {
+                skippedStructsCount++;
+                if (skippedStructsCount == allStructsSize) {
+                    LOG.warn("Unable to progress on remaining structs, aborting!");
+                    LOG.warn("  Remaining structs[" + allStructs.size() + "]");
+                    for (final Struct struct : allStructs) {
+                        LOG.warn("    " + struct.getName());
                     }
-                }
-                if (depth > 6) {
-                    LOG.warn("generating ResponseParsers up to depth " + depth + ", warning for potential infinite loop.");
                     break;
                 }
             }
-
-            // Generate Element Types
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                if (ConverterUtil.hasContent(ds3TypeEntry.getElements())) {
-                    final Type typeEntry = TypeConverter.toType(ds3TypeEntry);
-                    generateTypeTemplate(typeEntry, "TypeElement.ftl");
-                    generateTypeTemplate(typeEntry, "FreeTypeElementPrototype.ftl");
-                    generateTypeTemplate(typeEntry, "FreeTypeElement.ftl");
-                }
-            }
         }
 
-        // Generate Requests last because they depend on the code generated above
+        return orderedStructsBuilder.build();
+    }
+
+    public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
+        final ImmutableList.Builder<Request> allRequestsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getRequests())) {
-            for (final Ds3Request request : spec.getRequests()) {
-                generateRequest(request);
+            for (final Ds3Request ds3Request: spec.getRequests()) {
+                allRequestsBuilder.add(RequestConverter.toRequest(ds3Request));
             }
         }
+        return allRequestsBuilder.build();
     }
 
-    public void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
-        Template requestTemplate = null;
-        Request request = null;
+    public void processTemplate(final Object obj, final String templateName, final OutputStream outputStream) throws IOException {
+        final Template template = config.getTemplate(templateName);
 
-        if (ds3Request.getClassification() == Classification.amazons3) {
-            request = RequestConverter.toRequest(ds3Request);
-            requestTemplate = config.getTemplate("AmazonS3InitRequestHandler.ftl");
-        } else if (ds3Request.getClassification() == Classification.spectrads3) {
-            LOG.info("AmazonS3 request");
-            // TODO
-        } else if (ds3Request.getClassification() == Classification.spectrainternal) /* TODO && codeGenType != production */ {
-            LOG.debug("Skipping Spectra internal request");
-            return;
-        } else {
-            throw new TemplateException("Unknown dDs3Request Classification: " + ds3Request.getClassification().toString(), Environment.getCurrentEnvironment());
-        }
-
-        final Path outputPath = getRequestOutputPath(request);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
+        final Writer writer = new OutputStreamWriter(outputStream);
         try {
-            requestTemplate.process(request, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + requestTemplate.getName(), e);
-        }
-    }
-
-    public void generateTypeTemplate(final Type typeEntry, final String templateName) throws IOException {
-        final Template typeTemplate = config.getTemplate(templateName);
-
-        final Path outputPath = getTypeOutputPath(typeEntry);
-
-        final OutputStream outStream = fileUtils.getOutputFile(outputPath);
-        final Writer writer = new OutputStreamWriter(outStream);
-        try {
-            typeTemplate.process(typeEntry, writer);
-        } catch (final NullPointerException e) {
-            LOG.error("Encountered NullPointerException while processing template " + typeTemplate.getName(), e);
-        } catch (final TemplateException e) {
-            LOG.error("Encountered TemplateException while processing template " + typeTemplate.getName(), e);
+            template.process(obj, writer);
+        } catch (final NullPointerException | TemplateException e) {
+            LOG.error("Unable to process template " + templateName, e);
         }
     }
 }

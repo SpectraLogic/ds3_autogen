@@ -13,8 +13,23 @@
  * ****************************************************************************
  */
 
-/* This Code is Auto-Generated; DO NOT MODIFY! */
+package com.spectralogic.ds3autogen.c.converters;
 
-ds3_error* ds3_delete_bucket(const ds3_client* client, const ds3_request* request) {
-    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL);
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.StructMember;
+
+import java.text.ParseException;
+
+public final class StructConverter {
+    private StructConverter() {}
+
+    public static Struct toStruct(final Ds3Type ds3Type) throws ParseException {
+        final ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(ds3Type.getElements());
+        return new Struct(
+                ds3Type.getName(),
+                variablesList);
+    }
 }
