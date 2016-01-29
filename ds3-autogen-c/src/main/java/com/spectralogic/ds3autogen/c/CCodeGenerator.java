@@ -140,7 +140,7 @@ public class CCodeGenerator implements CodeGenerator {
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
-            final Struct structEntry = allStructs.peek();
+            final Struct structEntry = allStructs.remove();
             if (existingTypes.contains(structEntry)) {
                 LOG.warn("Skipping structEntry " + structEntry.getName());
                 continue;
@@ -148,9 +148,9 @@ public class CCodeGenerator implements CodeGenerator {
 
             if (StructHelper.isPrimitive(structEntry) || containsExistingStructs(structEntry, existingTypes)) {
                 existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
-                orderedStructsBuilder.add(allStructs.remove());
+                orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
-                allStructs.add(allStructs.remove());
+                allStructs.add(structEntry);
             }
 
             if (allStructsSize == allStructs.size()) {
