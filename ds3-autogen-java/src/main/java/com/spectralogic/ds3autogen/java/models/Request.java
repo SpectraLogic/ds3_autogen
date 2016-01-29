@@ -32,7 +32,6 @@ public class Request {
     private final Action action;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
-    private final ImmutableList<Arguments> constructorArguments; //TODO delete
     private final ImmutableList<RequestConstructor> constructors;
     private final ImmutableList<Variable> classVariables;
     private final ImmutableList<String> imports;
@@ -47,7 +46,6 @@ public class Request {
                    final Action action,
                    final ImmutableList<Arguments> requiredArguments,
                    final ImmutableList<Arguments> optionalArguments,
-                   final ImmutableList<Arguments> constructorArguments, //TODO delete
                    final ImmutableList<RequestConstructor> constructors,
                    final ImmutableList<Variable> classVariables,
                    final ImmutableList<String> imports) {
@@ -59,7 +57,6 @@ public class Request {
         this.action = action;
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
-        this.constructorArguments = constructorArguments; //TODO delete
         this.constructors = constructors;
         this.classVariables = classVariables;
         this.imports = imports;
@@ -107,10 +104,6 @@ public class Request {
     }
 
     public JavaHelper getJavaHelper() { return javaHelper; }
-
-    public ImmutableList<Arguments> getConstructorArguments() {
-        return constructorArguments;
-    }
 
     public ImmutableList<Variable> getClassVariables() {
         return classVariables;
