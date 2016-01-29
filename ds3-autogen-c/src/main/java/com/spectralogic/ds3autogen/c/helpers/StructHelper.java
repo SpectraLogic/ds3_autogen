@@ -207,14 +207,12 @@ public final class StructHelper {
             }
 
             final StructMember currentStructMember = variables.get(structMemberIndex);
-
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
             outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember));
         }
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
-        outputBuilder.append(indent(3)).
-                append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
         outputBuilder.append(indent(2)).append("}").append("\n");
 
         return outputBuilder.toString();
