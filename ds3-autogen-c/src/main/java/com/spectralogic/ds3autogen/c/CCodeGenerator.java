@@ -27,9 +27,7 @@ import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.Header;
-import com.spectralogic.ds3autogen.c.models.Request;
-import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -119,10 +117,19 @@ public class CCodeGenerator implements CodeGenerator {
         return allStructsBuilder.build();
     }
 
+    public static boolean containsExistingStructs(final Struct struct, final ImmutableSet<String> existingStructs) {
+        for (final StructMember structMember: struct.getStructMembers()) {
+            if (!existingStructs.contains(structMember.getType().getTypeRoot())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // return structs which contain only primitive types first, and then cascade for structs that contain other structs
     public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
-        final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec).asList());
+        final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec).asList());
         final ImmutableSet.Builder<String> existingTypesBuilder = ImmutableSet.builder();
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
@@ -132,7 +139,7 @@ public class CCodeGenerator implements CodeGenerator {
                 continue;
             }
 
-            if (StructHelper.isPrimitive(structEntry) || StructHelper.containsExistingStructs(structEntry, existingTypesBuilder.build())) {
+            if (StructHelper.isPrimitive(structEntry) || containsExistingStructs(structEntry, existingTypesBuilder.build())) {
                 existingTypesBuilder.add(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructsBuilder.add(allStructs.remove());
             } else {  // move to end to come back to
@@ -155,7 +162,7 @@ public class CCodeGenerator implements CodeGenerator {
         return orderedStructsBuilder.build();
     }
 
-    public static ImmutableList<Request> getAllRequests(Ds3ApiSpec spec) throws ParseException {
+    public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
         final ImmutableList.Builder<Request> allRequestsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getRequests())) {
             for (final Ds3Request ds3Request: spec.getRequests()) {

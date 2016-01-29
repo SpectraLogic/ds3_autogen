@@ -4,7 +4,7 @@
 <#-- ******************************************************** -->
 <#list getStructs() as structEntry>
 
-    <#list structEntry.getVariables() as structMember>
+    <#list structEntry.getStructMembers() as structMember>
         <#if structMember.getType()?contains("**")>
             <#include "ArrayStructMemberParser.ftl">
         </#if>
@@ -15,7 +15,7 @@ static ${structEntry.getStructHelper().getResponseTypeName(structEntry.getName()
     ${structEntry.getStructHelper().getResponseTypeName(structEntry.getName())}* response = g_new0(${structEntry.getStructHelper().getResponseTypeName(structEntry.getName())}, 1);
 
     for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), structEntry.getVariables())}
+${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), structEntry.getStructMembers())}
     }
 
     return response;

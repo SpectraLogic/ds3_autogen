@@ -8,7 +8,7 @@ void ${structEntry.getStructHelper().getFreeFunctionName(structEntry.getName())}
         return;
     }
 
-${structEntry.getStructHelper().generateFreeStructMembers(structEntry.getVariables())}
+${structEntry.getStructHelper().generateFreeStructMembers(structEntry.getStructMembers())}
 
     g_free(response_data);
 }

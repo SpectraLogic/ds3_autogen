@@ -35,7 +35,7 @@ public class Struct {
         return this.name;
     }
 
-    public ImmutableList<StructMember> getVariables() {
+    public ImmutableList<StructMember> getStructMembers() {
         return variables;
     }
 

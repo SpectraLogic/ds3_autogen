@@ -18,19 +18,19 @@ package com.spectralogic.ds3autogen.c.models;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
 public class StructMember {
-    private final String type;
+    private final C_Type type;
     private final String name;
     private final StructHelper structHelper;
 
     public StructMember(
-            final String type,
+            final C_Type type,
             final String name) {
         this.type = type;
         this.name = name;
         this.structHelper = StructHelper.getInstance();
     }
 
-    public String getType() {
+    public C_Type getType() {
         return type;
     }
 
