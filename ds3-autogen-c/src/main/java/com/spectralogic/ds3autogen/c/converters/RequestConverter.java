@@ -18,37 +18,23 @@ package com.spectralogic.ds3autogen.c.converters;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RequestConverter {
-    private final Ds3Request ds3Request;
-    private final ImmutableList<Arguments> requiredArguments;
-    private final ImmutableList<Arguments> optionalArguments;
-
+public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
 
-    private RequestConverter(final Ds3Request ds3Request) {
-        this.ds3Request = ds3Request;
-        this.requiredArguments = getRequiredArgs(ds3Request);
-        this.optionalArguments = getOptionalArgs(ds3Request);
-    }
-
-    private Request convert() {
+    public static Request toRequest(final Ds3Request ds3Request) {
         return new Request(
-                this.ds3Request.getName(),
-                this.ds3Request.getHttpVerb(),
-                requestPath(this.ds3Request),
+                ds3Request.getName(),
+                ds3Request.getHttpVerb(),
+                getRequestPath(ds3Request),
                 getRequiredArgs(ds3Request),
                 getOptionalArgs(ds3Request));
     }
 
-    public static Request toRequest(final Ds3Request ds3Request) {
-        final RequestConverter converter = new RequestConverter(ds3Request);
-        return converter.convert();
-    }
-
-    private static String requestPath(final Ds3Request ds3Request) {
+    private static String getRequestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
         builder.append("\"/");
 
@@ -92,16 +78,17 @@ public class RequestConverter {
         }
 
         LOG.debug("Getting required query params...");
-        if (ds3Request.getRequiredQueryParams() != null) {
-            for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-                if (ds3Param == null) {
-                    break;
-                }
-                LOG.debug("query param " + ds3Param.getType().toString());
-                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                LOG.debug("param " + paramType + " is required.");
-                requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
-            }
+        if (ConverterUtil.isEmpty(ds3Request.getRequiredQueryParams())) {
+            return requiredArgsBuilder.build();
+        }
+
+        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
+            if (ds3Param == null) break;
+
+            LOG.debug("query param " + ds3Param.getType());
+            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+            LOG.debug("param " + paramType + " is required.");
+            requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
         }
 
         return requiredArgsBuilder.build();
@@ -110,11 +97,13 @@ public class RequestConverter {
     private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> optionalArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting optional args...");
-        if (ds3Request.getOptionalQueryParams() != null) {
-            for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
-            }
+        if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
+            return optionalArgsBuilder.build();
+        }
+
+        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+            optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
         }
 
         return optionalArgsBuilder.build();

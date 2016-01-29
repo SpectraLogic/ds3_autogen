@@ -16,43 +16,30 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.c.helpers.TypeHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 
-public class Type {
-    private static final Logger LOG = LoggerFactory.getLogger(Type.class);
-
+public class Enum {
     private final String name;
-    private final ImmutableList<Ds3EnumConstant> enumConstants;
-    private final ImmutableList<Element> elements;
-    private final TypeHelper typeHelper;
+    private final ImmutableList<String> values;
+    private final EnumHelper enumHelper;
 
-    public Type(
+    public Enum(
             final String name,
-            final ImmutableList<Ds3EnumConstant> enumConstants,
-            final ImmutableList<Ds3Element> elements) {
+            final ImmutableList<String> values) {
         this.name = name;
-        this.enumConstants = enumConstants;
-        this.elements = TypeHelper.convertDs3Elements(elements);
-        this.typeHelper = TypeHelper.getInstance();
+        this.values = values;
+        this.enumHelper = EnumHelper.getInstance();
     }
 
     public String getName() {
         return this.name;
     }
 
-    public ImmutableList<Ds3EnumConstant> getEnumConstants() {
-        return enumConstants;
+    public ImmutableList<String> getValues() {
+        return values;
     }
 
-    public ImmutableList<Element> getElements() {
-        return elements;
-    }
-
-    public TypeHelper getTypeHelper() {
-        return typeHelper;
+    public EnumHelper getEnumHelper() {
+        return enumHelper;
     }
 }

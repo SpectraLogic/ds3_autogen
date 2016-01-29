@@ -1,1 +1,0 @@
-void ds3_free_get_system_information(ds3_get_system_information_response* system_info);
