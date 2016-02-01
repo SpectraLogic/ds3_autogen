@@ -2,7 +2,6 @@
 
 package ${packageName};
 
-<#include "common/import_abstract_request.ftl"/>
 import com.spectralogic.ds3client.HttpVerb;
 <#include "../imports.ftl"/>
 

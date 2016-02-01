@@ -18,27 +18,20 @@ package com.spectralogic.ds3autogen.c.converters;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
 
-    private RequestConverter() {}
-
-    private final static RequestConverter requestConverter = new RequestConverter();
-
-    private Request convert(final Ds3Request ds3Request) {
+    public static Request toRequest(final Ds3Request ds3Request) {
         return new Request(
                 ds3Request.getName(),
                 ds3Request.getHttpVerb(),
                 getRequestPath(ds3Request),
                 getRequiredArgs(ds3Request),
                 getOptionalArgs(ds3Request));
-    }
-
-    public static Request toRequest(final Ds3Request ds3Request) {
-        return requestConverter.convert(ds3Request);
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {
@@ -85,7 +78,7 @@ public final class RequestConverter {
         }
 
         LOG.debug("Getting required query params...");
-        if (ds3Request.getRequiredQueryParams() == null) {
+        if (ConverterUtil.isEmpty(ds3Request.getRequiredQueryParams())) {
             return requiredArgsBuilder.build();
         }
 
@@ -104,7 +97,7 @@ public final class RequestConverter {
     private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> optionalArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting optional args...");
-        if (ds3Request.getOptionalQueryParams() == null) {
+        if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
         }
 

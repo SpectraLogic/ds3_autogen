@@ -2,7 +2,6 @@
 
 package ${packageName};
 
-<#include "common/import_abstract_request.ftl"/>
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
@@ -15,13 +14,10 @@ import java.util.List;
 public class ${name} extends AbstractRequest {
 
     // Variables
-    private final List<Ds3Object> objects;
     <#include "common/variables.ftl"/>
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(constructorArguments, "Objects", "List<Ds3Object>"))}) {
-        this.objects = objects;
+    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
         <#list constructorArguments as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
@@ -47,5 +43,4 @@ public class ${name} extends AbstractRequest {
 
     <#include "common/getters.ftl"/>
 
-    ${javaHelper.createGetter("Objects", "List<Ds3Object>")}
 }

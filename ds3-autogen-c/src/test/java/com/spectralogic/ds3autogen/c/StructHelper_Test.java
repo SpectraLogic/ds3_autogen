@@ -91,20 +91,16 @@ public class StructHelper_Test {
     public void testTypeIsPrimitive() throws ParseException {
         final StructMember testStruct1 = new StructMember(new C_Type("int", true, false), "intMember");
         final StructMember testStruct2 = new StructMember(new C_Type("ds3_bool", true, false), "boolMember");
-        final ImmutableList.Builder<StructMember> structMemberBuilder = ImmutableList.builder();
-        structMemberBuilder.add(testStruct1);
-        structMemberBuilder.add(testStruct2);
-        final Struct testStruct = new Struct("testStruct", structMemberBuilder.build());
+        final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertTrue(StructHelper.isPrimitive(testStruct));
     }
     @Test
     public void testTypeIsNotPrimitive() throws ParseException {
         final StructMember testStruct1 = new StructMember(new C_Type("ds3_bool", true, false), "boolMember");
         final StructMember testStruct2 = new StructMember(new C_Type("ds3_user_api_bean_response", false, false), "beanMember");
-        final ImmutableList.Builder<StructMember> structMemberBuilder = ImmutableList.builder();
-        structMemberBuilder.add(testStruct1);
-        structMemberBuilder.add(testStruct2);
-        final Struct testStruct = new Struct("testStruct", structMemberBuilder.build());
+        final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.isPrimitive(testStruct));
     }
 
@@ -112,10 +108,7 @@ public class StructHelper_Test {
     public void testGenerateStructMembers() throws ParseException {
         final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null);
         final Ds3Element testElement2 = new Ds3Element("beanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
-        final ImmutableList.Builder<Ds3Element> ds3ElementBuilder = ImmutableList.builder();
-        ds3ElementBuilder.add(testElement1);
-        ds3ElementBuilder.add(testElement2);
-        final ImmutableList<Ds3Element> elementsList = ds3ElementBuilder.build();
+        final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
 
         final Struct testStruct = new Struct("testStruct", StructHelper.convertDs3Elements(elementsList));
         final String output = StructHelper.generateStructMembers(testStruct.getStructMembers());
@@ -127,10 +120,7 @@ public class StructHelper_Test {
     public void testGenerateResponseParser() throws ParseException {
         final Ds3Element testElement1 = new Ds3Element("BoolElement", "boolean", null);
         final Ds3Element testElement2 = new Ds3Element("BeanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
-        final ImmutableList.Builder<Ds3Element> ds3ElementBuilder = ImmutableList.builder();
-        ds3ElementBuilder.add(testElement1);
-        ds3ElementBuilder.add(testElement2);
-        final ImmutableList<Ds3Element> elementsList = ds3ElementBuilder.build();
+        final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
 
         final Struct testStruct = new Struct("testStruct", StructHelper.convertDs3Elements(elementsList));
         final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
@@ -139,6 +129,8 @@ public class StructHelper_Test {
         assertTrue(output.contains("        response->bool_element = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
         assertTrue(output.contains("        response->bean_element = _parse_ds3_bean_element_response(log, doc, child_node);"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("    }"));
     }
 

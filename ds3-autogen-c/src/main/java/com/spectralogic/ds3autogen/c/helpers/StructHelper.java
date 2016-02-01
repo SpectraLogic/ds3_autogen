@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
@@ -134,16 +135,12 @@ public final class StructHelper {
             }
 
             final StructMember currentStructMember = structMembers.get(structMemberIndex);
-
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
             outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember));
         }
-        // TODO Leaving the catch case commented out unless needed.
-        /*
-        outputBuilder.append(indent(3)).append("} else {").append("\n");
-        outputBuilder.append(indent(4)).
-                append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
-        */
+
+        outputBuilder.append(indent(2)).append("} else {").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
         outputBuilder.append(indent(2)).append("}").append("\n");
 
         return outputBuilder.toString();
