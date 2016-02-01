@@ -155,7 +155,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Converts a Ds3Type into a Model
      */
     private Model toModel(final Ds3Type ds3Type, final String packageName) {
-        final TypeModelGenerator<?> modelGenerator =getModelGenerator(ds3Type);
+        final TypeModelGenerator<?> modelGenerator = getModelGenerator(ds3Type);
         return modelGenerator.generate(ds3Type, packageName);
     }
 

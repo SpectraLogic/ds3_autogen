@@ -71,7 +71,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
     }
 
     /**
-     * Converts a list of Ds3Elements into al ist of Element models
+     * Converts a list of Ds3Elements into a list of Element models
      * @param ds3Elements A list of Ds3Elements
      * @return A list of Element models
      */
