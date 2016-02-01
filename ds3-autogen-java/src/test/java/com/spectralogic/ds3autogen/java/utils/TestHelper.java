@@ -200,6 +200,18 @@ public final class TestHelper {
         return hasModelVariable(name, name, type, false, code);
     }
 
+    public static boolean hasParamAttribute(
+            final String name,
+            final String type,
+            final String code) {
+        final String xmlLine = "@JacksonXmlProperty(isAttribute = true, localName = \""
+                + name + "\")\n"
+                + "    private " + type + " " + Helper.uncapFirst(name) + ";";
+        return code.contains(xmlLine)
+                && hasGetter(name, type, code)
+                && hasSetter(name, type, code);
+    }
+
     public static boolean hasModelVariable(
             final String name,
             final String xmlName,
