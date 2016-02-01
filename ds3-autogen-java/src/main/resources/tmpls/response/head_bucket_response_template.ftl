@@ -17,15 +17,14 @@ public class ${name} extends AbstractResponse {
 
     ${javaHelper.createGetter("Status", "Status")}
 
-${javaHelper.createAllResponseResultClassVars(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultClassVars(responseCodes)}
 
 <#include "common/response_constructor.ftl"/>
 
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
+            this.checkStatusCode(200, 403, 404);
             this.setStatus(this.getStatusCode());
         } finally {
             this.getResponse().close();
@@ -45,6 +44,5 @@ ${javaHelper.createAllResponseResultClassVars(
         }
     }
 
-${javaHelper.createAllResponseResultGetters(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultGetters(responseCodes)}
 }

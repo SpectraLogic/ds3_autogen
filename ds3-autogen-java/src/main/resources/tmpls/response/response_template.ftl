@@ -6,19 +6,17 @@ package ${packageName};
 
 public class ${name} extends AbstractResponse {
 
-${javaHelper.createAllResponseResultClassVars(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultClassVars(responseCodes)}
 
 <#include "common/response_constructor.ftl"/>
 
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(${helper.getResponseCodes(
-                                   javaHelper.removeErrorResponseCodes(responseCodes))});
+            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
 
             switch (this.getStatusCode()) {
-            <#list javaHelper.removeErrorResponseCodes(responseCodes) as responseCode>
+            <#list responseCodes as responseCode>
             case ${responseCode.getCode()}:
                 ${javaHelper.processResponseCodeLines(responseCode, 4)}
             </#list>
@@ -30,6 +28,5 @@ ${javaHelper.createAllResponseResultClassVars(
         }
     }
 
-${javaHelper.createAllResponseResultGetters(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultGetters(responseCodes)}
 }

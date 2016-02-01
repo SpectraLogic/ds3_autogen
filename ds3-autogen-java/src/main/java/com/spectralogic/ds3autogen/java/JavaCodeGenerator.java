@@ -21,11 +21,20 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
-import com.spectralogic.ds3autogen.java.converters.ModelConverter;
-import com.spectralogic.ds3autogen.java.converters.ResponseConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.ChecksumTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.JobsApiBeanTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -131,7 +140,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private void generateModel(final Ds3Type ds3Type) throws IOException, TemplateException {
         final Template modelTmpl = getModelTemplate(ds3Type);
-        final Model model = ModelConverter.toModel(ds3Type, getModelPackage());
+        final Model model = toModel(ds3Type, getModelPackage());
         final Path modelPath = toModelFilePath(model.getName());
 
         LOG.info("Getting outputstream for file:" + modelPath.toString());
@@ -140,6 +149,27 @@ public class JavaCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             modelTmpl.process(model, writer);
         }
+    }
+
+    /**
+     * Converts a Ds3Type into a Model
+     */
+    private Model toModel(final Ds3Type ds3Type, final String packageName) {
+        final TypeModelGenerator<?> modelGenerator = getModelGenerator(ds3Type);
+        return modelGenerator.generate(ds3Type, packageName);
+    }
+
+    /**
+     * Retrieves the associated type model generator for the specified Ds3TYpe
+     */
+    private TypeModelGenerator<?> getModelGenerator(final Ds3Type ds3Type) {
+        if (isChecksum(ds3Type)) {
+            return new ChecksumTypeGenerator();
+        }
+        if (isJobsApiBean(ds3Type)) {
+            return new JobsApiBeanTypeGenerator();
+        }
+        return new BaseTypeGenerator();
     }
 
     /**
@@ -168,6 +198,13 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isChecksum(final Ds3Type ds3Type) {
         return ds3Type.getName().endsWith(".ChecksumType");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the JobsApiBean type
+     */
+    private boolean isJobsApiBean(final Ds3Type ds3Type) {
+        return ds3Type.getName().endsWith(".JobsApiBean");
     }
 
     /**
@@ -275,7 +312,23 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Response
      */
     private Response toResponse(final Ds3Request ds3Request) {
-        return ResponseConverter.toResponse(ds3Request, getCommandPackage(ds3Request));
+        final ResponseModelGenerator<?> modelGenerator = getResponseTemplateModelGenerator(ds3Request);
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+    }
+    
+    /**
+     * Retrieves the associated response generator for the specified Ds3Request
+     */
+    private ResponseModelGenerator<?> getResponseTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isAllocateJobChunkRequest(ds3Request)
+                || isHeadObjectRequest(ds3Request)
+                || isHeadBucketRequest(ds3Request)) {
+            return new CodesResponseGenerator();
+        }
+        if (isBulkRequest(ds3Request)) {
+            return new BulkResponseGenerator();
+        }
+        return new BaseResponseGenerator();
     }
 
     /**
@@ -305,46 +358,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
     }
 
-    /**
-     * Determines if a Ds3Request is Head Bucket Request
-     */
-    private static boolean isHeadBucketRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.amazons3
-                && request.getBucketRequirement() == Requirement.REQUIRED
-                && request.getHttpVerb() == HttpVerb.HEAD
-                && request.getObjectRequirement() == Requirement.NOT_ALLOWED;
-    }
 
-    /**
-     * Determines if a Ds3Request is Head Object Request
-     */
-    private static boolean isHeadObjectRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.amazons3
-                && request.getBucketRequirement() == Requirement.REQUIRED
-                && request.getHttpVerb() == HttpVerb.HEAD
-                && request.getObjectRequirement() == Requirement.REQUIRED;
-    }
-
-    /**
-     * Determines if a Ds3Request is Allocate Job Chunk Request
-     */
-    private static boolean isAllocateJobChunkRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.spectrads3
-                && request.getResource() == Resource.JOB_CHUNK
-                && request.getAction() == Action.MODIFY
-                && request.getHttpVerb() == HttpVerb.PUT
-                && request.getOperation() == Operation.ALLOCATE;
-    }
-
-    /**
-     * Determines if a Ds3Request is Get Job Chunks Ready For Client Processing Request
-     */
-    private static boolean isGetJobChunksReadyForClientProcessingRequest(final Ds3Request request) {
-        return request.getClassification() == Classification.spectrads3
-                && request.getResource() == Resource.JOB_CHUNK
-                && request.getAction() == Action.LIST
-                && request.getHttpVerb() == HttpVerb.GET;
-    }
 
     /**
      * Gets the command package suitable for the given Ds3Request. SpectraDs3 commands

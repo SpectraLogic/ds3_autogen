@@ -7,7 +7,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 /**
  * This class provides utilities for testing Response Converter
  */
-public final class ResponseConverterTestHelper {
+public final class BaseResponseGeneratorTestHelper {
 
     /**
      * Creates a populated Ds3ResponseCode with a non-error response code
