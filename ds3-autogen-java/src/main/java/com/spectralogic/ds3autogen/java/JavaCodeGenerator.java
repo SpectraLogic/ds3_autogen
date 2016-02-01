@@ -182,6 +182,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isChecksum(ds3Type)) {
             return config.getTemplate("models/checksum_type_template.ftl");
         }
+        if (isS3Object(ds3Type)) {
+            return config.getTemplate("models/s3object_model_template.ftl");
+        }
         if (hasContent(ds3Type.getEnumConstants())) {
             return config.getTemplate("models/enum_model_template.ftl");
         }
@@ -189,6 +192,13 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("models/model_template.ftl");
         }
         throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the S3Object
+     */
+    private boolean isS3Object(final Ds3Type ds3type) {
+        return ds3type.getName().endsWith(".S3Object");
     }
 
     /**
