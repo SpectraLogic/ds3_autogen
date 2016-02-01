@@ -2,7 +2,6 @@
 
 package ${packageName};
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -28,7 +27,7 @@ ${javaHelper.getModelVariable(elmt)}
 
     @Override
     public int hashCode() {
-        return Objects.hash(bucketId, name, id, latest, creationDate, type, version);
+        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
     }
 
     @Override
@@ -37,14 +36,16 @@ ${javaHelper.getModelVariable(elmt)}
             return false;
         }
 
-        final ${name} s3obj = (${name})obj;
+        final ${name} bulkObject = (${name}) obj;
 
-        return this.bucketId.equals(s3obj.getBucketId())
-                && this.creationDate.equals(s3obj.getCreationDate())
-                && this.id.equals(s3obj.getId())
-                && this.latest == s3obj.getLatest()
-                && this.name.equals(s3obj.getName())
-                && this.type == s3obj.getType()
-                && this.version == s3obj.getVersion();
+        return (((this.getId() == null) && (bulkObject.getId() == null))
+                || ((this.getId() != null) && (bulkObject.getId() != null) && this.getId().equals(bulkObject.getId())))
+                && this.getInCache().equals(bulkObject.getInCache())
+                && this.getLatest() == bulkObject.getLatest()
+                && this.getLength() == bulkObject.getLength()
+                && this.getName().equals(bulkObject.getName())
+                && this.getOffset() == bulkObject.getOffset()
+                && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
+                && this.getVersion() == bulkObject.getVersion();
     }
 }
