@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
 
@@ -332,5 +333,50 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(3).getName(), is("Priority"));
         assertThat(result.get(4).getName(), is("NotificationEndPoint"));
         assertThat(result.get(5).getName(), is("RequestType"));
+    }
+
+    @Test
+    public void toQueryParamsList_Test() {
+        final ImmutableList<Ds3Param> params = createTestDs3ParamList();
+        final Ds3Request request = createDs3RequestTestData(true, null, params);
+
+        final ImmutableList<Arguments> result = generator.toQueryParamsList(request);
+        assertThat(result.size(), is(4));
+        assertThat(result.get(0).getName(), is("IgnoreNamingConflicts"));
+        assertThat(result.get(1).getName(), is("MaxUploadSize"));
+        assertThat(result.get(2).getName(), is("Name"));
+        assertThat(result.get(3).getName(), is("Priority"));
+    }
+
+    @Test
+    public void toConstructorList_Test() {
+        final ImmutableList<Ds3Param> params = createTestDs3ParamList();
+        final Ds3Request request = createDs3RequestTestData(true, null, params);
+
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        assertThat(result.size(), is(1));
+
+        final RequestConstructor constructor = result.get(0);
+        assertThat(constructor.getAdditionalLines().size(), is(0));
+        assertThat(constructor.isDeprecated(), is(false));
+
+        final ImmutableList<Arguments> constructorParams = constructor.getParameters();
+        assertThat(constructorParams.size(), is(3));
+        assertThat(constructorParams.get(0).getName(), is("MaxUploadSize"));
+        assertThat(constructorParams.get(1).getName(), is("Name"));
+        assertThat(constructorParams.get(2).getName(), is("Priority"));
+
+        final ImmutableList<Arguments> constructorAssignments = constructor.getAssignments();
+        assertThat(constructorAssignments.size(), is(3));
+        assertThat(constructorAssignments.get(0).getName(), is("MaxUploadSize"));
+        assertThat(constructorAssignments.get(1).getName(), is("Name"));
+        assertThat(constructorAssignments.get(2).getName(), is("Priority"));
+
+        final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
+        assertThat(queryParams.size(), is(4));
+        assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
+        assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
+        assertThat(queryParams.get(2).getName(), is("Name"));
+        assertThat(queryParams.get(3).getName(), is("Priority"));
     }
 }

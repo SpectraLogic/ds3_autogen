@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
@@ -42,7 +43,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         final String requestPath = getRequestPath(ds3Request);
         final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
-        final ImmutableList<Arguments> constructorArguments = toConstructorArgumentsList(ds3Request);
+        final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request);
         final ImmutableList<Variable> classVariableArguments = toClassVariableArguments(ds3Request);
         final ImmutableList<String> imports = getAllImports(ds3Request, packageName);
 
@@ -55,9 +56,33 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 ds3Request.getAction(),
                 requiredArguments,
                 optionalArguments,
-                constructorArguments,
+                constructors,
                 classVariableArguments,
                 imports);
+    }
+
+    /**
+     * Gets the list of constructor models from a Ds3Request. For the base request, the
+     * constructor list will be of size one.
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
+        final RequestConstructor constructor = new RequestConstructor(
+                constructorArgs,
+                constructorArgs,
+                toQueryParamsList(ds3Request));
+
+        return ImmutableList.of(constructor);
+    }
+
+    /**
+     * Creates the list of arguments that are added to the query params within
+     * the constructors
+     */
+    @Override
+    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
+        return toRequiredArgumentsList(ds3Request);
     }
 
     /**

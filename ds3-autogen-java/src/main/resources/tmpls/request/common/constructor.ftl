@@ -1,10 +1,11 @@
-    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
-        <#list constructorArguments as arg>
+    <#list constructors as constructor>
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
+        <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
-        <#if operation??>
-        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
-        </#if>
-<#include "constructor_get_query_params.ftl"/>
-
+<#include "add_query_params.ftl"/>
+        <#list constructor.getAdditionalLines() as line>
+        ${line}
+        </#list>
     }
+    </#list>

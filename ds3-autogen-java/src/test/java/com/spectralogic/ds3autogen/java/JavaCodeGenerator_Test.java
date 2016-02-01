@@ -845,6 +845,9 @@ public class JavaCodeGenerator_Test {
         builder.add(new Arguments("long", "Offset"));
         assertTrue(hasConstructor(requestName, builder.build(), requestGeneratedCode));
 
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"job\", job.toString())"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"offset\", Long.toString(offset))"));
+
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
@@ -965,6 +968,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasCopyright(requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest", requestGeneratedCode));
 
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("UUID", "NotificationId"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
@@ -1026,6 +1033,11 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("JobId", "UUID", requestName, requestGeneratedCode, false));
         assertTrue(hasCopyright(requestGeneratedCode));
 
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "NotificationEndPoint"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"notification_end_point\", notificationEndPoint);"));
+
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
@@ -1082,6 +1094,10 @@ public class JavaCodeGenerator_Test {
         assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("UUID", "NotificationId"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1370,6 +1386,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName", requestGeneratedCode));
 
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         LOG.info("Generated code:\n" + responseGeneratedCode);
@@ -1424,6 +1444,11 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();

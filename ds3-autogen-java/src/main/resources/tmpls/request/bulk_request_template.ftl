@@ -18,14 +18,15 @@ public class ${name} extends BulkRequest {
     <#include "common/variables.ftl"/>
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) throws XmlProcessingException {
+    <#list constructors as constructor>
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) throws XmlProcessingException {
         super(bucketName, objects);
-        <#if operation??>
-        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
-        </#if>
-<#include "common/constructor_get_query_params.ftl"/>
-
+        <#list constructor.getAssignments() as arg>
+        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        </#list>
+        <#include "common/add_query_params.ftl"/>
     }
+    </#list>
 
     <#list optionalArguments as arg>
 ${javaHelper.createWithConstructorBulk(arg, name)}

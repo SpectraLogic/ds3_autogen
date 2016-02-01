@@ -16,7 +16,9 @@
 package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
@@ -81,4 +83,24 @@ public class NotificationRequestGenerator_Test {
         final Ds3Request request = createSimpleTestDs3Request();
         generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3.notifications");
     }
+
+    @Test
+    public void toConstructorList_Test() {
+        final Ds3Request request = getRequestDeleteNotification();
+
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        assertThat(result.size(), is(1));
+
+        final RequestConstructor constructor = result.get(0);
+        assertThat(constructor.getAdditionalLines().size(), is(0));
+        assertThat(constructor.isDeprecated(), is(false));
+
+        final ImmutableList<Arguments> constructorParams = constructor.getParameters();
+        assertThat(constructorParams.size(), is(1));
+        assertThat(constructorParams.get(0).getName(), is("NotificationId"));
+
+        assertThat(constructor.getAssignments().size(), is(0));
+        assertThat(constructor.getQueryParams().size(), is(0));
+    }
+
 }

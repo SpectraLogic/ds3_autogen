@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isDeleteNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetNotificationRequest;
@@ -61,5 +63,25 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
         builder.add("java.util.UUID");
 
         return builder.build().asList();
+    }
+
+    /**
+     * Gets the list of constructor models from a Ds3Request. The notification
+     * constructor will have the parameter NotificationId
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
+
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(constructorArgs);
+        builder.add(new Arguments("UUID", "NotificationId"));
+
+        final RequestConstructor constructor = new RequestConstructor(
+                builder.build(),
+                constructorArgs,
+                toQueryParamsList(ds3Request));
+
+        return ImmutableList.of(constructor);
     }
 }

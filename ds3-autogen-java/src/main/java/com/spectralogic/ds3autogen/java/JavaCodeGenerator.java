@@ -425,14 +425,24 @@ public class JavaCodeGenerator implements CodeGenerator {
     private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
-        } else if (isPhysicalPlacementRequest(ds3Request)) {
+        }
+        if (isPhysicalPlacementRequest(ds3Request)) {
             return new PhysicalPlacementRequestGenerator();
-        } else if (isCreateObjectRequest(ds3Request)) {
+        }
+        if (isCreateObjectRequest(ds3Request)) {
             return new CreateObjectRequestGenerator();
-        } else if (isCreateNotificationRequest(ds3Request)) {
+        }
+        if (isCreateNotificationRequest(ds3Request)) {
             return new CreateNotificationRequestGenerator();
-        } else if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
+        }
+        if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
             return new NotificationRequestGenerator();
+        }
+        if (isGetObjectRequest(ds3Request)) {
+            return new  GetObjectRequestGenerator();
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return new MultiFileDeleteRequestGenerator();
         }
         return new BaseRequestGenerator();
     }
