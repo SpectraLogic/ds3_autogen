@@ -5,7 +5,7 @@ package ${packageName};
 public abstract class ${name} {
 
     public enum Type {
-${javaHelper.getEnumValues(javaHelper.addEnum(enumConstants, "NONE"), 2)}
+${javaHelper.getEnumValues(enumConstants, 2)}
     }
 
     private static final ${name} none = new None();

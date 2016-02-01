@@ -26,12 +26,15 @@ import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
-import com.spectralogic.ds3autogen.java.converters.ModelConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.ChecksumTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.JobsApiBeanTypeGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -137,7 +140,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private void generateModel(final Ds3Type ds3Type) throws IOException, TemplateException {
         final Template modelTmpl = getModelTemplate(ds3Type);
-        final Model model = ModelConverter.toModel(ds3Type, getModelPackage());
+        final Model model = toModel(ds3Type, getModelPackage());
         final Path modelPath = toModelFilePath(model.getName());
 
         LOG.info("Getting outputstream for file:" + modelPath.toString());
@@ -146,6 +149,27 @@ public class JavaCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             modelTmpl.process(model, writer);
         }
+    }
+
+    /**
+     * Converts a Ds3Type into a Model
+     */
+    private Model toModel(final Ds3Type ds3Type, final String packageName) {
+        final TypeModelGenerator<?> modelGenerator = getModelGenerator(ds3Type);
+        return modelGenerator.generate(ds3Type, packageName);
+    }
+
+    /**
+     * Retrieves the associated type model generator for the specified Ds3TYpe
+     */
+    private TypeModelGenerator<?> getModelGenerator(final Ds3Type ds3Type) {
+        if (isChecksum(ds3Type)) {
+            return new ChecksumTypeGenerator();
+        }
+        if (isJobsApiBean(ds3Type)) {
+            return new JobsApiBeanTypeGenerator();
+        }
+        return new BaseTypeGenerator();
     }
 
     /**
@@ -174,6 +198,13 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isChecksum(final Ds3Type ds3Type) {
         return ds3Type.getName().endsWith(".ChecksumType");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the JobsApiBean type
+     */
+    private boolean isJobsApiBean(final Ds3Type ds3Type) {
+        return ds3Type.getName().endsWith(".JobsApiBean");
     }
 
     /**

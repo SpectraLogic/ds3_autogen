@@ -3,8 +3,13 @@
 package ${packageName};
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 <#include "../imports.ftl"/>
 
+<#if nameToMarshal??>
+@JacksonXmlRootElement(namespace = "${nameToMarshal}")
+</#if>
 public class ${name} {
 
     // Variables

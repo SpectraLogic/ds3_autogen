@@ -238,10 +238,29 @@ public class JavaHelper_Test {
     @Test
     public void getModelVariable_SimpleType_Test() {
         final String expectedResult =
-                "    @JsonProperty(\"TestName\")\n"
+                "    @JsonProperty(\"XmlName\")\n"
                 + "    private testType testName;";
         final Element element = new Element(
                 "testName",
+                "xmlName",
+                false,
+                false,
+                "testType",
+                null);
+        final String result = getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable_SimpleType_AsAttribute_Test() {
+        final String expectedResult =
+                "    @JacksonXmlProperty(isAttribute = true, localName = \"xmlName\")\n"
+                        + "    private testType testName;";
+        final Element element = new Element(
+                "testName",
+                "xmlName",
+                true,
+                false,
                 "testType",
                 null);
         final String result = getModelVariable(element);
@@ -251,11 +270,31 @@ public class JavaHelper_Test {
     @Test
     public void getModelVariable_ArrayComponentType_Test() {
         final String expectedResult =
-                "    @JsonProperty(\"TestName\")\n"
-                + "    @JacksonXmlElementWrapper\n"
+                "    @JsonProperty(\"XmlName\")\n"
+                + "    @JacksonXmlElementWrapper(useWrapping = false)\n"
                 + "    private List<BlobApiBean> testName;";
         final Element element = new Element(
                 "testName",
+                "xmlName",
+                false,
+                false,
+                "array",
+                "com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        final String result = getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable_ComponentType_Wrapper_Test() {
+        final String expectedResult =
+                "    @JsonProperty(\"TestName\")\n"
+                        + "    @JacksonXmlElementWrapper(useWrapping = true)\n"
+                        + "    private List<BlobApiBean> testName;";
+        final Element element = new Element(
+                "testName",
+                "xmlName",
+                false,
+                true,
                 "array",
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
         final String result = getModelVariable(element);
