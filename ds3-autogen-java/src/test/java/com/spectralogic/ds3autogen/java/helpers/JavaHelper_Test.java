@@ -624,35 +624,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void removeErrorResponseCodes_NullList_Test() {
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void removeErrorResponseCodes_EmptyList_Test() {
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void removeErrorResponseCodes_FullList_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(206, null),
-                new Ds3ResponseCode(307, null),
-                new Ds3ResponseCode(400, null),
-                new Ds3ResponseCode(503, null));
-
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(responseCodes);
-
-        assertThat(result.size(), is(3));
-        assertThat(result.get(0).getCode(), is(200));
-        assertThat(result.get(1).getCode(), is(206));
-        assertThat(result.get(2).getCode(), is(307));
-    }
-
-    @Test
     public void createResponseResultGetter_NullParam_Test() {
         final Ds3ResponseType responseType = new Ds3ResponseType("Arg", "Type");
         final String result = createResponseResultGetter(null, responseType);

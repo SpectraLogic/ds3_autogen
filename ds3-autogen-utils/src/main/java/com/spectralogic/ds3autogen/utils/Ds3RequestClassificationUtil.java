@@ -177,4 +177,45 @@ public final class Ds3RequestClassificationUtil {
         }
         return false;
     }
+
+    /**
+     * Determines if a Ds3Request is Head Bucket Request
+     */
+    public static boolean isHeadBucketRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.HEAD
+                && request.getObjectRequirement() == Requirement.NOT_ALLOWED;
+    }
+
+    /**
+     * Determines if a Ds3Request is Head Object Request
+     */
+    public static boolean isHeadObjectRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.HEAD
+                && request.getObjectRequirement() == Requirement.REQUIRED;
+    }
+
+    /**
+     * Determines if a Ds3Request is Allocate Job Chunk Request
+     */
+    public static boolean isAllocateJobChunkRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getResource() == Resource.JOB_CHUNK
+                && request.getAction() == Action.MODIFY
+                && request.getHttpVerb() == HttpVerb.PUT
+                && request.getOperation() == Operation.ALLOCATE;
+    }
+
+    /**
+     * Determines if a Ds3Request is Get Job Chunks Ready For Client Processing Request
+     */
+    public static boolean isGetJobChunksReadyForClientProcessingRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getResource() == Resource.JOB_CHUNK
+                && request.getAction() == Action.LIST
+                && request.getHttpVerb() == HttpVerb.GET;
+    }
 }
