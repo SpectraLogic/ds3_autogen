@@ -15,44 +15,29 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
-public abstract class C_Type {
-    protected String type;
-    protected boolean isArray;
-
-    /*
-    public C_Type(
+/**
+ * Any C_Type that does not require a free
+ */
+public final class PrimitiveType extends C_Type {
+    public PrimitiveType(
             final String type,
             final boolean isArray) {
         this.type = type;
         this.isArray = isArray;
     }
-    */
-
-    public String getTypeRoot() {
-        return type;
-    }
 
     @Override
     public String toString() {
-        String ret = type;
-        if (!isPrimitive()) {
-            ret += "*";
-        }
-        if (isArray()) {
-            ret += "*";
-        }
-
-        return ret;
+        return super.toString();
     }
 
-    /**
-     * Any StructMember can be an array, regardless of Type
-     * @return boolean isArray
-     */
-    public boolean isArray() {
-        return isArray;
+    @Override
+    public String getTypeRoot() {
+        return super.getTypeRoot();
     }
 
-    abstract public boolean isPrimitive();
+    @Override
+    public boolean isPrimitive() {
+        return true;
+    }
 }
-

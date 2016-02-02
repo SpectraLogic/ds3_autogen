@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -24,18 +23,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class StructHelper {
+    private static Set<String> existingStructs;
     private static final Logger LOG = LoggerFactory.getLogger(StructHelper.class);
-    private StructHelper() {}
+    private StructHelper() {
+        existingStructs = new HashSet<>();
+    }
 
     private final static StructHelper structHelper = new StructHelper();
 
     public static StructHelper getInstance() {
         return structHelper;
+    }
+
+    public static void addStruct(final String name) {
+        existingStructs.add(name);
+    }
+
+    public static boolean isExistingStruct(final String name) {
+        return existingStructs.contains(name);
     }
 
     public static String getNameUnderscores(final String name) {
@@ -73,19 +84,23 @@ public final class StructHelper {
             // build the name of the free function for the embedded type
             case "java.util.Set":
             case "array":
+                LOG.warn("found array");
+                throw new ParseException("parse error", 0);
             default:
-                return structMemberType + "_free";
+                return getFreeFunctionName(structMemberType);
         }
     }
 
     /**
-     * Determine if a Struct is primitive, if and only if every structMember is primitive.
+     * Determine if a Struct requires a custom parser.
      * @param struct
-     * @return true if every structMember is primitive
+     * @return true if no StructMembers require a custom parser.
      */
-    public static boolean isPrimitive(final Struct struct) {
+    public static boolean requiresCustomParser(final Struct struct) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
+                if (member.getType().getTypeRoot().equals("ds3_str")) continue; // ds3_str is not an auto-generated API type.
+
                 return false;
             }
         }
@@ -109,8 +124,7 @@ public final class StructHelper {
             return generateStructMemberArrayParserBlock(getResponseTypeName(structName), structMember);
         } else if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeRoot()) {
-                case "ds3_str":
-                    return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
+                case "uint_64_t":
                 case "double":
                 case "long":
                     return generateStructMemberParserLine(structMember, "xml_get_uint64(doc, child_node);");
@@ -118,7 +132,11 @@ public final class StructHelper {
                     return generateStructMemberParserLine(structMember, "xml_get_uint16(doc, child_node);");
                 case "ds3_bool":
                     return generateStructMemberParserLine(structMember, "xml_get_bool(doc, child_node);");
+                default:
+                    throw new ParseException("Unknown primitive type: " + structMember.getType().getTypeRoot(), 0);
             }
+        } else if (structMember.getType().getTypeRoot().equals("ds3_str")) { // special case
+            return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         }
 
         return generateStructMemberParserLine(structMember, getParserFunctionName(structMember.getName()) + "(log, doc, child_node);");
@@ -157,15 +175,14 @@ public final class StructHelper {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (final StructMember structMember : structMembers) {
-            final String freeFunc = getFreeFunction(structMember.getType().getTypeRoot());
-            if (freeFunc.length() == 0) continue;
+            if (structMember.getType().isPrimitive()) continue;
 
             if (structMember.getType().isArray()) {
                 outputBuilder.append(generateFreeArrayStructMember(structMember));
             } else {
                 outputBuilder.append(indent(1)).
-                        append(freeFunc).
-                        append("(response_data->").
+                        append(structMember.getType().getTypeRoot()).
+                        append("_free(response_data->").
                         append(structMember.getName()).
                         append(");").
                         append("\n");
@@ -173,14 +190,6 @@ public final class StructHelper {
         }
 
         return outputBuilder.toString();
-    }
-
-    public static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList) throws ParseException {
-        final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
-        for (final Ds3Element currentElement : elementsList) {
-            builder.add(new StructMember(C_TypeHelper.convertDs3ElementType(currentElement), getNameUnderscores(currentElement.getName())));
-        }
-        return builder.build();
     }
 
     public static String generateStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {

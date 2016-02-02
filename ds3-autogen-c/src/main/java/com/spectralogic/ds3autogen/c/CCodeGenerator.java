@@ -42,10 +42,8 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -101,7 +99,10 @@ public class CCodeGenerator implements CodeGenerator {
         final ImmutableList.Builder<Enum> allEnumsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                allEnumsBuilder.add(EnumConverter.toEnum(ds3TypeEntry));
+                final Enum newEnum = EnumConverter.toEnum(ds3TypeEntry);
+                allEnumsBuilder.add(newEnum);
+                LOG.debug("adding enum[" + newEnum.getName() + "]");
+                //EnumHelper.addEnum(newEnum.getName());
             }
         }
         return allEnumsBuilder.build();
@@ -117,15 +118,6 @@ public class CCodeGenerator implements CodeGenerator {
         return allStructsBuilder.build();
     }
 
-    public static boolean containsExistingStructs(final Struct struct, final Set<String> existingStructs) {
-        for (final StructMember structMember: struct.getStructMembers()) {
-            if (!existingStructs.contains(structMember.getType().getTypeRoot())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Return structs which contain only primitive types first, and then cascade for structs that contain other structs
      *
@@ -134,18 +126,17 @@ public class CCodeGenerator implements CodeGenerator {
     public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
         final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec));
-        final Set<String> existingTypes = new HashSet<>();
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.remove();
-            if (existingTypes.contains(structEntry.getName())) {
+            if (StructHelper.isExistingStruct(structEntry.getName())) {
                 LOG.warn("Skipping structEntry " + structEntry.getName());
                 continue;
             }
 
-            if (StructHelper.isPrimitive(structEntry) || containsExistingStructs(structEntry, existingTypes)) {
-                existingTypes.add(StructHelper.getResponseTypeName(structEntry.getName()));
+            if (StructHelper.requiresCustomParser(structEntry) || StructHelper.isExistingStruct(structEntry.getName())) {
+                StructHelper.addStruct(StructHelper.getResponseTypeName(structEntry.getName()));
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
                 allStructs.add(structEntry);

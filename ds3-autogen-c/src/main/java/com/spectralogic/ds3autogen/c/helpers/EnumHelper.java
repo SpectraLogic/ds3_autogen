@@ -22,12 +22,14 @@ import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class EnumHelper {
+    private static Set<String> existingEnums;
     private static final Logger LOG = LoggerFactory.getLogger(EnumHelper.class);
     private EnumHelper() {}
 
@@ -35,6 +37,19 @@ public final class EnumHelper {
 
     public static EnumHelper getInstance() {
         return enumHelper;
+    }
+
+    public static void addEnum(final String name) {
+        existingEnums.add(name);
+    }
+
+    public static boolean isExistingEnum(final String name) {
+        try {
+            return existingEnums.contains(name);
+        } catch (final NullPointerException e) {
+            LOG.debug("isExistingEnum", e);
+            return false;
+        }
     }
 
     public static String getNameUnderscores(final String name) {

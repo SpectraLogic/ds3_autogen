@@ -17,12 +17,14 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.C_Type;
+import com.spectralogic.ds3autogen.c.models.ComplexType;
+import com.spectralogic.ds3autogen.c.models.PrimitiveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
-public class C_TypeHelper {
+public final class C_TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
 
@@ -32,33 +34,51 @@ public class C_TypeHelper {
         return c_typeHelper;
     }
 
-    public static C_Type convertDs3ElementType(final Ds3Element element) throws ParseException {
-        switch (element.getType()) {
+    private static C_Type createType(final String type, final boolean isArray) throws ParseException {
+        switch (type) {
             case "boolean":
-                return new C_Type("ds3_bool", true, false);
+                return new PrimitiveType("ds3_bool", isArray);
 
             case "double":
-                return new C_Type("double", true, false);  // ex: 0.82
-
             case "java.lang.Long":
             case "long":
-                return new C_Type("uint64_t", true, false);
+                return new PrimitiveType("uint64_t", isArray);
 
             case "java.lang.Integer":
             case "int":
-                return new C_Type("int", true, false);
+                return new PrimitiveType("int", isArray);
 
             case "java.lang.String":
             case "java.util.Date":
             case "java.util.UUID":
-                return new C_Type("ds3_str", false, false);
+                return new ComplexType("ds3_str", isArray);
+
+            default:
+                final String responseTypeName = StructHelper.getResponseTypeName(type);
+                //Enum
+                if (EnumHelper.isExistingEnum(responseTypeName)) {
+                    LOG.debug("new complex type[" + responseTypeName + "] is an Enum");
+                    return new PrimitiveType(responseTypeName, isArray);
+                } else if (StructHelper.isExistingStruct(responseTypeName)) {
+                    //Enum
+                    LOG.debug("new complex type[" + responseTypeName + "] is a Struct? " + (StructHelper.isExistingStruct(responseTypeName) ? "FOUND" : "NOT FOUND"));
+                    return new ComplexType(responseTypeName, isArray);
+                }
+
+                LOG.warn("unknown type!!! " + type);
+                throw new ParseException("unknown type", 0);
+        }
+    }
+
+    public static C_Type convertDs3ElementType(final Ds3Element element) throws ParseException {
+        switch (element.getType()) {
 
             case "java.util.Set":
             case "array":
-                return new C_Type(StructHelper.getResponseTypeName(element.getComponentType()), false, true);
+                return createType(element.getComponentType(), true);
 
             default:
-                return new C_Type(StructHelper.getResponseTypeName(element.getType()), false, false);
+                return createType(element.getType(), false);
         }
     }
 }

@@ -251,10 +251,8 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            response->display_name = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
         assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
-        //  Not generating catch block at this time.
-        //assertTrue(output.contains("        } else {"));
-        //assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
-
+        assertTrue(output.contains("        } else {"));
+        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
@@ -301,6 +299,8 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
         assertTrue(output.contains("            response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
+        assertTrue(output.contains("        } else {"));
+        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("    }"));
