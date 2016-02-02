@@ -263,6 +263,7 @@ public class JavaCodeGenerator_Models_Test {
 
         assertTrue(modelGeneratedCode.contains("public int hashCode()"));
         assertTrue(modelGeneratedCode.contains("public boolean equals(final Object obj)"));
+        assertTrue(modelGeneratedCode.contains("public String toString()"));
     }
 
     @Test(expected = IllegalArgumentException.class)
