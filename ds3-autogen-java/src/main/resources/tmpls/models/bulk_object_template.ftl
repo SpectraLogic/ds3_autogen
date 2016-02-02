@@ -48,4 +48,9 @@ ${javaHelper.getModelVariable(elmt)}
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
                 && this.getVersion() == bulkObject.getVersion();
     }
+
+    @Override
+    public String toString() {
+        return String.format("name = %s, offset = %d, length %d", name, offset, length);
+    }
 }
