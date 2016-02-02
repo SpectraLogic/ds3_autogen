@@ -1,9 +1,8 @@
 {
   "TypeNameMap": [
     {
-      "ContractPath": "",
-      "ContractName": "",
-      "SdkName": ""
+      "ContractName": "BlobApiBean",
+      "SdkName": "BulkObject"
     }
   ]
 }

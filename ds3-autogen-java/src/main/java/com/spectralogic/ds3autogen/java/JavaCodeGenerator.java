@@ -201,7 +201,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Determines if a given Ds3Type is a BulkObject
      */
     private boolean isBulkObject(final Ds3Type ds3type) {
-        return ds3type.getName().endsWith(".BlobApiBean");
+        return ds3type.getName().endsWith(".BulkObject");
     }
 
     /**

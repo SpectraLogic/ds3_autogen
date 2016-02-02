@@ -230,7 +230,7 @@ public class JavaCodeGenerator_Models_Test {
 
     @Test
     public void bulkObject_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
-        final String modelName = "BlobApiBean";
+        final String modelName = "BulkObject";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
                 fileUtils,
