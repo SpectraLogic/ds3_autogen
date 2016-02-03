@@ -491,8 +491,9 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/create_notification_request_template.ftl");
         } else if (isGetNotificationRequest(ds3Request)) {
             return config.getTemplate("request/get_notification_request_template.ftl");
-        } else {
-            return config.getTemplate("request/request_template.ftl");
+        } else if (isGetJobRequest(ds3Request)) {
+            return config.getTemplate("request/get_job_request_template.ftl");
         }
+        return config.getTemplate("request/request_template.ftl");
     }
 }

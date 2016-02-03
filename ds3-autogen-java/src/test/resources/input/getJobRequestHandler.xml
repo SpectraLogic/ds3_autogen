@@ -1,0 +1,21 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>12.D2E1E5F53C787AAE87CD6C64E57DF392</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
