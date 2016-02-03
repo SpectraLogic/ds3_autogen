@@ -373,12 +373,12 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response_template.ftl");
-        } else {
-            return config.getTemplate("response/response_template.ftl");
         }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("response/get_object_response_template.ftl");
+        }
+        return config.getTemplate("response/response_template.ftl");
     }
-
-
 
     /**
      * Gets the command package suitable for the given Ds3Request. SpectraDs3 commands

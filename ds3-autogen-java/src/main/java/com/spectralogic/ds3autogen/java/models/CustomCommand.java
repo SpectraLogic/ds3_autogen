@@ -15,32 +15,20 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
-import com.google.common.collect.ImmutableList;
+public class CustomCommand extends Command {
 
-public class Client {
+    private final String customBody;
 
-    private final String packageName;
-    private final ImmutableList<Command> commands;
-    private final ImmutableList<CustomCommand> customCommands;
-
-    public Client(
-            final String packageName,
-            final ImmutableList<Command> commands,
-            final ImmutableList<CustomCommand> customCommands) {
-        this.packageName = packageName;
-        this.commands = commands;
-        this.customCommands = customCommands;
+    public CustomCommand(
+            final String name,
+            final String requestName,
+            final String responseName,
+            final String customBody) {
+        super(name, requestName, responseName);
+        this.customBody = customBody;
     }
 
-    public ImmutableList<Command> getCommands() {
-        return commands;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public ImmutableList<CustomCommand> getCustomCommands() {
-        return customCommands;
+    public String getCustomBody() {
+        return customBody;
     }
 }
