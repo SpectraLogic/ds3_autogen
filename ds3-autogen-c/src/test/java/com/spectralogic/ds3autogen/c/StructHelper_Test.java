@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
@@ -41,46 +42,46 @@ public class StructHelper_Test {
     @Test
     public void testTypeRequiresNewParser() {
         final Set<String> existingStructs = new HashSet<>();
-        final Set<String> enumNames = new HashSet<>();
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember");
         final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
         final Struct testStruct = new Struct("testStruct", testStructMembers);
-        assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames));
+        assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
     @Test
     public void testTypeRequiresNewParser2() {
         final Set<String> existingStructs = new HashSet<>();
-        final Set<String> enumNames = new HashSet<>();
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new ComplexType("ds3_user_api_bean_response", false), "beanMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
         final Struct testStruct = new Struct("testStruct", testStructMembers);
-        assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames));
+        assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
     @Test
     public void testEnumTypeDoesNotRequireNewParser() {
         final Set<String> existingStructs = new HashSet<>();
-        final Set<String> enumNames = new HashSet<>();
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         existingStructs.add("ds3_tape_type");
 
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new ComplexType("ds3_tape_type", false), "tapeTypeMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
         final Struct testStruct = new Struct("testStruct", testStructMembers);
-        assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames));
+        assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
     @Test
     public void testGenerateStructMembers() throws ParseException {
-        final Set<String> enumNames = new HashSet<>();
         final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null);
         final Ds3Element testElement2 = new Ds3Element("beanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
         final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames);
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build());
         final String output = StructHelper.generateStructMembers(testStruct.getStructMembers());
         assertTrue(output.contains("ds3_bool bool_element;"));
         assertTrue(output.contains("ds3_user_api_bean_response* bean_element;"));
@@ -88,13 +89,13 @@ public class StructHelper_Test {
 
     @Test
     public void testGenerateResponseParser() throws ParseException {
-        final Set<String> enumNames = new HashSet<>();
         final Ds3Element testElement1 = new Ds3Element("BoolElement", "boolean", null);
         final Ds3Element testElement2 = new Ds3Element("BeanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
         final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames);
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build());
         final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
         LOG.info("Generated code:\n" + output);
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));

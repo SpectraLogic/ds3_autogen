@@ -67,7 +67,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
-            final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();//allEnums.builder().build().stream().map(Enum::getName).collect(Collectors.toSet());
+            final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
             for (final Enum currentEnum : allEnums) {
                 enumNames.add(currentEnum.getName());
             }
