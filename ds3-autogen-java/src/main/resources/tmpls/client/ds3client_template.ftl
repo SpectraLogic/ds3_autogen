@@ -20,6 +20,10 @@ public interface Ds3Client extends Closeable {
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
             throws IOException, SignatureException;
     </#list>
+    <#list customCommands as cmd>
+    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
+            throws IOException, SignatureException;
+    </#list>
 
     Ds3Client newForNode(final NodeApiBean node);
 }

@@ -380,8 +380,6 @@ public class JavaCodeGenerator implements CodeGenerator {
         return config.getTemplate("response/response_template.ftl");
     }
 
-
-
     /**
      * Gets the command package suitable for the given Ds3Request. SpectraDs3 commands
      * have a separate package, as do notifications.

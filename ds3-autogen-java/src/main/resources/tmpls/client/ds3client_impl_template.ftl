@@ -34,6 +34,13 @@ public class Ds3ClientImpl implements Ds3Client {
     }
     </#list>
 
+    <#list customCommands as cmd>
+    @Override
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException, SignatureException {
+        ${cmd.getCustomBody()}
+    }
+    </#list>
+
     @Override
     public Ds3Client newForNode(final NodeApiBean node) {
         final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
