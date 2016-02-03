@@ -23,5 +23,5 @@ import java.nio.file.Path;
 public interface CodeGenerator {
     void generate(final Ds3ApiSpec spec,
                   final FileUtils fileUtils,
-                  final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException, InterruptedException;
+                  final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException;
 }
