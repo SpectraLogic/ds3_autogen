@@ -146,7 +146,7 @@ public final class Ds3RequestClassificationUtil {
      * @param ds3Request A request
      * @return True if the request is an AmazonS3 Get Object request, else false
      */
-    protected static boolean isGetObjectAmazonS3Request(final Ds3Request ds3Request) {
+    public static boolean isGetObjectAmazonS3Request(final Ds3Request ds3Request) {
         return enumsEqual(ds3Request.getClassification(), Classification.amazons3)
                 && enumsEqual(ds3Request.getHttpVerb(), HttpVerb.GET)
                 && enumsEqual(ds3Request.getBucketRequirement(), Requirement.REQUIRED)

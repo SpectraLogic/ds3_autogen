@@ -860,6 +860,11 @@ public class JavaCodeGenerator_Test {
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.HttpErrorResultApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
+        assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.IOUtils", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.PerformanceUtils", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -936,6 +941,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.S3Object", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
