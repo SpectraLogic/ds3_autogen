@@ -17,12 +17,16 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
+import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -70,5 +74,65 @@ public class BulkRequestGenerator_Test {
     @Test
     public void getParentImport_Test() {
         assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.BulkRequest"));
+    }
+
+    @Test
+    public void toConstructorList_Test() {
+        final ImmutableList<Ds3Param> params = createTestDs3ParamList();
+        final Ds3Request request = createDs3RequestTestData(true, null, params);
+
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        assertThat(result.size(), is(1));
+
+        final RequestConstructor constructor = result.get(0);
+        assertThat(constructor.getAdditionalLines().size(), is(0));
+        assertThat(constructor.isDeprecated(), is(false));
+
+        final ImmutableList<Arguments> constructorParams = constructor.getParameters();
+        assertThat(constructorParams.size(), is(4));
+        assertThat(constructorParams.get(0).getName(), is("MaxUploadSize"));
+        assertThat(constructorParams.get(1).getName(), is("Name"));
+        assertThat(constructorParams.get(2).getName(), is("Priority"));
+        assertThat(constructorParams.get(3).getName(), is("Objects"));
+
+        final ImmutableList<Arguments> constructorAssignments = constructor.getAssignments();
+        assertThat(constructorAssignments.size(), is(2));
+        assertThat(constructorAssignments.get(0).getName(), is("MaxUploadSize"));
+        assertThat(constructorAssignments.get(1).getName(), is("Name"));
+
+        final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
+        assertThat(queryParams.size(), is(4));
+        assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
+        assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
+        assertThat(queryParams.get(2).getName(), is("Name"));
+        assertThat(queryParams.get(3).getName(), is("Priority"));
+    }
+
+    @Test
+    public void toConstructorAssignmentList_NullList_Test() {
+        final ImmutableList<Arguments> result = toConstructorAssignmentList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toConstructorAssignmentList_EmptyList_Test() {
+        final ImmutableList<Arguments> result = toConstructorAssignmentList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toConstructorAssignmentList_FullList_Test() {
+        final ImmutableList<Arguments> arguments = ImmutableList.of(
+                new Arguments("type", "Priority"),
+                new Arguments("type", "Name1"),
+                new Arguments("type", "WriteOptimization"),
+                new Arguments("type", "BucketName"),
+                new Arguments("type", "Name2"),
+                new Arguments("type", "Objects"));
+
+        final ImmutableList<Arguments> result = toConstructorAssignmentList(arguments);
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("Name1"));
+        assertThat(result.get(1).getName(), is("Name2"));
     }
 }

@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3NameMap;
 
 import java.util.List;
 
@@ -34,13 +33,15 @@ public class TypeNameMap {
         this.types = types;
     }
 
-    public ImmutableMap<String, Ds3NameMap> getTypeMap() {
-        final ImmutableMap.Builder<String, Ds3NameMap> builder = ImmutableMap.builder();
+    /**
+     * Gets a map where the key is the contract name and the value
+     * is the sdk name. There are no paths included within these names.
+     * This is used to convert names into the sdk naming scheme.
+     */
+    public ImmutableMap<String, String> getTypeMap() {
+        final ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
         for (final NameMap nameMap : types) {
-            final Ds3NameMap ds3NameMap = new Ds3NameMap(
-                    nameMap.getContractName(),
-                    nameMap.getSdkName());
-            builder.put(nameMap.getContractPath(), ds3NameMap);
+            builder.put(nameMap.getContractName(), nameMap.getSdkName());
         }
         return builder.build();
     }

@@ -98,8 +98,8 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
 
-        assertTrue(hasModelVariable("Pools", "List<Pool>", true, modelGeneratedCode));
-        assertTrue(hasModelVariable("Tapes", "List<Tape>", true, modelGeneratedCode));
+        assertTrue(hasModelVariable("Pools", "Pools", "List<Pool>", true, modelGeneratedCode));
+        assertTrue(hasModelVariable("Tapes", "Tapes", "List<Tape>", true, modelGeneratedCode));
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
         assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper", modelGeneratedCode));
@@ -189,6 +189,81 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(TestHelper.enumContainsValue("NORMAL", modelGeneratedCode));
         assertTrue(TestHelper.enumContainsValue("LOW", modelGeneratedCode));
         assertTrue(TestHelper.enumContainsValue("BACKGROUND", modelGeneratedCode));
+    }
+
+    @Test
+    public void s3Object_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String modelName = "S3Object";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/s3objectType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(hasModelVariable("BucketId", "UUID", modelGeneratedCode));
+        assertTrue(hasModelVariable("CreationDate", "Date", modelGeneratedCode));
+        assertTrue(hasModelVariable("Id", "UUID", modelGeneratedCode));
+        assertTrue(hasModelVariable("Latest", "boolean", modelGeneratedCode));
+        assertTrue(hasModelVariable("Name", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("Type", "S3ObjectType", modelGeneratedCode));
+        assertTrue(hasModelVariable("Version", "long", modelGeneratedCode));
+
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement", modelGeneratedCode));
+        assertTrue(hasImport("java.util.Objects", modelGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", modelGeneratedCode));
+        assertTrue(hasImport("java.util.Date", modelGeneratedCode));
+
+        assertTrue(hasModelConstructor(modelName, ImmutableList.<Element>of(), modelGeneratedCode));
+
+        assertTrue(modelGeneratedCode.contains("public int hashCode()"));
+        assertTrue(modelGeneratedCode.contains("public boolean equals(final Object obj)"));
+    }
+
+    @Test
+    public void bulkObject_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String modelName = "BulkObject";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/bulkObjectType.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(hasModelVariable("Id", "UUID", modelGeneratedCode));
+        assertTrue(hasParamAttribute("InCache", "Boolean", modelGeneratedCode));
+        assertTrue(hasParamAttribute("Latest", "boolean", modelGeneratedCode));
+        assertTrue(hasParamAttribute("Length", "long", modelGeneratedCode));
+        assertTrue(hasParamAttribute("Name", "String", modelGeneratedCode));
+        assertTrue(hasParamAttribute("Offset", "long", modelGeneratedCode));
+        assertTrue(hasModelVariable("PhysicalPlacement", "PhysicalPlacementApiBean", modelGeneratedCode));
+        assertTrue(hasParamAttribute("Version", "long", modelGeneratedCode));
+
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty", modelGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", modelGeneratedCode));
+
+        assertTrue(hasModelConstructor(modelName, ImmutableList.<Element>of(), modelGeneratedCode));
+
+        assertTrue(modelGeneratedCode.contains("public int hashCode()"));
+        assertTrue(modelGeneratedCode.contains("public boolean equals(final Object obj)"));
+        assertTrue(modelGeneratedCode.contains("public String toString()"));
     }
 
     @Test(expected = IllegalArgumentException.class)

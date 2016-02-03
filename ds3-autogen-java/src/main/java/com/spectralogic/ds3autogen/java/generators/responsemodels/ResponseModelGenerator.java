@@ -13,23 +13,11 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
-public class Ds3NameMap {
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.Response;
 
-    private final String contractName;
-    private final String sdkName;
-
-    public Ds3NameMap(final String contractName, final String sdkName) {
-        this.contractName = contractName;
-        this.sdkName = sdkName;
-    }
-
-    public String getContractName() {
-        return contractName;
-    }
-
-    public String getSdkName() {
-        return sdkName;
-    }
+public interface ResponseModelGenerator<T extends Response> {
+    T generate(final Ds3Request ds3Request, final String packageName);
 }

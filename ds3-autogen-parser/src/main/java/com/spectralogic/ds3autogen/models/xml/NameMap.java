@@ -19,20 +19,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NameMap {
 
-    @JsonProperty("ContractPath")
-    private String contractPath;
     @JsonProperty("ContractName")
     private String contractName;
+
     @JsonProperty("SdkName")
     private String sdkName;
-
-    public String getContractPath() {
-        return contractPath;
-    }
-
-    public void setContractPath(final String contractPath) {
-        this.contractPath = contractPath;
-    }
 
     public String getContractName() {
         return contractName;

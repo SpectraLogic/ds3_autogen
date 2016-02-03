@@ -16,19 +16,20 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Client {
 
     private final String packageName;
     private final ImmutableList<Command> commands;
+    private final ImmutableList<CustomCommand> customCommands;
 
     public Client(
             final String packageName,
-            final ImmutableList<Command> commands) {
+            final ImmutableList<Command> commands,
+            final ImmutableList<CustomCommand> customCommands) {
         this.packageName = packageName;
         this.commands = commands;
+        this.customCommands = customCommands;
     }
 
     public ImmutableList<Command> getCommands() {
@@ -37,5 +38,9 @@ public class Client {
 
     public String getPackageName() {
         return packageName;
+    }
+
+    public ImmutableList<CustomCommand> getCustomCommands() {
+        return customCommands;
     }
 }

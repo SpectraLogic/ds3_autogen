@@ -19,49 +19,23 @@ public class ${name} extends AbstractRequest {
 <#include "common/checksum_variables.ftl"/>
 
     // Constructor
-
-    /**
-     * @deprecated use {@link #${name}(${javaHelper.argTypeList(
-                                         helper.addArgument(
-                                         helper.addArgument(constructorArguments, optionalArguments), "Channel", "SeekableByteChannel"))}) instead
-     */
+    <#list constructors as constructor>
+    <#if constructor.isDeprecated() == true>
+    /** @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(constructorArguments, "Channel", "SeekableByteChannel"))}) {
-        <#list constructorArguments as arg>
+    </#if>
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
+        <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>
-        this.channel = channel;
-        this.stream = new SeekableByteChannelInputStream(channel);
+        <#list constructor.getAdditionalLines() as line>
+        ${line}
+        </#list>
+        <#include "common/add_query_params.ftl"/>
+
     }
 
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.addArgument(constructorArguments, optionalArguments), "Channel", "SeekableByteChannel"))}) {
-        this(${javaHelper.modifiedArgNameList(
-               helper.addArgument(
-               helper.addArgument(
-                   constructorArguments, optionalArguments), "Stream", "InputStream"), "Stream", "new SeekableByteChannelInputStream(channel)")});
-
-        this.channel = channel;
-    }
-
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.addArgument(
-                         constructorArguments, optionalArguments), "Stream", "InputStream"))}) {
-            <#list constructorArguments as arg>
-            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-            </#list>
-            <#list optionalArguments as arg>
-            this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-            </#list>
-            this.stream = stream;
-
-            <#list optionalArguments as arg>
-            ${javaHelper.putQueryParamLine(arg)}
-            </#list>
-        }
+    </#list>
 
     <#include "common/with_constructors.ftl"/>
 

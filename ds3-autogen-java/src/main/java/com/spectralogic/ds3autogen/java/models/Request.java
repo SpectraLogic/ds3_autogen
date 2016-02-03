@@ -32,7 +32,7 @@ public class Request {
     private final Action action;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
-    private final ImmutableList<Arguments> constructorArguments;
+    private final ImmutableList<RequestConstructor> constructors;
     private final ImmutableList<Variable> classVariables;
     private final ImmutableList<String> imports;
     private final Helper helper;
@@ -46,7 +46,7 @@ public class Request {
                    final Action action,
                    final ImmutableList<Arguments> requiredArguments,
                    final ImmutableList<Arguments> optionalArguments,
-                   final ImmutableList<Arguments> constructorArguments,
+                   final ImmutableList<RequestConstructor> constructors,
                    final ImmutableList<Variable> classVariables,
                    final ImmutableList<String> imports) {
         this.packageName = packageName;
@@ -57,7 +57,7 @@ public class Request {
         this.action = action;
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
-        this.constructorArguments = constructorArguments;
+        this.constructors = constructors;
         this.classVariables = classVariables;
         this.imports = imports;
 
@@ -105,11 +105,11 @@ public class Request {
 
     public JavaHelper getJavaHelper() { return javaHelper; }
 
-    public ImmutableList<Arguments> getConstructorArguments() {
-        return constructorArguments;
-    }
-
     public ImmutableList<Variable> getClassVariables() {
         return classVariables;
+    }
+
+    public ImmutableList<RequestConstructor> getConstructors() {
+        return constructors;
     }
 }

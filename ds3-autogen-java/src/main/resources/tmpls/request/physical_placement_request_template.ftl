@@ -17,15 +17,7 @@ public class ${name} extends AbstractRequest {
     <#include "common/variables.ftl"/>
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(constructorArguments)}) {
-        <#list constructorArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        <#if operation??>
-        this.getQueryParams().put("operation", "${operation.toString()?lower_case}");
-        </#if>
-<#include "common/constructor_get_query_params.ftl"/>
-    }
+    <#include "common/constructor.ftl"/>
 
     <#include "common/with_constructors.ftl"/>
 

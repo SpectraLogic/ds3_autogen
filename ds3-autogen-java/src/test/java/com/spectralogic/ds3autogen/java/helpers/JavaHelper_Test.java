@@ -238,10 +238,29 @@ public class JavaHelper_Test {
     @Test
     public void getModelVariable_SimpleType_Test() {
         final String expectedResult =
-                "    @JsonProperty(\"TestName\")\n"
+                "    @JsonProperty(\"XmlName\")\n"
                 + "    private testType testName;";
         final Element element = new Element(
                 "testName",
+                "xmlName",
+                false,
+                false,
+                "testType",
+                null);
+        final String result = getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable_SimpleType_AsAttribute_Test() {
+        final String expectedResult =
+                "    @JacksonXmlProperty(isAttribute = true, localName = \"xmlName\")\n"
+                        + "    private testType testName;";
+        final Element element = new Element(
+                "testName",
+                "xmlName",
+                true,
+                false,
                 "testType",
                 null);
         final String result = getModelVariable(element);
@@ -251,11 +270,31 @@ public class JavaHelper_Test {
     @Test
     public void getModelVariable_ArrayComponentType_Test() {
         final String expectedResult =
-                "    @JsonProperty(\"TestName\")\n"
-                + "    @JacksonXmlElementWrapper\n"
+                "    @JsonProperty(\"XmlName\")\n"
+                + "    @JacksonXmlElementWrapper(useWrapping = false)\n"
                 + "    private List<BlobApiBean> testName;";
         final Element element = new Element(
                 "testName",
+                "xmlName",
+                false,
+                false,
+                "array",
+                "com.spectralogic.s3.common.platform.domain.BlobApiBean");
+        final String result = getModelVariable(element);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void getModelVariable_ComponentType_Wrapper_Test() {
+        final String expectedResult =
+                "    @JsonProperty(\"TestName\")\n"
+                        + "    @JacksonXmlElementWrapper(useWrapping = true)\n"
+                        + "    private List<BlobApiBean> testName;";
+        final Element element = new Element(
+                "testName",
+                "xmlName",
+                false,
+                true,
                 "array",
                 "com.spectralogic.s3.common.platform.domain.BlobApiBean");
         final String result = getModelVariable(element);
@@ -621,35 +660,6 @@ public class JavaHelper_Test {
         assertThat(
                 createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
                 is("bucketAclListResult"));
-    }
-
-    @Test
-    public void removeErrorResponseCodes_NullList_Test() {
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void removeErrorResponseCodes_EmptyList_Test() {
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void removeErrorResponseCodes_FullList_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(206, null),
-                new Ds3ResponseCode(307, null),
-                new Ds3ResponseCode(400, null),
-                new Ds3ResponseCode(503, null));
-
-        final ImmutableList<Ds3ResponseCode> result = removeErrorResponseCodes(responseCodes);
-
-        assertThat(result.size(), is(3));
-        assertThat(result.get(0).getCode(), is(200));
-        assertThat(result.get(1).getCode(), is(206));
-        assertThat(result.get(2).getCode(), is(307));
     }
 
     @Test

@@ -19,20 +19,35 @@ import com.google.common.collect.ImmutableMap;
 
 public class Ds3NameMapper {
 
-    private final ImmutableMap<String, Ds3NameMap> typeNameMapper;
+    /**
+     * Contains a map of contract names (key) to sdk names (value)
+     */
+    private final ImmutableMap<String, String> typeNameMapper;
 
-    public Ds3NameMapper(final ImmutableMap<String, Ds3NameMap> typeNameMapper) {
+    public Ds3NameMapper(final ImmutableMap<String, String> typeNameMapper) {
         this.typeNameMapper = typeNameMapper;
     }
 
-    public boolean containsType(final String namePath) {
-        return typeNameMapper.containsKey(namePath);
+    /**
+     * Determines if the provided contract name exists within the name mapper.
+     * This assumes that no path is included in the name lookup
+     */
+    public boolean containsType(final String contractName) {
+        return typeNameMapper.containsKey(contractName);
     }
 
-    public String getConvertedName(final String namePath) {
-        final Ds3NameMap ds3NameMap = typeNameMapper.get(namePath);
-        return namePath.replace(
-                ds3NameMap.getContractName(),
-                ds3NameMap.getSdkName());
+    /**
+     * Retrieves the SDK name associated with the provided contract name. If the
+     * contract name does not exist within the name mapper, then the original
+     * contract name is returned.
+     */
+    public String getConvertedName(final String contractName) {
+        if (contractName.contains(".")) {
+            throw new IllegalArgumentException("The contract name contains a path: " + contractName);
+        }
+        if (!containsType(contractName)) {
+            return contractName;
+        }
+        return typeNameMapper.get(contractName);
     }
 }

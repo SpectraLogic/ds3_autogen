@@ -23,21 +23,7 @@ public class ${name} extends AbstractRequest {
     private long size;
 
     // Constructor
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(constructorArguments, "Objects", "List<String>"))}) {
-        <#list constructorArguments as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
-        </#list>
-        this.objects = objects;
-<#include "common/constructor_get_query_params.ftl"/>
-    }
-
-    public ${name}(${javaHelper.constructorArgs(
-                     helper.addArgument(
-                     helper.removeArgument(constructorArguments, "Delete"), "Objs", "Iterable<Contents>"))}) {
-        this(${javaHelper.argsToList(
-               helper.removeArgument(constructorArguments, "Delete"))}, contentsToString(objs));
-    }
+    <#include "common/constructor.ftl"/>
 
     private static List<String> contentsToString(final Iterable<Contents> objs) {
         final List<String> objKeyList = new ArrayList<>();

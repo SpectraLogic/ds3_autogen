@@ -19,7 +19,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BulkRequestGenerator extends BaseRequestGenerator {
 
@@ -90,5 +93,37 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      */
     public static boolean isBulkRequestArg(final String argName) {
         return bulkBaseClassArgs.contains(argName);
+    }
+
+    /**
+     * Gets the list of constructor models from a Ds3Request
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArguments = toConstructorArgumentsList(ds3Request);
+        final RequestConstructor constructor = new RequestConstructor(
+                constructorArguments,
+                toConstructorAssignmentList(constructorArguments),
+                toQueryParamsList(ds3Request));
+
+        return ImmutableList.of(constructor);
+    }
+
+    /**
+     * Gets the list of constructor arguments that need to be assigned within the
+     * constructor. This excludes all arguments passed to the super constructor
+     */
+    protected static ImmutableList<Arguments> toConstructorAssignmentList(
+            final ImmutableList<Arguments> constructorArguments) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        if (isEmpty(constructorArguments)) {
+            return builder.build();
+        }
+        for (final Arguments arg : constructorArguments) {
+            if (!bulkBaseClassArgs.contains(arg.getName())) {
+                builder.add(arg);
+            }
+        }
+        return builder.build();
     }
 }

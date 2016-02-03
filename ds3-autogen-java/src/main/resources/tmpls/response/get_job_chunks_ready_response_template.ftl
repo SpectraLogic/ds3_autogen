@@ -7,8 +7,7 @@ import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class ${name} extends AbstractResponse {
 
-${javaHelper.createAllResponseResultClassVars(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultClassVars(responseCodes)}
 
     public enum Status {
         AVAILABLE, RETRYLATER
@@ -25,9 +24,9 @@ ${javaHelper.createAllResponseResultClassVars(
 
             switch (this.getStatusCode()) {
             case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.jobWithChunksContainerApiBeanResult = XmlOutput.fromXml(content, JobWithChunksContainerApiBean.class);
-                    if (this.jobWithChunksContainerApiBeanResult == null) {
+                try (final InputStream content = webResponse.getResponseStream()) {
+                    this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
+                    if (this.jobWithChunksApiBeanResult.getObjects() == null) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {
@@ -45,7 +44,6 @@ ${javaHelper.createAllResponseResultClassVars(
 
 <#include "common/parse_retry_after.ftl"/>
 
-${javaHelper.createAllResponseResultGetters(
-  javaHelper.removeErrorResponseCodes(responseCodes))}
+${javaHelper.createAllResponseResultGetters(responseCodes)}
 
 }
