@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -67,11 +68,8 @@ public class CCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
-            final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-            for (final Enum currentEnum : allEnums) {
-                enumNames.add(currentEnum.getName());
-            }
-            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames.build());
+            final ImmutableSet<String> enumNames = ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
+            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames);
             final ImmutableList<Request> allRequests = getAllRequests(spec);
 
             generateHeader(allEnums, allStructs, allRequests);

@@ -252,13 +252,10 @@ public class CCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        for (final Enum currentEnum : allEnums) {
-            enumNames.add(currentEnum.getName());
-        }
+        final ImmutableSet<String> enumNames = ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -370,12 +367,9 @@ public class CCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        for (final Enum currentEnum : allEnums) {
-            enumNames.add(currentEnum.getName());
-        }
+        final ImmutableSet<String> enumNames = ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
 
-        final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
