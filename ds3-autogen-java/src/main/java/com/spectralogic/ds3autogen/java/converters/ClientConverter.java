@@ -66,7 +66,10 @@ public class ClientConverter {
         return converter.convert();
     }
 
-    //TODO
+    /**
+     * Creates a list of Custom Commands from the Ds3Request list assuming
+     * that the request list contains custom commands.
+     */
     protected static ImmutableList<CustomCommand> toCustomCommandList(
             final ImmutableList<Ds3Request> ds3Requests) {
         if (isEmpty(ds3Requests)) {
@@ -81,7 +84,10 @@ public class ClientConverter {
         return builder.build();
     }
 
-    //TODO
+    /**
+     * Creates a custom command from a Ds3Request. If the request does not
+     * describe a custom command, then an error is thrown.
+     */
     protected static CustomCommand toCustomCommand(final Ds3Request ds3Request) {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return toGetObjectAmazonS3CustomCommand(ds3Request);
@@ -89,7 +95,10 @@ public class ClientConverter {
         throw new IllegalArgumentException("Ds3Request is not a special cased command: " + ds3Request.getName());
     }
 
-    //TODO
+    /**
+     * Creates the AmazonS3 Get Object Custom command from the Ds3Request.
+     * This assumes that the provided Ds3Request is the Get Object.
+     */
     protected static CustomCommand toGetObjectAmazonS3CustomCommand(final Ds3Request ds3Request) {
         final String customBody = "return new GetObjectResponse(\n" +
                 indent(3) + "this.netClient.getResponse(request),\n" +
@@ -105,7 +114,11 @@ public class ClientConverter {
                 customBody);
     }
 
-    //TODO
+    /**
+     * Determines if the provided Ds3Request describes a custom command
+     * i.e. a request/response that requires a unique function body
+     * within the Ds3ClientImpl
+     */
     protected static boolean isCustomCommand(final Ds3Request ds3Request) {
         return isGetObjectAmazonS3Request(ds3Request);
     }
