@@ -58,12 +58,14 @@ public final class StructHelper {
      * @param struct
      * @return true if no StructMembers require a custom parser.
      */
-    public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes) {
+    public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes, final Set<String> enumNames) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
                 if (member.getType().getTypeRoot().equals("ds3_str")) continue; // ds3_str is not an auto-generated API type.
 
                 if (existingTypes.contains(member.getType().getTypeRoot())) continue;
+
+                if (enumNames.contains(member.getType().getTypeRoot())) continue;
 
                 return true;
             }
@@ -83,12 +85,18 @@ public final class StructHelper {
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
+    public static String generateStructMemberEnumParserBlock(final StructMember structMember) {
+        return indent(3) + "xmlChar* text = xmlNodeListGetString(doc, child_node, 1);\n"
+             + indent(3) + "if (text == NULL) {\n"
+             + indent(3) + "    continue;\n"
+             + indent(3) + "}\n"
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeRoot() + "(log, text);\n";
+    }
+
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
-        if (structMember.getType().isArray()) {
-            return generateStructMemberArrayParserBlock(structName, structMember);
-        } else if (structMember.getType().isPrimitive()) {
+        if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeRoot()) {
-                case "uint_64_t":
+                case "uint64_t":
                 case "double":
                 case "long":
                     return generateStructMemberParserLine(structMember, "xml_get_uint64(doc, child_node);");
@@ -96,9 +104,11 @@ public final class StructHelper {
                     return generateStructMemberParserLine(structMember, "xml_get_uint16(doc, child_node);");
                 case "ds3_bool":
                     return generateStructMemberParserLine(structMember, "xml_get_bool(doc, child_node);");
-                default:
-                    throw new ParseException("Unknown primitive type: " + structMember.getType().getTypeRoot(), 0);
+                default: // Enum
+                    return generateStructMemberEnumParserBlock(structMember);
             }
+        } else if (structMember.getType().isArray()) {
+            return generateStructMemberArrayParserBlock(structName, structMember);
         } else if (structMember.getType().getTypeRoot().equals("ds3_str")) { // special case
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         }

@@ -23,12 +23,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.Set;
 
 public final class C_TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
 
-    private static C_Type createType(final String type, final boolean isArray) {
+    private static C_Type createType(final String type, final boolean isArray, final Set<String> enumNames) {
+        final String ds3TypeName = StructHelper.getDs3TypeName(type);
+        if (enumNames.contains(ds3TypeName)) {
+            return new PrimitiveType(ds3TypeName, isArray);
+        }
+
         switch (type) {
             case "boolean":
                 return new PrimitiveType("ds3_bool", isArray);
@@ -52,15 +58,15 @@ public final class C_TypeHelper {
         }
     }
 
-    public static C_Type convertDs3ElementType(final Ds3Element element) throws ParseException {
+    public static C_Type convertDs3ElementType(final Ds3Element element, final Set<String> enumNames) throws ParseException {
         switch (element.getType()) {
 
             case "java.util.Set":
             case "array":
-                return createType(element.getComponentType(), true);
+                return createType(element.getComponentType(), true, enumNames);
 
             default:
-                return createType(element.getType(), false);
+                return createType(element.getType(), false, enumNames);
         }
     }
 }

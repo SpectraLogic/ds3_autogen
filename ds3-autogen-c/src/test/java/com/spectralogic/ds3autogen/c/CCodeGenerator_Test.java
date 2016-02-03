@@ -15,12 +15,14 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.Header;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
@@ -31,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -46,8 +51,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(source, "AmazonS3InitRequestHandler.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -66,8 +72,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(header, "TypedefEnum.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -89,8 +96,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(source, "TypedefEnumMatcher.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -104,6 +112,9 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("        return COMPLETED;"));
         assertTrue(output.contains("    } else if (xmlStrcmp(text, (const xmlChar*) \"CANCELED\") == 0) {"));
         assertTrue(output.contains("        return CANCELED;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning IN_PROGRESS for safety.\", text);"));
+        assertTrue(output.contains("        return CANCELED;"));
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("}"));
     }
@@ -115,8 +126,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -136,8 +148,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -158,8 +171,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(header, "FreeStructPrototype.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -176,8 +190,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -203,8 +218,9 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -228,14 +244,46 @@ public class CCodeGenerator_Test {
     }
 
     @Test
+    public void testComplexFreeTypedefStructWithEnum() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+        final String inputSpecFile = "/input/ComplexTypedefStructWithEnum.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final Set<String> enumNames = allEnums.stream().map(Enum::getName).collect(Collectors.toSet());
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+        codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("void ds3_blob_response_free(ds3_blob_response* response_data) {"));
+        assertTrue(output.contains("    if (response_data == NULL) {"));
+        assertTrue(output.contains("        return;"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    ds3_str_free(response_data->checksum);"));
+        assertTrue(output.contains("    ds3_str_free(response_data->id);"));
+        assertTrue(output.contains("    ds3_str_free(response_data->object_id);"));
+
+        assertTrue(output.contains("    g_free(response_data);"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
     public void testSimpleTypdefStructResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
         final String inputSpecFile = "/input/SimpleTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -268,9 +316,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final Set<String> enumNames = new HashSet<>();
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -308,6 +357,60 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    return response;"));
         assertTrue(output.contains("}"));
     }
+
+    @Test
+    public void testComplexResponseStructParserWithEnum() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+        final String inputSpecFile = "/input/ComplexTypedefStructWithEnum.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final Set<String> enumNames = allEnums.stream().map(Enum::getName).collect(Collectors.toSet());
+
+        final Source source = new Source(allEnums, CCodeGenerator.getStructsOrderedList(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        /*
+        assertTrue(output.contains("static GPtrArray* _parse_ds3_buckets_api_bean_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+        assertTrue(output.contains("    xmlNodePtr child_node;"));
+
+        assertTrue(output.contains("    GPtrArray* buckets_array = g_ptr_array_new();"));
+
+        assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("        g_ptr_array_add(buckets_array, _parse_ds3_bucket_api_bean_response(log, doc, child_node));"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return buckets_array;"));
+        assertTrue(output.contains("}"));
+
+        assertTrue(output.contains("static ds3_buckets_api_bean_response* _parse_ds3_buckets_api_bean_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
+        assertTrue(output.contains("    xmlNodePtr child_node;"));
+        assertTrue(output.contains("    ds3_buckets_api_bean_response* response = g_new0(ds3_buckets_api_bean_response, 1);"));
+
+        assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("        if (element_equal(child_node, \"Buckets\")) {"));
+        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_buckets_api_bean_response_array(log, doc, child_node);"));
+        assertTrue(output.contains("            response->buckets = (ds3_bucket_api_bean_response**)buckets_array->pdata;"));
+        assertTrue(output.contains("            response->num_buckets = buckets_array->len;"));
+        assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
+        assertTrue(output.contains("            response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
+        assertTrue(output.contains("        }"));
+
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return response;"));
+        assertTrue(output.contains("}"));
+        */
+    }
+
 
     /* Parsing of AllTypedefEnums.xml is hanging currently.
     @Test

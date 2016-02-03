@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -66,7 +67,8 @@ public class CCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
-            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec);
+            final Set<String> enumNames = allEnums.stream().map(Enum::getName).collect(Collectors.toSet());
+            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames);
             final ImmutableList<Request> allRequests = getAllRequests(spec);
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -107,13 +109,13 @@ public class CCodeGenerator implements CodeGenerator {
         return allEnumsBuilder.build();
     }
 
-    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec) throws ParseException {
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final Set<String> enumNames) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                if (ConverterUtil.isEmpty(ds3TypeEntry.getElements())) continue;
+                if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry));
+                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames));
             }
         }
         return allStructsBuilder.build();
@@ -124,16 +126,16 @@ public class CCodeGenerator implements CodeGenerator {
      *
      * @throws java.text.ParseException
      */
-    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
+    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec, final Set<String> enumNames) throws ParseException {
         final Set<String> existingStructs = new HashSet<>();
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
-        final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec));
+        final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames));
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.remove();
 
-            if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs)) {
+            if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
                 existingStructs.add(structEntry.getName());
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
