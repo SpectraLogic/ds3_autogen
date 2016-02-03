@@ -42,4 +42,13 @@ public class Struct {
     public StructHelper getStructHelper() {
         return structHelper;
     }
+
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Struct[" + getName() + "]\n");
+        for (final StructMember structMember: getStructMembers()) {
+            builder.append("  " + structMember.toString());
+        }
+        return builder.toString();
+    }
 }

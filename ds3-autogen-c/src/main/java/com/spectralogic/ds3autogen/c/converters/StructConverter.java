@@ -31,7 +31,7 @@ public final class StructConverter {
     public static Struct toStruct(final Ds3Type ds3Type) throws ParseException {
         final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements());
         return new Struct(
-                ds3Type.getName(),
+                StructHelper.getResponseTypeName(ds3Type.getName()),
                 variablesList);
     }
 

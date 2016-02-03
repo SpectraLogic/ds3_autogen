@@ -42,15 +42,16 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
-    private Ds3ApiSpec spec;
     private FileUtils fileUtils;
 
     public CCodeGenerator() {
@@ -61,7 +62,6 @@ public class CCodeGenerator implements CodeGenerator {
 
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
-        this.spec = spec;
         this.fileUtils = fileUtils;
 
         try {
@@ -99,10 +99,9 @@ public class CCodeGenerator implements CodeGenerator {
         final ImmutableList.Builder<Enum> allEnumsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                final Enum newEnum = EnumConverter.toEnum(ds3TypeEntry);
-                allEnumsBuilder.add(newEnum);
-                LOG.debug("adding enum[" + newEnum.getName() + "]");
-                //EnumHelper.addEnum(newEnum.getName());
+                if (ConverterUtil.isEmpty(ds3TypeEntry.getEnumConstants())) continue;
+
+                allEnumsBuilder.add(EnumConverter.toEnum(ds3TypeEntry));
             }
         }
         return allEnumsBuilder.build();
@@ -112,6 +111,8 @@ public class CCodeGenerator implements CodeGenerator {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                if (ConverterUtil.isEmpty(ds3TypeEntry.getElements())) continue;
+
                 allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry));
             }
         }
@@ -124,19 +125,16 @@ public class CCodeGenerator implements CodeGenerator {
      * @throws java.text.ParseException
      */
     public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec) throws ParseException {
+        final Set<String> existingStructs = new HashSet<>();
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
         final Queue<Struct> allStructs = new LinkedList(getAllStructs(spec));
         int skippedStructsCount = 0;
         while (!allStructs.isEmpty()) {
             final int allStructsSize = allStructs.size();
             final Struct structEntry = allStructs.remove();
-            if (StructHelper.isExistingStruct(structEntry.getName())) {
-                LOG.warn("Skipping structEntry " + structEntry.getName());
-                continue;
-            }
 
-            if (StructHelper.requiresCustomParser(structEntry) || StructHelper.isExistingStruct(structEntry.getName())) {
-                StructHelper.addStruct(StructHelper.getResponseTypeName(structEntry.getName()));
+            if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs)) {
+                existingStructs.add(structEntry.getName());
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
                 allStructs.add(structEntry);
@@ -148,7 +146,7 @@ public class CCodeGenerator implements CodeGenerator {
                     LOG.warn("Unable to progress on remaining structs, aborting!");
                     LOG.warn("  Remaining structs[" + allStructs.size() + "]");
                     for (final Struct struct : allStructs) {
-                        LOG.warn("    " + struct.getName());
+                        LOG.warn("    " + struct.toString());
                     }
                     break;
                 }

@@ -41,4 +41,8 @@ public class StructMember {
     public StructHelper getStructHelper() {
         return structHelper;
     }
+
+    public String toString() {
+        return getType().toString() + "    " + getName();
+    }
 }

@@ -28,13 +28,7 @@ public final class C_TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
 
-    private final static C_TypeHelper c_typeHelper = new C_TypeHelper();
-
-    public static C_TypeHelper getInstance() {
-        return c_typeHelper;
-    }
-
-    private static C_Type createType(final String type, final boolean isArray) throws ParseException {
+    private static C_Type createType(final String type, final boolean isArray) {
         switch (type) {
             case "boolean":
                 return new PrimitiveType("ds3_bool", isArray);
@@ -54,19 +48,7 @@ public final class C_TypeHelper {
                 return new ComplexType("ds3_str", isArray);
 
             default:
-                final String responseTypeName = StructHelper.getResponseTypeName(type);
-                //Enum
-                if (EnumHelper.isExistingEnum(responseTypeName)) {
-                    LOG.debug("new complex type[" + responseTypeName + "] is an Enum");
-                    return new PrimitiveType(responseTypeName, isArray);
-                } else if (StructHelper.isExistingStruct(responseTypeName)) {
-                    //Enum
-                    LOG.debug("new complex type[" + responseTypeName + "] is a Struct? " + (StructHelper.isExistingStruct(responseTypeName) ? "FOUND" : "NOT FOUND"));
-                    return new ComplexType(responseTypeName, isArray);
-                }
-
-                LOG.warn("unknown type!!! " + type);
-                throw new ParseException("unknown type", 0);
+                return new ComplexType(StructHelper.getResponseTypeName(type), isArray);
         }
     }
 

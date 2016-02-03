@@ -23,30 +23,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.HashSet;
 import java.util.Set;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class StructHelper {
-    private static Set<String> existingStructs;
     private static final Logger LOG = LoggerFactory.getLogger(StructHelper.class);
-    private StructHelper() {
-        existingStructs = new HashSet<>();
-    }
+    private StructHelper() {}
 
     private final static StructHelper structHelper = new StructHelper();
 
     public static StructHelper getInstance() {
         return structHelper;
-    }
-
-    public static void addStruct(final String name) {
-        existingStructs.add(name);
-    }
-
-    public static boolean isExistingStruct(final String name) {
-        return existingStructs.contains(name);
     }
 
     public static String getNameUnderscores(final String name) {
@@ -65,46 +53,22 @@ public final class StructHelper {
         return "_parse_" + getResponseTypeName(name);
     }
 
-    public static String getFreeFunctionName(final String name) {
-        return getResponseTypeName(name) + "_free";
-    }
-
-    public static String getFreeFunction(final String structMemberType) throws ParseException {
-        switch (structMemberType) {
-            case "ds3_str":
-                return "ds3_str_free";
-            // The following primitive types don't require a free
-            case "uint64_t":
-            case "double":
-            case "long":
-            case "int":
-            case "ds3_bool":
-                return "";
-
-            // build the name of the free function for the embedded type
-            case "java.util.Set":
-            case "array":
-                LOG.warn("found array");
-                throw new ParseException("parse error", 0);
-            default:
-                return getFreeFunctionName(structMemberType);
-        }
-    }
-
     /**
      * Determine if a Struct requires a custom parser.
      * @param struct
      * @return true if no StructMembers require a custom parser.
      */
-    public static boolean requiresCustomParser(final Struct struct) {
+    public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
                 if (member.getType().getTypeRoot().equals("ds3_str")) continue; // ds3_str is not an auto-generated API type.
 
-                return false;
+                if (existingTypes.contains(member.getType().getTypeRoot())) continue;
+
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
@@ -113,7 +77,7 @@ public final class StructHelper {
 
 
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
-        return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "(log, doc, child_node);\n"
+        return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "_array(log, doc, child_node);\n"
              + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType() + ")" + structMember.getName() + "_array->pdata;\n"
              + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
@@ -121,7 +85,7 @@ public final class StructHelper {
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
         if (structMember.getType().isArray()) {
-            return generateStructMemberArrayParserBlock(getResponseTypeName(structName), structMember);
+            return generateStructMemberArrayParserBlock(structName, structMember);
         } else if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeRoot()) {
                 case "uint_64_t":

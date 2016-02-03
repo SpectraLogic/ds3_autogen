@@ -19,15 +19,6 @@ public abstract class C_Type {
     protected String type;
     protected boolean isArray;
 
-    /*
-    public C_Type(
-            final String type,
-            final boolean isArray) {
-        this.type = type;
-        this.isArray = isArray;
-    }
-    */
-
     public String getTypeRoot() {
         return type;
     }

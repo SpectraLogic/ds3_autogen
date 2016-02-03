@@ -5,5 +5,6 @@
 <#list getStructs() as structEntry>
 typedef struct {
 ${structEntry.getStructHelper().generateStructMembers(structEntry.getStructMembers())}
-}${structEntry.getStructHelper().getResponseTypeName(structEntry.getName())};
+}${structEntry.getName()};
+
 </#list>

@@ -251,8 +251,10 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            response->display_name = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
         assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
-        assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        //  Not generating catch block at this time.
+        //assertTrue(output.contains("        } else {"));
+        //assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
@@ -275,7 +277,7 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static GPtrArray* _parse_ds3_buckets_api_bean_response(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+        assertTrue(output.contains("static GPtrArray* _parse_ds3_buckets_api_bean_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
 
         assertTrue(output.contains("    GPtrArray* buckets_array = g_ptr_array_new();"));
@@ -293,14 +295,12 @@ public class CCodeGenerator_Test {
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"Buckets\")) {"));
-        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_buckets_api_bean_response(log, doc, child_node);"));
+        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_buckets_api_bean_response_array(log, doc, child_node);"));
         assertTrue(output.contains("            response->buckets = (ds3_bucket_api_bean_response**)buckets_array->pdata;"));
         assertTrue(output.contains("            response->num_buckets = buckets_array->len;"));
         assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
         assertTrue(output.contains("            response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
-        assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("    }"));
