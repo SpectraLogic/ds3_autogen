@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -58,7 +59,7 @@ public final class StructHelper {
      * @param struct
      * @return true if no StructMembers require a custom parser.
      */
-    public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes, final Set<String> enumNames) {
+    public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes, final ImmutableSet<String> enumNames) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
                 if (member.getType().getTypeRoot().equals("ds3_str")) continue; // ds3_str is not an auto-generated API type.

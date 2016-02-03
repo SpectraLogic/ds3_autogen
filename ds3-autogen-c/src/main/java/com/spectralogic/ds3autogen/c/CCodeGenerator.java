@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -46,7 +47,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -67,8 +67,11 @@ public class CCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
-            final Set<String> enumNames = allEnums.stream().map(Enum::getName).collect(Collectors.toSet());
-            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames);
+            final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();//allEnums.builder().build().stream().map(Enum::getName).collect(Collectors.toSet());
+            for (final Enum currentEnum : allEnums) {
+                enumNames.add(currentEnum.getName());
+            }
+            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames.build());
             final ImmutableList<Request> allRequests = getAllRequests(spec);
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -126,7 +129,7 @@ public class CCodeGenerator implements CodeGenerator {
      *
      * @throws java.text.ParseException
      */
-    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec, final Set<String> enumNames) throws ParseException {
+    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames) throws ParseException {
         final Set<String> existingStructs = new HashSet<>();
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
         final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames));
