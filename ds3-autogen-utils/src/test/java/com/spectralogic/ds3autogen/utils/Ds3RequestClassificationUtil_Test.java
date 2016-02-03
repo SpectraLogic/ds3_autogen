@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
@@ -178,6 +179,21 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectAmazonS3Request(getRequestMultiFileDelete()));
         assertFalse(isGetObjectAmazonS3Request(getRequestCreateObject()));
         assertFalse(isGetObjectAmazonS3Request(getRequestSpectraS3GetObject()));
+    }
+
+    @Test
+    public void isGetJobRequest_Test() {
+        assertTrue(isGetJobRequest(getRequestGetJob()));
+
+        assertFalse(isGetJobRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isGetJobRequest(getRequestDeleteNotification()));
+        assertFalse(isGetJobRequest(getRequestCreateNotification()));
+        assertFalse(isGetJobRequest(getRequestGetNotification()));
+        assertFalse(isGetJobRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isGetJobRequest(getRequestBulk()));
+        assertFalse(isGetJobRequest(getRequestMultiFileDelete()));
+        assertFalse(isGetJobRequest(getRequestCreateObject()));
+        assertFalse(isGetJobRequest(getRequestSpectraS3GetObject()));
     }
 
     @Test

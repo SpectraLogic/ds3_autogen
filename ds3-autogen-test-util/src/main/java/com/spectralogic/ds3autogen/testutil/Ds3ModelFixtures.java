@@ -279,4 +279,26 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("BucketId", "java.util.UUID")));
     }
+
+    /**
+     * Creates the SpectraDs3 Get Job request GetJobRequestHandler as
+     * described in the Contract, exlcuding the response codes
+     * @return A SpectraDs3 GetJob request
+     */
+    public static Ds3Request getRequestGetJob() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.JOB,
+                ResourceType.NON_SINGLETON,
+                null,
+                true,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                null);
+    }
 }

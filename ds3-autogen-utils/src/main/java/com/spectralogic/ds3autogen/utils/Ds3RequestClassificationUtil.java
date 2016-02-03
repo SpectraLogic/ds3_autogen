@@ -218,4 +218,16 @@ public final class Ds3RequestClassificationUtil {
                 && request.getAction() == Action.LIST
                 && request.getHttpVerb() == HttpVerb.GET;
     }
+
+    /**
+     * Determines if a Ds3Request is the SpectraS3 Get Job Request
+     */
+    public static boolean isGetJobRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getAction() == Action.SHOW
+                && request.getHttpVerb() == HttpVerb.GET
+                && request.includeIdInPath()
+                && request.getResource() == Resource.JOB
+                && request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
 }
