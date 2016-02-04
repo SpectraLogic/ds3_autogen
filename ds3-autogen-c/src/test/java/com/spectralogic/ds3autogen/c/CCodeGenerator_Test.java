@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertFalse;
@@ -51,10 +49,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "AmazonS3InitRequestHandler.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -72,10 +70,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final Set<String> enumNames = new HashSet<>();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefEnum.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -96,10 +94,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final Set<String> enumNames = new HashSet<>();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "TypedefEnumMatcher.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -126,10 +124,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -148,10 +146,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -171,10 +169,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "FreeStructPrototype.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -190,10 +188,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -218,10 +216,10 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -254,8 +252,9 @@ public class CCodeGenerator_Test {
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
 
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
         final Source source = new Source(allEnums, CCodeGenerator.getAllStructs(spec, enumNames), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
@@ -281,8 +280,8 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());
@@ -315,8 +314,8 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, enumNames.build()), CCodeGenerator.getAllRequests(spec));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "ResponseParser.ftl", fileUtils.getOutputStream());

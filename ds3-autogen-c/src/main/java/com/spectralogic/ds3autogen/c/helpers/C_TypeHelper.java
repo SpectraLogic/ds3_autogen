@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.c.helpers;
 
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.C_Type;
 import com.spectralogic.ds3autogen.c.models.ComplexType;
@@ -23,13 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
-import java.util.Set;
 
 public final class C_TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
 
-    private static C_Type createType(final String type, final boolean isArray, final Set<String> enumNames) {
+    private static C_Type createType(final String type, final boolean isArray, final ImmutableSet<String> enumNames) {
         final String ds3TypeName = StructHelper.getDs3TypeName(type);
         if (enumNames.contains(ds3TypeName)) {
             return new PrimitiveType(ds3TypeName, isArray);
@@ -58,7 +58,7 @@ public final class C_TypeHelper {
         }
     }
 
-    public static C_Type convertDs3ElementType(final Ds3Element element, final Set<String> enumNames) throws ParseException {
+    public static C_Type convertDs3ElementType(final Ds3Element element, final ImmutableSet<String> enumNames) throws ParseException {
         switch (element.getType()) {
 
             case "java.util.Set":

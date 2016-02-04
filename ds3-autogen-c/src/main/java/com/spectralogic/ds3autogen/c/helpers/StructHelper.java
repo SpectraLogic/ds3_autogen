@@ -56,17 +56,17 @@ public final class StructHelper {
 
     /**
      * Determine if a Struct requires a custom parser.
-     * @param struct
+     * @param struct a valid Struct to examine
      * @return true if no StructMembers require a custom parser.
      */
     public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes, final ImmutableSet<String> enumNames) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
-                if (member.getType().getTypeRoot().equals("ds3_str")) continue; // ds3_str is not an auto-generated API type.
+                if (member.getType().getTypeName().equals("ds3_str")) continue; // ds3_str is not an auto-generated API typeName.
 
-                if (existingTypes.contains(member.getType().getTypeRoot())) continue;
+                if (existingTypes.contains(member.getType().getTypeName())) continue;
 
-                if (enumNames.contains(member.getType().getTypeRoot())) continue;
+                if (enumNames.contains(member.getType().getTypeName())) continue;
 
                 return true;
             }
@@ -91,12 +91,12 @@ public final class StructHelper {
              + indent(3) + "if (text == NULL) {\n"
              + indent(3) + "    continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeRoot() + "(log, text);\n";
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
     }
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
         if (structMember.getType().isPrimitive()) {
-            switch (structMember.getType().getTypeRoot()) {
+            switch (structMember.getType().getTypeName()) {
                 case "uint64_t":
                 case "double":
                 case "long":
@@ -110,7 +110,7 @@ public final class StructHelper {
             }
         } else if (structMember.getType().isArray()) {
             return generateStructMemberArrayParserBlock(structName, structMember);
-        } else if (structMember.getType().getTypeRoot().equals("ds3_str")) { // special case
+        } else if (structMember.getType().getTypeName().equals("ds3_str")) { // special case
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         }
 
@@ -141,7 +141,7 @@ public final class StructHelper {
 
     public static String generateFreeArrayStructMember(final StructMember structMember) {
         return indent(1) + "for (index = 0; index < response->num_" + structMember.getName() + "; index++) {\n"
-             + indent(2) + structMember.getType().getTypeRoot() + "_free(response_data->" + structMember.getName() + "[index]);\n"
+             + indent(2) + structMember.getType().getTypeName() + "_free(response_data->" + structMember.getName() + "[index]);\n"
              + indent(1) + "}\n"
              + indent(1) + "g_free(response_data->" + structMember.getName() + ");\n\n";
     }
@@ -156,7 +156,7 @@ public final class StructHelper {
                 outputBuilder.append(generateFreeArrayStructMember(structMember));
             } else {
                 outputBuilder.append(indent(1)).
-                        append(structMember.getType().getTypeRoot()).
+                        append(structMember.getType().getTypeName()).
                         append("_free(response_data->").
                         append(structMember.getName()).
                         append(");").

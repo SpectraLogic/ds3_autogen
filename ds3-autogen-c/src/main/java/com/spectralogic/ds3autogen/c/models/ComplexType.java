@@ -15,11 +15,15 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
+/**
+ * A ComplexType indicates a StructMember that requires a free,
+ * in other words a Struct inside of a Struct.
+ */
 public class ComplexType extends C_Type {
     public ComplexType(
             final String type,
             final boolean isArray) {
-        this.type = type;
+        this.typeName = type;
         this.isArray = isArray;
     }
 
@@ -29,8 +33,8 @@ public class ComplexType extends C_Type {
     }
 
     @Override
-    public String getTypeRoot() {
-        return super.getTypeRoot();
+    public String getTypeName() {
+        return super.getTypeName();
     }
 
     @Override

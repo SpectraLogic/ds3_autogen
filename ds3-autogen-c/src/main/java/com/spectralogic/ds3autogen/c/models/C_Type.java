@@ -16,16 +16,26 @@
 package com.spectralogic.ds3autogen.c.models;
 
 public abstract class C_Type {
-    protected String type;
+    protected String typeName;
     protected boolean isArray;
 
-    public String getTypeRoot() {
-        return type;
+    /**
+     * An alternate to toString
+     * @return The typeName without any qualifiers (*)
+     */
+    public String getTypeName() {
+        return typeName;
     }
 
+    /**
+     * The Type property when printed in a Typedef Struct,
+     * with proper pointer qualifier for a sub-Struct or
+     * array.
+     * @return Printable typedef struct field; also suitable for logging.
+     */
     @Override
     public String toString() {
-        String ret = type;
+        String ret = typeName;
         if (!isPrimitive()) {
             ret += "*";
         }

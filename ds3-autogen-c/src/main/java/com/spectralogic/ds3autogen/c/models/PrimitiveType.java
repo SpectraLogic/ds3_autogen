@@ -16,13 +16,14 @@
 package com.spectralogic.ds3autogen.c.models;
 
 /**
- * Any C_Type that does not require a free
+ * Any C_Type that does not require a free,
+ * such as an int or enum.
  */
 public final class PrimitiveType extends C_Type {
     public PrimitiveType(
             final String type,
             final boolean isArray) {
-        this.type = type;
+        this.typeName = type;
         this.isArray = isArray;
     }
 
@@ -32,8 +33,8 @@ public final class PrimitiveType extends C_Type {
     }
 
     @Override
-    public String getTypeRoot() {
-        return super.getTypeRoot();
+    public String getTypeName() {
+        return super.getTypeName();
     }
 
     @Override

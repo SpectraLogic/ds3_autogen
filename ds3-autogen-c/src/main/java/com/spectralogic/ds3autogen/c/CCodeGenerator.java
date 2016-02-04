@@ -110,7 +110,7 @@ public class CCodeGenerator implements CodeGenerator {
         return allEnumsBuilder.build();
     }
 
-    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final Set<String> enumNames) throws ParseException {
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
@@ -123,7 +123,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Return structs which contain only primitive types first, and then cascade for structs that contain other structs
+     * Return Structs which contain only primitive types first, and then cascade for Complex Structs that contain other Structs
      *
      * @throws java.text.ParseException
      */

@@ -16,7 +16,6 @@
 package com.spectralogic.autogen.cli;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.utils.FileUtilsImpl;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
@@ -25,6 +24,7 @@ import com.spectralogic.ds3autogen.c.CCodeGenerator;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
+import com.spectralogic.ds3autogen.utils.FileUtilsImpl;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,7 +90,7 @@ public class Main {
                 generator = new PythonCodeGenerator();
                 break;
             default:
-                throw new IllegalArgumentException("Unknown generator type " + args.getType().toString());
+                throw new IllegalArgumentException("Unknown generator typeName " + args.getType().toString());
         }
         final FileUtils fileUtils = new FileUtilsImpl();
         generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()));
