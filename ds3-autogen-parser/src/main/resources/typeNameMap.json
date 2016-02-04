@@ -3,6 +3,10 @@
     {
       "ContractName": "BlobApiBean",
       "SdkName": "BulkObject"
+    },
+    {
+      "ContractName": "S3ObjectApiBean",
+      "SdkName": "Contents"
     }
   ]
 }
