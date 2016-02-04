@@ -73,7 +73,7 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
             }
         }
 
-        builder.add(new Arguments("Iterable<Contents>", "Objs"));
+        builder.add(new Arguments("Iterable<S3ObjectApiBean>", "Objs"));
 
         final ImmutableList<String> additionalLines = ImmutableList.of(
                 "this.objects = contentsToString(objs);");

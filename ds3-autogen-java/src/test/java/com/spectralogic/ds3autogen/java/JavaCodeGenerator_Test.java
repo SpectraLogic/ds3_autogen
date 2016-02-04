@@ -665,7 +665,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isReqParamOfType("Delete", "boolean", requestName, requestGeneratedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Contents", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.S3ObjectApiBean", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.delete.Delete", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.delete.DeleteObject", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));

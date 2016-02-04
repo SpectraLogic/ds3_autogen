@@ -3,10 +3,10 @@
 package ${packageName};
 
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.delete.Delete;
 import com.spectralogic.ds3client.models.delete.DeleteObject;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.S3ObjectApiBean;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -25,9 +25,9 @@ public class ${name} extends AbstractRequest {
     // Constructor
     <#include "common/constructor.ftl"/>
 
-    private static List<String> contentsToString(final Iterable<Contents> objs) {
+    private static List<String> contentsToString(final Iterable<S3ObjectApiBean> objs) {
         final List<String> objKeyList = new ArrayList<>();
-        for (final Contents obj : objs) {
+        for (final S3ObjectApiBean obj : objs) {
             objKeyList.add(obj.getKey());
         }
         return objKeyList;
