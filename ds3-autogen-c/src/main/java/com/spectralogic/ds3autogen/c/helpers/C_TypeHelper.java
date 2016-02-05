@@ -18,7 +18,7 @@ package com.spectralogic.ds3autogen.c.helpers;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.C_Type;
-import com.spectralogic.ds3autogen.c.models.ComplexType;
+import com.spectralogic.ds3autogen.c.models.FreeableType;
 import com.spectralogic.ds3autogen.c.models.PrimitiveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +51,10 @@ public final class C_TypeHelper {
             case "java.lang.String":
             case "java.util.Date":
             case "java.util.UUID":
-                return new ComplexType("ds3_str", isArray);
+                return new FreeableType("ds3_str", isArray);
 
             default:
-                return new ComplexType(StructHelper.getResponseTypeName(type), isArray);
+                return new FreeableType(StructHelper.getResponseTypeName(type), isArray);
         }
     }
 
