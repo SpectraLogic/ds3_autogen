@@ -3,5 +3,5 @@
 <#--   Input: Header object                                  -->
 <#-- ******************************************************* -->
 <#list getStructs() as structEntry>
-void ${structEntry.getStructHelper().getFreeFunctionName(structEntry.getName())}(${structEntry.getStructHelper().getResponseTypeName(structEntry.getName())}* response_data);
+void ${structEntry.getName()}_free(${structEntry.getName()}* response_data);
 </#list>

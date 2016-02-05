@@ -35,11 +35,20 @@ public class Struct {
         return this.name;
     }
 
-    public ImmutableList<StructMember> getVariables() {
+    public ImmutableList<StructMember> getStructMembers() {
         return variables;
     }
 
     public StructHelper getStructHelper() {
         return structHelper;
+    }
+
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Struct[" + getName() + "]\n");
+        for (final StructMember structMember: getStructMembers()) {
+            builder.append("  " + structMember.toString());
+        }
+        return builder.toString();
     }
 }

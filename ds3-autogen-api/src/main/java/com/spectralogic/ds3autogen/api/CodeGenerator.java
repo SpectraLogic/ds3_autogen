@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.api;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 
 import java.io.IOException;
-
 import java.nio.file.Path;
 
 public interface CodeGenerator {

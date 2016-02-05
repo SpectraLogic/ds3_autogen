@@ -15,34 +15,30 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-
-public class StructMember {
-    private final C_Type type;
-    private final String name;
-    private final StructHelper structHelper;
-
-    public StructMember(
-            final C_Type type,
-            final String name) {
-        this.type = type;
-        this.name = name;
-        this.structHelper = StructHelper.getInstance();
+/**
+ * A ComplexType indicates a StructMember that requires a free,
+ * in other words a Struct inside of a Struct.
+ */
+public class FreeableType extends C_Type {
+    public FreeableType(
+            final String type,
+            final boolean isArray) {
+        this.typeName = type;
+        this.isArray = isArray;
     }
 
-    public C_Type getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public StructHelper getStructHelper() {
-        return structHelper;
-    }
-
+    @Override
     public String toString() {
-        return getType().toString() + "    " + getName();
+        return super.toString();
+    }
+
+    @Override
+    public String getTypeName() {
+        return super.getTypeName();
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return false;
     }
 }

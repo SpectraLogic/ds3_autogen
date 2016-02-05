@@ -42,4 +42,13 @@ public class Enum {
     public EnumHelper getEnumHelper() {
         return enumHelper;
     }
+
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Enum[" + getName() + "]\n");
+        for (final String value : getValues()) {
+            builder.append("  " + value + "\n");
+        }
+        return builder.toString();
+    }
 }

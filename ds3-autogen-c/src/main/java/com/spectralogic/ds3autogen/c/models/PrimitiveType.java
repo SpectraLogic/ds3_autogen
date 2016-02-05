@@ -15,34 +15,30 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-
-public class StructMember {
-    private final C_Type type;
-    private final String name;
-    private final StructHelper structHelper;
-
-    public StructMember(
-            final C_Type type,
-            final String name) {
-        this.type = type;
-        this.name = name;
-        this.structHelper = StructHelper.getInstance();
+/**
+ * Any C_Type that does not require a free,
+ * such as an int or enum.
+ */
+public final class PrimitiveType extends C_Type {
+    public PrimitiveType(
+            final String type,
+            final boolean isArray) {
+        this.typeName = type;
+        this.isArray = isArray;
     }
 
-    public C_Type getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public StructHelper getStructHelper() {
-        return structHelper;
-    }
-
+    @Override
     public String toString() {
-        return getType().toString() + "    " + getName();
+        return super.toString();
+    }
+
+    @Override
+    public String getTypeName() {
+        return super.getTypeName();
+    }
+
+    @Override
+    public boolean isPrimitive() {
+        return true;
     }
 }
