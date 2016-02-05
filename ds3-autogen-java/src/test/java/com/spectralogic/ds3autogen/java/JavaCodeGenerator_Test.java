@@ -738,6 +738,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.nio.channels.SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.SeekableByteChannelInputStream", requestGeneratedCode));
 
         testHasChecksumCode(requestGeneratedCode, requestName);
 
@@ -895,7 +896,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
-        assertTrue(isReqParamOfType("BucketId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("BucketId", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
 
@@ -907,7 +908,6 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
-        assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         testHasChecksumCode(requestGeneratedCode, requestName);
@@ -918,7 +918,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasPath("\"/_rest_/object/\" + objectName", requestGeneratedCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("UUID", "BucketId"),
+                new Arguments("String", "BucketId"),
                 new Arguments("String", "ObjectName"),
                 new Arguments("WritableByteChannel", "Channel"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));

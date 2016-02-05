@@ -5,6 +5,7 @@ package ${packageName};
 import com.spectralogic.ds3client.HttpVerb;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 <#include "../imports.ftl"/>
 <#include "common/checksum_import.ftl"/>
 

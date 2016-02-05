@@ -157,6 +157,9 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
         assertTrue(modelGeneratedCode.contains("public abstract class " + modelName + " {"));
 
+        assertTrue(hasImport("org.apache.commons.codec.binary.Base64", modelGeneratedCode));
+        assertTrue(hasImport("org.apache.commons.codec.binary.Base64", modelGeneratedCode));
+
         assertTrue(TestHelper.enumContainsValue("CRC_32", modelGeneratedCode));
         assertTrue(TestHelper.enumContainsValue("CRC_32C", modelGeneratedCode));
         assertTrue(TestHelper.enumContainsValue("MD5", modelGeneratedCode));
