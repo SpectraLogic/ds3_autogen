@@ -39,26 +39,70 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
 
     @Override
     public Request generate(final Ds3Request ds3Request, final String packageName) {
-        final String requestName = getRequestName(ds3Request.getName());
-        final String requestPath = getRequestPath(ds3Request);
-        final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(ds3Request);
-        final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
-        final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request);
-        final ImmutableList<Variable> classVariableArguments = toClassVariableArguments(ds3Request);
-        final ImmutableList<String> imports = getAllImports(ds3Request, packageName);
+        final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
+        final String requestName = getRequestName(updatedRequest.getName());
+        final String requestPath = getRequestPath(updatedRequest);
+        final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(updatedRequest);
+        final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(updatedRequest.getOptionalQueryParams());
+        final ImmutableList<RequestConstructor> constructors = toConstructorList(updatedRequest);
+        final ImmutableList<Variable> classVariableArguments = toClassVariableArguments(updatedRequest);
+        final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
 
         return new Request(
                 packageName,
                 requestName,
-                ds3Request.getHttpVerb(),
+                updatedRequest.getHttpVerb(),
                 requestPath,
-                ds3Request.getOperation(),
-                ds3Request.getAction(),
+                updatedRequest.getOperation(),
+                updatedRequest.getAction(),
                 requiredArguments,
                 optionalArguments,
                 constructors,
                 classVariableArguments,
                 imports);
+    }
+
+    /**
+     * Updates the Ds3Request's parameter: BucketId is changed from type UUID
+     * to String if said parameter exists within the request
+     */
+    protected static Ds3Request updateDs3RequestParamTypes(final Ds3Request ds3Request) {
+        return new Ds3Request(
+                ds3Request.getName(),
+                ds3Request.getHttpVerb(),
+                ds3Request.getClassification(),
+                ds3Request.getBucketRequirement(),
+                ds3Request.getObjectRequirement(),
+                ds3Request.getAction(),
+                ds3Request.getResource(),
+                ds3Request.getResourceType(),
+                ds3Request.getOperation(),
+                ds3Request.includeIdInPath(),
+                ds3Request.getDs3ResponseCodes(),
+                updateDs3ParamListTypes(
+                        ds3Request.getOptionalQueryParams()),
+                updateDs3ParamListTypes(
+                        ds3Request.getRequiredQueryParams()));
+    }
+
+    /**
+     * Updates the Ds3Param list where all instances of BucketId have their
+     * type updated to String
+     */
+    protected static ImmutableList<Ds3Param> updateDs3ParamListTypes(final ImmutableList<Ds3Param> params) {
+        if (isEmpty(params)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<Ds3Param> builder = ImmutableList.builder();
+        for (final Ds3Param param : params) {
+            if (param.getName().equalsIgnoreCase("BucketId")) {
+                builder.add(new Ds3Param("BucketId", "String"));
+            } else {
+                builder.add(param);
+            }
+        }
+        return builder.build();
     }
 
     /**
