@@ -118,12 +118,11 @@ public final class JavaHelper {
         return stringBuilder.toString();
     }
 
-    //TODO full testing
     /**
      * Creates the Java code for a simple With-Constructor that sets the class variable to
      * the user provided variable, and adds said variable to the query param list.
      */
-    private static String withConstructor(final Arguments arg, final String requestName) {
+    protected static String withConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + argAssignmentLine(arg.getName())
                 + indent(2) + updateQueryParamLine(arg.getName(), queryParamArgToString(arg));
@@ -183,7 +182,6 @@ public final class JavaHelper {
         return "this.getQueryParams().remove(\"" + Helper.camelToUnderscore(name) + "\");\n";
     }
 
-    //TODO full testing
     /**
      * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
@@ -196,24 +194,33 @@ public final class JavaHelper {
      * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
      */
-    private static String putQueryParamLine(final String name, final String type) {
-        return "this.getQueryParams().put(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");";
+    protected static String putQueryParamLine(final String name, final String type) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("this.getQueryParams().put(\"");
+        if (name.equalsIgnoreCase("BucketName")) {
+            builder.append("bucket_id");
+        } else {
+            builder.append(Helper.camelToUnderscore(name));
+        }
+        builder.append("\", ")
+                .append(type)
+                .append(");");
+        return builder.toString();
     }
 
-    //TODO
     /**
      * Creates the Java code for converting an Argument within a query param line.
      * If the argument is Delimiter, then it is not escaped. If the argument is
      * of type String, then it is escaped. All other arguments return a string
      * containing the Java code for converting said argument to a String.
      */
-    private static String queryParamArgToString(final Arguments arg) {
+    protected static String queryParamArgToString(final Arguments arg) {
         if (arg.getName().equalsIgnoreCase("Delimiter")
                 || arg.getName().equalsIgnoreCase("BucketId")
                 || arg.getName().equalsIgnoreCase("BucketName")) {
             return uncapFirst(arg.getName());
         }
-        if (arg.getType().equalsIgnoreCase("String")) {
+        if (arg.getType().endsWith("String")) {
             return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
         }
         return argToString(arg);
@@ -255,8 +262,7 @@ public final class JavaHelper {
             case "void":
                 return "null";
             case "string":
-                return uncapFirst(arg.getName()); //TODO
-                //return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
+                return uncapFirst(arg.getName());
             case "double":
             case "integer":
             case "long":
@@ -382,12 +388,12 @@ public final class JavaHelper {
                     .append("@JacksonXmlProperty(isAttribute = true, localName = \"")
                     .append(element.getXmlTagName())
                     .append("\")\n");
-        } else if (element.hasWrapper() == true) {
+        } else if (element.hasWrapper()) {
             builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
             if (element.getComponentType() != null) {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = true)\n");
             }
-        } else if (element.hasWrapper() == false) {
+        } else if (!element.hasWrapper()) {
             builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getXmlTagName())).append("\")\n");
             if (element.getComponentType() != null) {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");

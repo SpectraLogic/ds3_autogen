@@ -166,7 +166,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
-        //TODO unit tests
         if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
                 builder.add("java.util.UUID");
@@ -206,7 +205,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                     && !ds3Param.getType().equals("java.lang.String")) {
                 importsBuilder.add(ConvertType.toModelName(ds3Param.getType()));
             }
-            //TODO unit test
             if (ds3Param.getType().endsWith("String")) {
                 importsBuilder.add("com.google.common.net.UrlEscapers");
             }

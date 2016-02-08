@@ -119,7 +119,6 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
     public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(toRequiredArgumentsList(ds3Request));
-        builder.add(new Arguments("String", "NotificationEndPoint"));
         return builder.build();
     }
 }
