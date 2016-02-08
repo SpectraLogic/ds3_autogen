@@ -290,17 +290,31 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void getImportsFromParamList_Test() {
+    public void getImportsFromParamList_NullList_Test() {
+        final ImmutableSet<String> result = getImportsFromParamList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getImportsFromParamList_EmptyList_Test() {
+        final ImmutableSet<String> result = getImportsFromParamList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getImportsFromParamList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("BucketId", "java.util.UUID"),
                 new Ds3Param("MaxUploadSize", "long"),
                 new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"),
+                new Ds3Param("Name", "java.lang.String"));
 
         final ImmutableSet<String> result = getImportsFromParamList(params);
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.UUID"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
+        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
     }
 
     @Test
@@ -314,11 +328,12 @@ public class BaseRequestGenerator_Test {
 
         final ImmutableList<String> result = generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3");
 
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(5));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractRequest"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.JobRequestType"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
         assertTrue(result.contains("java.util.UUID"));
+        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
     }
 
     @Test
