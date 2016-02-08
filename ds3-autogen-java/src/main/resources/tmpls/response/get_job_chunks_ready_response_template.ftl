@@ -5,6 +5,8 @@ package ${packageName};
 <#include "common/response_imports.ftl"/>
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
+import static com.google.common.collect.Iterables.isEmpty;
+
 public class ${name} extends AbstractResponse {
 
 ${javaHelper.createAllResponseResultClassVars(responseCodes)}
@@ -26,7 +28,7 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
             case 200:
                 try (final InputStream content = webResponse.getResponseStream()) {
                     this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (this.jobWithChunksApiBeanResult.getObjects().size() == 0) {
+                    if (isEmpty(this.jobWithChunksApiBeanResult.getObjects())) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {
