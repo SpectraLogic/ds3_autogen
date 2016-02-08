@@ -1351,7 +1351,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("import static com.google.common.collect.Iterables.isEmpty;"));
+        assertTrue(responseGeneratedCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;"));
 
         assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
         assertTrue(responseGeneratedCode.contains("public enum Status"));
