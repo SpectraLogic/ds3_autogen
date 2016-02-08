@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +56,8 @@ public final class EnumHelper {
 
     public static ImmutableList<String> convertDs3EnumConstants(final ImmutableList<Ds3EnumConstant> enums) {
         final ImmutableList.Builder<String> stringListBuilder = ImmutableList.builder();
-        if (ConverterUtil.hasContent(enums)) {
-            for (final Ds3EnumConstant currentEnum : enums) {
-                stringListBuilder.add(currentEnum.getName());
-            }
+        for (final Ds3EnumConstant currentEnum : enums) {
+            stringListBuilder.add(currentEnum.getName());
         }
         return stringListBuilder.build();
     }
@@ -81,26 +78,14 @@ public final class EnumHelper {
             }
 
             final String currentEnumName = enumValues.get(currentEnum);
-            outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").
-                    append(currentEnumName).
-                    append("\") == 0) {").append("\n");
-            outputBuilder.append(indent(2)).append("return ").
-                    append(currentEnumName).
-                    append(";").append("\n");
+            outputBuilder.append("if (xmlStrcmp(text, (const xmlChar*) \"").append(currentEnumName).append("\") == 0) {\n");
+            outputBuilder.append(indent(2)).append("return ").append(currentEnumName).append(";\n");
         }
 
-        //  Shouldn't need this else, since we are autogenerating from all possible values.
-        //    Leaving these lines commented out until we're sure we don't need to deal with this situation.
-        /*
         final String enumName = enumValues.get(0);
         outputBuilder.append(indent(1)).append("} else {").append("\n");
-        outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").
-                append(enumName).
-                append(" for safety.").append("\n");
-        outputBuilder.append(indent(2)).append("return ").
-                append(enumName).
-                append(";").append("\n");
-        */
+        outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").append(enumName).append(" for safety.\", text);\n");
+        outputBuilder.append(indent(2)).append("return ").append(enumName).append(";\n");
 
         outputBuilder.append(indent(1)).append("}").append("\n");
         return outputBuilder.toString();

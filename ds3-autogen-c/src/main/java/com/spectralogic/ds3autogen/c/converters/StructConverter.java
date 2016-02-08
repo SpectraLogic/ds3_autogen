@@ -16,7 +16,10 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
@@ -26,10 +29,18 @@ import java.text.ParseException;
 public final class StructConverter {
     private StructConverter() {}
 
-    public static Struct toStruct(final Ds3Type ds3Type) throws ParseException {
-        final ImmutableList<StructMember> variablesList = StructHelper.convertDs3Elements(ds3Type.getElements());
+    public static Struct toStruct(final Ds3Type ds3Type, final ImmutableSet<String> enumNames) throws ParseException {
+        final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements(), enumNames);
         return new Struct(
-                ds3Type.getName(),
+                StructHelper.getResponseTypeName(ds3Type.getName()),
                 variablesList);
+    }
+
+    private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList, final ImmutableSet<String> enumNames) throws ParseException {
+        final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
+        for (final Ds3Element currentElement : elementsList) {
+            builder.add(new StructMember(C_TypeHelper.convertDs3ElementType(currentElement, enumNames), StructHelper.getNameUnderscores(currentElement.getName())));
+        }
+        return builder.build();
     }
 }
