@@ -230,12 +230,22 @@ public final class TestHelper {
             final boolean isList,
             final String code) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("    @JsonProperty(\"").append(Helper.capFirst(xmlName)).append("\")\n");
+        builder.append("    @JsonProperty(\"")
+                .append(Helper.capFirst(xmlName))
+                .append("\")\n");
         if (isList) {
-            builder.append("    @JacksonXmlElementWrapper(useWrapping = " +
-                    Boolean.toString(name.equals(xmlName)).toLowerCase() + ")\n");
+            builder.append("    @JacksonXmlElementWrapper(useWrapping = ")
+                    .append(Boolean.toString(name.equals(xmlName)).toLowerCase())
+                    .append(")\n");
         }
-        builder.append("    private ").append(type).append(" ").append(Helper.uncapFirst(name)).append(";");
+        builder.append("    private ")
+                .append(type)
+                .append(" ")
+                .append(Helper.uncapFirst(name));
+        if (type.contains("List")) {
+            builder.append(" = new ArrayList<>()");
+        }
+        builder.append(";");
         return code.contains(builder.toString());
     }
 

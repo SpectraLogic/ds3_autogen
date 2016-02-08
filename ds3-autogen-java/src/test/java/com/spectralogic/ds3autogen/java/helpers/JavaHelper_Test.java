@@ -272,7 +272,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    @JsonProperty(\"XmlName\")\n"
                 + "    @JacksonXmlElementWrapper(useWrapping = false)\n"
-                + "    private List<BlobApiBean> testName;";
+                + "    private List<BlobApiBean> testName = new ArrayList<>();";
         final Element element = new Element(
                 "testName",
                 "xmlName",
@@ -289,7 +289,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    @JsonProperty(\"TestName\")\n"
                         + "    @JacksonXmlElementWrapper(useWrapping = true)\n"
-                        + "    private List<BlobApiBean> testName;";
+                        + "    private List<BlobApiBean> testName = new ArrayList<>();";
         final Element element = new Element(
                 "testName",
                 "xmlName",

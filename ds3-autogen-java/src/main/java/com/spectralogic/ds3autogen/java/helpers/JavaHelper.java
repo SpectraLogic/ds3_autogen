@@ -399,7 +399,11 @@ public final class JavaHelper {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");
             }
         }
-        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName())).append(";");
+        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName()));
+        if (hasContent(element.getComponentType())) {
+            builder.append(" = new ArrayList<>()");
+        }
+        builder.append(";");
         return builder.toString();
     }
 

@@ -270,6 +270,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
                     && element.getComponentType().contains(".")) {
                 builder.add(ConvertType.toModelName(element.getComponentType()));
                 builder.add("java.util.List");
+                builder.add("java.util.ArrayList");
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
             }
         }
