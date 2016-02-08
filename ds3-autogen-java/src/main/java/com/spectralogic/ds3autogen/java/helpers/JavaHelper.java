@@ -118,6 +118,7 @@ public final class JavaHelper {
         return stringBuilder.toString();
     }
 
+    //TODO full testing
     /**
      * Creates the Java code for a simple With-Constructor that sets the class variable to
      * the user provided variable, and adds said variable to the query param list.
@@ -125,7 +126,7 @@ public final class JavaHelper {
     private static String withConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + argAssignmentLine(arg.getName())
-                + indent(2) + updateQueryParamLine(arg.getName(), argToString(arg));
+                + indent(2) + updateQueryParamLine(arg.getName(), queryParamArgToString(arg));
     }
 
     /**
@@ -136,7 +137,7 @@ public final class JavaHelper {
     private static String maxUploadSizeWithConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + "if (" + uncapFirst(arg.getName()) + " > MIN_UPLOAD_SIZE_IN_BYTES) {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), argToString(arg)) + "\n"
+                + indent(3) + putQueryParamLine(arg) + "\n"
                 + indent(2) + "} else {\n"
                 + indent(3) + putQueryParamLine(arg.getName(), "MAX_UPLOAD_SIZE_IN_BYTES") + "\n"
                 + indent(2) + "}\n";
@@ -182,12 +183,13 @@ public final class JavaHelper {
         return "this.getQueryParams().remove(\"" + Helper.camelToUnderscore(name) + "\");\n";
     }
 
+    //TODO full testing
     /**
      * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
      */
     public static String putQueryParamLine(final Arguments arg) {
-        return putQueryParamLine(arg.getName(), argToString(arg));
+        return putQueryParamLine(arg.getName(), queryParamArgToString(arg));
     }
 
     /**
@@ -196,6 +198,25 @@ public final class JavaHelper {
      */
     private static String putQueryParamLine(final String name, final String type) {
         return "this.getQueryParams().put(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");";
+    }
+
+    //TODO
+    /**
+     * Creates the Java code for converting an Argument within a query param line.
+     * If the argument is Delimiter, then it is not escaped. If the argument is
+     * of type String, then it is escaped. All other arguments return a string
+     * containing the Java code for converting said argument to a String.
+     */
+    private static String queryParamArgToString(final Arguments arg) {
+        if (arg.getName().equalsIgnoreCase("Delimiter")
+                || arg.getName().equalsIgnoreCase("BucketId")
+                || arg.getName().equalsIgnoreCase("BucketName")) {
+            return uncapFirst(arg.getName());
+        }
+        if (arg.getType().equalsIgnoreCase("String")) {
+            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
+        }
+        return argToString(arg);
     }
 
     /**
@@ -234,7 +255,8 @@ public final class JavaHelper {
             case "void":
                 return "null";
             case "string":
-                return uncapFirst(arg.getName());
+                return uncapFirst(arg.getName()); //TODO
+                //return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
             case "double":
             case "integer":
             case "long":
