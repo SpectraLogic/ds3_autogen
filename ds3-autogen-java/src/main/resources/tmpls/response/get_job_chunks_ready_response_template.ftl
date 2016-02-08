@@ -26,7 +26,7 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
             case 200:
                 try (final InputStream content = webResponse.getResponseStream()) {
                     this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (this.jobWithChunksApiBeanResult.getObjects() == null) {
+                    if (this.jobWithChunksApiBeanResult.getObjects().size() == 0) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {
