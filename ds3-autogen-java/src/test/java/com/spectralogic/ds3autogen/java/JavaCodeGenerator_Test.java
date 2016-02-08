@@ -1042,7 +1042,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "NotificationEndPoint"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"notification_end_point\", notificationEndPoint);"));
+        assertFalse(requestGeneratedCode.contains("this.getQueryParams().put(\"notification_end_point\", "));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
