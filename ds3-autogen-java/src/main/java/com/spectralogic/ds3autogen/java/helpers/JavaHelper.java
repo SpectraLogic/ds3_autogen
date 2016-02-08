@@ -360,18 +360,22 @@ public final class JavaHelper {
                     .append("@JacksonXmlProperty(isAttribute = true, localName = \"")
                     .append(element.getXmlTagName())
                     .append("\")\n");
-        } else if (element.hasWrapper() == true) {
+        } else if (element.hasWrapper()) {
             builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getName())).append("\")\n");
             if (element.getComponentType() != null) {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = true)\n");
             }
-        } else if (element.hasWrapper() == false) {
+        } else if (!element.hasWrapper()) {
             builder.append(indent(1)).append("@JsonProperty(\"").append(capFirst(element.getXmlTagName())).append("\")\n");
             if (element.getComponentType() != null) {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");
             }
         }
-        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName())).append(";");
+        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName()));
+        if (hasContent(element.getComponentType())) {
+            builder.append(" = new ArrayList<>()");
+        }
+        builder.append(";");
         return builder.toString();
     }
 
