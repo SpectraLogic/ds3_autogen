@@ -427,6 +427,7 @@ public class JavaHelper_Test {
         assertThat(convertType("long", null), is("long"));
         assertThat(convertType("long", ""), is("long"));
         assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+        assertThat(convertType("com.spectralogic.util.security.ChecksumType", null), is("ChecksumType.Type"));
     }
 
     @Test

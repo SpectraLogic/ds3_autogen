@@ -419,7 +419,13 @@ public final class JavaHelper {
      */
     public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
         if (isEmpty(componentType)) {
-            return stripPath(type);
+            final String typeNoPath = stripPath(type);
+            switch (typeNoPath.toLowerCase()) {
+                case "checksumtype":
+                    return "ChecksumType.Type";
+                default:
+                    return typeNoPath;
+            }
         }
         if (type.equalsIgnoreCase("array")) {
             return "List<" + stripPath(componentType) + ">";
