@@ -1183,6 +1183,27 @@
                 </ResponseCodes>
                 <Version>1.02590286CB47605C8B4FE6AD26018391</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.CreateDataReplicationRuleRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Ds3TargetDataPolicy" Type="java.lang.String"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="Ds3TargetId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.15628A0330AD0E0625933F66BCEB28C8</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.DeleteDataPersistenceRuleRequestHandler">
                 <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
@@ -1212,6 +1233,21 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.5C597451975C08FCCE2F0647EDD16872</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.DeleteDataReplicationRuleRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.674D6DDEBBCFBF126863A9D1A289D702</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataPersistenceRuleRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -1291,6 +1327,45 @@
                 </ResponseCodes>
                 <Version>1.40C486BA0D58B76E2C253E81EB297D0E</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataReplicationRuleRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.848BC849C76372008E7CA6D161AE6FB5</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetDataReplicationRulesRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="Ds3TargetId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleState"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D55F835C420542D4B3A065144C70A2F9</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.ModifyDataPersistenceRuleRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -1348,6 +1423,24 @@
                 </ResponseCodes>
                 <Version>1.05F8176C16EE5DC0C158954F844F9D60</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.ModifyDataReplicationRuleRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Ds3TargetDataPolicy" Type="java.lang.String"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.E943C898944350614744C27CA2E12DC6</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.GetDegradedBucketsRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DEGRADED_BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -1395,6 +1488,30 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.00731DDAF1A7B83EB9FBA5D8BC8AEE36</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.GetDegradedDataReplicationRulesRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DEGRADED_DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="Ds3TargetId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleState"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.7F61DF3700439F2649F472293A920C41</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.group.CreateGroupGroupMemberRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="GROUP_MEMBER" ResourceType="NON_SINGLETON">
@@ -1681,6 +1798,12 @@
                         <Code>204</Code>
                         <ResponseTypes>
                             <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>411</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -3940,6 +4063,21 @@
                 </ResponseCodes>
                 <Version>1.D7B16FCF4CB54A4DDD0B7B96965B0C89</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.ResetInstanceIdentifierRequestHandler">
+                <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="INSTANCE_IDENTIFIER" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.6C78CB68979C1B30B65792A51C4909B4</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.VerifySystemHealthRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="SYSTEM_HEALTH" ResourceType="SINGLETON">
                     <OptionalQueryParams/>
@@ -5053,6 +5191,313 @@
                 </ResponseCodes>
                 <Version>1.32E4082ED243CB134EA743FF78000BD5</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.CreateDs3TargetReadPreferenceRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DS3_TARGET_READ_PREFERENCE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="ReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetReadPreference"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.8FC8E11C2CE687A3AD40DF896990A475</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.CreateDs3TargetUserMappingRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="AuthId" Type="java.lang.String"/>
+                        <Param Name="OrderNum" Type="long"/>
+                        <Param Name="SecretKey" Type="java.lang.String"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetUserMapping"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.EBAD151E3949BFC5AC47AECAF0A93463</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.DeleteDs3TargetReadPreferenceRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="DS3_TARGET_READ_PREFERENCE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.71B0E6E68AA99863BE55E1D6D037301B</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.DeleteDs3TargetRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.9F2F0F9EE78721BF80AD83701F9736A0</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.DeleteDs3TargetUserMappingRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D1DD81FA7559151A9A2CA5BFF17F0F1E</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetReadPreferenceRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DS3_TARGET_READ_PREFERENCE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetReadPreference"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.21E756DE8577C5778B49EB14777DE712</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetReadPreferencesRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DS3_TARGET_READ_PREFERENCE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="ReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.target.Ds3TargetReadPreference" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.50AFCAD203191524C22F8F2A47488C49</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3Target"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.444CF76C0D4A6C4E637033A4D4E9126A</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetUserMappingRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetUserMapping"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.650DBD56AF293BBC99C43F45CEB68AAD</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetUserMappingsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AuthId" Type="java.lang.String"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="OrderNum" Type="long"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.target.Ds3TargetUserMapping" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.122CC5086E04BF246776B7A1F774F4BA</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AdminAuthId" Type="java.lang.String"/>
+                        <Param Name="DataPath" Type="java.lang.String"/>
+                        <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.target.TargetState"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.target.Ds3Target" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.540EEFB596B55F8A48C2F10CDDA2CCDA</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ModifyAllDs3TargetsRequestHandler">
+                <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.3426C46B6878DDEC0DA8DA6A0D5554AA</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ModifyDs3TargetRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AccessControlReplication" Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetAccessControlReplication"/>
+                        <Param Name="AdminAuthId" Type="java.lang.String"/>
+                        <Param Name="AdminSecretKey" Type="java.lang.String"/>
+                        <Param Name="DataPath" Type="java.lang.String"/>
+                        <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3Target"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.FC39E3EACFA6F2E7150664B8E6E12668</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ModifyDs3TargetUserMappingRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AuthId" Type="java.lang.String"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="GroupId" Type="java.util.UUID"/>
+                        <Param Name="OrderNum" Type="long"/>
+                        <Param Name="SecretKey" Type="java.lang.String"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetUserMapping"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.2382DA9946FC519D0A55E1604A238DFE</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.RegisterDs3TargetRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AccessControlReplication" Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetAccessControlReplication"/>
+                        <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="LocalAdminUserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="AdminAuthId" Type="java.lang.String"/>
+                        <Param Name="AdminSecretKey" Type="java.lang.String"/>
+                        <Param Name="DataPath" Type="java.lang.String"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.target.Ds3Target"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.AB28B9D3C8C39D183170020B2C1F9421</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.GetUserRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="USER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
@@ -5120,6 +5565,7 @@
                     <OptionalQueryParams>
                         <Param Name="DefaultDataPolicyId" Type="java.util.UUID"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="SecretKey" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -5131,7 +5577,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.1BF52ED23229607506F64E389FD6FF26</Version>
+                <Version>1.6D32416F86CAE6372CEE63F13A13B4CE</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.RegenerateUserSecretKeyRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="REGENERATE_SECRET_KEY" Resource="USER" ResourceType="NON_SINGLETON">
@@ -5329,6 +5775,7 @@
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="USER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="DefaultDataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="SecretKey" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Name" Type="java.lang.String"/>
@@ -5348,7 +5795,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.3C0EC37198CC636E448ABCA908A81947</Version>
+                <Version>1.48B0E48688A99CFCFAEE261146E529E3</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrainternal" Name="com.spectralogic.s3.server.handler.reqhandler.spectrainternal.user.DeleteUserRequestHandler">
                 <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="USER" ResourceType="NON_SINGLETON">
@@ -5933,6 +6380,9 @@
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
+                    <Element Name="InstanceId" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
                     <Element Name="LastHeartbeat" Type="java.util.Date">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
@@ -6199,6 +6649,60 @@
                         </Annotations>
                     </Element>
                 </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRule">
+                <Elements>
+                    <Element Name="ConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="ACCEPT_MOST_RECENT" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DataPolicyId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Ds3TargetDataPolicy" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Ds3TargetId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.target.Ds3Target" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPersistenceRuleState">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="PERMANENT"/>
+                    <EnumConstant Name="RETIRED"/>
+                </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.Group">
                 <Elements>
@@ -9288,6 +9792,241 @@
                     <EnumConstant Name="FORBIDDEN"/>
                 </EnumConstants>
             </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.Ds3Target">
+                <Elements>
+                    <Element Name="AccessControlReplication" Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetAccessControlReplication">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="NONE" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="AdminAuthId" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="AdminSecretKey" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Secret">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DataPath" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="LAST_RESORT" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LocalAdminUserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="10" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value=".+" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="NO" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="State" Type="com.spectralogic.s3.common.dao.domain.target.TargetState">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="ONLINE" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.Ds3TargetAccessControlReplication">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="NONE"/>
+                    <EnumConstant Name="USERS"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.Ds3TargetReadPreference">
+                <Elements>
+                    <Element Name="BucketId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="TargetId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.target.Ds3Target" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.Ds3TargetUserMapping">
+                <Elements>
+                    <Element Name="AuthId" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="BucketId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="GroupId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Group" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="OrderNum" Type="long">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="SecretKey" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Secret">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="TargetId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.target.Ds3Target" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="AFTER_ONLINE_POOL"/>
+                    <EnumConstant Name="AFTER_NEARLINE_POOL"/>
+                    <EnumConstant Name="AFTER_NON_EJECTABLE_TAPE"/>
+                    <EnumConstant Name="LAST_RESORT"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.target.TargetState">
+                <Elements/>
+                <EnumConstants>
+                    <EnumConstant Name="ONLINE"/>
+                    <EnumConstant Name="OFFLINE"/>
+                </EnumConstants>
+            </Type>
             <Type Name="com.spectralogic.s3.common.platform.domain.BlobApiBean">
                 <Elements>
                     <Element Name="Id" Type="java.util.UUID">
@@ -10342,6 +11081,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Name" Type="java.lang.String">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
@@ -10518,6 +11264,13 @@
                         </Annotations>
                     </Element>
                     <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Naked" Type="boolean">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
                                 <AnnotationElements/>
@@ -10978,6 +11731,9 @@
                         <Annotations/>
                     </Element>
                     <Element Name="BuildInformation" Type="com.spectralogic.s3.common.platform.lang.BuildInformation">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="InstanceId" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
                     <Element Name="SerialNumber" Type="java.lang.String">
@@ -11511,12 +12267,37 @@
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
                     </EnumConstant>
+                    <EnumConstant Name="DATA_REPLICATION_RULE">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
                     <EnumConstant Name="DEGRADED_BUCKET">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="DEGRADED_DATA_PERSISTENCE_RULE">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DEGRADED_DATA_REPLICATION_RULE">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DS3_TARGET">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DS3_TARGET_READ_PREFERENCE">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DS3_TARGET_USER_MAPPING">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
@@ -11544,6 +12325,11 @@
                     <EnumConstant Name="HEAP_DUMP">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="INSTANCE_IDENTIFIER">
+                        <Properties>
+                            <Property Name="ResourceType" Value="SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="JOB">
