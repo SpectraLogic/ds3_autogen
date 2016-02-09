@@ -415,11 +415,18 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates the Java type from elements, converting component types into a List.
+     * Creates the Java type from elements, converting component types into a List,
+     * and ChecksumType into ChecksumType.Type
      */
     public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
         if (isEmpty(componentType)) {
-            return stripPath(type);
+            final String typeNoPath = stripPath(type);
+            switch (typeNoPath.toLowerCase()) {
+                case "checksumtype":
+                    return "ChecksumType.Type";
+                default:
+                    return typeNoPath;
+            }
         }
         if (type.equalsIgnoreCase("array")) {
             return "List<" + stripPath(componentType) + ">";
