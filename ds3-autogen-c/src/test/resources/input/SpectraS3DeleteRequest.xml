@@ -1,0 +1,41 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Force" Type="void"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.7E0B95E1E222BB82689E2AA8CD3FE344</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

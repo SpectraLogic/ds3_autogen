@@ -23,7 +23,7 @@ import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 public class Request {
     private final String name;
     private final HttpVerb verb;
-    private final String path;
+    private final String buildPathArgs;
     private final ImmutableList<Arguments> requiredArguments;
     private final ImmutableList<Arguments> optionalArguments;
     private final RequestHelper requestHelper;
@@ -31,12 +31,12 @@ public class Request {
     public Request(
             final String name,
             final HttpVerb verb,
-            final String path,
+            final String buildPathArgs,
             final ImmutableList<Arguments> requiredArguments,
             final ImmutableList<Arguments> optionalArguments) {
         this.name = name;
         this.verb = verb;
-        this.path = path;
+        this.buildPathArgs = buildPathArgs;
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
         this.requestHelper = RequestHelper.getInstance();
@@ -50,8 +50,8 @@ public class Request {
         return verb;
     }
 
-    public String getPath() {
-        return path;
+    public String getBuildPathArgs() {
+        return buildPathArgs;
     }
 
     public ImmutableList<Arguments> getRequiredArguments() {

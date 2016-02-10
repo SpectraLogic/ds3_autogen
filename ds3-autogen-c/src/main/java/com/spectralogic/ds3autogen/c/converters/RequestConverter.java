@@ -22,6 +22,10 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.InvalidParameterException;
+
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
+
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
 
@@ -35,20 +39,19 @@ public final class RequestConverter {
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("\"/");
-
         if (ds3Request.getClassification() == Classification.amazons3) {
-            builder.append("\"");
+            return getAmazonS3BuildPathArgs(ds3Request);
+        } else if (ds3Request.getClassification() == Classification.spectrads3) {
+            return getSpectraS3BuildPathArgs(ds3Request);
         } else {
-            builder.append("_rest_/");
-
-            if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-                builder.append("bucket/\"");
-            } else {
-                builder.append("\"");
-            }
+            LOG.warn("Skipping internal or unknown Request " + ds3Request.getName() + " of Classification " + ds3Request.getClassification().toString());
+            throw new InvalidParameterException("Invalid Request Classification " + ds3Request.getClassification().toString());
         }
+    }
+
+    private static String getAmazonS3BuildPathArgs(final Ds3Request ds3Request) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("\"/\"");
 
         if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
             builder.append(", bucket_name");
@@ -58,6 +61,24 @@ public final class RequestConverter {
             } else {
                 builder.append(", NULL");
             }
+        } else {
+            builder.append(", NULL, NULL");
+        }
+
+        return builder.toString();
+    }
+
+    private static String getSpectraS3BuildPathArgs(final Ds3Request ds3Request) {
+        if (ds3Request.getResource() == null) {
+            return "\"/_rest_/\"";
+        }
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("\"");
+
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+            // _build_path() will URL escape the resource_id
+            builder.append(", resource_id, NULL");
         } else {
             builder.append(", NULL, NULL");
         }
