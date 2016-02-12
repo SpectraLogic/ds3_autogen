@@ -23,6 +23,8 @@ import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public final class RequestHelper {
     private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
     private final static RequestHelper requestHelper = new RequestHelper();
@@ -40,16 +42,16 @@ public final class RequestHelper {
     }
 
     public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        for(final Ds3ResponseCode responseCode : responseCodes) {
+        for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
-            if( rc >= 200 && rc < 300)
+            if ( rc >= 200 && rc < 300)
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if(ConverterUtil.hasContent(responseType.getType())
-                   && responseType.getType() != "null") {
+                if (ConverterUtil.hasContent(responseType.getType())
+                    && !Objects.equals(responseType.getType(), "null")) {
                     LOG.debug("response type " + responseType.getType());
                     return true;
-                } else if(ConverterUtil.hasContent(responseType.getComponentType())
-                          && responseType.getComponentType() != "null") {
+                } else if (ConverterUtil.hasContent(responseType.getComponentType())
+                           && !Objects.equals(responseType.getComponentType(), "null")) {
                     LOG.debug("response type " + responseType.getComponentType());
                     return true;
                 }

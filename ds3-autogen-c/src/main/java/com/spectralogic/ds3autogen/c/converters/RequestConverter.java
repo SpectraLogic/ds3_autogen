@@ -97,10 +97,10 @@ public final class RequestConverter {
         final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required args...");
         if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-            LOG.debug("bucket name REQUIRED.");
+            LOG.debug("\tbucket name REQUIRED.");
             requiredArgsBuilder.add(new Arguments("String", "bucketName"));
             if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                LOG.debug("object name REQUIRED.");
+                LOG.debug("\tobject name REQUIRED.");
                 requiredArgsBuilder.add(new Arguments("String", "objectName"));
             }
         }
@@ -113,9 +113,9 @@ public final class RequestConverter {
         for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
             if (ds3Param == null) break;
 
-            LOG.debug("  query param " + ds3Param.getType());
+            LOG.debug("\tquery param " + ds3Param.getType());
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("  param " + paramType + " is required.");
+            LOG.debug("\tparam " + paramType + " is required.");
             requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
         }
 
@@ -131,7 +131,7 @@ public final class RequestConverter {
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("param " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
+            LOG.debug("\tparam " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
             optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
         }
 

@@ -35,7 +35,7 @@ import java.text.ParseException;
 import static org.junit.Assert.assertTrue;
 
 public class CCodeGeneratorAmazonS3InitRequests_Test {
-    final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
+    final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorAmazonS3InitRequests_Test.class);
 
     @Test
     public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
