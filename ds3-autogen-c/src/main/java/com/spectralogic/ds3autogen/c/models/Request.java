@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 
 public class Request {
     private final String name;
+    private final Classification classification;
     private final HttpVerb verb;
     private final String buildPathArgs;
     private final Operation operation;
@@ -34,6 +35,7 @@ public class Request {
 
     public Request(
             final String name,
+            final Classification classification,
             final HttpVerb verb,
             final String buildPathArgs,
             final Operation operation,
@@ -44,6 +46,7 @@ public class Request {
             final ImmutableList<Arguments> optionalArguments,
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         this.name = name;
+        this.classification = classification;
         this.verb = verb;
         this.buildPathArgs = buildPathArgs;
         this.operation = operation;
@@ -58,6 +61,10 @@ public class Request {
 
     public String getName() {
         return name;
+    }
+
+    public Classification getClassification() {
+        return classification;
     }
 
     public HttpVerb getVerb() {

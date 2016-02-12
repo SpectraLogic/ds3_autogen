@@ -39,16 +39,17 @@ public final class RequestHelper {
         return Helper.camelToUnderscore(getNameRoot(name));
     }
 
-    public boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
         for(final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
             if( rc >= 200 && rc < 300)
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if(ConverterUtil.hasContent(responseType.getType())) {
+                if(ConverterUtil.hasContent(responseType.getType())
+                   && responseType.getType() != "null") {
                     LOG.debug("response type " + responseType.getType());
                     return true;
-                }
-                else if(ConverterUtil.hasContent(responseType.getComponentType())) {
+                } else if(ConverterUtil.hasContent(responseType.getComponentType())
+                          && responseType.getComponentType() != "null") {
                     LOG.debug("response type " + responseType.getComponentType());
                     return true;
                 }

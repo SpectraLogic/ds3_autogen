@@ -15,132 +15,35 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class RequestHelper_Test {
-/*
 
-<#---------------------------------------------- S3 REQUESTS ------------------------------------------->
-<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteBucketRequestHandler">
-    <Documentation>
-        Delete a bucket. This is an AWS request (see http://docs.aws.amazon.com/AmazonS3/latest/API/RESTBucketDELETE.html for AWS documentation).
-    </Documentation>
-    <RequestRequirements>Cannot include an S3 object specification</RequestRequirements>
-    <RequestRequirements>Must be HTTP request type DELETE</RequestRequirements>
-    <RequestRequirements>Must be an AWS-style request</RequestRequirements>
-    <RequestRequirements>Must include an S3 bucket specification</RequestRequirements>
-    <RequestRequirements>Query Parameters Required: [], Optional: []</RequestRequirements>
-    <SampleResponses>
-    <HttpRequest>
-        DELETE 'test_bucket_name' with query parameters {} and headers {Internal-Request=1}.
-    </HttpRequest>
-    <HttpResponse>
-        with headers {x-amz-request-id=97, RequestHandler-Version=1.416E43D944A06C824AD8BF5005FA1DC3}.
-    </HttpResponse>
-    <HttpResponseCode>204</HttpResponseCode>
-    <HttpResponseType>null</HttpResponseType>
-    <Test>
-        com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteBucketRequestHandler_Test.testDeleteBucketReturns204WhenBucketExistsAndIsEmpty
-    </Test>
-    </SampleResponses>
-</RequestHandler>
+    @Test
+    public void testHasResponsePayload() {
+        final Ds3ResponseType responseType = new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null);
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, ImmutableList.of(responseType));
+        assertTrue(RequestHelper.hasResponsePayload(ImmutableList.of(responseCode)));
+    }
 
-<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectRequestHandler">
-    <Documentation>
-        Delete an S3 object in a bucket. This is an AWS request (see http://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectDELETE.html for AWS documentation).
-    </Documentation>
-    <RequestRequirements>Must be HTTP request type DELETE</RequestRequirements>
-    <RequestRequirements>Must be an AWS-style request</RequestRequirements>
-    <RequestRequirements>Must include an S3 bucket specification</RequestRequirements>
-    <RequestRequirements>Must include an S3 object specification</RequestRequirements>
-    <RequestRequirements>
-        Query Parameters Required: [], Optional: [roll_back]
-    </RequestRequirements>
-    <SampleResponses>
-        <HttpRequest>
-            DELETE 'test_bucket_name/test_object_name/' with query parameters {} and headers {Internal-Request=1}.
-        </HttpRequest>
-        <HttpResponse>
-            with headers {x-amz-request-id=98, RequestHandler-Version=1.46B3A42F88F14FF8E433CEF3CED4C70E}.
-        </HttpResponse>
-        <HttpResponseCode>204</HttpResponseCode>
-        <HttpResponseType>null</HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectRequestHandler_Test.testDeleteObjectReturns204WhenFolderNotEmpty
-        </Test>
-    </SampleResponses>
-</RequestHandler>
+    @Test
+    public void testEmptyResponsePayload() {
+        final Ds3ResponseType responseTypeNull = new Ds3ResponseType("null", null);
+        final Ds3ResponseCode responseCode200 = new Ds3ResponseCode(200, ImmutableList.of(responseTypeNull));
 
-<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectsRequestHandler">
-    <Documentation>
-        Delete multiple S3 objects in a bucket. This is an AWS request (see http://docs.aws.amazon.com/AmazonS3/latest/API/multiobjectdeleteapi.html for AWS documentation).
-    </Documentation>
-    <RequestRequirements>Cannot include an S3 object specification</RequestRequirements>
-    <RequestRequirements>Must be HTTP request type POST</RequestRequirements>
-    <RequestRequirements>Must be an AWS-style request</RequestRequirements>
-    <RequestRequirements>Must include an S3 bucket specification</RequestRequirements>
-    <RequestRequirements>
-        Query Parameters Required: [delete], Optional: [roll_back]
-    </RequestRequirements>
-    <SampleResponses>
-        <HttpRequest>
-            POST 'test_bucket_name' with query parameters {delete=} and headers {Internal-Request=1} and request payload {
-                <Delete>
-                    <Object>
-                        <Key>object/</Key>
-                    </Object>
-                    <Object>
-                        <Key>object/1</Key>
-                    </Object>
-                    <Object>
-                        <Key>object/2</Key>
-                    </Object>
-                </Delete>}.
-        </HttpRequest>
-        <HttpResponse>
-            <DeleteResult>
-                <Deleted>
-                    <Key>object/</Key>
-                </Deleted>
-                <Deleted>
-                    <Key>object/2</Key>
-                </Deleted>
-                <Error>
-                    <Code>ObjectNotFound</Code>
-                    <Key>object/1</Key>
-                    <Message>Object not found</Message>
-                </Error>
-            </DeleteResult> with headers {x-amz-request-id=104, Content-Type=text/xml, RequestHandler-Version=1.773E50A74C3DC9EB87D6CD924CA1B34A}.
-        </HttpResponse>
-        <HttpResponseCode>200</HttpResponseCode>
-        <HttpResponseType>
-            com.spectralogic.s3.server.domain.DeleteResultApiBean
-        </HttpResponseType>
-    </SampleResponses>
-</RequestHandler>
+        final Ds3ResponseType responseTypeError = new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null);
+        final Ds3ResponseCode responseCode400 = new Ds3ResponseCode(400, ImmutableList.of(responseTypeError));
 
-<#---------------------------------------------- SpectraS3 REQUESTS --------------------------------------------->
-<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler">
-    <Documentation>Delete a bucket.</Documentation>
-    <RequestRequirements>Must be REST action DELETE</RequestRequirements>
-    <RequestRequirements>Must be REST domain BUCKET</RequestRequirements>
-    <RequestRequirements>Must be a DS3-style request</RequestRequirements>
-    <RequestRequirements>Query Parameters Required: [], Optional: [force]</RequestRequirements>
-    <SampleResponses>
-        <HttpRequest>
-            DELETE '_rest_/bucket/test_bucket_name' with query parameters {FORCE=0} and headers {Internal-Request=1}.
-        </HttpRequest>
-        <SampleResponses>
-        <HttpRequest>
-            DELETE '_rest_/bucket/test_bucket_name' with query parameters {} and headers {Internal-Request=1}.
-        </HttpRequest>
-        <HttpResponse>
-            with headers {x-amz-request-id=211, RequestHandler-Version=1.7E0B95E1E222BB82689E2AA8CD3FE344}.
-        </HttpResponse>
-        <HttpResponseCode>204</HttpResponseCode>
-        <HttpResponseType>null</HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler_Test.testDeleteBucketReturns204WhenBucketExistsAndIsEmpty
-        </Test>
-    </SampleResponses>
-</RequestHandler>
-*/
+        final Ds3ResponseCode responseCode403 = new Ds3ResponseCode(403, ImmutableList.of(responseTypeError));
+
+        final Ds3ResponseCode responseCode409 = new Ds3ResponseCode(409, ImmutableList.of(responseTypeError));
+        assertFalse(RequestHelper.hasResponsePayload(ImmutableList.of(responseCode200, responseCode400, responseCode403, responseCode409)));
+    }
 }

@@ -3,8 +3,8 @@
 <#--   Input: Source object             -->
 <#-- ********************************** -->
 <#list getRequests() as requestEntry>
+    <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "DELETE")>
 ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request) {
-    ds3_error* error = NULL;
 
     <#if requestEntry.isResourceIdRequired()>
     if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {
@@ -18,8 +18,7 @@ ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEn
     }
     </#if>
 
-    error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);
-
-    return error;
+    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);
 }
+    </#if>
 </#list>

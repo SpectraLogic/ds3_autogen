@@ -3,6 +3,7 @@
 <#--   Input: Source object             -->
 <#-- ********************************** -->
 <#list getRequests() as requestEntry>
+    <#if (requestEntry.getClassification().toString() == "spectrads3") && (requestEntry.getAction().toString() == "DELETE")>
 ds3_error* ${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request) {
     <#if requestEntry.isResourceIdRequired()>
     if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {
@@ -18,5 +19,6 @@ ds3_error* ${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry
 
     return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);
 }
+    </#if>
 </#list>
 

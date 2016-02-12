@@ -33,6 +33,7 @@ public final class RequestConverter {
     public static Request toRequest(final Ds3Request ds3Request) {
         return new Request(
                 ds3Request.getName(),
+                ds3Request.getClassification(),
                 ds3Request.getHttpVerb(),
                 getRequestPath(ds3Request),
                 ds3Request.getOperation(),
@@ -148,7 +149,7 @@ public final class RequestConverter {
     private static boolean isResourceIdRequired(final Ds3Request ds3Request) {
         if (ds3Request.getClassification() == Classification.amazons3) {
             return ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                    && ds3Request.getObjectRequirement() == Requirement.REQUIRED;
+                && ds3Request.getObjectRequirement() == Requirement.REQUIRED;
         }
 
         return !RequestConverterUtil.isResourceSingleton(ds3Request.getResource());

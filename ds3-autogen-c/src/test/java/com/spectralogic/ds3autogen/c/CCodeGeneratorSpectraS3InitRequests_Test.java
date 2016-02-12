@@ -38,7 +38,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorSpectraS3InitRequests_Test.class);
 
     @Test
-    public void testGenerateInitSpectraS3DeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitSpectraS3DeleteRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/SpectraS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -59,7 +59,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitSpectraS3PutRequestNoPayloadHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitSpectraS3PutRequestNoPayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/SpectraS3PutBucketRequest_NoPayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -80,7 +80,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitSpectraS3GetRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitSpectraS3GetRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/SpectraS3GetSystemInfoRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

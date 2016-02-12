@@ -3,6 +3,7 @@
 <#--   Input: Source object           -->
 <#-- ******************************** -->
 <#list getRequests() as requestEntry>
+    <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
 ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request) {
     ds3_error* error = NULL;
     ds3_string_multimap* return_headers = NULL;
@@ -29,5 +30,6 @@ ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEn
 
     return error;
 }
+    </#if>
 </#list>
 

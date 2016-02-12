@@ -74,7 +74,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     }
 
     @Test
-    public void testGenerateAmazonS3HeadObjectRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateAmazonS3HeadObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/AmazonS3HeadObjectRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -127,15 +127,13 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_error* s3_delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
-        assertTrue(output.contains("    ds3_error* error = NULL;"));
 
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);"));
+        assertTrue(output.contains("    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);"));
 
-        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
     }
 }
