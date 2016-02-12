@@ -1291,7 +1291,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkApiBean", responseGeneratedCode));
 
         assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
         assertTrue(responseGeneratedCode.contains("public enum Status"));
