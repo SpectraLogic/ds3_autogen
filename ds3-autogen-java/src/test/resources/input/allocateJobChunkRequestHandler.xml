@@ -12,7 +12,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.JobChunkContainerApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobChunkApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
