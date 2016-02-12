@@ -39,3 +39,27 @@
         </RequestHandlers>
     </Contract>
 </Data>
+
+<!--
+<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler">
+    <Documentation>Delete a bucket.</Documentation>
+    <RequestRequirements>Must be REST action DELETE</RequestRequirements>
+    <RequestRequirements>Must be REST domain BUCKET</RequestRequirements>
+    <RequestRequirements>Must be a DS3-style request</RequestRequirements>
+    <RequestRequirements>Query Parameters Required: [], Optional: [force]</RequestRequirements>
+    <SampleResponses>
+        <HttpRequest>DELETE '_rest_/bucket/test_bucket_name' with query parameters {FORCE=0} and headers {Internal-Request=1}.</HttpRequest>
+        <HttpResponse>with headers {x-amz-request-id=205, RequestHandler-Version=1.7E0B95E1E222BB82689E2AA8CD3FE344}.</HttpResponse>
+        <HttpResponseCode>204</HttpResponseCode>
+        <HttpResponseType>null</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler_Test.testDeleteBucketDoesSoWhenBucketExistsAndIsNotEmptyAndForceFlagIsSpecified</Test>
+    </SampleResponses>
+    <SampleResponses>
+        <HttpRequest>DELETE '_rest_/bucket/test_bucket_name' with query parameters {} and headers {Internal-Request=1}.</HttpRequest>
+        <HttpResponse>with headers {x-amz-request-id=211, RequestHandler-Version=1.7E0B95E1E222BB82689E2AA8CD3FE344}.</HttpResponse>
+        <HttpResponseCode>204</HttpResponseCode>
+        <HttpResponseType>null</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler_Test.testDeleteBucketReturns204WhenBucketExistsAndIsEmpty</Test>
+    </SampleResponses>
+</RequestHandler>
+-->

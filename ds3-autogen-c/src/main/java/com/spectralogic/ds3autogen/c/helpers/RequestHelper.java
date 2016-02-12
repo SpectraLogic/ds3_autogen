@@ -15,9 +15,16 @@
 
 package com.spectralogic.ds3autogen.c.helpers;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class RequestHelper {
+    private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
     private final static RequestHelper requestHelper = new RequestHelper();
 
     public static RequestHelper getInstance() {
@@ -30,5 +37,23 @@ public final class RequestHelper {
 
     public static String getNameRootUnderscores(final String name) {
         return Helper.camelToUnderscore(getNameRoot(name));
+    }
+
+    public boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        for(final Ds3ResponseCode responseCode : responseCodes) {
+            final int rc = responseCode.getCode();
+            if( rc >= 200 && rc < 300)
+            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                if(ConverterUtil.hasContent(responseType.getType())) {
+                    LOG.debug("response type " + responseType.getType());
+                    return true;
+                }
+                else if(ConverterUtil.hasContent(responseType.getComponentType())) {
+                    LOG.debug("response type " + responseType.getComponentType());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
