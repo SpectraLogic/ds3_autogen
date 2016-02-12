@@ -2,6 +2,9 @@
 
 package ${packageName};
 
+import org.apache.commons.codec.binary.Base64;
+import java.nio.charset.Charset;
+
 public abstract class ${name} {
 
     public enum Type {
@@ -19,8 +22,13 @@ ${javaHelper.getEnumValues(enumConstants, 2)}
         return compute;
     }
 
-    public static ${name} value(final byte[] hash) {
+    public static ${name} value(final String hash) {
         return new Value(hash);
+    }
+
+    public static ${name} value(final byte[] hash) {
+        final String hashStr = Base64.encodeBase64String(hash);
+        return new Value(hashStr);
     }
 
     public abstract <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E;
@@ -50,15 +58,15 @@ ${javaHelper.getEnumValues(enumConstants, 2)}
     }
 
     private static class Value extends ${name} {
-        private final byte[] hash;
+        private final String hash;
 
-        public Value(final byte[] hash) {
+        public Value(final String hash) {
             this.hash = hash;
         }
 
         @Override
         public <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E {
-            return handler.value(this.hash);
+            return handler.value(this.hash.getBytes(Charset.forName("UTF-8")));
         }
     }
 }

@@ -290,17 +290,31 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void getImportsFromParamList_Test() {
+    public void getImportsFromParamList_NullList_Test() {
+        final ImmutableSet<String> result = getImportsFromParamList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getImportsFromParamList_EmptyList_Test() {
+        final ImmutableSet<String> result = getImportsFromParamList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getImportsFromParamList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("BucketId", "java.util.UUID"),
                 new Ds3Param("MaxUploadSize", "long"),
                 new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"),
+                new Ds3Param("Name", "java.lang.String"));
 
         final ImmutableSet<String> result = getImportsFromParamList(params);
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.UUID"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
+        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
     }
 
     @Test
@@ -314,11 +328,12 @@ public class BaseRequestGenerator_Test {
 
         final ImmutableList<String> result = generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3");
 
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(5));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractRequest"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.JobRequestType"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
         assertTrue(result.contains("java.util.UUID"));
+        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
     }
 
     @Test
@@ -378,5 +393,63 @@ public class BaseRequestGenerator_Test {
         assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
         assertThat(queryParams.get(2).getName(), is("Name"));
         assertThat(queryParams.get(3).getName(), is("Priority"));
+    }
+
+    @Test
+    public void updateDs3RequestParamTypes_Test() {
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("Arg1", "String"),
+                new Ds3Param("Arg2", "java.util.UUID"),
+                new Ds3Param("BucketId", "java.util.UUID"));
+        final Ds3Request request = createDs3RequestTestData(false, params, params);
+
+        final Ds3Request result = updateDs3RequestParamTypes(request);
+
+        final ImmutableList<Ds3Param> requiredParams = result.getRequiredQueryParams();
+        assertThat(requiredParams.size(), is(3));
+        assertThat(requiredParams.get(0).getName(), is("Arg1"));
+        assertThat(requiredParams.get(0).getType(), is("String"));
+        assertThat(requiredParams.get(1).getName(), is("Arg2"));
+        assertThat(requiredParams.get(1).getType(), is("java.util.UUID"));
+        assertThat(requiredParams.get(2).getName(), is("BucketId"));
+        assertThat(requiredParams.get(2).getType(), is("String"));
+
+        final ImmutableList<Ds3Param> optionalParams = result.getOptionalQueryParams();
+        assertThat(optionalParams.size(), is(3));
+        assertThat(optionalParams.get(0).getName(), is("Arg1"));
+        assertThat(optionalParams.get(0).getType(), is("String"));
+        assertThat(optionalParams.get(1).getName(), is("Arg2"));
+        assertThat(optionalParams.get(1).getType(), is("java.util.UUID"));
+        assertThat(optionalParams.get(2).getName(), is("BucketId"));
+        assertThat(optionalParams.get(2).getType(), is("String"));
+    }
+
+    @Test
+    public void updateDs3ParamListTypes_NullList_Test() {
+        final ImmutableList<Ds3Param> result = updateDs3ParamListTypes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void updateDs3ParamListTypes_EmptyList_Test() {
+        final ImmutableList<Ds3Param> result = updateDs3ParamListTypes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void updateDs3ParamListTypes_FullList_Test() {
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("Arg1", "String"),
+                new Ds3Param("Arg2", "java.util.UUID"),
+                new Ds3Param("BucketId", "java.util.UUID"));
+
+        final ImmutableList<Ds3Param> result = updateDs3ParamListTypes(params);
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getName(), is("Arg1"));
+        assertThat(result.get(0).getType(), is("String"));
+        assertThat(result.get(1).getName(), is("Arg2"));
+        assertThat(result.get(1).getType(), is("java.util.UUID"));
+        assertThat(result.get(2).getName(), is("BucketId"));
+        assertThat(result.get(2).getType(), is("String"));
     }
 }

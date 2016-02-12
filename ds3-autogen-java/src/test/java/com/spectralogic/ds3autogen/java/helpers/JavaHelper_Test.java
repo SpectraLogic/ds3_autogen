@@ -272,7 +272,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    @JsonProperty(\"XmlName\")\n"
                 + "    @JacksonXmlElementWrapper(useWrapping = false)\n"
-                + "    private List<BlobApiBean> testName;";
+                + "    private List<BlobApiBean> testName = new ArrayList<>();";
         final Element element = new Element(
                 "testName",
                 "xmlName",
@@ -289,7 +289,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    @JsonProperty(\"TestName\")\n"
                         + "    @JacksonXmlElementWrapper(useWrapping = true)\n"
-                        + "    private List<BlobApiBean> testName;";
+                        + "    private List<BlobApiBean> testName = new ArrayList<>();";
         final Element element = new Element(
                 "testName",
                 "xmlName",
@@ -427,6 +427,7 @@ public class JavaHelper_Test {
         assertThat(convertType("long", null), is("long"));
         assertThat(convertType("long", ""), is("long"));
         assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+        assertThat(convertType("com.spectralogic.util.security.ChecksumType", null), is("ChecksumType.Type"));
     }
 
     @Test
@@ -764,5 +765,55 @@ public class JavaHelper_Test {
         final ImmutableList<Variable> result = removeVariable(variables, "Name");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("Name2"));
+    }
+
+    @Test
+     public void putQueryParamLine_ArgInput_Test() {
+        final Arguments delimiter = new Arguments("java.lang.String", "Delimiter");
+        assertThat(putQueryParamLine(delimiter),
+                is("this.getQueryParams().put(\"delimiter\", delimiter);"));
+
+        final Arguments bucketId = new Arguments("java.lang.String", "BucketId");
+        assertThat(putQueryParamLine(bucketId),
+                is("this.getQueryParams().put(\"bucket_id\", bucketId);"));
+
+        final Arguments bucketName = new Arguments("java.lang.String", "BucketName");
+        assertThat(putQueryParamLine(bucketName),
+                is("this.getQueryParams().put(\"bucket_id\", bucketName);"));
+
+        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
+        assertThat(putQueryParamLine(stringTest),
+                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest));"));
+
+        final Arguments intTest = new Arguments("int", "IntTest");
+        assertThat(putQueryParamLine(intTest),
+                is("this.getQueryParams().put(\"int_test\", Integer.toString(intTest));"));
+    }
+
+    @Test
+    public void putQueryParamLine_StringInput_Test() {
+        assertThat(putQueryParamLine("BucketId", "bucketId"),
+                is("this.getQueryParams().put(\"bucket_id\", bucketId);"));
+
+        assertThat(putQueryParamLine("BucketName", "bucketName"),
+                is("this.getQueryParams().put(\"bucket_id\", bucketName);"));
+    }
+
+    @Test
+    public void queryParamArgToString_Test() {
+        final Arguments delimiter = new Arguments("java.lang.String", "Delimiter");
+        assertThat(queryParamArgToString(delimiter), is("delimiter"));
+
+        final Arguments bucketId = new Arguments("java.lang.String", "BucketId");
+        assertThat(queryParamArgToString(bucketId), is("bucketId"));
+
+        final Arguments bucketName = new Arguments("java.lang.String", "BucketName");
+        assertThat(queryParamArgToString(bucketName), is("bucketName"));
+
+        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
+        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest)"));
+
+        final Arguments intTest = new Arguments("int", "IntTest");
+        assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
     }
 }

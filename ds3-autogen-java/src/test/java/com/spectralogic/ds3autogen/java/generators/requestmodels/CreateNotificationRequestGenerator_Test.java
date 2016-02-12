@@ -66,9 +66,8 @@ public class CreateNotificationRequestGenerator_Test {
         final Ds3Request request = createSimpleTestDs3Request();
 
         final ImmutableList<Arguments> result = generator.toQueryParamsList(request);
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("Priority"));
-        assertThat(result.get(1).getName(), is("NotificationEndPoint"));
     }
 
     @Test
@@ -125,11 +124,10 @@ public class CreateNotificationRequestGenerator_Test {
         assertThat(constructorAssignments.get(2).getName(), is("Priority"));
 
         final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
-        assertThat(queryParams.size(), is(5));
+        assertThat(queryParams.size(), is(4));
         assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
         assertThat(queryParams.get(2).getName(), is("Name"));
         assertThat(queryParams.get(3).getName(), is("Priority"));
-        assertThat(queryParams.get(4).getName(), is("NotificationEndPoint"));
     }
 }
