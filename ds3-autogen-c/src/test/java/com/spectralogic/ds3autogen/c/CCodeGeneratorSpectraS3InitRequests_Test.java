@@ -60,7 +60,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
     @Test
     public void testGenerateInitSpectraS3PutRequestNoPayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
-        final String inputSpecFile = "/input/SpectraS3PutBucketRequest_NoPayload.xml";
+        final String inputSpecFile = "/input/SpectraS3PutBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));

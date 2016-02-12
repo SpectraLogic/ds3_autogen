@@ -60,7 +60,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
     @Test
     public void testGenerateInitAmazonS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
-        final String inputSpecFile = "/input/AmazonS3GetBucketRequest.xml";
+        final String inputSpecFile = "/input/AmazonS3GetBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
