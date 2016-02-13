@@ -62,7 +62,7 @@
     },
     {
       "ContractName": "ListMultiPartUploadsApiBean",
-      "SdkName": "ListMultipartUploadsResult"
+      "SdkName": "ListMultiPartUploadsResult"
     },
     {
       "ContractName": "MultiPartUploadApiBean",
@@ -70,7 +70,7 @@
     },
     {
       "ContractName": "MultiPartUploadPartApiBean",
-      "SdkName": "MultipartUploadPart"
+      "SdkName": "MultiPartUploadPart"
     },
     {
       "ContractName": "NodeApiBean",
