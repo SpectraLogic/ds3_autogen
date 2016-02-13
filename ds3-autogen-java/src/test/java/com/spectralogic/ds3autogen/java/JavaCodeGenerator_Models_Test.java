@@ -83,7 +83,7 @@ public class JavaCodeGenerator_Models_Test {
 
     @Test
     public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String modelName = "PhysicalPlacementApiBean";
+        final String modelName = "PhysicalPlacement";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
                 fileUtils,
@@ -254,7 +254,7 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasParamAttribute("Length", "long", modelGeneratedCode));
         assertTrue(hasParamAttribute("Name", "String", modelGeneratedCode));
         assertTrue(hasParamAttribute("Offset", "long", modelGeneratedCode));
-        assertTrue(hasModelVariable("PhysicalPlacement", "PhysicalPlacementApiBean", modelGeneratedCode));
+        assertTrue(hasModelVariable("PhysicalPlacement", "PhysicalPlacement", modelGeneratedCode));
         assertTrue(hasParamAttribute("Version", "long", modelGeneratedCode));
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));

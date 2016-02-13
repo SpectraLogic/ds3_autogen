@@ -7,6 +7,82 @@
     {
       "ContractName": "S3ObjectApiBean",
       "SdkName": "Contents"
+    },
+    {
+      "ContractName": "PhysicalPlacementApiBean",
+      "SdkName": "PhysicalPlacement"
+    },
+    {
+      "ContractName": "BlobApiBeansContainer",
+      "SdkName": "BulkObjectList"
+    },
+    {
+      "ContractName": "BucketApiBean",
+      "SdkName": "Ds3Bucket"
+    },
+    {
+      "ContractName": "BucketObjectsApiBean",
+      "SdkName": "ListBucketResult"
+    },
+    {
+      "ContractName": "BucketsApiBean",
+      "SdkName": "ListAllMyBucketsResult"
+    },
+    {
+      "ContractName": "CompleteMultipartUploadResultApiBean",
+      "SdkName": "CompleteMultipartUploadResult"
+    },
+    {
+      "ContractName": "DeleteObjectErrorResultApiBean",
+      "SdkName": "DeleteObjectError"
+    },
+    {
+      "ContractName": "DeleteResultApiBean",
+      "SdkName": "DeleteResult"
+    },
+    {
+      "ContractName": "HttpErrorResultApiBean",
+      "SdkName": "HttpError"
+    },
+    {
+      "ContractName": "InitiateMultipartUploadResultApiBean",
+      "SdkName": "InitiateMultipartUploadResult"
+    },
+    {
+      "ContractName": "JobChunkApiBean",
+      "SdkName": "Objects"
+    },
+    {
+      "ContractName": "JobWithChunksApiBean",
+      "SdkName": "MasterObjectList"
+    },
+    {
+      "ContractName": "ListMultiPartUploadPartsApiBean",
+      "SdkName": "ListPartsResult"
+    },
+    {
+      "ContractName": "ListMultiPartUploadsApiBean",
+      "SdkName": "ListMultipartUploadsResult"
+    },
+    {
+      "ContractName": "MultiPartUploadApiBean",
+      "SdkName": "MultiPartUpload"
+    },
+    {
+      "ContractName": "MultiPartUploadPartApiBean",
+      "SdkName": "MultipartUploadPart"
+    },
+    {
+      "ContractName": "NodeApiBean",
+      "SdkName": "Ds3Node"
+    },
+    {
+      "ContractName": "S3ObjectToDeleteApiBean",
+      "SdkName": "S3ObjectToDelete"
+    },
+    {
+      "ContractName": "SystemInformationApiBean",
+      "SdkName": "SystemInformation"
     }
   ]
 }
