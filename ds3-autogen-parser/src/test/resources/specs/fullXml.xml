@@ -5432,6 +5432,7 @@
                         <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
                         <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                        <Param Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -5449,7 +5450,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.FC39E3EACFA6F2E7150664B8E6E12668</Version>
+                <Version>1.4045DC8DF47423C4DD033FD5F22D0524</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ModifyDs3TargetUserMappingRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DS3_TARGET_USER_MAPPING" ResourceType="NON_SINGLETON">
@@ -5480,6 +5481,8 @@
                         <Param Name="AccessControlReplication" Type="com.spectralogic.s3.common.dao.domain.target.Ds3TargetAccessControlReplication"/>
                         <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
                         <Param Name="LocalAdminUserId" Type="java.util.UUID"/>
+                        <Param Name="LocalReplicatedUserDefaultDataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="AdminAuthId" Type="java.lang.String"/>
@@ -5496,7 +5499,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.AB28B9D3C8C39D183170020B2C1F9421</Version>
+                <Version>1.3A0A1174BD51916CA4BA31BA04B1FF4F</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.GetUserRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="USER" ResourceType="NON_SINGLETON">
@@ -9843,6 +9846,21 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="LocalReplicatedUserDefaultDataPolicyId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Name" Type="java.lang.String">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
@@ -9864,6 +9882,13 @@
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="NO" ValueType="java.lang.String"/>
                                 </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
                             </Annotation>
                         </Annotations>
                     </Element>
