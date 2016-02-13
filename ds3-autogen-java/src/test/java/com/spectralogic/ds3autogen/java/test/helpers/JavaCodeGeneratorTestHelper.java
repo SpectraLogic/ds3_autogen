@@ -45,7 +45,7 @@ public final class JavaCodeGeneratorTestHelper {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.*", clientCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.*", clientCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.notifications.*", clientCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.NodeApiBean", clientCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Ds3Node", clientCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.ConnectionDetails", clientCode));
 
         assertTrue(hasImport("java.io.IOException", clientCode));

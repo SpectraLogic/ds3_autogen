@@ -519,8 +519,8 @@ public final class JavaHelper {
 
         return "try (final InputStream content = getResponse().getResponseStream()) {\n"
                 + indent(indent + 1) + "this."
-                + uncapFirst(responseType)
-                + "Result = XmlOutput.fromXml(content, "
+                + createDs3ResponseTypeParamName(ds3ResponseType)
+                + " = XmlOutput.fromXml(content, "
                 + responseType + ".class);\n"
                 + indent(indent) + "}\n"
                 + indent(indent) + "break;";
