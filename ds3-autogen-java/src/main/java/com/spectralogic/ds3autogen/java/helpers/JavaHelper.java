@@ -617,10 +617,16 @@ public final class JavaHelper {
         if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
             return "";
         }
+        final StringBuilder builder = new StringBuilder();
         if (hasContent(responseType.getComponentType())) {
-            return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
+            builder.append(uncapFirst(stripPath(responseType.getComponentType())) + "List");
+        } else {
+            builder.append(uncapFirst(stripPath(responseType.getType())));
         }
-        return uncapFirst(stripPath(responseType.getType())) + "Result";
+        if (!builder.toString().toLowerCase().endsWith("result")) {
+            builder.append("Result");
+        }
+        return builder.toString();
     }
 
     /**

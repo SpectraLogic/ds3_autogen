@@ -661,6 +661,10 @@ public class JavaHelper_Test {
         assertThat(
                 createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
                 is("bucketAclListResult"));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("SimpleTypeResult", null)),
+                is("simpleTypeResult"));
     }
 
     @Test
