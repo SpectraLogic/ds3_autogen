@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -860,7 +861,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.HttpError", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Error", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.utils.IOUtils", responseGeneratedCode));
@@ -1532,6 +1533,73 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
+
+    @Test
+    public void getBucketsAMZ_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetServiceRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getBucketsAMZ.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        //Verify that name mapped from GetBuckets to GetService
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
+
+    @Test
+    public void getBucketsSpectraS3_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetBucketsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedComponentResponseCode testGeneratedCode = new TestGeneratedComponentResponseCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/BucketList.java");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getBucketsSpectraS3.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        //Verify that name mapped from GetBuckets to GetService
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

@@ -83,6 +83,11 @@
     {
       "ContractName": "SystemInformationApiBean",
       "SdkName": "SystemInformation"
+    },
+    {
+      "ContractName": "GetBucketsRequestHandler",
+      "SdkName": "GetServiceRequestHandler",
+      "Type": "AMAZONS3"
     }
   ]
 }

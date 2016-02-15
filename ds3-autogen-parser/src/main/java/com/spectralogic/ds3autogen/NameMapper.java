@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen;
 
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
 import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
+import com.spectralogic.ds3autogen.api.models.NameMapperType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +47,13 @@ public class NameMapper {
         return ds3NameMapper.containsType(namePath);
     }
 
-    public String getConvertedName(final String namePath) {
-        return ds3NameMapper.getConvertedName(namePath);
+    public String getConvertedName(final String namePath, final Classification classification) {
+        if (classification == Classification.amazons3) {
+            return ds3NameMapper.getConvertedName(namePath, NameMapperType.AMAZONS3);
+        }
+        if (classification == Classification.spectrads3) {
+            return ds3NameMapper.getConvertedName(namePath, NameMapperType.SPECTRADS3);
+        }
+        return ds3NameMapper.getConvertedName(namePath, NameMapperType.NONE);
     }
 }

@@ -42,7 +42,7 @@ class Ds3SpecConverter {
 
         for (final Ds3Request request : requests) {
             final Ds3Request convertedRequest = new Ds3Request(
-                    request.getName(),
+                    convertName(request.getName(), request.getClassification(), nameMapper),
                     request.getHttpVerb(),
                     request.getClassification(),
                     request.getBucketRequirement(),
@@ -246,11 +246,24 @@ class Ds3SpecConverter {
     }
 
     /**
+     * Converts a contract name into an sdk name while maintaining the original path.
+     * This assumes that one is renaming a type vs a request.
+     */
+    protected static String convertName(
+            final String contractName,
+            final NameMapper nameMapper) {
+        return convertName(contractName, null, nameMapper);
+    }
+
+    /**
      * Converts a contract name into an sdk name while maintaining the original path. If the
      * contract name contained a '$', then everything proceeding the '$' is maintained, but
      * the name following the symbol is converted to the sdk name, if a name mapping exists.
      */
-    protected static String convertName(final String contractName, final NameMapper nameMapper) {
+    protected static String convertName(
+            final String contractName,
+            final Classification classification,
+            final NameMapper nameMapper) {
         if (isEmpty(contractName)) {
             return contractName;
         }
@@ -259,9 +272,9 @@ class Ds3SpecConverter {
 
         final String[] parts = curName.split("\\$");
         if (parts.length < 2) {
-            return path + nameMapper.getConvertedName(curName);
+            return path + nameMapper.getConvertedName(curName, classification);
         }
-        return path + parts[0] + "$" + nameMapper.getConvertedName(parts[1]);
+        return path + parts[0] + "$" + nameMapper.getConvertedName(parts[1], classification);
     }
 
     /**
