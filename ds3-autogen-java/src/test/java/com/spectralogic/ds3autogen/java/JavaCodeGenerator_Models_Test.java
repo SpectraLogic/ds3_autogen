@@ -269,6 +269,37 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(modelGeneratedCode.contains("public String toString()"));
     }
 
+    @Test
+    public void httpErrorResultApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String modelName = "Error";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/httpErrorResultApiBean.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(hasModelVariable("Code", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("HttpErrorCode", "int", modelGeneratedCode));
+        assertTrue(hasModelVariable("Message", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("Resource", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("ResourceId", "long", modelGeneratedCode));
+
+        assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonIgnoreProperties", modelGeneratedCode));
+
+        assertTrue(modelGeneratedCode.contains("@JsonIgnoreProperties(ignoreUnknown = true)"));
+        assertTrue(modelGeneratedCode.contains("public String toString()"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "EmptyType";

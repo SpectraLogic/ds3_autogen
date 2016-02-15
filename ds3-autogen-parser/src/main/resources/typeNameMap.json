@@ -42,7 +42,7 @@
     },
     {
       "ContractName": "HttpErrorResultApiBean",
-      "SdkName": "HttpError"
+      "SdkName": "Error"
     },
     {
       "ContractName": "InitiateMultipartUploadResultApiBean",
