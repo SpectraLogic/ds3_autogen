@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import org.atteo.evo.inflector.English;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,18 +185,26 @@ public final class ResponseTypeConverter {
     /**
      * Converts a response Component Type into a simple Ds3Type that contains a
      * list of the given component type, and where the new Ds3Type is namespaced.
+     * The element name is pluralized, and an annotation is added to denote the
+     * original name for xml parsing.
      */
     protected static Ds3Type toDs3Type(final String componentType) {
         if (isEmpty(componentType)) {
             throw new IllegalArgumentException("Cannot generate Ds3Type from empty response component type");
         }
+        //Create the annotation for non-pluralized name scheme
+        final ImmutableList<Ds3Annotation> annotations = ImmutableList.of(
+                new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName",
+                        ImmutableList.of(
+                                new Ds3AnnotationElement("Value", stripPath(componentType), "java.lang.String"))));
         return new Ds3Type(
                 componentType + NAMESPACE_ARRAY_RESPONSE_TYPES,
                 ImmutableList.of(
                         new Ds3Element(
-                                stripPath(componentType),
+                                English.plural(stripPath(componentType)),
                                 "array",
-                                componentType)));
+                                componentType,
+                                annotations)));
     }
 
     /**
