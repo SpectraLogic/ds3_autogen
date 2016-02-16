@@ -19,11 +19,13 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.utils.ProjectConstants;
+import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.getPathOfType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAMESPACING;
 
 /**
  * Converts all Ds3Requests within a Ds3ApiSpec to conform to the Java module
@@ -32,6 +34,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  * Naming Scheme:
  * All Ds3Request names should end with "Request" instead of "RequestHandler"
  * All SpectraDs3 request names should be name spaced to end with "SpectraS3Request" instead of just "Request"
+ * All Ds3Request names that start with "Create" should instead start with "Put"
  */
 public final class NameConverter {
 
@@ -89,10 +92,38 @@ public final class NameConverter {
      */
     protected static String toUpdatedDs3RequestName(final String requestName, final Classification classification) {
         if (classification == Classification.spectrads3) {
-            final String namespacedName = requestName.replace("Request", ProjectConstants.SPECTRA_S3_NAMESPACING + "Request");
-            return stripHandlerFromName(namespacedName);
+            final String namespaceName = requestName.replace("Request", SPECTRA_S3_NAMESPACING + "Request");
+            return updateName(namespaceName);
         }
-        return stripHandlerFromName(requestName);
+        return updateName(requestName);
+    }
+
+    /**
+     * Updates the request name to remove postfix 'Handler' and change
+     * prefix 'Create' to 'Put'
+     */
+    protected static String updateName(final String requestName) {
+        if (isEmpty(requestName)) {
+            return null;
+        }
+        return stripHandlerFromName(
+                changeCreateToPut(requestName));
+    }
+
+    /**
+     * Changes request names that start with 'Create' to start
+     * with 'Put'
+     */
+    protected static String changeCreateToPut(final String requestName) {
+        if (isEmpty(requestName)) {
+            return null;
+        }
+        final String path = getPathOfType(requestName, '.');
+        final String name = Helper.stripPath(requestName);
+        if (name.startsWith("Create")) {
+            return path + name.replace("Create", "Put");
+        }
+        return requestName;
     }
 
     /**
@@ -100,7 +131,7 @@ public final class NameConverter {
      * @param ds3RequestName The name of a Ds3Request
      * @return The name of the Ds3Request with "Handler" removed from the end
      */
-    public static String stripHandlerFromName(final String ds3RequestName) {
+    protected static String stripHandlerFromName(final String ds3RequestName) {
         final String nameEnding = "Handler";
         if (isEmpty(ds3RequestName)) {
             return null;
