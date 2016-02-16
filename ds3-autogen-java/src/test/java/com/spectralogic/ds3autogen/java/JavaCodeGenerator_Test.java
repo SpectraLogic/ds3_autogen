@@ -190,7 +190,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createVerifyJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "CreateVerifyJobSpectraS3Request";
+        final String requestName = "VerifyBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -252,7 +252,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createGetJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "CreateGetJobSpectraS3Request";
+        final String requestName = "GetBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -312,7 +312,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createPutJobRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "CreatePutJobSpectraS3Request";
+        final String requestName = "PutBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -711,7 +711,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createObjectRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "CreateObjectRequest";
+        final String requestName = "PutObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -1008,7 +1008,7 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void createJobCompletedNotificationRegistrationRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String requestName = "CreateJobCompletedNotificationRegistrationSpectraS3Request";
+        final String requestName = "PutJobCompletedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,

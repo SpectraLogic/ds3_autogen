@@ -88,6 +88,21 @@
       "ContractName": "GetBucketsRequestHandler",
       "SdkName": "GetServiceRequestHandler",
       "Type": "AMAZONS3"
+    },
+    {
+      "ContractName": "CreateGetJobRequestHandler",
+      "SdkName": "GetBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "CreatePutJobRequestHandler",
+      "SdkName": "PutBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "CreateVerifyJobRequestHandler",
+      "SdkName": "VerifyBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
     }
   ]
 }
