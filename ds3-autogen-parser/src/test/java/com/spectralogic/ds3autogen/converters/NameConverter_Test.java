@@ -120,6 +120,10 @@ public class NameConverter_Test {
         assertThat(changeCreateToPut("CreateSimpleRequest"), is("PutSimpleRequest"));
         assertThat(changeCreateToPut("com.spectra.CreateRequestWithPath"), is("com.spectra.PutRequestWithPath"));
         assertThat(changeCreateToPut("com.spectra.NotCreateRequest"), is("com.spectra.NotCreateRequest"));
+
+        assertThat(changeCreateToPut("CreateSimpleCreateRequest"), is("PutSimpleCreateRequest"));
+        assertThat(changeCreateToPut("com.spectra.CreateJobCreateRequestWithPath"),
+                is("com.spectra.PutJobCreateRequestWithPath"));
     }
 
     @Test

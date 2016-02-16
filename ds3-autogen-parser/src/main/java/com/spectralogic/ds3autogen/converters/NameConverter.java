@@ -121,7 +121,7 @@ public final class NameConverter {
         final String path = getPathOfType(requestName, '.');
         final String name = Helper.stripPath(requestName);
         if (name.startsWith("Create")) {
-            return path + name.replace("Create", "Put");
+            return path + name.replaceFirst("Create", "Put");
         }
         return requestName;
     }
