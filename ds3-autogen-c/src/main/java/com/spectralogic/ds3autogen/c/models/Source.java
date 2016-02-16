@@ -16,11 +16,13 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Source {
     final ImmutableList<Enum> enums;
     final ImmutableList<Struct> structs;
     final ImmutableList<Request> requests;
+    private final Helper helper;
 
     public Source(
             final ImmutableList<Enum> enums,
@@ -29,6 +31,7 @@ public class Source {
         this.enums = enums;
         this.structs = structs;
         this.requests = requests;
+        this.helper = Helper.getInstance();
     }
 
     public ImmutableList<Enum> getEnums() {
@@ -41,5 +44,9 @@ public class Source {
 
     public ImmutableList<Request> getRequests() {
         return requests;
+    }
+
+    public Helper getHelper() {
+        return this.helper;
     }
 }

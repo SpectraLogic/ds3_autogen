@@ -16,7 +16,10 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Requirement;
+import com.spectralogic.ds3autogen.api.models.Resource;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 /**
@@ -137,7 +140,7 @@ public final class RequestConverterUtil {
      * Determines if a resource describes a singleton, meaning that this resource
      * does not describe a valid argument
      */
-    private static boolean isResourceSingleton(final Resource resource) {
+    public static boolean isResourceSingleton(final Resource resource) {
         switch (resource) {
             case CAPACITY_SUMMARY:
             case DATA_PATH:
