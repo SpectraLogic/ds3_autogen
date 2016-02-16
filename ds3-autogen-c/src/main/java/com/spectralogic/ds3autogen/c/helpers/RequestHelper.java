@@ -44,7 +44,7 @@ public final class RequestHelper {
     public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
-            if ( rc >= 200 && rc < 300)
+            if (rc >= 200 && rc < 300)
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
                 if (ConverterUtil.hasContent(responseType.getType())
                     && !Objects.equals(responseType.getType(), "null")) {
