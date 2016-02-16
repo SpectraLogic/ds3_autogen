@@ -34,6 +34,7 @@ import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAME
  * Naming Scheme:
  * All Ds3Request names should end with "Request" instead of "RequestHandler"
  * All SpectraDs3 request names should be name spaced to end with "SpectraS3Request" instead of just "Request"
+ * All Ds3Request names that start with "Create" should instead start with "Put"
  */
 public final class NameConverter {
 
