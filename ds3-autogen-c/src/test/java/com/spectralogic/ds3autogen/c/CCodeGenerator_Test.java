@@ -136,10 +136,10 @@ public class CCodeGenerator_Test {
         LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("typedef struct {"));
-        assertTrue(output.contains("    ds3_bucket_api_bean_response** buckets;"));
+        assertTrue(output.contains("    ds3_ds3_bucket_response** buckets;"));
         assertTrue(output.contains("    size_t num_buckets;"));
         assertTrue(output.contains("    ds3_user_api_bean_response* owner;"));
-        assertTrue(output.contains("}ds3_buckets_api_bean_response;"));
+        assertTrue(output.contains("}ds3_list_all_my_buckets_result_response;"));
     }
 
     @Test
@@ -205,13 +205,13 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_buckets_api_bean_response_free(ds3_buckets_api_bean_response* response_data) {"));
+        assertTrue(output.contains("void ds3_list_all_my_buckets_result_response_free(ds3_list_all_my_buckets_result_response* response_data) {"));
         assertTrue(output.contains("    if (response_data == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    for (index = 0; index < response->num_buckets; index++) {"));
-        assertTrue(output.contains("        ds3_bucket_api_bean_response_free(response_data->buckets[index]);"));
+        assertTrue(output.contains("        ds3_ds3_bucket_response_free(response_data->buckets[index]);"));
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    g_free(response_data->buckets);"));
 
@@ -303,26 +303,26 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static GPtrArray* _parse_ds3_buckets_api_bean_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+        assertTrue(output.contains("static GPtrArray* _parse_ds3_list_all_my_buckets_result_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
 
         assertTrue(output.contains("    GPtrArray* buckets_array = g_ptr_array_new();"));
 
         assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
-        assertTrue(output.contains("        g_ptr_array_add(buckets_array, _parse_ds3_bucket_api_bean_response(log, doc, child_node));"));
+        assertTrue(output.contains("        g_ptr_array_add(buckets_array, _parse_ds3_ds3_bucket_response(log, doc, child_node));"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    return buckets_array;"));
         assertTrue(output.contains("}"));
 
-        assertTrue(output.contains("static ds3_buckets_api_bean_response* _parse_ds3_buckets_api_bean_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
+        assertTrue(output.contains("static ds3_list_all_my_buckets_result_response* _parse_ds3_list_all_my_buckets_result_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
-        assertTrue(output.contains("    ds3_buckets_api_bean_response* response = g_new0(ds3_buckets_api_bean_response, 1);"));
+        assertTrue(output.contains("    ds3_list_all_my_buckets_result_response* response = g_new0(ds3_list_all_my_buckets_result_response, 1);"));
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"Buckets\")) {"));
-        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_buckets_api_bean_response_array(log, doc, child_node);"));
-        assertTrue(output.contains("            response->buckets = (ds3_bucket_api_bean_response**)buckets_array->pdata;"));
+        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_list_all_my_buckets_result_response_array(log, doc, child_node);"));
+        assertTrue(output.contains("            response->buckets = (ds3_ds3_bucket_response**)buckets_array->pdata;"));
         assertTrue(output.contains("            response->num_buckets = buckets_array->len;"));
         assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
