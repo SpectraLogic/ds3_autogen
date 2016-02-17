@@ -44,27 +44,6 @@ public class CCodeGenerator_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
 
     @Test
-    public void testGenerateSingleDeleteRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
-        final String inputSpecFile = "/input/SingleRequestHandler.xml";
-        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
-
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3InitRequestHandler.ftl", fileUtils.getOutputStream());
-
-        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
-        final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
-
-        assertTrue(output.contains("ds3_request* ds3_init_delete_bucket_request(const char* bucket_name) {"));
-        assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_DELETE, _build_path(\"/\", bucket_name, NULL));"));
-        assertTrue(output.contains("}"));
-    }
-
-    @Test
     public void testGenerateSingleTypedefEnum() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/TypedefEnum.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
@@ -436,7 +415,7 @@ public class CCodeGenerator_Test {
     /* Parsing of full api contract is not currently working - exception thrown for multiple responses for the same request.
     @Test
     public void testGenerateHeader() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
-        final String inputSpecFile = "/input/complete-request-handlers-contract.xml";
+        final String inputSpecFile = "/input/CompleteApiContract.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));

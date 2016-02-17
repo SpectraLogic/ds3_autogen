@@ -1,0 +1,25 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectsRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="POST" IncludeIdInPath="false" ObjectRequirement="NOT_ALLOWED">
+                    <OptionalQueryParams>
+                        <Param Name="RollBack" Type="void" />
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Delete" Type="void" />
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.DeleteResultApiBean" />
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.773E50A74C3DC9EB87D6CD924CA1B34A</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

@@ -119,7 +119,7 @@ void ds3_free_request(ds3_request* _request) {
     if (request->query_params != NULL) {
         g_hash_table_destroy(request->query_params);
     }
-    ds3_str_free(request->path);
+    ds3_str_free(request->buildPathArgs);
     ds3_str_free(request->checksum);
     g_free(request);
 }

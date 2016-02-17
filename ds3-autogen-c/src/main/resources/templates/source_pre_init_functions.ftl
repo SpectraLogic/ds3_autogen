@@ -455,17 +455,17 @@ void ds3_request_set_version(ds3_request* _request, const char* version) {
     _set_query_param(_request, "version", version);
 }
 
-static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) {
+static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* buildPathArgs) {
     struct _ds3_request* request = g_new0(struct _ds3_request, 1);
     request->headers = _create_hash_table();
     request->query_params = _create_hash_table();
     request->verb = verb;
-    request->path = path;
+    request->buildPathArgs = buildPathArgs;
     return request;
 }
 
 static ds3_str* _build_path(const char* path_prefix, const char* bucket_name, const char* object_name) {
-    ds3_str* path = NULL;
+    ds3_str* buildPathArgs = NULL;
     char* escaped_bucket_name = NULL;
     char* escaped_object_name = NULL;
     char* joined_path = NULL;
@@ -488,7 +488,7 @@ static ds3_str* _build_path(const char* path_prefix, const char* bucket_name, co
     full_path = g_strconcat(path_prefix, joined_path, NULL);
     g_free(joined_path);
 
-    path = ds3_str_init(full_path);
+    buildPathArgs = ds3_str_init(full_path);
     g_free(full_path);
 
     if (escaped_bucket_name != NULL) {
@@ -498,5 +498,5 @@ static ds3_str* _build_path(const char* path_prefix, const char* bucket_name, co
         g_free(escaped_object_name);
     }
 
-    return path;
+    return buildPathArgs;
 }

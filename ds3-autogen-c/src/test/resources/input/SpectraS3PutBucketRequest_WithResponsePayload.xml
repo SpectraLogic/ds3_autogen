@@ -1,0 +1,44 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.CreateBucketRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                <OptionalQueryParams>
+                    <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                    <Param Name="UserId" Type="java.util.UUID"/>
+                </OptionalQueryParams>
+                <RequiredQueryParams>
+                    <Param Name="Name" Type="java.lang.String"/>
+                </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.EDFFA04367DD65F241226EE1BE3BE259</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
