@@ -205,10 +205,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
@@ -268,13 +268,13 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasMethod("getCommand", "BulkCommand", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(isOptParamOfType("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestName, requestGeneratedCode, true));
-        assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
         assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.BulkRequest", requestGeneratedCode));
         assertTrue(hasImport("java.util.List", requestGeneratedCode));
@@ -329,12 +329,12 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(isOptParamOfType("IgnoreNamingConflicts", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("MaxUploadSize", "long", requestName, requestGeneratedCode, true));
-        assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
         assertFalse(hasGetter("MaxUploadSize", "long", requestGeneratedCode));
         assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.BulkRequest", requestGeneratedCode));
@@ -1148,12 +1148,12 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasMethod("getCommand", "BulkCommand", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(isOptParamOfType("ConflictResolutionMode", "ReplicationConflictResolutionMode", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("Priority", "BlobStoreTaskPriority", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
         assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
         assertFalse(isReqVariable("Replicate", "boolean", requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.BlobStoreTaskPriority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.BulkRequest", requestGeneratedCode));

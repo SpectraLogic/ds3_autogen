@@ -85,6 +85,10 @@
       "SdkName": "SystemInformation"
     },
     {
+      "ContractName": "BlobStoreTaskPriority",
+      "SdkName": "Priority"
+    },
+    {
       "ContractName": "GetBucketsRequestHandler",
       "SdkName": "GetServiceRequestHandler",
       "Type": "AMAZONS3"

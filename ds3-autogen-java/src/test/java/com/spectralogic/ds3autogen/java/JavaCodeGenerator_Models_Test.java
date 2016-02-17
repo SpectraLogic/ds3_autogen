@@ -170,7 +170,7 @@ public class JavaCodeGenerator_Models_Test {
 
     @Test
     public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String modelName = "BlobStoreTaskPriority";
+        final String modelName = "Priority";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
                 fileUtils,
