@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseTypeList;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.*;
 import static com.spectralogic.ds3autogen.test.helpers.ResponseTypeConverterHelper.*;
@@ -128,10 +129,18 @@ public class ResponseTypeConverter_Test {
         assertThat(ds3Type.getElements().size(), is(1));
 
         final Ds3Element element = ds3Type.getElements().get(0);
-        assertThat(element.getName(), is("BucketAcl"));
+        assertThat(element.getName(), is("BucketAcls"));
         assertThat(element.getType(), is("array"));
         assertThat(element.getComponentType(), is("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl"));
-        assertTrue(isEmpty(element.getDs3Annotations()));
+
+        assertTrue(hasContent(element.getDs3Annotations()));
+        assertThat(element.getDs3Annotations().get(0).getName(), is("com.spectralogic.util.marshal.CustomMarshaledName"));
+
+        final ImmutableList<Ds3AnnotationElement> elements = element.getDs3Annotations().get(0).getDs3AnnotationElements();
+        assertThat(elements.size(), is(1));
+        assertThat(elements.get(0).getName(), is("Value"));
+        assertThat(elements.get(0).getValue(), is("BucketAcl"));
+        assertThat(elements.get(0).getValueType(), is("java.lang.String"));
     }
 
     @Test
@@ -359,5 +368,45 @@ public class ResponseTypeConverter_Test {
         assertTrue(result.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v2_List"));
         assertTrue(result.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v3_List"));
         assertTrue(result.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl_v4_List"));
+    }
+
+    @Test
+    public void tapeEncapsulation_Test() {
+        final Ds3Request request = new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.CancelEjectTapeRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.TAPE,
+                ResourceType.NON_SINGLETON,
+                Operation.CANCEL_EJECT,
+                true,
+                ImmutableList.of(
+                        new Ds3ResponseCode(200, ImmutableList.of(
+                                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape")))),
+                null,
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+
+        final Ds3Type tape = new Ds3Type(
+                "com.spectralogic.s3.common.dao.domain.tape.Tape",
+                ImmutableList.of(
+                        new Ds3Element("AssignedToStorageDomain", "boolean", null),
+                        new Ds3Element("AvailableRawCapacity", "long", null)));
+
+        final ImmutableMap<String, Ds3Type> result = createEncapsulatingModelResponseTypes(
+                ImmutableList.of(request),
+                ImmutableMap.of(tape.getName(), tape));
+
+        assertThat(result.size(), is(2));
+        assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.Tape"));
+        assertTrue(result.containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeList"));
+
+        //Verify that TapeList has pluralized element tapes
+        final Ds3Type tapeList = result.get("com.spectralogic.s3.common.dao.domain.tape.TapeList");
+        assertThat(tapeList.getElements().size(), is(1));
+        assertThat(tapeList.getElements().get(0).getName(), is("Tapes"));
     }
 }
