@@ -135,7 +135,7 @@ class Ds3SpecConverter {
                     entry.getValue().getNameToMarshal(),
                     convertAllElements(entry.getValue().getElements(), nameMapper),
                     convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
-            builder.put(convertName(convertName(entry.getKey(), nameMapper), nameMapper), ds3Type);
+            builder.put(convertName(entry.getKey(), nameMapper), ds3Type);
         }
 
         return builder.build();

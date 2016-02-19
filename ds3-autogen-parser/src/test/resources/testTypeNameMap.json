@@ -7,6 +7,24 @@
     {
       "ContractName": "Bucket",
       "SdkName": "TEST_Bucket"
+    },
+    {
+      "ContractName": "Swap1",
+      "SdkName": "Swap2"
+    },
+    {
+      "ContractName": "Swap2",
+      "SdkName": "Swap1"
+    },
+    {
+      "ContractName": "RequestSwap1",
+      "SdkName": "RequestSwap2",
+      "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "RequestSwap2",
+      "SdkName": "RequestSwap1",
+      "Type": "SPECTRADS3"
     }
   ]
 }

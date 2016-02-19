@@ -29,6 +29,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class Ds3SpecConverter_Test {
 
@@ -363,5 +364,64 @@ public class Ds3SpecConverter_Test {
         final ImmutableList<Ds3Request> result = convertRequests(input, nameMapper);
 
         assertThat(result, is(notNullValue()));
+    }
+
+    /**
+     * Creates a Ds3Request that is empty except for the request name and optional params
+     */
+    public static Ds3Request createDs3RequestTestData(
+            final String requestName,
+            final ImmutableList<Ds3Param> optionalParams) {
+        return new Ds3Request(
+                requestName,
+                null,
+                Classification.spectrads3,
+                null, null, null, null, null, null, false, null,
+                optionalParams,
+                null);
+    }
+
+    @Test
+    public void swapNames_Requests_Test() throws IOException, ParserException {
+        final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
+
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("Param1", "Swap1"),
+                new Ds3Param("Param2", "Swap2"));
+        final Ds3Request request1 = createDs3RequestTestData("com.spectralogic.test.RequestSwap1", params);
+        final Ds3Request request2 = createDs3RequestTestData("com.spectralogic.test.RequestSwap2", null);
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(request1, request2);
+
+        final ImmutableList<Ds3Request> result = convertRequests(requests, nameMapper);
+        assertThat(result.size(), is(2));
+
+        assertThat(result.get(0).getName(), is("com.spectralogic.test.RequestSwap2"));
+        assertThat(result.get(0).getOptionalQueryParams().get(0).getName(), is("Param1"));
+        assertThat(result.get(0).getOptionalQueryParams().get(0).getType(), is("Swap2"));
+        assertThat(result.get(0).getOptionalQueryParams().get(1).getName(), is("Param2"));
+        assertThat(result.get(0).getOptionalQueryParams().get(1).getType(), is("Swap1"));
+
+        assertThat(result.get(1).getName(), is("com.spectralogic.test.RequestSwap1"));
+        assertThat(result.get(1).getOptionalQueryParams(), is(nullValue()));
+    }
+
+    @Test
+    public void swapNames_Types_Test() throws IOException, ParserException {
+        final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
+
+        final String typeName1 = "com.test.one.Swap1";
+        final String typeName2 = "com.test.two.Swap2";
+        final Ds3Type type1 = new Ds3Type(typeName1, null);
+        final Ds3Type type2 = new Ds3Type(typeName2, null);
+
+        final ImmutableMap<String, Ds3Type> types = ImmutableMap.of(
+                typeName1, type1,
+                typeName2, type2);
+
+        final ImmutableMap<String, Ds3Type> result = convertTypes(types, nameMapper);
+        assertThat(result.size(), is(2));
+
+        assertTrue(result.containsKey("com.test.one.Swap2"));
+        assertTrue(result.containsKey("com.test.two.Swap1"));
     }
 }

@@ -107,9 +107,9 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(2));
         assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(true));
-        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(true));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(true));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(notNullValue()));
-        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(notNullValue()));
     }
 
     @Test

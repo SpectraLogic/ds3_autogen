@@ -89,6 +89,38 @@
       "SdkName": "Priority"
     },
     {
+      "ContractName": "JobApiBean",
+      "SdkName": "Job"
+    },
+    {
+      "ContractName": "Job",
+      "SdkName": "ActiveJob"
+    },
+    {
+      "ContractName": "JobsApiBean",
+      "SdkName": "JobList"
+    },
+    {
+      "ContractName": "UserApiBean",
+      "SdkName": "User"
+    },
+    {
+      "ContractName": "User",
+      "SdkName": "SpectraUser"
+    },
+    {
+      "ContractName": "TapeFailureApiBean",
+      "SdkName": "TapeFailure"
+    },
+    {
+      "ContractName": "TapeFailuresApiBean",
+      "SdkName": "TapeFailureList"
+    },
+    {
+      "ContractName": "TapeFailure",
+      "SdkName": "DetailedTapeFailure"
+    },
+    {
       "ContractName": "GetBucketsRequestHandler",
       "SdkName": "GetServiceRequestHandler",
       "Type": "AMAZONS3"
