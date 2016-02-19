@@ -390,7 +390,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("FullDetails", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
+        assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
@@ -457,7 +457,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
+        assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", requestName, requestGeneratedCode));
@@ -530,7 +530,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("FullDetails", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
+        assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
@@ -594,7 +594,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(hasMethod("getContentStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
+        assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
         assertFalse(doesConstructorContainParam("FullDetails", "void", requestName, requestGeneratedCode));
