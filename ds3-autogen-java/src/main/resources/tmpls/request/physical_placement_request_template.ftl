@@ -15,6 +15,7 @@ public class ${name} extends AbstractRequest {
 
     // Variables
     <#include "common/variables.ftl"/>
+    private long size = 0;
 
     // Constructor
     <#include "common/constructor.ftl"/>
@@ -29,7 +30,13 @@ public class ${name} extends AbstractRequest {
         ${javaHelper.toXmlLine("xmlOutput", "objects", operation)}
 
         final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
     }
 
     <#include "common/getters_verb_path.ftl"/>
