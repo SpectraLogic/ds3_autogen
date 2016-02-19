@@ -22,9 +22,9 @@ public class Ds3NameMapper {
     /**
      * Contains a map of contract names (key) to sdk names (value)
      */
-    private final ImmutableMap<String, String> typeNameMapper;
+    private final ImmutableMap<String, TypeRename> typeNameMapper;
 
-    public Ds3NameMapper(final ImmutableMap<String, String> typeNameMapper) {
+    public Ds3NameMapper(final ImmutableMap<String, TypeRename> typeNameMapper) {
         this.typeNameMapper = typeNameMapper;
     }
 
@@ -41,13 +41,17 @@ public class Ds3NameMapper {
      * contract name does not exist within the name mapper, then the original
      * contract name is returned.
      */
-    public String getConvertedName(final String contractName) {
+    public String getConvertedName(final String contractName, final NameMapperType type) {
         if (contractName.contains(".")) {
             throw new IllegalArgumentException("The contract name contains a path: " + contractName);
         }
         if (!containsType(contractName)) {
             return contractName;
         }
-        return typeNameMapper.get(contractName);
+        final TypeRename rename = typeNameMapper.get(contractName);
+        if (type == NameMapperType.NONE || type == rename.getType()) {
+            return rename.getSdkName();
+        }
+        return contractName;
     }
 }

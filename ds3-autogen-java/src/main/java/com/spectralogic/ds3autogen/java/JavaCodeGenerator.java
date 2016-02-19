@@ -179,6 +179,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
+        if (isHttpErrorType(ds3Type)) {
+            return config.getTemplate("models/http_error_template.ftl");
+        }
         if (isChecksum(ds3Type)) {
             return config.getTemplate("models/checksum_type_template.ftl");
         }

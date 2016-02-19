@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.models.xml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spectralogic.ds3autogen.api.models.NameMapperType;
 
 public class NameMap {
 
@@ -24,6 +25,9 @@ public class NameMap {
 
     @JsonProperty("SdkName")
     private String sdkName;
+
+    @JsonProperty("Type")
+    private NameMapperType type = NameMapperType.NONE;
 
     public String getContractName() {
         return contractName;
@@ -39,5 +43,13 @@ public class NameMap {
 
     public void setSdkName(final String sdkName) {
         this.sdkName = sdkName;
+    }
+
+    public NameMapperType getType() {
+        return type;
+    }
+
+    public void setType(final NameMapperType type) {
+        this.type = type;
     }
 }

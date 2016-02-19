@@ -83,7 +83,7 @@ public class JavaCodeGenerator_Models_Test {
 
     @Test
     public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String modelName = "PhysicalPlacementApiBean";
+        final String modelName = "PhysicalPlacement";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
                 fileUtils,
@@ -170,7 +170,7 @@ public class JavaCodeGenerator_Models_Test {
 
     @Test
     public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
-        final String modelName = "BlobStoreTaskPriority";
+        final String modelName = "Priority";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
                 fileUtils,
@@ -254,7 +254,7 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasParamAttribute("Length", "long", modelGeneratedCode));
         assertTrue(hasParamAttribute("Name", "String", modelGeneratedCode));
         assertTrue(hasParamAttribute("Offset", "long", modelGeneratedCode));
-        assertTrue(hasModelVariable("PhysicalPlacement", "PhysicalPlacementApiBean", modelGeneratedCode));
+        assertTrue(hasModelVariable("PhysicalPlacement", "PhysicalPlacement", modelGeneratedCode));
         assertTrue(hasParamAttribute("Version", "long", modelGeneratedCode));
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
@@ -266,6 +266,37 @@ public class JavaCodeGenerator_Models_Test {
 
         assertTrue(modelGeneratedCode.contains("public int hashCode()"));
         assertTrue(modelGeneratedCode.contains("public boolean equals(final Object obj)"));
+        assertTrue(modelGeneratedCode.contains("public String toString()"));
+    }
+
+    @Test
+    public void httpErrorResultApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String modelName = "Error";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/httpErrorResultApiBean.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(hasModelVariable("Code", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("HttpErrorCode", "int", modelGeneratedCode));
+        assertTrue(hasModelVariable("Message", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("Resource", "String", modelGeneratedCode));
+        assertTrue(hasModelVariable("ResourceId", "long", modelGeneratedCode));
+
+        assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
+        assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonIgnoreProperties", modelGeneratedCode));
+
+        assertTrue(modelGeneratedCode.contains("@JsonIgnoreProperties(ignoreUnknown = true)"));
         assertTrue(modelGeneratedCode.contains("public String toString()"));
     }
 

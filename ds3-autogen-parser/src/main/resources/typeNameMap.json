@@ -7,6 +7,106 @@
     {
       "ContractName": "S3ObjectApiBean",
       "SdkName": "Contents"
+    },
+    {
+      "ContractName": "PhysicalPlacementApiBean",
+      "SdkName": "PhysicalPlacement"
+    },
+    {
+      "ContractName": "BlobApiBeansContainer",
+      "SdkName": "BulkObjectList"
+    },
+    {
+      "ContractName": "BucketApiBean",
+      "SdkName": "Ds3Bucket"
+    },
+    {
+      "ContractName": "BucketObjectsApiBean",
+      "SdkName": "ListBucketResult"
+    },
+    {
+      "ContractName": "BucketsApiBean",
+      "SdkName": "ListAllMyBucketsResult"
+    },
+    {
+      "ContractName": "CompleteMultipartUploadResultApiBean",
+      "SdkName": "CompleteMultipartUploadResult"
+    },
+    {
+      "ContractName": "DeleteObjectErrorResultApiBean",
+      "SdkName": "DeleteObjectError"
+    },
+    {
+      "ContractName": "DeleteResultApiBean",
+      "SdkName": "DeleteResult"
+    },
+    {
+      "ContractName": "HttpErrorResultApiBean",
+      "SdkName": "Error"
+    },
+    {
+      "ContractName": "InitiateMultipartUploadResultApiBean",
+      "SdkName": "InitiateMultipartUploadResult"
+    },
+    {
+      "ContractName": "JobChunkApiBean",
+      "SdkName": "Objects"
+    },
+    {
+      "ContractName": "JobWithChunksApiBean",
+      "SdkName": "MasterObjectList"
+    },
+    {
+      "ContractName": "ListMultiPartUploadPartsApiBean",
+      "SdkName": "ListPartsResult"
+    },
+    {
+      "ContractName": "ListMultiPartUploadsApiBean",
+      "SdkName": "ListMultiPartUploadsResult"
+    },
+    {
+      "ContractName": "MultiPartUploadApiBean",
+      "SdkName": "MultiPartUpload"
+    },
+    {
+      "ContractName": "MultiPartUploadPartApiBean",
+      "SdkName": "MultiPartUploadPart"
+    },
+    {
+      "ContractName": "NodeApiBean",
+      "SdkName": "Ds3Node"
+    },
+    {
+      "ContractName": "S3ObjectToDeleteApiBean",
+      "SdkName": "S3ObjectToDelete"
+    },
+    {
+      "ContractName": "SystemInformationApiBean",
+      "SdkName": "SystemInformation"
+    },
+    {
+      "ContractName": "BlobStoreTaskPriority",
+      "SdkName": "Priority"
+    },
+    {
+      "ContractName": "GetBucketsRequestHandler",
+      "SdkName": "GetServiceRequestHandler",
+      "Type": "AMAZONS3"
+    },
+    {
+      "ContractName": "CreateGetJobRequestHandler",
+      "SdkName": "GetBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "CreatePutJobRequestHandler",
+      "SdkName": "PutBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "CreateVerifyJobRequestHandler",
+      "SdkName": "VerifyBulkJobRequestHandler",
+      "Type": "SPECTRADS3"
     }
   ]
 }

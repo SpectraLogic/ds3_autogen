@@ -21,9 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequests;
-import static com.spectralogic.ds3autogen.converters.NameConverter.toUpdatedDs3Request;
-import static com.spectralogic.ds3autogen.converters.NameConverter.toUpdatedDs3RequestName;
+import static com.spectralogic.ds3autogen.converters.NameConverter.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -111,5 +109,31 @@ public class NameConverter_Test {
         assertThat(result.getRequests().size(), is(2));
         assertThat(result.getRequests().get(0).getName(), is("com.spectralogic.test.MyTestOneSpectraS3Request"));
         assertThat(result.getRequests().get(1).getName(), is("com.spectralogic.test.MyTestTwoRequest"));
+    }
+
+    @Test
+    public void changeCreateToPut_Test() {
+        assertThat(changeCreateToPut(null), is(nullValue()));
+        assertThat(changeCreateToPut(""), is(nullValue()));
+        assertThat(changeCreateToPut("SimpleRequest"), is("SimpleRequest"));
+        assertThat(changeCreateToPut("com.spectra.RequestWithPath"), is("com.spectra.RequestWithPath"));
+        assertThat(changeCreateToPut("CreateSimpleRequest"), is("PutSimpleRequest"));
+        assertThat(changeCreateToPut("com.spectra.CreateRequestWithPath"), is("com.spectra.PutRequestWithPath"));
+        assertThat(changeCreateToPut("com.spectra.NotCreateRequest"), is("com.spectra.NotCreateRequest"));
+
+        assertThat(changeCreateToPut("CreateSimpleCreateRequest"), is("PutSimpleCreateRequest"));
+        assertThat(changeCreateToPut("com.spectra.CreateJobCreateRequestWithPath"),
+                is("com.spectra.PutJobCreateRequestWithPath"));
+    }
+
+    @Test
+    public void updateName_Test() {
+        assertThat(updateName(null), is(nullValue()));
+        assertThat(updateName(""), is(nullValue()));
+        assertThat(updateName("SimpleRequestHandler"), is("SimpleRequest"));
+        assertThat(updateName("com.spectra.RequestWithPathHandler"), is("com.spectra.RequestWithPath"));
+        assertThat(updateName("CreateSimpleRequestHandler"), is("PutSimpleRequest"));
+        assertThat(updateName("com.spectra.CreateRequestWithPathHandler"), is("com.spectra.PutRequestWithPath"));
+        assertThat(updateName("com.spectra.NotCreateRequestHandler"), is("com.spectra.NotCreateRequest"));
     }
 }

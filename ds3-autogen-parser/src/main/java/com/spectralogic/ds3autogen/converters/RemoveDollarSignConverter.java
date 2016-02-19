@@ -305,7 +305,7 @@ public final class RemoveDollarSignConverter {
      * @param typeName The Type Name, which may include a path
      * @param pathDelimiter The path delimiter character
      */
-    protected static String getPathOfType(final String typeName, final char pathDelimiter) {
+    public static String getPathOfType(final String typeName, final char pathDelimiter) {
         if (isEmpty(typeName)) {
             return "";
         }
