@@ -116,7 +116,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("typedef struct {"));
         assertTrue(output.contains("    ds3_str* display_name;"));
         assertTrue(output.contains("    ds3_str* id;"));
-        assertTrue(output.contains("}ds3_user_api_bean_response;"));
+        assertTrue(output.contains("}ds3_user_response;"));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("typedef struct {"));
         assertTrue(output.contains("    ds3_ds3_bucket_response** buckets;"));
         assertTrue(output.contains("    size_t num_buckets;"));
-        assertTrue(output.contains("    ds3_user_api_bean_response* owner;"));
+        assertTrue(output.contains("    ds3_user_response* owner;"));
         assertTrue(output.contains("}ds3_list_all_my_buckets_result_response;"));
     }
 
@@ -158,7 +158,7 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_user_api_bean_response_free(ds3_user_api_bean_response* response_data);"));
+        assertTrue(output.contains("void ds3_user_response_free(ds3_user_response* response_data);"));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_user_api_bean_response_free(ds3_user_api_bean_response* response_data) {"));
+        assertTrue(output.contains("void ds3_user_response_free(ds3_user_response* response_data) {"));
         assertTrue(output.contains("    if (response_data == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
@@ -215,7 +215,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    g_free(response_data->buckets);"));
 
-        assertTrue(output.contains("    ds3_user_api_bean_response_free(response_data->owner);"));
+        assertTrue(output.contains("    ds3_user_response_free(response_data->owner);"));
 
         assertTrue(output.contains("    g_free(response_data);"));
         assertTrue(output.contains("}"));
@@ -269,9 +269,9 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_user_api_bean_response* _parse_ds3_user_api_bean_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
+        assertTrue(output.contains("static ds3_user_response* _parse_ds3_user_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
-        assertTrue(output.contains("    ds3_user_api_bean_response* response = g_new0(ds3_user_api_bean_response, 1);"));
+        assertTrue(output.contains("    ds3_user_response* response = g_new0(ds3_user_response, 1);"));
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"DisplayName\")) {"));
