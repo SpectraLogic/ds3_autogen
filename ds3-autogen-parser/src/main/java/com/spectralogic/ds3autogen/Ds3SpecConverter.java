@@ -112,9 +112,43 @@ class Ds3SpecConverter {
         for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
             builder.add(new Ds3ResponseType(
                     convertName(responseType.getType(), nameMapper),
-                    convertName(responseType.getComponentType(), nameMapper)));
+                    convertName(responseType.getComponentType(), nameMapper),
+                    getOriginalType(responseType.getComponentType(), nameMapper)));
         }
         return new Ds3ResponseCode(responseCode.getCode(), builder.build());
+    }
+
+    /**
+     * Gets the contract name of a type if said type is renamed within the NameMapper.
+     * If the type name does not change, then null is returned.
+     */
+    protected static String getOriginalType(final String type, final NameMapper nameMapper) {
+        if (isEmpty(type)) {
+            return null;
+        }
+        final String converted = convertName(type, nameMapper);
+        if (converted.equals(type)) {
+            return null;
+        }
+        return stripPathAndDollarSign(type);
+    }
+
+    /**
+     * This removes the path and anything proceeding a dollar sign. This is
+     * used to retrieve the original type name of a response type.
+     */
+    protected static String stripPathAndDollarSign(final String type) {
+        final String typeMinusPath = getNameFromPath(type);
+        final String[] parts = typeMinusPath.split("\\$");
+        switch (parts.length) {
+            case 0:
+            case 1:
+                return typeMinusPath;
+            case 2:
+                return parts[1];
+            default:
+                throw new IllegalArgumentException("A type name cannot have two dollar signs within it: " + type);
+        }
     }
 
     /**

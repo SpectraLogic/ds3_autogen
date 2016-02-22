@@ -25,9 +25,7 @@ import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.Ds3SpecConverter.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -423,5 +421,29 @@ public class Ds3SpecConverter_Test {
 
         assertTrue(result.containsKey("com.test.one.Swap2"));
         assertTrue(result.containsKey("com.test.two.Swap1"));
+    }
+
+    @Test
+    public void stripPathAndDollarSign_Test() {
+        assertThat(stripPathAndDollarSign(null), is(""));
+        assertThat(stripPathAndDollarSign(""), is(""));
+        assertThat(stripPathAndDollarSign("SimpleName"), is("SimpleName"));
+        assertThat(stripPathAndDollarSign("com.test.Name"), is("Name"));
+        assertThat(stripPathAndDollarSign("com.test.useless$Name"), is("Name"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void stripPathAndDollarSign_Error_Test() {
+        stripPathAndDollarSign("com.test.illegal$argument$Name");
+    }
+
+    @Test
+    public void getOriginalType_Test() throws IOException, ParserException {
+        final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
+
+        assertThat(getOriginalType(null, nameMapper), is(nullValue()));
+        assertThat(getOriginalType("", nameMapper), is(nullValue()));
+        assertThat(getOriginalType("NotRenamedType", nameMapper), is(nullValue()));
+        assertThat(getOriginalType("Bucket", nameMapper), is("Bucket"));
     }
 }

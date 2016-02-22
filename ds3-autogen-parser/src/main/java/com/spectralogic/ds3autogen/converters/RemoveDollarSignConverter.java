@@ -123,7 +123,8 @@ public final class RemoveDollarSignConverter {
             final Ds3ResponseType responseType) {
         return new Ds3ResponseType(
                 removeDollarSignFromName(responseType.getType()),
-                removeDollarSignFromName(responseType.getComponentType()));
+                removeDollarSignFromName(responseType.getComponentType()),
+                responseType.getOriginalTypeName());
     }
 
     /**
