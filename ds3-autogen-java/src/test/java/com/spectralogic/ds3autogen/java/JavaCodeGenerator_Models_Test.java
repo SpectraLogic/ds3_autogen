@@ -300,6 +300,32 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(modelGeneratedCode.contains("public String toString()"));
     }
 
+    @Test
+    public void JobsApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        //This Type is special cased AND renamed: generation relies on name detection in isJobsApiBean within JavaCodeGenerator
+        final String modelName = "JobList";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
+                fileUtils,
+                modelName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/");
+
+        testGeneratedModelCode.generateCode(fileUtils, "/input/jobsApiBean.xml");
+
+        final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
+        LOG.info("Generated code:\n" + modelGeneratedCode);
+
+        assertTrue(hasCopyright(modelGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
+
+        assertTrue(modelGeneratedCode.contains("@JacksonXmlRootElement(namespace = \"Jobs\")"));
+        assertTrue(modelGeneratedCode.contains("public class JobList {"));
+
+        assertTrue(modelGeneratedCode.contains("@JsonProperty(\"Job\")"));
+        assertTrue(modelGeneratedCode.contains("@JacksonXmlElementWrapper(useWrapping = false)"));
+        assertTrue(modelGeneratedCode.contains("private List<Job> jobs = new ArrayList<>();"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String modelName = "EmptyType";

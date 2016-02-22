@@ -19,17 +19,30 @@ public class Ds3ResponseType {
 
     private final String type;
     private final String componentType;
+    private final String originalTypeName; //Used when types are renamed
+
+    public Ds3ResponseType(
+            final String type,
+            final String componentType,
+            final String originalTypeName) {
+        this.type = type;
+        this.componentType = componentType;
+        this.originalTypeName = originalTypeName;
+    }
 
     public Ds3ResponseType(
             final String type,
             final String componentType) {
-        this.type = type;
-        this.componentType = componentType;
+        this(type, componentType, null);
     }
 
     public String getType() { return type; }
 
     public String getComponentType() {
         return componentType;
+    }
+
+    public String getOriginalTypeName() {
+        return originalTypeName;
     }
 }

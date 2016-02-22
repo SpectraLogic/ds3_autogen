@@ -18,7 +18,9 @@ package com.spectralogic.ds3autogen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.models.xml.Annotation;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
@@ -112,9 +114,43 @@ class Ds3SpecConverter {
         for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
             builder.add(new Ds3ResponseType(
                     convertName(responseType.getType(), nameMapper),
-                    convertName(responseType.getComponentType(), nameMapper)));
+                    convertName(responseType.getComponentType(), nameMapper),
+                    getOriginalType(responseType.getComponentType(), nameMapper)));
         }
         return new Ds3ResponseCode(responseCode.getCode(), builder.build());
+    }
+
+    /**
+     * Gets the contract name of a type if said type is renamed within the NameMapper.
+     * If the type name does not change, then null is returned.
+     */
+    protected static String getOriginalType(final String type, final NameMapper nameMapper) {
+        if (isEmpty(type)) {
+            return null;
+        }
+        final String converted = convertName(type, nameMapper);
+        if (converted.equals(type)) {
+            return null;
+        }
+        return stripPathAndDollarSign(type);
+    }
+
+    /**
+     * This removes the path and anything proceeding a dollar sign. This is
+     * used to retrieve the original type name of a response type.
+     */
+    protected static String stripPathAndDollarSign(final String type) {
+        final String typeMinusPath = getNameFromPath(type);
+        final String[] parts = typeMinusPath.split("\\$");
+        switch (parts.length) {
+            case 0:
+            case 1:
+                return typeMinusPath;
+            case 2:
+                return parts[1];
+            default:
+                throw new IllegalArgumentException("A type name cannot have two dollar signs within it: " + type);
+        }
     }
 
     /**
@@ -135,7 +171,7 @@ class Ds3SpecConverter {
                     entry.getValue().getNameToMarshal(),
                     convertAllElements(entry.getValue().getElements(), nameMapper),
                     convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
-            builder.put(convertName(convertName(entry.getKey(), nameMapper), nameMapper), ds3Type);
+            builder.put(convertName(entry.getKey(), nameMapper), ds3Type);
         }
 
         return builder.build();
@@ -182,6 +218,7 @@ class Ds3SpecConverter {
         return builder.build();
     }
 
+    //TODO remove convertAllAnnotations and subsequent functions
     /**
      * Converts the contract names of all element types, component types, and
      * annotations to the SDK naming scheme, as defined within the NameMapper
@@ -198,48 +235,7 @@ class Ds3SpecConverter {
                     element.getName(),
                     convertName(element.getType(), nameMapper),
                     convertName(element.getComponentType(), nameMapper),
-                    convertAllAnnotations(element.getDs3Annotations(), nameMapper));
-            builder.add(convertedElement);
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts the contract names of all annotation names and annotation elements
-     * to the SDK naming scheme, as defined within the NameMapper
-     */
-    protected static ImmutableList<Ds3Annotation> convertAllAnnotations(
-            final ImmutableList<Ds3Annotation> annotations,
-            final NameMapper nameMapper) {
-        if (isEmpty(annotations)) {
-            return annotations;
-        }
-        final ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
-        for (final Ds3Annotation annotation : annotations) {
-            final Ds3Annotation convertedAnnotation = new Ds3Annotation(
-                    convertName(annotation.getName(), nameMapper),
-                    convertAllAnnotationElements(annotation.getDs3AnnotationElements(), nameMapper));
-            builder.add(convertedAnnotation);
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts the contract names of all annotation element values and value types
-     * to the SDK naming scheme, as defined within the NameMapper
-     */
-    protected static ImmutableList<Ds3AnnotationElement> convertAllAnnotationElements(
-            final ImmutableList<Ds3AnnotationElement> annotationElements,
-            final NameMapper nameMapper) {
-        if (isEmpty(annotationElements)) {
-            return annotationElements;
-        }
-        final ImmutableList.Builder<Ds3AnnotationElement> builder = ImmutableList.builder();
-        for (final Ds3AnnotationElement annotationElement : annotationElements) {
-            final Ds3AnnotationElement convertedElement = new Ds3AnnotationElement(
-                    annotationElement.getName(),
-                    convertName(annotationElement.getValue(), nameMapper),
-                    convertName(annotationElement.getValueType(), nameMapper));
+                    element.getDs3Annotations());
             builder.add(convertedElement);
         }
         return builder.build();
@@ -278,8 +274,8 @@ class Ds3SpecConverter {
     }
 
     /**
-     * Gets the name at the end of a path. If there is no path, then the original
-     * name is returned.
+     * Gets the path associated with a full contract name. If there is
+     * no path, then the original name is returned.
      */
     protected static String getPathFromName(final String contractName) {
         if (isEmpty(contractName)) {
@@ -292,9 +288,9 @@ class Ds3SpecConverter {
     }
 
     /**
-     * Gets the path associated with a full contract name. If there is no path, then
-     * the original name is returned. If the provided contract name is a path (i.e. it
-     * ends with a period '.', then an error is thrown.
+     * Gets the name at the end of a path. If there is no path, then the
+     * original name is returned. If the provided contract name is a path
+     * (i.e. it ends with a period '.', then an error is thrown.
      */
     protected static String getNameFromPath(final String contractName) {
         if (isEmpty(contractName)) {
