@@ -102,62 +102,6 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertAllAnnotationElements_NullList_Test() throws IOException, ParserException {
-        final ImmutableList<Ds3AnnotationElement> result = convertAllAnnotationElements(null, null);
-        assertThat(result, is(nullValue()));
-    }
-
-    @Test
-    public void convertAllAnnotationElements_EmptyList_Test() throws IOException, ParserException {
-        final ImmutableList<Ds3AnnotationElement> result = convertAllAnnotationElements(ImmutableList.of(), null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void convertAllAnnotationElements_FullList_Test() throws IOException, ParserException {
-        final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
-
-        final ImmutableList<Ds3AnnotationElement> input = ImmutableList.of(
-                new Ds3AnnotationElement(
-                        "testName",
-                        "TEST_VALUE",
-                        "com.spectralogic.s3.common.dao.domain.ds3.Test$BlobStoreTaskPriority"),
-                new Ds3AnnotationElement(
-                        "testName",
-                        "TEST_VALUE",
-                        "com.spectralogic.s3.common.dao.domain.ds3.Bucket"));
-        final ImmutableList<Ds3AnnotationElement> result = convertAllAnnotationElements(input, nameMapper);
-
-        assertThat(result.get(0).getValueType(), is("com.spectralogic.s3.common.dao.domain.ds3.Test$TEST_BlobStoreTaskPriority"));
-        assertThat(result.get(1).getValueType(), is("com.spectralogic.s3.common.dao.domain.ds3.TEST_Bucket"));
-    }
-
-    @Test
-    public void convertAllAnnotations_NullList_Test() throws IOException, ParserException {
-        final ImmutableList<Ds3Annotation> result = convertAllAnnotations(null, null);
-        assertThat(result, is(nullValue()));
-    }
-
-    @Test
-    public void convertAllAnnotations_EmptyList_Test() throws IOException, ParserException {
-        final ImmutableList<Ds3Annotation> result = convertAllAnnotations(ImmutableList.of(), null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void convertAllAnnotations_FullList_Test() throws IOException, ParserException {
-        final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
-
-        final ImmutableList<Ds3Annotation> input = ImmutableList.of(
-                new Ds3Annotation("com.spectralogic.s3.common.dao.domain.ds3.Bucket", null),
-                new Ds3Annotation("Integer", null));
-        final ImmutableList<Ds3Annotation> result = convertAllAnnotations(input, nameMapper);
-
-        assertThat(result.get(0).getName(), is("com.spectralogic.s3.common.dao.domain.ds3.TEST_Bucket"));
-        assertThat(result.get(1).getName(), is(input.get(1).getName()));
-    }
-
-    @Test
     public void convertAllEnumConstants_NullList_Test() throws IOException, ParserException {
         final ImmutableList<Ds3EnumConstant> result = convertAllEnumConstants(null, null);
         assertThat(result, is(nullValue()));

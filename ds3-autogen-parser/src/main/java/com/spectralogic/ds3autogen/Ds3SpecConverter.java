@@ -236,48 +236,6 @@ class Ds3SpecConverter {
                     convertName(element.getType(), nameMapper),
                     convertName(element.getComponentType(), nameMapper),
                     element.getDs3Annotations());
-                    //convertAllAnnotations(element.getDs3Annotations(), nameMapper));
-            builder.add(convertedElement);
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts the contract names of all annotation names and annotation elements
-     * to the SDK naming scheme, as defined within the NameMapper
-     */
-    protected static ImmutableList<Ds3Annotation> convertAllAnnotations(
-            final ImmutableList<Ds3Annotation> annotations,
-            final NameMapper nameMapper) {
-        if (isEmpty(annotations)) {
-            return annotations;
-        }
-        final ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
-        for (final Ds3Annotation annotation : annotations) {
-            final Ds3Annotation convertedAnnotation = new Ds3Annotation(
-                    convertName(annotation.getName(), nameMapper),
-                    convertAllAnnotationElements(annotation.getDs3AnnotationElements(), nameMapper));
-            builder.add(convertedAnnotation);
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts the contract names of all annotation element values and value types
-     * to the SDK naming scheme, as defined within the NameMapper
-     */
-    protected static ImmutableList<Ds3AnnotationElement> convertAllAnnotationElements(
-            final ImmutableList<Ds3AnnotationElement> annotationElements,
-            final NameMapper nameMapper) {
-        if (isEmpty(annotationElements)) {
-            return annotationElements;
-        }
-        final ImmutableList.Builder<Ds3AnnotationElement> builder = ImmutableList.builder();
-        for (final Ds3AnnotationElement annotationElement : annotationElements) {
-            final Ds3AnnotationElement convertedElement = new Ds3AnnotationElement(
-                    annotationElement.getName(),
-                    convertName(annotationElement.getValue(), nameMapper),
-                    convertName(annotationElement.getValueType(), nameMapper));
             builder.add(convertedElement);
         }
         return builder.build();
