@@ -278,8 +278,8 @@ class Ds3SpecConverter {
     }
 
     /**
-     * Gets the name at the end of a path. If there is no path, then the original
-     * name is returned.
+     * Gets the path associated with a full contract name. If there is
+     * no path, then the original name is returned.
      */
     protected static String getPathFromName(final String contractName) {
         if (isEmpty(contractName)) {
@@ -292,9 +292,9 @@ class Ds3SpecConverter {
     }
 
     /**
-     * Gets the path associated with a full contract name. If there is no path, then
-     * the original name is returned. If the provided contract name is a path (i.e. it
-     * ends with a period '.', then an error is thrown.
+     * Gets the name at the end of a path. If there is no path, then the
+     * original name is returned. If the provided contract name is a path
+     * (i.e. it ends with a period '.', then an error is thrown.
      */
     protected static String getNameFromPath(final String contractName) {
         if (isEmpty(contractName)) {
