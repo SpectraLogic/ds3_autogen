@@ -225,9 +225,10 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     /**
      * Determines if a given Ds3Type is the JobsApiBean type
+     * which is renamed to JobList in the NameMapper
      */
     private boolean isJobsApiBean(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".JobsApiBean");
+        return ds3Type.getName().endsWith(".JobList");
     }
 
     /**
