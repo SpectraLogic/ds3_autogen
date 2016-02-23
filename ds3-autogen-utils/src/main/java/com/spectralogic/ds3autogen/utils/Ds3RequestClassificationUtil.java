@@ -20,7 +20,6 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.enumsEqual;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceNotification;
@@ -230,36 +229,5 @@ public final class Ds3RequestClassificationUtil {
                 && request.includeIdInPath()
                 && request.getResource() == Resource.JOB
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
-    }
-
-    /**
-     * Determines if a Ds3Type is the HttpErrorResultApiBean Type
-     */
-    public static boolean isHttpErrorType(final Ds3Type ds3Type) {
-        if (isEmpty(ds3Type.getNameToMarshal()) || isEmpty(ds3Type.getElements())) {
-            return false;
-        }
-        final ImmutableList<String> elementNames = getElementNames(ds3Type);
-        return ds3Type.getNameToMarshal().equalsIgnoreCase("Error")
-                && elementNames.contains("Code")
-                && elementNames.contains("HttpErrorCode")
-                && elementNames.contains("Message")
-                && elementNames.contains("Resource")
-                && elementNames.contains("ResourceId");
-    }
-
-    /**
-     * Gets the list of Ds3Element names contained within the Ds3Type, or an
-     * empty list if no elements exist.
-     */
-    private static ImmutableList<String> getElementNames(final Ds3Type type) {
-        if (isEmpty(type.getElements())) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Ds3Element element : type.getElements()) {
-            builder.add(element.getName());
-        }
-        return builder.build();
     }
 }

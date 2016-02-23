@@ -31,10 +31,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGe
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.ChecksumTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.JobsApiBeanTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.TypeModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -56,6 +53,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -168,6 +167,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isJobsApiBean(ds3Type)) {
             return new JobsApiBeanTypeGenerator();
+        }
+        if (isCommonPrefixesType(ds3Type)) {
+            return new CommonPrefixGenerator();
         }
         return new BaseTypeGenerator();
     }
