@@ -18,9 +18,7 @@ package com.spectralogic.ds3autogen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
-import com.spectralogic.ds3autogen.models.xml.Annotation;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
@@ -218,7 +216,6 @@ class Ds3SpecConverter {
         return builder.build();
     }
 
-    //TODO remove convertAllAnnotations and subsequent functions
     /**
      * Converts the contract names of all element types, component types, and
      * annotations to the SDK naming scheme, as defined within the NameMapper
