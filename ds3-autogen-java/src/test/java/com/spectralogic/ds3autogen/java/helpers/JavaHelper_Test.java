@@ -420,6 +420,7 @@ public class JavaHelper_Test {
         assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
         assertThat(argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
+        assertThat(argToString(new Arguments("Date", "ArgName")), is("Long.toString(argName.getTime())"));
     }
 
     @Test
