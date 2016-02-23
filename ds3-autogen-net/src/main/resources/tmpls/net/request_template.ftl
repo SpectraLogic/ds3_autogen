@@ -8,6 +8,8 @@ namespace Ds3.Calls
     {
         <#include "common/required_args.ftl" />
 
+        <#include "common/optional_args.ftl" />
+
         <#include "common/constructor.ftl" />
 
         internal override HttpVerb Verb

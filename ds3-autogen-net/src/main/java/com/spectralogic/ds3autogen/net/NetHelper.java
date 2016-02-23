@@ -62,6 +62,23 @@ public final class NetHelper {
         }
     }
 
+    //TODO unit tests
+    /**
+     * Gets the nullable type of an argument, converting the argument from a Contract
+     * type to a nullable .net type.
+     */
+    public static String getNullableType(final Arguments arg) {
+        final String type = getType(arg);
+        switch (type) {
+            case "":
+                return "";
+            case "string":
+                return type;
+            default:
+                return type + "?";
+        }
+    }
+
     /**
      * Creates the .net code for converting an argument to a String.
      */
