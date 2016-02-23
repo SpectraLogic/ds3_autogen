@@ -27,6 +27,8 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  */
 public final class Ds3TypeClassificationUtil {
 
+    public static final String COMMON_PREFIX_ELEMENT = "CommonPrefixes";
+
     /**
      * Determines if a Ds3Type is the HttpErrorResultApiBean Type
      */
@@ -47,7 +49,7 @@ public final class Ds3TypeClassificationUtil {
      * Determines if a Ds3Type contains the CommonPrefixes element
      */
     public static boolean isCommonPrefixesType(final Ds3Type ds3Type) {
-        return containsElement(ds3Type, "CommonPrefixes");
+        return containsElement(ds3Type, COMMON_PREFIX_ELEMENT);
     }
 
     /**
