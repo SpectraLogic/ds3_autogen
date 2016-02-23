@@ -33,7 +33,6 @@ import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.COMMON
 public class CommonPrefixGenerator extends BaseTypeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommonPrefixGenerator.class);
-    //private static final String COMMON_PREFIX_ELEMENT = "CommonPrefixes";
 
     /**
      * Converts a list of Ds3Elements into a list of Element models, while special casing the
