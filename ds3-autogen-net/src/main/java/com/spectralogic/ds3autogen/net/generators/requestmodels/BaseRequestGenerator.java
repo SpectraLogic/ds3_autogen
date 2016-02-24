@@ -46,6 +46,9 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 optionalArgs);
     }
 
+    /**
+     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param
+     */
     @Override
     public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
         if(isEmpty(optionalParams)) {
@@ -60,11 +63,18 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         return argsBuilder.build();
     }
 
+    /**
+     * Gets the list of Arguments for creating the constructor, which is derived from the
+     * required parameters for standard commands
+     */
     @Override
     public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
         return GeneratorUtils.getRequiredArgs(ds3Request);
     }
 
+    /**
+     * Gets the list of required Arguments from a Ds3Request
+     */
     @Override
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         return GeneratorUtils.getRequiredArgs(ds3Request);

@@ -24,7 +24,10 @@ import com.spectralogic.ds3autogen.net.generators.requestmodels.BaseRequestGener
 import com.spectralogic.ds3autogen.net.generators.requestmodels.GetObjectRequestGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.RequestModelGenerator;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,6 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectRequest;
 
 public class NetCodeGenerator implements CodeGenerator {
