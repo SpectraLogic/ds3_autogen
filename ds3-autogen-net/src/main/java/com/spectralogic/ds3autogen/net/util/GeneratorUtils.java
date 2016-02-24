@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getArgFromResource;
@@ -104,7 +105,7 @@ public final class GeneratorUtils {
     }
 
     private static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
-        if(paramList == null) {
+        if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
 

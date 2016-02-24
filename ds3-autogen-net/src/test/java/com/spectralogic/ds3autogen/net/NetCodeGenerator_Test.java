@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.net;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,5 +62,29 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.extendsClass("GetObjectRequest", "Ds3Request", generatedCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", generatedCode));
         assertTrue(TestHelper.hasProperty("Path", "string", generatedCode));
+    }
+
+    @Test
+    public void getBucketRequest_Test() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+        final String requestName = "GetBucketRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
+
+        final String requestCode = codeGenerator.getRequestCode();
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass("GetBucketRequest", "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Delimiter", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "MaxKeys", "int", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Prefix", "string", requestCode));
     }
 }
