@@ -32,25 +32,49 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
 
         final String name = GeneratorUtils.toRequestName(ds3Request);
         final String path = GeneratorUtils.toRequestPath(ds3Request);
+        final ImmutableList<Arguments> constructorArgs = toConstructorArgsList(ds3Request);
         final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
 
-        return new BaseRequest(NetHelper.getInstance(), name, path, ds3Request.getHttpVerb(), requiredArgs, optionalArgs);
+        return new BaseRequest(
+                NetHelper.getInstance(),
+                name,
+                path,
+                ds3Request.getHttpVerb(),
+                constructorArgs,
+                requiredArgs,
+                optionalArgs);
     }
 
-    public static ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalparams) {
-        if(isEmpty(optionalparams)) {
+    /**
+     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param
+     */
+    @Override
+    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
+        if(isEmpty(optionalParams)) {
             return ImmutableList.of();
         }
 
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : optionalparams) {
+        for (final Ds3Param ds3Param : optionalParams) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
             argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
         }
         return argsBuilder.build();
     }
 
+    /**
+     * Gets the list of Arguments for creating the constructor, which is derived from the
+     * required parameters for standard commands
+     */
+    @Override
+    public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
+        return GeneratorUtils.getRequiredArgs(ds3Request);
+    }
+
+    /**
+     * Gets the list of required Arguments from a Ds3Request
+     */
     @Override
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         return GeneratorUtils.getRequiredArgs(ds3Request);

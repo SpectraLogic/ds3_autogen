@@ -25,6 +25,7 @@ public class BaseRequest {
     private final String name;
     private final String path;
     private final HttpVerb verb;
+    private final ImmutableList<Arguments> constructorArgs;
     private final ImmutableList<Arguments> requiredArgs;
     private final ImmutableList<Arguments> optionalArgs;
 
@@ -33,12 +34,14 @@ public class BaseRequest {
             final String name,
             final String path,
             final HttpVerb verb,
+            final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> requiredArgs,
             final ImmutableList<Arguments> optionalArgs) {
         this.netHelper = netHelper;
         this.name = name;
         this.path = path;
         this.verb = verb;
+        this.constructorArgs = constructorArgs;
         this.requiredArgs = requiredArgs;
         this.optionalArgs = optionalArgs;
     }
@@ -65,5 +68,9 @@ public class BaseRequest {
 
     public ImmutableList<Arguments> getOptionalArgs() {
         return optionalArgs;
+    }
+
+    public ImmutableList<Arguments> getConstructorArgs() {
+        return constructorArgs;
     }
 }

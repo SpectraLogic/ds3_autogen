@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 
 public interface RequestModelGeneratorUtils {
@@ -25,4 +26,14 @@ public interface RequestModelGeneratorUtils {
      * Gets the list of required Arguments from a Ds3Request
      */
     ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param
+     */
+    ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalparams);
+
+    /**
+     * Gets the list of Arguments for creating the constructor
+     */
+    ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request);
 }

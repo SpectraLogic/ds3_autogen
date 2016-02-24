@@ -15,6 +15,10 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.NetHelper;
+
 import java.util.regex.Pattern;
 
 import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
@@ -45,7 +49,11 @@ public final class TestHelper {
     /**
      * Checks if the generated code contains the specified optional parameter
      */
-    public static boolean hasOptionalParam(final String requestName, final String paramName, final String paramType, final String generatedCode) {
+    public static boolean hasOptionalParam(
+            final String requestName,
+            final String paramName,
+            final String paramType,
+            final String generatedCode) {
         final Pattern searchString = Pattern.compile("private\\s" + paramType + "\\???\\s_" + uncapFirst(paramName) + ";"
                 + "\\s+public\\s" + paramType + "\\???\\s" + paramName + "\\s+\\{"
                 + "\\s+get\\s\\{\\sreturn\\s_" + uncapFirst(paramName) + ";\\s\\}"
@@ -61,6 +69,18 @@ public final class TestHelper {
      */
     public static boolean hasRequiredParam(final String paramName, final String paramType, final String generatedCode) {
         final String searchString = "public " + paramType + " " + paramName + " { get; private set; }";
+        return generatedCode.contains(searchString);
+    }
+
+    /**
+     * Checks if the generated code contains a constructor for the request with the
+     * specified constructor parameters
+     */
+    public static boolean hasConstructor(
+            final String requestName,
+            final ImmutableList<Arguments> args,
+            final String generatedCode) {
+        final String searchString = "public " + requestName + "(" + NetHelper.constructor(args) + ") {";
         return generatedCode.contains(searchString);
     }
 }

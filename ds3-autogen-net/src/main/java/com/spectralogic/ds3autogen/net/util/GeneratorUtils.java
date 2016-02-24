@@ -104,7 +104,7 @@ public final class GeneratorUtils {
         return requiredArgs.build();
     }
 
-    private static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+    public static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
         if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
