@@ -17,19 +17,50 @@ package com.spectralogic.ds3autogen.net.utils;
 
 import java.util.regex.Pattern;
 
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+
 public final class TestHelper {
 
     private TestHelper() {
         // pass
     }
 
+    /**
+     * Checks if the generated code extends the specified class
+     */
     public static boolean extendsClass(final String getObjectRequestHandler, final String abstractRequest, final String generatedCode) {
         final String searchString = "public class " + getObjectRequestHandler + " : " + abstractRequest;
         return generatedCode.contains(searchString);
     }
 
+    /**
+     * Checks if the generated code has the specified property
+     */
     public static boolean hasProperty(final String propertyName, final String type, final String generatedCode) {
         final Pattern searchString = Pattern.compile("(internal\\s)?(override\\s)?" + type + " " + propertyName, Pattern.MULTILINE | Pattern.UNIX_LINES);
         return searchString.matcher(generatedCode).find();
+    }
+
+    /**
+     * Checks if the generated code contains the specified optional parameter
+     */
+    public static boolean hasOptionalParam(final String requestName, final String paramName, final String paramType, final String generatedCode) {
+        final Pattern searchString = Pattern.compile("private\\s" + paramType + "\\???\\s_" + uncapFirst(paramName) + ";"
+                + "\\s+public\\s" + paramType + "\\???\\s" + paramName + "\\s+\\{"
+                + "\\s+get\\s\\{\\sreturn\\s_" + uncapFirst(paramName) + ";\\s\\}"
+                + "\\s+set\\s\\{\\sWith" + capFirst(paramName) + "\\(value\\);\\s\\}"
+                + "\\s+\\}"
+                + "\\s+public\\s" + requestName + "\\sWith" + capFirst(paramName) + "\\(" + paramType + "\\???\\s" + uncapFirst(paramName) + "\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(generatedCode).find();
+    }
+
+    /**
+     * Checks if the generated code contains the specified required parameter
+     */
+    public static boolean hasRequiredParam(final String paramName, final String paramType, final String generatedCode) {
+        final String searchString = "public " + paramType + " " + paramName + " { get; private set; }";
+        return generatedCode.contains(searchString);
     }
 }

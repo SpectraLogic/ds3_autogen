@@ -81,5 +81,10 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.extendsClass("GetBucketRequest", "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Delimiter", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "MaxKeys", "int", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Prefix", "string", requestCode));
     }
 }

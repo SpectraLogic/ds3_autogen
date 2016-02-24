@@ -15,25 +15,45 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
 import static com.spectralogic.ds3autogen.utils.Helper.sortConstructorArgs;
 import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
 public final class NetHelper {
+
+    private final static Logger LOG = LoggerFactory.getLogger(NetHelper.class);
+
     private NetHelper() {
         // pass
     }
 
+    /**
+     * Creates a comma separated list of constructor arguments
+     */
     public static String constructor(final ImmutableList<Arguments> args) {
+        if (isEmpty(args)) {
+            return "";
+        }
         return sortConstructorArgs(args)
                 .stream()
                 .map(i -> getType(i) + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Converts a camel cased name to a lower hyphenated name
+     */
+    public static String camelToHyphen(final String str) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, str);
     }
 
     /**
@@ -42,27 +62,28 @@ public final class NetHelper {
      * @return The Java type of the Argument
      */
     public static String getType(final Arguments arg) {
-        if (arg.getType() == null) {
+        if (isEmpty(arg.getType())) {
+            LOG.error("Argument does not have a type: " + arg.getName());
             return "";
         }
 
-        switch (arg.getType()) {
+        switch (arg.getType().toLowerCase()) {
             case "void":
+            case "boolean":
                 return "bool";
-            case "Integer":
+            case "integer":
                 return "int";
-            case "String":
+            case "string":
                 return "string";
-            case "UUID":
+            case "uuid":
                 return "Guid";
-            case "ChecksumType":
+            case "checksumtype":
                 return arg.getType() + ".Type";
             default:
                 return arg.getType();
         }
     }
 
-    //TODO unit tests
     /**
      * Gets the nullable type of an argument, converting the argument from a Contract
      * type to a nullable .net type.
@@ -83,6 +104,10 @@ public final class NetHelper {
      * Creates the .net code for converting an argument to a String.
      */
     public static String argToString(final Arguments arg) {
+        if (isEmpty(arg.getType())) {
+            LOG.error("Argument does not have a type: " + arg.getName());
+            return "";
+        }
         switch (arg.getType().toLowerCase()) {
             case "boolean":
             case "void":

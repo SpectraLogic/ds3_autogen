@@ -1,6 +1,6 @@
 <#include "common/copyright.ftl" />
 
-using System;
+using System.Net;
 
 namespace Ds3.Calls
 {
