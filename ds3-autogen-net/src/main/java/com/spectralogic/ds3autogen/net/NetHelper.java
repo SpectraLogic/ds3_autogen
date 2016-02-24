@@ -126,7 +126,9 @@ public final class NetHelper {
     }
 
     /**
-     * Determines if a list of arguments contains the specified argument
+     * Determines if a list of arguments contains the specified argument.
+     * This is a wrapper function because Helper is not currently accessible
+     * from within the template
      */
     public static boolean containsArgument(final ImmutableList<Arguments> args, final String argName) {
         return Helper.containsArgument(args, argName);
