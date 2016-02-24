@@ -15,8 +15,10 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,7 +54,8 @@ public class NetCodeGenerator_Test {
         when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
 
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(NetCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(
+                NetCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, Paths.get("."));
@@ -78,7 +82,7 @@ public class NetCodeGenerator_Test {
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
-        assertTrue(TestHelper.extendsClass("GetBucketRequest", "Ds3Request", requestCode));
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
@@ -86,5 +90,74 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasOptionalParam(requestName, "Delimiter", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "MaxKeys", "int", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "Prefix", "string", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("String", "BucketName"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+    }
+
+    @Test
+    public void getObjectRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/getObjectRequest.xml");
+
+        final String requestCode = codeGenerator.getRequestCode();
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Job", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Offset", "long", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("Stream", "DestinationStream"),
+                new Arguments("UUID", "Job"),
+                new Arguments("long", "Offset"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
+        assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
+    }
+
+    @Test
+    public void getObjectSpectraS3Request_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "GetObjectSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/getObjectRequestSpectraS3.xml");
+
+        final String requestCode = codeGenerator.getRequestCode();
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "ObjectName"),
+                new Arguments("UUID", "BucketId"),
+                new Arguments("Stream", "DestinationStream"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
+        assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
     }
 }

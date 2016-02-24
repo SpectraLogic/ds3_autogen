@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.net;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,6 +123,13 @@ public final class NetHelper {
             default:
                 return uncapFirst(arg.getName()) + ".ToString()";
         }
+    }
+
+    /**
+     * Determines if a list of arguments contains the specified argument
+     */
+    public static boolean containsArgument(final ImmutableList<Arguments> args, final String argName) {
+        return Helper.containsArgument(args, argName);
     }
 
     private final static NetHelper instance = new NetHelper();

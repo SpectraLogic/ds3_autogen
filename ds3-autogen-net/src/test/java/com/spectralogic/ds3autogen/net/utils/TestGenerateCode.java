@@ -33,7 +33,7 @@ public class TestGenerateCode {
             final FileUtils fileUtils,
             final String inputFileName) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream("/input/getBucketRequest.xml"));
+        final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
 
         codeGenerator.generate(spec, fileUtils, Paths.get("."));

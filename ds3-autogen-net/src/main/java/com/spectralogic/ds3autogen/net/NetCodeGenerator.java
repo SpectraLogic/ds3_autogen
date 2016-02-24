@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.net.generators.requestmodels.GetObjectRequestGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.RequestModelGenerator;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import freemarker.template.*;
@@ -36,6 +37,8 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectRequest;
 
 public class NetCodeGenerator implements CodeGenerator {
 
@@ -94,10 +97,16 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isGetObjectRequest(ds3Request)) {
+            return new GetObjectRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
     private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        return config.getTemplate("request_template.ftl");
+        if (isGetObjectRequest(request)) {
+            return config.getTemplate("request/get_object_request.ftl");
+        }
+        return config.getTemplate("request/request_template.ftl");
     }
 }
