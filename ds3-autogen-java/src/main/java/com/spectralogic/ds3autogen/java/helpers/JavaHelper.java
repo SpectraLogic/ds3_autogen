@@ -269,6 +269,8 @@ public final class JavaHelper {
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
                 return "Integer.toString(" + uncapFirst(arg.getName()) + ")";
+            case "date":
+                return "Long.toString(" + uncapFirst(arg.getName()) + ".getTime())";
             default:
                 return uncapFirst(arg.getName()) + ".toString()";
         }
