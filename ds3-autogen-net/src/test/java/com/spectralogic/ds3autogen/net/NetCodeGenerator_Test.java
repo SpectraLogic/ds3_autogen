@@ -160,4 +160,34 @@ public class NetCodeGenerator_Test {
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
     }
+
+    @Test
+    public void CreatePutJobRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "PutBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/createPutJobRequest.xml");
+
+        final String requestCode = codeGenerator.getRequestCode();
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("MaxUploadSize", "long?", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
+    }
 }

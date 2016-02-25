@@ -51,10 +51,12 @@ public final class NetHelper {
     }
 
     /**
-     * Converts a camel cased name to a lower hyphenated name
+     * Converts a camel cased name to an underscored name.
+     * This is a wrapper function because Helper is not currently accessible
+     * from within the template
      */
-    public static String camelToHyphen(final String str) {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, str);
+    public static String camelToUnderscore(final String str) {
+        return Helper.camelToUnderscore(str);
     }
 
     /**

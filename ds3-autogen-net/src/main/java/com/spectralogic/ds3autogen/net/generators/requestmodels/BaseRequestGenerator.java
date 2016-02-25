@@ -41,6 +41,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 name,
                 path,
                 ds3Request.getHttpVerb(),
+                ds3Request.getOperation(),
                 constructorArgs,
                 requiredArgs,
                 optionalArgs);
@@ -57,8 +58,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
 
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : optionalParams) {
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            argsBuilder.add(GeneratorUtils.toArgument(ds3Param));
         }
         return argsBuilder.build();
     }

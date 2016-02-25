@@ -130,4 +130,13 @@ public final class GeneratorUtils {
     public static String toResponseName(final Ds3Request ds3Request) {
         return toRequestName(ds3Request).replace("Request", "Response");
     }
+
+    //TODO unit test
+    /**
+     * Converts a Ds3Param into an argument
+     */
+    public static Arguments toArgument(final Ds3Param ds3Param) {
+        final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+        return new Arguments(paramType, ds3Param.getName());
+    }
 }
