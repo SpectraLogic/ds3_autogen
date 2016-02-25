@@ -21,7 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
-import com.spectralogic.ds3autogen.net.util.GeneratorUtils;
+import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 

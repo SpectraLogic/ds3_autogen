@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.util.GeneratorUtils;
+import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
