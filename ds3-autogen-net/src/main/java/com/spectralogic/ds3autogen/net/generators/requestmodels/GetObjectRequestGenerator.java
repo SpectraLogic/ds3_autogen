@@ -27,7 +27,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
      * The get object request has no optional arguments
      */
     @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalparams) {
+    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
         return ImmutableList.of();
     }
 

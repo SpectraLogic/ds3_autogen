@@ -28,6 +28,11 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getArgFromR
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
+/**
+ * Provides a series of static utility functions that are used within
+ * the Net package generators to convert the data from Ds3Requests and
+ * Ds3Types into models that are then used within the templates
+ */
 public final class GeneratorUtils {
 
     private GeneratorUtils() {
