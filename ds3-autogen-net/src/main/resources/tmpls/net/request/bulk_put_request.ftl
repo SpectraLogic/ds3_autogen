@@ -37,21 +37,7 @@ namespace Ds3.Calls
         }
 
 
-        internal override HttpVerb Verb
-        {
-            get
-            {
-                return HttpVerb.${verb.toString()}
-            }
-        }
-
-        internal override string Path
-        {
-            get
-            {
-                return "${path}";
-            }
-        }
+        <#include "common/http_verb_and_path.ftl" />
 
         internal override Stream GetContentStream()
         {

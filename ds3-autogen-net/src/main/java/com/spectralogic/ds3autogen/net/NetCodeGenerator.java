@@ -20,10 +20,7 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.net.generators.requestmodels.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.net.generators.requestmodels.BulkPutRequestGenerator;
-import com.spectralogic.ds3autogen.net.generators.requestmodels.GetObjectRequestGenerator;
-import com.spectralogic.ds3autogen.net.generators.requestmodels.RequestModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -41,6 +38,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkGetRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkPutRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectRequest;
 
@@ -119,6 +117,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkPutRequest(ds3Request)) {
             return new BulkPutRequestGenerator();
         }
+        if (isBulkGetRequest(ds3Request)) {
+            return new BulkGetRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -133,6 +134,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isBulkPutRequest(request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
+        }
+        if (isBulkGetRequest(request)) {
+            return config.getTemplate("request/bulk_get_request.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

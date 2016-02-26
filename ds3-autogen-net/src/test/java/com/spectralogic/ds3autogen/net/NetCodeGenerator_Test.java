@@ -190,4 +190,49 @@ public class NetCodeGenerator_Test {
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
     }
+
+    @Test
+    public void createGetJobRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "GetBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/createGetJobRequest.xml");
+
+        final String requestCode = codeGenerator.getRequestCode();
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<string>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee?", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Priority", "Priority", requestCode));
+        assertFalse(TestHelper.hasOptionalParam(requestName, "ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("IEnumerable<string>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        final ImmutableList<Arguments> secondConstructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, secondConstructorArgs, requestCode));
+
+        assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_get\");"));
+        assertTrue(requestCode.contains("public GetBulkJobSpectraS3Request WithChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
+    }
 }
