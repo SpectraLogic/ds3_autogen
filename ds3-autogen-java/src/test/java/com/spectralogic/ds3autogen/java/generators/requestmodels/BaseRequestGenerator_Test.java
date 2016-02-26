@@ -67,7 +67,7 @@ public class BaseRequestGenerator_Test {
         final Ds3Request verifyPhysicalPlacement = getRequestVerifyPhysicalPlacement();
         assertThat(getSpectraDs3RequestPath(verifyPhysicalPlacement), is("\"/_rest_/bucket/\" + this.bucketName"));
 
-        final Ds3Request bulkRequest  = getRequestBulkGet();
+        final Ds3Request bulkRequest = getRequestBulkGet();
         assertThat(getSpectraDs3RequestPath(bulkRequest), is("\"/_rest_/bucket/\" + this.bucketName"));
 
         final Ds3Request spectraS3GetObject = getRequestSpectraS3GetObject();

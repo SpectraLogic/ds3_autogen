@@ -98,7 +98,7 @@ public final class GeneratorUtils {
     }
 
     /**
-     * Retries a list of arguments from the Ds3Request, including converting the required
+     * Retrieves a list of arguments from the Ds3Request, including converting the required
      * parameters to arguments, and retrieving the arguments from the request header info
      */
     public static ImmutableList<Arguments> getRequiredArgs(
