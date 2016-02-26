@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -135,6 +136,23 @@ public final class NetHelper {
      */
     public static boolean containsArgument(final ImmutableList<Arguments> args, final String argName) {
         return Helper.containsArgument(args, argName);
+    }
+
+    /**
+     * Returns the .net code for the right-hand-side of an assignment. This is
+     * used to assign required variables within a constructor. Return examples:
+     * IEnumerable list: myList.ToList()
+     * Default: myArgument
+     */
+    public static String paramAssignmentRightValue(final Arguments arg) {
+        if (isEmpty(arg.getName()) || isEmpty(arg.getType())) {
+            return "";
+        }
+        final Pattern patternIEnumerable = Pattern.compile("IEnumerable<\\w+>");
+        if (patternIEnumerable.matcher(arg.getType()).find()) {
+            return Helper.uncapFirst(arg.getName()) + ".ToList()";
+        }
+        return Helper.uncapFirst(arg.getName());
     }
 
     private final static NetHelper instance = new NetHelper();

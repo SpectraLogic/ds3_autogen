@@ -101,4 +101,13 @@ public class NetHelper_Test {
         assertThat(argToString(new Arguments("ChecksumType", "ArgName")), is("argName.ToString()"));
         assertThat(argToString(new Arguments("OtherType", "ArgName")), is("argName.ToString()"));
     }
+
+    @Test
+    public void paramAssignmentRightValue_Test() {
+        assertThat(paramAssignmentRightValue(new Arguments(null, null)), is(""));
+        assertThat(paramAssignmentRightValue(new Arguments("", "")), is(""));
+        assertThat(paramAssignmentRightValue(new Arguments("String", "ArgName")), is("argName"));
+        assertThat(paramAssignmentRightValue(new Arguments("int", "ArgName")), is("argName"));
+        assertThat(paramAssignmentRightValue(new Arguments("IEnumerable<SomeArg>", "ArgName")), is("argName.ToList()"));
+    }
 }

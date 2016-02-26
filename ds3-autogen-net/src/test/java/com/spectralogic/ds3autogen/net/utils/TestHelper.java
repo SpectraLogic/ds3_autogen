@@ -80,7 +80,7 @@ public final class TestHelper {
             final String requestName,
             final ImmutableList<Arguments> args,
             final String generatedCode) {
-        final String searchString = "public " + requestName + "(" + NetHelper.constructor(args) + ") {";
+        final String searchString = "public " + requestName + "(" + NetHelper.constructor(args) + ")";
         return generatedCode.contains(searchString);
     }
 }
