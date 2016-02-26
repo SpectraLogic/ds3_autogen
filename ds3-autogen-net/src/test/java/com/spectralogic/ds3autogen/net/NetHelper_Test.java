@@ -26,13 +26,6 @@ import static org.junit.Assert.*;
 public class NetHelper_Test {
 
     @Test
-    public void camelToHyphen_Test() {
-        assertThat(camelToHyphen(""), is(""));
-        assertThat(camelToHyphen("Simple"), is("simple"));
-        assertThat(camelToHyphen("TestThisString"), is("test-this-string"));
-    }
-
-    @Test
     public void constructor_NullList_Test() {
         final String result = constructor(null);
         assertThat(result, is(""));

@@ -10,11 +10,11 @@
         {
             this._${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
             if (${arg.getName()?uncap_first} != null) {
-                this.QueryParams.Add("${netHelper.camelToHyphen(arg.getName())}", ${netHelper.argToString(arg)});
+                this.QueryParams.Add("${netHelper.camelToUnderscore(arg.getName())}", ${netHelper.argToString(arg)});
             }
             else
             {
-                this.QueryParams.Remove("${netHelper.camelToHyphen(arg.getName())}");
+                this.QueryParams.Remove("${netHelper.camelToUnderscore(arg.getName())}");
             }
             return this;
         }

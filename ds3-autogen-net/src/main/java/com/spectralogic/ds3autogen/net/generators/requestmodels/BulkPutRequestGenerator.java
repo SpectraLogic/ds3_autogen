@@ -21,35 +21,47 @@ import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
-public class GetObjectRequestGenerator extends BaseRequestGenerator {
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+
+public class BulkPutRequestGenerator extends BaseRequestGenerator {
 
     /**
-     * The get object request has no optional arguments
-     */
-    @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalparams) {
-        return ImmutableList.of();
-    }
-
-    /**
-     * The get object request has both optional and required params as required arguments.
+     * Gets the list of required Arguments from a Bulk Put request and adds a list
+     * of Ds3Objects
      */
     @Override
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.addAll(GeneratorUtils.getArgsFromParamList(ds3Request.getOptionalQueryParams()));
+        builder.add(new Arguments("List<Ds3Object>", "Objects"));
         return builder.build();
     }
 
     /**
-     * Gets the optional and required params, and adds DestinationStream
+     * Gets the list of Arguments for creating the constructor, which is derived from the
+     * required parameters for standard commands
      */
     @Override
     public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(toRequiredArgumentsList(ds3Request));
-        builder.add(new Arguments("Stream", "DestinationStream"));
-        return builder.build();
+        return toRequiredArgumentsList(ds3Request);
+    }
+
+    /**
+     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Params
+     * excluding the MaxUploadSize which is special cased within the template
+     */
+    @Override
+    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
+        if(isEmpty(optionalParams)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
+        for (final Ds3Param ds3Param : optionalParams) {
+            if (!ds3Param.getName().equals("MaxUploadSize")) {
+                argsBuilder.add(GeneratorUtils.toArgument(ds3Param));
+            }
+        }
+        return argsBuilder.build();
     }
 }

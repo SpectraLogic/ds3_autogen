@@ -91,9 +91,23 @@ public final class Ds3RequestClassificationUtil {
      *         START_BULK_PUT. Else it returns false.
      */
     public static boolean isBulkRequest(final Ds3Request ds3Request) {
+        return isBulkPutRequest(ds3Request) || isBulkGetRequest(ds3Request);
+    }
+
+    /**
+     * Determines if the request is a Bulk Put request
+     */
+    public static boolean isBulkPutRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null
-                && (ds3Request.getOperation() == Operation.START_BULK_GET
-                        || ds3Request.getOperation() == Operation.START_BULK_PUT);
+                && ds3Request.getOperation() == Operation.START_BULK_PUT;
+    }
+
+    /**
+     * Determines if the request is a Bulk Get request
+     */
+    public static boolean isBulkGetRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null
+                && ds3Request.getOperation() == Operation.START_BULK_GET;
     }
 
     /**

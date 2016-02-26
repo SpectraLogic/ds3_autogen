@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.net;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -25,9 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
-import static com.spectralogic.ds3autogen.utils.Helper.sortConstructorArgs;
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+import static com.spectralogic.ds3autogen.utils.Helper.*;
 
 public final class NetHelper {
 
@@ -51,10 +48,12 @@ public final class NetHelper {
     }
 
     /**
-     * Converts a camel cased name to a lower hyphenated name
+     * Converts a camel cased name to an underscored name.
+     * This is a wrapper function because Helper is not currently accessible
+     * from within the template
      */
-    public static String camelToHyphen(final String str) {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, str);
+    public static String camelToUnderscore(final String str) {
+        return Helper.camelToUnderscore(str);
     }
 
     /**
