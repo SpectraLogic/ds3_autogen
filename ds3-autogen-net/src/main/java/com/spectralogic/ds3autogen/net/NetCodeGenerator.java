@@ -44,6 +44,9 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInter
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkPutRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectRequest;
 
+/**
+ * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
+ */
 public class NetCodeGenerator implements CodeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
@@ -75,6 +78,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
     }
 
+    /**
+     * Generates all code associated with the Ds3ApiSpec
+     */
     private void generateCommands() throws TemplateException, IOException {
         final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
         if (isEmpty(requests)) {
@@ -86,6 +92,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
     }
 
+    /**
+     * Generates the .net code for the request handler described in the Ds3Request
+     */
     private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
@@ -100,6 +109,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
     }
 
+    /**
+     * Retrieves the associated .net request generator for the specified Ds3Request
+     */
     private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
         if (isGetObjectRequest(ds3Request)) {
             return new GetObjectRequestGenerator();
@@ -110,6 +122,11 @@ public class NetCodeGenerator implements CodeGenerator {
         return new BaseRequestGenerator();
     }
 
+
+    /**
+     * Retrieves the appropriate template that will generate the .net request handler
+     * code for this Ds3Request
+     */
     private Template getRequestTemplate(final Ds3Request request) throws IOException {
         if (isGetObjectRequest(request)) {
             return config.getTemplate("request/get_object_request.ftl");

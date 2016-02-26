@@ -26,6 +26,10 @@ import java.util.stream.Collectors;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
 
+/**
+ * Series of static functions that are used within the Net module template
+ * files to help generate the .Net SDK code
+ */
 public final class NetHelper {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetHelper.class);
