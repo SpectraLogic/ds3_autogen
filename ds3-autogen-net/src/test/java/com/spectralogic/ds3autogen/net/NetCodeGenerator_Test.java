@@ -87,10 +87,16 @@ public class NetCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("String", "BucketName"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
+        final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
 
-        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 
     @Test
@@ -127,10 +133,16 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
 
-        assertTrue(TestHelper.hasVoidCommand(requestName.replace("Request", ""), clientCode));
+        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 
     @Test
@@ -163,10 +175,16 @@ public class NetCodeGenerator_Test {
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
 
-        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 
     @Test
@@ -198,10 +216,16 @@ public class NetCodeGenerator_Test {
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
 
+        final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
 
-        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 
     @Test
@@ -248,9 +272,15 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
         assertTrue(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
 
+        final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
 
-        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 }

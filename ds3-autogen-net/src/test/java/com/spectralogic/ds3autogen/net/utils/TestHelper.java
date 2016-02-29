@@ -113,4 +113,11 @@ public final class TestHelper {
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return searchString.matcher(clientCode).find();
     }
+
+    public static boolean hasIDsCommand(final String commandName, final String idsClientCode) {
+        final Pattern searchString = Pattern.compile(
+                "(" + commandName + "Response)?(void)? " + commandName + "\\(" + commandName + "Request request\\);",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(idsClientCode).find();
+    }
 }

@@ -99,6 +99,16 @@ public class NetCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             clientTmpl.process(client, writer);
         }
+
+        final Template ids3ClientTmpl = config.getTemplate("client/ids3_client.ftl");
+        final Path ids3ClientPath = toClientPath("IDs3Client.cs");
+
+        LOG.info("Getting outputstream for file:" + ids3ClientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(ids3ClientPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            ids3ClientTmpl.process(client, writer);
+        }
     }
 
     /**

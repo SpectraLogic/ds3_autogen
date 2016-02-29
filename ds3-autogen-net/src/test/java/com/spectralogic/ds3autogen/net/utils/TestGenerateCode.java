@@ -21,8 +21,10 @@ public class TestGenerateCode {
 
     protected final ByteArrayOutputStream requestOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
+    protected final ByteArrayOutputStream idsClientOutputStream;
     protected String requestCode;
     protected String clientCode;
+    protected String idsClientCode;
 
     public enum PathType { REQUEST, RESPONSE }
 
@@ -32,6 +34,7 @@ public class TestGenerateCode {
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
+        this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
     }
 
     public void generateCode(
@@ -45,6 +48,7 @@ public class TestGenerateCode {
 
         requestCode = new String(requestOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
+        idsClientCode = new String(idsClientOutputStream.toByteArray());
     }
 
     protected static ByteArrayOutputStream setupOutputStream(
@@ -76,5 +80,9 @@ public class TestGenerateCode {
 
     public String getClientCode() {
         return this.clientCode;
+    }
+
+    public String getIdsClientCode() {
+        return this.idsClientCode;
     }
 }
