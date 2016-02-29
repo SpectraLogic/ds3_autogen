@@ -83,4 +83,34 @@ public final class TestHelper {
         final String searchString = "public " + requestName + "(" + NetHelper.constructor(args) + ")";
         return generatedCode.contains(searchString);
     }
+
+    /**
+     * Checks if the client code contains the given command. This assumes that the command has a
+     * payload, and that it is not void.
+     */
+    public static boolean hasPayloadCommand(final String commandName, final String clientCode) {
+        final Pattern searchString = Pattern.compile(
+                "public " + commandName + "Response " + commandName + "\\(" + commandName + "Request request\\)"
+                + "\\s+\\{"
+                + "\\s+return new " + commandName + "ResponseParser\\(\\)\\.Parse\\(request, _netLayer\\.Invoke\\(request\\)\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(clientCode).find();
+    }
+
+    /**
+     * Checks if the client code contains the given command. This assumes that the command has
+     * no payload, i.e. that it returns void
+     */
+    public static boolean hasVoidCommand(final String commandName, final String clientCode) {
+        final Pattern searchString = Pattern.compile("public void " + commandName + "\\(" + commandName + "Request request\\)"
+                + "\\s+\\{"
+                + "\\s+using \\(var response = _netLayer\\.Invoke\\(request\\)\\)"
+                + "\\s+\\{"
+                + "\\s+ResponseParseUtilities\\.HandleStatusCode\\(response, HttpStatusCode\\.(OK)?(NoContent)?\\);"
+                + "\\s+\\}"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(clientCode).find();
+    }
 }

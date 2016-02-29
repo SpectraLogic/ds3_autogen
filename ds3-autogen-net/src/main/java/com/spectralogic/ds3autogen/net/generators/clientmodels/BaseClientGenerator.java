@@ -60,7 +60,43 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
     protected static VoidCommand toVoidCommand(final Ds3Request ds3Request) {
         return new VoidCommand(
                 ClientGeneratorUtil.removePath(ds3Request.getName()),
-                ClientGeneratorUtil.toCommandName(ds3Request.getName()));
+                ClientGeneratorUtil.toCommandName(ds3Request.getName()),
+                getHttpStatusCode(ds3Request.getDs3ResponseCodes()));
+    }
+
+    /**
+     * Gets the value of the HttpStatusCode associated with the void response type.
+     * code > 300: empty string (error)
+     * code == 204: HttpStatusCode.NoContent
+     * Else: HttpStatusCode.OK
+     */
+    protected static String getHttpStatusCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            LOG.error("There are no response codes");
+            return "";
+        }
+        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (isNotErrorCode(responseCode.getCode())) {
+                builder.add(responseCode.getCode());
+            }
+        }
+        final ImmutableList<Integer> codes = builder.build();
+        if (isEmpty(codes)) {
+            LOG.error("There are no non-error response codes within the list: " + codes.toString());
+            return "";
+        }
+        if (codes.contains(204)) {
+            return "NoContent";
+        }
+        return "OK";
+    }
+
+    /**
+     * Determines if a given response code denotes an error response
+     */
+    protected static boolean isNotErrorCode(final int responseCode) {
+        return responseCode < 300;
     }
 
     /**
@@ -133,7 +169,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
             return ImmutableList.of();
         }
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (responseCode.getCode() < 300) {
+            if (isNotErrorCode(responseCode.getCode())) {
                 builder.add(getResponseType(responseCode.getDs3ResponseTypes()));
             }
         }

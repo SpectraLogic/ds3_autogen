@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net.generators.clientmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
@@ -189,5 +190,43 @@ public class BaseClientGenerator_Test {
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getRequestName(), is("OneRequest"));
         assertThat(result.get(1).getRequestName(), is("ThreeRequest"));
+    }
+
+    @Test
+    public void isNotErrorCode_Test() {
+        assertTrue(isNotErrorCode(100));
+        assertTrue(isNotErrorCode(200));
+        assertTrue(isNotErrorCode(299));
+        assertFalse(isNotErrorCode(300));
+        assertFalse(isNotErrorCode(400));
+    }
+
+    @Test
+    public void getHttpStatusCode_NullList_Test() {
+        final String result = getHttpStatusCode(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getHttpStatusCode_EmptyList_Test() {
+        final String result = getHttpStatusCode(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getHttpStatusCode_NoContent_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = createTestResponseCodes(false);
+        final String result = getHttpStatusCode(responseCodes);
+        assertThat(result, is("NoContent"));
+    }
+
+    @Test
+    public void getHttpStatusCode_OK_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(201, null));
+
+        final String result = getHttpStatusCode(responseCodes);
+        assertThat(result, is("OK"));
     }
 }

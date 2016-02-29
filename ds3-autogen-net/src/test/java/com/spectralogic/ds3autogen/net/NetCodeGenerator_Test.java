@@ -16,10 +16,11 @@
 package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.FileUtils;
+import com.spectralogic.ds3autogen.api.ParserException;
+import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
+import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
 import org.junit.Rule;
@@ -28,15 +29,11 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class NetCodeGenerator_Test {
 
@@ -47,25 +44,21 @@ public class NetCodeGenerator_Test {
 
     @Test
     public void simpleRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final Path requestPath = Paths.get("./Ds3/Calls/GetObjectRequest.cs");
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024 * 8);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
 
-        when(fileUtils.getOutputFile(requestPath)).thenReturn(outputStream);
+        codeGenerator.generateCode(fileUtils, "/input/singleRequestHandler.xml");
+        final String requestCode = codeGenerator.getRequestCode();
 
-        final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(
-                NetCodeGenerator_Test.class.getResourceAsStream("/input/singleRequestHandler.xml"));
-        final CodeGenerator codeGenerator = new NetCodeGenerator();
+        LOG.info("Generated code:\n" + requestCode);
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
-
-        final String generatedCode = new String(outputStream.toByteArray());
-        LOG.info("Generated code:\n" + generatedCode);
-
-        assertTrue(TestHelper.extendsClass("GetObjectRequest", "Ds3Request", generatedCode));
-        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", generatedCode));
-        assertTrue(TestHelper.hasProperty("Path", "string", generatedCode));
+        assertTrue(TestHelper.extendsClass("GetObjectRequest", "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
     }
 
     @Test
@@ -93,6 +86,11 @@ public class NetCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("String", "BucketName"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
     }
 
     @Test
@@ -128,6 +126,11 @@ public class NetCodeGenerator_Test {
 
         assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
+
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasVoidCommand(requestName.replace("Request", ""), clientCode));
     }
 
     @Test
@@ -159,6 +162,11 @@ public class NetCodeGenerator_Test {
 
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
+
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
     }
 
     @Test
@@ -189,6 +197,11 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
+
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
     }
 
     @Test
@@ -234,5 +247,10 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("public GetBulkJobSpectraS3Request WithChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
         assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
         assertTrue(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
+
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(requestName.replace("Request", ""), clientCode));
     }
 }

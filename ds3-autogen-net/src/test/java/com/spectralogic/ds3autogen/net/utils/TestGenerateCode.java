@@ -17,8 +17,12 @@ import static org.mockito.Mockito.when;
  */
 public class TestGenerateCode {
 
+    final static String CLIENT_PATH = "./Ds3/";
+
     protected final ByteArrayOutputStream requestOutputStream;
+    protected final ByteArrayOutputStream clientOutputStream;
     protected String requestCode;
+    protected String clientCode;
 
     public enum PathType { REQUEST, RESPONSE }
 
@@ -27,6 +31,7 @@ public class TestGenerateCode {
             final String requestName,
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
+        this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
     }
 
     public void generateCode(
@@ -39,6 +44,7 @@ public class TestGenerateCode {
         codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         requestCode = new String(requestOutputStream.toByteArray());
+        clientCode = new String(clientOutputStream.toByteArray());
     }
 
     protected static ByteArrayOutputStream setupOutputStream(
@@ -66,5 +72,9 @@ public class TestGenerateCode {
 
     public String getRequestCode() {
         return this.requestCode;
+    }
+
+    public String getClientCode() {
+        return this.clientCode;
     }
 }
