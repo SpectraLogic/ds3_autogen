@@ -123,7 +123,6 @@ public class NetCodeGenerator implements CodeGenerator {
         return new BaseRequestGenerator();
     }
 
-
     /**
      * Retrieves the appropriate template that will generate the .net request handler
      * code for this Ds3Request
