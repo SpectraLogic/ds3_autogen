@@ -72,6 +72,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -87,6 +88,7 @@ public class NetCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("String", "BucketName"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -97,6 +99,10 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
     }
 
     @Test
@@ -110,6 +116,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -133,6 +140,7 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -143,6 +151,10 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
     }
 
     @Test
@@ -156,6 +168,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequestSpectraS3.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -175,6 +188,7 @@ public class NetCodeGenerator_Test {
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -185,6 +199,10 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
     }
 
     @Test
@@ -198,6 +216,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/createPutJobRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -216,6 +235,7 @@ public class NetCodeGenerator_Test {
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -226,6 +246,10 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
     }
 
     @Test
@@ -239,6 +263,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/createGetJobRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -272,6 +297,7 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
         assertTrue(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -282,5 +308,9 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
     }
 }
