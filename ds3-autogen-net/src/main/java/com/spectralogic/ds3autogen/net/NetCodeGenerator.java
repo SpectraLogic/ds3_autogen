@@ -20,7 +20,10 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
+import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
+import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -38,9 +41,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkGetRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkPutRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -49,6 +50,7 @@ public class NetCodeGenerator implements CodeGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
+    private static final String CLIENT_NAMESPACE = "Ds3.";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -70,17 +72,56 @@ public class NetCodeGenerator implements CodeGenerator {
         this.destDir = destDir;
 
         try {
-            generateCommands();
+            final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+            generateCommands(requests);
+            generateClient(requests);
         } catch (final TemplateException e) {
             e.printStackTrace();
         }
     }
 
     /**
+     * Generates the .net code for the client
+     */
+    private void generateClient(final ImmutableList<Ds3Request> requests) throws IOException, TemplateException {
+        if (isEmpty(requests)) {
+            LOG.info("Not generating client: no requests.");
+            return;
+        }
+        final Template clientTmpl = config.getTemplate("client/ds3_client.ftl");
+        final ClientModelGenerator<?> clientGenerator = new BaseClientGenerator();
+        final BaseClient client = clientGenerator.generate(requests);
+        final Path clientPath = toClientPath("Ds3Client.cs");
+
+        LOG.info("Getting outputstream for file:" + clientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            clientTmpl.process(client, writer);
+        }
+
+        final Template ids3ClientTmpl = config.getTemplate("client/ids3_client.ftl");
+        final Path ids3ClientPath = toClientPath("IDs3Client.cs");
+
+        LOG.info("Getting outputstream for file:" + ids3ClientPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(ids3ClientPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            ids3ClientTmpl.process(client, writer);
+        }
+    }
+
+    /**
+     * Converts a file name into the path containing said file within the client path
+     */
+    private Path toClientPath(final String fileName) {
+        return destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(CLIENT_NAMESPACE.replace(".", "/") + "/" + fileName)));
+    }
+
+    /**
      * Generates all code associated with the Ds3ApiSpec
      */
-    private void generateCommands() throws TemplateException, IOException {
-        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+    private void generateCommands(final ImmutableList<Ds3Request> requests) throws TemplateException, IOException {
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
@@ -122,7 +163,6 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         return new BaseRequestGenerator();
     }
-
 
     /**
      * Retrieves the appropriate template that will generate the .net request handler
