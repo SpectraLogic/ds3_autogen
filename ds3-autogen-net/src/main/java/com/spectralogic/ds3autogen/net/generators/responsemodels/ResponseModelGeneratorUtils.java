@@ -16,26 +16,16 @@
 package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
-import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
-public class BaseResponseGenerator implements ResponseModelGenerator<BaseResponse>, ResponseModelGeneratorUtils {
+/**
+ * Contains the interface for functions that are used to convert a Ds3Request into
+ * the Response model within Response Generators
+ */
+public interface ResponseModelGeneratorUtils {
 
-    @Override
-    public BaseResponse generate(final Ds3Request ds3Request) {
-        final String name = GeneratorUtils.toResponseName(ds3Request);
-        final ImmutableList<Integer> expectedStatusCodes = toExpectedStatusCodes(ds3Request.getDs3ResponseCodes());
-
-        return new BaseResponse(
-                name,
-                expectedStatusCodes);
-    }
-
-    @Override
-    public ImmutableList<Integer> toExpectedStatusCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        //TODO implement stub function
-        return null;
-    }
+    /**
+     * Gets the list of response codes from a list of Ds3ResponseCodes
+     */
+    ImmutableList<Integer> toExpectedStatusCodes(final ImmutableList<Ds3ResponseCode> responseCodes);
 }

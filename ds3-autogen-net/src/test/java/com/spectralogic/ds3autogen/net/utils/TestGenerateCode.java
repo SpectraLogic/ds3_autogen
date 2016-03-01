@@ -35,9 +35,11 @@ public class TestGenerateCode {
     final static String CLIENT_PATH = "./Ds3/";
 
     protected final ByteArrayOutputStream requestOutputStream;
+    protected final ByteArrayOutputStream responseOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
     protected String requestCode;
+    protected String responseCode;
     protected String clientCode;
     protected String idsClientCode;
 
@@ -48,6 +50,7 @@ public class TestGenerateCode {
             final String requestName,
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
+        this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
         this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
     }
@@ -66,6 +69,7 @@ public class TestGenerateCode {
         codeGenerator.generate(spec, fileUtils, Paths.get("."));
 
         requestCode = new String(requestOutputStream.toByteArray());
+        responseCode = new String(responseOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
     }
@@ -102,6 +106,10 @@ public class TestGenerateCode {
 
     public String getRequestCode() {
         return this.requestCode;
+    }
+
+    public String getResponseCode() {
+        return this.responseCode;
     }
 
     public String getClientCode() {
