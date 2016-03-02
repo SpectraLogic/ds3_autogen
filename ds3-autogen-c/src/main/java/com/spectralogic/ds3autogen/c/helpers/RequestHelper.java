@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
@@ -58,5 +59,34 @@ public final class RequestHelper {
             }
         }
         return false;
+    }
+
+    public static String getAmazonS3InitParams(final ImmutableMap<String, String> requiredArgs) {
+        if (requiredArgs.containsKey("bucketName")) {
+            if (requiredArgs.containsKey("objectName")) {
+                return "const char* bucket_name, const char* object_name";
+            } else {
+                return "const char* bucket_name";
+            }
+        }
+        return "void";
+    }
+
+    public static String getSpectraS3InitParams(final boolean isResourceIdRequired) {
+        if (isResourceIdRequired) {
+            return "const char* resource_id";
+        }
+        return "void";
+    }
+
+    /**
+     * FreeMarker work around
+     * @param immutableMap
+     * @param key
+     * @return
+     */
+    public static boolean containsKey(final ImmutableMap<String, String> immutableMap, final String key) {
+        LOG.info("looking for key " + key);
+        return immutableMap.containsKey(key);
     }
 }

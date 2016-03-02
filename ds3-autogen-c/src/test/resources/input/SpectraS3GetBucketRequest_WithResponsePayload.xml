@@ -1,26 +1,73 @@
 <Data>
     <Contract>
         <RequestHandlers>
-            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketRequestHandler">
-                <Request BucketRequirement="REQUIRED" HttpVerb="GET" IncludeIdInPath="false" ObjectRequirement="NOT_ALLOWED">
-                    <OptionalQueryParams>
-                        <Param Name="Delimiter" Type="java.lang.String" />
-                        <Param Name="Marker" Type="java.lang.String" />
-                        <Param Name="MaxKeys" Type="int" />
-                        <Param Name="Prefix" Type="java.lang.String" />
-                    </OptionalQueryParams>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams />
                     <RequiredQueryParams />
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.BucketObjectsApiBean" />
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket" />
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean" />
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.3A8DB55ED9BC0A138E7E63E96E6EF55F</Version>
+                <Version>1.4FAD1C67C3247080EFA33C224B87544D</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
 </Data>
+
+<!--
+<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler">
+    <Documentation>Get the specified bucket.</Documentation>
+    <RequestRequirements>Must be REST action SHOW</RequestRequirements>
+    <RequestRequirements>Must be REST domain BUCKET</RequestRequirements>
+    <RequestRequirements>Must be a DS3-style request</RequestRequirements>
+    <RequestRequirements>Query Parameters Required: [], Optional: []</RequestRequirements>
+    <SampleResponses>
+        <HttpRequest>GET '_rest_/bucket/b' with query parameters {} and headers {}.</HttpRequest>
+        <HttpResponse>
+            <Error>
+                <Code>Forbidden</Code>
+                <HttpErrorCode>403</HttpErrorCode>
+                <Message>Operation not permitted for anonymous logon.</Message>
+                <Resource>/_rest_/bucket/b</Resource>
+                <ResourceId>213</ResourceId>
+            </Error>
+            with headers {x-amz-request-id=213, Content-Type=text/xml, RequestHandler-Version=1.4FAD1C67C3247080EFA33C224B87544D}.
+        </HttpResponse>
+        <HttpResponseCode>403</HttpResponseCode>
+        <HttpResponseType>com.spectralogic.s3.server.domain.HttpErrorResultApiBean</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler_Test.testGetBucketsAsAnonymousLogonNotAllowed</Test>
+    </SampleResponses>
+    <SampleResponses>
+        <HttpRequest>GET '_rest_/bucket/a' with query parameters {} and headers {Impersonate-User=user}.</HttpRequest>
+        <HttpResponse>
+            <Data>
+                <CreationDate>2016-01-27T00:28:44.000Z</CreationDate>
+                <DataPolicyId>efc78384-a387-484a-9c9d-61cab9da60a8</DataPolicyId>
+                <Id>a9608b67-b3bb-4298-9a98-aedb9d7b78c7</Id>
+                <LastPreferredChunkSizeInBytes />
+                <LogicalUsedCapacity>0</LogicalUsedCapacity>
+                <Name>a</Name>
+                <UserId>06bd3351-f07d-4b3f-b3d7-d3a1e1b9067e</UserId>
+            </Data>
+            with headers {x-amz-request-id=212, Content-Type=text/xml, RequestHandler-Version=1.4FAD1C67C3247080EFA33C224B87544D}.
+        </HttpResponse>
+        <HttpResponseCode>200</HttpResponseCode>
+        <HttpResponseType>com.spectralogic.s3.common.dao.domain.ds3.Bucket</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler_Test.testGetBucketsReturnsBucketsWithLogicalCapacities</Test>
+    </SampleResponses>
+    <Version>1.4FAD1C67C3247080EFA33C224B87544D</Version>
+</RequestHandler>
+
+-->

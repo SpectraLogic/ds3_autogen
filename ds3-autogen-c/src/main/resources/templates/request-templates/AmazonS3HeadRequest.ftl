@@ -9,13 +9,19 @@ ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEn
     ds3_string_multimap* return_headers = NULL;
     ds3_metadata* metadata = NULL;
 
-    <#if helper.containsArgument(requestEntry.getRequiredArguments(), "objectName")>
+    <#if requestEntry.getRequestHelper().containsKey(requestEntry.getRequiredArguments(), "objectName")>
+    <#--
+    <#if requestEntry.getRequiredArguments().containsKey("objectName")>
+    -->
     if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The object name parameter is required.");
     } else if (g_ascii_strncasecmp(request->path->value, "//", 2) == 0) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bucket name parameter is required.");
     }
-    <#elseif helper.containsArgument(requestEntry.getRequiredArguments(), "bucketName")>
+    <#elseif requestEntry.getRequestHelper().containsKey(requestEntry.getRequiredArguments(), "bucketName")>
+    <#--
+    <#elseif requestEntry.getRequiredArguments().containsKey("bucketName")>
+    -->
     if (g_ascii_strncasecmp(request->path->value, "//", 2) == 0) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bucket name parameter is required.");
     }
