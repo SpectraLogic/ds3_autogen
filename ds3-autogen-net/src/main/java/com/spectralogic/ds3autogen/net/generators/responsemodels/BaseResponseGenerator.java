@@ -37,7 +37,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
                 arguments);
     }
 
-    //TODO unit test
     /**
      * Converts a list of Ds3Elements into a list of Arguments
      */
@@ -53,7 +52,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Converts a Ds3Element into an Argument
      */
@@ -63,17 +61,16 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
                 stripPath(ds3Element.getName()));
     }
 
-    //TODO unit test
     /**
      * Converts a type and component type into .net code for a composite type
      */
     protected static String toArgType(final String type, final String componentType) {
         if (isEmpty(componentType)) {
-            return stripPath(type);
+            return NetHelper.toNetType(stripPath(type));
         }
         if (!type.equals("array")) {
             throw new IllegalArgumentException("Unknown type: " + type + " associated with component type: " + componentType);
         }
-        return "IEnumerable<" + stripPath(componentType) + ">";
+        return "IEnumerable<" + NetHelper.toNetType(stripPath(componentType)) + ">";
     }
 }

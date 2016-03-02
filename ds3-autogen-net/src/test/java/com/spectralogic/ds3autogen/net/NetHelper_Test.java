@@ -66,6 +66,24 @@ public class NetHelper_Test {
     }
 
     @Test
+    public void toNetType_Test() {
+        assertThat(toNetType(null), is(""));
+        assertThat(toNetType(""), is(""));
+        assertThat(toNetType("void"), is("bool"));
+        assertThat(toNetType("Void"), is("bool"));
+        assertThat(toNetType("boolean"), is("bool"));
+        assertThat(toNetType("Boolean"), is("bool"));
+        assertThat(toNetType("Integer"), is("int"));
+        assertThat(toNetType("int"), is("int"));
+        assertThat(toNetType("String"), is("string"));
+        assertThat(toNetType("string"), is("string"));
+        assertThat(toNetType("UUID"), is("Guid"));
+        assertThat(toNetType("ChecksumType"), is("ChecksumType.Type"));
+        assertThat(toNetType("Date"), is("DateTime"));
+        assertThat(toNetType("OtherType"), is("OtherType"));
+    }
+
+    @Test
     public void getNullableType_Test() {
         assertThat(getNullableType(new Arguments(null, "ArgName")), is(""));
         assertThat(getNullableType(new Arguments("", "ArgName")), is(""));

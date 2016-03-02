@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -104,6 +105,24 @@ public class NetCodeGenerator_Test {
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<string>", "CommonPrefixes"),
+                new Arguments("DateTime", "CreationDate"),
+                new Arguments("string", "Delimiter"),
+                new Arguments("string", "Marker"),
+                new Arguments("int", "MaxKeys"),
+                new Arguments("string", "Name"),
+                new Arguments("string", "NextMarker"),
+                new Arguments("IEnumerable<Contents>", "Objects"),
+                new Arguments("string", "Prefix"),
+                new Arguments("bool", "Truncated"));
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -204,6 +223,21 @@ public class NetCodeGenerator_Test {
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("Guid", "BucketId"),
+                new Arguments("DateTime", "CreationDate"),
+                new Arguments("Guid", "Id"),
+                new Arguments("bool", "Latest"),
+                new Arguments("string", "Name"),
+                new Arguments("S3ObjectType", "Type"),
+                new Arguments("long", "Version"));
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -251,6 +285,33 @@ public class NetCodeGenerator_Test {
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("bool", "Aggregating"),
+                new Arguments("string", "BucketName"),
+                new Arguments("long", "CachedSizeInBytes"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("long", "CompletedSizeInBytes"),
+                new Arguments("Guid", "JobId"),
+                new Arguments("bool", "Naked"),
+                new Arguments("string", "Name"),
+                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
+                new Arguments("IEnumerable<Objects>", "Objects"),
+                new Arguments("long", "OriginalSizeInBytes"),
+                new Arguments("Priority", "Priority"),
+                new Arguments("JobRequestType", "RequestType"),
+                new Arguments("DateTime", "StartDate"),
+                new Arguments("JobStatus", "Status"),
+                new Arguments("Guid", "UserId"),
+                new Arguments("string", "UserName"),
+                new Arguments("WriteOptimization", "WriteOptimization"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -313,5 +374,32 @@ public class NetCodeGenerator_Test {
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("bool", "Aggregating"),
+                new Arguments("string", "BucketName"),
+                new Arguments("long", "CachedSizeInBytes"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("long", "CompletedSizeInBytes"),
+                new Arguments("Guid", "JobId"),
+                new Arguments("bool", "Naked"),
+                new Arguments("string", "Name"),
+                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
+                new Arguments("IEnumerable<Objects>", "Objects"),
+                new Arguments("long", "OriginalSizeInBytes"),
+                new Arguments("Priority", "Priority"),
+                new Arguments("JobRequestType", "RequestType"),
+                new Arguments("DateTime", "StartDate"),
+                new Arguments("JobStatus", "Status"),
+                new Arguments("Guid", "UserId"),
+                new Arguments("string", "UserName"),
+                new Arguments("WriteOptimization", "WriteOptimization"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 }

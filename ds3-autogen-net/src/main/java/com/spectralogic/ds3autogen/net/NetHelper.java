@@ -71,8 +71,17 @@ public final class NetHelper {
             LOG.error("Argument does not have a type: " + arg.getName());
             return "";
         }
+        return toNetType(arg.getType());
+    }
 
-        switch (arg.getType().toLowerCase()) {
+    /**
+     * Converts a contract type into a .net type
+     */
+    public static String toNetType(final String contractType) {
+        if (isEmpty(contractType)) {
+            return "";
+        }
+        switch (contractType.toLowerCase()) {
             case "void":
             case "boolean":
                 return "bool";
@@ -83,11 +92,11 @@ public final class NetHelper {
             case "uuid":
                 return "Guid";
             case "checksumtype":
-                return arg.getType() + ".Type";
+                return contractType + ".Type";
             case "date":
                 return "DateTime";
             default:
-                return arg.getType();
+                return contractType;
         }
     }
 
