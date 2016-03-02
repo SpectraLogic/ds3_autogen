@@ -46,7 +46,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "SpectraS3DeleteRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/SpectraS3DeleteRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());

@@ -15,8 +15,11 @@
 
 package com.spectralogic.ds3autogen.c.converters;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
@@ -93,15 +96,15 @@ public final class RequestConverter {
         return builder.toString();
     }
 
-    private static ImmutableList<Arguments> getRequiredArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
+    private static ImmutableMap<String, String> getRequiredArgs(final Ds3Request ds3Request) {
+        final ImmutableMap.Builder<String, String> requiredArgsBuilder = ImmutableMap.builder();
         LOG.debug("Getting required args...");
         if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
             LOG.debug("\tbucket name REQUIRED.");
-            requiredArgsBuilder.add(new Arguments("String", "bucketName"));
+            requiredArgsBuilder.put("bucketName", "String");
             if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
                 LOG.debug("\tobject name REQUIRED.");
-                requiredArgsBuilder.add(new Arguments("String", "objectName"));
+                requiredArgsBuilder.put("objectName", "String");
             }
         }
 
@@ -116,14 +119,14 @@ public final class RequestConverter {
             LOG.debug("\tquery param " + ds3Param.getType());
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
             LOG.debug("\tparam " + paramType + " is required.");
-            requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            requiredArgsBuilder.put(ds3Param.getName(), paramType);
         }
 
         return requiredArgsBuilder.build();
     }
 
-    private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> optionalArgsBuilder = ImmutableList.builder();
+    private static ImmutableMap<String, String> getOptionalArgs(final Ds3Request ds3Request) {
+        final ImmutableMap.Builder<String, String> optionalArgsBuilder = ImmutableMap.builder();
         LOG.debug("Getting optional args...");
         if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
@@ -132,7 +135,7 @@ public final class RequestConverter {
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
             LOG.debug("\tparam " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
-            optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            optionalArgsBuilder.put(ds3Param.getName(), paramType);
         }
 
         return optionalArgsBuilder.build();

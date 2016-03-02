@@ -1,0 +1,23 @@
+<RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectRequestHandler">
+    <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="OBJECT" ResourceType="NON_SINGLETON">
+        <OptionalQueryParams />
+        <RequiredQueryParams>
+            <Param Name="BucketId" Type="java.util.UUID" />
+        </RequiredQueryParams>
+    </Request>
+    <ResponseCodes>
+        <ResponseCode>
+            <Code>200</Code>
+            <ResponseTypes>
+                <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.S3Object" />
+            </ResponseTypes>
+        </ResponseCode>
+        <ResponseCode>
+            <Code>403</Code>
+            <ResponseTypes>
+                <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean" />
+            </ResponseTypes>
+        </ResponseCode>
+    </ResponseCodes>
+    <Version>1.70D55191E13B0C77A5FF57DA126E0849</Version>
+</RequestHandler>
