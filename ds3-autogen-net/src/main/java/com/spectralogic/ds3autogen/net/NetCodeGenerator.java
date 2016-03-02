@@ -20,6 +20,8 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
@@ -28,6 +30,7 @@ import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGe
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -129,7 +132,7 @@ public class NetCodeGenerator implements CodeGenerator {
             LOG.info("There were no requests to generate");
             return;
         }
-        for (final Ds3Request request : spec.getRequests()) {
+        for (final Ds3Request request : requests) {
             generateRequest(request);
             generateResponse(request);
         }
@@ -139,9 +142,21 @@ public class NetCodeGenerator implements CodeGenerator {
      * Generates the .net code for the response handler described in the Ds3Request
      */
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
+        if (!GeneratorUtils.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
+            //There is no payload for this Ds3Request, so do not generate any response handling code
+            return;
+        }
+        if (isEmpty(spec.getTypes())) {
+            LOG.error("Cannot generate response because type map is empty");
+            return;
+        }
+        final Ds3Type responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
+        if (responsePayload == null) {
+            throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
+        }
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
-        final BaseResponse response = responseGenerator.generate(ds3Request);
+        final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
         final Path responsePath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" +
                         response.getName() + ".cs")));
@@ -152,6 +167,24 @@ public class NetCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(response, writer);
         }
+    }
+
+    /**
+     * Retrieves the non-error response type from within the response codes. If no non-error
+     * response type is found, then null is returned.
+     */
+    private Ds3Type getResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            LOG.error("There are no response codes to generate the response");
+            return null;
+        }
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            final String responseType = GeneratorUtils.getResponseType(responseCode.getDs3ResponseTypes());
+            if (GeneratorUtils.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
+                return spec.getTypes().get(responseType);
+            }
+        }
+        return null;
     }
 
     /**

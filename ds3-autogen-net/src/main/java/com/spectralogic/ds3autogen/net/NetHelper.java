@@ -84,6 +84,8 @@ public final class NetHelper {
                 return "Guid";
             case "checksumtype":
                 return arg.getType() + ".Type";
+            case "date":
+                return "DateTime";
             default:
                 return arg.getType();
         }

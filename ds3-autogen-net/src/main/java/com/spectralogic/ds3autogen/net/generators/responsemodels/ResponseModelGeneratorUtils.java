@@ -16,7 +16,8 @@
 package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 
 /**
  * Contains the interface for functions that are used to convert a Ds3Request into
@@ -25,7 +26,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 public interface ResponseModelGeneratorUtils {
 
     /**
-     * Gets the list of response codes from a list of Ds3ResponseCodes
+     * Converts a list of Ds3Elements into Arguments
      */
-    ImmutableList<Integer> toExpectedStatusCodes(final ImmutableList<Ds3ResponseCode> responseCodes);
+    ImmutableList<Arguments> toArgumentsList(final ImmutableList<Ds3Element> elements);
 }

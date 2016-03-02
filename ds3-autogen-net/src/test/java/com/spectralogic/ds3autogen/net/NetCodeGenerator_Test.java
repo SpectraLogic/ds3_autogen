@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -152,9 +153,9 @@ public class NetCodeGenerator_Test {
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
-        //Generate Responses
+        //Generate Responses (should be empty due to no response payload)
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        assertTrue(isEmpty(responseCode));
     }
 
     @Test

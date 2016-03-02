@@ -61,6 +61,7 @@ public class NetHelper_Test {
         assertThat(getType(new Arguments("string", "ArgName")), is("string"));
         assertThat(getType(new Arguments("UUID", "ArgName")), is("Guid"));
         assertThat(getType(new Arguments("ChecksumType", "ArgName")), is("ChecksumType.Type"));
+        assertThat(getType(new Arguments("Date", "ArgName")), is("DateTime"));
         assertThat(getType(new Arguments("OtherType", "ArgName")), is("OtherType"));
     }
 
