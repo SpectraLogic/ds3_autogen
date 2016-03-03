@@ -23,8 +23,8 @@ import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator.*;
-import static com.spectralogic.ds3autogen.net.test.helper.BaseClientGeneratorTestHelper.createTestRequest;
-import static com.spectralogic.ds3autogen.net.test.helper.BaseClientGeneratorTestHelper.createTestResponseCodes;
+import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestRequestWithResponseCodes;
+import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -45,10 +45,10 @@ public class BaseClientGenerator_Test {
     @Test
     public void getRequestsBasedOnResponsePayload_FullList_Test() {
         final ImmutableList<Ds3Request> input = ImmutableList.of(
-                createTestRequest("Request1", true),
-                createTestRequest("Request2", false),
-                createTestRequest("Request3", true),
-                createTestRequest("Request4", false));
+                createTestRequestWithResponseCodes("Request1", true),
+                createTestRequestWithResponseCodes("Request2", false),
+                createTestRequestWithResponseCodes("Request3", true),
+                createTestRequestWithResponseCodes("Request4", false));
 
         final ImmutableList<Ds3Request> payloadRequests = getRequestsBasedOnResponsePayload(input, true);
         assertThat(payloadRequests.size(), is(2));
@@ -63,7 +63,7 @@ public class BaseClientGenerator_Test {
 
     @Test
     public void toPayloadCommand_Test() {
-        final Ds3Request request = createTestRequest("com.test.WithPayloadRequest", true);
+        final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithPayloadRequest", true);
 
         final PayloadCommand result = toPayloadCommand(request);
         assertThat(result.getCommandName(), is("WithPayload"));
@@ -73,7 +73,7 @@ public class BaseClientGenerator_Test {
 
     @Test
     public void toVoidCommand_Test() {
-        final Ds3Request request = createTestRequest("com.test.WithoutPayloadRequest", false);
+        final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithoutPayloadRequest", false);
 
         final VoidCommand result = toVoidCommand(request);
         assertThat(result.getCommandName(), is("WithoutPayload"));
@@ -96,10 +96,10 @@ public class BaseClientGenerator_Test {
     @Test
     public void toPayloadCommands_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                createTestRequest("com.test.OneRequest", false),
-                createTestRequest("com.test.TwoRequest", true),
-                createTestRequest("com.test.ThreeRequest", false),
-                createTestRequest("com.test.FourRequest", true));
+                createTestRequestWithResponseCodes("com.test.OneRequest", false),
+                createTestRequestWithResponseCodes("com.test.TwoRequest", true),
+                createTestRequestWithResponseCodes("com.test.ThreeRequest", false),
+                createTestRequestWithResponseCodes("com.test.FourRequest", true));
 
         final ImmutableList<PayloadCommand> result = toPayloadCommands(requests);
         assertThat(result.size(), is(2));
@@ -122,10 +122,10 @@ public class BaseClientGenerator_Test {
     @Test
     public void toVoidCommands_FullList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                createTestRequest("com.test.OneRequest", false),
-                createTestRequest("com.test.TwoRequest", true),
-                createTestRequest("com.test.ThreeRequest", false),
-                createTestRequest("com.test.FourRequest", true));
+                createTestRequestWithResponseCodes("com.test.OneRequest", false),
+                createTestRequestWithResponseCodes("com.test.TwoRequest", true),
+                createTestRequestWithResponseCodes("com.test.ThreeRequest", false),
+                createTestRequestWithResponseCodes("com.test.FourRequest", true));
 
         final ImmutableList<VoidCommand> result = toVoidCommands(requests);
         assertThat(result.size(), is(2));

@@ -37,8 +37,6 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceA
  */
 public final class GeneratorUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GeneratorUtils.class);
-
     private GeneratorUtils() {
         //pass
     }
@@ -158,68 +156,5 @@ public final class GeneratorUtils {
     public static Arguments toArgument(final Ds3Param ds3Param) {
         final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
         return new Arguments(paramType, ds3Param.getName());
-    }
-
-    /**
-     * Determines if a given response code denotes a non-error response
-     */
-    public static boolean isNonErrorCode(final int responseCode) {
-        return !isErrorCode(responseCode);
-    }
-
-    /**
-     * Determines if a given response code denotes an error response
-     */
-    public static boolean isErrorCode(final int responseCode) {
-        return responseCode >= 300;
-    }
-
-    /**
-     * Determines if a list of Ds3Response codes has at least one response payload.
-     * Note: Some commands can have multiple non-error codes with different response payloads.
-     */
-    public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final ImmutableList<String> responseTypes = getAllResponseTypes(responseCodes);
-        for (final String responseType : responseTypes) {
-            if (!responseType.equals("null")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Gets the list of Response Types from a list of Ds3ResponseCodes
-     */
-    public static ImmutableList<String> getAllResponseTypes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        if (isEmpty(responseCodes)) {
-            //No response codes is logged as an error instead of throwing an error
-            //because some test may not contain response codes
-            LOG.error("There are no Response Codes associated with this request");
-            return ImmutableList.of();
-        }
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (GeneratorUtils.isNonErrorCode(responseCode.getCode())) {
-                builder.add(getResponseType(responseCode.getDs3ResponseTypes()));
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Gets the Response Type associated with a Ds3ResponseCode. This assumes that all component
-     * response types have already been converted into encapsulating types.
-     */
-    public static String getResponseType(final ImmutableList<Ds3ResponseType> responseTypes) {
-        if (isEmpty(responseTypes)) {
-            throw new IllegalArgumentException("Response code does not contain any associated types");
-        }
-        switch (responseTypes.size()) {
-            case 1:
-                return responseTypes.get(0).getType();
-            default:
-                throw new IllegalArgumentException("Response code has multiple associated types");
-        }
     }
 }

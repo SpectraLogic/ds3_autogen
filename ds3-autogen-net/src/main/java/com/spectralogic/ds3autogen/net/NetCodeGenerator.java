@@ -30,7 +30,7 @@ import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGe
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
-import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
+import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -142,7 +142,7 @@ public class NetCodeGenerator implements CodeGenerator {
      * Generates the .net code for the response handler described in the Ds3Request
      */
     private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
-        if (!GeneratorUtils.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
+        if (!ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
         }
@@ -179,8 +179,8 @@ public class NetCodeGenerator implements CodeGenerator {
             return null;
         }
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            final String responseType = GeneratorUtils.getResponseType(responseCode.getDs3ResponseTypes());
-            if (GeneratorUtils.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
+            final String responseType = ResponsePayloadUtil.getResponseType(responseCode.getDs3ResponseTypes());
+            if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
                 return spec.getTypes().get(responseType);
             }
         }

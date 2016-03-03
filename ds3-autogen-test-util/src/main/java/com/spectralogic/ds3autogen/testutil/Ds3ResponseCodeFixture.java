@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.test.helper;
+package com.spectralogic.ds3autogen.testutil;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
@@ -23,7 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 /**
  * Contains static utilities for testing the BaseClientGenerator
  */
-public class BaseClientGeneratorTestHelper {
+public class Ds3ResponseCodeFixture {
 
     /**
      * Creates a list of populated response codes for testing purposes. If hasPayload is true,
@@ -59,9 +59,9 @@ public class BaseClientGeneratorTestHelper {
     }
 
     /**
-     * Creates a Ds3Request with the speicifed name and response codes
+     * Creates a Ds3Request with the specified name and response codes
      */
-    public static Ds3Request createTestRequest(final String requestName, final boolean hasPayload) {
+    public static Ds3Request createTestRequestWithResponseCodes(final String requestName, final boolean hasPayload) {
         return new Ds3Request(
                 requestName,
                 null, null, null, null, null, null, null, null, false,

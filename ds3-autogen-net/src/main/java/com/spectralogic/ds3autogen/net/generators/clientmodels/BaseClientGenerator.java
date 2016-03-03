@@ -21,8 +21,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
-import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +77,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         }
         final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (GeneratorUtils.isNonErrorCode(responseCode.getCode())) {
+            if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode())) {
                 builder.add(responseCode.getCode());
             }
         }
@@ -129,7 +129,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {
-            if (GeneratorUtils.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload) {
+            if (ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload) {
                 builder.add(ds3Request);
             }
         }
