@@ -55,14 +55,6 @@ public class BaseTypeGenerator_Test {
     }
 
     @Test
-    public void toModelName_Test() {
-        assertThat(getModelName(null), is(""));
-        assertThat(getModelName(""), is(""));
-        assertThat(getModelName("SimpleName"), is("SimpleName"));
-        assertThat(getModelName("com.spectralogic.test.TypeName"), is("TypeName"));
-    }
-
-    @Test
     public void toElement_Test() {
         final Ds3Element ds3Element = new Ds3Element("Name", "Type", "ComponentType");
         final Element result = generator.toElement(ds3Element);

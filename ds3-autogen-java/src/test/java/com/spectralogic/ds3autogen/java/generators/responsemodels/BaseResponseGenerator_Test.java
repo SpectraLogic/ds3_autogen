@@ -99,22 +99,6 @@ public class BaseResponseGenerator_Test {
     }
 
     @Test
-    public void toResponseName_NullString_Test() {
-        assertThat(generator.toResponseName(null), is(""));
-    }
-
-    @Test
-    public void toResponseName_EmptyString_Test() {
-        assertThat(generator.toResponseName(""), is(""));
-    }
-
-    @Test
-    public void toResponseName_Test() {
-        final String result = generator.toResponseName("com.spectralogic.s3.server.handler.reqhandler.amazons3.HeadObjectRequest");
-        assertThat(result, is("HeadObjectResponse"));
-    }
-
-    @Test
     public void getParentImport_Test() {
         assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.AbstractResponse"));
     }

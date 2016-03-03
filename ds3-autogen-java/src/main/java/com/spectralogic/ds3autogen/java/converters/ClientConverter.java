@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 import com.spectralogic.ds3autogen.java.models.CustomCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
@@ -110,8 +111,8 @@ public class ClientConverter {
 
         return new CustomCommand(
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                ClientGeneratorUtil.removePath(ds3Request.getName()),
-                ClientGeneratorUtil.toResponseName(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
                 customBody);
     }
 
@@ -138,8 +139,8 @@ public class ClientConverter {
             if (!isCustomCommand(ds3Request)) {
                 builder.add(new Command(
                         ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                        ClientGeneratorUtil.removePath(ds3Request.getName()),
-                        ClientGeneratorUtil.toResponseName(ds3Request.getName())));
+                        NormalizingContractNamesUtil.removePath(ds3Request.getName()),
+                        NormalizingContractNamesUtil.toResponseName(ds3Request.getName())));
             }
         }
         return builder.build();

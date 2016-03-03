@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
@@ -28,7 +29,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
 
     @Override
     public BaseResponse generate(final Ds3Request ds3Request, final Ds3Type ds3Type) {
-        final String name = GeneratorUtils.toResponseName(ds3Request);
+        final String name = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
         final ImmutableList<Arguments> arguments = toArgumentsList(ds3Type.getElements());
 
         return new BaseResponse(

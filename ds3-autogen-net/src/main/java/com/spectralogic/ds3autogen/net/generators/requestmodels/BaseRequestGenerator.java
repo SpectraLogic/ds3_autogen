@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -30,7 +31,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     @Override
     public BaseRequest generate(final Ds3Request ds3Request) {
 
-        final String name = GeneratorUtils.toRequestName(ds3Request);
+        final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
         final ImmutableList<Arguments> constructorArgs = toConstructorArgsList(ds3Request);
         final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);

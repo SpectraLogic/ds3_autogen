@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -106,7 +106,7 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        final String responseName = toResponseName(requestName);
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final ImmutableList<Arguments> responseArgs = ImmutableList.of(
                 new Arguments("IEnumerable<string>", "CommonPrefixes"),
                 new Arguments("DateTime", "CreationDate"),
@@ -224,7 +224,7 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        final String responseName = toResponseName(requestName);
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final ImmutableList<Arguments> responseArgs = ImmutableList.of(
                 new Arguments("Guid", "BucketId"),
                 new Arguments("DateTime", "CreationDate"),
@@ -286,7 +286,7 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        final String responseName = toResponseName(requestName);
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final ImmutableList<Arguments> responseArgs = ImmutableList.of(
                 new Arguments("bool", "Aggregating"),
                 new Arguments("string", "BucketName"),
@@ -375,7 +375,7 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        final String responseName = toResponseName(requestName);
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final ImmutableList<Arguments> responseArgs = ImmutableList.of(
                 new Arguments("bool", "Aggregating"),
                 new Arguments("string", "BucketName"),

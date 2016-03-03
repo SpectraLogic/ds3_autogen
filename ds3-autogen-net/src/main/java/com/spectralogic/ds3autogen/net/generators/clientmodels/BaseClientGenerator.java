@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
      */
     protected static VoidCommand toVoidCommand(final Ds3Request ds3Request) {
         return new VoidCommand(
-                ClientGeneratorUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
                 getHttpStatusCode(ds3Request.getDs3ResponseCodes()));
     }
@@ -111,9 +112,9 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
      */
     protected static PayloadCommand toPayloadCommand(final Ds3Request ds3Request) {
         return new PayloadCommand(
-                ClientGeneratorUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                ClientGeneratorUtil.toResponseName(ds3Request.getName()));
+                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()));
     }
 
     /**

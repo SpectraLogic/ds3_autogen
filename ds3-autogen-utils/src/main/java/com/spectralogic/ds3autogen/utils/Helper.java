@@ -285,8 +285,8 @@ public final class Helper {
      * For example, com.spectralogic.ds3autogen.Utils.Helper would return Helper
      */
     public static String stripPath(final String str) {
-        final String[] classparts = str.split("\\.");
-        return classparts[classparts.length - 1];
+        //Wrapping function so that it is accessible from within models
+        return NormalizingContractNamesUtil.removePath(str);
     }
 
 

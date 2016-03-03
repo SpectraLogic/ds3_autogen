@@ -17,17 +17,26 @@ package com.spectralogic.ds3autogen.utils;
 
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.*;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ClientGeneratorUtil_Test {
+public class NormalizingContractNamesUtil_Test {
 
     @Test
-    public void toCommandName_Test() {
-        assertThat(toCommandName(null), is(""));
-        assertThat(toCommandName(""), is(""));
-        assertThat(toCommandName("SimpleRequest"), is("Simple"));
-        assertThat(toCommandName("com.spectralogic.test.PathRequest"), is("Path"));
+    public void removePath_Test() {
+        assertThat(removePath(null), is(""));
+        assertThat(removePath(""), is(""));
+        assertThat(removePath("SimpleString"), is("SimpleString"));
+        assertThat(removePath("com.spectralogic.test.StringWithPath"), is("StringWithPath"));
+    }
+
+    @Test
+    public void toResponseName_Test() {
+        assertThat(toResponseName(null), is(""));
+        assertThat(toResponseName(""), is(""));
+        assertThat(toResponseName("SimpleRequest"), is("SimpleResponse"));
+        assertThat(toResponseName("com.spectralogic.test.PathRequest"), is("PathResponse"));
     }
 }

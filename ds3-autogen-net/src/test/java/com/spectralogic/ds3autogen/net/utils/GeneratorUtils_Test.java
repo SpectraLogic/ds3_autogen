@@ -41,18 +41,6 @@ public class GeneratorUtils_Test {
     }
 
     @Test
-    public void toResponseName_Test() {
-        assertThat(toResponseName(getRequestDeleteNotification()), is("DeleteJobCreatedNotificationRegistrationResponseHandler"));
-        assertThat(toResponseName(getRequestBulkGet()), is("CreateGetJobResponseHandler"));
-    }
-
-    @Test
-    public void toRequestName_Test() {
-        assertThat(toRequestName(getRequestDeleteNotification()), is("DeleteJobCreatedNotificationRegistrationRequestHandler"));
-        assertThat(toRequestName(getRequestBulkGet()), is("CreateGetJobRequestHandler"));
-    }
-
-    @Test
     public void getArgsFromParamList_NullList_Test() {
         final ImmutableList<Arguments> result = getArgsFromParamList(null);
         assertThat(result.size(), is(0));
