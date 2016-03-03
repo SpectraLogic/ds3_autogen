@@ -25,5 +25,67 @@
                 <Version>1.70D55191E13B0C77A5FF57DA126E0849</Version>
             </RequestHandler>
         </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.S3Object">
+                <Elements>
+                    <Element Name="BucketId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Latest" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Version" Type="long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultLongValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Long"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="2" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
     </Contract>
 </Data>

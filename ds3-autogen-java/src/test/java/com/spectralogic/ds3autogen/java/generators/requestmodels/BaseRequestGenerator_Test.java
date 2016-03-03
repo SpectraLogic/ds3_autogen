@@ -46,14 +46,6 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void getRequestName_Test() {
-        assertThat(getRequestName(null), is(""));
-        assertThat(getRequestName(""), is(""));
-        assertThat(getRequestName("SimpleRequestName"), is("SimpleRequestName"));
-        assertThat(getRequestName("com.spectralogic.ds3client.SimpleRequestName"), is("SimpleRequestName"));
-    }
-
-    @Test
     public void getSpectraDs3RequestPath_Test() {
         final Ds3Request deleteNotification = getRequestDeleteNotification();
         assertThat(getSpectraDs3RequestPath(deleteNotification), is("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()"));

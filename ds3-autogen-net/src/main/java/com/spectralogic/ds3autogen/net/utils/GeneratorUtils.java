@@ -24,9 +24,7 @@ import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getArgFromResource;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 /**
  * Provides a series of static utility functions that are used within
@@ -128,24 +126,6 @@ public final class GeneratorUtils {
             }
         }
         return argsBuilder.build();
-    }
-
-
-    /**
-     * Gets the request name from a Ds3Request by striping the path
-     */
-    public static String toRequestName(final Ds3Request ds3Request) {
-        final String name = ds3Request.getName();
-        final int lastIndex = name.lastIndexOf(".");
-
-        return name.substring(lastIndex + 1);
-    }
-
-    /**
-     * Converts a request name into its response name
-     */
-    public static String toResponseName(final Ds3Request ds3Request) {
-        return toRequestName(ds3Request).replace("Request", "Response");
     }
 
     /**

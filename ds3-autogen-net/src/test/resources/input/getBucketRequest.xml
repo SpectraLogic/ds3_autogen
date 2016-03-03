@@ -22,5 +22,77 @@
                 <Version>1.3A8DB55ED9BC0A138E7E63E96E6EF55F</Version>
             </RequestHandler>
         </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.BucketObjectsApiBean" NameToMarshal="ListBucketResult">
+                <Elements>
+                    <Element ComponentType="java.lang.String" Name="CommonPrefixes" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="CommonPrefixes" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="BLOCK_FOR_EVERY_ELEMENT" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Prefix" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Delimiter" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Marker" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="MaxKeys" Type="int">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="NextMarker" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.S3ObjectApiBean" Name="Objects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Contents" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Prefix" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Truncated" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="IsTruncated" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
     </Contract>
 </Data>

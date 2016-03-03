@@ -18,11 +18,12 @@ package com.spectralogic.ds3autogen.net.generators.clientmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
+import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
      */
     protected static VoidCommand toVoidCommand(final Ds3Request ds3Request) {
         return new VoidCommand(
-                ClientGeneratorUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
                 getHttpStatusCode(ds3Request.getDs3ResponseCodes()));
     }
@@ -77,7 +78,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         }
         final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
         for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (isNotErrorCode(responseCode.getCode())) {
+            if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode())) {
                 builder.add(responseCode.getCode());
             }
         }
@@ -90,13 +91,6 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
             return "NoContent";
         }
         return "OK";
-    }
-
-    /**
-     * Determines if a given response code denotes an error response
-     */
-    protected static boolean isNotErrorCode(final int responseCode) {
-        return responseCode < 300;
     }
 
     /**
@@ -118,9 +112,9 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
      */
     protected static PayloadCommand toPayloadCommand(final Ds3Request ds3Request) {
         return new PayloadCommand(
-                ClientGeneratorUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                ClientGeneratorUtil.toResponseName(ds3Request.getName()));
+                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()));
     }
 
     /**
@@ -136,59 +130,10 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {
-            if (hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload) {
+            if (ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload) {
                 builder.add(ds3Request);
             }
         }
         return builder.build();
-    }
-
-    /**
-     * Determines if a list of Ds3Response codes has at least one response payload.
-     * Note: Some commands can have multiple non-error codes with different response payloads.
-     */
-    protected static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final ImmutableList<String> responseTypes = getAllResponseTypes(responseCodes);
-        for (final String responseType : responseTypes) {
-            if (!responseType.equals("null")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Gets the list of Response Types from a list of Ds3ResponseCodes
-     */
-    protected static ImmutableList<String> getAllResponseTypes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        if (isEmpty(responseCodes)) {
-            //No response codes is logged as an error instead of throwing an error
-            //because some test may not contain response codes
-            LOG.error("There are no Response Codes associated with this request");
-            return ImmutableList.of();
-        }
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (isNotErrorCode(responseCode.getCode())) {
-                builder.add(getResponseType(responseCode.getDs3ResponseTypes()));
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Gets the Response Type associated with a Ds3ResponseCode. This assumes that all component
-     * response types have already been converted into encapsulating types.
-     */
-    protected static String getResponseType(final ImmutableList<Ds3ResponseType> responseTypes) {
-        if (isEmpty(responseTypes)) {
-            throw new IllegalArgumentException("Response code does not contain any associated types");
-        }
-        switch (responseTypes.size()) {
-            case 1:
-                return responseTypes.get(0).getType();
-            default:
-                throw new IllegalArgumentException("Response code has multiple associated types");
-        }
     }
 }

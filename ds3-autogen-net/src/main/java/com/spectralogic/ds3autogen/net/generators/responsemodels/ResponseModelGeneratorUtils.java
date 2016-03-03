@@ -13,37 +13,20 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model.response;
+package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.net.NetHelper;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
 
-public class BaseResponse {
+/**
+ * Contains the interface for functions that are used to convert a Ds3Request into
+ * the Response model within Response Generators
+ */
+public interface ResponseModelGeneratorUtils {
 
-    private final NetHelper netHelper;
-    private final String name;
-    private final ImmutableList<Arguments> arguments;
-
-    public BaseResponse(
-            final NetHelper netHelper,
-            final String name,
-            final ImmutableList<Arguments> arguments) {
-        this.netHelper = netHelper;
-        this.name = name;
-        this.arguments = arguments;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ImmutableList<Arguments> getArguments() {
-        return arguments;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
-    }
+    /**
+     * Converts a list of Ds3Elements into Arguments
+     */
+    ImmutableList<Arguments> toArgumentsList(final ImmutableList<Ds3Element> elements);
 }
-

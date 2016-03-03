@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
@@ -40,7 +41,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     @Override
     public Request generate(final Ds3Request ds3Request, final String packageName) {
         final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
-        final String requestName = getRequestName(updatedRequest.getName());
+        final String requestName = NormalizingContractNamesUtil.removePath(updatedRequest.getName());
         final String requestPath = getRequestPath(updatedRequest);
         final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(updatedRequest);
         final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(updatedRequest.getOptionalQueryParams());
@@ -341,17 +342,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             builder.append("\"");
         }
         return builder.toString();
-    }
-
-    /**
-     * Retrieves the request name without the request path
-     */
-    protected static String getRequestName(final String requestName) {
-        if (isEmpty(requestName)) {
-            return "";
-        }
-        final String[] classParts = requestName.split("\\.");
-        return classParts[classParts.length - 1];
     }
 
     /**

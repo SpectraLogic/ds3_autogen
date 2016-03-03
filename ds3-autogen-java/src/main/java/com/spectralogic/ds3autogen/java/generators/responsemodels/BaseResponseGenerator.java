@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
@@ -33,7 +34,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
     @Override
     public Response generate(final Ds3Request ds3Request, final String packageName) {
-        final String responseName = toResponseName(ds3Request.getName());
+        final String responseName = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
         final ImmutableList<Ds3ResponseCode> responseCodes = toResponseCodes(ds3Request);
         final ImmutableList<String> imports = getAllImports(responseCodes, packageName);
 
@@ -42,18 +43,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
                 responseName,
                 responseCodes,
                 imports);
-    }
-
-    /**
-     * Converts the Ds3Request name into a Response name by removing the path and
-     * changing the name ending from "Request" into "Response"
-     */
-    protected static String toResponseName(final String ds3RequestName) {
-        if (isEmpty(ds3RequestName)) {
-            return "";
-        }
-        final String[] classParts = ds3RequestName.split("\\.");
-        return classParts[classParts.length - 1].replace("Request", "Response");
     }
 
     /**

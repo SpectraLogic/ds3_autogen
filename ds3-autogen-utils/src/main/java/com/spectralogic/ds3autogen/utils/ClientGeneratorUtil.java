@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3autogen.utils;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 /**
- * Set of static utility commands for generating the Client
+ * Set of static utility functions for generating the Client
  */
 public final class ClientGeneratorUtil {
 
@@ -27,27 +27,5 @@ public final class ClientGeneratorUtil {
      */
     public static String toCommandName(final String requestName) {
         return removePath(requestName).replace("Request", "");
-    }
-
-    /**
-     * Converts a Ds3Request's name into a Response name by removing the path and converting
-     * "Request" into "Response"
-     */
-    public static String toResponseName(final String requestName) {
-        return removePath(requestName).replace("Request", "Response");
-    }
-
-    /**
-     * Removes the path from a string. This is used to remove the contract path
-     * path from Ds3Requests.
-     * @param str A string
-     * @return The subset of str that is located after the last period '.' within str
-     */
-    public static String removePath(final String str) {
-        if (isEmpty(str)) {
-            return "";
-        }
-        final String[] classParts = str.split("\\.");
-        return classParts[classParts.length - 1];
     }
 }

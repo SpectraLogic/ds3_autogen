@@ -61,7 +61,26 @@ public class NetHelper_Test {
         assertThat(getType(new Arguments("string", "ArgName")), is("string"));
         assertThat(getType(new Arguments("UUID", "ArgName")), is("Guid"));
         assertThat(getType(new Arguments("ChecksumType", "ArgName")), is("ChecksumType.Type"));
+        assertThat(getType(new Arguments("Date", "ArgName")), is("DateTime"));
         assertThat(getType(new Arguments("OtherType", "ArgName")), is("OtherType"));
+    }
+
+    @Test
+    public void toNetType_Test() {
+        assertThat(toNetType(null), is(""));
+        assertThat(toNetType(""), is(""));
+        assertThat(toNetType("void"), is("bool"));
+        assertThat(toNetType("Void"), is("bool"));
+        assertThat(toNetType("boolean"), is("bool"));
+        assertThat(toNetType("Boolean"), is("bool"));
+        assertThat(toNetType("Integer"), is("int"));
+        assertThat(toNetType("int"), is("int"));
+        assertThat(toNetType("String"), is("string"));
+        assertThat(toNetType("string"), is("string"));
+        assertThat(toNetType("UUID"), is("Guid"));
+        assertThat(toNetType("ChecksumType"), is("ChecksumType.Type"));
+        assertThat(toNetType("Date"), is("DateTime"));
+        assertThat(toNetType("OtherType"), is("OtherType"));
     }
 
     @Test

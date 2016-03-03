@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -72,6 +74,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -87,6 +90,7 @@ public class NetCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("String", "BucketName"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -97,6 +101,28 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<string>", "CommonPrefixes"),
+                new Arguments("DateTime", "CreationDate"),
+                new Arguments("string", "Delimiter"),
+                new Arguments("string", "Marker"),
+                new Arguments("int", "MaxKeys"),
+                new Arguments("string", "Name"),
+                new Arguments("string", "NextMarker"),
+                new Arguments("IEnumerable<Contents>", "Objects"),
+                new Arguments("string", "Prefix"),
+                new Arguments("bool", "Truncated"));
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -110,6 +136,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -133,6 +160,7 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -143,6 +171,10 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses (should be empty due to no response payload)
+        final String responseCode = codeGenerator.getResponseCode();
+        assertTrue(isEmpty(responseCode));
     }
 
     @Test
@@ -156,6 +188,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequestSpectraS3.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -175,6 +208,7 @@ public class NetCodeGenerator_Test {
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -185,6 +219,25 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("Guid", "BucketId"),
+                new Arguments("DateTime", "CreationDate"),
+                new Arguments("Guid", "Id"),
+                new Arguments("bool", "Latest"),
+                new Arguments("string", "Name"),
+                new Arguments("S3ObjectType", "Type"),
+                new Arguments("long", "Version"));
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -198,6 +251,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/createPutJobRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -216,6 +270,7 @@ public class NetCodeGenerator_Test {
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -226,6 +281,37 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("bool", "Aggregating"),
+                new Arguments("string", "BucketName"),
+                new Arguments("long", "CachedSizeInBytes"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("long", "CompletedSizeInBytes"),
+                new Arguments("Guid", "JobId"),
+                new Arguments("bool", "Naked"),
+                new Arguments("string", "Name"),
+                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
+                new Arguments("IEnumerable<Objects>", "Objects"),
+                new Arguments("long", "OriginalSizeInBytes"),
+                new Arguments("Priority", "Priority"),
+                new Arguments("JobRequestType", "RequestType"),
+                new Arguments("DateTime", "StartDate"),
+                new Arguments("JobStatus", "Status"),
+                new Arguments("Guid", "UserId"),
+                new Arguments("string", "UserName"),
+                new Arguments("WriteOptimization", "WriteOptimization"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
@@ -239,6 +325,7 @@ public class NetCodeGenerator_Test {
 
         codeGenerator.generateCode(fileUtils, "/input/createGetJobRequest.xml");
 
+        //Generate Request code
         final String requestCode = codeGenerator.getRequestCode();
         LOG.info("Generated code:\n" + requestCode);
 
@@ -272,6 +359,7 @@ public class NetCodeGenerator_Test {
         assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
         assertTrue(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
 
+        //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
         LOG.info("Generated code:\n" + clientCode);
@@ -282,5 +370,36 @@ public class NetCodeGenerator_Test {
         LOG.info("Generated code:\n" + idsClientCode);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("bool", "Aggregating"),
+                new Arguments("string", "BucketName"),
+                new Arguments("long", "CachedSizeInBytes"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("long", "CompletedSizeInBytes"),
+                new Arguments("Guid", "JobId"),
+                new Arguments("bool", "Naked"),
+                new Arguments("string", "Name"),
+                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
+                new Arguments("IEnumerable<Objects>", "Objects"),
+                new Arguments("long", "OriginalSizeInBytes"),
+                new Arguments("Priority", "Priority"),
+                new Arguments("JobRequestType", "RequestType"),
+                new Arguments("DateTime", "StartDate"),
+                new Arguments("JobStatus", "Status"),
+                new Arguments("Guid", "UserId"),
+                new Arguments("string", "UserName"),
+                new Arguments("WriteOptimization", "WriteOptimization"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 }
