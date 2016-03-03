@@ -259,6 +259,7 @@ public final class JavaHelper {
     public static String argToString(final Arguments arg) {
         switch (arg.getType().toLowerCase()) {
             case "boolean":
+                return "String.valueOf(" + uncapFirst(arg.getName()) + ")";
             case "void":
                 return "null";
             case "string":
