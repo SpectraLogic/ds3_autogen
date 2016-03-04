@@ -32,6 +32,8 @@ public class Request {
     private final ImmutableMap<String, String> requiredArguments;
     private final ImmutableMap<String, String> optionalArguments;
     private final ImmutableList<Ds3ResponseCode> responseCodes;
+    private final String responseType;
+    private final boolean hasResponsePayload;
     private final RequestHelper requestHelper;
 
     public Request(
@@ -45,6 +47,7 @@ public class Request {
             final boolean isResourceIdRequired,
             final ImmutableMap<String, String> requiredArguments,
             final ImmutableMap<String, String> optionalArguments,
+            final String responseType,
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         this.name = name;
         this.classification = classification;
@@ -57,6 +60,8 @@ public class Request {
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
         this.responseCodes = responseCodes;
+        this.responseType = responseType;
+        this.hasResponsePayload = !responseType.isEmpty();
         this.requestHelper = RequestHelper.getInstance();
     }
 
@@ -110,6 +115,14 @@ public class Request {
 
     public ImmutableList<Ds3ResponseCode> getResponseCodes() {
         return responseCodes;
+    }
+
+    public String getResponseType() {
+        return responseType;
+    }
+
+    public boolean hasResponsePayload() {
+        return hasResponsePayload;
     }
 
     public RequestHelper getRequestHelper() {

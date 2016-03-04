@@ -15,16 +15,10 @@
 
 package com.spectralogic.ds3autogen.c.helpers;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
-import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 public final class RequestHelper {
     private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
@@ -40,25 +34,6 @@ public final class RequestHelper {
 
     public static String getNameRootUnderscores(final String name) {
         return Helper.camelToUnderscore(getNameRoot(name));
-    }
-
-    public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            final int rc = responseCode.getCode();
-            if (rc >= 200 && rc < 300)
-            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if (ConverterUtil.hasContent(responseType.getType())
-                    && !Objects.equals(responseType.getType(), "null")) {
-                    LOG.debug("response type " + responseType.getType());
-                    return true;
-                } else if (ConverterUtil.hasContent(responseType.getComponentType())
-                           && !Objects.equals(responseType.getComponentType(), "null")) {
-                    LOG.debug("response type " + responseType.getComponentType());
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public static String getAmazonS3InitParams(final ImmutableMap<String, String> requiredArgs) {
@@ -86,7 +61,6 @@ public final class RequestHelper {
      * @return
      */
     public static boolean containsKey(final ImmutableMap<String, String> immutableMap, final String key) {
-        LOG.info("looking for key " + key);
         return immutableMap.containsKey(key);
     }
 }
