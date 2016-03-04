@@ -16,22 +16,34 @@
 package com.spectralogic.ds3autogen.net.model.response;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.NetHelper;
 
 public class BaseResponse {
 
+    private final NetHelper netHelper;
     private final String name;
-    private final ImmutableList<Integer> expectedStatusCodes;
+    private final ImmutableList<Arguments> arguments;
 
-    public BaseResponse(final String name, final ImmutableList<Integer> expectedStatusCodes) {
+    public BaseResponse(
+            final NetHelper netHelper,
+            final String name,
+            final ImmutableList<Arguments> arguments) {
+        this.netHelper = netHelper;
         this.name = name;
-        this.expectedStatusCodes = expectedStatusCodes;
+        this.arguments = arguments;
     }
 
     public String getName() {
         return name;
     }
 
-    public ImmutableList<Integer> getExpectedStatusCodes() {
-        return expectedStatusCodes;
+    public ImmutableList<Arguments> getArguments() {
+        return arguments;
+    }
+
+    public NetHelper getNetHelper() {
+        return netHelper;
     }
 }
+

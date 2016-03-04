@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Model;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -30,7 +31,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
 
     @Override
     public Model generate(final Ds3Type ds3Type, final String packageName) {
-        final String modelName = getModelName(ds3Type.getName());
+        final String modelName = NormalizingContractNamesUtil.removePath(ds3Type.getName());
         final String nameToMarshal = toNameToMarshal(ds3Type);
         final ImmutableList<Element> elements = toElementList(ds3Type.getElements());
         final ImmutableList<EnumConstant> enumConstants = toEnumConstantList(ds3Type.getEnumConstants());
@@ -57,17 +58,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
             return null;
         }
         return ds3Type.getNameToMarshal();
-    }
-
-    /**
-     * Converts a Ds3Type name into a Model name by removing the path.
-     */
-    protected static String getModelName(final String ds3TypeName) {
-        if (isEmpty(ds3TypeName)) {
-            return "";
-        }
-        final String[] classParts = ds3TypeName.split("\\.");
-        return classParts[classParts.length -1];
     }
 
     /**

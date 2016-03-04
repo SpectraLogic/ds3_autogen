@@ -383,7 +383,7 @@ public class JavaHelper_Test {
         final String expectedResultBoolean =
                 "    public RequestName withArgName(final boolean argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", null);\n" +
+                "        this.updateQueryParam(\"arg_name\", String.valueOf(argName));\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
@@ -413,13 +413,14 @@ public class JavaHelper_Test {
     @Test
     public void argToString_Test() {
         assertThat(argToString(new Arguments("void", "ArgName")), is("null"));
-        assertThat(argToString(new Arguments("boolean", "ArgName")), is("null"));
+        assertThat(argToString(new Arguments("boolean", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
         assertThat(argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
         assertThat(argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
         assertThat(argToString(new Arguments("double", "ArgName")), is("Double.toString(argName)"));
+        assertThat(argToString(new Arguments("Date", "ArgName")), is("Long.toString(argName.getTime())"));
     }
 
     @Test
@@ -661,6 +662,10 @@ public class JavaHelper_Test {
         assertThat(
                 createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
                 is("bucketAclListResult"));
+
+        assertThat(
+                createDs3ResponseTypeParamName(new Ds3ResponseType("SimpleTypeResult", null)),
+                is("simpleTypeResult"));
     }
 
     @Test

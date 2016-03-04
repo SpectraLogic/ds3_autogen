@@ -161,11 +161,11 @@ public class Ds3ModelFixtures {
     }
 
     /**
-     * Creates the SpectraDs3 Bulk request CreateGetJobRequestHandler
+     * Creates the SpectraDs3 Bulk Get request CreateGetJobRequestHandler
      * as described in the Contract, excluding the response codes
      * @return A Bulk request
      */
-    public static Ds3Request getRequestBulk() {
+    public static Ds3Request getRequestBulkGet() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler",
                 null,
@@ -180,6 +180,34 @@ public class Ds3ModelFixtures {
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
                         new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+    }
+
+    /**
+     * Creates the SpectraDs3 Bulk Put request CreatePutJobRequestHandler
+     * as described in the Contract, excluding the response codes
+     * @return A Bulk request
+     */
+    public static Ds3Request getRequestBulkPut() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.START_BULK_PUT,
+                true,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("Aggregating", "boolean"),
+                        new Ds3Param("IgnoreNamingConflicts", "void"),
+                        new Ds3Param("MaxUploadSize", "long"),
+                        new Ds3Param("Name", "java.lang.String"),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
                 ImmutableList.of(
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));

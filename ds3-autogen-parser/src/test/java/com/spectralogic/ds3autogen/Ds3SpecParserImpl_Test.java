@@ -77,11 +77,11 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec, is(notNullValue()));
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(1));
-        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(true));
 
-        final Ds3Type ds3Type = spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority");
+        final Ds3Type ds3Type = spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.Priority");
         assertThat(ds3Type, is(notNullValue()));
-        assertThat(ds3Type.getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+        assertThat(ds3Type.getName(), is("com.spectralogic.s3.common.dao.domain.ds3.Priority"));
 
         assertThat(ds3Type.getElements(), is(notNullValue()));
         assertThat(ds3Type.getElements().size(), is(1));
@@ -106,10 +106,10 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec, is(notNullValue()));
         assertThat(spec.getTypes(), is(notNullValue()));
         assertThat(spec.getTypes().size(), is(2));
-        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(true));
-        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(true));
-        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"), is(notNullValue()));
-        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.TapeFailure"), is(notNullValue()));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(true));
+        assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(true));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(notNullValue()));
+        assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(notNullValue()));
     }
 
     @Test

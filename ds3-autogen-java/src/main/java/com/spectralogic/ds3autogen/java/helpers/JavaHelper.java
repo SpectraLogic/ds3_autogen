@@ -259,6 +259,7 @@ public final class JavaHelper {
     public static String argToString(final Arguments arg) {
         switch (arg.getType().toLowerCase()) {
             case "boolean":
+                return "String.valueOf(" + uncapFirst(arg.getName()) + ")";
             case "void":
                 return "null";
             case "string":
@@ -269,6 +270,8 @@ public final class JavaHelper {
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
                 return "Integer.toString(" + uncapFirst(arg.getName()) + ")";
+            case "date":
+                return "Long.toString(" + uncapFirst(arg.getName()) + ".getTime())";
             default:
                 return uncapFirst(arg.getName()) + ".toString()";
         }
@@ -519,8 +522,8 @@ public final class JavaHelper {
 
         return "try (final InputStream content = getResponse().getResponseStream()) {\n"
                 + indent(indent + 1) + "this."
-                + uncapFirst(responseType)
-                + "Result = XmlOutput.fromXml(content, "
+                + createDs3ResponseTypeParamName(ds3ResponseType)
+                + " = XmlOutput.fromXml(content, "
                 + responseType + ".class);\n"
                 + indent(indent) + "}\n"
                 + indent(indent) + "break;";
@@ -617,10 +620,16 @@ public final class JavaHelper {
         if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
             return "";
         }
+        final StringBuilder builder = new StringBuilder();
         if (hasContent(responseType.getComponentType())) {
-            return uncapFirst(stripPath(responseType.getComponentType())) + "ListResult";
+            builder.append(uncapFirst(stripPath(responseType.getComponentType())) + "List");
+        } else {
+            builder.append(uncapFirst(stripPath(responseType.getType())));
         }
-        return uncapFirst(stripPath(responseType.getType())) + "Result";
+        if (!builder.toString().toLowerCase().endsWith("result")) {
+            builder.append("Result");
+        }
+        return builder.toString();
     }
 
     /**

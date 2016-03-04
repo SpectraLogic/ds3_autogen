@@ -19,8 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -31,8 +29,6 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  * remove all instances of the dollar symbol '$'
  */
 public final class RemoveDollarSignConverter {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RemoveDollarSignConverter.class);
 
     private RemoveDollarSignConverter() { }
 
@@ -127,7 +123,8 @@ public final class RemoveDollarSignConverter {
             final Ds3ResponseType responseType) {
         return new Ds3ResponseType(
                 removeDollarSignFromName(responseType.getType()),
-                removeDollarSignFromName(responseType.getComponentType()));
+                removeDollarSignFromName(responseType.getComponentType()),
+                responseType.getOriginalTypeName());
     }
 
     /**
@@ -305,7 +302,7 @@ public final class RemoveDollarSignConverter {
      * @param typeName The Type Name, which may include a path
      * @param pathDelimiter The path delimiter character
      */
-    protected static String getPathOfType(final String typeName, final char pathDelimiter) {
+    public static String getPathOfType(final String typeName, final char pathDelimiter) {
         if (isEmpty(typeName)) {
             return "";
         }

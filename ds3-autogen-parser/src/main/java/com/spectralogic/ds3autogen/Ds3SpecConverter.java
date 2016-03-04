@@ -42,7 +42,7 @@ class Ds3SpecConverter {
 
         for (final Ds3Request request : requests) {
             final Ds3Request convertedRequest = new Ds3Request(
-                    request.getName(),
+                    convertName(request.getName(), request.getClassification(), nameMapper),
                     request.getHttpVerb(),
                     request.getClassification(),
                     request.getBucketRequirement(),
@@ -112,9 +112,43 @@ class Ds3SpecConverter {
         for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
             builder.add(new Ds3ResponseType(
                     convertName(responseType.getType(), nameMapper),
-                    convertName(responseType.getComponentType(), nameMapper)));
+                    convertName(responseType.getComponentType(), nameMapper),
+                    getOriginalType(responseType.getComponentType(), nameMapper)));
         }
         return new Ds3ResponseCode(responseCode.getCode(), builder.build());
+    }
+
+    /**
+     * Gets the contract name of a type if said type is renamed within the NameMapper.
+     * If the type name does not change, then null is returned.
+     */
+    protected static String getOriginalType(final String type, final NameMapper nameMapper) {
+        if (isEmpty(type)) {
+            return null;
+        }
+        final String converted = convertName(type, nameMapper);
+        if (converted.equals(type)) {
+            return null;
+        }
+        return stripPathAndDollarSign(type);
+    }
+
+    /**
+     * This removes the path and anything proceeding a dollar sign. This is
+     * used to retrieve the original type name of a response type.
+     */
+    protected static String stripPathAndDollarSign(final String type) {
+        final String typeMinusPath = getNameFromPath(type);
+        final String[] parts = typeMinusPath.split("\\$");
+        switch (parts.length) {
+            case 0:
+            case 1:
+                return typeMinusPath;
+            case 2:
+                return parts[1];
+            default:
+                throw new IllegalArgumentException("A type name cannot have two dollar signs within it: " + type);
+        }
     }
 
     /**
@@ -135,7 +169,7 @@ class Ds3SpecConverter {
                     entry.getValue().getNameToMarshal(),
                     convertAllElements(entry.getValue().getElements(), nameMapper),
                     convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
-            builder.put(convertName(convertName(entry.getKey(), nameMapper), nameMapper), ds3Type);
+            builder.put(convertName(entry.getKey(), nameMapper), ds3Type);
         }
 
         return builder.build();
@@ -198,51 +232,20 @@ class Ds3SpecConverter {
                     element.getName(),
                     convertName(element.getType(), nameMapper),
                     convertName(element.getComponentType(), nameMapper),
-                    convertAllAnnotations(element.getDs3Annotations(), nameMapper));
+                    element.getDs3Annotations());
             builder.add(convertedElement);
         }
         return builder.build();
     }
 
     /**
-     * Converts the contract names of all annotation names and annotation elements
-     * to the SDK naming scheme, as defined within the NameMapper
+     * Converts a contract name into an sdk name while maintaining the original path.
+     * This assumes that one is renaming a type vs a request.
      */
-    protected static ImmutableList<Ds3Annotation> convertAllAnnotations(
-            final ImmutableList<Ds3Annotation> annotations,
+    protected static String convertName(
+            final String contractName,
             final NameMapper nameMapper) {
-        if (isEmpty(annotations)) {
-            return annotations;
-        }
-        final ImmutableList.Builder<Ds3Annotation> builder = ImmutableList.builder();
-        for (final Ds3Annotation annotation : annotations) {
-            final Ds3Annotation convertedAnnotation = new Ds3Annotation(
-                    convertName(annotation.getName(), nameMapper),
-                    convertAllAnnotationElements(annotation.getDs3AnnotationElements(), nameMapper));
-            builder.add(convertedAnnotation);
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts the contract names of all annotation element values and value types
-     * to the SDK naming scheme, as defined within the NameMapper
-     */
-    protected static ImmutableList<Ds3AnnotationElement> convertAllAnnotationElements(
-            final ImmutableList<Ds3AnnotationElement> annotationElements,
-            final NameMapper nameMapper) {
-        if (isEmpty(annotationElements)) {
-            return annotationElements;
-        }
-        final ImmutableList.Builder<Ds3AnnotationElement> builder = ImmutableList.builder();
-        for (final Ds3AnnotationElement annotationElement : annotationElements) {
-            final Ds3AnnotationElement convertedElement = new Ds3AnnotationElement(
-                    annotationElement.getName(),
-                    convertName(annotationElement.getValue(), nameMapper),
-                    convertName(annotationElement.getValueType(), nameMapper));
-            builder.add(convertedElement);
-        }
-        return builder.build();
+        return convertName(contractName, null, nameMapper);
     }
 
     /**
@@ -250,7 +253,10 @@ class Ds3SpecConverter {
      * contract name contained a '$', then everything proceeding the '$' is maintained, but
      * the name following the symbol is converted to the sdk name, if a name mapping exists.
      */
-    protected static String convertName(final String contractName, final NameMapper nameMapper) {
+    protected static String convertName(
+            final String contractName,
+            final Classification classification,
+            final NameMapper nameMapper) {
         if (isEmpty(contractName)) {
             return contractName;
         }
@@ -259,14 +265,14 @@ class Ds3SpecConverter {
 
         final String[] parts = curName.split("\\$");
         if (parts.length < 2) {
-            return path + nameMapper.getConvertedName(curName);
+            return path + nameMapper.getConvertedName(curName, classification);
         }
-        return path + parts[0] + "$" + nameMapper.getConvertedName(parts[1]);
+        return path + parts[0] + "$" + nameMapper.getConvertedName(parts[1], classification);
     }
 
     /**
-     * Gets the name at the end of a path. If there is no path, then the original
-     * name is returned.
+     * Gets the path associated with a full contract name. If there is
+     * no path, then the original name is returned.
      */
     protected static String getPathFromName(final String contractName) {
         if (isEmpty(contractName)) {
@@ -279,9 +285,9 @@ class Ds3SpecConverter {
     }
 
     /**
-     * Gets the path associated with a full contract name. If there is no path, then
-     * the original name is returned. If the provided contract name is a path (i.e. it
-     * ends with a period '.', then an error is thrown.
+     * Gets the name at the end of a path. If there is no path, then the
+     * original name is returned. If the provided contract name is a path
+     * (i.e. it ends with a period '.', then an error is thrown.
      */
     protected static String getNameFromPath(final String contractName) {
         if (isEmpty(contractName)) {

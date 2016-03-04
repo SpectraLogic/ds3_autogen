@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.util;
+package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
@@ -21,18 +21,25 @@ import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getArgFromResource;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNotificationType;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
+/**
+ * Provides a series of static utility functions that are used within
+ * the Net package generators to convert the data from Ds3Requests and
+ * Ds3Types into models that are then used within the templates
+ */
 public final class GeneratorUtils {
 
     private GeneratorUtils() {
         //pass
     }
 
+    /**
+     * Creates the C# request path code for a Ds3 request
+     */
     public static String toRequestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
 
@@ -93,40 +100,39 @@ public final class GeneratorUtils {
         return builder.toString();
     }
 
+    /**
+     * Retrieves a list of arguments from the Ds3Request, including converting the required
+     * parameters to arguments, and retrieving the arguments from the request header info
+     */
     public static ImmutableList<Arguments> getRequiredArgs(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
-
         requiredArgs.addAll(RequestConverterUtil.getRequiredArgsFromRequestHeader(ds3Request));
-
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
         return requiredArgs.build();
     }
 
-    private static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
-        if(paramList == null) {
+    /**
+     * Converts a list of Ds3Params into a list of Arguments, excluding the Operations param
+     */
+    public static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+        if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
-
         final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : paramList) {
             if (!ds3Param.getName().equals("Operation")) {
-                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+                argsBuilder.add(toArgument(ds3Param));
             }
         }
         return argsBuilder.build();
     }
 
-
-    public static String toRequestName(final Ds3Request ds3Request) {
-        final String name = ds3Request.getName();
-        final int lastIndex = name.lastIndexOf(".");
-
-        return name.substring(lastIndex + 1);
-    }
-
-    public static String toResponseName(final Ds3Request ds3Request) {
-        return toRequestName(ds3Request).replace("Request", "Response");
+    /**
+     * Converts a Ds3Param into an argument
+     */
+    public static Arguments toArgument(final Ds3Param ds3Param) {
+        final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+        return new Arguments(paramType, ds3Param.getName());
     }
 }

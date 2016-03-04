@@ -27,8 +27,8 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = webResponse.getResponseStream()) {
-                    this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (isNullOrEmpty(this.jobWithChunksApiBeanResult.getObjects())) {
+                    this.masterObjectListResult = XmlOutput.fromXml(content, MasterObjectList.class);
+                    if (isNullOrEmpty(this.masterObjectListResult.getObjects())) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {

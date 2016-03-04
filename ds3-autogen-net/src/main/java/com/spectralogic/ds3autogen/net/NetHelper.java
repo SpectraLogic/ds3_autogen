@@ -17,23 +17,48 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.utils.Helper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
-import static com.spectralogic.ds3autogen.utils.Helper.sortConstructorArgs;
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.*;
 
+/**
+ * Series of static functions that are used within the Net module template
+ * files to help generate the .Net SDK code
+ */
 public final class NetHelper {
+
+    private final static Logger LOG = LoggerFactory.getLogger(NetHelper.class);
+
     private NetHelper() {
         // pass
     }
 
+    /**
+     * Creates a comma separated list of constructor arguments
+     */
     public static String constructor(final ImmutableList<Arguments> args) {
+        if (isEmpty(args)) {
+            return "";
+        }
         return sortConstructorArgs(args)
                 .stream()
                 .map(i -> getType(i) + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Converts a camel cased name to an underscored name.
+     * This is a wrapper function because Helper is not currently accessible
+     * from within the template
+     */
+    public static String camelToUnderscore(final String str) {
+        return Helper.camelToUnderscore(str);
     }
 
     /**
@@ -42,23 +67,52 @@ public final class NetHelper {
      * @return The Java type of the Argument
      */
     public static String getType(final Arguments arg) {
-        if (arg.getType() == null) {
+        if (isEmpty(arg.getType())) {
+            LOG.error("Argument does not have a type: " + arg.getName());
             return "";
         }
+        return toNetType(arg.getType());
+    }
 
-        switch (arg.getType()) {
+    /**
+     * Converts a contract type into a .net type
+     */
+    public static String toNetType(final String contractType) {
+        if (isEmpty(contractType)) {
+            return "";
+        }
+        switch (contractType.toLowerCase()) {
             case "void":
+            case "boolean":
                 return "bool";
-            case "Integer":
+            case "integer":
                 return "int";
-            case "String":
+            case "string":
                 return "string";
-            case "UUID":
+            case "uuid":
                 return "Guid";
-            case "ChecksumType":
-                return arg.getType() + ".Type";
+            case "checksumtype":
+                return contractType + ".Type";
+            case "date":
+                return "DateTime";
             default:
-                return arg.getType();
+                return contractType;
+        }
+    }
+
+    /**
+     * Gets the nullable type of an argument, converting the argument from a Contract
+     * type to a nullable .net type.
+     */
+    public static String getNullableType(final Arguments arg) {
+        final String type = getType(arg);
+        switch (type) {
+            case "":
+                return "";
+            case "string":
+                return type;
+            default:
+                return type + "?";
         }
     }
 
@@ -66,6 +120,10 @@ public final class NetHelper {
      * Creates the .net code for converting an argument to a String.
      */
     public static String argToString(final Arguments arg) {
+        if (isEmpty(arg.getType())) {
+            LOG.error("Argument does not have a type: " + arg.getName());
+            return "";
+        }
         switch (arg.getType().toLowerCase()) {
             case "boolean":
             case "void":
@@ -80,6 +138,32 @@ public final class NetHelper {
             default:
                 return uncapFirst(arg.getName()) + ".ToString()";
         }
+    }
+
+    /**
+     * Determines if a list of arguments contains the specified argument.
+     * This is a wrapper function because Helper is not currently accessible
+     * from within the template
+     */
+    public static boolean containsArgument(final ImmutableList<Arguments> args, final String argName) {
+        return Helper.containsArgument(args, argName);
+    }
+
+    /**
+     * Returns the .net code for the right-hand-side of an assignment. This is
+     * used to assign required variables within a constructor. Return examples:
+     * IEnumerable list: myList.ToList()
+     * Default: myArgument
+     */
+    public static String paramAssignmentRightValue(final Arguments arg) {
+        if (isEmpty(arg.getName()) || isEmpty(arg.getType())) {
+            return "";
+        }
+        final Pattern patternIEnumerable = Pattern.compile("IEnumerable<\\w+>");
+        if (patternIEnumerable.matcher(arg.getType()).find()) {
+            return Helper.uncapFirst(arg.getName()) + ".ToList()";
+        }
+        return Helper.uncapFirst(arg.getName());
     }
 
     private final static NetHelper instance = new NetHelper();

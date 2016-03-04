@@ -1,15 +1,3 @@
-<#include "common/copyright.ftl" />
-
-using System;
-
-namespace Ds3.Calls
-{
-    public class ${name} : Ds3Request
-    {
-        <#include "common/required_args.ftl" />
-
-        <#include "common/constructor.ftl" />
-
         internal override HttpVerb Verb
         {
             get
@@ -22,8 +10,6 @@ namespace Ds3.Calls
         {
             get
             {
-                return "${path}";
+                return ${path};
             }
         }
-    }
-}

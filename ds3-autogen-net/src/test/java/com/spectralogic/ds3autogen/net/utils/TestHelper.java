@@ -15,7 +15,14 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.NetHelper;
+
 import java.util.regex.Pattern;
+
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
 public final class TestHelper {
 
@@ -23,13 +30,94 @@ public final class TestHelper {
         // pass
     }
 
+    /**
+     * Checks if the generated code extends the specified class
+     */
     public static boolean extendsClass(final String getObjectRequestHandler, final String abstractRequest, final String generatedCode) {
         final String searchString = "public class " + getObjectRequestHandler + " : " + abstractRequest;
         return generatedCode.contains(searchString);
     }
 
+    /**
+     * Checks if the generated code has the specified property
+     */
     public static boolean hasProperty(final String propertyName, final String type, final String generatedCode) {
         final Pattern searchString = Pattern.compile("(internal\\s)?(override\\s)?" + type + " " + propertyName, Pattern.MULTILINE | Pattern.UNIX_LINES);
         return searchString.matcher(generatedCode).find();
+    }
+
+    /**
+     * Checks if the generated code contains the specified optional parameter
+     */
+    public static boolean hasOptionalParam(
+            final String requestName,
+            final String paramName,
+            final String paramType,
+            final String generatedCode) {
+        final Pattern searchString = Pattern.compile("private\\s" + paramType + "\\???\\s_" + uncapFirst(paramName) + ";"
+                + "\\s+public\\s" + paramType + "\\???\\s" + paramName + "\\s+\\{"
+                + "\\s+get\\s\\{\\sreturn\\s_" + uncapFirst(paramName) + ";\\s\\}"
+                + "\\s+set\\s\\{\\sWith" + capFirst(paramName) + "\\(value\\);\\s\\}"
+                + "\\s+\\}"
+                + "\\s+public\\s" + requestName + "\\sWith" + capFirst(paramName) + "\\(" + paramType + "\\???\\s" + uncapFirst(paramName) + "\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(generatedCode).find();
+    }
+
+    /**
+     * Checks if the generated code contains the specified required parameter
+     */
+    public static boolean hasRequiredParam(final String paramName, final String paramType, final String generatedCode) {
+        final String searchString = "public " + paramType + " " + paramName + " { get; private set; }";
+        return generatedCode.contains(searchString);
+    }
+
+    /**
+     * Checks if the generated code contains a constructor for the request with the
+     * specified constructor parameters
+     */
+    public static boolean hasConstructor(
+            final String requestName,
+            final ImmutableList<Arguments> args,
+            final String generatedCode) {
+        final String searchString = "public " + requestName + "(" + NetHelper.constructor(args) + ")";
+        return generatedCode.contains(searchString);
+    }
+
+    /**
+     * Checks if the client code contains the given command. This assumes that the command has a
+     * payload, and that it is not void.
+     */
+    public static boolean hasPayloadCommand(final String commandName, final String clientCode) {
+        final Pattern searchString = Pattern.compile(
+                "public " + commandName + "Response " + commandName + "\\(" + commandName + "Request request\\)"
+                + "\\s+\\{"
+                + "\\s+return new " + commandName + "ResponseParser\\(\\)\\.Parse\\(request, _netLayer\\.Invoke\\(request\\)\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(clientCode).find();
+    }
+
+    /**
+     * Checks if the client code contains the given command. This assumes that the command has
+     * no payload, i.e. that it returns void
+     */
+    public static boolean hasVoidCommand(final String commandName, final String clientCode) {
+        final Pattern searchString = Pattern.compile("public void " + commandName + "\\(" + commandName + "Request request\\)"
+                + "\\s+\\{"
+                + "\\s+using \\(var response = _netLayer\\.Invoke\\(request\\)\\)"
+                + "\\s+\\{"
+                + "\\s+ResponseParseUtilities\\.HandleStatusCode\\(response, HttpStatusCode\\.(OK)?(NoContent)?\\);"
+                + "\\s+\\}"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(clientCode).find();
+    }
+
+    public static boolean hasIDsCommand(final String commandName, final String idsClientCode) {
+        final Pattern searchString = Pattern.compile(
+                "(" + commandName + "Response)?(void)? " + commandName + "\\(" + commandName + "Request request\\);",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return searchString.matcher(idsClientCode).find();
     }
 }

@@ -31,10 +31,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGe
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.ChecksumTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.JobsApiBeanTypeGenerator;
-import com.spectralogic.ds3autogen.java.generators.typemodels.TypeModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -56,6 +53,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -169,6 +168,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isJobsApiBean(ds3Type)) {
             return new JobsApiBeanTypeGenerator();
         }
+        if (isCommonPrefixesType(ds3Type)) {
+            return new CommonPrefixGenerator();
+        }
         return new BaseTypeGenerator();
     }
 
@@ -179,6 +181,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getModelTemplate(final Ds3Type ds3Type) throws IOException {
+        if (isHttpErrorType(ds3Type)) {
+            return config.getTemplate("models/http_error_template.ftl");
+        }
         if (isChecksum(ds3Type)) {
             return config.getTemplate("models/checksum_type_template.ftl");
         }
@@ -222,9 +227,10 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     /**
      * Determines if a given Ds3Type is the JobsApiBean type
+     * which is renamed to JobList in the NameMapper
      */
     private boolean isJobsApiBean(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".JobsApiBean");
+        return ds3Type.getName().endsWith(".JobList");
     }
 
     /**

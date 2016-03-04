@@ -74,7 +74,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_request* init_create_bucket_spectra_s3_request(const char* resource_id) {"));
+        assertTrue(output.contains("ds3_request* init_put_bucket_spectra_s3_request(const char* resource_id) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_POST, _build_path(\"/_rest_/bucket\", NULL, NULL));"));
         assertTrue(output.contains("}"));
     }

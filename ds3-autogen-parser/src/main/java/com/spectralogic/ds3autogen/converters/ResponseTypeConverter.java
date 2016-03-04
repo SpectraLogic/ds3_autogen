@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.models.EncapsulatingTypeNames;
+import org.atteo.evo.inflector.English;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,7 @@ public final class ResponseTypeConverter {
     protected static ImmutableList<Ds3Request> createAllUpdatedDs3RequestResponseTypes(
             final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {
-            LOG.info("No requests to update response types");
+            LOG.debug("No requests to update response types");
             return ImmutableList.of();
         }
 
@@ -101,7 +103,7 @@ public final class ResponseTypeConverter {
     protected static ImmutableList<Ds3ResponseCode> toUpdatedDs3ResponseCodeList(
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) {
-            LOG.info("No response codes to update response types");
+            LOG.debug("No response codes to update response types");
             return ImmutableList.of();
         }
 
@@ -121,7 +123,7 @@ public final class ResponseTypeConverter {
     protected static ImmutableList<Ds3ResponseType> toUpdatedDs3ResponseTypesList(
             final ImmutableList<Ds3ResponseType> responseTypes) {
         if (isEmpty(responseTypes)) {
-            LOG.info("No response types to update");
+            LOG.debug("No response types to update");
             return ImmutableList.of();
         }
 
@@ -146,7 +148,8 @@ public final class ResponseTypeConverter {
 
         return new Ds3ResponseType(
                 responseType.getComponentType() + NAMESPACE_ARRAY_RESPONSE_TYPES,
-                null);
+                null,
+                responseType.getOriginalTypeName());
     }
 
     /**
@@ -162,20 +165,20 @@ public final class ResponseTypeConverter {
             final ImmutableList<Ds3Request> requests,
             final ImmutableMap<String, Ds3Type> types) {
         if (isEmpty(requests)) {
-            LOG.info("No requests to generate encapsulating models for");
+            LOG.debug("No requests to generate encapsulating models for");
             return types;
         }
-        final ImmutableSet<String> componentTypes = getResponseComponentTypesFromRequests(requests);
-        if (isEmpty(componentTypes)) {
-            LOG.info("Requests do not contain any responses with component types");
+        final ImmutableSet<EncapsulatingTypeNames> encapsulatingTypes = getResponseComponentTypesFromRequests(requests);
+        if (isEmpty(encapsulatingTypes)) {
+            LOG.debug("Requests do not contain any responses with component types");
             return types;
         }
         final ImmutableMap.Builder<String, Ds3Type> builder = ImmutableMap.builder();
         if (hasContent(types)) {
             builder.putAll(types);
         }
-        for (final String componentType : componentTypes) {
-            final Ds3Type ds3Type = toDs3Type(componentType);
+        for (final EncapsulatingTypeNames encapsulatingType : encapsulatingTypes) {
+            final Ds3Type ds3Type = toDs3Type(encapsulatingType);
             builder.put(ds3Type.getName(), ds3Type);
         }
         return builder.build();
@@ -184,32 +187,52 @@ public final class ResponseTypeConverter {
     /**
      * Converts a response Component Type into a simple Ds3Type that contains a
      * list of the given component type, and where the new Ds3Type is namespaced.
+     * The element name is pluralized, and an annotation is added to denote the
+     * original name for xml parsing.
      */
-    protected static Ds3Type toDs3Type(final String componentType) {
-        if (isEmpty(componentType)) {
+    protected static Ds3Type toDs3Type(final EncapsulatingTypeNames encapsulatingType) {
+        if (isEmpty(encapsulatingType.getSdkName())) {
             throw new IllegalArgumentException("Cannot generate Ds3Type from empty response component type");
         }
+        //Create the annotation for non-pluralized name scheme
+        final ImmutableList<Ds3Annotation> annotations = ImmutableList.of(
+                new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName",
+                        ImmutableList.of(
+                                new Ds3AnnotationElement("Value", getAnnotationName(encapsulatingType), "java.lang.String"))));
         return new Ds3Type(
-                componentType + NAMESPACE_ARRAY_RESPONSE_TYPES,
+                encapsulatingType.getSdkName() + NAMESPACE_ARRAY_RESPONSE_TYPES,
                 ImmutableList.of(
                         new Ds3Element(
-                                stripPath(componentType),
+                                English.plural(stripPath(encapsulatingType.getSdkName())),
                                 "array",
-                                componentType)));
+                                encapsulatingType.getSdkName(),
+                                annotations)));
     }
 
     /**
-     * Gets a list of response Component Types that are being converted into new models
-     * that are within the Ds3Requests list.
+     * Retrieves the annotation name (i.e. "Value") that should be used for
+     * proper xml parsing of model created by this Encapsulating Type Names
+     * object.
      */
-    protected static ImmutableSet<String> getResponseComponentTypesFromRequests(
+    protected static String getAnnotationName(final EncapsulatingTypeNames encapsulatingType) {
+        if (hasContent(encapsulatingType.getOriginalName())) {
+            return encapsulatingType.getOriginalName();
+        }
+        return stripPath(encapsulatingType.getSdkName());
+    }
+
+    /**
+     * Gets a list of response Component Types and original type names that are being
+     * converted into new models that are within the Ds3Requests list.
+     */
+    protected static ImmutableSet<EncapsulatingTypeNames> getResponseComponentTypesFromRequests(
             final ImmutableList<Ds3Request> requests) {
         if (isEmpty(requests)) {
-            LOG.info("No requests for model generation of response component types");
+            LOG.debug("No requests for model generation of response component types");
             return ImmutableSet.of();
         }
 
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        final ImmutableSet.Builder<EncapsulatingTypeNames> builder = ImmutableSet.builder();
         for (final Ds3Request request : requests) {
             builder.addAll(getResponseComponentTypesFromResponseCodes(request.getDs3ResponseCodes()));
         }
@@ -217,17 +240,17 @@ public final class ResponseTypeConverter {
     }
 
     /**
-     * Gets a list of response Component Types that are being converted into new models
-     * that are within the Ds3ResponseCodes list.
+     * Gets a list of response Component Types and original type names that are being converted
+     * into new models that are within the Ds3ResponseCodes list.
      */
-    protected static ImmutableSet<String> getResponseComponentTypesFromResponseCodes(
+    protected static ImmutableSet<EncapsulatingTypeNames> getResponseComponentTypesFromResponseCodes(
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) {
-            LOG.info("No response codes for model generation of response component types");
+            LOG.debug("No response codes for model generation of response component types");
             return ImmutableSet.of();
         }
 
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        final ImmutableSet.Builder<EncapsulatingTypeNames> builder = ImmutableSet.builder();
         for (final Ds3ResponseCode responseCode : responseCodes) {
             builder.addAll(getResponseTypesToUpdateFromResponseTypes(responseCode.getDs3ResponseTypes()));
         }
@@ -235,20 +258,22 @@ public final class ResponseTypeConverter {
     }
 
     /**
-     * Gets a list of response Component Types that are being converted into new models
-     * that are within the Ds3ResponseTypes list.
+     * Gets a list of response Component Types and original type names that are being converted
+     * into new models that are within the Ds3ResponseTypes list.
      */
-    protected static ImmutableSet<String> getResponseTypesToUpdateFromResponseTypes(
+    protected static ImmutableSet<EncapsulatingTypeNames> getResponseTypesToUpdateFromResponseTypes(
             final ImmutableList<Ds3ResponseType> responseTypes) {
         if (isEmpty(responseTypes)) {
-            LOG.info("No response types for model generation of response component types");
+            LOG.debug("No response types for model generation of response component types");
             return ImmutableSet.of();
         }
 
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        final ImmutableSet.Builder<EncapsulatingTypeNames> builder = ImmutableSet.builder();
         for (final Ds3ResponseType responseType : responseTypes) {
             if (hasContent(responseType.getComponentType())) {
-                builder.add(responseType.getComponentType());
+                builder.add(new EncapsulatingTypeNames(
+                        responseType.getComponentType(),
+                        responseType.getOriginalTypeName()));
             }
         }
         return builder.build();

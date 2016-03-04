@@ -46,14 +46,6 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void getRequestName_Test() {
-        assertThat(getRequestName(null), is(""));
-        assertThat(getRequestName(""), is(""));
-        assertThat(getRequestName("SimpleRequestName"), is("SimpleRequestName"));
-        assertThat(getRequestName("com.spectralogic.ds3client.SimpleRequestName"), is("SimpleRequestName"));
-    }
-
-    @Test
     public void getSpectraDs3RequestPath_Test() {
         final Ds3Request deleteNotification = getRequestDeleteNotification();
         assertThat(getSpectraDs3RequestPath(deleteNotification), is("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()"));
@@ -67,7 +59,7 @@ public class BaseRequestGenerator_Test {
         final Ds3Request verifyPhysicalPlacement = getRequestVerifyPhysicalPlacement();
         assertThat(getSpectraDs3RequestPath(verifyPhysicalPlacement), is("\"/_rest_/bucket/\" + this.bucketName"));
 
-        final Ds3Request bulkRequest  = getRequestBulk();
+        final Ds3Request bulkRequest = getRequestBulkGet();
         assertThat(getSpectraDs3RequestPath(bulkRequest), is("\"/_rest_/bucket/\" + this.bucketName"));
 
         final Ds3Request spectraS3GetObject = getRequestSpectraS3GetObject();

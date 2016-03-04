@@ -20,6 +20,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 import com.spectralogic.ds3autogen.java.models.CustomCommand;
+import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
@@ -108,9 +110,9 @@ public class ClientConverter {
                 indent(2) + ");";
 
         return new CustomCommand(
-                toCommandName(ds3Request.getName()),
-                removePath(ds3Request.getName()),
-                toResponseName(ds3Request.getName()),
+                ClientGeneratorUtil.toCommandName(ds3Request.getName()),
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
+                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
                 customBody);
     }
 
@@ -136,40 +138,11 @@ public class ClientConverter {
         for (final Ds3Request ds3Request : ds3Requests) {
             if (!isCustomCommand(ds3Request)) {
                 builder.add(new Command(
-                        toCommandName(ds3Request.getName()),
-                        removePath(ds3Request.getName()),
-                        toResponseName(ds3Request.getName())));
+                        ClientGeneratorUtil.toCommandName(ds3Request.getName()),
+                        NormalizingContractNamesUtil.removePath(ds3Request.getName()),
+                        NormalizingContractNamesUtil.toResponseName(ds3Request.getName())));
             }
         }
         return builder.build();
-    }
-
-    /**
-     * Converts a Ds3Request's name into a Command name
-     * @param requestName The name of a Ds3Request
-     * @return The Command name
-     */
-    private static String toCommandName(final String requestName) {
-        return removePath(requestName).replace("Request", "");
-    }
-
-    /**
-     * Converts a Ds3Request's name into a Response name
-     * @param requestName The name of a Ds3Request
-     * @return The Response name
-     */
-    private static String toResponseName(final String requestName) {
-        return removePath(requestName).replace("Request", "Response");
-    }
-
-    /**
-     * Removes the path from a string. This is used to remove the contract path
-     * path from Ds3Requests.
-     * @param str A string
-     * @return The subset of str that is located after the last period '.' within str
-     */
-    private static String removePath(final String str) {
-        final String[] classParts = str.split("\\.");
-        return classParts[classParts.length - 1];
     }
 }
