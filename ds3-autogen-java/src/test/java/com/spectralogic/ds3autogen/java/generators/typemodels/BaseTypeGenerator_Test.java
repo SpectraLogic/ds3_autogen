@@ -139,11 +139,9 @@ public class BaseTypeGenerator_Test {
                 new Ds3Element("Name3", "Type3", null));
 
         final ImmutableList<String> result = getImportsFromDs3Elements(ds3Elements);
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.List"));
         assertTrue(result.contains("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.Type1"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.ComponentType2"));
         assertTrue(result.contains("java.util.ArrayList"));
     }
 
@@ -182,12 +180,10 @@ public class BaseTypeGenerator_Test {
                 null);
 
         final ImmutableList<String> result = generator.getAllImports(ds3Type);
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.List"));
         assertTrue(result.contains("java.util.ArrayList"));
         assertTrue(result.contains("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.ElementType1"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.ElementComponentType2"));
     }
 
     @Test

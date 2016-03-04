@@ -253,12 +253,15 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
         }
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         for (final Ds3Element element : elements) {
-            if (element.getType().contains(".")) {
+            if (element.getType().contains(".")
+                    && !ConvertType.isModelName(element.getType())) {
                 builder.add(ConvertType.toModelName(element.getType()));
             }
             if (hasContent(element.getComponentType())
                     && element.getComponentType().contains(".")) {
-                builder.add(ConvertType.toModelName(element.getComponentType()));
+                if (!ConvertType.isModelName(element.getComponentType())) {
+                    builder.add(ConvertType.toModelName(element.getComponentType()));
+                }
                 builder.add("java.util.List");
                 builder.add("java.util.ArrayList");
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
