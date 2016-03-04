@@ -81,7 +81,7 @@ public final class StructHelper {
 
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
         return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "_array(log, doc, child_node);\n"
-             + indent(3) + "_response->" + structMember.getName() + " = (" + structMember.getType() + ")" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "_response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
              + indent(3) + "_response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }

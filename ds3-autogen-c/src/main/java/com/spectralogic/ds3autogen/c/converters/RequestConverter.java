@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.c.converters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
@@ -165,10 +164,8 @@ public final class RequestConverter {
             if (rc >= 200 && rc < 300) {
                 for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
                     if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
-                        System.out.println("responseType:" + RequestHelper.getNameRootUnderscores(responseType.getType()));
                         return StructHelper.getResponseTypeName(responseType.getType());
                     } else if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
-                        System.out.println("responseType:" + RequestHelper.getNameRootUnderscores(responseType.getComponentType()));
                         return StructHelper.getResponseTypeName(responseType.getComponentType());
                     }
                 }

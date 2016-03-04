@@ -128,12 +128,12 @@ public class StructHelper_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_api_bean_response(const ds3_log* log, const ds3_system_information_api_bean_response** response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_log* log, const ds3_system_information_response** response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_error* error;"));
-        assertTrue(output.contains("    ds3_system_information_api_bean_response* _response = *response;"));
+        assertTrue(output.contains("    ds3_system_information_response* _response = *response;"));
 
         assertTrue(output.contains("    error = _get_request_xml_nodes(client, request, &doc, &root, \"Data\");"));
         assertTrue(output.contains("    if (error != NULL) {"));
