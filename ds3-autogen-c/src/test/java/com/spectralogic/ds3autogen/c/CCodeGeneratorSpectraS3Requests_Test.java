@@ -78,8 +78,8 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_api_bean_response** response) {"));
-        assertTrue(output.contains("    return _parse_ds3_system_information_api_bean_response(client->log, response);"));
+        assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** response) {"));
+        assertTrue(output.contains("    return _parse_ds3_system_information_response(client->log, response);"));
         assertTrue(output.contains("}"));
     }
 

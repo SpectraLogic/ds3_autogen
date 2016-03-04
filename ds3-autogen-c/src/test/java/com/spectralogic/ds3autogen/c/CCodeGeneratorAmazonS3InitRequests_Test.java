@@ -116,7 +116,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_request* s3_init_get_buckets_request(void) {"));
+        assertTrue(output.contains("ds3_request* s3_init_get_service_request(void) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_GET, _build_path(\"/\", NULL, NULL));"));
         assertTrue(output.contains("}"));
     }
