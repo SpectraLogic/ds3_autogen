@@ -15,11 +15,11 @@
 
 package com.spectralogic.ds3autogen.c.converters;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Requirement;
+import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
@@ -45,6 +45,7 @@ public final class RequestConverter {
                 isResourceIdRequired(ds3Request),
                 getRequiredArgs(ds3Request),
                 getOptionalArgs(ds3Request),
+                getResponseType(ds3Request.getDs3ResponseCodes()),
                 ds3Request.getDs3ResponseCodes());
     }
 
@@ -87,7 +88,7 @@ public final class RequestConverter {
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("\"");
 
         if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
-            // _build_path() will URL escape the resource_id
+            // _build_path() will URL escape the resource_id at runtime
             builder.append(", resource_id, NULL");
         } else {
             builder.append(", NULL, NULL");
@@ -156,5 +157,23 @@ public final class RequestConverter {
         }
 
         return !RequestConverterUtil.isResourceSingleton(ds3Request.getResource());
+    }
+
+    public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            final int rc = responseCode.getCode();
+            if (rc >= 200 && rc < 300) {
+                for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                    if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
+                        System.out.println("responseType:" + RequestHelper.getNameRootUnderscores(responseType.getType()));
+                        return StructHelper.getResponseTypeName(responseType.getType());
+                    } else if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
+                        System.out.println("responseType:" + RequestHelper.getNameRootUnderscores(responseType.getComponentType()));
+                        return StructHelper.getResponseTypeName(responseType.getComponentType());
+                    }
+                }
+            }
+        }
+        return "";
     }
 }

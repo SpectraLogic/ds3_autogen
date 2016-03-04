@@ -33,6 +33,7 @@ public final class StructConverter {
         final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements(), enumNames);
         return new Struct(
                 StructHelper.getResponseTypeName(ds3Type.getName()),
+                toNameToMarshall(ds3Type.getNameToMarshal()),
                 variablesList);
     }
 
@@ -42,5 +43,14 @@ public final class StructConverter {
             builder.add(new StructMember(C_TypeHelper.convertDs3ElementType(currentElement, enumNames), StructHelper.getNameUnderscores(currentElement.getName())));
         }
         return builder.build();
+    }
+
+    private static String toNameToMarshall(final String nameToMarshall) {
+        if (nameToMarshall == null) {
+            return "Data";
+        } else if (nameToMarshall.equals("")) {
+            return null;
+        }
+        return nameToMarshall;
     }
 }

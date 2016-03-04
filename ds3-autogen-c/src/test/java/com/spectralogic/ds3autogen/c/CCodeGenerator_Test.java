@@ -275,15 +275,16 @@ public class CCodeGenerator_Test {
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"DisplayName\")) {"));
-        assertTrue(output.contains("            response->display_name = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            _response->display_name = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
-        assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            _response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return response;"));
+        assertTrue(output.contains("    xmlFreeDoc(doc);"));
+        assertTrue(output.contains("    return NULL;"));
         assertTrue(output.contains("}"));
     }
 
@@ -326,14 +327,15 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            response->num_buckets = buckets_array->len;"));
         assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
-        assertTrue(output.contains("            response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
+        assertTrue(output.contains("            _response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return response;"));
+        assertTrue(output.contains("    xmlFreeDoc(doc);"));
+        assertTrue(output.contains("    return NULL;"));
         assertTrue(output.contains("}"));
     }
 
@@ -356,34 +358,38 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_blob_response* _parse_ds3_blob_response(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_blob_response(const ds3_log* log, const ds3_blob_response** response) {"));
+        assertTrue(output.contains("    xmlDocPtr doc;"));
+        assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
-        assertTrue(output.contains("    ds3_blob_response* response = g_new0(ds3_blob_response, 1);"));
+        assertTrue(output.contains("    ds3_error* error;"));
+        assertTrue(output.contains("    ds3_blob_response* _response = *response;"));
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"ByteOffset\")) {"));
-        assertTrue(output.contains("            response->byte_offset = xml_get_uint64(doc, child_node);"));
+        assertTrue(output.contains("            _response->byte_offset = xml_get_uint64(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Checksum\")) {"));
-        assertTrue(output.contains("            response->checksum = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            _response->checksum = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"ChecksumType\")) {"));
         assertTrue(output.contains("            xmlChar* text = xmlNodeListGetString(doc, child_node, 1);"));
         assertTrue(output.contains("            if (text == NULL) {"));
         assertTrue(output.contains("                continue;"));
         assertTrue(output.contains("            }"));
-        assertTrue(output.contains("            response->checksum_type = _match_ds3_checksum_type(log, text);"));
+        assertTrue(output.contains("            _response->checksum_type = _match_ds3_checksum_type(log, text);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
-        assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            _response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Length\")) {"));
-        assertTrue(output.contains("            response->length = xml_get_uint64(doc, child_node);"));
+        assertTrue(output.contains("            _response->length = xml_get_uint64(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"ObjectId\")) {"));
-        assertTrue(output.contains("            response->object_id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            _response->object_id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return response;"));
+        assertTrue(output.contains("    xmlFreeDoc(doc);"));
+        assertTrue(output.contains("    return NULL;"));
         assertTrue(output.contains("}"));
     }
 
