@@ -34,40 +34,34 @@
     <RequestRequirements>Must be a DS3-style request</RequestRequirements>
     <RequestRequirements>Query Parameters Required: [], Optional: []</RequestRequirements>
     <SampleResponses>
-        <HttpRequest>GET '_rest_/bucket/b' with query parameters {} and headers {}.</HttpRequest>
-        <HttpResponse>
-            <Error>
-                <Code>Forbidden</Code>
-                <HttpErrorCode>403</HttpErrorCode>
-                <Message>Operation not permitted for anonymous logon.</Message>
-                <Resource>/_rest_/bucket/b</Resource>
-                <ResourceId>213</ResourceId>
-            </Error>
-            with headers {x-amz-request-id=213, Content-Type=text/xml, RequestHandler-Version=1.4FAD1C67C3247080EFA33C224B87544D}.
-        </HttpResponse>
-        <HttpResponseCode>403</HttpResponseCode>
-        <HttpResponseType>com.spectralogic.s3.server.domain.HttpErrorResultApiBean</HttpResponseType>
-        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler_Test.testGetBucketsAsAnonymousLogonNotAllowed</Test>
-    </SampleResponses>
-    <SampleResponses>
-        <HttpRequest>GET '_rest_/bucket/a' with query parameters {} and headers {Impersonate-User=user}.</HttpRequest>
+        <HttpRequest>GET '_rest_/bucket' with query parameters {} and headers {Impersonate-User=user}.</HttpRequest>
         <HttpResponse>
             <Data>
-                <CreationDate>2016-01-27T00:28:44.000Z</CreationDate>
-                <DataPolicyId>efc78384-a387-484a-9c9d-61cab9da60a8</DataPolicyId>
-                <Id>a9608b67-b3bb-4298-9a98-aedb9d7b78c7</Id>
-                <LastPreferredChunkSizeInBytes />
-                <LogicalUsedCapacity>0</LogicalUsedCapacity>
-                <Name>a</Name>
-                <UserId>06bd3351-f07d-4b3f-b3d7-d3a1e1b9067e</UserId>
+                <Bucket>
+                    <CreationDate>2016-01-27T00:28:45.000Z</CreationDate>
+                    <DataPolicyId>d3fd402e-6b8f-4332-bbfb-2ceefa4cb093</DataPolicyId>
+                    <Id>b8536f7d-80b9-458f-a1e5-9f37be6fe667</Id>
+                    <LastPreferredChunkSizeInBytes />
+                    <LogicalUsedCapacity>0</LogicalUsedCapacity>
+                    <Name>a</Name>
+                    <UserId>870f35bf-19e7-41d3-b6d4-368c2a3df831</UserId>
+                </Bucket>
+                <Bucket>
+                    <CreationDate>2016-01-27T00:28:45.000Z</CreationDate>
+                    <DataPolicyId>d3fd402e-6b8f-4332-bbfb-2ceefa4cb093</DataPolicyId>
+                    <Id>ecdaf07d-b2ca-4658-bd55-6f39cebd8c16</Id>
+                    <LastPreferredChunkSizeInBytes />
+                    <LogicalUsedCapacity>1</LogicalUsedCapacity>
+                    <Name>b</Name>
+                    <UserId>870f35bf-19e7-41d3-b6d4-368c2a3df831</UserId>
+                </Bucket>
             </Data>
-            with headers {x-amz-request-id=212, Content-Type=text/xml, RequestHandler-Version=1.4FAD1C67C3247080EFA33C224B87544D}.
+            with headers {x-amz-request-id=216, Content-Type=text/xml, RequestHandler-Version=1.8C885A22F5F8EA044A104A020AE563D5}.
         </HttpResponse>
         <HttpResponseCode>200</HttpResponseCode>
-        <HttpResponseType>com.spectralogic.s3.common.dao.domain.ds3.Bucket</HttpResponseType>
-        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler_Test.testGetBucketsReturnsBucketsWithLogicalCapacities</Test>
+        <HttpResponseType>[Lcom.spectralogic.s3.common.dao.domain.ds3.Bucket;</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler_Test.testGetBucketsReturnsBucketsWithLogicalCapacities</Test>
     </SampleResponses>
     <Version>1.4FAD1C67C3247080EFA33C224B87544D</Version>
 </RequestHandler>
-
 -->

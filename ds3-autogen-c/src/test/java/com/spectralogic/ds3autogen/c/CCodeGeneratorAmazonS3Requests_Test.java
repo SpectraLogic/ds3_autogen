@@ -94,6 +94,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));
         assertTrue(output.contains("    ds3_metadata* metadata = NULL;"));
 
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
         assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");"));
         assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
