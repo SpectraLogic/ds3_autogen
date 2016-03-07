@@ -10,6 +10,7 @@ ds3_error* s3_${requestEntry.getRequestHelper().getNameRootUnderscores(requestEn
     ds3_metadata* metadata = NULL;
 
     <#if requestEntry.getRequestHelper().containsKey(requestEntry.getRequiredArguments(), "objectName")>
+    int num_slashes = num_chars_in_ds3_str(request->path, '/');
     if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The object name parameter is required.");
     } else if (g_ascii_strncasecmp(request->path->value, "//", 2) == 0) {
