@@ -266,6 +266,9 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
                 builder.add("java.util.ArrayList");
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
             }
+            if (toElementAsAttribute(element.getDs3Annotations())) {
+                builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty");
+            }
         }
         return builder.build().asList();
     }

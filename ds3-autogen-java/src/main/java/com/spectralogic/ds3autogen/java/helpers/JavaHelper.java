@@ -386,7 +386,7 @@ public final class JavaHelper {
     public static String getModelVariable(final Element element) {
         final StringBuilder builder = new StringBuilder();
 
-        if (element.isAsAttribute()) {
+        if (element.isAttribute()) {
             builder.append(indent(1))
                     .append("@JacksonXmlProperty(isAttribute = true, localName = \"")
                     .append(element.getXmlTagName())

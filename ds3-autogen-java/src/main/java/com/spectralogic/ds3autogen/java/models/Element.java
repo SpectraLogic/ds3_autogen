@@ -19,7 +19,7 @@ public class Element {
 
     private final String name;
     private final String xmlTagName;
-    private final boolean asAttribute;
+    private final boolean isAttribute;
     private final boolean hasWrapper;
     private final String type;
     private final String componentType;
@@ -27,13 +27,13 @@ public class Element {
     public Element(
             final String name,
             final String xmlTagName,
-            final boolean asAttribute,
+            final boolean isAttribute,
             final boolean hasWrapper,
             final String type,
             final String componentType) {
         this.name = name;
         this.xmlTagName = xmlTagName;
-        this.asAttribute = asAttribute;
+        this.isAttribute = isAttribute;
         this.hasWrapper = hasWrapper;
         this.type = type;
         this.componentType = componentType;
@@ -62,8 +62,8 @@ public class Element {
         return xmlTagName;
     }
 
-    public boolean isAsAttribute() {
-        return asAttribute;
+    public boolean isAttribute() {
+        return isAttribute;
     }
 
     public boolean hasWrapper() {
