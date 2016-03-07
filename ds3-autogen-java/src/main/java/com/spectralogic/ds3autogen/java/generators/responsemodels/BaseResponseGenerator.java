@@ -104,6 +104,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
             final String curImport = getImportFromResponseCode(responseCode);
             if (hasContent(curImport)) {
                 builder.add(curImport);
+                builder.add("java.io.InputStream");
             }
         }
         return builder.build();
