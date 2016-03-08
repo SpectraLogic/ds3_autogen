@@ -37,14 +37,12 @@ public final class RequestHelper {
     }
 
     public static String getAmazonS3InitParams(final ImmutableMap<String, String> requiredArgs) {
-        if (requiredArgs.containsKey("bucketName")) {
-            if (requiredArgs.containsKey("objectName")) {
-                return "const char* bucket_name, const char* object_name";
-            } else {
-                return "const char* bucket_name";
-            }
+        if (!requiredArgs.containsKey("bucketName")) {
+            return "void";
+        } else if (requiredArgs.containsKey("objectName")) {
+            return "const char* bucket_name, const char* object_name";
         }
-        return "void";
+        return "const char* bucket_name";
     }
 
     public static String getSpectraS3InitParams(final boolean isResourceIdRequired) {

@@ -161,13 +161,14 @@ public final class RequestConverter {
     public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
-            if (rc >= 200 && rc < 300) {
-                for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                    if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
-                        return StructHelper.getResponseTypeName(responseType.getType());
-                    } else if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
-                        return StructHelper.getResponseTypeName(responseType.getComponentType());
-                    }
+            if (rc < 200 || rc >= 300) continue;
+
+            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
+                    return StructHelper.getResponseTypeName(responseType.getType());
+                }
+                if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
+                    return StructHelper.getResponseTypeName(responseType.getComponentType());
                 }
             }
         }
