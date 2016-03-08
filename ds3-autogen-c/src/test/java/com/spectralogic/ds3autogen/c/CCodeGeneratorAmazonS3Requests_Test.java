@@ -46,7 +46,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -82,7 +82,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -94,6 +94,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));
         assertTrue(output.contains("    ds3_metadata* metadata = NULL;"));
 
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
         assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");"));
         assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
@@ -120,7 +121,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3DeleteRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/AmazonS3DeleteRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());

@@ -46,13 +46,14 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "SpectraS3DeleteRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/SpectraS3DeleteRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_error* delete_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
         assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");"));
         assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
@@ -60,6 +61,80 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, NULL);"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateSpectraS3GetSystemInformationRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/SpectraS3GetSystemInfoRequest_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "request-templates/SpectraS3GetRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** response) {"));
+        assertTrue(output.contains("    return _parse_ds3_system_information_response(client->log, response);"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateSpectraS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/SpectraS3GetBucketRequest_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "request-templates/SpectraS3GetRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_error* get_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_bucket_response** response) {"));
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
+        assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");"));
+        assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return _parse_ds3_bucket_response(client->log, response);"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateSpectraS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/SpectraS3GetBucketsRequest_WithArrayResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "request-templates/SpectraS3GetRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_error* get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_bucket_list_response** response) {"));
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
+        assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");"));
+        assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return _parse_ds3_bucket_list_response(client->log, response);"));
         assertTrue(output.contains("}"));
     }
 }

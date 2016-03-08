@@ -18,11 +18,11 @@ package com.spectralogic.ds3autogen.c;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class RequestHelper_Test {
 
@@ -30,7 +30,8 @@ public class RequestHelper_Test {
     public void testHasResponsePayload() {
         final Ds3ResponseType responseType = new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null);
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, ImmutableList.of(responseType));
-        assertTrue(RequestHelper.hasResponsePayload(ImmutableList.of(responseCode)));
+
+        assertEquals(RequestConverter.getResponseType(ImmutableList.of(responseCode)), "ds3_bucket_objects_api_bean_response");
     }
 
     @Test
@@ -44,6 +45,6 @@ public class RequestHelper_Test {
         final Ds3ResponseCode responseCode403 = new Ds3ResponseCode(403, ImmutableList.of(responseTypeError));
 
         final Ds3ResponseCode responseCode409 = new Ds3ResponseCode(409, ImmutableList.of(responseTypeError));
-        assertFalse(RequestHelper.hasResponsePayload(ImmutableList.of(responseCode200, responseCode400, responseCode403, responseCode409)));
+        assertTrue(RequestConverter.getResponseType(ImmutableList.of(responseCode200, responseCode400, responseCode403, responseCode409)).isEmpty());
     }
 }

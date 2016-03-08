@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 
@@ -28,9 +29,11 @@ public class Request {
     private final Action action;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
-    private final ImmutableList<Arguments> requiredArguments;
-    private final ImmutableList<Arguments> optionalArguments;
+    private final ImmutableMap<String, String> requiredArguments;
+    private final ImmutableMap<String, String> optionalArguments;
     private final ImmutableList<Ds3ResponseCode> responseCodes;
+    private final String responseType;
+    private final boolean hasResponsePayload;
     private final RequestHelper requestHelper;
 
     public Request(
@@ -42,8 +45,9 @@ public class Request {
             final Action action,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
-            final ImmutableList<Arguments> requiredArguments,
-            final ImmutableList<Arguments> optionalArguments,
+            final ImmutableMap<String, String> requiredArguments,
+            final ImmutableMap<String, String> optionalArguments,
+            final String responseType,
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         this.name = name;
         this.classification = classification;
@@ -56,6 +60,8 @@ public class Request {
         this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
         this.responseCodes = responseCodes;
+        this.responseType = responseType;
+        this.hasResponsePayload = !responseType.isEmpty();
         this.requestHelper = RequestHelper.getInstance();
     }
 
@@ -91,17 +97,34 @@ public class Request {
         return isResourceIdRequired;
     }
 
-    public ImmutableList<Arguments> getRequiredArguments() {
+    /**
+     * Key is arg name
+     * Value is arg type
+     */
+    public ImmutableMap<String, String> getRequiredArguments() {
         return requiredArguments;
     }
 
-    public ImmutableList<Arguments> getOptionalArguments() {
+    /**
+     * Key is arg name
+     * Value is arg type
+     */
+    public ImmutableMap<String, String> getOptionalArguments() {
         return optionalArguments;
     }
 
     public ImmutableList<Ds3ResponseCode> getResponseCodes() {
         return responseCodes;
     }
+
+    public String getResponseType() {
+        return responseType;
+    }
+
+    public boolean hasResponsePayload() {
+        return hasResponsePayload;
+    }
+
     public RequestHelper getRequestHelper() {
         return requestHelper;
     }

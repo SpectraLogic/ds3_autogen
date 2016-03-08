@@ -28,9 +28,7 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseRequestGenerator_Test {
 

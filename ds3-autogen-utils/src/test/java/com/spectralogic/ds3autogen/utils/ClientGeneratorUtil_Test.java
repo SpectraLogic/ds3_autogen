@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.utils;
 
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.*;
+import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toCommandName;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

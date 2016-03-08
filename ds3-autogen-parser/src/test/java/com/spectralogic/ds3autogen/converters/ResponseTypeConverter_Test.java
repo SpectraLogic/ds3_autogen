@@ -22,15 +22,16 @@ import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.models.EncapsulatingTypeNames;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.*;
+import static com.spectralogic.ds3autogen.test.helpers.ResponseTypeConverterHelper.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseTypeList;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.*;
-import static com.spectralogic.ds3autogen.test.helpers.ResponseTypeConverterHelper.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ResponseTypeConverter_Test {
 

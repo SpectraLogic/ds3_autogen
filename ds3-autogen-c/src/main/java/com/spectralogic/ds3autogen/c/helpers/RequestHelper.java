@@ -15,15 +15,10 @@
 
 package com.spectralogic.ds3autogen.c.helpers;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
-import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
 
 public final class RequestHelper {
     private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
@@ -41,22 +36,29 @@ public final class RequestHelper {
         return Helper.camelToUnderscore(getNameRoot(name));
     }
 
-    public static boolean hasResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            final int rc = responseCode.getCode();
-            if (rc >= 200 && rc < 300)
-            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if (ConverterUtil.hasContent(responseType.getType())
-                    && !Objects.equals(responseType.getType(), "null")) {
-                    LOG.debug("response type " + responseType.getType());
-                    return true;
-                } else if (ConverterUtil.hasContent(responseType.getComponentType())
-                           && !Objects.equals(responseType.getComponentType(), "null")) {
-                    LOG.debug("response type " + responseType.getComponentType());
-                    return true;
-                }
-            }
+    public static String getAmazonS3InitParams(final ImmutableMap<String, String> requiredArgs) {
+        if (!requiredArgs.containsKey("bucketName")) {
+            return "void";
+        } else if (requiredArgs.containsKey("objectName")) {
+            return "const char* bucket_name, const char* object_name";
         }
-        return false;
+        return "const char* bucket_name";
+    }
+
+    public static String getSpectraS3InitParams(final boolean isResourceIdRequired) {
+        if (isResourceIdRequired) {
+            return "const char* resource_id";
+        }
+        return "void";
+    }
+
+    /**
+     * FreeMarker work around
+     * @param immutableMap
+     * @param key
+     * @return
+     */
+    public static boolean containsKey(final ImmutableMap<String, String> immutableMap, final String key) {
+        return immutableMap.containsKey(key);
     }
 }
