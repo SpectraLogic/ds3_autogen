@@ -4,7 +4,12 @@
 <#-- ********************************** -->
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "spectrads3") && (requestEntry.getVerb().toString() == "GET")>
-ds3_error* ${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request, const ${requestEntry.getResponseType()}** response) { <#-- add response type param -->
+    <#if requestEntry.hasResponsePayload()>
+ds3_error* ${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request, const ${requestEntry.getResponseType()}** response) {
+    <#else>
+ds3_error* ${requestEntry.getRequestHelper().getNameRootUnderscores(requestEntry.getName())}(const ds3_client* client, const ds3_request* request) {
+    </#if>
+
     <#if requestEntry.isResourceIdRequired()>
     int num_slashes = num_chars_in_ds3_str(request->path, '/');
     if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {

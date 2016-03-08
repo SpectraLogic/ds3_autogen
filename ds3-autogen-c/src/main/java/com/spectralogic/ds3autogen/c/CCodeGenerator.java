@@ -94,6 +94,8 @@ public class CCodeGenerator implements CodeGenerator {
         final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.c");
         final Source source = new Source(allEnums,allOrderedStructs,allRequests);
+
+
         processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
 
     }

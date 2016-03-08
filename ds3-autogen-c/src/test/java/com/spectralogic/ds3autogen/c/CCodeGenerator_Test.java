@@ -136,7 +136,7 @@ public class CCodeGenerator_Test {
         LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("typedef struct {"));
-        assertTrue(output.contains("    ds3_ds3_bucket_response** buckets;"));
+        assertTrue(output.contains("    ds3_bucket_response** buckets;"));
         assertTrue(output.contains("    size_t num_buckets;"));
         assertTrue(output.contains("    ds3_user_response* owner;"));
         assertTrue(output.contains("}ds3_list_all_my_buckets_result_response;"));
@@ -211,7 +211,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    for (index = 0; index < response->num_buckets; index++) {"));
-        assertTrue(output.contains("        ds3_ds3_bucket_response_free(response_data->buckets[index]);"));
+        assertTrue(output.contains("        ds3_bucket_response_free(response_data->buckets[index]);"));
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    g_free(response_data->buckets);"));
 
@@ -312,7 +312,7 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static GPtrArray* _parse_ds3_list_all_my_buckets_result_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+                assertTrue(output.contains("static GPtrArray* _parse_ds3_list_all_my_buckets_result_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
 
         assertTrue(output.contains("    GPtrArray* buckets_array = g_ptr_array_new();"));
