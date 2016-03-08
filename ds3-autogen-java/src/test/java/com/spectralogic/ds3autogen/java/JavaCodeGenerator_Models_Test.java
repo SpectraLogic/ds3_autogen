@@ -68,7 +68,7 @@ public class JavaCodeGenerator_Models_Test {
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
         assertTrue(hasImport("java.util.UUID", modelGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.BucketAclPermission", modelGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.models.BucketAclPermission", modelGeneratedCode));
         assertFalse(hasImport("java.util.List", modelGeneratedCode));
 
         final ImmutableList<Element> constructorArgs = ImmutableList.of(
@@ -103,8 +103,8 @@ public class JavaCodeGenerator_Models_Test {
 
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
         assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper", modelGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Pool", modelGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Tape", modelGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.models.Pool", modelGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.models.Tape", modelGeneratedCode));
         assertTrue(hasImport("java.util.List", modelGeneratedCode));
 
         final ImmutableList<Element> constructorArgs = ImmutableList.of(

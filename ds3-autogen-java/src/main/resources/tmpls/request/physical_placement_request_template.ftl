@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
