@@ -32,10 +32,10 @@ public final class RemoveSpectraInternalConverter {
     }
 
     /**
-     * Removes all Spectra Internal requests form a Spec if removeInternal is specified
+     * Removes all Spectra Internal requests form a Spec if generateInternal is not specified
      */
-    public static Ds3ApiSpec removeInternalRequestsFromSpec(final Ds3ApiSpec spec, final boolean removeInternal) {
-        if (removeInternal == false) {
+    public static Ds3ApiSpec removeInternalRequestsFromSpec(final Ds3ApiSpec spec, final boolean generateInternal) {
+        if (generateInternal) {
             return spec;
         }
         return new Ds3ApiSpec(

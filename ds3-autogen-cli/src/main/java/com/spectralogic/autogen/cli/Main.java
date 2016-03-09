@@ -75,7 +75,7 @@ public class Main {
 
         final Ds3ApiSpec spec = parser.getSpec(
                 Files.newInputStream(Paths.get(args.getInputSpec())),
-                args.removeInternal());
+                args.generateInternal());
 
         final CodeGenerator generator;
         switch (args.getType()) {

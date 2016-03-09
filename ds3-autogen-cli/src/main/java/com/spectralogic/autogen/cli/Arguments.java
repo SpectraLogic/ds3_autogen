@@ -6,19 +6,19 @@ public class Arguments {
     private final GeneratorType type;
     private final String inputSpec;
     private final boolean help;
-    private final boolean removeInternal;
+    private final boolean generateInternal;
 
     public Arguments(
             final String targetDir,
             final GeneratorType type,
             final String inputSpec,
             final boolean help,
-            final boolean removeInternal) {
+            final boolean generateInternal) {
         this.targetDir = targetDir;
         this.type = type;
         this.help = help;
         this.inputSpec = inputSpec;
-        this.removeInternal = removeInternal;
+        this.generateInternal = generateInternal;
     }
 
     public String getTargetDir() {
@@ -37,7 +37,7 @@ public class Arguments {
         return inputSpec;
     }
 
-    public boolean removeInternal() {
-        return removeInternal;
+    public boolean generateInternal() {
+        return generateInternal;
     }
 }

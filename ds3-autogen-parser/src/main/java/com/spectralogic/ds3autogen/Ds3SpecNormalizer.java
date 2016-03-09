@@ -42,19 +42,19 @@ public final class Ds3SpecNormalizer {
      * Normalizes the spec to conform to Autogen standards. This renames requests and types,
      * and removes or includes spectra internal requests based on specified parameters.
      * @param spec The spec to be normalized
-     * @param removeInternal Whether the spectra internal requests should be generated
+     * @param generateInternal Whether the spectra internal requests should be generated
      * @return Spec with normalized data
      * @throws ResponseTypeNotFoundException
      * @throws TypeRenamingConflictException
      */
     public static Ds3ApiSpec convertSpec(
             final Ds3ApiSpec spec,
-            final boolean removeInternal) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
+            final boolean generateInternal) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
         verifySingleResponsePayloadRequests(spec.getRequests());
         return renameRequests( //Rename requests from RequestHandler to Request
                 convertResponseTypes( //Converts response types with components into new encapsulating types
                 removeDollarSigns( //Converts all type names containing '$' into proper type names
-                removeInternalRequestsFromSpec(spec, removeInternal)))); //Removes spectra internal requests from spec
+                removeInternalRequestsFromSpec(spec, generateInternal)))); //Removes/keeps spectra internal requests
     }
 
     /**

@@ -64,7 +64,7 @@ public class RemoveSpectraInternalConverter_Test {
         final ImmutableList<Ds3Request> requests = createTestRequests();
 
         final Ds3ApiSpec spec = new Ds3ApiSpec(requests, null);
-        final Ds3ApiSpec result = removeInternalRequestsFromSpec(spec, false);
+        final Ds3ApiSpec result = removeInternalRequestsFromSpec(spec, true);
         assertThat(result.getRequests().size(), is(3));
     }
 
@@ -73,7 +73,7 @@ public class RemoveSpectraInternalConverter_Test {
         final ImmutableList<Ds3Request> requests = createTestRequests();
 
         final Ds3ApiSpec spec = new Ds3ApiSpec(requests, null);
-        final Ds3ApiSpec result = removeInternalRequestsFromSpec(spec, true);
+        final Ds3ApiSpec result = removeInternalRequestsFromSpec(spec, false);
         assertThat(result.getRequests().size(), is(2));
         for (final Ds3Request request : result.getRequests()) {
             assertThat(request.getClassification(), not(Classification.spectrainternal));
