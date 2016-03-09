@@ -5604,7 +5604,6 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.DelegateCreateUserRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="USER" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="DefaultDataPolicyId" Type="java.util.UUID"/>
                         <Param Name="Id" Type="java.util.UUID"/>
                         <Param Name="SecretKey" Type="java.lang.String"/>
                     </OptionalQueryParams>
@@ -5614,13 +5613,19 @@
                 </Request>
                 <ResponseCodes>
                     <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.User"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
                         <Code>500</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.2C3521838857EEFCA9E8992E5B664769</Version>
+                <Version>1.6BCFED905208FF2C3021E49E1113053C</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.DelegateDeleteUserRequestHandler">
                 <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="USER" ResourceType="NON_SINGLETON">
@@ -5628,6 +5633,12 @@
                     <RequiredQueryParams/>
                 </Request>
                 <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                     <ResponseCode>
                         <Code>500</Code>
                         <ResponseTypes>
