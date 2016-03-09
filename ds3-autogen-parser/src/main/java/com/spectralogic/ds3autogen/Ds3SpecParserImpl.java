@@ -44,16 +44,25 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
     }
 
     @Override
-    public Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException {
-        return toSpec(mapper.readValue(stream, RawSpec.class));
+    public Ds3ApiSpec getSpec(final InputStream stream) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        return getSpec(stream, true); //Defaults to removing Spectra Internal requests
     }
 
-    private static Ds3ApiSpec toSpec(final RawSpec contract) throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    @Override
+    public Ds3ApiSpec getSpec(
+            final InputStream stream,
+            final boolean removeInternal) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+        return toSpec(mapper.readValue(stream, RawSpec.class), removeInternal);
+    }
+
+    private static Ds3ApiSpec toSpec(
+            final RawSpec contract,
+            final boolean removeInternal) throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
         final NameMapper nameMapper = new NameMapper();
         final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
                 Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),
                 Ds3SpecConverter.convertTypes(contract.getContract().getDs3Types(), nameMapper));
 
-        return Ds3SpecNormalizer.convertSpec(ds3ApiSpec);
+        return Ds3SpecNormalizer.convertSpec(ds3ApiSpec, removeInternal);
     }
 }
