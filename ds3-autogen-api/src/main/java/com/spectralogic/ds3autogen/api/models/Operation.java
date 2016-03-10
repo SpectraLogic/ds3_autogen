@@ -21,6 +21,7 @@ public enum Operation {
     CANCEL_FORMAT,
     CANCEL_IMPORT,
     CANCEL_ONLINE,
+    CANCEL_VERIFY,
     CLEAN,
     COMPACT,
     DEALLOCATE,
