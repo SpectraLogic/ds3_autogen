@@ -19,6 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.ParameterModifier;
+import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
@@ -33,6 +36,7 @@ public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
 
     public static Request toRequest(final Ds3Request ds3Request) {
+        final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
         return new Request(
                 ds3Request.getName(),
                 ds3Request.getClassification(),
@@ -40,12 +44,10 @@ public final class RequestConverter {
                 getRequestPath(ds3Request),
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
+                getParamList(responseType),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
-                getRequiredArgs(ds3Request),
-                getOptionalArgs(ds3Request),
-                getResponseType(ds3Request.getDs3ResponseCodes()),
-                ds3Request.getDs3ResponseCodes());
+                responseType);
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {
@@ -173,5 +175,17 @@ public final class RequestConverter {
             }
         }
         return "";
+    }
+
+    public static ImmutableList<Parameter> getParamList(final String responseType) {
+        final ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER));
+
+        if (!responseType.isEmpty()) {
+            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER));
+        }
+
+        return builder.build();
     }
 }

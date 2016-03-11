@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.c.models.Parameter;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -46,5 +48,19 @@ public class RequestHelper_Test {
 
         final Ds3ResponseCode responseCode409 = new Ds3ResponseCode(409, ImmutableList.of(responseTypeError));
         assertTrue(RequestConverter.getResponseType(ImmutableList.of(responseCode200, responseCode400, responseCode403, responseCode409)).isEmpty());
+    }
+
+    @Test
+    public void testGetRequestParameterListNoResponseType() {
+        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("");
+        assertEquals(paramList.size(), 2);
+        assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request");
+    }
+
+    @Test
+    public void testGetRequestParameterListWithResponseType() {
+        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response");
+        assertEquals(paramList.size(), 3);
+        assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, const ds3_get_service_response** response");
     }
 }

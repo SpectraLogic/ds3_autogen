@@ -15,10 +15,17 @@
 
 package com.spectralogic.ds3autogen.c.helpers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.stream.Collectors;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public final class RequestHelper {
     private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
@@ -50,6 +57,24 @@ public final class RequestHelper {
             return "const char* resource_id";
         }
         return "void";
+    }
+
+    public static String paramListToString(final ImmutableList<Parameter> paramList) {
+        if (isEmpty(paramList)) {
+            return "";
+        }
+        return paramList
+                .stream()
+                .map(parm -> parm.toString())
+                .collect(Collectors.joining(", "));
+    }
+
+    public static String generateInitRequestFunctionSignature(final Request request) {
+        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
+    }
+
+    public static String generateRequestFunctionSignature(final Request request) {
+        return "ds3_request* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
     }
 
     /**
