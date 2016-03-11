@@ -72,23 +72,6 @@ public final class ConverterUtil {
     }
 
     /**
-     * Removes all Spectra Internal requests form a list of Ds3Requests
-     */
-    public static ImmutableList<Ds3Request> removeSpectraInternalRequests(
-            final ImmutableList<Ds3Request> requests) {
-        if (isEmpty(requests)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
-        for (final Ds3Request request : requests) {
-            if (request.getClassification() != Classification.spectrainternal) {
-                builder.add(request);
-            }
-        }
-        return builder.build();
-    }
-
-    /**
      * Removes all unused types from the Ds3Type map. Types are considered to be used if
      * they are used within a Ds3Request, and/or if they are used within another type that
      * is also used.

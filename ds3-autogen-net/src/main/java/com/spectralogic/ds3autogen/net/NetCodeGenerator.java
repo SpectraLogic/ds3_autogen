@@ -46,7 +46,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeSpectraInternalRequests;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 /**
@@ -78,7 +77,7 @@ public class NetCodeGenerator implements CodeGenerator {
         this.destDir = destDir;
 
         try {
-            final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+            final ImmutableList<Ds3Request> requests = spec.getRequests();
             generateCommands(requests);
             generateClient(requests);
         } catch (final TemplateException e) {

@@ -28,7 +28,7 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-public class Util_Test {
+public class ConverterUtil_Test {
 
     @Test
     public void enumsEqual_Test() {
@@ -122,30 +122,6 @@ public class Util_Test {
         final String fullString = "Hello World";
         assertTrue(hasContent(fullString));
         assertFalse(isEmpty(fullString));
-    }
-
-    @Test
-    public void removeSpectraInternalRequests_NullList_Test() {
-        final ImmutableList<Ds3Request> nullResult = removeSpectraInternalRequests(null);
-        assertTrue(nullResult.isEmpty());
-    }
-
-    @Test
-    public void removeSpectraInternalRequests_EmptyList_Test() {
-        final ImmutableList<Ds3Request> emptyResult = removeSpectraInternalRequests(ImmutableList.of());
-        assertTrue(emptyResult.isEmpty());
-    }
-
-    @Test
-    public void removeSpectraInternalRequests_FullList_Test() {
-        final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                createDs3RequestTestData("Request1", Classification.amazons3),
-                createDs3RequestTestData("Request2", Classification.spectrainternal),
-                createDs3RequestTestData("Request3", Classification.spectrads3));
-        final ImmutableList<Ds3Request> result = removeSpectraInternalRequests(requests);
-        assertThat(result.size(), is(2));
-        assertTrue(result.get(0).getClassification() != Classification.spectrainternal);
-        assertTrue(result.get(1).getClassification() != Classification.spectrainternal);
     }
 
     @Test
