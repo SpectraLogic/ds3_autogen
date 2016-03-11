@@ -331,8 +331,6 @@ public final class JavaHelper {
         switch (arg.getType()) {
             case "void":
                 return "boolean";
-            case "Integer":
-                return "int";
             case "ChecksumType":
                 return arg.getType() + ".Type";
             default:
