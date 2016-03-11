@@ -32,6 +32,7 @@ import java.util.List;
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class JavaHelper_Test {
@@ -415,7 +416,7 @@ public class JavaHelper_Test {
         assertThat(argToString(new Arguments("void", "ArgName")), is("null"));
         assertThat(argToString(new Arguments("boolean", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
-        assertThat(argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(argToString(new Arguments("Integer", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));

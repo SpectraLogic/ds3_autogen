@@ -264,8 +264,9 @@ public final class JavaHelper {
                 return "null";
             case "string":
                 return uncapFirst(arg.getName());
-            case "double":
             case "integer":
+                return "String.valueOf(" + uncapFirst(arg.getName()) + ")";
+            case "double":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
