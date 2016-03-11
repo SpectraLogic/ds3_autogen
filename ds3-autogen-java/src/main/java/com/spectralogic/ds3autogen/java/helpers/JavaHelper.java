@@ -259,13 +259,13 @@ public final class JavaHelper {
     public static String argToString(final Arguments arg) {
         switch (arg.getType().toLowerCase()) {
             case "boolean":
+            case "integer":
                 return "String.valueOf(" + uncapFirst(arg.getName()) + ")";
             case "void":
                 return "null";
             case "string":
                 return uncapFirst(arg.getName());
             case "double":
-            case "integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
@@ -331,8 +331,6 @@ public final class JavaHelper {
         switch (arg.getType()) {
             case "void":
                 return "boolean";
-            case "Integer":
-                return "int";
             case "ChecksumType":
                 return arg.getType() + ".Type";
             default:
