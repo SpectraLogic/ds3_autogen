@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -26,6 +28,8 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  * Removes Spectra Internal requests from Ds3ApiSpec
  */
 public final class RemoveSpectraInternalConverter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RemoveSpectraInternalConverter.class);
 
     private RemoveSpectraInternalConverter() {
         //Pass
@@ -36,8 +40,10 @@ public final class RemoveSpectraInternalConverter {
      */
     public static Ds3ApiSpec removeInternalRequestsFromSpec(final Ds3ApiSpec spec, final boolean generateInternal) {
         if (generateInternal) {
+            LOG.info("Generating Spectra Internal requests");
             return spec;
         }
+        LOG.info("Removing Spectra Internal requests from Ds3ApiSpec");
         return new Ds3ApiSpec(
                 removeSpectraInternalRequests(spec.getRequests()),
                 spec.getTypes());
