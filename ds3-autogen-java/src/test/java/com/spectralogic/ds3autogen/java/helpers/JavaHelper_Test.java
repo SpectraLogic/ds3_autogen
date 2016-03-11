@@ -32,6 +32,7 @@ import java.util.List;
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class JavaHelper_Test {
@@ -144,7 +145,7 @@ public class JavaHelper_Test {
     @Test
     public void getType_Argument_Test() {
         assertThat(getType(new Arguments("void", "test")), is("boolean"));
-        assertThat(getType(new Arguments("Integer", "test")), is("int"));
+        assertThat(getType(new Arguments("Integer", "test")), is("Integer"));
         assertThat(getType(new Arguments("long", "test")), is("long"));
         assertThat(getType(new Arguments(null, "test")), is(""));
         assertThat(getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
@@ -153,13 +154,13 @@ public class JavaHelper_Test {
     @Test
     public void getType_Variable_Test() {
         assertThat(getType(new Variable("test", "void", true)), is("boolean"));
-        assertThat(getType(new Variable("test", "Integer", true)), is("int"));
+        assertThat(getType(new Variable("test", "Integer", true)), is("Integer"));
         assertThat(getType(new Variable("test", "long", true)), is("long"));
         assertThat(getType(new Variable("test", null, true)), is(""));
         assertThat(getType(new Variable("test", "ChecksumType", true)), is("ChecksumType.Type"));
 
         assertThat(getType(new Variable("test", "void", false)), is("boolean"));
-        assertThat(getType(new Variable("test", "Integer", false)), is("int"));
+        assertThat(getType(new Variable("test", "Integer", false)), is("Integer"));
         assertThat(getType(new Variable("test", "long", false)), is("long"));
         assertThat(getType(new Variable("test", null, false)), is(""));
         assertThat(getType(new Variable("test", "ChecksumType", false)), is("ChecksumType.Type"));
@@ -415,7 +416,7 @@ public class JavaHelper_Test {
         assertThat(argToString(new Arguments("void", "ArgName")), is("null"));
         assertThat(argToString(new Arguments("boolean", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
-        assertThat(argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(argToString(new Arguments("Integer", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
