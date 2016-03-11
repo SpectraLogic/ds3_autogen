@@ -221,7 +221,7 @@ public final class JavaHelper {
             return uncapFirst(arg.getName());
         }
         if (arg.getType().endsWith("String")) {
-            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
+            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ").replace('+', ' ')";
         }
         return argToString(arg);
     }

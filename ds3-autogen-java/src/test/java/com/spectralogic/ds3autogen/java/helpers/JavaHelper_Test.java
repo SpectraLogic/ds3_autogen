@@ -788,7 +788,7 @@ public class JavaHelper_Test {
 
         final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
         assertThat(putQueryParamLine(stringTest),
-                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest));"));
+                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest).replace('+', ' '));"));
 
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(putQueryParamLine(intTest),
@@ -816,7 +816,7 @@ public class JavaHelper_Test {
         assertThat(queryParamArgToString(bucketName), is("bucketName"));
 
         final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest)"));
+        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest).replace('+', ' ')"));
 
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
