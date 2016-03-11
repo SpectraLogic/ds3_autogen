@@ -398,6 +398,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
         }
+        if (ds3Request.getClassification() == Classification.spectrainternal) {
+            builder.append(SPECTRA_INTERNAL_PACKAGE);
+        }
         if (isNotificationRequest(ds3Request)) {
             builder.append(NOTIFICATION_PACKAGE);
         }

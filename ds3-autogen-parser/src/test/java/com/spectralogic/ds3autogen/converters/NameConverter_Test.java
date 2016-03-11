@@ -57,6 +57,14 @@ public class NameConverter_Test {
     }
 
     @Test
+    public void toUpdatedDs3RequestName_SpectraInternal_Test() {
+        final String result = toUpdatedDs3RequestName(
+                "com.spectralogic.test.MyTestRequestHandler",
+                Classification.spectrainternal);
+        assertThat(result, is("com.spectralogic.test.MyTestInternalRequest"));
+    }
+
+    @Test
     public void toUpdatedDs3Request_SpectraS3_Test() {
         final Ds3Request request = new Ds3Request(
                 "com.spectralogic.test.MyTestRequestHandler",
