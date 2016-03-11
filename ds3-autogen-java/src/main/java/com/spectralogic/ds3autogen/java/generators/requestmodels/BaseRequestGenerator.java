@@ -283,15 +283,11 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @return The Java code for the request path
      */
     protected static String getRequestPath(final Ds3Request ds3Request) {
-        final StringBuilder builder = new StringBuilder();
-
         if (ds3Request.getClassification() == Classification.amazons3) {
-            builder.append(getAmazonS3RequestPath(ds3Request));
-        } else if (ds3Request.getClassification() == Classification.spectrads3) {
-            builder.append(getSpectraDs3RequestPath(ds3Request));
+            return getAmazonS3RequestPath(ds3Request);
         }
-
-        return builder.toString();
+        //Spectra internal requests have the same path construction as SpectraDs3
+        return getSpectraDs3RequestPath(ds3Request);
     }
 
     /**
@@ -321,7 +317,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      */
     protected static String getSpectraDs3RequestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
-        if (ds3Request.getClassification() != Classification.spectrads3) {
+        if (ds3Request.getClassification() != Classification.spectrads3
+                && ds3Request.getClassification() != Classification.spectrainternal) {
             return builder.toString();
         }
         if (ds3Request.getResource() == null) {

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.getPathOfType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_INTERNAL_NAMESPACING;
 import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAMESPACING;
 
 /**
@@ -34,6 +35,7 @@ import static com.spectralogic.ds3autogen.utils.ProjectConstants.SPECTRA_S3_NAME
  * Naming Scheme:
  * All Ds3Request names should end with "Request" instead of "RequestHandler"
  * All SpectraDs3 request names should be name spaced to end with "SpectraS3Request" instead of just "Request"
+ * All Spectra Internal requests should be name spaced to end with "InternalRequest" instead of just "Request"
  * All Ds3Request names that start with "Create" should instead start with "Put"
  */
 public final class NameConverter {
@@ -93,6 +95,10 @@ public final class NameConverter {
     protected static String toUpdatedDs3RequestName(final String requestName, final Classification classification) {
         if (classification == Classification.spectrads3) {
             final String namespaceName = requestName.replace("Request", SPECTRA_S3_NAMESPACING + "Request");
+            return updateName(namespaceName);
+        }
+        if (classification == Classification.spectrainternal) {
+            final String namespaceName = requestName.replace("Request", SPECTRA_INTERNAL_NAMESPACING + "Request");
             return updateName(namespaceName);
         }
         return updateName(requestName);
