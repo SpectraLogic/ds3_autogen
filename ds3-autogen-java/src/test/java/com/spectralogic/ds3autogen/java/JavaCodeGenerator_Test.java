@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -763,6 +764,7 @@ public class JavaCodeGenerator_Test {
         channelBuilder.add(new Arguments("long", "Offset"));
         channelBuilder.add(new Arguments("SeekableByteChannel", "Channel"));
         assertTrue(hasConstructor(requestName, channelBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         final ImmutableList.Builder<Arguments> streamBuilder = ImmutableList.builder();
         streamBuilder.addAll(commonConstructorArgs);
@@ -770,6 +772,7 @@ public class JavaCodeGenerator_Test {
         streamBuilder.add(new Arguments("long", "Offset"));
         streamBuilder.add(new Arguments("InputStream", "Stream"));
         assertTrue(hasConstructor(requestName, streamBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(streamBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -845,6 +848,7 @@ public class JavaCodeGenerator_Test {
         builder.add(new Arguments("UUID", "Job"));
         builder.add(new Arguments("long", "Offset"));
         assertTrue(hasConstructor(requestName, builder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(builder.build(), "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"job\", job.toString())"));
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"offset\", Long.toString(offset))"));
@@ -977,6 +981,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "NotificationId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1104,6 +1109,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "NotificationId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1279,6 +1285,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "JobChunkId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1337,6 +1344,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "Job"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1515,6 +1523,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "JobId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("public int hashCode()"));
         assertTrue(requestGeneratedCode.contains("public boolean equals(final Object obj)"));

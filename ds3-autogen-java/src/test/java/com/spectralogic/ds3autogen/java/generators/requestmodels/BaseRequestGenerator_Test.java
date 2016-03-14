@@ -491,4 +491,23 @@ public class BaseRequestGenerator_Test {
         assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
         assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
     }
+
+    @Test
+    public void splitAllUuidConstructors_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitAllUuidConstructors(ImmutableList.of(constructor));
+        assertThat(result.size(), is(2));
+        assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
+
+        assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
+    }
 }

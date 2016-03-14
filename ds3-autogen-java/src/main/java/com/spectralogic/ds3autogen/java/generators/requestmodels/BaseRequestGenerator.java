@@ -47,7 +47,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         final String requestPath = getRequestPath(updatedRequest);
         final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(updatedRequest);
         final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(updatedRequest.getOptionalQueryParams());
-        final ImmutableList<RequestConstructor> constructors = toConstructorList(updatedRequest);
+        final ImmutableList<RequestConstructor> constructors = splitAllUuidConstructors(toConstructorList(updatedRequest));
         final ImmutableList<Variable> classVariableArguments = toClassVariableArguments(updatedRequest);
         final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
 
@@ -120,7 +120,23 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 constructorArgs,
                 toQueryParamsList(ds3Request));
 
-        return splitUuidConstructor(constructor);
+        return ImmutableList.of(constructor);
+    }
+    
+    /**
+     * Takes a list of constructors and splits all constructors containing at least one UUID into two
+     * constructors: an original, and a constructor where all UUIDs are replaced with String type.
+     */
+    protected static ImmutableList<RequestConstructor> splitAllUuidConstructors(
+            final ImmutableList<RequestConstructor> constructors) {
+        if (isEmpty(constructors)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
+        for (final RequestConstructor constructor : constructors) {
+            builder.addAll(splitUuidConstructor(constructor));
+        }
+        return builder.build();
     }
 
     /**
