@@ -28,6 +28,8 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
@@ -118,7 +120,40 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 constructorArgs,
                 toQueryParamsList(ds3Request));
 
-        return ImmutableList.of(constructor);
+        return splitUuidConstructor(constructor);
+    }
+
+    //TODO unit test
+    /**
+     * Splits a constructor in two if the constructor contains a parameter of type UUID. The first
+     * constructor is unchanged, while the second constructor has all UUID parameters converted into
+     * strings. If the constructor does not have a UUID parameter, then the original constructor is
+     * returned.
+     */
+    protected static ImmutableList<RequestConstructor> splitUuidConstructor(final RequestConstructor constructor) {
+        final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
+        builder.add(constructor);
+        if (!containsType(constructor.getParameters(), "UUID")) {
+            return builder.build();
+        }
+        builder.add(convertUuidConstructorToStringConstructor(constructor));
+        return builder.build();
+    }
+
+    //TODO unit test
+    /**
+     * Converts all UUID types into Strings within a given request constructor
+     */
+    protected static RequestConstructor convertUuidConstructorToStringConstructor(
+            final RequestConstructor constructor) {
+        final String curType = "UUID";
+        final String newType = "String";
+        return new RequestConstructor(
+                constructor.isDeprecated(),
+                constructor.getAdditionalLines(),
+                modifyType(constructor.getParameters(), curType, newType),
+                modifyType(constructor.getAssignments(), curType, newType),
+                modifyType(constructor.getQueryParams(), curType, newType));
     }
 
     /**
