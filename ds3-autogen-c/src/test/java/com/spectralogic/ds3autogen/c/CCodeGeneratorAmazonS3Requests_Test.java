@@ -52,7 +52,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* s3_head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
 
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));
@@ -88,7 +88,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* s3_head_object_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* head_object_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
 
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));

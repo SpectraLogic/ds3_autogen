@@ -47,7 +47,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -68,7 +68,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -89,7 +89,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -110,7 +110,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());

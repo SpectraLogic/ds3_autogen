@@ -16,7 +16,7 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -43,10 +43,10 @@ public final class RequestHelper {
         return Helper.camelToUnderscore(getNameRoot(name));
     }
 
-    public static String getAmazonS3InitParams(final ImmutableMap<String, String> requiredArgs) {
-        if (!requiredArgs.containsKey("bucketName")) {
+    public static String getAmazonS3InitParams(final boolean isBucketRequired, final boolean isObjectRequired) {
+        if (!isBucketRequired) {
             return "void";
-        } else if (requiredArgs.containsKey("objectName")) {
+        } else if (isObjectRequired) {
             return "const char* bucket_name, const char* object_name";
         }
         return "const char* bucket_name";
@@ -70,20 +70,14 @@ public final class RequestHelper {
     }
 
     public static String generateInitRequestFunctionSignature(final Request request) {
-        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
+        if (request.getClassification() == Classification.amazons3) {
+            return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getAmazonS3InitParams(request.isBucketRequired(), request.isObjectRequired()) + ")";
+        }
+
+        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getSpectraS3InitParams(request.isResourceIdRequired()) + ")";
     }
 
     public static String generateRequestFunctionSignature(final Request request) {
-        return "ds3_request* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
-    }
-
-    /**
-     * FreeMarker work around
-     * @param immutableMap
-     * @param key
-     * @return
-     */
-    public static boolean containsKey(final ImmutableMap<String, String> immutableMap, final String key) {
-        return immutableMap.containsKey(key);
+        return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
     }
 }

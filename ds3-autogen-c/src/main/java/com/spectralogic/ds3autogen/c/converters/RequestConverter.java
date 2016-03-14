@@ -45,6 +45,8 @@ public final class RequestConverter {
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
                 getParamList(responseType),
+                ds3Request.getBucketRequirement() == Requirement.REQUIRED,
+                ds3Request.getObjectRequirement() == Requirement.REQUIRED,
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
                 responseType);
