@@ -30,8 +30,6 @@ public class Request {
     private final Operation operation;
     private final Action action;
     private final ImmutableList<Parameter> paramList;
-    private final boolean isBucketRequired;
-    private final boolean isObjectRequired;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
     private final String responseType;
@@ -46,8 +44,6 @@ public class Request {
             final Operation operation,
             final Action action,
             final ImmutableList<Parameter> paramList,
-            final boolean isBucketRequired,
-            final boolean isObjectRequired,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
             final String responseType) {
@@ -63,8 +59,6 @@ public class Request {
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
         this.requestHelper = RequestHelper.getInstance();
-        this.isBucketRequired = isBucketRequired;
-        this.isObjectRequired = isObjectRequired;
     }
 
     public String getName() {
@@ -93,14 +87,6 @@ public class Request {
 
     public ImmutableList<Parameter> getParamList() {
         return paramList;
-    }
-
-    public boolean isBucketRequired() {
-        return isBucketRequired;
-    }
-
-    public boolean isObjectRequired() {
-        return isObjectRequired;
     }
 
     public boolean isResourceRequired() {

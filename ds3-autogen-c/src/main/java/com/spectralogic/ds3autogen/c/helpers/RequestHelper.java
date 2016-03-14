@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class RequestHelper {
     private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
@@ -71,7 +72,7 @@ public final class RequestHelper {
 
     public static String generateInitRequestFunctionSignature(final Request request) {
         if (request.getClassification() == Classification.amazons3) {
-            return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getAmazonS3InitParams(request.isBucketRequired(), request.isObjectRequired()) + ")";
+            return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()) + ")";
         }
 
         return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getSpectraS3InitParams(request.isResourceIdRequired()) + ")";
@@ -79,5 +80,69 @@ public final class RequestHelper {
 
     public static String generateRequestFunctionSignature(final Request request) {
         return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
+    }
+
+    /*
+    private static String getRequestResourceDomain(final Request request) {
+        if (request.getClassification() == Classification.amazons3) {
+            return "resource type";
+        }
+        return "bucket name";
+    }
+
+    private static String getRequestResource(final Request request) {
+        if (request.getClassification() == Classification.amazons3) {
+            return "resource id";
+        }
+        return "object name";
+    }
+
+    private static String getRequestResourceDomainCondition(final Request request) {
+        if (request.getClassification() == Classification.amazons3) {
+            return "isBucketRequired()";
+        }
+        return "isResourceRequired()";
+    }
+
+    private static String getRequestResourceCondition(final Request request) {
+        if (request.getClassification() == Classification.amazons3) {
+            return "isObjectRequired()";
+        }
+        return "isResourceIdRequired()";
+    }
+    */
+
+    public static String generateParameterCheckingBlock(final Request request) {
+        final StringBuilder builder = new StringBuilder();
+
+        if (request.getClassification() == Classification.amazons3) {
+            builder.append(indent(1)).append("int num_slashes = num_chars_in_ds3_str(request->path, '/');\n");
+            if (request.isResourceIdRequired()) {
+                builder.append(indent(1)).append("if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");\n");
+                builder.append(indent(1)).append("} else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");\n");
+                builder.append(indent(1)).append("}");
+            } else if(request.isResourceRequired()) {
+                builder.append(indent(1)).append("if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");\n");
+                builder.append(indent(1)).append("}");
+            }
+        } else if(request.getClassification() == Classification.spectrads3) {
+            builder.append(indent(1)).append("int num_slashes = num_chars_in_ds3_str(request->path, '/');\n");
+            if (request.isResourceRequired()) {
+                builder.append(indent(1)).append("if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");\n");
+                builder.append(indent(1)).append("} else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");\n");
+                builder.append(indent(1)).append("}");
+            } else if(request.isResourceIdRequired()) {
+                builder.append(indent(1)).append("if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
+                builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");\n");
+                builder.append(indent(1)).append("}");
+            }
+        }
+
+        return builder.toString();
     }
 }

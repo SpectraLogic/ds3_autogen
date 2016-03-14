@@ -9,18 +9,7 @@ ${requestEntry.getRequestHelper().generateRequestFunctionSignature(requestEntry)
     ds3_string_multimap* return_headers = NULL;
     ds3_metadata* metadata = NULL;
 
-    <#if requestEntry.isObjectRequired()>
-    int num_slashes = num_chars_in_ds3_str(request->path, '/');
-    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The object name parameter is required.");
-    } else if (g_ascii_strncasecmp(request->path->value, "//", 2) == 0) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bucket name parameter is required.");
-    }
-    <#elseif requestEntry.isBucketRequired()>
-    if (g_ascii_strncasecmp(request->path->value, "//", 2) == 0) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bucket name parameter is required.");
-    }
-    </#if>
+${requestEntry.getRequestHelper().generateParameterCheckingBlock(requestEntry)}
 
     error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);
     if (error == NULL) {
