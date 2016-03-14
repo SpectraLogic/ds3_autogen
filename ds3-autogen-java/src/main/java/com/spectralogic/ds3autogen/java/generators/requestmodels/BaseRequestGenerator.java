@@ -123,7 +123,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         return splitUuidConstructor(constructor);
     }
 
-    //TODO unit test
     /**
      * Splits a constructor in two if the constructor contains a parameter of type UUID. The first
      * constructor is unchanged, while the second constructor has all UUID parameters converted into
@@ -140,7 +139,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Converts all UUID types into Strings within a given request constructor
      */

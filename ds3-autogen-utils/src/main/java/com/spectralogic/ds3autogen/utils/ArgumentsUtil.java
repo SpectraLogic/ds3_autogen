@@ -26,18 +26,13 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
  */
 public class ArgumentsUtil {
 
-    //TODO unit test
     /**
      * Determines if a list of Arguments contains a given type
      */
     public static boolean containsType(final ImmutableList<Arguments> args, final String type) {
-        if (isEmpty(args) || isEmpty(type)) {
-            return false;
-        }
-        return getAllArgumentTypes(args).contains(type);
+        return !(isEmpty(args) || isEmpty(type)) && getAllArgumentTypes(args).contains(type);
     }
 
-    //TODO unit test
     /**
      * Retrieves the set of all types within a list of Arguments
      */
@@ -52,7 +47,6 @@ public class ArgumentsUtil {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Changes the type of all arguments with the specified type
      */

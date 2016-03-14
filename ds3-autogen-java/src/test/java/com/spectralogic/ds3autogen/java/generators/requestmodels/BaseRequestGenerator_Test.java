@@ -27,7 +27,10 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.getAllArgumentTypes;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -443,5 +446,49 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(1).getType(), is("java.util.UUID"));
         assertThat(result.get(2).getName(), is("BucketId"));
         assertThat(result.get(2).getType(), is("String"));
+    }
+
+    @Test
+    public void convertUuidConstructorToStringConstructor_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final RequestConstructor result = convertUuidConstructorToStringConstructor(constructor);
+        assertThat(getAllArgumentTypes(result.getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.getAssignments()), not(hasItem("UUID")));
+    }
+
+    @Test
+    public void splitUuidConstructor_NoUuid_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
+        assertThat(result.size(), is(1));
+    }
+
+    @Test
+    public void splitUuidConstructor_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
+        assertThat(result.size(), is(2));
+        assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
+
+        assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
     }
 }
