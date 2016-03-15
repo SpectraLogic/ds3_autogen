@@ -251,9 +251,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
                 builder.add("java.util.UUID");
-            } else {
-                builder.add("com.google.common.net.UrlEscapers");
             }
+            builder.add("com.google.common.net.UrlEscapers");
         }
 
         return builder.build().asList();

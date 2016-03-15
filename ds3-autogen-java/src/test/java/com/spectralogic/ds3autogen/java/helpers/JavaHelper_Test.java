@@ -32,7 +32,6 @@ import java.util.List;
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class JavaHelper_Test {
