@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
@@ -45,10 +46,16 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
         final String requestName = NormalizingContractNamesUtil.removePath(updatedRequest.getName());
         final String requestPath = getRequestPath(updatedRequest);
-        final ImmutableList<Arguments> requiredArguments = toRequiredArgumentsList(updatedRequest);
-        final ImmutableList<Arguments> optionalArguments = toOptionalArgumentsList(updatedRequest.getOptionalQueryParams());
-        final ImmutableList<RequestConstructor> constructors = splitAllUuidConstructors(toConstructorList(updatedRequest));
-        final ImmutableList<Variable> classVariableArguments = toClassVariableArguments(updatedRequest);
+
+        final ImmutableList<Arguments> optionalArguments =
+                splitAllUuidOptionalArguments(toOptionalArgumentsList(updatedRequest.getOptionalQueryParams()));
+
+        final ImmutableList<RequestConstructor> constructors =
+                splitAllUuidConstructors(toConstructorList(updatedRequest));
+
+        final ImmutableList<Variable> classVariableArguments =
+                convertAllUuidClassVariables(toClassVariableArguments(updatedRequest));
+
         final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
 
         return new Request(
@@ -58,7 +65,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 requestPath,
                 updatedRequest.getOperation(),
                 updatedRequest.getAction(),
-                requiredArguments,
                 optionalArguments,
                 constructors,
                 classVariableArguments,
@@ -180,6 +186,32 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     }
 
     /**
+     * Converts all UUID class variable arguments from type UUID to type String.
+     * All other variables are left un-modified.
+     */
+    public static ImmutableList<Variable> convertAllUuidClassVariables(final ImmutableList<Variable> variables) {
+        if (isEmpty(variables)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
+        for (final Variable var : variables) {
+            builder.add(convertUuidClassVariable(var));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a UUID class variable argument's type to String. If the variable
+     * is not of type UUID, then the variable is not modified.
+     */
+    public static Variable convertUuidClassVariable(final Variable var) {
+        if (var.getType().equals("UUID")) {
+            return new Variable(var.getName(), "String", var.isRequired());
+        }
+        return var;
+    }
+
+    /**
      * Gets all the class variables to properly generate the variables and their
      * getter functions. This consists of all constructor arguments and optional
      * arguments being converted into variables.
@@ -290,6 +322,34 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     }
 
     /**
+     * Splits all UUID arguments into two arguments (UUID and String) for support of both
+     * UUID and String with-constructors. All non-UUID arguments are left unmodified.
+     */
+    protected static ImmutableList<Arguments> splitAllUuidOptionalArguments(final ImmutableList<Arguments> arguments) {
+        if (isEmpty(arguments)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        for (final Arguments arg : arguments) {
+            builder.addAll(splitUuidOptionalArgument(arg));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Splits UUID arguments into two arguments, one UUID and one String. This is done
+     * so that both a UUID and String with-constructor will be crated for this parameter
+     */
+    protected static ImmutableList<Arguments> splitUuidOptionalArgument(final Arguments arg) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.add(arg);
+        if (arg.getType().equals("UUID")) {
+            builder.add(new Arguments("String", arg.getName()));
+        }
+        return builder.build();
+    }
+
+    /**
      * Converts a list of optional Ds3Params into a list of optional Arguments
      * @param optionalDs3Params A list of optional Ds3Params
      * @return A list of optional Arguments
@@ -383,11 +443,23 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             builder.append("/\"").append(" + this.bucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
-            builder.append("/\"").append(" + ").append(JavaHelper.argToString(resourceArg));
+            builder.append("/\"").append(" + ").append(resourceArgToString(resourceArg));
         } else {
             builder.append("\"");
         }
         return builder.toString();
+    }
+
+    /**
+     * Gets the java code for turning a resource argument into a string. This is used
+     * to prevent previously UUID parameters (which are now stored as Strings) from
+     * being incorrectly converted.
+     */
+    protected static String resourceArgToString(final Arguments arg) {
+        if (arg.getType().equals("UUID")) {
+            return Helper.uncapFirst(arg.getName());
+        }
+        return JavaHelper.argToString(arg);
     }
 
     /**
