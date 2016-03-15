@@ -286,7 +286,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                     && !ds3Param.getType().equals("java.lang.String")) {
                 importsBuilder.add(ConvertType.toModelName(ds3Param.getType()));
             }
-            if (ds3Param.getType().endsWith("String")) {
+            if (ds3Param.getType().endsWith("String") || ds3Param.getType().endsWith("UUID")) {
                 importsBuilder.add("com.google.common.net.UrlEscapers");
             }
         }
