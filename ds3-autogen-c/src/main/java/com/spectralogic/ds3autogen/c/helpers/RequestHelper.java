@@ -82,36 +82,6 @@ public final class RequestHelper {
         return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
     }
 
-    /*
-    private static String getRequestResourceDomain(final Request request) {
-        if (request.getClassification() == Classification.amazons3) {
-            return "resource type";
-        }
-        return "bucket name";
-    }
-
-    private static String getRequestResource(final Request request) {
-        if (request.getClassification() == Classification.amazons3) {
-            return "resource id";
-        }
-        return "object name";
-    }
-
-    private static String getRequestResourceDomainCondition(final Request request) {
-        if (request.getClassification() == Classification.amazons3) {
-            return "isBucketRequired()";
-        }
-        return "isResourceRequired()";
-    }
-
-    private static String getRequestResourceCondition(final Request request) {
-        if (request.getClassification() == Classification.amazons3) {
-            return "isObjectRequired()";
-        }
-        return "isResourceIdRequired()";
-    }
-    */
-
     public static String generateParameterCheckingBlock(final Request request) {
         final StringBuilder builder = new StringBuilder();
 
