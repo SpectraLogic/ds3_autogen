@@ -22,9 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getAllImportsFromResponseCodes;
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getImportFromResponseCode;
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.removeErrorResponseCodes;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;

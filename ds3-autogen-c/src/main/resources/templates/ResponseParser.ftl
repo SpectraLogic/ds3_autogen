@@ -10,14 +10,23 @@
         </#if>
     </#list>
 
-static ${structEntry.getName()}* _parse_${structEntry.getName()}(const ds3_log* log, const xmlDocPtr doc, const xmlNodePtr root_node) {
+static ds3_error* _parse_${structEntry.getName()}(const ds3_log* log, const ${structEntry.getName()}** response) {
+    xmlDocPtr doc;
+    xmlNodePtr root;
     xmlNodePtr child_node;
-    ${structEntry.getName()}* response = g_new0(${structEntry.getName()}, 1);
+    ds3_error* error;
+    ${structEntry.getName()}* _response = *response;
+
+    error = _get_request_xml_nodes(client, request, &doc, &root, "${structEntry.getNameToMarshall()}");
+    if (error != NULL) {
+        return error;
+    }
 
     for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
 ${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), structEntry.getStructMembers())}
     }
 
-    return response;
+    xmlFreeDoc(doc);
+    return NULL;
 }
 </#list>

@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.NetHelper.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class NetHelper_Test {
 

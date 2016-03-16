@@ -43,7 +43,11 @@ public final class StructHelper {
     }
 
     public static String getDs3TypeName(final String name) {
-        return "ds3_" + getNameUnderscores(name);
+        final String name_underscores = getNameUnderscores(name);
+        if (name_underscores.startsWith("ds3_")) { // some special-cased types have already been renamed with ds3_ prefix
+            return name_underscores;
+        }
+        return "ds3_" + name_underscores;
     }
 
     public static String getResponseTypeName(final String name) {
@@ -75,14 +79,14 @@ public final class StructHelper {
     }
 
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
-        return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
+        return indent(3) + "_response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
 
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
         return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "_array(log, doc, child_node);\n"
-             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType() + ")" + structMember.getName() + "_array->pdata;\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
+             + indent(3) + "_response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "_response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
@@ -91,7 +95,7 @@ public final class StructHelper {
              + indent(3) + "if (text == NULL) {\n"
              + indent(3) + "    continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
+             + indent(3) + "_response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
     }
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
