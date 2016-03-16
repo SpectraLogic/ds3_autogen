@@ -374,7 +374,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    public RequestName withArgName(final ArgType argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName.toString());\n" +
+                "        this.updateQueryParam(\"arg_name\", argName);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments argument = new Arguments("ArgType", "ArgName");
@@ -384,7 +384,7 @@ public class JavaHelper_Test {
         final String expectedResultBoolean =
                 "    public RequestName withArgName(final boolean argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", String.valueOf(argName));\n" +
+                "        this.updateQueryParam(\"arg_name\", argName);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");

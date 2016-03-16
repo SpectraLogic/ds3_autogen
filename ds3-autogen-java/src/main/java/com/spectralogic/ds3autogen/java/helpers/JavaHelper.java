@@ -125,7 +125,7 @@ public final class JavaHelper {
     protected static String withConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
                 + indent(2) + argAssignmentLine(arg.getName())
-                + indent(2) + updateQueryParamLine(arg.getName(), queryParamArgToString(arg));
+                + indent(2) + updateQueryParamLine(arg.getName(), uncapFirst(arg.getName()));
     }
 
     /**
