@@ -22,9 +22,11 @@ import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.utils.Helper;
 
+import java.util.regex.Pattern;
+
 public final class TestHelper {
 
-    public enum Scope { PUBLIC, PROTECTED, PRIVATE }
+    public enum Scope { PUBLIC, PRIVATE }
 
     private TestHelper() { }
 
@@ -117,19 +119,11 @@ public final class TestHelper {
             final String paramType,
             final String requestName,
             final String code) {
-        final String constructorLine = getLineContaining(code, "public " + requestName + "(");
-        return constructorLine != null
-                && constructorLine.contains("final " + paramType + " " + Helper.uncapFirst(paramName));
-    }
+        final Pattern searchString = Pattern.compile("\\s+public " + requestName + "\\([^\n]+"
+                + paramType + " " + Helper.uncapFirst(paramName) + "[^\n\\)]*\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
 
-    private static String getLineContaining(final String input, final String desiredContent) {
-        final String[] separated = input.split("\n");
-        for (final String str : separated) {
-            if (str.contains(desiredContent)) {
-                return str;
-            }
-        }
-        return null;
+        return searchString.matcher(code).find();
     }
 
     public static boolean hasImport(final String importName, final String code) {

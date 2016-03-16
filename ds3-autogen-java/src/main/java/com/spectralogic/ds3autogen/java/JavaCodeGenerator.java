@@ -120,7 +120,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     private void generateAllModels() throws IOException, TemplateException {
         final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(
                 spec.getTypes(),
-                removeSpectraInternalRequests(spec.getRequests()));
+                spec.getRequests());
 
         if (isEmpty(types)) {
             LOG.info("There were no models to generate");
@@ -258,7 +258,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws TemplateException
      */
     private void generateAllRequests() throws IOException, TemplateException {
-        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+        final ImmutableList<Ds3Request> requests = spec.getRequests();
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
@@ -276,7 +276,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws TemplateException
      */
     private void generateClient() throws IOException, TemplateException {
-        final ImmutableList<Ds3Request> requests = removeSpectraInternalRequests(spec.getRequests());
+        final ImmutableList<Ds3Request> requests = spec.getRequests();
         if (isEmpty(requests)) {
             LOG.info("Not generating client: no requests.");
             return;
@@ -397,6 +397,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         builder.append(COMMANDS_PACKAGE_PATH);
         if (ds3Request.getClassification() == Classification.spectrads3) {
             builder.append(SPECTRA_DS3_PACKAGE);
+        }
+        if (ds3Request.getClassification() == Classification.spectrainternal) {
+            builder.append(SPECTRA_INTERNAL_PACKAGE);
         }
         if (isNotificationRequest(ds3Request)) {
             builder.append(NOTIFICATION_PACKAGE);

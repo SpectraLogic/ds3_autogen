@@ -27,7 +27,10 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.getAllArgumentTypes;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 public class BaseRequestGenerator_Test {
@@ -162,7 +165,7 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void getRequestPath_SpectraS3ResourceWithJobChunkId_Test() {
-        final String expectedPath = "\"/_rest_/job_chunk/\" + jobChunkId.toString()";
+        final String expectedPath = "\"/_rest_/job_chunk/\" + jobChunkId";
         final Ds3Request request = createDs3RequestTestData(
                 "RequestName",
                 Classification.spectrads3,
@@ -441,5 +444,154 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(1).getType(), is("java.util.UUID"));
         assertThat(result.get(2).getName(), is("BucketId"));
         assertThat(result.get(2).getType(), is("String"));
+    }
+
+    @Test
+    public void convertUuidConstructorToStringConstructor_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final RequestConstructor result = convertUuidConstructorToStringConstructor(constructor);
+        assertThat(getAllArgumentTypes(result.getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.getAssignments()), not(hasItem("UUID")));
+    }
+
+    @Test
+    public void splitUuidConstructor_NoUuid_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
+        assertThat(result.size(), is(1));
+    }
+
+    @Test
+    public void splitUuidConstructor_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
+        assertThat(result.size(), is(2));
+        assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
+
+        assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
+    }
+
+    @Test
+    public void splitAllUuidConstructors_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("String", "StringArg"),
+                new Arguments("UUID", "UuidArg"),
+                new Arguments("int", "IntArg"));
+        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+
+        final ImmutableList<RequestConstructor> result = splitAllUuidConstructors(ImmutableList.of(constructor));
+        assertThat(result.size(), is(2));
+        assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
+
+        assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
+    }
+
+    @Test
+    public void convertUuidClassVariable_Test() {
+        final Variable uuidVar = convertUuidClassVariable(new Variable("UuidVar", "UUID", true));
+        assertThat(uuidVar.getType(), is("String"));
+
+        final Variable intVar = convertUuidClassVariable(new Variable("IntVar", "int", true));
+        assertThat(intVar.getType(), is("int"));
+    }
+
+    @Test
+    public void convertAllUuidClassVariables_NullList_Test() {
+        final ImmutableList<Variable> result = convertAllUuidClassVariables(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void convertAllUuidClassVariables_EmptyList_Test() {
+        final ImmutableList<Variable> result = convertAllUuidClassVariables(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void convertAllUuidClassVariables_FullList_Test() {
+        final ImmutableList<Variable> variables = ImmutableList.of(
+                new Variable("Var", "String", true),
+                new Variable("Var", "UUID", true),
+                new Variable("Var", "UUID", false),
+                new Variable("Var", "Integer", true));
+
+        final ImmutableList<Variable> result = convertAllUuidClassVariables(variables);
+        assertThat(result.size(), is(4));
+        for (final Variable var : result) {
+            assertThat(var.getType(), not(is("UUID")));
+        }
+    }
+
+    @Test
+    public void splitUuidOptionalArgument_UUID_Test() {
+        final ImmutableList<Arguments> result = splitUuidOptionalArgument(new Arguments("UUID", "Arg"));
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getType(), is("UUID"));
+        assertThat(result.get(1).getType(), is("String"));
+    }
+
+    @Test
+    public void splitUuidOptionalArgument_Test() {
+        final ImmutableList<Arguments> result = splitUuidOptionalArgument(new Arguments("Integer", "Arg"));
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getType(), is("Integer"));
+    }
+
+    @Test
+    public void splitAllUuidOptionalArguments_NullList_Test() {
+        final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void splitAllUuidOptionalArguments_EmptyList_Test() {
+        final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void splitAllUuidOptionalArguments_FullList_Test() {
+        final ImmutableList<Arguments> variables = ImmutableList.of(
+                new Arguments("UUID", "Var1"),
+                new Arguments("Integer", "Var2"));
+
+        final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(variables);
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getName(), is("Var1"));
+        assertThat(result.get(0).getType(), is("UUID"));
+        assertThat(result.get(1).getName(), is("Var1"));
+        assertThat(result.get(1).getType(), is("String"));
+        assertThat(result.get(2).getName(), is("Var2"));
+        assertThat(result.get(2).getType(), is("Integer"));
+    }
+
+    @Test
+    public void resourceArgToString_Test() {
+        assertThat(resourceArgToString(new Arguments("UUID", "Arg")), is("arg"));
+        assertThat(resourceArgToString(new Arguments("String", "Arg")), is("arg"));
+        assertThat(resourceArgToString(new Arguments("Integer", "Arg")), is("String.valueOf(arg)"));
     }
 }

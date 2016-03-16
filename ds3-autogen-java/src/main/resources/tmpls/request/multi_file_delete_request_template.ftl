@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.delete.Delete;
 import com.spectralogic.ds3client.models.delete.DeleteObject;

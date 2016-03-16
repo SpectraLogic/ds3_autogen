@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
  * Converts a Ds3Type name into a Model name used for generating the correct
@@ -28,6 +29,16 @@ public final class ConvertType {
     }
 
     /**
+     * Determines if a given name is a model name
+     */
+    public static boolean isModelName(final String ds3TypeName) {
+        if (isEmpty(ds3TypeName)) {
+            return false;
+        }
+        return ds3TypeName.startsWith(CONTRACT_PACKAGE_PATH);
+    }
+
+    /**
      * Converts a Ds3Type name into a Model name. If the Ds3Type is defined
      * within the Contract, then the package path is modified from the Contract
      * package scheme into the Java Model's package scheme.
@@ -35,6 +46,9 @@ public final class ConvertType {
      * @return The Model name
      */
     public static String toModelName(final String ds3TypeName) {
+        if (isEmpty(ds3TypeName)) {
+            return "";
+        }
         if (ds3TypeName.startsWith(CONTRACT_PACKAGE_PATH)) {
             final String[] packageParts = ds3TypeName.split("\\.");
             return MODELS_PACKAGE_PATH + packageParts[packageParts.length - 1];

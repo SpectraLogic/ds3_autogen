@@ -124,8 +124,8 @@ public final class JavaHelper {
      */
     protected static String withConstructor(final Arguments arg, final String requestName) {
         return withConstructorFirstLine(arg, requestName)
-                + indent(2) + argAssignmentLine(arg.getName())
-                + indent(2) + updateQueryParamLine(arg.getName(), queryParamArgToString(arg));
+                + indent(2) + argAssignmentLine(arg)
+                + indent(2) + updateQueryParamLine(arg.getName(), uncapFirst(arg.getName()));
     }
 
     /**
@@ -170,8 +170,8 @@ public final class JavaHelper {
      * parameter of the same name.
      * Example: this.myVariable = myVariable;
      */
-    private static String argAssignmentLine(final String name) {
-        return "this." + uncapFirst(name) + " = " + uncapFirst(name) + ";\n";
+    private static String argAssignmentLine(final Arguments arg) {
+        return "this." + uncapFirst(arg.getName()) + " = " + paramAssignmentRHS(arg) + ";\n";
     }
 
     /**
@@ -221,7 +221,7 @@ public final class JavaHelper {
             return uncapFirst(arg.getName());
         }
         if (arg.getType().endsWith("String")) {
-            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ")";
+            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ").replace(\"+\", \"%2B\")";
         }
         return argToString(arg);
     }
@@ -259,13 +259,13 @@ public final class JavaHelper {
     public static String argToString(final Arguments arg) {
         switch (arg.getType().toLowerCase()) {
             case "boolean":
+            case "integer":
                 return "String.valueOf(" + uncapFirst(arg.getName()) + ")";
             case "void":
                 return "null";
             case "string":
                 return uncapFirst(arg.getName());
             case "double":
-            case "integer":
             case "long":
                 return capFirst(arg.getType()) + ".toString(" + uncapFirst(arg.getName()) + ")";
             case "int":
@@ -331,8 +331,6 @@ public final class JavaHelper {
         switch (arg.getType()) {
             case "void":
                 return "boolean";
-            case "Integer":
-                return "int";
             case "ChecksumType":
                 return arg.getType() + ".Type";
             default:
@@ -386,7 +384,7 @@ public final class JavaHelper {
     public static String getModelVariable(final Element element) {
         final StringBuilder builder = new StringBuilder();
 
-        if (element.isAsAttribute()) {
+        if (element.isAttribute()) {
             builder.append(indent(1))
                     .append("@JacksonXmlProperty(isAttribute = true, localName = \"")
                     .append(element.getXmlTagName())
@@ -668,5 +666,17 @@ public final class JavaHelper {
             }
         }
         return builder.build();
+    }
+
+    /**
+     * Gets the right-hand-side (RHS) of the assignment for request constructor parameters.
+     * For UUID parameters, the parameter will be converted to a string. For all other
+     * parameters, the RHS will be the parameter name.
+     */
+    public static String paramAssignmentRHS(final Arguments arg) {
+        if (arg.getType().equals("UUID")) {
+            return argToString(arg);
+        }
+        return uncapFirst(arg.getName());
     }
 }

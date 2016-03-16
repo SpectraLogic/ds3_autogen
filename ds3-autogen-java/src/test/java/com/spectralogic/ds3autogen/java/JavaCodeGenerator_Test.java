@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -97,7 +98,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("MaxKeys", "int", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Prefix", "String", requestName, requestGeneratedCode, true));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
@@ -148,10 +149,10 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("DataPolicyId", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("UserId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("DataPolicyId", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("UserId", "String", requestName, requestGeneratedCode, false));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
@@ -206,7 +207,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
@@ -388,14 +389,14 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("FullDetails", "boolean", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
@@ -455,7 +456,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
@@ -467,7 +468,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
@@ -528,10 +529,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("FullDetails", "boolean", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("java.util.List", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
@@ -592,7 +593,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("StorageDomainId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("StorageDomainId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasMethod("getStream", "InputStream", Scope.PUBLIC, requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"full_details\", null)"));
@@ -600,7 +601,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isReqVariable("FullDetails", "void", requestGeneratedCode));
         assertFalse(hasGetter("FullDetails", "void", requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("java.util.List", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
@@ -664,7 +665,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("Objects", "List<String>", requestName, requestGeneratedCode, false));
         assertFalse(isReqParamOfType("Delete", "boolean", requestName, requestGeneratedCode, false));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Contents", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.delete.Delete", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.delete.DeleteObject", requestGeneratedCode));
@@ -723,7 +724,7 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
-        assertTrue(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
@@ -733,7 +734,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptVariable("Channel", "SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasGetter("Channel", "SeekableByteChannel", requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
@@ -763,6 +764,7 @@ public class JavaCodeGenerator_Test {
         channelBuilder.add(new Arguments("long", "Offset"));
         channelBuilder.add(new Arguments("SeekableByteChannel", "Channel"));
         assertTrue(hasConstructor(requestName, channelBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         final ImmutableList.Builder<Arguments> streamBuilder = ImmutableList.builder();
         streamBuilder.addAll(commonConstructorArgs);
@@ -770,6 +772,7 @@ public class JavaCodeGenerator_Test {
         streamBuilder.add(new Arguments("long", "Offset"));
         streamBuilder.add(new Arguments("InputStream", "Stream"));
         assertTrue(hasConstructor(requestName, streamBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(streamBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -779,7 +782,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
@@ -809,7 +812,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
-        assertTrue(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
@@ -819,7 +822,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Range", requestGeneratedCode));
         assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
@@ -845,6 +848,7 @@ public class JavaCodeGenerator_Test {
         builder.add(new Arguments("UUID", "Job"));
         builder.add(new Arguments("long", "Offset"));
         assertTrue(hasConstructor(requestName, builder.build(), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(builder.build(), "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"job\", job.toString())"));
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"offset\", Long.toString(offset))"));
@@ -893,7 +897,7 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
-        assertFalse(isOptParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+        assertFalse(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertFalse(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
         assertTrue(isReqParamOfType("BucketId", "String", requestName, requestGeneratedCode, false));
@@ -903,7 +907,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Range", requestGeneratedCode));
         assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
@@ -977,6 +981,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "NotificationId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -987,7 +992,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
@@ -1036,7 +1041,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("Format", "HttpResponseFormatType", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("NamingConvention", "NamingConventionType", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("NotificationHttpMethod", "RequestType", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("JobId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("JobId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasCopyright(requestGeneratedCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
@@ -1093,8 +1098,8 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOptParamOfType("LastPage", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("PageLength", "int", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("PageOffset", "int", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("PageStartMarker", "UUID", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("UserId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("PageStartMarker", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("UserId", "String", requestName, requestGeneratedCode, false));
         assertTrue(hasCopyright(requestGeneratedCode));
 
         assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
@@ -1104,6 +1109,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "NotificationId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1211,7 +1217,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isReqVariable("Uploads", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Uploads", "boolean", requestGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
@@ -1267,18 +1273,19 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertTrue(hasCopyright(requestGeneratedCode));
 
-        assertTrue(isReqParamOfType("JobChunkId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("JobChunkId", "String", requestName, requestGeneratedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
 
         assertTrue(hasOperation(Operation.ALLOCATE, requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_chunk/\" + jobChunkId.toString()", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_chunk/\" + jobChunkId", requestGeneratedCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "JobChunkId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1325,10 +1332,10 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertTrue(hasCopyright(requestGeneratedCode));
 
-        assertTrue(isReqParamOfType("Job", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("Job", "String", requestName, requestGeneratedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
@@ -1337,6 +1344,7 @@ public class JavaCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "Job"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1388,7 +1396,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
 
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName", requestGeneratedCode));
@@ -1406,7 +1414,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
         assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
@@ -1447,7 +1455,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
 
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
@@ -1466,7 +1474,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
         assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
@@ -1503,18 +1511,19 @@ public class JavaCodeGenerator_Test {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertTrue(hasCopyright(requestGeneratedCode));
 
-        assertTrue(isReqParamOfType("JobId", "UUID", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("JobId", "String", requestName, requestGeneratedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
 
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job/\" + jobId.toString()", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job/\" + jobId", requestGeneratedCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("UUID", "JobId"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("public int hashCode()"));
         assertTrue(requestGeneratedCode.contains("public boolean equals(final Object obj)"));

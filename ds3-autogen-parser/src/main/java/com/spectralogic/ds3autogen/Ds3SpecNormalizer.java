@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 
 import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.removeDollarSigns;
+import static com.spectralogic.ds3autogen.converters.RemoveSpectraInternalConverter.removeInternalRequestsFromSpec;
 import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.convertResponseTypes;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -37,11 +38,23 @@ public final class Ds3SpecNormalizer {
 
     private Ds3SpecNormalizer() { }
 
-    public static Ds3ApiSpec convertSpec(final Ds3ApiSpec spec) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
+    /**
+     * Normalizes the spec to conform to Autogen standards. This renames requests and types,
+     * and removes or includes spectra internal requests based on specified parameters.
+     * @param spec The spec to be normalized
+     * @param generateInternal Whether the spectra internal requests should be generated
+     * @return Spec with normalized data
+     * @throws ResponseTypeNotFoundException
+     * @throws TypeRenamingConflictException
+     */
+    public static Ds3ApiSpec convertSpec(
+            final Ds3ApiSpec spec,
+            final boolean generateInternal) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
         verifySingleResponsePayloadRequests(spec.getRequests());
         return renameRequests( //Rename requests from RequestHandler to Request
-                        convertResponseTypes( //Converts response types with components into new encapsulating types
-                                removeDollarSigns(spec))); //Converts all type names containing '$' into proper type names
+                convertResponseTypes( //Converts response types with components into new encapsulating types
+                removeDollarSigns( //Converts all type names containing '$' into proper type names
+                removeInternalRequestsFromSpec(spec, generateInternal)))); //Removes/keeps spectra internal requests
     }
 
     /**

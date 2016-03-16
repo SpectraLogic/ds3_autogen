@@ -37,6 +37,20 @@ import static org.junit.Assert.*;
 public class JavaHelper_Test {
 
     @Test
+    public void createWithConstructor_UUID_Test() {
+        final String expected =
+                "    public MyRequest withMyId(final UUID myId) {\n" +
+                "        this.myId = myId.toString();\n" +
+                "        this.updateQueryParam(\"my_id\", myId);\n" +
+                "        return this;\n" +
+                "    }\n";
+
+        final Arguments idArg = new Arguments("UUID", "MyId");
+        final String result = createWithConstructor(idArg, "MyRequest");
+        assertThat(result, is(expected));
+    }
+
+    @Test
     public void createWithConstructorBulk_PriorityParam_Test() {
         final String expectedResult =
                         "    @Override\n" +
@@ -144,7 +158,7 @@ public class JavaHelper_Test {
     @Test
     public void getType_Argument_Test() {
         assertThat(getType(new Arguments("void", "test")), is("boolean"));
-        assertThat(getType(new Arguments("Integer", "test")), is("int"));
+        assertThat(getType(new Arguments("Integer", "test")), is("Integer"));
         assertThat(getType(new Arguments("long", "test")), is("long"));
         assertThat(getType(new Arguments(null, "test")), is(""));
         assertThat(getType(new Arguments("ChecksumType", "test")), is("ChecksumType.Type"));
@@ -153,13 +167,13 @@ public class JavaHelper_Test {
     @Test
     public void getType_Variable_Test() {
         assertThat(getType(new Variable("test", "void", true)), is("boolean"));
-        assertThat(getType(new Variable("test", "Integer", true)), is("int"));
+        assertThat(getType(new Variable("test", "Integer", true)), is("Integer"));
         assertThat(getType(new Variable("test", "long", true)), is("long"));
         assertThat(getType(new Variable("test", null, true)), is(""));
         assertThat(getType(new Variable("test", "ChecksumType", true)), is("ChecksumType.Type"));
 
         assertThat(getType(new Variable("test", "void", false)), is("boolean"));
-        assertThat(getType(new Variable("test", "Integer", false)), is("int"));
+        assertThat(getType(new Variable("test", "Integer", false)), is("Integer"));
         assertThat(getType(new Variable("test", "long", false)), is("long"));
         assertThat(getType(new Variable("test", null, false)), is(""));
         assertThat(getType(new Variable("test", "ChecksumType", false)), is("ChecksumType.Type"));
@@ -373,7 +387,7 @@ public class JavaHelper_Test {
         final String expectedResult =
                 "    public RequestName withArgName(final ArgType argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName.toString());\n" +
+                "        this.updateQueryParam(\"arg_name\", argName);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments argument = new Arguments("ArgType", "ArgName");
@@ -383,7 +397,7 @@ public class JavaHelper_Test {
         final String expectedResultBoolean =
                 "    public RequestName withArgName(final boolean argName) {\n" +
                 "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", String.valueOf(argName));\n" +
+                "        this.updateQueryParam(\"arg_name\", argName);\n" +
                 "        return this;\n" +
                 "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
@@ -415,7 +429,7 @@ public class JavaHelper_Test {
         assertThat(argToString(new Arguments("void", "ArgName")), is("null"));
         assertThat(argToString(new Arguments("boolean", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
-        assertThat(argToString(new Arguments("Integer", "ArgName")), is("Integer.toString(argName)"));
+        assertThat(argToString(new Arguments("Integer", "ArgName")), is("String.valueOf(argName)"));
         assertThat(argToString(new Arguments("long", "ArgName")), is("Long.toString(argName)"));
         assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.toString()"));
         assertThat(argToString(new Arguments("int", "ArgName")), is("Integer.toString(argName)"));
@@ -788,7 +802,7 @@ public class JavaHelper_Test {
 
         final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
         assertThat(putQueryParamLine(stringTest),
-                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest));"));
+                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\"));"));
 
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(putQueryParamLine(intTest),
@@ -816,9 +830,17 @@ public class JavaHelper_Test {
         assertThat(queryParamArgToString(bucketName), is("bucketName"));
 
         final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest)"));
+        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\")"));
 
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
+    }
+
+    @Test
+    public void paramAssignmentRHS_Test() {
+        assertThat(paramAssignmentRHS(new Arguments("UUID", "UuidArg")), is("uuidArg.toString()"));
+        assertThat(paramAssignmentRHS(new Arguments("String", "StringArg")), is("stringArg"));
+        assertThat(paramAssignmentRHS(new Arguments("int", "IntArg")), is("intArg"));
+        assertThat(paramAssignmentRHS(new Arguments("Double", "DoubleArg")), is("doubleArg"));
     }
 }

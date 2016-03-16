@@ -5,7 +5,7 @@ package ${packageName};
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
@@ -28,7 +28,7 @@ public class ${name} extends AbstractRequest {
     </#if>
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         <#list constructor.getAssignments() as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};
         </#list>
         <#list constructor.getAdditionalLines() as line>
         ${line}

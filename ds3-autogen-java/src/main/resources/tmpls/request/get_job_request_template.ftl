@@ -2,7 +2,7 @@
 
 package ${packageName};
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 <#include "../imports.ftl"/>
 
 public class ${name} extends AbstractRequest {

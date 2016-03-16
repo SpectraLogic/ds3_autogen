@@ -89,11 +89,12 @@ public class BaseResponseGenerator_Test {
         final ImmutableList<String> result = generator.getAllImports(
                 responseCodes,
                 "com.spectralogic.ds3client.commands.spectrads3");
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(5));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractResponse"));
+        assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test
@@ -121,9 +122,10 @@ public class BaseResponseGenerator_Test {
                 createPopulatedErrorResponseCode("_v3"));
 
         final ImmutableSet<String> result = getAllImportsFromResponseCodes(responseCodes);
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
+        assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test

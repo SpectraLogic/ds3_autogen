@@ -73,7 +73,9 @@ public class Main {
 
         //TODO make the input file also accept a url that we can read from
 
-        final Ds3ApiSpec spec = parser.getSpec(Files.newInputStream(Paths.get(args.getInputSpec())));
+        final Ds3ApiSpec spec = parser.getSpec(
+                Files.newInputStream(Paths.get(args.getInputSpec())),
+                args.generateInternal());
 
         final CodeGenerator generator;
         switch (args.getType()) {
