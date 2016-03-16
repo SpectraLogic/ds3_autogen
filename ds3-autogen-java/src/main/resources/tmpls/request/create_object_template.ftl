@@ -27,7 +27,7 @@ public class ${name} extends AbstractRequest {
     </#if>
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         <#list constructor.getAssignments() as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};
         </#list>
         <#list constructor.getAdditionalLines() as line>
         ${line}

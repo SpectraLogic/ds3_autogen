@@ -32,10 +32,23 @@ import java.util.List;
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class JavaHelper_Test {
+
+    @Test
+    public void createWithConstructor_UUID_Test() {
+        final String expected =
+                "    public MyRequest withMyId(final UUID myId) {\n" +
+                "        this.myId = myId.toString();\n" +
+                "        this.updateQueryParam(\"my_id\", myId);\n" +
+                "        return this;\n" +
+                "    }\n";
+
+        final Arguments idArg = new Arguments("UUID", "MyId");
+        final String result = createWithConstructor(idArg, "MyRequest");
+        assertThat(result, is(expected));
+    }
 
     @Test
     public void createWithConstructorBulk_PriorityParam_Test() {
@@ -821,5 +834,13 @@ public class JavaHelper_Test {
 
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
+    }
+
+    @Test
+    public void paramAssignmentRHS_Test() {
+        assertThat(paramAssignmentRHS(new Arguments("UUID", "UuidArg")), is("uuidArg.toString()"));
+        assertThat(paramAssignmentRHS(new Arguments("String", "StringArg")), is("stringArg"));
+        assertThat(paramAssignmentRHS(new Arguments("int", "IntArg")), is("intArg"));
+        assertThat(paramAssignmentRHS(new Arguments("Double", "DoubleArg")), is("doubleArg"));
     }
 }

@@ -30,11 +30,19 @@ public class Request {
     private final String path;
     private final Operation operation;
     private final Action action;
-    private final ImmutableList<Arguments> requiredArguments;
+
+    /** List of optional arguments: used to create with-constructors */
     private final ImmutableList<Arguments> optionalArguments;
+
+    /** List of constructor models */
     private final ImmutableList<RequestConstructor> constructors;
+
+    /** List of variables defined within the class; also used to create getters */
     private final ImmutableList<Variable> classVariables;
+
+    /** List of class imports required for compilation */
     private final ImmutableList<String> imports;
+
     private final Helper helper;
     private final JavaHelper javaHelper;
 
@@ -44,7 +52,6 @@ public class Request {
                    final String path,
                    final Operation operation,
                    final Action action,
-                   final ImmutableList<Arguments> requiredArguments,
                    final ImmutableList<Arguments> optionalArguments,
                    final ImmutableList<RequestConstructor> constructors,
                    final ImmutableList<Variable> classVariables,
@@ -55,7 +62,6 @@ public class Request {
         this.path = path;
         this.operation = operation;
         this.action = action;
-        this.requiredArguments = requiredArguments;
         this.optionalArguments = optionalArguments;
         this.constructors = constructors;
         this.classVariables = classVariables;
@@ -79,10 +85,6 @@ public class Request {
 
     public String getPath() {
         return path;
-    }
-
-    public ImmutableList<Arguments> getRequiredArguments() {
-        return requiredArguments;
     }
 
     public ImmutableList<Arguments> getOptionalArguments() {

@@ -22,7 +22,7 @@ public class ${name} extends BulkRequest {
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) throws XmlProcessingException {
         super(bucketName, objects);
         <#list constructor.getAssignments() as arg>
-        this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+        this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};
         </#list>
         <#include "common/add_query_params.ftl"/>
     }
