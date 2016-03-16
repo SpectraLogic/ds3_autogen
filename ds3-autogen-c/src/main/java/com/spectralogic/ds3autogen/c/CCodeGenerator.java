@@ -73,13 +73,6 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Request> allRequests = getAllRequests(spec);
 
             generateHeader(allEnums, allStructs, allRequests);
-
-            // process allEnums into an ImmutableList of Strings
-
-            // process allOrderedStructs into an ImmutableList of Strings
-
-            // process allRequests into an ImmutableList of Strings
-
             generateSource(allEnums, allStructs, allRequests);
         } catch (final ParseException e) {
             LOG.error("Caught exception: ", e);
