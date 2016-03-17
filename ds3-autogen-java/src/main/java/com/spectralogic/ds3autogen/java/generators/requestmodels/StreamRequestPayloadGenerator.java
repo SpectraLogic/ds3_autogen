@@ -35,7 +35,6 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceA
  */
 public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
 
-    //TODO unit test
     /**
      * Gets the list of Arguments needed to create the request constructor. This
      * includes all non-void required parameters, arguments described within the
@@ -51,7 +50,6 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Gets the list of constructor models from a Ds3Request. This includes a
      * constructor with Stream parameter and one with Channel parameter for
@@ -69,7 +67,6 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Gets all the required imports that the Request will need in order to properly
      * generate the Java request code, including the Stream and Channel imports
@@ -100,7 +97,6 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
         return builder.build().asList();
     }
 
-    //TODO
     /**
      * Gets all the class variables to properly generate the variables and their
      * getter functions, including Stream and Channel

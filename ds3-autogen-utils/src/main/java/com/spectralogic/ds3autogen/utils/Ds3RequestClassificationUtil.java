@@ -245,7 +245,6 @@ public final class Ds3RequestClassificationUtil {
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
     }
 
-    //TODO unit test
     /**
      * Determines if a Ds3Request is the AmazonS3 Create Multi Part Upload Part Request
      */

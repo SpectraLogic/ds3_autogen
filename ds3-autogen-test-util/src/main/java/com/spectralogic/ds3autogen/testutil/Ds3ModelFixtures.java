@@ -310,7 +310,7 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the SpectraDs3 Get Job request GetJobRequestHandler as
-     * described in the Contract, exlcuding the response codes
+     * described in the Contract, excluding the response codes
      * @return A SpectraDs3 GetJob request
      */
     public static Ds3Request getRequestGetJob() {
@@ -328,5 +328,28 @@ public class Ds3ModelFixtures {
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 null);
+    }
+
+    /**
+     * Creates the AmazonS3  CreateMultiPartUploadPartRequestHandler as
+     * described in the contract, excluding the response codes
+     */
+    public static Ds3Request getCreateMultiPartUploadPart() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.CreateMultiPartUploadPartRequestHandler",
+                HttpVerb.PUT,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                ImmutableList.of(
+                        new Ds3Param("PartNumber", "int"),
+                        new Ds3Param("UploadId", "java.util.UUID")));
     }
 }
