@@ -1620,6 +1620,23 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void createMultiPartUploadPartRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "PutMultiPartUploadPartRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/createMultiPartUploadPartRequest.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        //TODO fill out test
+    }
+
+    @Test
     public void spectraInternalRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String requestName = "CreateFakeTapeEnvironmentRequestHandler";
         final FileUtils fileUtils = mock(FileUtils.class);

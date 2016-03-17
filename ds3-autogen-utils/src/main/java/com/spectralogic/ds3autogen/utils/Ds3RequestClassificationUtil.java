@@ -244,4 +244,18 @@ public final class Ds3RequestClassificationUtil {
                 && request.getResource() == Resource.JOB
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
     }
+
+    //TODO unit test
+    /**
+     * Determines if a Ds3Request is the AmazonS3 Create Multi Part Upload Part Request
+     */
+    public static boolean isCreateMultiPartUploadPartRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getObjectRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.PUT
+                && request.includeIdInPath() == false
+                && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID")
+                && paramListContainsParam(request.getRequiredQueryParams(), "PartNumber", "int");
+    }
 }
