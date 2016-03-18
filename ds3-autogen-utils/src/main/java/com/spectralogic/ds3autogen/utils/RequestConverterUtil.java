@@ -161,8 +161,10 @@ public final class RequestConverterUtil {
      */
     public static boolean isResourceNotification(final Resource resource) {
         switch (resource) {
+            case DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION:
             case GENERIC_DAO_NOTIFICATION_REGISTRATION:
             case JOB_COMPLETED_NOTIFICATION_REGISTRATION:
+            case JOB_CREATED_NOTIFICATION_REGISTRATION:
             case OBJECT_CACHED_NOTIFICATION_REGISTRATION:
             case OBJECT_LOST_NOTIFICATION_REGISTRATION:
             case OBJECT_PERSISTED_NOTIFICATION_REGISTRATION:
@@ -171,7 +173,6 @@ public final class RequestConverterUtil {
             case SYSTEM_FAILURE_NOTIFICATION_REGISTRATION:
             case TAPE_FAILURE_NOTIFICATION_REGISTRATION:
             case TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION:
-            case JOB_CREATED_NOTIFICATION_REGISTRATION:
                 return true;
             default:
                 return false;
