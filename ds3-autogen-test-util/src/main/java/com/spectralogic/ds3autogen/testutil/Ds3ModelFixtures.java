@@ -352,4 +352,30 @@ public class Ds3ModelFixtures {
                         new Ds3Param("PartNumber", "int"),
                         new Ds3Param("UploadId", "java.util.UUID")));
     }
+
+    /**
+     * Creates the SpectraDs3 Eject Storage Domain Request Handler as described
+     * in the contract, excluding the response codes.
+     */
+    public static Ds3Request getEjectStorageDomainRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.TAPE,
+                ResourceType.NON_SINGLETON,
+                Operation.EJECT,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("BucketId", "java.util.UUID"),
+                        new Ds3Param("EjectLabel", "java.lang.String"),
+                        new Ds3Param("EjectLocation", "java.lang.String")),
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
+                        new Ds3Param("StorageDomainId", "java.util.UUID")));
+    }
 }
