@@ -25,9 +25,16 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
+
 public final class C_TypeHelper {
     private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
+    private final static C_TypeHelper cTypeHelper = new C_TypeHelper();
+
+    public static C_TypeHelper getInstance() {
+        return cTypeHelper;
+    }
 
     private static C_Type createType(final String type, final boolean isArray, final ImmutableSet<String> enumNames) {
         final String ds3TypeName = StructHelper.getDs3TypeName(type);
@@ -68,5 +75,22 @@ public final class C_TypeHelper {
             default:
                 return createType(element.getType(), false, enumNames);
         }
+    }
+
+    public static String generateArrayMemberParser(final C_Type cType) {
+        final StringBuilder outputBuilder = new StringBuilder();
+
+        outputBuilder.append("static GPtrArray* _parse_").append(cType.getTypeName()).append("_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {\n");
+        outputBuilder.append(indent(1)).append("xmlNodePtr child_node;\n");
+        outputBuilder.append(indent(1)).append("GPtrArray* ").append(cType.getTypeName()).append("_array = g_ptr_array_new();\n");
+        outputBuilder.append("\n");
+        outputBuilder.append(indent(1)).append("for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n");
+        outputBuilder.append(indent(2)).append("g_ptr_array_add(").append(cType.getTypeName()).append("_array, _parse_").append(cType.getTypeName()).append("(log, doc, child_node));\n");
+        outputBuilder.append(indent(1)).append("}\n");
+        outputBuilder.append("\n");
+        outputBuilder.append(indent(1)).append("return ").append(cType.getTypeName()).append("_array;\n");
+        outputBuilder.append("}\n");
+
+        return outputBuilder.toString();
     }
 }

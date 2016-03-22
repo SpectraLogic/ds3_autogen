@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 
@@ -77,6 +78,53 @@ public class StructHelper_Test {
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
         final Struct testStruct = new Struct("testStruct", "Data", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
+    }
+
+    @Test
+    public void testGetArrayStructMemberTypes() {
+        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
+        final StructMember testStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
+        final Struct testStructWithArrayMembers = new Struct("testStruct", "Data", ImmutableList.of(testStructMember1));
+        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers));
+        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
+        assertEquals(arrayStructMemberTypes.size(), 1);
+    }
+
+    @Test
+    public void testGetArrayStructMembersUnique() {
+        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
+        final C_Type ds3TapeTypeArray = new FreeableType("ds3_tape_type", true);
+        final StructMember testArrayStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
+        final StructMember testArrayStructMember2 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember1");
+        final StructMember testArrayStructMember3 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember2");
+        final StructMember testStructMember3 = new StructMember(new FreeableType("ds3_bucket", false), "bucketTypeArrayMember");
+        final ImmutableList<StructMember> testArrayStructMembers1 = ImmutableList.of(testArrayStructMember1, testArrayStructMember2);
+        final ImmutableList<StructMember> testArrayStructMembers2 = ImmutableList.of(testArrayStructMember2, testArrayStructMember3);
+        final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStructMember3);
+        final Struct testStructWithArrayMembers1 = new Struct("testStruct", "Data", testArrayStructMembers1);
+        final Struct testStructWithArrayMembers2 = new Struct("testStruct", "Data", testArrayStructMembers2);
+        final Struct testStructWithoutArrayMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembers);
+        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers1, testStructWithArrayMembers2, testStructWithoutArrayMember));
+        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
+        assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
+        assertEquals(arrayStructMemberTypes.size(), 2);
+    }
+
+    @Test
+    public void testGetArrayStructMembersUnique2() {
+        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
+        final C_Type ds3TapeTypeArray = new FreeableType("ds3_tape_type", true);
+        final StructMember testStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
+        final StructMember testStructMember2 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember");
+        final StructMember testStructMember3 = new StructMember(new FreeableType("ds3_bucket", false), "bucketTypeArrayMember");
+        final ImmutableList<StructMember> testArrayStructMemberTypes = ImmutableList.of(testStructMember1, testStructMember2);
+        final ImmutableList<StructMember> testStructMembersWithoutArrays = ImmutableList.of(testStructMember3);
+        final Struct testStructWithArrayTypeMembers = new Struct("testStruct", "Data", testArrayStructMemberTypes);
+        final Struct testStructWithoutArrayTypeMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembersWithoutArrays);
+        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayTypeMembers, testStructWithoutArrayTypeMember));
+        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
+        assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
+        assertEquals(arrayStructMemberTypes.size(), 2);
     }
 
     @Test

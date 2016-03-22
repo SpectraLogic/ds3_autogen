@@ -2,14 +2,6 @@
 <#-- Generate all "TypedefStructResponseParsers" from Structs -->
 <#--   Input: Header object                                   -->
 <#-- ******************************************************** -->
-<#list getStructs() as structEntry>
-
-    <#list structEntry.getStructMembers() as structMember>
-        <#if structMember.getType().isArray()>
-            <#include "ArrayStructMemberParser.ftl">
-        </#if>
-    </#list>
-
 static ds3_error* _parse_${structEntry.getName()}(const ds3_log* log, const ${structEntry.getName()}** response) {
     xmlDocPtr doc;
     xmlNodePtr root;
@@ -29,4 +21,4 @@ ${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), st
     xmlFreeDoc(doc);
     return NULL;
 }
-</#list>
+

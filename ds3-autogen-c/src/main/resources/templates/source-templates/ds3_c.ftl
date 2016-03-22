@@ -1,4 +1,4 @@
-<#include "CopyrightHeader.ftl"/>
+<#include "../CopyrightHeader.ftl"/>
 
 <#include "source_includes.ftl"/>
 
@@ -6,37 +6,42 @@
 
 <#-- ***************************************** -->
 <#-- Generate all "InitRequests" from Requests -->
-<#-- Not fully implemented yet
 <#list getRequests() as requestEntry>
     <#include "AmazonS3InitRequestHandler.ftl">
 </#list>
--->
-// SKIPPING GENERATION OF REQUESTS
 <#-- ***************************************** -->
 
 <#include "source_post_init_pre_response_parsers.ftl"/>
 
 <#-- ******************************************* -->
-<#-- Generate all "ResponseParsers" from Structs -->
+/////////////////////////////////////////////////////////
+// Generate all "ArrayStructMemberParsers" from Structs
+//////////////////////////////////////////////////////////
+<#list getArrayTypes() as arrayType>
+${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
+</#list>
+<#-- ******************************************* -->
+
+<#-- ******************************************* -->
+/////////////////////////////////////////////////////////
+// Generate all "ResponseParsers" from Structs
+//////////////////////////////////////////////////////////
 <#list getStructs() as structEntry>
-    <#include "ResponseParser.ftl">
+    <#include "../ResponseParser.ftl">
 </#list>
 <#-- ******************************************* -->
 
 <#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
-<#-- Not fully implemented yet
-<#list getRequests() as requestEntry>
-    <#include "ResponseParser.ftl">
-</#list>
--->
-// SKIPPING GENERATION OF REQUESTS
+<#include "../request-templates/HeadRequest.ftl"/>
+<#include "../request-templates/GetRequest.ftl"/>
+<#include "../request-templates/DeleteRequest.ftl"/>
 <#-- ********************************************* -->
 
 <#-- ******************************************* -->
 <#-- Generate all "EnumMatchers" from Enums      -->
 <#list getEnums() as enumEntry>
-    <#include "TypedefEnumMatcher.ftl">
+    <#include "../TypedefEnumMatcher.ftl">
 </#list>
 <#-- ******************************************* -->
 
@@ -45,6 +50,6 @@
 <#-- *********************************************** -->
 <#-- Generate all "StructFreeFunctions" from Structs -->
 <#list getStructs() as structEntry>
-    <#include "FreeStruct.ftl">
+    <#include "../FreeStruct.ftl">
 </#list>
 <#-- *********************************************** -->
