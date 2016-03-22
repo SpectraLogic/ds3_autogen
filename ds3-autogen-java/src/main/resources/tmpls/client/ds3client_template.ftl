@@ -2,6 +2,9 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.annotations.Action;
+import com.spectralogic.ds3client.annotations.Resource;
+import com.spectralogic.ds3client.annotations.ResponsePayloadModel;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
