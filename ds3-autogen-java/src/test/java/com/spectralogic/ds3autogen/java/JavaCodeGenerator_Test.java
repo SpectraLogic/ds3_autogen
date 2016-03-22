@@ -36,8 +36,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class JavaCodeGenerator_Test {
@@ -182,6 +182,10 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"Bucket\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
+
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -244,6 +248,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -304,6 +311,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -365,6 +375,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -433,6 +446,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"PhysicalPlacement\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -505,6 +521,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"BulkObjectList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -570,6 +589,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"PhysicalPlacement\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"SHOW\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -639,6 +661,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"BulkObjectList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"SHOW\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -951,6 +976,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"S3Object\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"SHOW\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"OBJECT\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1004,6 +1032,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"DELETE\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_CREATED_NOTIFICATION_REGISTRATION\")"));
+        assertFalse(ds3ClientGeneratedCode.contains("@ResponsePayloadModel("));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1067,6 +1098,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobCompletedNotificationRegistration\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"CREATE\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_COMPLETED_NOTIFICATION_REGISTRATION\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1129,6 +1163,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobCompletedNotificationRegistrationList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_COMPLETED_NOTIFICATION_REGISTRATION\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1191,6 +1228,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1308,6 +1348,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"Objects\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_CHUNK\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1369,6 +1412,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_CHUNK\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1546,6 +1592,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"MasterObjectList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"SHOW\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
@@ -1613,6 +1662,9 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
         testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"BucketList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
