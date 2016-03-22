@@ -325,7 +325,12 @@ public class Ds3ModelFixtures {
                 ResourceType.NON_SINGLETON,
                 null,
                 true,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType(
+                                                "com.spectralogic.s3.server.domain.JobWithChunksApiBean", null)))),
                 null,
                 null);
     }
