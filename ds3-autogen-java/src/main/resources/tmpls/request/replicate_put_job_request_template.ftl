@@ -5,6 +5,7 @@ package ${packageName};
 import com.spectralogic.ds3client.networking.HttpVerb;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
 <#include "../imports.ftl"/>
 
@@ -26,7 +27,7 @@ public class ${name} extends AbstractRequest {
         if (Guard.isStringNullOrEmpty(requestPayload)) {
             return null;
         }
-        final byte[] stringBytes = requestPayload.getBytes();
+        final byte[] stringBytes = requestPayload.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

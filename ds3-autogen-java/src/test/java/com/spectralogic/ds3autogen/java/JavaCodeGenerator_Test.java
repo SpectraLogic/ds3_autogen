@@ -1165,6 +1165,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.ReplicationConflictResolutionMode", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertFalse(requestGeneratedCode.contains("RestOperationType"));
