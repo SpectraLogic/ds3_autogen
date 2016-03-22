@@ -33,6 +33,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertTrue(isNotificationRequest(getRequestCreateNotification()));
         assertTrue(isNotificationRequest(getRequestGetNotification()));
 
+        assertFalse(isNotificationRequest(getReplicatePutJob()));
         assertFalse(isNotificationRequest(getRequestVerifyPhysicalPlacement()));
         assertFalse(isNotificationRequest(getRequestBulkGet()));
         assertFalse(isNotificationRequest(getRequestMultiFileDelete()));
@@ -45,6 +46,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isDeleteNotificationRequest_test() {
         assertTrue(isDeleteNotificationRequest(getRequestDeleteNotification()));
 
+        assertFalse(isDeleteNotificationRequest(getReplicatePutJob()));
         assertFalse(isDeleteNotificationRequest(getRequestCreateNotification()));
         assertFalse(isDeleteNotificationRequest(getRequestGetNotification()));
         assertFalse(isDeleteNotificationRequest(getRequestVerifyPhysicalPlacement()));
@@ -59,6 +61,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isCreateNotificationRequest_test() {
         assertTrue(isCreateNotificationRequest(getRequestCreateNotification()));
 
+        assertFalse(isCreateNotificationRequest(getReplicatePutJob()));
         assertFalse(isCreateNotificationRequest(getRequestDeleteNotification()));
         assertFalse(isCreateNotificationRequest(getRequestGetNotification()));
         assertFalse(isCreateNotificationRequest(getRequestVerifyPhysicalPlacement()));
@@ -73,6 +76,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isGetNotificationRequest_test() {
         assertTrue(isGetNotificationRequest(getRequestGetNotification()));
 
+        assertFalse(isGetNotificationRequest(getReplicatePutJob()));
         assertFalse(isGetNotificationRequest(getRequestDeleteNotification()));
         assertFalse(isGetNotificationRequest(getRequestCreateNotification()));
         assertFalse(isGetNotificationRequest(getRequestVerifyPhysicalPlacement()));
@@ -87,6 +91,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isPhysicalPlacementRequest_test() {
         assertTrue(isPhysicalPlacementRequest(getRequestVerifyPhysicalPlacement()));
 
+        assertFalse(isPhysicalPlacementRequest(getReplicatePutJob()));
         assertFalse(isPhysicalPlacementRequest(getRequestDeleteNotification()));
         assertFalse(isPhysicalPlacementRequest(getRequestCreateNotification()));
         assertFalse(isPhysicalPlacementRequest(getRequestGetNotification()));
@@ -102,6 +107,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertTrue(isBulkRequest(getRequestBulkGet()));
         assertTrue(isBulkRequest(getRequestBulkPut()));
 
+        assertFalse(isBulkRequest(getReplicatePutJob()));
         assertFalse(isBulkRequest(getRequestDeleteNotification()));
         assertFalse(isBulkRequest(getRequestCreateNotification()));
         assertFalse(isBulkRequest(getRequestGetNotification()));
@@ -115,6 +121,7 @@ public class Ds3RequestClassificationUtil_Test {
     @Test public void isBulkPutRequest_Test() {
         assertTrue(isBulkPutRequest(getRequestBulkPut()));
 
+        assertFalse(isBulkPutRequest(getReplicatePutJob()));
         assertFalse(isBulkPutRequest(getRequestBulkGet()));
         assertFalse(isBulkPutRequest(getRequestDeleteNotification()));
         assertFalse(isBulkPutRequest(getRequestCreateNotification()));
@@ -126,9 +133,25 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkPutRequest(getRequestSpectraS3GetObject()));
     }
 
+    @Test public void isBulkReplicateRequest_Test() {
+        assertTrue(isBulkReplicateRequest(getReplicatePutJob()));
+
+        assertFalse(isBulkReplicateRequest(getRequestBulkPut()));
+        assertFalse(isBulkReplicateRequest(getRequestBulkGet()));
+        assertFalse(isBulkReplicateRequest(getRequestDeleteNotification()));
+        assertFalse(isBulkReplicateRequest(getRequestCreateNotification()));
+        assertFalse(isBulkReplicateRequest(getRequestGetNotification()));
+        assertFalse(isBulkReplicateRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isBulkReplicateRequest(getRequestMultiFileDelete()));
+        assertFalse(isBulkReplicateRequest(getRequestCreateObject()));
+        assertFalse(isBulkReplicateRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isBulkReplicateRequest(getRequestSpectraS3GetObject()));
+    }
+
     @Test public void isBulkGetRequest_Test() {
         assertTrue(isBulkGetRequest(getRequestBulkGet()));
 
+        assertFalse(isBulkGetRequest(getReplicatePutJob()));
         assertFalse(isBulkGetRequest(getRequestBulkPut()));
         assertFalse(isBulkGetRequest(getRequestDeleteNotification()));
         assertFalse(isBulkGetRequest(getRequestCreateNotification()));
@@ -144,6 +167,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isMultiFileDeleteRequest_test() {
         assertTrue(isMultiFileDeleteRequest(getRequestMultiFileDelete()));
 
+        assertFalse(isMultiFileDeleteRequest(getReplicatePutJob()));
         assertFalse(isMultiFileDeleteRequest(getRequestDeleteNotification()));
         assertFalse(isMultiFileDeleteRequest(getRequestCreateNotification()));
         assertFalse(isMultiFileDeleteRequest(getRequestGetNotification()));
@@ -158,6 +182,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isCreateObjectRequest_test() {
         assertTrue(isCreateObjectRequest(getRequestCreateObject()));
 
+        assertFalse(isCreateObjectRequest(getReplicatePutJob()));
         assertFalse(isCreateObjectRequest(getRequestDeleteNotification()));
         assertFalse(isCreateObjectRequest(getRequestCreateNotification()));
         assertFalse(isCreateObjectRequest(getRequestGetNotification()));
@@ -173,6 +198,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertTrue(isGetObjectRequest(getRequestAmazonS3GetObject()));
         assertTrue(isGetObjectRequest(getRequestSpectraS3GetObject()));
 
+        assertFalse(isGetObjectRequest(getReplicatePutJob()));
         assertFalse(isGetObjectRequest(getRequestDeleteNotification()));
         assertFalse(isGetObjectRequest(getRequestCreateNotification()));
         assertFalse(isGetObjectRequest(getRequestGetNotification()));
@@ -186,6 +212,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isGetObjectSpectraS3Request_test() {
         assertTrue(isGetObjectSpectraS3Request(getRequestSpectraS3GetObject()));
 
+        assertFalse(isGetObjectSpectraS3Request(getReplicatePutJob()));
         assertFalse(isGetObjectSpectraS3Request(getRequestDeleteNotification()));
         assertFalse(isGetObjectSpectraS3Request(getRequestCreateNotification()));
         assertFalse(isGetObjectSpectraS3Request(getRequestGetNotification()));
@@ -200,6 +227,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isGetObjectAmazonS3Request_test() {
         assertTrue(isGetObjectAmazonS3Request(getRequestAmazonS3GetObject()));
 
+        assertFalse(isGetObjectAmazonS3Request(getReplicatePutJob()));
         assertFalse(isGetObjectAmazonS3Request(getRequestDeleteNotification()));
         assertFalse(isGetObjectAmazonS3Request(getRequestCreateNotification()));
         assertFalse(isGetObjectAmazonS3Request(getRequestGetNotification()));
@@ -214,6 +242,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void isGetJobRequest_Test() {
         assertTrue(isGetJobRequest(getRequestGetJob()));
 
+        assertFalse(isGetJobRequest(getReplicatePutJob()));
         assertFalse(isGetJobRequest(getRequestAmazonS3GetObject()));
         assertFalse(isGetJobRequest(getRequestDeleteNotification()));
         assertFalse(isGetJobRequest(getRequestCreateNotification()));

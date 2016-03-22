@@ -99,7 +99,17 @@ public final class Ds3RequestClassificationUtil {
      */
     public static boolean isBulkPutRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null
-                && ds3Request.getOperation() == Operation.START_BULK_PUT;
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
+    }
+
+    /**
+     * Determines if the request is a Bulk Replicate request
+     */
+    public static boolean isBulkReplicateRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
     }
 
     /**
