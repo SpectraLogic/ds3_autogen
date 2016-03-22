@@ -38,6 +38,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isNotificationRequest(getRequestCreateObject()));
         assertFalse(isNotificationRequest(getRequestAmazonS3GetObject()));
         assertFalse(isNotificationRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isNotificationRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -52,6 +53,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isDeleteNotificationRequest(getRequestCreateObject()));
         assertFalse(isDeleteNotificationRequest(getRequestAmazonS3GetObject()));
         assertFalse(isDeleteNotificationRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isDeleteNotificationRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -66,6 +68,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateNotificationRequest(getRequestCreateObject()));
         assertFalse(isCreateNotificationRequest(getRequestAmazonS3GetObject()));
         assertFalse(isCreateNotificationRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isCreateNotificationRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -80,6 +83,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetNotificationRequest(getRequestCreateObject()));
         assertFalse(isGetNotificationRequest(getRequestAmazonS3GetObject()));
         assertFalse(isGetNotificationRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isGetNotificationRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -94,6 +98,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isPhysicalPlacementRequest(getRequestCreateObject()));
         assertFalse(isPhysicalPlacementRequest(getRequestAmazonS3GetObject()));
         assertFalse(isPhysicalPlacementRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isPhysicalPlacementRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -109,6 +114,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkRequest(getRequestCreateObject()));
         assertFalse(isBulkRequest(getRequestAmazonS3GetObject()));
         assertFalse(isBulkRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isBulkRequest(getEjectStorageDomainRequest()));
     }
 
     @Test public void isBulkPutRequest_Test() {
@@ -123,6 +129,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkPutRequest(getRequestCreateObject()));
         assertFalse(isBulkPutRequest(getRequestAmazonS3GetObject()));
         assertFalse(isBulkPutRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isBulkPutRequest(getEjectStorageDomainRequest()));
     }
 
     @Test public void isBulkGetRequest_Test() {
@@ -137,6 +144,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkGetRequest(getRequestCreateObject()));
         assertFalse(isBulkGetRequest(getRequestAmazonS3GetObject()));
         assertFalse(isBulkGetRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isBulkGetRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -151,6 +159,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMultiFileDeleteRequest(getRequestCreateObject()));
         assertFalse(isMultiFileDeleteRequest(getRequestAmazonS3GetObject()));
         assertFalse(isMultiFileDeleteRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMultiFileDeleteRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -165,6 +174,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateObjectRequest(getRequestMultiFileDelete()));
         assertFalse(isCreateObjectRequest(getRequestAmazonS3GetObject()));
         assertFalse(isCreateObjectRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isCreateObjectRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -179,6 +189,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectRequest(getRequestBulkGet()));
         assertFalse(isGetObjectRequest(getRequestMultiFileDelete()));
         assertFalse(isGetObjectRequest(getRequestCreateObject()));
+        assertFalse(isGetObjectRequest(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -193,6 +204,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectSpectraS3Request(getRequestMultiFileDelete()));
         assertFalse(isGetObjectSpectraS3Request(getRequestCreateObject()));
         assertFalse(isGetObjectSpectraS3Request(getRequestAmazonS3GetObject()));
+        assertFalse(isGetObjectSpectraS3Request(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -207,6 +219,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectAmazonS3Request(getRequestMultiFileDelete()));
         assertFalse(isGetObjectAmazonS3Request(getRequestCreateObject()));
         assertFalse(isGetObjectAmazonS3Request(getRequestSpectraS3GetObject()));
+        assertFalse(isGetObjectAmazonS3Request(getEjectStorageDomainRequest()));
     }
 
     @Test
@@ -222,6 +235,39 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetJobRequest(getRequestMultiFileDelete()));
         assertFalse(isGetJobRequest(getRequestCreateObject()));
         assertFalse(isGetJobRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isGetJobRequest(getEjectStorageDomainRequest()));
+    }
+
+    @Test
+    public void isEjectStorageDomainRequest_Test() {
+        assertTrue(isEjectStorageDomainRequest(getEjectStorageDomainRequest()));
+
+        assertFalse(isEjectStorageDomainRequest(getRequestGetJob()));
+        assertFalse(isEjectStorageDomainRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isEjectStorageDomainRequest(getRequestDeleteNotification()));
+        assertFalse(isEjectStorageDomainRequest(getRequestCreateNotification()));
+        assertFalse(isEjectStorageDomainRequest(getRequestGetNotification()));
+        assertFalse(isEjectStorageDomainRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isEjectStorageDomainRequest(getRequestBulkGet()));
+        assertFalse(isEjectStorageDomainRequest(getRequestMultiFileDelete()));
+        assertFalse(isEjectStorageDomainRequest(getRequestCreateObject()));
+        assertFalse(isEjectStorageDomainRequest(getRequestSpectraS3GetObject()));
+    }
+
+    @Test
+    public void hasListObjectsRequestPayload_Test() {
+        assertTrue(hasListObjectsRequestPayload(getEjectStorageDomainRequest()));
+        assertTrue(hasListObjectsRequestPayload(getRequestVerifyPhysicalPlacement()));
+
+        assertFalse(hasListObjectsRequestPayload(getRequestGetJob()));
+        assertFalse(hasListObjectsRequestPayload(getRequestAmazonS3GetObject()));
+        assertFalse(hasListObjectsRequestPayload(getRequestDeleteNotification()));
+        assertFalse(hasListObjectsRequestPayload(getRequestCreateNotification()));
+        assertFalse(hasListObjectsRequestPayload(getRequestGetNotification()));
+        assertFalse(hasListObjectsRequestPayload(getRequestBulkGet()));
+        assertFalse(hasListObjectsRequestPayload(getRequestMultiFileDelete()));
+        assertFalse(hasListObjectsRequestPayload(getRequestCreateObject()));
+        assertFalse(hasListObjectsRequestPayload(getRequestSpectraS3GetObject()));
     }
 
     @Test

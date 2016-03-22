@@ -455,8 +455,8 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         }
-        if (isPhysicalPlacementRequest(ds3Request)) {
-            return new PhysicalPlacementRequestGenerator();
+        if (hasListObjectsRequestPayload(ds3Request)) {
+            return new ObjectsRequestPayloadGenerator();
         }
         if (isCreateObjectRequest(ds3Request)) {
             return new CreateObjectRequestGenerator();
@@ -486,8 +486,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
-        } else if (isPhysicalPlacementRequest(ds3Request)) {
-            return config.getTemplate("request/physical_placement_request_template.ftl");
+        } else if (hasListObjectsRequestPayload(ds3Request)) {
+            return config.getTemplate("request/objects_request_payload_request_template.ftl");
         } else if (isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/multi_file_delete_request_template.ftl");
         } else if (isGetObjectRequest(ds3Request)) {
