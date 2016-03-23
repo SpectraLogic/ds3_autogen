@@ -39,6 +39,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -445,6 +447,77 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    return ds3_bucket_response_array;"));
         assertTrue(output.contains("}"));
 
+    }
+
+    @Test
+    public void testComplexResponseStructParserOrdering() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+        final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.indexOf("_parse_ds3_bucket_response_array") > output.indexOf("_parse_ds3_bucket_response"));
+        assertTrue(output.indexOf("_parse_ds3_list_all_my_buckets_result_response") > output.indexOf("_parse_ds3_bucket_response_array"));
+    }
+
+    @Test
+    public void testParserUnique() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+        final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote("static GPtrArray* _parse_ds3_bucket_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+        final Pattern arrayParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_user_response(const ds3_log* log, const ds3_user_response** response) {"));
+        final Pattern structParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_list_all_my_buckets_result_response(const ds3_log* log, const ds3_list_all_my_buckets_result_response** response) {"));
+
+        final Matcher arrayParserMatcher = arrayParserPattern.matcher(output);
+        final Matcher arrayStructParserMatcher = arrayStructParserPattern.matcher(output);
+        final Matcher structParserMatcher = structParserPattern.matcher(output);
+
+        int arrayParserCount = 0;
+        int arrayStructParserCount = 0;
+        int structParserCount = 0;
+
+        while (arrayParserMatcher.find()){
+    	    arrayParserCount +=1;
+        }
+        while (arrayStructParserMatcher.find()){
+            arrayStructParserCount +=1;
+        }
+        while (structParserMatcher.find()){
+            structParserCount +=1;
+        }
+
+        assert(arrayParserCount == 1);
+        assert(arrayStructParserCount == 1);
+        assert(structParserCount == 1);
     }
 
     /* Parsing of AllTypedefEnums.xml is hanging currently.

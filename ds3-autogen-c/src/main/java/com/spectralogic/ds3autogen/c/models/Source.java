@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Source {
     final ImmutableList<Enum> enums;
+    final ImmutableList<Struct> arrayStructs;
     final ImmutableSet<C_Type> arrayTypes;
     final ImmutableList<Struct> structs;
     final ImmutableList<Request> requests;
@@ -33,13 +34,18 @@ public class Source {
             final ImmutableList<Request> requests) {
         this.enums = enums;
         this.arrayTypes = StructHelper.getArrayStructMemberTypes(structs);
-        this.structs = structs;
+        this.arrayStructs = StructHelper.getArrayStructs(structs, arrayTypes);
+        this.structs = StructHelper.filterArrayStructs(structs, arrayTypes);
         this.requests = requests;
         this.helper = Helper.getInstance();
     }
 
     public ImmutableList<Enum> getEnums() {
         return enums;
+    }
+
+    public ImmutableList<Struct> getArrayStructs() {
+        return arrayStructs;
     }
 
     public ImmutableSet<C_Type> getArrayTypes() {

@@ -199,12 +199,7 @@ public final class StructHelper {
             if (structMember.getType().isArray()) {
                 outputBuilder.append(generateFreeArrayStructMember(structMember));
             } else {
-                outputBuilder.append(indent(1)).
-                        append(structMember.getType().getTypeName()).
-                        append("_free(response_data->").
-                        append(structMember.getName()).
-                        append(");").
-                        append("\n");
+                outputBuilder.append(indent(1)).append(structMember.getType().getTypeName()).append("_free(response_data->").append(structMember.getName()).append(");\n");
             }
         }
 
@@ -215,12 +210,7 @@ public final class StructHelper {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (final StructMember member : structMembers) {
-            outputBuilder.append(indent(1)).
-                    append(member.getType()).
-                    append(" ").
-                    append(member.getName()).
-                    append(";").
-                    append("\n");
+            outputBuilder.append(indent(1)).append(member.getType()).append(" ").append(member.getName()).append(";\n");
 
             if (member.getType().isArray()) {
                 outputBuilder.append(indent(1)).append("size_t").append(" num_").append(member.getName()).append(";\n");
@@ -233,14 +223,50 @@ public final class StructHelper {
     public static ImmutableSet<C_Type> getArrayStructMemberTypes(final ImmutableList<Struct> allOrderedStructs) {
         final ImmutableSet.Builder<C_Type> arrayStructMemberTypesBuilder = ImmutableSet.builder();
         for (final Struct currentStruct : allOrderedStructs) {
-            currentStruct.getStructMembers().stream().
-                    filter(currentStructMember -> currentStructMember.getType().isArray()).
-                    map(StructMember::getType).
-                    collect(Collectors.toCollection(HashSet::new)).
-                    forEach(arrayStructMemberTypesBuilder::add);
+            currentStruct.getStructMembers().stream()
+                    .filter(currentStructMember -> currentStructMember.getType().isArray())
+                    .map(StructMember::getType)
+                    .collect(Collectors.toCollection(HashSet::new))
+                    .forEach(arrayStructMemberTypesBuilder::add);
         }
 
         return arrayStructMemberTypesBuilder.build();
+    }
+
+    public static ImmutableList<Struct> getArrayStructs(final ImmutableList<Struct> allOrderedStructs, final ImmutableSet<C_Type> arrayTypes) {
+        final Set<String> typeKeys = arrayTypes.stream()
+                .map(C_Type::getTypeName)
+                .collect(Collectors.toCollection(HashSet::new));
+
+        final ImmutableList.Builder<Struct> arrayStructsBuilder = ImmutableList.builder();
+        for (final Struct currentStruct : allOrderedStructs) {
+            if (typeKeys.contains(currentStruct.getName())) {
+                arrayStructsBuilder.add(currentStruct);
+            }
+        }
+
+        return arrayStructsBuilder.build();
+    }
+
+    /**
+     * Remove Structs from allOrderedStructs that exist in arrayTypes
+     * @param allOrderedStructs
+     * @param arrayTypes
+     * @return
+     */
+    public static ImmutableList<Struct> filterArrayStructs(final ImmutableList<Struct> allOrderedStructs, final ImmutableSet<C_Type> arrayTypes) {
+        final Set<String> typeKeys = arrayTypes.stream()
+                .map(C_Type::getTypeName)
+                .collect(Collectors.toCollection(HashSet::new));
+
+        final ImmutableList.Builder<Struct> filteredStructsBuilder = ImmutableList.builder();
+        for (final Struct currentStruct : allOrderedStructs) {
+            if (!typeKeys.contains(currentStruct.getName())) {
+                filteredStructsBuilder.add(currentStruct);
+            }
+        }
+
+        return filteredStructsBuilder.build();
     }
 
 }
