@@ -25,6 +25,7 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     </#list>
     <#list customCommands as cmd>
+    ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
             throws IOException, SignatureException;
     </#list>
