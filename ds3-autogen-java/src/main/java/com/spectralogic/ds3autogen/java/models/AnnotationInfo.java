@@ -15,36 +15,36 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
-public class Command {
-    private final String name;
-    private final String requestName;
-    private final String responseName;
-    private final AnnotationInfo annotationInfo;
+import com.spectralogic.ds3autogen.utils.Helper;
 
-    public Command(
-            final String name,
-            final String requestName,
-            final String responseName,
-            final AnnotationInfo annotationInfo) {
-        this.name = name;
-        this.requestName = requestName;
-        this.responseName = responseName;
-        this.annotationInfo = annotationInfo;
+/**
+ * Used to store information for generating annotations within
+ * the client
+ */
+public class AnnotationInfo {
+
+    private final String responsePayloadModel;
+    private final String action;
+    private final String resource;
+
+    public AnnotationInfo(
+            final String responsePayloadModel,
+            final String action,
+            final String resource) {
+        this.responsePayloadModel = responsePayloadModel;
+        this.action = action;
+        this.resource = resource;
     }
 
-    public String getName() {
-        return name;
+    public String getResponsePayloadModel() {
+        return responsePayloadModel;
     }
 
-    public String getRequestName() {
-        return requestName;
+    public String getAction() {
+        return action;
     }
 
-    public String getResponseName() {
-        return responseName;
-    }
-
-    public AnnotationInfo getAnnotationInfo() {
-        return annotationInfo;
+    public String getResource() {
+        return resource;
     }
 }

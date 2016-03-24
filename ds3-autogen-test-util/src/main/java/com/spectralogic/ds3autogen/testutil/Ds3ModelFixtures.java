@@ -310,7 +310,7 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the SpectraDs3 Get Job request GetJobRequestHandler as
-     * described in the Contract, exlcuding the response codes
+     * described in the Contract, excluding the response codes
      * @return A SpectraDs3 GetJob request
      */
     public static Ds3Request getRequestGetJob() {
@@ -325,7 +325,12 @@ public class Ds3ModelFixtures {
                 ResourceType.NON_SINGLETON,
                 null,
                 true,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType(
+                                                "com.spectralogic.s3.server.domain.JobWithChunksApiBean", null)))),
                 null,
                 null);
     }
@@ -377,5 +382,54 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(new Ds3ResponseType("java.lang.String", null)))),
                 null,
                 null);
+    }
+
+    /**
+     * Creates the AmazonS3  CreateMultiPartUploadPartRequestHandler as
+     * described in the contract, excluding the response codes
+     */
+    public static Ds3Request getCreateMultiPartUploadPart() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.CreateMultiPartUploadPartRequestHandler",
+                HttpVerb.PUT,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                ImmutableList.of(
+                        new Ds3Param("PartNumber", "int"),
+                        new Ds3Param("UploadId", "java.util.UUID")));
+    }
+
+    /**
+     * Creates the SpectraDs3 Eject Storage Domain Request Handler as described
+     * in the contract, excluding the response codes.
+     */
+    public static Ds3Request getEjectStorageDomainRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.TAPE,
+                ResourceType.NON_SINGLETON,
+                Operation.EJECT,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("BucketId", "java.util.UUID"),
+                        new Ds3Param("EjectLabel", "java.lang.String"),
+                        new Ds3Param("EjectLocation", "java.lang.String")),
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
+                        new Ds3Param("StorageDomainId", "java.util.UUID")));
     }
 }

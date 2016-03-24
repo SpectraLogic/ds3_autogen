@@ -23,8 +23,9 @@ public class CustomCommand extends Command {
             final String name,
             final String requestName,
             final String responseName,
+            final AnnotationInfo annotationInfo,
             final String customBody) {
-        super(name, requestName, responseName);
+        super(name, requestName, responseName, annotationInfo);
         this.customBody = customBody;
     }
 

@@ -24,9 +24,9 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class PhysicalPlacementRequestGenerator_Test {
+public class ObjectsRequestPayloadGenerator_Test {
 
-    private static final PhysicalPlacementRequestGenerator generator = new PhysicalPlacementRequestGenerator();
+    private static final ObjectsRequestPayloadGenerator generator = new ObjectsRequestPayloadGenerator();
 
     @Test
     public void toConstructorArgumentsList_Test() {

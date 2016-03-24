@@ -16,16 +16,20 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 import com.spectralogic.ds3autogen.java.models.CustomCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getResponsePayload;
 
 /**
  * Converts a list of Ds3Requests into a Client model used for generating
@@ -111,8 +115,9 @@ public class ClientConverter {
 
         return new CustomCommand(
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
-                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
+                removePath(ds3Request.getName()),
+                toResponseName(ds3Request.getName()),
+                toAnnotationInfo(ds3Request),
                 customBody);
     }
 
@@ -139,10 +144,27 @@ public class ClientConverter {
             if (!isCustomCommand(ds3Request)) {
                 builder.add(new Command(
                         ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                        NormalizingContractNamesUtil.removePath(ds3Request.getName()),
-                        NormalizingContractNamesUtil.toResponseName(ds3Request.getName())));
+                        removePath(ds3Request.getName()),
+                        toResponseName(ds3Request.getName()),
+                        toAnnotationInfo(ds3Request)));
             }
         }
         return builder.build();
+    }
+
+    /**
+     * Creates the annotation information for a request
+     */
+    protected static AnnotationInfo toAnnotationInfo(final Ds3Request ds3Request) {
+        if (ds3Request.getClassification() != Classification.spectrads3) {
+            return null;
+        }
+        final String action = ds3Request.getAction() == null? null : ds3Request.getAction().toString();
+        final String resource = ds3Request.getResource() == null? null : ds3Request.getResource().toString();
+        final String responsePayload = removePath(getResponsePayload(ds3Request.getDs3ResponseCodes()));
+        return new AnnotationInfo(
+                responsePayload,
+                action,
+                resource);
     }
 }

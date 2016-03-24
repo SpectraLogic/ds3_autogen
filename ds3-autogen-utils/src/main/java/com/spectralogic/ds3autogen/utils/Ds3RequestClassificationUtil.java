@@ -72,6 +72,25 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
+     * Determines if this request has a List of Ds3Object request payload
+     */
+    public static boolean hasListObjectsRequestPayload(final Ds3Request ds3Request) {
+        return isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainRequest(ds3Request);
+    }
+
+    /**
+     * Determines if this request is an Eject Storage Domain (Blobs) request.
+     */
+    public static boolean isEjectStorageDomainRequest(final Ds3Request ds3Request) {
+        return ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getOperation() == Operation.EJECT
+                && ds3Request.getResource() == Resource.TAPE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "StorageDomainId", "java.util.UUID");
+    }
+
+    /**
      * Determines if this request is a Physical Placement request
      * @param ds3Request A request
      * @return True if the request has an Operation of value GET_PHYSICAL_PLACEMENT,
@@ -271,5 +290,18 @@ public final class Ds3RequestClassificationUtil {
                 && request.includeIdInPath()
                 && request.getResource() == Resource.JOB
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the AmazonS3 Create Multi Part Upload Part Request
+     */
+    public static boolean isCreateMultiPartUploadPartRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getObjectRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.PUT
+                && request.includeIdInPath() == false
+                && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID")
+                && paramListContainsParam(request.getRequiredQueryParams(), "PartNumber", "int");
     }
 }
