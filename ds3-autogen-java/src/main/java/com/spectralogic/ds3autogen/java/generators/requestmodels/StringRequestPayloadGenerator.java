@@ -22,7 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
 
-public class ReplicatePutJobGenerator extends BaseRequestGenerator {
+public class StringRequestPayloadGenerator extends BaseRequestGenerator {
 
     /**
      * Gets the list of Arguments needed to create the request constructor. This

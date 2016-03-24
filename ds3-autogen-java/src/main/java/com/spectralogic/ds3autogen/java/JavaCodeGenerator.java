@@ -452,8 +452,8 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated request generator for the specified Ds3Request
      */
     private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
-        if (isBulkReplicateRequest(ds3Request)) {
-            return new ReplicatePutJobGenerator();
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
         }
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
@@ -489,7 +489,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
-        } else if(isBulkReplicateRequest(ds3Request)) {
+        } else if(hasStringRequestPayload(ds3Request)) {
             return config.getTemplate("request/replicate_put_job_request_template.ftl");
         } else if (isPhysicalPlacementRequest(ds3Request)) {
             return config.getTemplate("request/physical_placement_request_template.ftl");
