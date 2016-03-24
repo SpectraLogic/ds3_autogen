@@ -490,7 +490,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
         } else if(hasStringRequestPayload(ds3Request)) {
-            return config.getTemplate("request/replicate_put_job_request_template.ftl");
+            return config.getTemplate("request/request_with_string_payload_template.ftl");
         } else if (isPhysicalPlacementRequest(ds3Request)) {
             return config.getTemplate("request/physical_placement_request_template.ftl");
         } else if (isMultiFileDeleteRequest(ds3Request)) {
