@@ -60,6 +60,31 @@ public final class ResponsePayloadUtil {
     }
 
     /**
+     * Retrieves the non-error non-null response payload associated with the request.
+     * If one does not exist, then null is returned
+     */
+    public static String getResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (!hasResponsePayload(responseCodes)) {
+            return null;
+        }
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final String payload : getAllResponseTypes(responseCodes)) {
+            if (!payload.equalsIgnoreCase("null")) {
+                builder.add(payload);
+            }
+        }
+        final ImmutableList<String> responsePayloads = builder.build();
+        switch (responsePayloads.size()) {
+            case 0:
+                return null;
+            case 1:
+                return responsePayloads.get(0);
+            default:
+                throw new IllegalArgumentException("Request has multiple non-error response payloads");
+        }
+    }
+
+    /**
      * Gets the list of Response Types from a list of Ds3ResponseCodes
      */
     public static ImmutableList<String> getAllResponseTypes(final ImmutableList<Ds3ResponseCode> responseCodes) {
