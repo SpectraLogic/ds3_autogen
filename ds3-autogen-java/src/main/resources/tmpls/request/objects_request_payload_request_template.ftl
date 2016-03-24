@@ -9,6 +9,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import com.spectralogic.ds3client.utils.Guard;
 <#include "../imports.ftl"/>
 
 public class ${name} extends AbstractRequest {
@@ -24,6 +25,9 @@ public class ${name} extends AbstractRequest {
 
     @Override
     public InputStream getStream() {
+        if (Guard.isNullOrEmpty(objects)) {
+            return null;
+        }
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 
