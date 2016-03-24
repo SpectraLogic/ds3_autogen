@@ -103,17 +103,22 @@ public final class Ds3RequestClassificationUtil {
                 && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
     }
 
-    //TODO
     /**
      * Determines if the request handler should have a payload of type String
      */
     public static boolean hasStringRequestPayload(final Ds3Request ds3Request) {
-        return isBulkReplicateRequest(ds3Request) || isGetBlobsRequest(ds3Request);
+        return isBulkReplicateRequest(ds3Request) || isGetBlobPersistenceRequest(ds3Request);
     }
 
-    //TODO
-    public static boolean isGetBlobsRequest(final Ds3Request ds3Request) {
-        return false;
+    /**
+     * Determines if the request is a Get Blob Persistence Request
+     */
+    public static boolean isGetBlobPersistenceRequest(final Ds3Request ds3Request) {
+        return ds3Request.getAction() == Action.LIST
+                && ds3Request.getHttpVerb() == HttpVerb.GET
+                && ds3Request.includeIdInPath() == false
+                && ds3Request.getResource() == Resource.BLOB_PERSISTENCE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
     }
 
     /**

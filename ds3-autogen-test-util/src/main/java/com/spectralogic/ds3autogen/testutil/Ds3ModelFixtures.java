@@ -331,7 +331,7 @@ public class Ds3ModelFixtures {
     }
 
     /**
-     * Creates the SpectraDs3 Replicate Put Job requet handler as
+     * Creates the SpectraDs3 Replicate Put Job request handler as
      * described in the Contract, excluding the response codes
      */
     public static Ds3Request getReplicatePutJob() {
@@ -353,5 +353,29 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
                         new Ds3Param("Replicate", "void")));
+    }
+
+    /**
+     * Creates the SpectraDs3 Get Blob Persistence request handler as
+     * described in the Contract
+     */
+    public static Ds3Request getGetBlobPersistence() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetBlobPersistenceRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.LIST,
+                Resource.BLOB_PERSISTENCE,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(new Ds3ResponseType("java.lang.String", null)))),
+                null,
+                null);
     }
 }

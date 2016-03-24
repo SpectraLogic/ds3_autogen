@@ -1558,6 +1558,61 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void GetBlobPersistenceRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetBlobPersistenceSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getBlobPersistenceRequest.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+
+        assertTrue(isReqVariable("RequestPayload", "String", requestGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.Guard", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "RequestPayload"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
+
+    @Test
     public void getBucketsAMZ_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
         final String requestName = "GetServiceRequest";
         final FileUtils fileUtils = mock(FileUtils.class);

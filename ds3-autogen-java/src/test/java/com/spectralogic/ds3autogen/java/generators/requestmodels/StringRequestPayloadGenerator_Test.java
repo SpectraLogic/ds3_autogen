@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getGetBlobPersistence;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +29,9 @@ public class StringRequestPayloadGenerator_Test {
 
     @Test
     public void toConstructorArgumentsList_Test() {
-        //TODO
-        //final ImmutableList<Arguments> result = generator.toConstructorArgumentsList();
-        //assertThat(result.size(), is(3));
+        final ImmutableList<Arguments> result = generator.toConstructorArgumentsList(getGetBlobPersistence());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("RequestPayload"));
+        assertThat(result.get(0).getType(), is("String"));
     }
 }
