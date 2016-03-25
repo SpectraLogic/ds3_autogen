@@ -80,6 +80,70 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
+    public void completeMultiPartUploadRequest() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "CompleteMultiPartUploadRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/completeMultiPartUploadRequest.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("UploadId", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("RequestPayload", "CompleteMultipartUpload", requestName, requestGeneratedCode, false));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload", requestGeneratedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
+        assertTrue(hasImport("com.google.common.net.UrlEscapers", requestGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
+        assertTrue(doesNotHaveOperation(requestGeneratedCode));
+        assertTrue(hasCopyright(requestGeneratedCode));
+        assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("UUID", "UploadId"),
+                new Arguments("CompleteMultipartUpload", "RequestPayload"));
+        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
+        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.CompleteMultipartUploadResult", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+    }
+
+    @Test
     public void getBucketRequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);

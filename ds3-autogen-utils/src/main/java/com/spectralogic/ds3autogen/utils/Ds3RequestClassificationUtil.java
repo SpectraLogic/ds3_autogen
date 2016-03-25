@@ -276,4 +276,17 @@ public final class Ds3RequestClassificationUtil {
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID")
                 && paramListContainsParam(request.getRequiredQueryParams(), "PartNumber", "int");
     }
+
+    /**
+     * Determines if a Ds3Request is the AmazonS3 Complete Multi Part Upload request
+     */
+    public static boolean isCompleteMultiPartUploadRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.POST
+                && request.includeIdInPath() == false
+                && request.getObjectRequirement() == Requirement.REQUIRED
+                && isEmpty(request.getOptionalQueryParams())
+                && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID");
+    }
 }

@@ -383,4 +383,26 @@ public class Ds3ModelFixtures {
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
                         new Ds3Param("StorageDomainId", "java.util.UUID")));
     }
+
+    /**
+     * Creates the AmazonS3 Complete Multi Part Upload Request Handler as described
+     * in the contract, excluding the response codes
+     */
+    public static Ds3Request getCompleteMultipartUploadRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.CompleteMultiPartUploadRequestHandler",
+                HttpVerb.POST,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                ImmutableList.of(
+                        new Ds3Param("UploadId", "java.util.UUID")));
+    }
 }
