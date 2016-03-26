@@ -21,16 +21,19 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 public class Struct {
     private final String name;
     private final String nameToMarshall;
-    private final ImmutableList<StructMember> variables; // members?
+    private final ImmutableList<StructMember> members;
+    private final boolean isTopLevel;
     private final StructHelper structHelper;
 
     public Struct(
             final String name,
             final String nameToMarshall,
-            final ImmutableList<StructMember> variables) {
+            final ImmutableList<StructMember> members,
+            final boolean isTopLevel) {
         this.name = name;
         this.nameToMarshall = nameToMarshall;
-        this.variables = variables;
+        this.members = members;
+        this.isTopLevel = isTopLevel;
         this.structHelper = StructHelper.getInstance();
     }
 
@@ -43,7 +46,11 @@ public class Struct {
     }
 
     public ImmutableList<StructMember> getStructMembers() {
-        return variables;
+        return members;
+    }
+
+    public boolean isTopLevel() {
+        return isTopLevel;
     }
 
     public StructHelper getStructHelper() {

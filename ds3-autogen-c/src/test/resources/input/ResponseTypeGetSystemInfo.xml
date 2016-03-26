@@ -1,5 +1,22 @@
 <Data>
     <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="SYSTEM_INFORMATION" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler$SystemInformationApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D7B16FCF4CB54A4DDD0B7B96965B0C89</Version>
+            </RequestHandler>
+        </RequestHandlers>
         <Types>
             <Type Name="com.spectralogic.s3.common.platform.lang.BuildInformation">
                 <Elements>

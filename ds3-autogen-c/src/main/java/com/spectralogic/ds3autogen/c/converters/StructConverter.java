@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 
@@ -29,12 +30,14 @@ import java.text.ParseException;
 public final class StructConverter {
     private StructConverter() {}
 
-    public static Struct toStruct(final Ds3Type ds3Type, final ImmutableSet<String> enumNames) throws ParseException {
+    public static Struct toStruct(final Ds3Type ds3Type, final ImmutableSet<String> enumNames, final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements(), enumNames);
+        final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
-                StructHelper.getResponseTypeName(ds3Type.getName()),
+                responseTypeName,
                 convertNameToMarshall(ds3Type.getNameToMarshal()),
-                variablesList);
+                variablesList,
+                isTopLevelStruct(responseTypeName, allRequests));
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList, final ImmutableSet<String> enumNames) throws ParseException {
@@ -53,5 +56,19 @@ public final class StructConverter {
             return null;
         }
         return nameToMarshall;
+    }
+
+    /**
+     * used to determine if the parser for this type should _get_request_xml_nodes() for the request response
+     * @param responseTypeName
+     * @param allRequests
+     * @return
+     */
+    private static boolean isTopLevelStruct(final String responseTypeName, final ImmutableList<Request> allRequests) {
+        for (final Request currentRequest : allRequests) {
+            if (currentRequest.getResponseType().equals(responseTypeName))
+                return true;
+        }
+        return false;
     }
 }

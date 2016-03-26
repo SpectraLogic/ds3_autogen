@@ -57,7 +57,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember");
         final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -68,7 +68,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_user_api_bean_response", false), "beanMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false);
         assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
     @Test
@@ -80,7 +80,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_tape_type", false), "tapeTypeMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -88,7 +88,7 @@ public class StructHelper_Test {
     public void testGetArrayStructMemberTypes() {
         final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
         final StructMember testStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
-        final Struct testStructWithArrayMembers = new Struct("testStruct", "Data", ImmutableList.of(testStructMember1));
+        final Struct testStructWithArrayMembers = new Struct("testStruct", "Data", ImmutableList.of(testStructMember1), false);
         final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers));
         assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
         assertEquals(arrayStructMemberTypes.size(), 1);
@@ -105,9 +105,9 @@ public class StructHelper_Test {
         final ImmutableList<StructMember> testArrayStructMembers1 = ImmutableList.of(testArrayStructMember1, testArrayStructMember2);
         final ImmutableList<StructMember> testArrayStructMembers2 = ImmutableList.of(testArrayStructMember2, testArrayStructMember3);
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStructMember3);
-        final Struct testStructWithArrayMembers1 = new Struct("testStruct", "Data", testArrayStructMembers1);
-        final Struct testStructWithArrayMembers2 = new Struct("testStruct", "Data", testArrayStructMembers2);
-        final Struct testStructWithoutArrayMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembers);
+        final Struct testStructWithArrayMembers1 = new Struct("testStruct", "Data", testArrayStructMembers1, false);
+        final Struct testStructWithArrayMembers2 = new Struct("testStruct", "Data", testArrayStructMembers2, false);
+        final Struct testStructWithoutArrayMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembers, false);
         final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers1, testStructWithArrayMembers2, testStructWithoutArrayMember));
         assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
         assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
@@ -123,8 +123,8 @@ public class StructHelper_Test {
         final StructMember testStructMember3 = new StructMember(new FreeableType("ds3_bucket", false), "bucketTypeArrayMember");
         final ImmutableList<StructMember> testArrayStructMemberTypes = ImmutableList.of(testStructMember1, testStructMember2);
         final ImmutableList<StructMember> testStructMembersWithoutArrays = ImmutableList.of(testStructMember3);
-        final Struct testStructWithArrayTypeMembers = new Struct("testStruct", "Data", testArrayStructMemberTypes);
-        final Struct testStructWithoutArrayTypeMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembersWithoutArrays);
+        final Struct testStructWithArrayTypeMembers = new Struct("testStruct", "Data", testArrayStructMemberTypes, false);
+        final Struct testStructWithoutArrayTypeMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembersWithoutArrays, false);
         final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayTypeMembers, testStructWithoutArrayTypeMember));
         assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
         assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
@@ -139,7 +139,7 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build());
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableList.of());
         final String output = StructHelper.generateStructMembers(testStruct.getStructMembers());
         assertTrue(output.contains("ds3_bool bool_element;"));
         assertTrue(output.contains("ds3_user_api_bean_response* bean_element;"));
@@ -153,15 +153,15 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build());
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableList.of());
         final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
         LOG.info("Generated code:\n" + output);
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
-        assertTrue(output.contains("        _response->bool_element = xml_get_bool(doc, child_node);"));
+        assertTrue(output.contains("        response->bool_element = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
-        assertTrue(output.contains("        _response->bean_element = _parse_ds3_bean_element_response(log, doc, child_node);"));
+        assertTrue(output.contains("        error = _parse_ds3_bean_element_response(client, doc, child_node, &response->bean_element);"));
         assertTrue(output.contains("    } else {"));
-        assertTrue(output.contains("        ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("    }"));
     }
 
@@ -172,9 +172,75 @@ public class StructHelper_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, allRequests);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
+        assertTrue(output.contains("    xmlDocPtr doc;"));
+        assertTrue(output.contains("    xmlNodePtr root;"));
+        assertTrue(output.contains("    xmlNodePtr child_node;"));
+        assertTrue(output.contains("    ds3_error* error;"));
+        assertTrue(output.contains("    ds3_system_information_response* response;"));
+
+        assertTrue(output.contains("    error = _get_request_xml_nodes(client, request, &doc, &root, \"Data\");"));
+        assertTrue(output.contains("    if (error != NULL) {"));
+        assertTrue(output.contains("        return error;"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("        if (element_equal(child_node, \"ApiVersion\")) {"));
+        assertTrue(output.contains("            response->api_version = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"BackendActivated\")) {"));
+        assertTrue(output.contains("            response->backend_activated = xml_get_bool(doc, child_node);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"BuildInformation\")) {"));
+        assertTrue(output.contains("            error = _parse_ds3_build_information_response(client, doc, child_node, &response->build_information);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"InstanceId\")) {"));
+        assertTrue(output.contains("            response->instance_id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
+        assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("        } else {"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        }"));
+
+        assertTrue(output.contains("        if (error != NULL) {"));
+        assertTrue(output.contains("            break;"));
+        assertTrue(output.contains("        }"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    xmlFreeDoc(doc);"));
+
+        assertTrue(output.contains("    if (error == NULL) {"));
+        assertTrue(output.contains("        *_response = response;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_system_information_response_free(response);"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return error;"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateParserForTopLevelStruct() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/ResponseTypeGetSystemInfo.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -185,36 +251,48 @@ public class StructHelper_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_log* log, const ds3_system_information_response** response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
+        assertTrue(output.contains("    ds3_system_information_response* response;"));
         assertTrue(output.contains("    ds3_error* error;"));
-        assertTrue(output.contains("    ds3_system_information_response* _response = *response;"));
 
         assertTrue(output.contains("    error = _get_request_xml_nodes(client, request, &doc, &root, \"Data\");"));
         assertTrue(output.contains("    if (error != NULL) {"));
         assertTrue(output.contains("        return error;"));
         assertTrue(output.contains("    }"));
 
+        assertTrue(output.contains("    response = g_new0(ds3_system_information_response, 1);"));
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"ApiVersion\")) {"));
-        assertTrue(output.contains("            _response->api_version = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->api_version = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"BackendActivated\")) {"));
-        assertTrue(output.contains("            _response->backend_activated = xml_get_bool(doc, child_node);"));
+        assertTrue(output.contains("            response->backend_activated = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"BuildInformation\")) {"));
-        assertTrue(output.contains("            _response->build_information = _parse_ds3_build_information_response(log, doc, child_node);"));
+        assertTrue(output.contains("            error = _parse_ds3_build_information_response(client, doc, child_node, &response->build_information);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"InstanceId\")) {"));
-        assertTrue(output.contains("            _response->instance_id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->instance_id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
-        assertTrue(output.contains("            _response->serial_number = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        }"));
+
+        assertTrue(output.contains("        if (error != NULL) {"));
+        assertTrue(output.contains("            break;"));
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    xmlFreeDoc(doc);"));
-        assertTrue(output.contains("    return NULL;"));
+
+        assertTrue(output.contains("    if (error == NULL) {"));
+        assertTrue(output.contains("        *_response = response;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_system_information_response_free(response);"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
     }
 }

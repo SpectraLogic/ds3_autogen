@@ -26,9 +26,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.Header;
-import com.spectralogic.ds3autogen.c.models.Source;
-import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -56,14 +54,13 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefEnum.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("typedef enum {"));
         assertTrue(output.contains("    IN_PROGRESS,"));
@@ -80,14 +77,13 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefEnumMatcher.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("static ds3_job_status _match_ds3_job_status(const ds3_log* log, const xmlChar* text) {"));
         assertTrue(output.contains("    if (xmlStrcmp(text, (const xmlChar*) \"IN_PROGRESS\") == 0) {"));
@@ -110,14 +106,13 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("typedef struct {"));
         assertTrue(output.contains("    ds3_str* display_name;"));
@@ -132,14 +127,13 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "TypedefStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("typedef struct {"));
         assertTrue(output.contains("    ds3_bucket_response** buckets;"));
@@ -155,14 +149,13 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Header header = new Header(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "FreeStructPrototype.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("void ds3_user_response_free(ds3_user_response* response_data);"));
     }
@@ -174,9 +167,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -185,17 +179,16 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_user_response_free(ds3_user_response* response_data) {"));
-        assertTrue(output.contains("    if (response_data == NULL) {"));
+        assertTrue(output.contains("void ds3_user_response_free(ds3_user_response* response) {"));
+        assertTrue(output.contains("    if (response == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    ds3_str_free(response_data->display_name);"));
-        assertTrue(output.contains("    ds3_str_free(response_data->id);"));
+        assertTrue(output.contains("    ds3_str_free(response->display_name);"));
+        assertTrue(output.contains("    ds3_str_free(response->id);"));
 
-        assertTrue(output.contains("    g_free(response_data);"));
+        assertTrue(output.contains("    g_free(response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -206,9 +199,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -217,21 +211,20 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_list_all_my_buckets_result_response_free(ds3_list_all_my_buckets_result_response* response_data) {"));
-        assertTrue(output.contains("    if (response_data == NULL) {"));
+        assertTrue(output.contains("void ds3_list_all_my_buckets_result_response_free(ds3_list_all_my_buckets_result_response* response) {"));
+        assertTrue(output.contains("    if (response == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    for (index = 0; index < response->num_buckets; index++) {"));
-        assertTrue(output.contains("        ds3_bucket_response_free(response_data->buckets[index]);"));
+        assertTrue(output.contains("        ds3_bucket_response_free(response->buckets[index]);"));
         assertTrue(output.contains("    }"));
-        assertTrue(output.contains("    g_free(response_data->buckets);"));
+        assertTrue(output.contains("    g_free(response->buckets);"));
 
-        assertTrue(output.contains("    ds3_user_response_free(response_data->owner);"));
+        assertTrue(output.contains("    ds3_user_response_free(response->owner);"));
 
-        assertTrue(output.contains("    g_free(response_data);"));
+        assertTrue(output.contains("    g_free(response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -242,9 +235,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -253,18 +247,17 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("void ds3_blob_response_free(ds3_blob_response* response_data) {"));
-        assertTrue(output.contains("    if (response_data == NULL) {"));
+        assertTrue(output.contains("void ds3_blob_response_free(ds3_blob_response* response) {"));
+        assertTrue(output.contains("    if (response == NULL) {"));
         assertTrue(output.contains("        return;"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    ds3_str_free(response_data->checksum);"));
-        assertTrue(output.contains("    ds3_str_free(response_data->id);"));
-        assertTrue(output.contains("    ds3_str_free(response_data->object_id);"));
+        assertTrue(output.contains("    ds3_str_free(response->checksum);"));
+        assertTrue(output.contains("    ds3_str_free(response->id);"));
+        assertTrue(output.contains("    ds3_str_free(response->object_id);"));
 
-        assertTrue(output.contains("    g_free(response_data);"));
+        assertTrue(output.contains("    g_free(response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -275,9 +268,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -286,14 +280,13 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_user_response(const ds3_log* log, const ds3_user_response** response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_user_response(const ds3_client* client, const ds3_request* request, const ds3_user_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_error* error;"));
-        assertTrue(output.contains("    ds3_user_response* _response = *response;"));
+        assertTrue(output.contains("    ds3_user_response* response;"));
 
         assertTrue(output.contains("    error = _get_request_xml_nodes(client, request, &doc, &root, \"Data\");"));
         assertTrue(output.contains("    if (error != NULL) {"));
@@ -302,16 +295,23 @@ public class CCodeGenerator_Test {
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"DisplayName\")) {"));
-        assertTrue(output.contains("            _response->display_name = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->display_name = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
-        assertTrue(output.contains("            _response->id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    xmlFreeDoc(doc);"));
-        assertTrue(output.contains("    return NULL;"));
+
+        assertTrue(output.contains("    if (error == NULL) {"));
+        assertTrue(output.contains("        *_response = response;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_user_response_free(response);"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
     }
 
@@ -322,9 +322,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -335,29 +336,37 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_list_all_my_buckets_result_response(const ds3_log* log, const ds3_list_all_my_buckets_result_response** response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_error* error;"));
-        assertTrue(output.contains("    ds3_list_all_my_buckets_result_response* _response = *response;"));
+        assertTrue(output.contains("    ds3_list_all_my_buckets_result_response* response;"));
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"Buckets\")) {"));
-        assertTrue(output.contains("            GPtrArray* buckets_array = _parse_ds3_list_all_my_buckets_result_response_array(log, doc, child_node);"));
-        assertTrue(output.contains("            _response->buckets = (ds3_list_all_my_buckets_result_response**)buckets_array->pdata;"));
-        assertTrue(output.contains("            _response->num_buckets = buckets_array->len;"));
+        assertTrue(output.contains("            GPtrArray* buckets_array;"));
+        assertTrue(output.contains("            error = _parse_ds3_list_all_my_buckets_result_response_array(client, doc, child_node, &buckets_array);"));
+        assertTrue(output.contains("            response->buckets = (ds3_list_all_my_buckets_result_response**)buckets_array->pdata;"));
+        assertTrue(output.contains("            response->num_buckets = buckets_array->len;"));
         assertTrue(output.contains("            g_ptr_array_free(buckets_array, FALSE);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Owner\")) {"));
-        assertTrue(output.contains("            _response->owner = _parse_ds3_owner_response(log, doc, child_node);"));
+        assertTrue(output.contains("            error = _parse_ds3_owner_response(client, doc, child_node, &response->owner);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    xmlFreeDoc(doc);"));
-        assertTrue(output.contains("    return NULL;"));
+
+        assertTrue(output.contains("    if (error == NULL) {"));
+        assertTrue(output.contains("        *_response = response;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_list_all_my_buckets_result_response_free(response);"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
     }
 
@@ -368,9 +377,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -379,32 +389,31 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_blob_response(const ds3_log* log, const ds3_blob_response** response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_blob_response(const ds3_client* client, const ds3_request* request, const ds3_blob_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_error* error;"));
-        assertTrue(output.contains("    ds3_blob_response* _response = *response;"));
+        assertTrue(output.contains("    ds3_blob_response* response;"));
 
         assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"ByteOffset\")) {"));
-        assertTrue(output.contains("            _response->byte_offset = xml_get_uint64(doc, child_node);"));
+        assertTrue(output.contains("            response->byte_offset = xml_get_uint64(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Checksum\")) {"));
-        assertTrue(output.contains("            _response->checksum = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->checksum = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"ChecksumType\")) {"));
         assertTrue(output.contains("            xmlChar* text = xmlNodeListGetString(doc, child_node, 1);"));
         assertTrue(output.contains("            if (text == NULL) {"));
         assertTrue(output.contains("                continue;"));
         assertTrue(output.contains("            }"));
-        assertTrue(output.contains("            _response->checksum_type = _match_ds3_checksum_type(log, text);"));
+        assertTrue(output.contains("            response->checksum_type = _match_ds3_checksum_type(log, text);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
-        assertTrue(output.contains("            _response->id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Length\")) {"));
-        assertTrue(output.contains("            _response->length = xml_get_uint64(doc, child_node);"));
+        assertTrue(output.contains("            response->length = xml_get_uint64(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"ObjectId\")) {"));
-        assertTrue(output.contains("            _response->object_id = xml_get_string(doc, child_node);"));
+        assertTrue(output.contains("            response->object_id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
         assertTrue(output.contains("            ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
         assertTrue(output.contains("        }"));
@@ -412,7 +421,14 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    xmlFreeDoc(doc);"));
-        assertTrue(output.contains("    return NULL;"));
+
+        assertTrue(output.contains("    if (error == NULL) {"));
+        assertTrue(output.contains("        *_response = response;"));
+        assertTrue(output.contains("    } else {"));
+        assertTrue(output.contains("        ds3_blob_response_free(response);"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
     }
 
@@ -423,9 +439,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -434,17 +451,25 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
+        LOG.info(output);
 
-        assertTrue(output.contains("static GPtrArray* _parse_ds3_bucket_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
+        assertTrue(output.contains("    ds3_error* error = NULL;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    GPtrArray* ds3_bucket_response_array = g_ptr_array_new();"));
 
         assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
-        assertTrue(output.contains("        g_ptr_array_add(ds3_bucket_response_array, _parse_ds3_bucket_response(log, doc, child_node));"));
+        assertTrue(output.contains("        ds3_bucket_response* response;"));
+        assertTrue(output.contains("        error = _parse_ds3_bucket_response(client, doc, child_node, &response)"));
+        assertTrue(output.contains("        g_ptr_array_add(ds3_bucket_response_array, response);"));
+
+        assertTrue(output.contains("    if (error != NULL) {"));
+        assertTrue(output.contains("        break;"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return ds3_bucket_response_array;"));
+        assertTrue(output.contains("    *_response = response;"));
+
+        assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
 
     }
@@ -456,9 +481,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -467,7 +493,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.indexOf("_parse_ds3_bucket_response_array") > output.indexOf("_parse_ds3_bucket_response"));
         assertTrue(output.indexOf("_parse_ds3_list_all_my_buckets_result_response") > output.indexOf("_parse_ds3_bucket_response_array"));
@@ -480,9 +505,10 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames));
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -491,32 +517,32 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
+        LOG.info("generated output:\n" + output);
 
-        final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote("static GPtrArray* _parse_ds3_bucket_response_array(const ds3_log* log, xmlDocPtr doc, xmlNodePtr root) {"));
-        final Pattern arrayParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_user_response(const ds3_log* log, const ds3_user_response** response) {"));
-        final Pattern structParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_list_all_my_buckets_result_response(const ds3_log* log, const ds3_list_all_my_buckets_result_response** response) {"));
+        final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote("static GPtrArray* _parse_ds3_bucket_response_array(const ds3_client* client, xmlDocPtr doc, xmlNodePtr root, GPtrArray** _response) {"));
+        final Pattern arrayParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_user_response(const ds3_client* client, const ds3_request* request, const ds3_user_response** _response) {"));
+        final Pattern structParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** _response) {"));
 
-        final Matcher arrayParserMatcher = arrayParserPattern.matcher(output);
         final Matcher arrayStructParserMatcher = arrayStructParserPattern.matcher(output);
+        final Matcher arrayParserMatcher = arrayParserPattern.matcher(output);
         final Matcher structParserMatcher = structParserPattern.matcher(output);
 
-        int arrayParserCount = 0;
         int arrayStructParserCount = 0;
+        int arrayParserCount = 0;
         int structParserCount = 0;
 
-        while (arrayParserMatcher.find()){
-    	    arrayParserCount +=1;
-        }
         while (arrayStructParserMatcher.find()){
             arrayStructParserCount +=1;
+        }
+        while (arrayParserMatcher.find()){
+    	    arrayParserCount +=1;
         }
         while (structParserMatcher.find()){
             structParserCount +=1;
         }
 
-        assert(arrayParserCount == 1);
         assert(arrayStructParserCount == 1);
+        assert(arrayParserCount == 1);
         assert(structParserCount == 1);
     }
 

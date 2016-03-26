@@ -7,44 +7,41 @@
 <#-- ***************************************** -->
 <#-- Generate all "InitRequests" from Requests -->
 <#list getRequests() as requestEntry>
-    <#include "AmazonS3InitRequestHandler.ftl">
+    <#include "../request-templates/InitRequest.ftl">
 </#list>
 <#-- ***************************************** -->
 
 <#include "source_post_init_pre_response_parsers.ftl"/>
 
-<#-- ******************************************* -->
-/////////////////////////////////////////////////////////
-// Generate all "StructParsers" from ArrayStructs
-//////////////////////////////////////////////////////////
+<#-- ********************************************* -->
+<#-- Generate all "ResponseParsers" that are used by arrayParsers -->
 <#list getArrayStructs() as structEntry>
     <#include "../ResponseParser.ftl">
 </#list>
-<#-- ******************************************* -->
 
-<#-- ******************************************* -->
-/////////////////////////////////////////////////////////
-// Generate all "ArrayStructMemberParsers" from Structs
-//////////////////////////////////////////////////////////
+<#-- ********************************************* -->
+<#-- Generate all "ArrayTypeParsers"               -->
 <#list getArrayTypes() as arrayType>
 ${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
 </#list>
-<#-- ******************************************* -->
 
-<#-- ******************************************* -->
-/////////////////////////////////////////////////////////
-// Generate all "ResponseParsers" from Structs
-//////////////////////////////////////////////////////////
+<#-- ********************************************* -->
+<#-- Generate remaining "ResponseParsers"          -->
 <#list getStructs() as structEntry>
     <#include "../ResponseParser.ftl">
 </#list>
-<#-- ******************************************* -->
 
 <#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
-<#include "../request-templates/HeadRequest.ftl"/>
-<#include "../request-templates/GetRequest.ftl"/>
-<#include "../request-templates/DeleteRequest.ftl"/>
+<#list getRequests() as requestEntry>
+    <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
+        <#include "../request-templates/HeadRequest.ftl"/>
+    <#elseif requestEntry.getVerb().toString() == "GET">
+        <#include "../request-templates/GetRequest.ftl"/>
+    <#elseif requestEntry.getVerb().toString() == "DELETE">
+        <#include "../request-templates/DeleteRequest.ftl"/>
+    </#if>
+</#list>
 <#-- ********************************************* -->
 
 <#-- ******************************************* -->

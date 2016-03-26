@@ -1,9 +1,7 @@
 <#-- ******************************** -->
 <#-- Generate "AmazonS3 HEAD Request" -->
-<#--   Input: Source object           -->
+<#--   Input: Head Request object     -->
 <#-- ******************************** -->
-<#list getRequests() as requestEntry>
-    <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
 ${requestEntry.getRequestHelper().generateRequestFunctionSignature(requestEntry)} {
     ds3_error* error = NULL;
     ds3_string_multimap* return_headers = NULL;
@@ -20,6 +18,4 @@ ${requestEntry.getRequestHelper().generateParameterCheckingBlock(requestEntry)}
 
     return error;
 }
-    </#if>
-</#list>
 

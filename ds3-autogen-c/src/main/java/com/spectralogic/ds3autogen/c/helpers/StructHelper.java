@@ -63,6 +63,22 @@ public final class StructHelper {
     }
 
     /**
+     * determine if a parser requires a ds3_error to track the response of a sub-parser
+     * @param struct
+     * @return
+     */
+    public static boolean hasComplexMembers(final Struct struct) {
+        for (final StructMember structMember : struct.getStructMembers()) {
+            if (!structMember.getType().isPrimitive()) {
+                if (structMember.getType().getTypeName().equals("ds3_str")) continue; // ds3_str is not an auto-generated API typeName.
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Determine if a Struct requires a custom parser.
      * @param struct a valid Struct to examine
      * @return true if no StructMembers require a custom parser.
@@ -119,23 +135,23 @@ public final class StructHelper {
     }
 
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
-        return indent(3) + "_response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
+        return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
-
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
-        return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "_array(log, doc, child_node);\n"
-             + indent(3) + "_response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
-             + indent(3) + "_response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
+        return indent(3) + "GPtrArray* " + structMember.getName() + "_array;\n"
+             + indent(3) + "error = _parse_" + structResponseTypeName + "_array(client, doc, child_node, &" + structMember.getName() + "_array);\n"
+             + indent(3) + "response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
     public static String generateStructMemberEnumParserBlock(final StructMember structMember) {
         return indent(3) + "xmlChar* text = xmlNodeListGetString(doc, child_node, 1);\n"
              + indent(3) + "if (text == NULL) {\n"
-             + indent(3) + "    continue;\n"
+             + indent(4) + "continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "_response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
     }
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
@@ -158,7 +174,7 @@ public final class StructHelper {
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         }
 
-        return generateStructMemberParserLine(structMember, getParserFunctionName(structMember.getName()) + "(log, doc, child_node);");
+        return indent(3) + "error = " + getParserFunctionName(structMember.getName()) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
     }
 
     public static String generateResponseParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
@@ -177,17 +193,21 @@ public final class StructHelper {
         }
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
-        outputBuilder.append(indent(3)).append("ds3_log_message(log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
-        outputBuilder.append(indent(2)).append("}").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
+        outputBuilder.append(indent(2)).append("}").append("\n\n");
+
+        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
+        outputBuilder.append(indent(3)).append("break;\n");
+        outputBuilder.append(indent(2)).append("}\n");
 
         return outputBuilder.toString();
     }
 
     public static String generateFreeArrayStructMember(final StructMember structMember) {
         return indent(1) + "for (index = 0; index < response->num_" + structMember.getName() + "; index++) {\n"
-             + indent(2) + structMember.getType().getTypeName() + "_free(response_data->" + structMember.getName() + "[index]);\n"
+             + indent(2) + structMember.getType().getTypeName() + "_free(response->" + structMember.getName() + "[index]);\n"
              + indent(1) + "}\n"
-             + indent(1) + "g_free(response_data->" + structMember.getName() + ");\n\n";
+             + indent(1) + "g_free(response->" + structMember.getName() + ");\n\n";
     }
 
     public static String generateFreeStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
@@ -199,7 +219,7 @@ public final class StructHelper {
             if (structMember.getType().isArray()) {
                 outputBuilder.append(generateFreeArrayStructMember(structMember));
             } else {
-                outputBuilder.append(indent(1)).append(structMember.getType().getTypeName()).append("_free(response_data->").append(structMember.getName()).append(");\n");
+                outputBuilder.append(indent(1)).append(structMember.getType().getTypeName()).append("_free(response->").append(structMember.getName()).append(");\n");
             }
         }
 

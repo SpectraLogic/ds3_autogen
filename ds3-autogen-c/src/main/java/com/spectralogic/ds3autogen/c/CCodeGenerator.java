@@ -65,11 +65,11 @@ public class CCodeGenerator implements CodeGenerator {
         this.fileUtils = fileUtils;
 
         try {
+            final ImmutableList<Request> allRequests = getAllRequests(spec);
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-            final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames));
+            final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames, allRequests));
             final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-            final ImmutableList<Request> allRequests = getAllRequests(spec);
 
             generateHeader(allEnums, allOrderedStructs, allRequests);
             generateSource(allEnums, allOrderedStructs, allRequests);
@@ -110,13 +110,13 @@ public class CCodeGenerator implements CodeGenerator {
         return allEnumsBuilder.build();
     }
 
-    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames) throws ParseException {
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames, final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames));
+                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames, allRequests));
             }
         }
         return allStructsBuilder.build();
