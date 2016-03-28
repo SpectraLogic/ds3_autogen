@@ -51,6 +51,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
+        LOG.info("output:\n" + output);
 
         assertTrue(output.contains("ds3_error* delete_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));

@@ -1,10 +1,14 @@
 <#-- ******************************************************** -->
 <#-- Generate all "TypedefStructResponseParsers" from Structs -->
-<#--   Input: Header object                                   -->
+<#--   Input: Source object                                   -->
 <#-- ******************************************************** -->
+<#if !structEntry.isTopLevel()>
+static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ${structEntry.getName()}** _response) {
+<#else>
 static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const ds3_request* request, const ${structEntry.getName()}** _response) {
     xmlDocPtr doc;
     xmlNodePtr root;
+</#if>
     xmlNodePtr child_node;
     ${structEntry.getName()}* response;
     <#if structEntry.isTopLevel() || structEntry.getStructHelper().hasComplexMembers(structEntry)>
@@ -19,7 +23,7 @@ static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, cons
     </#if>
 
     response = g_new0(${structEntry.getName()}, 1);
-    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
+    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
 ${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), structEntry.getStructMembers())}
     }
 

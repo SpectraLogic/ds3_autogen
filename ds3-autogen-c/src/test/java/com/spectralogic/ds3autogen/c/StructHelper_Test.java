@@ -198,7 +198,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("        return error;"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"ApiVersion\")) {"));
         assertTrue(output.contains("            response->api_version = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"BackendActivated\")) {"));
@@ -264,7 +264,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    response = g_new0(ds3_system_information_response, 1);"));
-        assertTrue(output.contains("    for (child_node = root_node->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
+        assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
         assertTrue(output.contains("        if (element_equal(child_node, \"ApiVersion\")) {"));
         assertTrue(output.contains("            response->api_version = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"BackendActivated\")) {"));

@@ -13,6 +13,13 @@
 
 <#include "source_post_init_pre_response_parsers.ftl"/>
 
+<#-- ******************************************* -->
+<#-- Generate all "EnumMatchers" from Enums      -->
+<#list getEnums() as enumEntry>
+    <#include "../TypedefEnumMatcher.ftl">
+</#list>
+<#-- ******************************************* -->
+
 <#-- ********************************************* -->
 <#-- Generate all "ResponseParsers" that are used by arrayParsers -->
 <#list getArrayStructs() as structEntry>
@@ -36,20 +43,17 @@ ${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
         <#include "../request-templates/HeadRequest.ftl"/>
+    <#elseif requestEntry.getVerb().toString() == "POST">
+        <#include "../request-templates/Request.ftl"/>
+    <#elseif requestEntry.getVerb().toString() == "PUT">
+        <#include "../request-templates/Request.ftl"/>
     <#elseif requestEntry.getVerb().toString() == "GET">
-        <#include "../request-templates/GetRequest.ftl"/>
+        <#include "../request-templates/Request.ftl"/>
     <#elseif requestEntry.getVerb().toString() == "DELETE">
-        <#include "../request-templates/DeleteRequest.ftl"/>
+        <#include "../request-templates/Request.ftl"/>
     </#if>
 </#list>
 <#-- ********************************************* -->
-
-<#-- ******************************************* -->
-<#-- Generate all "EnumMatchers" from Enums      -->
-<#list getEnums() as enumEntry>
-    <#include "../TypedefEnumMatcher.ftl">
-</#list>
-<#-- ******************************************* -->
 
 <#include "source_post_response_matchers.ftl"/>
 
