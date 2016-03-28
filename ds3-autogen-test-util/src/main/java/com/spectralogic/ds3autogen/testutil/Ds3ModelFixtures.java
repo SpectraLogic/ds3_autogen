@@ -325,9 +325,37 @@ public class Ds3ModelFixtures {
                 ResourceType.NON_SINGLETON,
                 null,
                 true,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType(
+                                                "com.spectralogic.s3.server.domain.JobWithChunksApiBean", null)))),
                 null,
                 null);
+    }
+
+    /**
+     * Creates the AmazonS3  CreateMultiPartUploadPartRequestHandler as
+     * described in the contract, excluding the response codes
+     */
+    public static Ds3Request getCreateMultiPartUploadPart() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.CreateMultiPartUploadPartRequestHandler",
+                HttpVerb.PUT,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                ImmutableList.of(
+                        new Ds3Param("PartNumber", "int"),
+                        new Ds3Param("UploadId", "java.util.UUID")));
     }
 
     /**
@@ -350,12 +378,9 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("BucketId", "java.util.UUID"),
                         new Ds3Param("EjectLabel", "java.lang.String"),
-                        new Ds3Param("EjectLocation", "java.lang.String")
-                ),
+                        new Ds3Param("EjectLocation", "java.lang.String")),
                 ImmutableList.of(
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                        new Ds3Param("StorageDomainId", "java.util.UUID")
-                )
-        );
+                        new Ds3Param("StorageDomainId", "java.util.UUID")));
     }
 }

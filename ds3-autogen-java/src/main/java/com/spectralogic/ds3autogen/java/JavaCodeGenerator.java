@@ -473,6 +473,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isMultiFileDeleteRequest(ds3Request)) {
             return new MultiFileDeleteRequestGenerator();
         }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return new StreamRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 

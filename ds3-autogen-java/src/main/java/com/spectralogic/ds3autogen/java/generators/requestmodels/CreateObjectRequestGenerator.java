@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
@@ -30,6 +31,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * includes all non-void required parameters, and arguments described within
      * the request header.
      */
+    @Override
     public ImmutableList<Arguments> toConstructorArgumentsList(
             final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
@@ -62,12 +64,12 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
         final RequestConstructor depreciatedConstructor = createDeprecatedConstructor(
                 constructorArgs);
 
-        final RequestConstructor channelConstructor = createChannelConstructor(
+        final RequestConstructor channelConstructor = getChannelConstructor(
                 constructorArgs,
                 optionalArgs,
                 queryParams);
 
-        final RequestConstructor inputStreamConstructor = createInputStreamConstructor(
+        final RequestConstructor inputStreamConstructor = getInputStreamConstructor(
                 constructorArgs,
                 optionalArgs,
                 queryParams);
@@ -82,45 +84,28 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * Creates the create object request constructor that has the required
      * parameters Stream
      */
-    protected static RequestConstructor createInputStreamConstructor(
+    protected static RequestConstructor getInputStreamConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
             final ImmutableList<Arguments> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);
-        builder.add(new Arguments("InputStream", "Stream"));
-
-        final ImmutableList<Arguments> updatedArgs = builder.build();
-        return new RequestConstructor(
-                updatedArgs,
-                updatedArgs,
-                queryParams);
+        return CommonRequestGeneratorUtils.createInputStreamConstructor(builder.build(), queryParams);
     }
 
     /**
      * Creates the create object request constructor that has the required
      * parameters Channel
      */
-    protected static RequestConstructor createChannelConstructor(
+    protected static RequestConstructor getChannelConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
             final ImmutableList<Arguments> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);
-        builder.add(new Arguments("SeekableByteChannel", "Channel"));
-
-        final ImmutableList<String> additionalLines = ImmutableList.of(
-                "this.stream = new SeekableByteChannelInputStream(channel);");
-
-        final ImmutableList<Arguments> updatedArgs = builder.build();
-        return new RequestConstructor(
-                false,
-                additionalLines,
-                updatedArgs,
-                updatedArgs,
-                queryParams);
+        return CommonRequestGeneratorUtils.createChannelConstructor(builder.build(), queryParams);
     }
 
     /**

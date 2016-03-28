@@ -2,6 +2,9 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.annotations.Action;
+import com.spectralogic.ds3client.annotations.Resource;
+import com.spectralogic.ds3client.annotations.ResponsePayloadModel;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
@@ -17,10 +20,12 @@ public interface Ds3Client extends Closeable {
     ConnectionDetails getConnectionDetails();
 
     <#list commands as cmd>
+    ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
             throws IOException, SignatureException;
     </#list>
     <#list customCommands as cmd>
+    ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
             throws IOException, SignatureException;
     </#list>

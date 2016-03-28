@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Variable;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.toAnnotation;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -842,5 +844,39 @@ public class JavaHelper_Test {
         assertThat(paramAssignmentRHS(new Arguments("String", "StringArg")), is("stringArg"));
         assertThat(paramAssignmentRHS(new Arguments("int", "IntArg")), is("intArg"));
         assertThat(paramAssignmentRHS(new Arguments("Double", "DoubleArg")), is("doubleArg"));
+    }
+
+    @Test
+    public void toAnnotation_NullObject_Test() {
+        assertThat(toAnnotation(null), is(""));
+    }
+
+    @Test
+    public void toAnnotation_Test() {
+        final String expected = "@ResponsePayloadModel(\"MyPayload\")\n" +
+                "    @Action(\"MyAction\")\n" +
+                "    @Resource(\"MyResource\")";
+        final AnnotationInfo annotationInfo = new AnnotationInfo("MyPayload", "MyAction", "MyResource");
+        assertThat(toAnnotation(annotationInfo), is(expected));
+    }
+
+    @Test
+    public void createAnnotation_NullValue_Test() {
+        assertThat(createAnnotation("Annotation", null), is(""));
+        assertThat(createAnnotation(null, "Value"), is(""));
+        assertThat(createAnnotation(null, null), is(""));
+    }
+
+    @Test
+    public void createAnnotation_EmptyValue_Test() {
+        assertThat(createAnnotation("Annotation", ""), is(""));
+        assertThat(createAnnotation("", "Value"), is(""));
+        assertThat(createAnnotation("", ""), is(""));
+    }
+
+    @Test
+    public void createAnnotation_Test() {
+        final String expected = "@Annotation(\"Value\")";
+        assertThat(createAnnotation("Annotation", "Value"), is(expected));
     }
 }

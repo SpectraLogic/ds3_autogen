@@ -22,9 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.CreateObjectRequestGenerator.createChannelConstructor;
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.CreateObjectRequestGenerator.createDeprecatedConstructor;
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.CreateObjectRequestGenerator.createInputStreamConstructor;
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.CreateObjectRequestGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
@@ -158,7 +156,7 @@ public class CreateObjectRequestGenerator_Test {
 
     @Test
     public void createInputStreamConstructor_Test() {
-        final RequestConstructor result = createInputStreamConstructor(
+        final RequestConstructor result = getInputStreamConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
                 ImmutableList.of(new Arguments("Type", "Arg3")));
@@ -185,7 +183,7 @@ public class CreateObjectRequestGenerator_Test {
 
     @Test
     public void createChannelConstructor_Test() {
-        final RequestConstructor result = createChannelConstructor(
+        final RequestConstructor result = getChannelConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
                 ImmutableList.of(new Arguments("Type", "Arg3")));
