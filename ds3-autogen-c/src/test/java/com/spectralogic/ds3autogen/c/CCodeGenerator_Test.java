@@ -410,7 +410,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("output:\n" + output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_blob_response(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ds3_blob_response** _response) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
@@ -468,7 +467,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
@@ -535,7 +533,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("generated output:\n" + output);
 
         final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
         final Pattern arrayParserPattern = Pattern.compile(Pattern.quote("static ds3_error* _parse_ds3_user_response(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ds3_user_response** _response) {"));
@@ -553,7 +550,6 @@ public class CCodeGenerator_Test {
             arrayStructParserCount +=1;
         }
         while (arrayParserMatcher.find()){
-            LOG.info("found arrayParser");
     	    arrayParserCount +=1;
         }
         while (structParserMatcher.find()){

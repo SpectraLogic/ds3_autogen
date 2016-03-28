@@ -155,7 +155,7 @@ public class StructHelper_Test {
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableList.of());
         final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
-        LOG.info("Generated code:\n" + output);
+
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
         assertTrue(output.contains("        response->bool_element = xml_get_bool(doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
@@ -184,7 +184,6 @@ public class StructHelper_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
@@ -249,7 +248,6 @@ public class StructHelper_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
