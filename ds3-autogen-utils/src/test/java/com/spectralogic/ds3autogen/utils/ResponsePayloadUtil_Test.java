@@ -16,13 +16,17 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ResponsePayloadUtil_Test {
 
@@ -98,5 +102,38 @@ public class ResponsePayloadUtil_Test {
     @Test
     public void hasResponsePayload_PayloadResponse_Test() {
         assertTrue(hasResponsePayload(createTestResponseCodes(true)));
+    }
+
+    @Test
+    public void getResponsePayload_NullList_Test() {
+        assertThat(getResponsePayload(null), is(nullValue()));
+    }
+
+    @Test
+    public void getResponsePayload_EmptyList_Test() {
+        assertThat(getResponsePayload(ImmutableList.of()), is(nullValue()));
+    }
+
+    @Test
+    public void getResponsePayload_NoResponsePayload_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("null", null))));
+        assertThat(getResponsePayload(codes), is(nullValue()));
+    }
+
+    @Test
+    public void getResponsePayload_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("ResponseType", null))),
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("null", null))));
+        assertThat(getResponsePayload(codes), is("ResponseType"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getResponsePayload_Exception_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("ResponseType", null))),
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("ResponseType2", null))));
+        getResponsePayload(codes);
     }
 }

@@ -21,10 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.models.Constants;
-import com.spectralogic.ds3autogen.java.models.Element;
-import com.spectralogic.ds3autogen.java.models.EnumConstant;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.ArrayList;
@@ -678,5 +675,42 @@ public final class JavaHelper {
             return argToString(arg);
         }
         return uncapFirst(arg.getName());
+    }
+
+    /**
+     * Creates the java code for annotating a command in the client. if the annotation
+     * info is null, then an empty string is returned.
+     */
+    public static String toAnnotation(final AnnotationInfo annotationInfo) {
+        if (annotationInfo == null) {
+            return "";
+        }
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+
+        if (hasContent(annotationInfo.getResponsePayloadModel())) {
+            builder.add(createAnnotation("ResponsePayloadModel", annotationInfo.getResponsePayloadModel()));
+        }
+        if (hasContent(annotationInfo.getAction())) {
+            builder.add(createAnnotation("Action", annotationInfo.getAction()));
+        }
+        if (hasContent(annotationInfo.getResource())) {
+            builder.add(createAnnotation("Resource", annotationInfo.getResource()));
+        }
+        return builder.build()
+                .stream()
+                .map(i -> i)
+                .collect(Collectors.joining("\n" + indent(1)));
+    }
+
+    /**
+     * Creates the line for a specific annotation
+     */
+    protected static String createAnnotation(
+            final String annotationName,
+            final String annotationValue) {
+        if (isEmpty(annotationValue) || isEmpty(annotationName)) {
+            return "";
+        }
+        return "@" + annotationName + "(\"" + annotationValue + "\")";
     }
 }
