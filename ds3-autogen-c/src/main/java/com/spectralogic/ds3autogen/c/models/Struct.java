@@ -61,7 +61,7 @@ public class Struct {
         final StringBuilder builder = new StringBuilder();
         builder.append("Struct[" + getName() + "]\n");
         for (final StructMember structMember: getStructMembers()) {
-            builder.append("  " + structMember.toString());
+            builder.append("  " + structMember.toString() + "\n");
         }
         return builder.toString();
     }

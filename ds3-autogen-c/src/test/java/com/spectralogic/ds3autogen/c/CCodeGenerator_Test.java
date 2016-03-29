@@ -561,29 +561,26 @@ public class CCodeGenerator_Test {
         assert(structParserCount == 1);
     }
 
-    /* Parsing of AllTypedefEnums.xml is hanging currently.
     @Test
-    public void testAllEnums() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
-        final String inputSpecFile = "/input/AllTypedefEnums.xml";
+    public void testFullApiContractSource() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException {
+        final String inputSpecFile = "/input/CompleteApiContract.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        try {
-            final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getStructsOrderedList(spec), CCodeGenerator.getAllRequests(spec));
-            for (final Enum enumEntry : source.getEnums()) {
-                codeGenerator.processTemplate(enumEntry, "TypedefEnum.ftl", fileUtils.getOutputStream());
-            }
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
-            final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
-            final String output = new String(bstream.toByteArray());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
-            LOG.info("Generated code:\n" + output);
-        } catch (final ParseException e) {
-            LOG.error("Error parsing " + inputSpecFile, e);
-        }
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
     }
-    */
 
     /* Parsing of full api contract is not currently working - exception thrown for multiple responses for the same request.
     @Test

@@ -43,11 +43,13 @@ public final class C_TypeHelper {
         }
 
         switch (type) {
+            case "java.lang.Boolean":
             case "boolean":
                 return new PrimitiveType("ds3_bool", isArray);
 
-            case "double":
+            case "java.lang.Double":
             case "java.lang.Long":
+            case "double":
             case "long":
                 return new PrimitiveType("uint64_t", isArray);
 

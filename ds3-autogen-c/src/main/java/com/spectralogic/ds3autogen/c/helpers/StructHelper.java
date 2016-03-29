@@ -63,9 +63,7 @@ public final class StructHelper {
     }
 
     /**
-     * determine if a parser requires a ds3_error to track the response of a sub-parser
-     * @param struct
-     * @return
+     * Determine if a parser requires a ds3_error to track the response of a sub-parser
      */
     public static boolean hasComplexMembers(final Struct struct) {
         for (final StructMember structMember : struct.getStructMembers()) {
@@ -124,7 +122,7 @@ public final class StructHelper {
                     LOG.warn("Unable to progress on remaining structs, aborting!");
                     LOG.warn("  Remaining structs[" + allStructs.size() + "]");
                     for (final Struct struct : allStructs) {
-                        LOG.warn("    " + struct.toString());
+                        LOG.warn("    " + struct.toString() + "\n");
                     }
                     break;
                 }
@@ -194,8 +192,8 @@ public final class StructHelper {
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
         outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
-        outputBuilder.append(indent(2)).append("}").append("\n\n");
-
+        outputBuilder.append(indent(2)).append("}").append("\n");
+        outputBuilder.append("\n");
         outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
         outputBuilder.append(indent(3)).append("break;\n");
         outputBuilder.append(indent(2)).append("}\n");
@@ -207,7 +205,7 @@ public final class StructHelper {
         return indent(1) + "for (index = 0; index < response->num_" + structMember.getName() + "; index++) {\n"
              + indent(2) + structMember.getType().getTypeName() + "_free(response->" + structMember.getName() + "[index]);\n"
              + indent(1) + "}\n"
-             + indent(1) + "g_free(response->" + structMember.getName() + ");\n\n";
+             + indent(1) + "g_free(response->" + structMember.getName() + ");\n";
     }
 
     public static String generateFreeStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
@@ -259,20 +257,15 @@ public final class StructHelper {
                 .collect(Collectors.toCollection(HashSet::new));
 
         final ImmutableList.Builder<Struct> arrayStructsBuilder = ImmutableList.builder();
-        for (final Struct currentStruct : allOrderedStructs) {
-            if (typeKeys.contains(currentStruct.getName())) {
-                arrayStructsBuilder.add(currentStruct);
-            }
-        }
+        allOrderedStructs.stream()
+                .filter(currentStruct -> typeKeys.contains(currentStruct.getName()))
+                .forEach(arrayStructsBuilder::add);
 
         return arrayStructsBuilder.build();
     }
 
     /**
      * Remove Structs from allOrderedStructs that exist in arrayTypes
-     * @param allOrderedStructs
-     * @param arrayTypes
-     * @return
      */
     public static ImmutableList<Struct> filterArrayStructs(final ImmutableList<Struct> allOrderedStructs, final ImmutableSet<C_Type> arrayTypes) {
         final Set<String> typeKeys = arrayTypes.stream()
@@ -280,11 +273,9 @@ public final class StructHelper {
                 .collect(Collectors.toCollection(HashSet::new));
 
         final ImmutableList.Builder<Struct> filteredStructsBuilder = ImmutableList.builder();
-        for (final Struct currentStruct : allOrderedStructs) {
-            if (!typeKeys.contains(currentStruct.getName())) {
-                filteredStructsBuilder.add(currentStruct);
-            }
-        }
+        allOrderedStructs.stream()
+                .filter(currentStruct -> !typeKeys.contains(currentStruct.getName()))
+                .forEach(filteredStructsBuilder::add);
 
         return filteredStructsBuilder.build();
     }

@@ -2,12 +2,12 @@
 <#-- Generate all "TypedefStructResponseParsers" from Structs -->
 <#--   Input: Source object                                   -->
 <#-- ******************************************************** -->
-<#if !structEntry.isTopLevel()>
-static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ${structEntry.getName()}** _response) {
-<#else>
+<#if structEntry.isTopLevel()>
 static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const ds3_request* request, const ${structEntry.getName()}** _response) {
     xmlDocPtr doc;
     xmlNodePtr root;
+<#else>
+static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ${structEntry.getName()}** _response) {
 </#if>
     xmlNodePtr child_node;
     ${structEntry.getName()}* response;

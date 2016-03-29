@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
+import com.spectralogic.ds3autogen.utils.ConverterUtil;
 
 import java.text.ParseException;
 
@@ -43,26 +44,22 @@ public final class StructConverter {
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList, final ImmutableSet<String> enumNames) throws ParseException {
         final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elementsList) {
+            if (currentElement.getName().equals("StorageClass")) continue;  // Special case: ignore; unused - from S3ObjectApiBean
+
             builder.add(new StructMember(C_TypeHelper.convertDs3ElementType(currentElement, enumNames), StructHelper.getNameUnderscores(currentElement.getName())));
         }
         return builder.build();
     }
 
     private static String convertNameToMarshall(final String nameToMarshall) {
-        if (nameToMarshall == null) {
+        if (ConverterUtil.isEmpty(nameToMarshall)) {
             return "Data";
-        }
-        if (nameToMarshall.equals("")) {
-            return null;
         }
         return nameToMarshall;
     }
 
     /**
-     * used to determine if the parser for this type should _get_request_xml_nodes() for the request response
-     * @param responseTypeName
-     * @param allRequests
-     * @return
+     * Determine if the parser for this type should _get_request_xml_nodes() for the request response
      */
     private static boolean isTopLevelStruct(final String responseTypeName, final ImmutableList<Request> allRequests) {
         for (final Request currentRequest : allRequests) {

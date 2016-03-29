@@ -8,7 +8,6 @@ void ${structEntry.getName()}_free(${structEntry.getName()}* response) {
     }
 
 ${structEntry.getStructHelper().generateFreeStructMembers(structEntry.getStructMembers())}
-
     g_free(response);
 }
 
