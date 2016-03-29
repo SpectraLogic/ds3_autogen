@@ -30,7 +30,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BaseResponseGenerator implements ResponseModelGenerator<Response>, ResponseGeneratorUtil {
 
-    private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.AbstractResponse";
+    private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractResponse";
 
     @Override
     public Response generate(final Ds3Request ds3Request, final String packageName) {
@@ -78,13 +78,10 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         builder.addAll(getAllImportsFromResponseCodes(responseCodes));
+        builder.add(getParentImport());
         //If a response type has an associated import, then the XmlOutput import is also needed
         if (builder.build().size() > 0) {
             builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
-        }
-
-        if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport());
         }
 
         return builder.build().asList();

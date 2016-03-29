@@ -26,8 +26,8 @@ import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isG
 
 public class NotificationRequestGenerator extends BaseRequestGenerator {
 
-    private final static String ABSTRACT_DELETE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest";
-    private final static String ABSTRACT_GET_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest";
+    private final static String ABSTRACT_DELETE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractDeleteNotificationRequest";
+    private final static String ABSTRACT_GET_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest";
 
     /**
      * Returns the import for the parent class for standard requests, which
@@ -54,10 +54,7 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
             final String packageName) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport(ds3Request));
-        }
-
+        builder.add(getParentImport(ds3Request));
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
         builder.add("java.util.UUID");
