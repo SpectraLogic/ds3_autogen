@@ -78,12 +78,12 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         builder.addAll(getAllImportsFromResponseCodes(responseCodes));
-        builder.add(getParentImport());
         //If a response type has an associated import, then the XmlOutput import is also needed
         if (builder.build().size() > 0) {
             builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
         }
 
+        builder.add(getParentImport());
         return builder.build().asList();
     }
 

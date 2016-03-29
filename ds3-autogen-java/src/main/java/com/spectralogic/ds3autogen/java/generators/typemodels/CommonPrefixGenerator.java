@@ -60,7 +60,6 @@ public class CommonPrefixGenerator extends BaseTypeGenerator {
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Gets all the required imports that the Model will need in order to properly
      * generate the java model code, including importing for common prefix
