@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalChecksum;
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalMetadata;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -401,5 +403,57 @@ public class NetCodeGenerator_Test {
         for (final Arguments arg : responseArgs) {
             assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
         }
+    }
+
+    @Test
+    public void createObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+        final String requestName = "PutObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/createObjectRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Job", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Offset", "long", requestCode));
+
+        assertTrue(requestCode.contains("private readonly Stream RequestPayload;"));
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(hasOptionalChecksum(requestName, requestCode));
+        assertTrue(hasOptionalMetadata(requestName, requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("Stream", "RequestPayload"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses (should be empty due to no response payload)
+        final String responseCode = codeGenerator.getResponseCode();
+        assertTrue(isEmpty(responseCode));
     }
 }

@@ -231,6 +231,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
+        if (isCreateObjectRequest(ds3Request)) {
+            return new StreamRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -238,15 +241,18 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the .net request handler
      * code for this Ds3Request
      */
-    private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        if (isGetObjectRequest(request)) {
+    private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isBulkPutRequest(request)) {
+        if (isBulkPutRequest(ds3Request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
         }
-        if (isBulkGetRequest(request)) {
+        if (isBulkGetRequest(ds3Request)) {
             return config.getTemplate("request/bulk_get_request.ftl");
+        }
+        if (isCreateObjectRequest(ds3Request)) {
+            return config.getTemplate("request/put_object_request.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }
