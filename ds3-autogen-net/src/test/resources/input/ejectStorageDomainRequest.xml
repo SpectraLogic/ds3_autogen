@@ -1,0 +1,51 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler">
+                <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>207</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.0AE60BB682E75CC3CB3CE074995267EF</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailuresApiBean">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailureApiBean" Name="Failures" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="failure" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

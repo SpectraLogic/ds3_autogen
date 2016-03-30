@@ -509,32 +509,351 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void createVerifyJobRequestHandler() {
-        //TODO
+    public void createVerifyJobRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "VerifyBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/createVerifyJobRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Priority", "Priority", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("bool", "Aggregating"),
+                new Arguments("string", "BucketName"),
+                new Arguments("long", "CachedSizeInBytes"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("long", "CompletedSizeInBytes"),
+                new Arguments("Guid", "JobId"),
+                new Arguments("bool", "Naked"),
+                new Arguments("string", "Name"),
+                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
+                new Arguments("IEnumerable<Objects>", "Objects"),
+                new Arguments("long", "OriginalSizeInBytes"),
+                new Arguments("Priority", "Priority"),
+                new Arguments("JobRequestType", "RequestType"),
+                new Arguments("DateTime", "StartDate"),
+                new Arguments("JobStatus", "Status"),
+                new Arguments("Guid", "UserId"),
+                new Arguments("string", "UserName"),
+                new Arguments("WriteOptimization", "WriteOptimization"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
-    public void ejectStorageDomainBlobsRequestHandler() {
-        //TODO
+    public void ejectStorageDomainBlobsRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "EjectStorageDomainBlobsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/ejectStorageDomainBlobsRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("Blobs", "bool", requestCode)); //TODO change this to not being passed in
+        assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("bool", "Blobs"), //TODO change to this NOT being a param
+                new Arguments("Guid", "BucketId"),
+                new Arguments("Guid", "StorageDomainId"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses (should be empty due to no response payload)
+        final String responseCode = codeGenerator.getResponseCode();
+        assertTrue(isEmpty(responseCode));
     }
 
     @Test
-    public void ejectStorageDomainRequestHandler() {
-        //TODO
+    public void ejectStorageDomainRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "EjectStorageDomainSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/ejectStorageDomainRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "BucketId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("Guid", "StorageDomainId"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<TapeFailure>", "Failures"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
-    public void getPhysicalPlacementForObjectsRequestHandler() {
-        //TODO
+    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+        final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/getPhysicalPlacementForObjects.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("string", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<Pool>", "Pools"),
+                new Arguments("IEnumerable<Tape>", "Tapes"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsRequestHandler() {
-        //TODO
+    public void verifyPhysicalPlacementForObjectsRequestHandler() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjects.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("string", "BucketName"),
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<Pool>", "Pools"),
+                new Arguments("IEnumerable<Tape>", "Tapes"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler() {
-        //TODO
+    public void verifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjectsFullDetails.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("string", "BucketName"),
+                new Arguments("bool", "FullDetails"), //TODO change to this NOT being a param
+                new Arguments("List<Ds3Object>", "Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        LOG.info("Generated code:\n" + responseCode);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<BulkObject>", "Objects"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
     }
 }
