@@ -82,6 +82,10 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         if (builder.build().size() > 0) {
             builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
         }
+        if (builder.build().contains("java.lang.String") || builder.build().contains("String")) {
+            builder.add("java.nio.charset.StandardCharsets");
+            builder.add("org.apache.commons.io.IOUtils");
+        }
 
         if (isSpectraDs3(packageName)) {
             builder.add(getParentImport());
