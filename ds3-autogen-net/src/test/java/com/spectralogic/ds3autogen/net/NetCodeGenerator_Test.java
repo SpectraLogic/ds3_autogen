@@ -507,4 +507,34 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         assertTrue(isEmpty(responseCode));
     }
+
+    @Test
+    public void createVerifyJobRequestHandler() {
+        //TODO
+    }
+
+    @Test
+    public void ejectStorageDomainBlobsRequestHandler() {
+        //TODO
+    }
+
+    @Test
+    public void ejectStorageDomainRequestHandler() {
+        //TODO
+    }
+
+    @Test
+    public void getPhysicalPlacementForObjectsRequestHandler() {
+        //TODO
+    }
+
+    @Test
+    public void verifyPhysicalPlacementForObjectsRequestHandler() {
+        //TODO
+    }
+
+    @Test
+    public void verifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler() {
+        //TODO
+    }
 }
