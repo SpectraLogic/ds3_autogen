@@ -1,4 +1,4 @@
-<#include "CopyrightHeader.ftl"/>
+<#include "../CopyrightHeader.ftl"/>
 
 
 #ifndef __DS3_HEADER__

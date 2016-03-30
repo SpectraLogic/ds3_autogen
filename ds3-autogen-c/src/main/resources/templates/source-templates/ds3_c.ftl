@@ -16,14 +16,14 @@
 <#-- ******************************************* -->
 <#-- Generate all "EnumMatchers" from Enums      -->
 <#list getEnums() as enumEntry>
-    <#include "../TypedefEnumMatcher.ftl">
+    <#include "TypedefEnumMatcher.ftl">
 </#list>
 <#-- ******************************************* -->
 
 <#-- ********************************************* -->
 <#-- Generate all "ResponseParsers" that are used by arrayParsers -->
 <#list getArrayStructs() as structEntry>
-    <#include "../ResponseParser.ftl">
+    <#include "ResponseParser.ftl">
 </#list>
 
 <#-- ********************************************* -->
@@ -35,7 +35,7 @@ ${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
 <#-- ********************************************* -->
 <#-- Generate remaining "ResponseParsers"          -->
 <#list getStructs() as structEntry>
-    <#include "../ResponseParser.ftl">
+    <#include "ResponseParser.ftl">
 </#list>
 
 <#-- ********************************************* -->
@@ -60,6 +60,6 @@ ${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
 <#-- *********************************************** -->
 <#-- Generate all "StructFreeFunctions" from Structs -->
 <#list getStructs() as structEntry>
-    <#include "../FreeStruct.ftl">
+    <#include "FreeStruct.ftl">
 </#list>
 <#-- *********************************************** -->

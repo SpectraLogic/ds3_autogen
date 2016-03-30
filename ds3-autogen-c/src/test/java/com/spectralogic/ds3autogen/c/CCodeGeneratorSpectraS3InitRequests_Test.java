@@ -48,11 +48,10 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_request* init_delete_bucket_spectra_s3_request(const char* resource_id) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_DELETE, _build_path(\"/_rest_/bucket\", resource_id, NULL));"));
@@ -69,11 +68,10 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_request* init_put_bucket_spectra_s3_request(const char* resource_id) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_POST, _build_path(\"/_rest_/bucket\", NULL, NULL));"));
@@ -90,11 +88,10 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_request* init_get_system_information_spectra_s3_request(void) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_GET, _build_path(\"/_rest_/system_information\", NULL, NULL));"));
@@ -111,11 +108,10 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
         assertTrue(output.contains("ds3_request* init_get_buckets_spectra_s3_request(const char* resource_id) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", NULL, NULL));"));
