@@ -118,7 +118,35 @@ public final class Ds3RequestClassificationUtil {
      */
     public static boolean isBulkPutRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null
-                && ds3Request.getOperation() == Operation.START_BULK_PUT;
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
+    }
+
+    /**
+     * Determines if the request handler should have a payload of type String
+     */
+    public static boolean hasStringRequestPayload(final Ds3Request ds3Request) {
+        return isBulkReplicateRequest(ds3Request) || isGetBlobPersistenceRequest(ds3Request);
+    }
+
+    /**
+     * Determines if the request is a Get Blob Persistence Request
+     */
+    public static boolean isGetBlobPersistenceRequest(final Ds3Request ds3Request) {
+        return ds3Request.getAction() == Action.LIST
+                && ds3Request.getHttpVerb() == HttpVerb.GET
+                && ds3Request.includeIdInPath() == false
+                && ds3Request.getResource() == Resource.BLOB_PERSISTENCE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if the request is a Bulk Replicate request
+     */
+    public static boolean isBulkReplicateRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
     }
 
     /**

@@ -559,6 +559,23 @@ public class JavaHelper_Test {
     }
 
     @Test
+    public void processResponseCodeLines_StringType_Test() {
+        final String expectedResult =
+                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
+                "    this.stringResult = IOUtils.toString(content, StandardCharsets.UTF_8);\n" +
+                "}\n" +
+                "break;";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("java.lang.String", null)));
+
+        final String result = processResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
     public void processResponseCodeLines_Test() {
         final String expectedResult =
                 "try (final InputStream content = getResponse().getResponseStream()) {\n" +

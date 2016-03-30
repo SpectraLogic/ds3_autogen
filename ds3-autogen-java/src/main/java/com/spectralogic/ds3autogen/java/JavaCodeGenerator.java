@@ -453,6 +453,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated request generator for the specified Ds3Request
      */
     private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
+        }
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         }
@@ -493,6 +496,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
+        } else if(hasStringRequestPayload(ds3Request)) {
+            return config.getTemplate("request/request_with_string_payload_template.ftl");
         } else if (hasListObjectsRequestPayload(ds3Request)) {
             return config.getTemplate("request/objects_request_payload_request_template.ftl");
         } else if (isMultiFileDeleteRequest(ds3Request)) {

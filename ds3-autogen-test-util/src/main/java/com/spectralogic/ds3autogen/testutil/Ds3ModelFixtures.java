@@ -336,6 +336,55 @@ public class Ds3ModelFixtures {
     }
 
     /**
+     * Creates the SpectraDs3 Replicate Put Job request handler as
+     * described in the Contract, excluding the response codes
+     */
+    public static Ds3Request getReplicatePutJob() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ReplicatePutJobRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.START_BULK_PUT,
+                true,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("ConflictResolutionMode", "com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode"),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
+                        new Ds3Param("Replicate", "void")));
+    }
+
+    /**
+     * Creates the SpectraDs3 Get Blob Persistence request handler as
+     * described in the Contract
+     */
+    public static Ds3Request getGetBlobPersistence() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetBlobPersistenceRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.LIST,
+                Resource.BLOB_PERSISTENCE,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(new Ds3ResponseType("java.lang.String", null)))),
+                null,
+                null);
+    }
+
+    /**
      * Creates the AmazonS3  CreateMultiPartUploadPartRequestHandler as
      * described in the contract, excluding the response codes
      */
