@@ -24,17 +24,18 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.ResponseParserModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
+import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
+    private static final String PARSER_NAMESPACE = CLIENT_NAMESPACE + "ResponseParsers";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -133,14 +135,14 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         for (final Ds3Request request : requests) {
             generateRequest(request);
-            generateResponse(request);
+            generateResponseAndParser(request);
         }
     }
 
     /**
-     * Generates the .net code for the response handler described in the Ds3Request
+     * Generates the .net code for the response handler and parser described in the Ds3Request
      */
-    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateResponseAndParser(final Ds3Request ds3Request) throws IOException, TemplateException {
         if (!ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
@@ -153,6 +155,47 @@ public class NetCodeGenerator implements CodeGenerator {
         if (responsePayload == null) {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
+
+        generateResponse(ds3Request, responsePayload);
+        generateResponseParser(ds3Request, responsePayload);
+    }
+
+    /**
+     * Generates the .net code for the response parser
+     */
+    private void generateResponseParser(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
+        final Template tmpl = getResponseParserTemplate(ds3Request);
+        final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(ds3Request);
+        final BaseParser parser = parserGenerator.generate(ds3Request);
+        final Path parserPath = destDir.resolve(BASE_PROJECT_PATH.resolve(
+                Paths.get(PARSER_NAMESPACE.replace(".", "/") + "/" + parser.getName() + ".cs")));
+
+        LOG.info("Getting OutputStream for file:" + parserPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(parserPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(parser, writer);
+        }
+    }
+
+    /**
+     * Retrieves the response parser generator for the specified Ds3Request
+     */
+    private ResponseParserModelGenerator getResponseParserGenerator(final Ds3Request ds3Request) {
+        return new BaseResponseParserGenerator();
+    }
+
+    /**
+     * Retrieves the response parser template for the specified Ds3Request
+     */
+    private Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
+        return config.getTemplate("parser/parser_template.ftl");
+    }
+
+    /**
+     * Generates the .net code for the response handler
+     */
+    private void generateResponse(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
         final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);

@@ -21,7 +21,6 @@ import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
@@ -37,8 +36,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class JavaCodeGenerator_Test {

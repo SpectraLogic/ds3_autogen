@@ -33,15 +33,18 @@ import static org.mockito.Mockito.when;
 public class TestGenerateCode {
 
     final static String CLIENT_PATH = "./Ds3/";
+    final static String PARSER_PATH = CLIENT_PATH + "/ResponseParsers/";
 
     protected final ByteArrayOutputStream requestOutputStream;
     protected final ByteArrayOutputStream responseOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
+    protected final ByteArrayOutputStream parserOutputStream;
     protected String requestCode;
     protected String responseCode;
     protected String clientCode;
     protected String idsClientCode;
+    protected String parserCode;
 
     public enum PathType { REQUEST, RESPONSE }
 
@@ -53,6 +56,7 @@ public class TestGenerateCode {
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
         this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
+        this.parserOutputStream = setupOutputStream(fileUtils, PARSER_PATH + requestName.replace("Request", "ResponseParser") + ".cs");
     }
 
     /**
@@ -72,6 +76,7 @@ public class TestGenerateCode {
         responseCode = new String(responseOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
+        parserCode = new String(parserOutputStream.toByteArray());
     }
 
     /**
@@ -99,6 +104,7 @@ public class TestGenerateCode {
                 break;
             case RESPONSE:
                 builder.append(requestName.replace("Request", "Response"));
+                break;
         }
         builder.append(".cs");
         return builder.toString();
@@ -118,5 +124,9 @@ public class TestGenerateCode {
 
     public String getIdsClientCode() {
         return this.idsClientCode;
+    }
+
+    public String getParserCode() {
+        return this.parserCode;
     }
 }
