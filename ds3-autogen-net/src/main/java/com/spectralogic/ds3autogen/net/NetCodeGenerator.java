@@ -231,7 +231,7 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
-        if (isCreateObjectRequest(ds3Request)) {
+        if (isCreateObjectRequest(ds3Request) || isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
         return new BaseRequestGenerator();
@@ -253,6 +253,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isCreateObjectRequest(ds3Request)) {
             return config.getTemplate("request/put_object_request.ftl");
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return config.getTemplate("request/stream_request_payload.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

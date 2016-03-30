@@ -456,4 +456,55 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         assertTrue(isEmpty(responseCode));
     }
+
+    @Test
+    public void createMultiPartUploadPartRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+        final String requestName = "PutMultiPartUploadPartRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/createMultiPartUploadPartRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        LOG.info("Generated code:\n" + requestCode);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+
+        assertTrue(requestCode.contains("private readonly Stream RequestPayload;"));
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertFalse(hasOptionalChecksum(requestName, requestCode));
+        assertFalse(hasOptionalMetadata(requestName, requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("Stream", "RequestPayload"),
+                new Arguments("Guid", "UploadId"),
+                new Arguments("int", "PartNumber"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        LOG.info("Generated code:\n" + clientCode);
+
+        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        LOG.info("Generated code:\n" + idsClientCode);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses (should be empty due to no response payload)
+        final String responseCode = codeGenerator.getResponseCode();
+        assertTrue(isEmpty(responseCode));
+    }
 }
