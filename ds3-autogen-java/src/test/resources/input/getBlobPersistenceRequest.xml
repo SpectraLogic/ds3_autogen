@@ -1,0 +1,27 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetBlobPersistenceRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="BLOB_PERSISTENCE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="java.lang.String"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.51440FCFF3ADF3834C5500FF554FFBE2</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

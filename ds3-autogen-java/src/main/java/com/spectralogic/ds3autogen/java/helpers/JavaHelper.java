@@ -514,14 +514,21 @@ public final class JavaHelper {
             return "//Do nothing, payload is null\n"
                     + indent(indent) + "break;";
         }
-
-        return "try (final InputStream content = getResponse().getResponseStream()) {\n"
-                + indent(indent + 1) + "this."
-                + createDs3ResponseTypeParamName(ds3ResponseType)
-                + " = XmlOutput.fromXml(content, "
-                + responseType + ".class);\n"
-                + indent(indent) + "}\n"
-                + indent(indent) + "break;";
+        final StringBuilder builder = new StringBuilder();
+        builder.append("try (final InputStream content = getResponse().getResponseStream()) {\n")
+                .append(indent(indent + 1))
+                .append("this.")
+                .append(createDs3ResponseTypeParamName(ds3ResponseType));
+        if (responseType.equalsIgnoreCase("String")) {
+            builder.append(" = IOUtils.toString(content, StandardCharsets.UTF_8);\n");
+        } else {
+            builder.append(" = XmlOutput.fromXml(content, ")
+                    .append(responseType)
+                    .append(".class);\n");
+        }
+        builder.append(indent(indent)).append("}\n")
+                .append(indent(indent)).append("break;");
+        return builder.toString();
     }
 
     /**
