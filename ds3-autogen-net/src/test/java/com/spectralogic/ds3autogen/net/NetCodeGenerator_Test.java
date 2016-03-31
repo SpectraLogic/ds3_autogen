@@ -600,7 +600,7 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
-        assertTrue(TestHelper.hasRequiredParam("Blobs", "bool", requestCode)); //TODO change this to not being passed in
+        assertFalse(TestHelper.hasRequiredParam("Blobs", "bool", requestCode));
         assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
         assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
@@ -609,7 +609,6 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("bool", "Blobs"), //TODO change to this NOT being a param
                 new Arguments("Guid", "BucketId"),
                 new Arguments("Guid", "StorageDomainId"),
                 new Arguments("List<Ds3Object>", "Objects"));
@@ -821,12 +820,12 @@ public class NetCodeGenerator_Test {
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertFalse(TestHelper.hasRequiredParam("FullDetails", "bool", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("bool", "FullDetails"), //TODO change to this NOT being a param
                 new Arguments("List<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 

@@ -5,6 +5,8 @@
             <#if operation??>
             this.QueryParams.Add("operation", "${operation.toString()?lower_case}");
             </#if>
+            <#include "add_query_params.ftl" />
+
             if (!objects.TrueForAll(obj => obj.Size.HasValue))
             {
                 throw new Ds3RequestException(Resources.ObjectsMissingSizeException);

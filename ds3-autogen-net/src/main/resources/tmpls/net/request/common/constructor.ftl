@@ -5,4 +5,6 @@
             <#if operation??>
             this.QueryParams.Add("operation", "${operation.toString()?lower_case}");
             </#if>
+            <#include "add_query_params.ftl" />
+
         }

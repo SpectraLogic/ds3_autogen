@@ -36,4 +36,9 @@ public interface RequestModelGeneratorUtils {
      * Gets the list of Arguments for creating the constructor
      */
     ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of Arguments that are added to query params list in constructor
+     */
+    ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request);
 }
