@@ -53,6 +53,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
 
@@ -479,6 +480,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new CompleteMultipartUploadRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -510,6 +514,8 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/get_notification_request_template.ftl");
         } else if (isGetJobRequest(ds3Request)) {
             return config.getTemplate("request/get_job_request_template.ftl");
+        } else if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return config.getTemplate("request/complete_multipart_upload_template.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }
