@@ -240,6 +240,9 @@ public class NetCodeGenerator implements CodeGenerator {
                 || isMultiFileDeleteRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
         }
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -268,6 +271,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/multi_file_delete_request.ftl");
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return config.getTemplate("request/string_request_payload.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }
