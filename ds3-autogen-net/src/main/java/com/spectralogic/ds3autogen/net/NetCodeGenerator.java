@@ -231,10 +231,13 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
-        if (isCreateObjectRequest(ds3Request) || isCreateMultiPartUploadPartRequest(ds3Request)) {
+        if (isCreateObjectRequest(ds3Request)
+                || isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
-        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+        if (isEjectStorageDomainRequest(ds3Request)
+                || isPhysicalPlacementRequest(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
         }
         return new BaseRequestGenerator();
@@ -262,6 +265,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
             return config.getTemplate("request/objects_request_payload.ftl");
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return config.getTemplate("request/multi_file_delete_request.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }
