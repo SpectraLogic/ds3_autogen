@@ -37,7 +37,7 @@ public class CustomArgumentComparator implements Comparator<Arguments> {
         } else if (rightArg.getName().equalsIgnoreCase("ObjectName") || rightArg.getName().equalsIgnoreCase("Object")) {
             return 1;
         } else {
-            return leftArg.getName().compareTo(rightArg.getName());
+            return leftArg.getName().compareToIgnoreCase(rightArg.getName());
         }
     }
 }

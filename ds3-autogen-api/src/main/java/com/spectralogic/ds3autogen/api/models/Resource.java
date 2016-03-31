@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.api.models;
 
 public enum Resource {
     ACTIVE_JOB,
+    BLOB_PERSISTENCE,
     BLOB_STORE_TASK,
     BEANS_RETRIEVER,
     BUCKET,
@@ -48,6 +49,7 @@ public enum Resource {
     INSTANCE_IDENTIFIER,
     JOB,
     JOB_CHUNK,
+    JOB_CHUNK_DAO,
     JOB_COMPLETED_NOTIFICATION_REGISTRATION,
     JOB_CREATED_NOTIFICATION_REGISTRATION,
     NODE,

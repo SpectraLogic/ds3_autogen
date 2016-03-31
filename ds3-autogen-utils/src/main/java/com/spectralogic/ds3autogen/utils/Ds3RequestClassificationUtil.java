@@ -118,7 +118,35 @@ public final class Ds3RequestClassificationUtil {
      */
     public static boolean isBulkPutRequest(final Ds3Request ds3Request) {
         return ds3Request.getOperation() != null
-                && ds3Request.getOperation() == Operation.START_BULK_PUT;
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
+    }
+
+    /**
+     * Determines if the request handler should have a payload of type String
+     */
+    public static boolean hasStringRequestPayload(final Ds3Request ds3Request) {
+        return isBulkReplicateRequest(ds3Request) || isGetBlobPersistenceRequest(ds3Request);
+    }
+
+    /**
+     * Determines if the request is a Get Blob Persistence Request
+     */
+    public static boolean isGetBlobPersistenceRequest(final Ds3Request ds3Request) {
+        return ds3Request.getAction() == Action.LIST
+                && ds3Request.getHttpVerb() == HttpVerb.GET
+                && ds3Request.includeIdInPath() == false
+                && ds3Request.getResource() == Resource.BLOB_PERSISTENCE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if the request is a Bulk Replicate request
+     */
+    public static boolean isBulkReplicateRequest(final Ds3Request ds3Request) {
+        return ds3Request.getOperation() != null
+                && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
     }
 
     /**
@@ -275,5 +303,18 @@ public final class Ds3RequestClassificationUtil {
                 && request.includeIdInPath() == false
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID")
                 && paramListContainsParam(request.getRequiredQueryParams(), "PartNumber", "int");
+    }
+
+    /**
+     * Determines if a Ds3Request is the AmazonS3 Complete Multi Part Upload request
+     */
+    public static boolean isCompleteMultiPartUploadRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.amazons3
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getHttpVerb() == HttpVerb.POST
+                && request.includeIdInPath() == false
+                && request.getObjectRequirement() == Requirement.REQUIRED
+                && isEmpty(request.getOptionalQueryParams())
+                && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID");
     }
 }
