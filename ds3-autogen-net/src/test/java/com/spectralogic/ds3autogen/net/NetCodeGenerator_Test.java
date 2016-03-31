@@ -952,7 +952,6 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        /* TODO fix error in response generation where String response payload currently does not generate a response
         assertFalse(isEmpty(responseCode));
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
@@ -964,7 +963,6 @@ public class NetCodeGenerator_Test {
         for (final Arguments arg : responseArgs) {
             assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
         }
-        */
     }
 
     @Test

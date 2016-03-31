@@ -21,7 +21,6 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
@@ -145,17 +144,18 @@ public class NetCodeGenerator implements CodeGenerator {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
         }
-        if (isEmpty(spec.getTypes())) {
+        final String responsePayloadType = getResponsePayloadType(ds3Request.getDs3ResponseCodes());
+        if ((isEmpty(responsePayloadType) || !responsePayloadType.equalsIgnoreCase("java.lang.String")) && isEmpty(spec.getTypes())) {
             LOG.error("Cannot generate response because type map is empty");
             return;
         }
-        final Ds3Type responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
-        if (responsePayload == null) {
+
+        if (responsePayloadType == null) {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
-        final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
+        final BaseResponse response = responseGenerator.generate(ds3Request, spec.getTypes().get(responsePayloadType));
         final Path responsePath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" +
                         response.getName() + ".cs")));
@@ -169,10 +169,10 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Retrieves the non-error response type from within the response codes. If no non-error
+     * Retrieves the non-error response type from within the response codes.  If no non-error
      * response type is found, then null is returned.
      */
-    private Ds3Type getResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    private String getResponsePayloadType(final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) {
             LOG.error("There are no response codes to generate the response");
             return null;
@@ -180,7 +180,7 @@ public class NetCodeGenerator implements CodeGenerator {
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final String responseType = ResponsePayloadUtil.getResponseType(responseCode.getDs3ResponseTypes());
             if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
-                return spec.getTypes().get(responseType);
+                return responseType;
             }
         }
         return null;
