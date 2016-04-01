@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.NetHelper.*;
@@ -128,5 +129,30 @@ public class NetHelper_Test {
         assertThat(paramAssignmentRightValue(new Arguments("String", "ArgName")), is("argName"));
         assertThat(paramAssignmentRightValue(new Arguments("int", "ArgName")), is("argName"));
         assertThat(paramAssignmentRightValue(new Arguments("IEnumerable<SomeArg>", "ArgName")), is("argName.ToList()"));
+    }
+
+    @Test
+    public void getEnumValues_NullList_Test() {
+        final String result = getEnumValues(null, 0);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getEnumValues_EmptyList_Test() {
+        final String result = getEnumValues(ImmutableList.of(), 0);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void getEnumValues_FullList_Test() {
+        final String expected = "one,\ntwo,\nthree";
+
+        final ImmutableList<EnumConstant> enumConstants = ImmutableList.of(
+                new EnumConstant("one"),
+                new EnumConstant("two"),
+                new EnumConstant("three"));
+
+        final String result = getEnumValues(enumConstants, 0);
+        assertThat(result, is(expected));
     }
 }

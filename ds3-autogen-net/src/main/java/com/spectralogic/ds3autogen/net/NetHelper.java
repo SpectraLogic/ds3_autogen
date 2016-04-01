@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +165,21 @@ public final class NetHelper {
             return Helper.uncapFirst(arg.getName()) + ".ToList()";
         }
         return Helper.uncapFirst(arg.getName());
+    }
+
+    /**
+     * Creates a comma separated list of enum constants. Used in Java model generation.
+     */
+    public static String getEnumValues(
+            final ImmutableList<EnumConstant> enumConstants,
+            final int indent) {
+        if (isEmpty(enumConstants)) {
+            return "";
+        }
+        return enumConstants
+                .stream()
+                .map(i -> indent(indent) + i.getName())
+                .collect(Collectors.joining(",\n"));
     }
 
     private final static NetHelper instance = new NetHelper();

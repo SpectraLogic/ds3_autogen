@@ -70,7 +70,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "ListBucketResult");
 
         codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
 
@@ -184,7 +185,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "S3Object");
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequestSpectraS3.xml");
 
@@ -247,7 +249,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/createPutJobRequest.xml");
 
@@ -321,7 +324,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/createGetJobRequest.xml");
 

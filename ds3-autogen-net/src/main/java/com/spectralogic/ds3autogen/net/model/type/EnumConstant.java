@@ -13,35 +13,17 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model.response;
+package com.spectralogic.ds3autogen.net.model.type;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.net.NetHelper;
+public class EnumConstant {
 
-public class BaseResponse {
-
-    private final NetHelper netHelper = NetHelper.getInstance();
     private final String name;
-    private final ImmutableList<Arguments> arguments;
 
-    public BaseResponse(
-            final String name,
-            final ImmutableList<Arguments> arguments) {
+    public EnumConstant(final String name) {
         this.name = name;
-        this.arguments = arguments;
     }
 
     public String getName() {
         return name;
     }
-
-    public ImmutableList<Arguments> getArguments() {
-        return arguments;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
-    }
 }
-
