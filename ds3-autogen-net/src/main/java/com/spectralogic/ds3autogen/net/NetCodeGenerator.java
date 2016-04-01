@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
@@ -50,6 +51,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -126,6 +128,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * Gets the associated Type Generator for the specified Ds3Type
      */
     private TypeModelGenerator getTypeGenerator(final Ds3Type ds3Type) {
+        if (isChecksumType(ds3Type)) {
+            return new NoneEnumGenerator();
+        }
         return new BaseTypeGenerator();
     }
 

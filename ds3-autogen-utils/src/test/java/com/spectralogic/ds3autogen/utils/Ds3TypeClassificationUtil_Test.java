@@ -84,4 +84,10 @@ public class Ds3TypeClassificationUtil_Test {
         final Ds3Type type = createDs3TypeTestData("TestType", elements);
         assertTrue(isCommonPrefixesType(type));
     }
+
+    @Test
+    public void isChecksumType_Test() {
+        assertTrue(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumType")));
+        assertFalse(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumTypeApiBean")));
+    }
 }
