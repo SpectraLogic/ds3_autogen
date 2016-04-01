@@ -85,7 +85,7 @@ public class NetHelper_Test {
     }
 
     @Test
-    public void getNullableType_Test() {
+    public void getNullableType_Argument_Test() {
         assertThat(getNullableType(new Arguments(null, "ArgName")), is(""));
         assertThat(getNullableType(new Arguments("", "ArgName")), is(""));
         assertThat(getNullableType(new Arguments("void", "ArgName")), is("bool?"));
@@ -99,6 +99,22 @@ public class NetHelper_Test {
         assertThat(getNullableType(new Arguments("UUID", "ArgName")), is("Guid?"));
         assertThat(getNullableType(new Arguments("ChecksumType", "ArgName")), is("ChecksumType.Type?"));
         assertThat(getNullableType(new Arguments("OtherType", "ArgName")), is("OtherType?"));
+    }
+
+    @Test
+    public void getNullableType_String_Test() {
+        assertThat(getNullableType(""), is(""));
+        assertThat(getNullableType("void"), is("bool?"));
+        assertThat(getNullableType("Void"), is("bool?"));
+        assertThat(getNullableType("boolean"), is("bool?"));
+        assertThat(getNullableType("Boolean"), is("bool?"));
+        assertThat(getNullableType("Integer"), is("int?"));
+        assertThat(getNullableType("int"), is("int?"));
+        assertThat(getNullableType("String"), is("string"));
+        assertThat(getNullableType("string"), is("string"));
+        assertThat(getNullableType("UUID"), is("Guid?"));
+        assertThat(getNullableType("ChecksumType"), is("ChecksumType.Type?"));
+        assertThat(getNullableType("OtherType"), is("OtherType?"));
     }
 
     @Test

@@ -55,4 +55,29 @@ public class NetCodeGenerator_Types_Test {
         assertTrue(typeCode.contains("NEAR_LOW,"));
         assertTrue(typeCode.contains("NORMAL"));
     }
+
+    @Test
+    public void testElementsType() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "TestElementsType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                PLACEHOLDER_REQUEST_NAME,
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/testElementsType.xml");
+        final String typeCode = codeGenerator.getTypeCode();
+
+        LOG.info("Generated code:\n" + typeCode);
+
+        assertTrue(typeCode.contains("public class " + typeName));
+        assertTrue(typeCode.contains("public IEnumerable<Pool> Pools { get; set; }"));
+        assertTrue(typeCode.contains("public long ByteOffset { get; set; }"));
+        assertTrue(typeCode.contains("public string Checksum { get; set; }"));
+        assertTrue(typeCode.contains("public ChecksumType.Type? ChecksumType { get; set; }"));
+        assertTrue(typeCode.contains("public Guid Id { get; set; }"));
+        assertTrue(typeCode.contains("public long Length { get; set; }"));
+        assertTrue(typeCode.contains("public Guid ObjectId { get; set; }"));
+    }
 }

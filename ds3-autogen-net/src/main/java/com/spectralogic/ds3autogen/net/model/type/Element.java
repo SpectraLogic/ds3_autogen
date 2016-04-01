@@ -15,39 +15,23 @@
 
 package com.spectralogic.ds3autogen.net.model.type;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.net.NetHelper;
-
-public class BaseType {
-
-    private final NetHelper netHelper = NetHelper.getInstance();
+public class Element {
 
     private final String name;
-    private final ImmutableList<EnumConstant> enumConstants;
-    private final ImmutableList<Element> elements;
+    private final String type;
 
-    public BaseType(
+    public Element(
             final String name,
-            final ImmutableList<EnumConstant> enumConstants,
-            final ImmutableList<Element> elements) {
+            final String type) {
         this.name = name;
-        this.enumConstants = enumConstants;
-        this.elements = elements;
+        this.type = type;
     }
 
     public String getName() {
         return name;
     }
 
-    public ImmutableList<EnumConstant> getEnumConstants() {
-        return enumConstants;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
-    }
-
-    public ImmutableList<Element> getElements() {
-        return elements;
+    public String getType() {
+        return type;
     }
 }

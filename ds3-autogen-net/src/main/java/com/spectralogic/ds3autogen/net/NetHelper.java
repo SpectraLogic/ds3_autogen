@@ -106,14 +106,24 @@ public final class NetHelper {
      * type to a nullable .net type.
      */
     public static String getNullableType(final Arguments arg) {
-        final String type = getType(arg);
-        switch (type) {
+        return getNullableType(arg.getType());
+    }
+
+    /**
+     * Gets the nullable .net type from the provided Contract type
+     */
+    public static String getNullableType(final String type) {
+        if (isEmpty(type)) {
+            return "";
+        }
+        final String netType = toNetType(type);
+        switch (netType) {
             case "":
                 return "";
             case "string":
-                return type;
+                return netType;
             default:
-                return type + "?";
+                return netType + "?";
         }
     }
 
