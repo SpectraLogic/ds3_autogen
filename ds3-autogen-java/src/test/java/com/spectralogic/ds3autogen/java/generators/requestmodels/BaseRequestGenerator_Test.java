@@ -312,7 +312,7 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.AbstractRequest"));
+        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
     }
 
     @Test
@@ -322,7 +322,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<String> result = generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3");
 
         assertThat(result.size(), is(5));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractRequest"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.JobRequestType"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
         assertTrue(result.contains("java.util.UUID"));

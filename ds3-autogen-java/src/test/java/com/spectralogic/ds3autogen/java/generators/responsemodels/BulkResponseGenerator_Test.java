@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.createPopulatedResponseCode;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +31,7 @@ public class BulkResponseGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.BulkResponse"));
+        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
     }
 
     @Test
@@ -57,7 +58,7 @@ public class BulkResponseGenerator_Test {
                 responseCodes,
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(1));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.BulkResponse"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
     }
 
     @Test
@@ -69,6 +70,7 @@ public class BulkResponseGenerator_Test {
         final ImmutableList<String> result = generator.getAllImports(
                 responseCodes,
                 "com.spectralogic.ds3client.commands");
-        assertThat(result.size(), is(0));
+        assertThat(result.size(), is(1));
+        assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
     }
 }
