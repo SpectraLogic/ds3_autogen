@@ -3,6 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
 import java.nio.channels.WritableByteChannel;
 import com.spectralogic.ds3client.utils.IOUtils;

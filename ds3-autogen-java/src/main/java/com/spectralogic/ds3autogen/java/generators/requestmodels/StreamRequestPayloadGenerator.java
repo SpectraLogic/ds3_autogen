@@ -77,10 +77,7 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
             final String packageName) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport(ds3Request));
-        }
-
+        builder.add(getParentImport(ds3Request));
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 

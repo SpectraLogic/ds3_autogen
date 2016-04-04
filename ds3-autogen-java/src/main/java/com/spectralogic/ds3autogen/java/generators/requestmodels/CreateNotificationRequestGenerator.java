@@ -25,7 +25,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
 
-    private final static String ABSTRACT_CREATE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest";
+    private final static String ABSTRACT_CREATE_NOTIFICATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractCreateNotificationRequest";
 
     /**
      * Returns the import for the parent class for the create notification request,
