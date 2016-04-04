@@ -3,6 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

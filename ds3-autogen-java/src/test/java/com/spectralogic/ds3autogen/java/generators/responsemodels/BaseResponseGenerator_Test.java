@@ -95,13 +95,13 @@ public class BaseResponseGenerator_Test {
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractResponse"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
         assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.AbstractResponse"));
+        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
     }
 
     @Test

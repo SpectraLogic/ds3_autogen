@@ -36,14 +36,14 @@ public class NotificationRequestGenerator_Test {
     public void getParentImport_Delete_Test() {
         final Ds3Request request = getRequestDeleteNotification();
         final String result = generator.getParentImport(request);
-        assertThat(result, is("com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest"));
+        assertThat(result, is("com.spectralogic.ds3client.commands.interfaces.AbstractDeleteNotificationRequest"));
     }
 
     @Test
     public void getParentImport_Get_Test() {
         final Ds3Request request = getRequestGetNotification();
         final String result = generator.getParentImport(request);
-        assertThat(result, is("com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest"));
+        assertThat(result, is("com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -61,7 +61,7 @@ public class NotificationRequestGenerator_Test {
                 "com.spectralogic.ds3client.commands.spectrads3.notifications");
 
         assertThat(result.size(), is(2));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractDeleteNotificationRequest"));
         assertTrue(result.contains("java.util.UUID"));
     }
 
@@ -74,7 +74,7 @@ public class NotificationRequestGenerator_Test {
                 "com.spectralogic.ds3client.commands.spectrads3.notifications");
 
         assertThat(result.size(), is(2));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest"));
         assertTrue(result.contains("java.util.UUID"));
     }
 

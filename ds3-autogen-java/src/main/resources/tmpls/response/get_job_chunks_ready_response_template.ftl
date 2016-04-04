@@ -3,7 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
-import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
 import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 

@@ -39,7 +39,7 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class BaseRequestGenerator implements RequestModelGenerator<Request>, RequestGeneratorUtils {
 
-    private final static String ABSTRACT_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.AbstractRequest";
+    private final static String ABSTRACT_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractRequest";
 
     @Override
     public Request generate(final Ds3Request ds3Request, final String packageName) {
@@ -241,10 +241,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             final String packageName) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport(ds3Request));
-        }
-
+        builder.add(getParentImport(ds3Request));
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
