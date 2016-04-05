@@ -47,15 +47,17 @@ public final class C_TypeHelper {
             case "boolean":
                 return new PrimitiveType("ds3_bool", isArray);
 
-            case "java.lang.Double":
-            case "java.lang.Long":
-            case "double":
-            case "long":
-                return new PrimitiveType("uint64_t", isArray);
-
             case "java.lang.Integer":
             case "int":
                 return new PrimitiveType("int", isArray);
+
+            case "java.lang.Long":
+            case "long":
+                return new PrimitiveType("uint64_t", isArray);
+
+            case "java.lang.Double":
+            case "double":
+                return new PrimitiveType("float", isArray);
 
             case "java.lang.String":
             case "java.util.Date":
