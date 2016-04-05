@@ -15,13 +15,16 @@
 
 package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.toModelParserName;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getNonErrorResponseCode;
 
 public class BaseResponseParserGenerator implements ResponseParserModelGenerator<BaseParser>, ResponseParserModelGeneratorUtils {
 
@@ -32,28 +35,22 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
         final String responseName = toResponseName(ds3Request.getName());
         final String nameToMarshal = toNameToMarshal(ds3Type.getNameToMarshal(), ds3Type.getName());
         final String modelParserName = toModelParserName(ds3Type.getName());
+        final Integer code = getResponseCode(ds3Request.getDs3ResponseCodes());
 
         return new BaseParser(
                 parserName,
                 requestName,
                 responseName,
                 nameToMarshal,
-                modelParserName);
+                modelParserName,
+                code);
     }
 
-    //TODO unit test
-    /**
-     * Creates the name of the response parser
-     */
-    protected static String getParserName(final String requestName) {
-        return removePath(requestName.replace("Request", "ResponseParser"));
-    }
-
-    //TODO unit test
     /**
      * Gets the name of the encapsulating tag (i.e. name to marshal) for the response payload
      */
-    public static String toNameToMarshal(final String nameToMarshal, final String typeName) {
+    @Override
+    public String toNameToMarshal(final String nameToMarshal, final String typeName) {
         if (nameToMarshal == null) {
             return "Data";
         }
@@ -61,5 +58,19 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
             throw new IllegalArgumentException("The name to marshal value is empty: " + typeName);
         }
         return nameToMarshal;
+    }
+
+    /**
+     * Creates the name of the response parser
+     */
+    protected static String getParserName(final String requestName) {
+        return removePath(requestName.replace("Request", "ResponseParser"));
+    }
+
+    /**
+     * Gets the response code associated with the payload
+     */
+    protected static Integer getResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        return getNonErrorResponseCode(responseCodes);
     }
 }

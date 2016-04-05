@@ -84,4 +84,11 @@ public class Ds3TypeClassificationUtil_Test {
         final Ds3Type type = createDs3TypeTestData("TestType", elements);
         assertTrue(isCommonPrefixesType(type));
     }
+
+    @Test
+    public void isJobsApiBean_Test() {
+        assertTrue(isJobsApiBean(createDs3TypeTestData("JobList")));
+        assertTrue(isJobsApiBean(createDs3TypeTestData("com.test.JobList")));
+        assertFalse(isJobsApiBean(createDs3TypeTestData("JobListApiBean")));
+    }
 }

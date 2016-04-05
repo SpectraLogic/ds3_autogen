@@ -15,14 +15,17 @@
 
 package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
-/**
- * Contains the interface for functions that are used to convert a Ds3Request into
- * the response Parser Model within Parser Generators
- */
-public interface ResponseParserModelGeneratorUtils {
+import org.junit.Test;
 
-    /**
-     * Gets the name of the encapsulating tag (i.e. name to marshal) for the response payload
-     */
-    String toNameToMarshal(final String nameToMarshal, final String typeName);
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class JobListPayloadParserGenerator_Test {
+
+    private static final JobListPayloadParserGenerator generator = new JobListPayloadParserGenerator();
+
+    @Test
+    public void toNameToMarshal_Test() {
+        assertThat(generator.toNameToMarshal(null, null), is("Jobs"));
+    }
 }

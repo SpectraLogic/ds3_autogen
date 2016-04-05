@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasPayload;
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasResponseCode;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -68,7 +70,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(isEmpty(parserCode));
     }
 
     @Test
@@ -135,7 +137,8 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("ListBucketResult", "ListBucketResult", parserCode));
     }
 
     @Test
@@ -192,7 +195,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(isEmpty(parserCode));
     }
 
     @Test
@@ -260,7 +263,8 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("S3Object", "Data", parserCode));
     }
 
     @Test
@@ -339,7 +343,65 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
+    }
+
+    @Test
+    public void getJobsRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "GetJobsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/getJobsRequest.xml");
+
+        //Generate Request code
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "BucketId", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "FullDetails", "bool", requestCode));
+
+        assertTrue(TestHelper.hasConstructor(requestName, ImmutableList.of(), requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
+                new Arguments("IEnumerable<Job>", "Jobs"));
+
+        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
+
+        for (final Arguments arg : responseArgs) {
+            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
+        }
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("JobList", "Jobs", parserCode));
     }
 
     @Test
@@ -433,6 +495,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        //TODO test parser
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 }

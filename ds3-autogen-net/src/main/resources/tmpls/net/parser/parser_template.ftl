@@ -16,7 +16,7 @@ namespace Ds3.ResponseParsers
         {
             using (response)
             {
-                ResponseParseUtilities.HandleStatusCode(response, HttpStatusCode.OK); //TODO determine status code
+                ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)${responseCode});
                 using (var stream = response.GetResponseStream())
                 {
                     return new ${responseName}(

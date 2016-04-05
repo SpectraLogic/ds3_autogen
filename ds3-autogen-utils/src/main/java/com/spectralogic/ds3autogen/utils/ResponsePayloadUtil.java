@@ -104,6 +104,38 @@ public final class ResponsePayloadUtil {
     }
 
     /**
+     * Gets the non-error code associated with this
+     */
+    public static Integer getNonErrorResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        final ImmutableList<Integer> codes = getAllNonErrorResponseCodes(responseCodes);
+        switch (codes.size()) {
+            case 0:
+                throw new IllegalArgumentException("There are no non-error response codes for this request");
+            case 1:
+                return codes.get(0);
+            default:
+                throw new IllegalArgumentException("There are multiple non-error response codes for this request");
+        }
+    }
+
+    /**
+     * Gets the list of non-error Response Codes from a list of Ds3ResponseCodes
+     */
+    protected static ImmutableList<Integer> getAllNonErrorResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        if (isEmpty(responseCodes)) {
+            LOG.error("Could not retrieve response codes because list was empty");
+            return ImmutableList.of();
+        }
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            if (isNonErrorCode(responseCode.getCode())) {
+                builder.add(responseCode.getCode());
+            }
+        }
+        return builder.build();
+    }
+
+    /**
      * Gets the Response Type associated with a Ds3ResponseCode. This assumes that all component
      * response types have already been converted into encapsulating types, which is done within
      * the parser module.

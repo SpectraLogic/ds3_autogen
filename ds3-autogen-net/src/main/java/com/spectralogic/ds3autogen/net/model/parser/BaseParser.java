@@ -26,18 +26,21 @@ public class BaseParser {
     private final String responseName;
     private final String nameToMarshal;
     private final String modelParserName;
+    private final Integer responseCode;
 
     public BaseParser(
             final String name,
             final String requestName,
             final String responseName,
             final String nameToMarshal,
-            final String modelParserName) {
+            final String modelParserName,
+            final Integer responseCode) {
         this.name = name;
         this.requestName = requestName;
         this.responseName = responseName;
         this.nameToMarshal = nameToMarshal;
         this.modelParserName = modelParserName;
+        this.responseCode = responseCode;
     }
 
     public String getName() {
@@ -62,5 +65,9 @@ public class BaseParser {
 
     public String getModelParserName() {
         return modelParserName;
+    }
+
+    public Integer getResponseCode() {
+        return responseCode;
     }
 }

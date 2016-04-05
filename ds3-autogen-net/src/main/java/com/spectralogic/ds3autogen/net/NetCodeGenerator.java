@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.JobListPayloadParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsermodels.ResponseParserModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
@@ -34,7 +35,6 @@ import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
-import freemarker.core.ParseException;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +48,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -165,7 +166,7 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private void generateResponseParser(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseParserTemplate(ds3Request);
-        final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(ds3Request);
+        final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(responsePayload);
         final BaseParser parser = parserGenerator.generate(ds3Request, responsePayload);
         final Path parserPath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(PARSER_NAMESPACE.replace(".", "/") + "/" + parser.getName() + ".cs")));
@@ -181,7 +182,10 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the response parser generator for the specified Ds3Request
      */
-    private ResponseParserModelGenerator getResponseParserGenerator(final Ds3Request ds3Request) {
+    private ResponseParserModelGenerator getResponseParserGenerator(final Ds3Type responsePayload) {
+        if (isJobsApiBean(responsePayload)) {
+            return new JobListPayloadParserGenerator();
+        }
         return new BaseResponseParserGenerator();
     }
 

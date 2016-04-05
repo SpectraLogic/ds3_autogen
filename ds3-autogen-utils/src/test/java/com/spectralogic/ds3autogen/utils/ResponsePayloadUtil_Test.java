@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
@@ -135,5 +136,60 @@ public class ResponsePayloadUtil_Test {
                 new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("ResponseType", null))),
                 new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("ResponseType2", null))));
         getResponsePayload(codes);
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_NullList_Test() {
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_EmptyList_Test() {
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(204, null),
+                new Ds3ResponseCode(400, null));
+
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(codes);
+        assertThat(result.size(), is(2));
+        assertThat(result, hasItem(200));
+        assertThat(result, hasItem(204));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getNonErrorResponseCode_NullList_Test() {
+        getNonErrorResponseCode(null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getNonErrorResponseCode_EmptyList_Test() {
+        getNonErrorResponseCode(ImmutableList.of());
+    }
+
+    @Test
+    public void getNonErrorResponseCode_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(204, null),
+                new Ds3ResponseCode(400, null));
+
+        final Integer result = getNonErrorResponseCode(codes);
+        assertThat(result, is(204));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getNonErrorResponseCode_TwoNonErrorCodes_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(204, null),
+                new Ds3ResponseCode(400, null));
+
+        getNonErrorResponseCode(codes);
     }
 }
