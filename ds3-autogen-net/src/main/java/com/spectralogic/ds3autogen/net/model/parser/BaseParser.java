@@ -15,15 +15,52 @@
 
 package com.spectralogic.ds3autogen.net.model.parser;
 
+import com.spectralogic.ds3autogen.net.NetHelper;
+
 public class BaseParser {
 
-    private final String name;
+    private final static NetHelper netHelper = NetHelper.getInstance();
 
-    public BaseParser(final String name) {
+    private final String name;
+    private final String requestName;
+    private final String responseName;
+    private final String nameToMarshal;
+    private final String modelParserName;
+
+    public BaseParser(
+            final String name,
+            final String requestName,
+            final String responseName,
+            final String nameToMarshal,
+            final String modelParserName) {
         this.name = name;
+        this.requestName = requestName;
+        this.responseName = responseName;
+        this.nameToMarshal = nameToMarshal;
+        this.modelParserName = modelParserName;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getRequestName() {
+        return requestName;
+    }
+
+    public String getResponseName() {
+        return responseName;
+    }
+
+    public String getNameToMarshal() {
+        return nameToMarshal;
+    }
+
+    public NetHelper getNetHelper() {
+        return netHelper;
+    }
+
+    public String getModelParserName() {
+        return modelParserName;
     }
 }

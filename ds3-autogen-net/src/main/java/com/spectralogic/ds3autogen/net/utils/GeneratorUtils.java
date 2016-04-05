@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.utils.models.NotificationType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 /**
@@ -35,6 +36,14 @@ public final class GeneratorUtils {
 
     private GeneratorUtils() {
         //pass
+    }
+
+    //TODO unit test
+    /**
+     * Gets the name of the type/model parser
+     */
+    public static String toModelParserName(final String modelName) {
+        return removePath(modelName) + "Parser";
     }
 
     /**

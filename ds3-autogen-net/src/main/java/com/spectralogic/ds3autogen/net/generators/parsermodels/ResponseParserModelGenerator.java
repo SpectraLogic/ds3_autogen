@@ -16,9 +16,10 @@
 package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 @FunctionalInterface
 public interface ResponseParserModelGenerator<T extends BaseParser> {
-    T generate(final Ds3Request ds3Request);
+    T generate(final Ds3Request ds3Request, final Ds3Type ds3Type);
 }

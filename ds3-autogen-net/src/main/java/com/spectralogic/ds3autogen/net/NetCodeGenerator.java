@@ -166,7 +166,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private void generateResponseParser(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseParserTemplate(ds3Request);
         final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(ds3Request);
-        final BaseParser parser = parserGenerator.generate(ds3Request);
+        final BaseParser parser = parserGenerator.generate(ds3Request, responsePayload);
         final Path parserPath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(PARSER_NAMESPACE.replace(".", "/") + "/" + parser.getName() + ".cs")));
 
