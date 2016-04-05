@@ -247,7 +247,6 @@ public final class StructHelper {
             currentStruct.getStructMembers().stream()
                     .filter(currentStructMember -> currentStructMember.getType().isArray())
                     .map(StructMember::getType)
-                    .collect(Collectors.toCollection(HashSet::new))
                     .forEach(arrayStructMemberTypesBuilder::add);
         }
 
