@@ -39,12 +39,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 
 public class StructHelper_Test {
@@ -175,7 +173,7 @@ public class StructHelper_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, allRequests);
 
@@ -239,7 +237,7 @@ public class StructHelper_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 

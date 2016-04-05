@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -101,24 +102,26 @@ public final class StructHelper {
      *
      * @throws java.text.ParseException
      */
-    public static ImmutableList<Struct> getStructsOrderedList(final Queue<Struct> allStructs, final ImmutableSet<String> enumNames) throws ParseException {
+    public static ImmutableList<Struct> getStructsOrderedList(final ImmutableList<Struct> allStructs,
+                                                              final ImmutableSet<String> enumNames) throws ParseException {
+        final Queue<Struct> structsQueue = new LinkedList<>(allStructs);
         final Set<String> existingStructs = new HashSet<>();
         final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
         int skippedStructsCount = 0;
-        while (!allStructs.isEmpty()) {
-            final int allStructsSize = allStructs.size();
-            final Struct structEntry = allStructs.remove();
+        while (!structsQueue.isEmpty()) {
+            final int structsQueueSize = structsQueue.size();
+            final Struct structEntry = structsQueue.remove();
 
             if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
                 existingStructs.add(structEntry.getName());
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
-                allStructs.add(structEntry);
+                structsQueue.add(structEntry);
             }
 
-            if (allStructsSize == allStructs.size()) {
+            if (structsQueueSize == allStructs.size()) {
                 skippedStructsCount++;
-                if (skippedStructsCount == allStructsSize) {
+                if (skippedStructsCount == structsQueueSize) {
                     LOG.warn("Unable to progress on remaining structs, aborting!");
                     LOG.warn("  Remaining structs[" + allStructs.size() + "]");
                     for (final Struct struct : allStructs) {

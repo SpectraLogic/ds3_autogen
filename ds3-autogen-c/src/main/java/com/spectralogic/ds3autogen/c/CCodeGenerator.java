@@ -44,8 +44,6 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -68,7 +66,7 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Request> allRequests = getAllRequests(spec);
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-            final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames, allRequests));
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, allRequests);
             final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
 
             generateHeader(allEnums, allOrderedStructs, allRequests);
@@ -110,7 +108,9 @@ public class CCodeGenerator implements CodeGenerator {
         return allEnumsBuilder.build();
     }
 
-    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames, final ImmutableList<Request> allRequests) throws ParseException {
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec,
+                                                      final ImmutableSet<String> enumNames,
+                                                      final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {

@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import static org.junit.Assert.assertTrue;
 
@@ -91,7 +89,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -160,7 +158,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -187,7 +185,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final Queue<Struct> allStructs = new LinkedList<>(CCodeGenerator.getAllStructs(spec, enumNames, allRequests));
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
