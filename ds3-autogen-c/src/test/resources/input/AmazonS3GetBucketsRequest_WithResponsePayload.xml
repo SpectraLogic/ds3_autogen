@@ -1,0 +1,88 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler">
+                <Request BucketRequirement="NOT_ALLOWED" HttpVerb="GET" IncludeIdInPath="false" ObjectRequirement="NOT_ALLOWED">
+                    <OptionalQueryParams />
+                    <RequiredQueryParams />
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.BucketsApiBean" />
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.8D18E6B210A254D12ACD074CF265700F</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
+
+<!--  RequestHandler with full_details
+<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler">
+    <Documentation>Get all buckets. This is an AWS request (see http://docs.aws.amazon.com/AmazonS3/latest/API/RESTServiceGET.html for AWS documentation).</Documentation>
+    <RequestRequirements>Cannot include an S3 bucket specification</RequestRequirements>
+    <RequestRequirements>Cannot include an S3 object specification</RequestRequirements>
+    <RequestRequirements>Must be HTTP request type GET</RequestRequirements>
+    <RequestRequirements>Must be an AWS-style request</RequestRequirements>
+    <RequestRequirements>Query Parameters Required: [], Optional: []</RequestRequirements>
+    <SampleResponses>
+        <HttpRequest>GET '/' with query parameters {} and headers {Internal-Request=1, Impersonate-User=test_user_name}.</HttpRequest>
+        <HttpResponse>
+            <ListAllMyBucketsResult>
+                <Buckets />
+                <Owner>
+                    <DisplayName>test_user_name</DisplayName>
+                    <ID>a5057b0d-ebc7-4cfc-9f44-3ef379c1a004</ID>
+                </Owner>
+            </ListAllMyBucketsResult>
+            with headers {x-amz-request-id=128, Content-Type=text/xml, RequestHandler-Version=1.8D18E6B210A254D12ACD074CF265700F}.
+        </HttpResponse>
+        <HttpResponseCode>200</HttpResponseCode>
+        <HttpResponseType>com.spectralogic.s3.server.domain.BucketsApiBean</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler_Test.testGetBucketsReturnsNothingWhenNoBucketsExist</Test>
+    </SampleResponses>
+    <SampleResponses>
+        <HttpRequest>GET '/' with query parameters {} and headers {Internal-Request=1, Impersonate-User=test_user_name}.</HttpRequest>
+        <HttpResponse>
+            <ListAllMyBucketsResult>
+                <Buckets>
+                    <Bucket>
+                        <CreationDate>2016-02-11T15:37:13.000Z</CreationDate>
+                        <Name>spectra-test</Name>
+                    </Bucket>
+                    <Bucket>
+                        <CreationDate>2016-02-11T15:37:13.000Z</CreationDate>
+                        <Name>test_bucket_1</Name>
+                    </Bucket>
+                    <Bucket>
+                        <CreationDate>2016-02-11T15:37:13.000Z</CreationDate>
+                        <Name>test_bucket_2</Name>
+                    </Bucket>
+                    <Bucket>
+                        <CreationDate>2016-02-11T15:37:13.000Z</CreationDate>
+                        <Name>test_bucket_3</Name>
+                    </Bucket>
+                    <Bucket>
+                        <CreationDate>2016-02-11T15:37:13.000Z</CreationDate>
+                        <Name>test_bucket_4</Name>
+                    </Bucket>
+                </Buckets>
+                <Owner>
+                    <DisplayName>test_user_name</DisplayName>
+                    <ID>f4d33c02-8f2b-48ec-8f51-96060466603a</ID>
+                </Owner>
+            </ListAllMyBucketsResult>
+            with headers {x-amz-request-id=129, Content-Type=text/xml, RequestHandler-Version=1.8D18E6B210A254D12ACD074CF265700F}.
+        </HttpResponse>
+        <HttpResponseCode>200</HttpResponseCode>
+        <HttpResponseType>com.spectralogic.s3.server.domain.BucketsApiBean</HttpResponseType>
+        <Test>com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler_Test.testGetBucketsReturnsOnlyBucketsForSpecifiedUser</Test>
+    </SampleResponses>
+    <SampleUrl>http[s]://datapathdnsnameofappliance/</SampleUrl>
+    <Version>1.8D18E6B210A254D12ACD074CF265700F</Version>
+</RequestHandler>
+-->
+

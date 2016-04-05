@@ -47,19 +47,19 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_request* s3_init_delete_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* init_delete_bucket_request(const char* bucket_name) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_DELETE, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("}"));
     }
 
     @Test
-    public void testGenerateInitAmazonS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitAmazonS3GetBucketRequest_WithResponsePayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
         final String inputSpecFile = "/input/AmazonS3GetBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -68,13 +68,13 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_request* s3_init_get_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* init_get_bucket_request(const char* bucket_name) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_GET, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("}"));
     }
@@ -89,14 +89,35 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3InitRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_request* s3_init_put_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* init_put_bucket_request(const char* bucket_name) {"));
         assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_PUT, _build_path(\"/\", bucket_name, NULL));"));
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateInitAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/AmazonS3GetBucketsRequest_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_request* init_get_service_request(void) {"));
+        assertTrue(output.contains("    return (ds3_request*) _common_request_init(HTTP_GET, _build_path(\"/\", NULL, NULL));"));
         assertTrue(output.contains("}"));
     }
 }

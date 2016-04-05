@@ -1,0 +1,60 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="SYSTEM_INFORMATION" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler$SystemInformationApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D7B16FCF4CB54A4DDD0B7B96965B0C89</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
+<!--
+    <RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler">
+        <Documentation>
+            Get basic system information, including version and build information, and the system serial number.Note that the version is always of the form X.Y, where X is the MD5 checksum across all request handler majorrevisions and Y is the MD5 checksum across all request handler full versions (including the minor revision).
+        </Documentation>
+        <RequestRequirements>Must be REST action LIST</RequestRequirements>
+        <RequestRequirements>Must be REST domain SYSTEM_INFORMATION</RequestRequirements>
+        <RequestRequirements>Must be a DS3-style request</RequestRequirements>
+        <RequestRequirements>Query Parameters Required: [], Optional: []</RequestRequirements>
+        <SampleResponses>
+            <HttpRequest>
+                GET '_rest_/SYSTEM_INFORMATION' with query parameters {} and headers {}.
+            </HttpRequest>
+            <HttpResponse>
+                <Data>
+                    <ApiVersion>AC2DF47AEBFF2CF791951E2131EFCE26.EA975D33348AD6739CA7E5108E6FAD03</ApiVersion>
+                    <BackendActivated>true</BackendActivated>
+                    <BuildInformation>
+                        <Branch/>
+                        <Revision/>
+                        <Version/>
+                    </BuildInformation>
+                    <SerialNumber>UNKNOWN</SerialNumber>
+                </Data> with headers {x-amz-request-id=687, Content-Type=text/xml, RequestHandler-Version=1.D7B16FCF4CB54A4DDD0B7B96965B0C89}.
+            </HttpResponse>
+            <HttpResponseCode>200</HttpResponseCode>
+            <HttpResponseType>
+                com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler$SystemInformationApiBean
+            </HttpResponseType>
+                    <Test>
+                        com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler_Test.testGetSystemInformationRequestHandlerDoesNotBlowUp
+                    </Test>
+                </SampleResponses>
+                <SampleUrl>
+                    http[s]://datapathdnsnameofappliance/_rest_/system_information/
+                </SampleUrl>
+                <Version>1.D7B16FCF4CB54A4DDD0B7B96965B0C89</Version>
+            </RequestHandler>
+        -->

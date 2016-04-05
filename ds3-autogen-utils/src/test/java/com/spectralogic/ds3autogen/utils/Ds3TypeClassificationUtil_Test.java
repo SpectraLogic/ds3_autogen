@@ -24,9 +24,7 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.cr
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Type;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class Ds3TypeClassificationUtil_Test {
 

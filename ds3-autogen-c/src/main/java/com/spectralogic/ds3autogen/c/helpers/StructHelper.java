@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.c.models.C_Type;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -24,7 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
@@ -43,7 +47,11 @@ public final class StructHelper {
     }
 
     public static String getDs3TypeName(final String name) {
-        return "ds3_" + getNameUnderscores(name);
+        final String name_underscores = getNameUnderscores(name);
+        if (name_underscores.startsWith("ds3_")) { // some special-cased types have already been renamed with ds3_ prefix
+            return name_underscores;
+        }
+        return "ds3_" + name_underscores;
     }
 
     public static String getResponseTypeName(final String name) {
@@ -74,15 +82,51 @@ public final class StructHelper {
         return false;
     }
 
+    /**
+     * Return Structs which contain only primitive types first, and then cascade for Complex Structs that contain other Structs
+     *
+     * @throws java.text.ParseException
+     */
+    public static ImmutableList<Struct> getStructsOrderedList(final Queue<Struct> allStructs, final ImmutableSet<String> enumNames) throws ParseException {
+        final Set<String> existingStructs = new HashSet<>();
+        final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
+        int skippedStructsCount = 0;
+        while (!allStructs.isEmpty()) {
+            final int allStructsSize = allStructs.size();
+            final Struct structEntry = allStructs.remove();
+
+            if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
+                existingStructs.add(structEntry.getName());
+                orderedStructsBuilder.add(structEntry);
+            } else {  // move to end to come back to
+                allStructs.add(structEntry);
+            }
+
+            if (allStructsSize == allStructs.size()) {
+                skippedStructsCount++;
+                if (skippedStructsCount == allStructsSize) {
+                    LOG.warn("Unable to progress on remaining structs, aborting!");
+                    LOG.warn("  Remaining structs[" + allStructs.size() + "]");
+                    for (final Struct struct : allStructs) {
+                        LOG.warn("    " + struct.toString());
+                    }
+                    break;
+                }
+            }
+        }
+
+        return orderedStructsBuilder.build();
+    }
+
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
-        return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
+        return indent(3) + "_response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
 
     public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
         return indent(3) + "GPtrArray* " + structMember.getName() + "_array = _parse_" + structResponseTypeName + "_array(log, doc, child_node);\n"
-             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType() + ")" + structMember.getName() + "_array->pdata;\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
+             + indent(3) + "_response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "_response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
@@ -91,7 +135,7 @@ public final class StructHelper {
              + indent(3) + "if (text == NULL) {\n"
              + indent(3) + "    continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
+             + indent(3) + "_response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(log, text);\n";
     }
 
     public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
@@ -185,4 +229,18 @@ public final class StructHelper {
 
         return outputBuilder.toString();
     }
+
+    public static ImmutableSet<C_Type> getArrayStructMemberTypes(final ImmutableList<Struct> allOrderedStructs) {
+        final ImmutableSet.Builder<C_Type> arrayStructMemberTypesBuilder = ImmutableSet.builder();
+        for (final Struct currentStruct : allOrderedStructs) {
+            currentStruct.getStructMembers().stream().
+                    filter(currentStructMember -> currentStructMember.getType().isArray()).
+                    map(StructMember::getType).
+                    collect(Collectors.toCollection(HashSet::new)).
+                    forEach(arrayStructMemberTypesBuilder::add);
+        }
+
+        return arrayStructMemberTypesBuilder.build();
+    }
+
 }

@@ -1,0 +1,38 @@
+<Data>
+    <Contract>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.platform.lang.BuildInformation">
+                <Elements>
+                    <Element Name="Branch" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Revision" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Version" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler$SystemInformationApiBean">
+                <Elements>
+                    <Element Name="ApiVersion" Type="java.lang.String">
+                        <Annotations />
+                    </Element>
+                    <Element Name="BackendActivated" Type="boolean">
+                        <Annotations />
+                    </Element>
+                    <Element Name="BuildInformation" Type="com.spectralogic.s3.common.platform.lang.BuildInformation">
+                        <Annotations />
+                    </Element>
+                    <Element Name="InstanceId" Type="java.util.UUID">
+                        <Annotations />
+                    </Element>
+                    <Element Name="SerialNumber" Type="java.lang.String">
+                        <Annotations />
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

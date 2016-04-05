@@ -20,19 +20,26 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
 public class Struct {
     private final String name;
+    private final String nameToMarshall;
     private final ImmutableList<StructMember> variables; // members?
     private final StructHelper structHelper;
 
     public Struct(
             final String name,
+            final String nameToMarshall,
             final ImmutableList<StructMember> variables) {
         this.name = name;
+        this.nameToMarshall = nameToMarshall;
         this.variables = variables;
         this.structHelper = StructHelper.getInstance();
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public String getNameToMarshall() {
+        return nameToMarshall;
     }
 
     public ImmutableList<StructMember> getStructMembers() {
