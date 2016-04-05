@@ -59,6 +59,7 @@ public final class C_TypeHelper {
             case "double":
                 return new PrimitiveType("float", isArray);
 
+            case "java.lang.Object":
             case "java.lang.String":
             case "java.util.Date":
             case "java.util.UUID":

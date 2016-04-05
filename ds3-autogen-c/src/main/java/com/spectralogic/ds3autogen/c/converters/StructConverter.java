@@ -31,7 +31,9 @@ import java.text.ParseException;
 public final class StructConverter {
     private StructConverter() {}
 
-    public static Struct toStruct(final Ds3Type ds3Type, final ImmutableSet<String> enumNames, final ImmutableList<Request> allRequests) throws ParseException {
+    public static Struct toStruct(final Ds3Type ds3Type,
+                                  final ImmutableSet<String> enumNames,
+                                  final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements(), enumNames);
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
@@ -41,12 +43,13 @@ public final class StructConverter {
                 isTopLevelStruct(responseTypeName, allRequests));
     }
 
-    private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList, final ImmutableSet<String> enumNames) throws ParseException {
+    private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
+                                                                  final ImmutableSet<String> enumNames) throws ParseException {
         final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elementsList) {
-            if (currentElement.getName().equals("StorageClass")) continue;  // Special case: ignore; unused - from S3ObjectApiBean
-
-            builder.add(new StructMember(C_TypeHelper.convertDs3ElementType(currentElement, enumNames), StructHelper.getNameUnderscores(currentElement.getName())));
+            builder.add(new StructMember(
+                    C_TypeHelper.convertDs3ElementType(currentElement, enumNames),
+                    StructHelper.getNameUnderscores(currentElement.getName())));
         }
         return builder.build();
     }
