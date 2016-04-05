@@ -38,11 +38,13 @@ public final class GeneratorUtils {
         //pass
     }
 
-    //TODO unit test
     /**
      * Gets the name of the type/model parser
      */
     public static String toModelParserName(final String modelName) {
+        if (isEmpty(modelName)) {
+            return "";
+        }
         return removePath(modelName) + "Parser";
     }
 

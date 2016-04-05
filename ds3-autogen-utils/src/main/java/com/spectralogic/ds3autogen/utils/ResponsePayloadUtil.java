@@ -104,7 +104,7 @@ public final class ResponsePayloadUtil {
     }
 
     /**
-     * Gets the non-error code associated with this
+     * Gets the non-error code associated with a list of Ds3ResponseCodes
      */
     public static Integer getNonErrorResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
         final ImmutableList<Integer> codes = getAllNonErrorResponseCodes(responseCodes);

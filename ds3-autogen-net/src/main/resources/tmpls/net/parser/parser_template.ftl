@@ -22,7 +22,7 @@ namespace Ds3.ResponseParsers
                     return new ${responseName}(
                         XmlExtensions
                             .ReadDocument(stream)
-                            <#if netHelper.hasNameToMarshal(nameToMarshal)>.ElementOrThrow("${nameToMarshal}")</#if>
+                            .ElementOrThrow("${nameToMarshal}")
                             .Select(${modelParserName})
                             .ToList()
                     );

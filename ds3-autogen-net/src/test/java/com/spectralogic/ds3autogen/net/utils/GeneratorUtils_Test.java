@@ -128,4 +128,12 @@ public class GeneratorUtils_Test {
         assertThat(toRequestPath(getRequestCreateObject()), is("\"/\" + BucketName + \"/\" + ObjectName"));
         assertThat(toRequestPath(getRequestAmazonS3GetObject()), is("\"/\" + BucketName + \"/\" + ObjectName"));
     }
+
+    @Test
+    public void toModelParserName_Test() {
+        assertThat(toModelParserName(null), is(""));
+        assertThat(toModelParserName(""), is(""));
+        assertThat(toModelParserName("TestModel"), is("TestModelParser"));
+        assertThat(toModelParserName("com.test.TestModel"), is("TestModelParser"));
+    }
 }

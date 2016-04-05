@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
 
@@ -38,14 +37,6 @@ public final class NetHelper {
 
     private NetHelper() {
         // pass
-    }
-
-    //TODO unit test
-    /**
-     * Determines if NameToMarshal has content
-     */
-    public static boolean hasNameToMarshal(final String nameToMarshal) {
-        return hasContent(nameToMarshal);
     }
 
     /**
