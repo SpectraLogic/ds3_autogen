@@ -17,12 +17,15 @@ package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class CommonPrefixGenerator_Test {
 
@@ -55,5 +58,27 @@ public class CommonPrefixGenerator_Test {
         assertThat(result.get(1).getName(), is("CreationDate"));
         assertThat(result.get(1).getType(), is("java.util.Date"));
         assertThat(result.get(1).getComponentType(), is(nullValue()));
+    }
+
+    @Test
+    public void getAllImports_Test() {
+        final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
+                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1"),
+                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2"),
+                new Ds3Element("ElementName3", "ElementType3", null));
+
+        final Ds3Type ds3Type = new Ds3Type(
+                "TypeName",
+                null,
+                ds3Elements,
+                null);
+
+        final ImmutableList<String> result = generator.getAllImports(ds3Type);
+
+        assertThat(result.size(), is(4));
+        assertThat(result, hasItem("java.util.List"));
+        assertThat(result, hasItem("java.util.ArrayList"));
+        assertThat(result, hasItem("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.models.common.CommonPrefixes"));
     }
 }

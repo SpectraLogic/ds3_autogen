@@ -22,9 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getAllImportsFromResponseCodes;
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.getImportFromResponseCode;
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.removeErrorResponseCodes;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.is;
@@ -95,13 +93,13 @@ public class BaseResponseGenerator_Test {
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractResponse"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
         assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.AbstractResponse"));
+        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
     }
 
     @Test

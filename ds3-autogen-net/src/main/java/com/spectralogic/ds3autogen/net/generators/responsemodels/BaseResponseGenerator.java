@@ -16,10 +16,12 @@
 package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
-import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;

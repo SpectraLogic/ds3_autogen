@@ -3,7 +3,7 @@
 package ${packageName};
 
 <#include "common/response_imports.ftl"/>
-import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
 public class ${name} extends AbstractResponse {
 

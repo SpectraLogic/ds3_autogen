@@ -1,7 +1,6 @@
 package com.spectralogic.ds3autogen.java.test.helpers;
 
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
-import static com.spectralogic.ds3autogen.java.utils.TestHelper.hasGetter;
 import static org.junit.Assert.assertTrue;
 
 /**

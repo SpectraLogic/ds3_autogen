@@ -24,7 +24,7 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator.toArgType;
 import static com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator.toArgument;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class BaseResponseGenerator_Test {
 

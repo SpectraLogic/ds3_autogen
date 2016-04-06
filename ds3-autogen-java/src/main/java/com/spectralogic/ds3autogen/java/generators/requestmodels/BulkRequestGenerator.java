@@ -26,7 +26,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BulkRequestGenerator extends BaseRequestGenerator {
 
-    private final static String BULK_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.BulkRequest";
+    private final static String BULK_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.BulkRequest";
 
     /**
      * List of class arguments that are defined within the parent class BulkRequest.
