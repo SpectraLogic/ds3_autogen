@@ -13,21 +13,20 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.utils;
+package com.spectralogic.ds3autogen.c.models;
 
-import org.junit.Test;
+public enum ParameterModifier {
+    NONE(""),
+    CONST("const ");
 
-import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toCommandName;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+    private final String asString;
+    private ParameterModifier(final String asString) {
+        this.asString = asString;
+    }
 
-public class ClientGeneratorUtil_Test {
-
-    @Test
-    public void toCommandName_Test() {
-        assertThat(toCommandName(null), is(""));
-        assertThat(toCommandName(""), is(""));
-        assertThat(toCommandName("SimpleRequest"), is("Simple"));
-        assertThat(toCommandName("com.spectralogic.test.PathRequest"), is("Path"));
+    @Override
+    public String toString() {
+        return asString;
     }
 }
+

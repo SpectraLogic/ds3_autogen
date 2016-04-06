@@ -42,8 +42,8 @@ public class C_Type_Test {
     public void testStructMemberTypeDoubleToString() throws java.text.ParseException {
         final Ds3Element testElement = new Ds3Element("doubleElement", "double", null);
         final C_Type c_type = C_TypeHelper.convertDs3ElementType(testElement, ImmutableSet.of());
-        assertThat(c_type.getTypeName(), is("uint64_t"));
-        assertThat(c_type.toString(), is("uint64_t"));
+        assertThat(c_type.getTypeName(), is("float"));
+        assertThat(c_type.toString(), is("float"));
     }
     @Test
     public void testStructMemberTypeLongToString1() throws java.text.ParseException {
