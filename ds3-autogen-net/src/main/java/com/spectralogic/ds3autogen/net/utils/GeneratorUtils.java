@@ -16,11 +16,14 @@
 package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.net.NetHelper;
+import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
@@ -134,5 +137,26 @@ public final class GeneratorUtils {
     public static Arguments toArgument(final Ds3Param ds3Param) {
         final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
         return new Arguments(paramType, ds3Param.getName());
+    }
+
+    //TODO unit test
+    /**
+     * Creates a NullableVariable from the provided parameters
+     */
+    public static NullableVariable createNullableVariable(
+            final String name,
+            final String type,
+            final String componentType,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        /*
+        if (hasContent(componentType)) {
+            final String netType = "IEnumerable<" + stripPath(componentType) + ">";
+            return new NullableVariable(name, "IEnumerable<")
+        }
+
+        return new NullableVariable(name, "", false);
+        */
+        //TODO
+        return null;
     }
 }

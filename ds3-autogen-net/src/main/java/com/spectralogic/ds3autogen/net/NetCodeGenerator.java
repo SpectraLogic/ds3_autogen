@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -27,14 +28,15 @@ import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenera
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.typeparsers.TypeParserModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +58,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
+    private static final String MODEL_PARSER_NAMESPACE = "Ds3.ResponseParsers";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -80,8 +83,32 @@ public class NetCodeGenerator implements CodeGenerator {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
             generateCommands(requests);
             generateClient(requests);
+            generateModelParsers(spec.getTypes());
         } catch (final TemplateException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Generates the .net code for the type/model parsers
+     */
+    private void generateModelParsers(
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        if (isEmpty(typeMap)) {
+            LOG.info("Not generating model parsers: no types.");
+            return;
+        }
+        final Template tmpl = config.getTemplate("typeparser/all_type_parsers.ftl");
+        final TypeParserModelGenerator<?> generator = new BaseTypeParserGenerator();
+        final BaseTypeParser parser = generator.generate(typeMap);
+        final Path path = destDir.resolve(
+                BASE_PROJECT_PATH.resolve(Paths.get(MODEL_PARSER_NAMESPACE.replace(".", "/") + "/ModelParsers.cs")));
+
+        LOG.info("Getting OutputStream for file:" + path.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(path);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(parser, writer);
         }
     }
 

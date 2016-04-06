@@ -38,10 +38,12 @@ public class TestGenerateCode {
     protected final ByteArrayOutputStream responseOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
+    protected final ByteArrayOutputStream typeParserOutputStream;
     protected String requestCode;
     protected String responseCode;
     protected String clientCode;
     protected String idsClientCode;
+    protected String typeParser;
 
     public enum PathType { REQUEST, RESPONSE }
 
@@ -53,6 +55,7 @@ public class TestGenerateCode {
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
         this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
+        this.typeParserOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "ResponseParsers/ModelParsers.cs");
     }
 
     /**
@@ -72,6 +75,7 @@ public class TestGenerateCode {
         responseCode = new String(responseOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
+        typeParser = new String(typeParserOutputStream.toByteArray());
     }
 
     /**
@@ -118,5 +122,9 @@ public class TestGenerateCode {
 
     public String getIdsClientCode() {
         return this.idsClientCode;
+    }
+
+    public String getTypeParser() {
+        return this.typeParser;
     }
 }
