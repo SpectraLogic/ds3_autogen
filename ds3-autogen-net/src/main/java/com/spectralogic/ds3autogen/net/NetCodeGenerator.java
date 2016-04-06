@@ -231,6 +231,12 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
+        if (isCreateObjectRequest(ds3Request) || isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return new StreamRequestPayloadGenerator();
+        }
+        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return new ObjectsRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -238,15 +244,24 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the .net request handler
      * code for this Ds3Request
      */
-    private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        if (isGetObjectRequest(request)) {
+    private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isBulkPutRequest(request)) {
+        if (isBulkPutRequest(ds3Request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
         }
-        if (isBulkGetRequest(request)) {
+        if (isBulkGetRequest(ds3Request)) {
             return config.getTemplate("request/bulk_get_request.ftl");
+        }
+        if (isCreateObjectRequest(ds3Request)) {
+            return config.getTemplate("request/put_object_request.ftl");
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return config.getTemplate("request/stream_request_payload.ftl");
+        }
+        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return config.getTemplate("request/objects_request_payload.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

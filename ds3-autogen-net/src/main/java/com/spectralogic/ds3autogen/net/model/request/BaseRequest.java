@@ -28,6 +28,7 @@ public class BaseRequest {
     private final HttpVerb verb;
     private final Operation operation;
     private final ImmutableList<Arguments> constructorArgs;
+    private final ImmutableList<Arguments> queryParams;
     private final ImmutableList<Arguments> requiredArgs;
     private final ImmutableList<Arguments> optionalArgs;
 
@@ -38,6 +39,7 @@ public class BaseRequest {
             final HttpVerb verb,
             final Operation operation,
             final ImmutableList<Arguments> constructorArgs,
+            final ImmutableList<Arguments> queryParams,
             final ImmutableList<Arguments> requiredArgs,
             final ImmutableList<Arguments> optionalArgs) {
         this.netHelper = netHelper;
@@ -46,6 +48,7 @@ public class BaseRequest {
         this.verb = verb;
         this.operation = operation;
         this.constructorArgs = constructorArgs;
+        this.queryParams = queryParams;
         this.requiredArgs = requiredArgs;
         this.optionalArgs = optionalArgs;
     }
@@ -80,5 +83,9 @@ public class BaseRequest {
 
     public Operation getOperation() {
         return operation;
+    }
+
+    public ImmutableList<Arguments> getQueryParams() {
+        return queryParams;
     }
 }

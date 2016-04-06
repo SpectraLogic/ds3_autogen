@@ -12,14 +12,6 @@ namespace Ds3.Calls
     public class ${name} : Ds3Request
     {
         <#include "common/required_args.ftl" />
-        public long? MaxUploadSize { get; private set; }
-
-        public ${name} WithMaxUploadSize(long maxUploadSize)
-        {
-            this.MaxUploadSize = maxUploadSize;
-            this.QueryParams["max_upload_size"] = maxUploadSize.ToString("D");
-            return this;
-        }
 
         <#include "common/optional_args.ftl" />
 

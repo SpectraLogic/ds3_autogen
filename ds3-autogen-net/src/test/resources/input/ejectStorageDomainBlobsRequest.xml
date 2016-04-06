@@ -1,0 +1,35 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainBlobsRequestHandler">
+                <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="EJECT" Resource="TAPE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Blobs" Type="void"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D07A22B79C602A5E8C570C5E049FD7AB</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

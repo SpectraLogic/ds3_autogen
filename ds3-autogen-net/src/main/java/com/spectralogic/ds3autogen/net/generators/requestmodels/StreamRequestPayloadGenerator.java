@@ -17,29 +17,23 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-
-public class BulkPutRequestGenerator extends ObjectsRequestPayloadGenerator {
+/**
+ * Used with requests that have a required Stream request payload
+ */
+public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
 
     /**
-     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Params
-     * excluding the MaxUploadSize which is special cased within the template
+     * Gets the list of Arguments for creating the constructor, which is comprised of the
+     * required parameters and the request payload stream
      */
     @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
-        if(isEmpty(optionalParams)) {
-            return ImmutableList.of();
-        }
-
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : optionalParams) {
-            if (!ds3Param.getName().equals("MaxUploadSize")) {
-                argsBuilder.add(GeneratorUtils.toArgument(ds3Param));
-            }
-        }
-        return argsBuilder.build();
+    public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
+        builder.add(new Arguments("Stream", "RequestPayload"));
+        return builder.build();
     }
 }

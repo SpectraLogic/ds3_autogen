@@ -17,28 +17,23 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import org.junit.Test;
 
-public interface RequestModelGeneratorUtils {
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    /**
-     * Gets the list of required Arguments from a Ds3Request
-     */
-    ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request);
+public class StreamRequestPayloadGenerator_Test {
 
-    /**
-     * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param
-     */
-    ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalparams);
+    private static final StreamRequestPayloadGenerator generator = new StreamRequestPayloadGenerator();
 
-    /**
-     * Gets the list of Arguments for creating the constructor
-     */
-    ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request);
-
-    /**
-     * Gets the list of Arguments that are added to query params list in constructor
-     */
-    ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request);
+    @Test
+    public void toConstructorArgsList_Test() {
+        final ImmutableList<Arguments> result = generator.toConstructorArgsList(getRequestCreateObject());
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getName(), is("BucketName"));
+        assertThat(result.get(1).getName(), is("ObjectName"));
+        assertThat(result.get(2).getName(), is("RequestPayload"));
+        assertThat(result.get(2).getType(), is("Stream"));
+    }
 }

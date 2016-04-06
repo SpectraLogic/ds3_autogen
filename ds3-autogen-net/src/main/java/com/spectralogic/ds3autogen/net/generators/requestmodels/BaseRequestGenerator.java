@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -33,8 +34,9 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
 
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
-        final ImmutableList<Arguments> constructorArgs = toConstructorArgsList(ds3Request);
-        final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);
+        final ImmutableList<Arguments> constructorArgs = Helper.removeVoidArguments(toConstructorArgsList(ds3Request));
+        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+        final ImmutableList<Arguments> requiredArgs = Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request));
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
 
         return new BaseRequest(
@@ -44,8 +46,17 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 ds3Request.getHttpVerb(),
                 ds3Request.getOperation(),
                 constructorArgs,
+                queryParams,
                 requiredArgs,
                 optionalArgs);
+    }
+
+    /**
+     * Gets the list of Arguments that are added to the query params list within the constructor
+     */
+    @Override
+    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
+        return GeneratorUtils.getArgsFromParamList(ds3Request.getRequiredQueryParams());
     }
 
     /**
