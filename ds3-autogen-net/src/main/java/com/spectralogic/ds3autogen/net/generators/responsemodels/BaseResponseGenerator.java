@@ -32,12 +32,25 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     @Override
     public BaseResponse generate(final Ds3Request ds3Request, final Ds3Type ds3Type) {
         final String name = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
-        final ImmutableList<Arguments> arguments = toArgumentsList(ds3Type.getElements());
+        final ImmutableList<Arguments> arguments = typeToArgumentsList(ds3Type);
 
         return new BaseResponse(
                 NetHelper.getInstance(),
                 name,
                 arguments);
+    }
+
+    /**
+     * Converts a Ds3Type into a list of Arguments. If the type is null, then
+     * the response payload is assumed to be a String. If the type is non-null,
+     * then the type's Ds3Elements are converted into a list of Arguments
+     */
+    protected ImmutableList<Arguments> typeToArgumentsList(final Ds3Type ds3Type) {
+        if (ds3Type != null) {
+            return toArgumentsList(ds3Type.getElements());
+        }
+        return ImmutableList.of(
+                new Arguments("String", "ResponsePayload"));
     }
 
     /**
