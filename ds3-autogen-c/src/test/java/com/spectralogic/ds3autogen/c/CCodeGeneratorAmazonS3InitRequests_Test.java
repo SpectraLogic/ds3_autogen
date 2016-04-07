@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
+import freemarker.template.TemplateModelException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorAmazonS3InitRequests_Test.class);
 
     @Test
-    public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -59,7 +60,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3GetBucketRequest_WithResponsePayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitAmazonS3GetBucketRequest_WithResponsePayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3GetBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -79,7 +80,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3PutBucketRequest_NoPayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitAmazonS3PutBucketRequest_NoPayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3PutBucketRequest_NoPayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -99,7 +100,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateInitAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3GetBucketsRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

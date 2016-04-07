@@ -2,9 +2,9 @@
 <#-- Generate "Get Request" -->
 <#--   Input: Get Request object        -->
 <#-- ********************************** -->
-${requestEntry.getRequestHelper().generateRequestFunctionSignature(requestEntry)} {
+${requestHelper.generateRequestFunctionSignature(requestEntry)} {
 
-${requestEntry.getRequestHelper().generateParameterCheckingBlock(requestEntry)}
+${requestHelper.generateParameterCheckingBlock(requestEntry)}
 
     <#if requestEntry.hasResponsePayload()>
     return _parse_${requestEntry.getResponseType()}(client->log, response);

@@ -4,7 +4,7 @@
 <#-- ********************************************* -->
 <#list getStructs() as structEntry>
 typedef struct {
-${structEntry.getStructHelper().generateStructMembers(structEntry.getStructMembers())}
+${structHelper.generateStructMembers(structEntry.getStructMembers())}
 }${structEntry.getName()};
 
 </#list>
