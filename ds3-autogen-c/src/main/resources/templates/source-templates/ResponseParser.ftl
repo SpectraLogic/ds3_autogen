@@ -11,7 +11,7 @@ static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, cons
 </#if>
     xmlNodePtr child_node;
     ${structEntry.getName()}* response;
-    <#if structEntry.isTopLevel() || structEntry.getStructHelper().hasComplexMembers(structEntry)>
+    <#if structEntry.isTopLevel() || structHelper.hasComplexMembers(structEntry)>
     ds3_error* error;
     </#if>
 
@@ -24,14 +24,14 @@ static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, cons
 
     response = g_new0(${structEntry.getName()}, 1);
     for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-${structEntry.getStructHelper().generateResponseParser(structEntry.getName(), structEntry.getStructMembers())}
+${structHelper.generateResponseParser(structEntry.getName(), structEntry.getStructMembers())}
     }
 
     <#if structEntry.isTopLevel()>
     xmlFreeDoc(doc);
     </#if>
 
-    <#if structEntry.isTopLevel() || structEntry.getStructHelper().hasComplexMembers(structEntry)>
+    <#if structEntry.isTopLevel() || structHelper.hasComplexMembers(structEntry)>
     if (error == NULL) {
         *_response = response;
     } else {

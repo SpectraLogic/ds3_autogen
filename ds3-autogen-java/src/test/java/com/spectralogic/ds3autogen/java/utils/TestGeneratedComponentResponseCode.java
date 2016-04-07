@@ -4,6 +4,7 @@ import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
+import freemarker.template.TemplateModelException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class TestGeneratedComponentResponseCode extends TestGeneratedCode {
     @Override
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException {
+            final String inputFileName) throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();

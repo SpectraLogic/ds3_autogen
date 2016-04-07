@@ -29,11 +29,9 @@ import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGe
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,10 +61,12 @@ public class NetCodeGenerator implements CodeGenerator {
     private FileUtils fileUtils;
     private Path destDir;
 
-    public NetCodeGenerator() {
+    public NetCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(NetCodeGenerator.class, "/tmpls/net");
+        config.setSharedVariable("netHelper", NetHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override

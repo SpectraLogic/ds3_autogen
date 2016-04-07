@@ -19,6 +19,7 @@ import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
+import freemarker.template.TemplateModelException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class TestGeneratedModelCode {
 
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+            final String inputFileName) throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedModelCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
