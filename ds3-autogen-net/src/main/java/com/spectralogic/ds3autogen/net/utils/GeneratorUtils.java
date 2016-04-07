@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
@@ -134,5 +135,21 @@ public final class GeneratorUtils {
     public static Arguments toArgument(final Ds3Param ds3Param) {
         final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
         return new Arguments(paramType, ds3Param.getName());
+    }
+
+    /**
+     * Gets the .net type that represents the described type
+     * @param type The type of the element without path
+     * @param componentType The component type of the element without path, if one exists
+     * @param optional Whether or not the element is optional, therefore should be nullable
+     */
+    public static String getNetType(final String type, final String componentType, final boolean optional) {
+        if (hasContent(componentType)) {
+            return "IEnumerable<" + NetHelper.toNetType(componentType) + ">";
+        }
+        if (optional) {
+            return NetHelper.getNullableType(type);
+        }
+        return NetHelper.toNetType(type);
     }
 }

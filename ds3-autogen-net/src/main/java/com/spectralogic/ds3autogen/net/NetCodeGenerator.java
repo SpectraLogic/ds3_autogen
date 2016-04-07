@@ -16,19 +16,24 @@
 package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.net.model.type.BaseType;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import freemarker.template.*;
@@ -42,6 +47,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
@@ -53,6 +59,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
+    private static final String TYPES_NAMESPACE = "Ds3.Models";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -79,9 +86,62 @@ public class NetCodeGenerator implements CodeGenerator {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
             generateCommands(requests);
             generateClient(requests);
+
+            final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
+            generateAllTypes(typeMap);
         } catch (final TemplateException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Generates the .net code for the types
+     */
+    private void generateAllTypes(final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        if (isEmpty(typeMap)) {
+            LOG.info("There were no types to generate");
+            return;
+        }
+        for (final Ds3Type ds3Type : typeMap.values()) {
+            generateType(ds3Type);
+        }
+    }
+
+    /**
+     * Generates the .net code for the specified Ds3Type
+     */
+    private void generateType(final Ds3Type ds3Type) throws IOException, TemplateException {
+        final Template tmpl = getTypeTemplate(ds3Type);
+        final TypeModelGenerator<?> modelGenerator = getTypeGenerator(ds3Type);
+        final BaseType type = modelGenerator.generate(ds3Type);
+        final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(TYPES_NAMESPACE.replace(".", "/") + "/" + type.getName() + ".cs")));
+
+        LOG.info("Getting OutputStream for file:" + requestPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(requestPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(type, writer);
+        }
+    }
+
+    /**
+     * Gets the associated Type Generator for the specified Ds3Type
+     */
+    private TypeModelGenerator getTypeGenerator(final Ds3Type ds3Type) {
+        return new BaseTypeGenerator();
+    }
+
+    /**
+     * Gets the template used to generate the .net code for the specified Ds3Type
+     */
+    private Template getTypeTemplate(final Ds3Type ds3Type) throws IOException {
+        if (hasContent(ds3Type.getEnumConstants())) {
+            return config.getTemplate("types/enum_type.ftl");
+        }
+        if (hasContent(ds3Type.getElements())) {
+            return config.getTemplate("types/type_template.ftl");
+        }
+        throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }
 
     /**

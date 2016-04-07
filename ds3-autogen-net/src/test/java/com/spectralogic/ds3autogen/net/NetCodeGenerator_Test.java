@@ -73,7 +73,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "ListBucketResult");
 
         codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
 
@@ -187,7 +188,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "S3Object");
 
         codeGenerator.generateCode(fileUtils, "/input/getObjectRequestSpectraS3.xml");
 
@@ -250,7 +252,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/createPutJobRequest.xml");
 
@@ -324,7 +327,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/createGetJobRequest.xml");
 
@@ -516,7 +520,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/createVerifyJobRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -639,7 +644,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "TapeFailureList");
 
         codeGenerator.generateCode(fileUtils, "/input/ejectStorageDomainRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -696,7 +702,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "PhysicalPlacement");
 
         codeGenerator.generateCode(fileUtils, "/input/getPhysicalPlacementForObjects.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -752,7 +759,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "PhysicalPlacement");
 
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjects.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -808,7 +816,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "BulkObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjectsFullDetails.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -864,7 +873,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "DeleteResult");
 
         codeGenerator.generateCode(fileUtils, "/input/deleteObjectsRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
@@ -973,7 +983,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/replicatePutJobRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
