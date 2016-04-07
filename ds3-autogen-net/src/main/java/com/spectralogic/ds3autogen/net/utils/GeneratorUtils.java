@@ -23,10 +23,13 @@ import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.net.NetHelper.toNetType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
+import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 /**
@@ -148,15 +151,53 @@ public final class GeneratorUtils {
             final String type,
             final String componentType,
             final ImmutableMap<String, Ds3Type> typeMap) {
-        /*
         if (hasContent(componentType)) {
-            final String netType = "IEnumerable<" + stripPath(componentType) + ">";
-            return new NullableVariable(name, "IEnumerable<")
+            final String netType = "IEnumerable<" + toNetType(stripPath(componentType)) + ">";
+            return new NullableVariable(name, netType, false);
         }
 
-        return new NullableVariable(name, "", false);
-        */
-        //TODO
-        return null;
+        final boolean questionMarkForNullable = isEnumType(type, typeMap) || isPrimitive(type);
+        final String netType = toNetType(stripPath(type));
+        return new NullableVariable(
+                name,
+                netType,
+                questionMarkForNullable);
+    }
+
+    //TODO unit test
+    /**
+     * Determines if a contract type is an enum defined within the contract
+     */
+    protected static boolean isEnumType(
+            final String typeName,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeName) || isEmpty(typeMap)) {
+            return false;
+        }
+        final Ds3Type type = typeMap.get(typeName);
+        if (type == null || isEmpty(type.getEnumConstants())) {
+            return false;
+        }
+        return true;
+    }
+
+    //TODO unit test
+    /**
+     * Determines if a contract type is a primitive .net type
+     */
+    protected static boolean isPrimitive(final String type) {
+        if (isEmpty(type)) {
+            return false;
+        }
+        switch (removePath(type.toLowerCase())) {
+            case "int":
+            case "integer":
+            case "boolean":
+            case "long":
+            case "double":
+                return true;
+            default:
+                return false;
+        }
     }
 }

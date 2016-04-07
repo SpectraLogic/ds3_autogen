@@ -15,17 +15,15 @@
 
 package com.spectralogic.ds3autogen.net.model.common;
 
-public class NullableVariable {
+import com.spectralogic.ds3autogen.api.models.Arguments;
 
-    final private String name;
-    final private String type;
+public class NullableVariable extends Arguments {
 
     /** Denotes if the type must be followed by a '?' in order for the type to be nullable */
     final private boolean questionMarkForNullable;
 
     public NullableVariable(final String name, final String type, final boolean questionMarkForNullable) {
-        this.name = name;
-        this.type = type;
+        super(type, name);
         this.questionMarkForNullable = questionMarkForNullable;
     }
 
@@ -36,14 +34,6 @@ public class NullableVariable {
         if (questionMarkForNullable) {
             return type + "?";
         }
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
         return type;
     }
 

@@ -16,8 +16,8 @@
 package com.spectralogic.ds3autogen.api.models;
 
 public class Arguments {
-    final private String type;
-    final private String name;
+    final protected String type;
+    final protected String name;
 
     public Arguments(final String type, final String name) {
         this.type = type;
