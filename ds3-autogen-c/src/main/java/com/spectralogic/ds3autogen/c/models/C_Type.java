@@ -15,13 +15,9 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
-
 public abstract class C_Type {
     protected String typeName;
     protected boolean isArray;
-
-    private final C_TypeHelper cTypeHelper = C_TypeHelper.getInstance();
 
     /**
      * An alternate to toString
@@ -59,9 +55,5 @@ public abstract class C_Type {
     }
 
     abstract public boolean isPrimitive();
-
-    public C_TypeHelper getcTypeHelper() {
-        return cTypeHelper;
-    }
 }
 

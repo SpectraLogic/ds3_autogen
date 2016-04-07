@@ -40,7 +40,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
 
         return new BaseRequest(
-                NetHelper.getInstance(),
                 name,
                 path,
                 ds3Request.getHttpVerb(),

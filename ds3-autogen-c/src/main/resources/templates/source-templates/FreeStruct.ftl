@@ -7,7 +7,7 @@ void ${structEntry.getName()}_free(${structEntry.getName()}* response) {
         return;
     }
 
-${structEntry.getStructHelper().generateFreeStructMembers(structEntry.getStructMembers())}
+${structHelper.generateFreeStructMembers(structEntry.getStructMembers())}
     g_free(response);
 }
 

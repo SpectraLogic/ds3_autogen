@@ -16,14 +16,12 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
 public class Struct {
     private final String name;
     private final String nameToMarshall;
     private final ImmutableList<StructMember> members;
     private final boolean isTopLevel;
-    private final StructHelper structHelper;
 
     public Struct(
             final String name,
@@ -34,7 +32,6 @@ public class Struct {
         this.nameToMarshall = nameToMarshall;
         this.members = members;
         this.isTopLevel = isTopLevel;
-        this.structHelper = StructHelper.getInstance();
     }
 
     public String getName() {
@@ -51,10 +48,6 @@ public class Struct {
 
     public boolean isTopLevel() {
         return isTopLevel;
-    }
-
-    public StructHelper getStructHelper() {
-        return structHelper;
     }
 
     public String toString() {

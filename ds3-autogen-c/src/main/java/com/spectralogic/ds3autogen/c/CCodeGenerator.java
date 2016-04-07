@@ -25,15 +25,15 @@ import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
+import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import com.spectralogic.ds3autogen.utils.Helper;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,10 +52,15 @@ public class CCodeGenerator implements CodeGenerator {
 
     private FileUtils fileUtils;
 
-    public CCodeGenerator() {
+    public CCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(CCodeGenerator.class, "/templates");
+        config.setSharedVariable("cTypeHelper", C_TypeHelper.getInstance());
+        config.setSharedVariable("enumHelper", EnumHelper.getInstance());
+        config.setSharedVariable("requestHelper", RequestHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
+        config.setSharedVariable("structHelper", StructHelper.getInstance());
     }
 
     @Override

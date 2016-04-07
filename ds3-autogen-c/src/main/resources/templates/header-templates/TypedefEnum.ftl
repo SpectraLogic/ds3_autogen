@@ -3,5 +3,5 @@
 <#--   Input: Header object                    -->
 <#-- ***************************************** -->
 typedef enum {
-${enumEntry.getEnumHelper().getEnumValues(enumEntry.getValues())}
+${enumHelper.getEnumValues(enumEntry.getValues())}
 }${enumEntry.getName()};
