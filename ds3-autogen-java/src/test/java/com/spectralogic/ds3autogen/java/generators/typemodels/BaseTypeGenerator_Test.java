@@ -57,7 +57,7 @@ public class BaseTypeGenerator_Test {
 
     @Test
     public void toElement_Test() {
-        final Ds3Element ds3Element = new Ds3Element("Name", "Type", "ComponentType");
+        final Ds3Element ds3Element = new Ds3Element("Name", "Type", "ComponentType", false);
         final Element result = generator.toElement(ds3Element);
         assertThat(result.getName(), is("Name"));
         assertThat(result.getType(), is("Type"));
@@ -79,8 +79,8 @@ public class BaseTypeGenerator_Test {
     @Test
     public void toElementList_FullList_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("Name1", "Type1", "ComponentType1"),
-                new Ds3Element("Name2", "Type2", "ComponentType2")
+                new Ds3Element("Name1", "Type1", "ComponentType1", false),
+                new Ds3Element("Name2", "Type2", "ComponentType2", false)
         );
 
         final ImmutableList<Element> result = generator.toElementList(ds3Elements);
@@ -135,9 +135,9 @@ public class BaseTypeGenerator_Test {
     @Test
     public void getImportsFromDs3Elements_FullList_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("Name1", "com.spectralogic.test.Type1", "ComponentType1"),
-                new Ds3Element("Name2", "Type2", "com.spectralogic.test.ComponentType2"),
-                new Ds3Element("Name3", "Type3", null));
+                new Ds3Element("Name1", "com.spectralogic.test.Type1", "ComponentType1", false),
+                new Ds3Element("Name2", "Type2", "com.spectralogic.test.ComponentType2", false),
+                new Ds3Element("Name3", "Type3", null, false));
 
         final ImmutableList<String> result = getImportsFromDs3Elements(ds3Elements);
         assertThat(result.size(), is(3));
@@ -149,9 +149,9 @@ public class BaseTypeGenerator_Test {
     @Test
     public void getAllImports_EnumType_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1"),
-                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2"),
-                new Ds3Element("ElementName3", "ElementType3", null));
+                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1", false),
+                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2", false),
+                new Ds3Element("ElementName3", "ElementType3", null, false));
 
         final ImmutableList<Ds3EnumConstant> ds3EnumConstants = ImmutableList.of(
                 new Ds3EnumConstant("EnumConstName1", null),
@@ -170,9 +170,9 @@ public class BaseTypeGenerator_Test {
     @Test
     public void getAllImports_NonEnumType_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1"),
-                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2"),
-                new Ds3Element("ElementName3", "ElementType3", null));
+                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1", false),
+                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2", false),
+                new Ds3Element("ElementName3", "ElementType3", null, false));
 
         final Ds3Type ds3Type = new Ds3Type(
                 "TypeName",
@@ -244,7 +244,7 @@ public class BaseTypeGenerator_Test {
                 createSimpleNameAnnotation(),
                 createNonCustomMarshaedNameAnnotation(),
                 createCustomMarshaledNameAnnotation());
-        final Ds3Element element = new Ds3Element("ElementName", "Type", "ComponentType", annotations);
+        final Ds3Element element = new Ds3Element("ElementName", "Type", "ComponentType", annotations, false);
         final String result = getXmlTagName(element);
         assertThat(result, is("Error"));
     }

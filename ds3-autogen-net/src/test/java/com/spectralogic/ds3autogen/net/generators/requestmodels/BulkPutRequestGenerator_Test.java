@@ -42,9 +42,9 @@ public class BulkPutRequestGenerator_Test {
     @Test
     public void toOptionalArgumentsList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("MaxUploadSize", "long"),
-                new Ds3Param("MaxUploads", "int"),
-                new Ds3Param("Prefix", "java.lang.String"));
+                new Ds3Param("MaxUploadSize", "long", false),
+                new Ds3Param("MaxUploads", "int", false),
+                new Ds3Param("Prefix", "java.lang.String", true));
 
         final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
         assertThat(result.size(), is(2));

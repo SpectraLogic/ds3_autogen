@@ -25,23 +25,27 @@ public class Ds3Element {
     private final String type;
     private final String componentType;
     private final ImmutableList<Ds3Annotation> ds3Annotations;
+    private final boolean nullable;
 
     public Ds3Element(
             final String name,
             final String type,
             final String componentType,
-            final ImmutableList<Ds3Annotation> ds3Annotations) {
+            final ImmutableList<Ds3Annotation> ds3Annotations,
+            final boolean nullable) {
         this.name = name;
         this.type = type;
         this.componentType = componentType;
         this.ds3Annotations = ds3Annotations;
+        this.nullable = nullable;
     }
 
     public Ds3Element(
             final String name,
             final String type,
-            final String componentType) {
-        this(name, type, componentType, null);
+            final String componentType,
+            final boolean nullable) {
+        this(name, type, componentType, null, nullable);
     }
 
     public String getName() {
@@ -80,5 +84,9 @@ public class Ds3Element {
         return this.getName().equals(element.getName())
                 && this.getType().equals(element.getType())
                 && this.getComponentType().equals(element.getComponentType());
+    }
+
+    public boolean isNullable() {
+        return nullable;
     }
 }

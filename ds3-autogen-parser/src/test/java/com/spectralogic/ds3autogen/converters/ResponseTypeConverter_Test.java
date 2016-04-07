@@ -418,13 +418,13 @@ public class ResponseTypeConverter_Test {
                                 new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape")))),
                 null,
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
 
         final Ds3Type tape = new Ds3Type(
                 "com.spectralogic.s3.common.dao.domain.tape.Tape",
                 ImmutableList.of(
-                        new Ds3Element("AssignedToStorageDomain", "boolean", null),
-                        new Ds3Element("AvailableRawCapacity", "long", null)));
+                        new Ds3Element("AssignedToStorageDomain", "boolean", null, false),
+                        new Ds3Element("AvailableRawCapacity", "long", null, true)));
 
         final ImmutableMap<String, Ds3Type> result = createEncapsulatingModelResponseTypes(
                 ImmutableList.of(request),

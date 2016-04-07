@@ -23,7 +23,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
  * Converts all contract type names into SDK names as defined within
- * a NameMapper
+ * a NameMapper, and determines if a parameter type is nullable
  */
 class Ds3SpecConverter {
 
@@ -75,7 +75,8 @@ class Ds3SpecConverter {
         for (final Ds3Param param : params) {
             final Ds3Param convertedParam = new Ds3Param(
                     param.getName(),
-                    convertName(param.getType(), nameMapper));
+                    convertName(param.getType(), nameMapper),
+                    param.isNullable());
             builder.add(convertedParam);
         }
         return builder.build();
@@ -232,7 +233,8 @@ class Ds3SpecConverter {
                     element.getName(),
                     convertName(element.getType(), nameMapper),
                     convertName(element.getComponentType(), nameMapper),
-                    element.getDs3Annotations());
+                    element.getDs3Annotations(),
+                    element.isNullable());
             builder.add(convertedElement);
         }
         return builder.build();

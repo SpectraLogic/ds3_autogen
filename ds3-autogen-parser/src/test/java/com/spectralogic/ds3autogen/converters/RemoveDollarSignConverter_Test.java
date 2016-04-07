@@ -142,7 +142,8 @@ public class RemoveDollarSignConverter_Test {
                 "Name",
                 "com.test.package.One$Two",
                 "com.test.package.Three$Four",
-                createPopulatedAnnotations());
+                createPopulatedAnnotations(),
+                false);
 
         final Ds3Element result = removeDollarSignFromElement(element);
         assertThat(result.getName(), is(element.getName()));
@@ -287,7 +288,7 @@ public class RemoveDollarSignConverter_Test {
 
     @Test
     public void removeDollarSignFromParam_Test() {
-        final Ds3Param param = new Ds3Param("Name", "com.test.package.Base$Type");
+        final Ds3Param param = new Ds3Param("Name", "com.test.package.Base$Type", false);
         final Ds3Param result = removeDollarSignFromParam(param);
         assertThat(result.getName(), is(param.getName()));
         assertThat(result.getType(), is("com.test.package.Type"));
