@@ -17,6 +17,10 @@ package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.ParameterModifier;
+import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
@@ -31,6 +35,7 @@ public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
 
     public static Request toRequest(final Ds3Request ds3Request) {
+        final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
         return new Request(
                 ds3Request.getName(),
                 ds3Request.getClassification(),
@@ -38,11 +43,10 @@ public final class RequestConverter {
                 getRequestPath(ds3Request),
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
+                getParamList(responseType),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
-                getRequiredArgs(ds3Request),
-                getOptionalArgs(ds3Request),
-                ds3Request.getDs3ResponseCodes());
+                responseType);
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {
@@ -84,7 +88,7 @@ public final class RequestConverter {
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("\"");
 
         if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
-            // _build_path() will URL escape the resource_id
+            // _build_path() will URL escape the resource_id at runtime
             builder.append(", resource_id, NULL");
         } else {
             builder.append(", NULL, NULL");
@@ -92,7 +96,6 @@ public final class RequestConverter {
 
         return builder.toString();
     }
-
     private static ImmutableList<Arguments> getRequiredArgs(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required args...");
@@ -153,5 +156,34 @@ public final class RequestConverter {
         }
 
         return !RequestConverterUtil.isResourceSingleton(ds3Request.getResource());
+    }
+
+    public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        for (final Ds3ResponseCode responseCode : responseCodes) {
+            final int rc = responseCode.getCode();
+            if (rc < 200 || rc >= 300) continue;
+
+            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
+                if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
+                    return StructHelper.getResponseTypeName(responseType.getType());
+                }
+                if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
+                    return StructHelper.getResponseTypeName(responseType.getComponentType());
+                }
+            }
+        }
+        return "";
+    }
+
+    public static ImmutableList<Parameter> getParamList(final String responseType) {
+        final ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER));
+
+        if (!responseType.isEmpty()) {
+            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER));
+        }
+
+        return builder.build();
     }
 }

@@ -1,0 +1,49 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="FullDetails" Type="void"/>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.833E8B67365C5B36D6B3E2C048660EEB</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.common.platform.domain.BlobApiBean" Name="Objects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="object" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

@@ -38,6 +38,8 @@ namespace Ds3.Calls
             <#list constructorArgs as arg>
             this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
             </#list>
+            <#include "common/add_query_params.ftl" />
+
             <#if netHelper.containsArgument(constructorArgs, "Job")>
             if (job != Guid.Empty)
             {

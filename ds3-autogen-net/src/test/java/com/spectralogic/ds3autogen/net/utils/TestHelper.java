@@ -31,6 +31,27 @@ public final class TestHelper {
     }
 
     /**
+     * Determines if the request handler code contains the data for optional checksum
+     */
+    public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {
+        return generatedCode.contains("private Checksum _checksum = Checksum.None")
+                && generatedCode.contains("private Checksum.ChecksumType _checksumType")
+                && generatedCode.contains("internal override Checksum ChecksumValue")
+                && generatedCode.contains("internal override Checksum.ChecksumType ChecksumType")
+                && generatedCode.contains("public Checksum Checksum")
+                && generatedCode.contains("public " + requestName + " WithChecksum(Checksum checksum, Checksum.ChecksumType checksumType = Checksum.ChecksumType.Md5)");
+    }
+
+    /**
+     * Determines if the request handler code contains the data for optional headers
+     */
+    public static boolean hasOptionalMetadata(final String requestName, final String generatedCode) {
+        return generatedCode.contains("private IDictionary<string, string> _metadata = new Dictionary<string, string>()")
+                && generatedCode.contains("public IDictionary<string, string> Metadata")
+                && generatedCode.contains("public " + requestName + " WithMetadata(IDictionary<string, string> metadata)");
+    }
+
+    /**
      * Checks if the generated code extends the specified class
      */
     public static boolean extendsClass(final String getObjectRequestHandler, final String abstractRequest, final String generatedCode) {

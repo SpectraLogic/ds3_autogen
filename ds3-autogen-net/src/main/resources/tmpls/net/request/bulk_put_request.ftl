@@ -14,7 +14,7 @@ namespace Ds3.Calls
         <#include "common/required_args.ftl" />
         public long? MaxUploadSize { get; private set; }
 
-        public BulkPutRequest WithMaxUploadSize(long maxUploadSize)
+        public ${name} WithMaxUploadSize(long maxUploadSize)
         {
             this.MaxUploadSize = maxUploadSize;
             this.QueryParams["max_upload_size"] = maxUploadSize.ToString("D");
@@ -23,34 +23,8 @@ namespace Ds3.Calls
 
         <#include "common/optional_args.ftl" />
 
-        public ${name}(${netHelper.constructor(constructorArgs)}) {
-            <#list constructorArgs as arg>
-            this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
-            </#list>
-            <#if operation??>
-            this.QueryParams.Add("operation", "${operation.toString()?lower_case}");
-            </#if>
-            if (!objects.TrueForAll(obj => obj.Size.HasValue))
-            {
-                throw new Ds3RequestException(Resources.ObjectsMissingSizeException);
-            }
-        }
-
+        <#include "common/objects_constructor_get_stream.ftl" />
 
         <#include "common/http_verb_and_path.ftl" />
-
-        internal override Stream GetContentStream()
-        {
-            return new XDocument()
-                .AddFluent(
-                    new XElement("Objects").AddAllFluent(
-                        from obj in this.Objects
-                        select new XElement("Object")
-                            .SetAttributeValueFluent("Name", obj.Name)
-                            .SetAttributeValueFluent("Size", obj.Size.Value.ToString("D"))
-                    )
-                )
-                .WriteToMemoryStream();
-        }
     }
 }

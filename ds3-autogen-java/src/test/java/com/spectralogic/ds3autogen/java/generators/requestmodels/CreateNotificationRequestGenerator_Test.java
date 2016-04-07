@@ -36,7 +36,7 @@ public class CreateNotificationRequestGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest"));
+        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.interfaces.AbstractCreateNotificationRequest"));
     }
 
     @Test

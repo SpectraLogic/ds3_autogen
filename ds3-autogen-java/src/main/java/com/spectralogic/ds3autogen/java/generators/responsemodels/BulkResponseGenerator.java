@@ -24,7 +24,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BulkResponseGenerator extends BaseResponseGenerator {
 
-    private final static String BULK_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.BulkResponse";
+    private final static String BULK_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.BulkResponse";
 
     /**
      * Returns the import for the parent class for bulk responses, which
@@ -48,9 +48,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
         }
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        if (isSpectraDs3(packageName)) {
-            builder.add(getParentImport());
-        }
+        builder.add(getParentImport());
 
         return builder.build().asList();
     }

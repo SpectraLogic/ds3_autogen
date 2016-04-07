@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
+import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
@@ -43,11 +44,6 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -67,13 +63,14 @@ public class CCodeGenerator implements CodeGenerator {
         this.fileUtils = fileUtils;
 
         try {
-            final ImmutableList<Enum> allEnums = getAllEnums(spec);
-            final ImmutableSet<String> enumNames = ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
-            final ImmutableList<Struct> allStructs = getStructsOrderedList(spec, enumNames);
             final ImmutableList<Request> allRequests = getAllRequests(spec);
+            final ImmutableList<Enum> allEnums = getAllEnums(spec);
+            final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, allRequests);
+            final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
 
-            generateHeader(allEnums, allStructs, allRequests);
-            generateSource(allEnums, allStructs, allRequests);
+            generateHeader(allEnums, allOrderedStructs, allRequests);
+            generateSource(allEnums, allOrderedStructs, allRequests);
         } catch (final ParseException e) {
             LOG.error("Caught exception: ", e);
         }
@@ -92,8 +89,9 @@ public class CCodeGenerator implements CodeGenerator {
         final ImmutableList<Enum> allEnums,
         final ImmutableList<Struct> allOrderedStructs,
         final ImmutableList<Request> allRequests) throws IOException, ParseException {
-        final Path path = Paths.get("src/ds3.c");
+
         final Source source = new Source(allEnums,allOrderedStructs,allRequests);
+        final Path path = Paths.get("src/ds3.c");
         processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
 
     }
@@ -110,53 +108,18 @@ public class CCodeGenerator implements CodeGenerator {
         return allEnumsBuilder.build();
     }
 
-    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames) throws ParseException {
+    public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec,
+                                                      final ImmutableSet<String> enumNames,
+                                                      final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames));
+                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames, allRequests));
             }
         }
         return allStructsBuilder.build();
-    }
-
-    /**
-     * Return Structs which contain only primitive types first, and then cascade for Complex Structs that contain other Structs
-     *
-     * @throws java.text.ParseException
-     */
-    public static ImmutableList<Struct> getStructsOrderedList(final Ds3ApiSpec spec, final ImmutableSet<String> enumNames) throws ParseException {
-        final Set<String> existingStructs = new HashSet<>();
-        final ImmutableList.Builder<Struct> orderedStructsBuilder = ImmutableList.builder();
-        final Queue<Struct> allStructs = new LinkedList<>(getAllStructs(spec, enumNames));
-        int skippedStructsCount = 0;
-        while (!allStructs.isEmpty()) {
-            final int allStructsSize = allStructs.size();
-            final Struct structEntry = allStructs.remove();
-
-            if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
-                existingStructs.add(structEntry.getName());
-                orderedStructsBuilder.add(structEntry);
-            } else {  // move to end to come back to
-                allStructs.add(structEntry);
-            }
-
-            if (allStructsSize == allStructs.size()) {
-                skippedStructsCount++;
-                if (skippedStructsCount == allStructsSize) {
-                    LOG.warn("Unable to progress on remaining structs, aborting!");
-                    LOG.warn("  Remaining structs[" + allStructs.size() + "]");
-                    for (final Struct struct : allStructs) {
-                        LOG.warn("    " + struct.toString());
-                    }
-                    break;
-                }
-            }
-        }
-
-        return orderedStructsBuilder.build();
     }
 
     public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
