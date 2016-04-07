@@ -16,11 +16,8 @@
 package com.spectralogic.ds3autogen.net.model.type;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.net.NetHelper;
 
 public class BaseType {
-
-    private final NetHelper netHelper = NetHelper.getInstance();
 
     private final String name;
     private final ImmutableList<EnumConstant> enumConstants;
@@ -41,10 +38,6 @@ public class BaseType {
 
     public ImmutableList<EnumConstant> getEnumConstants() {
         return enumConstants;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
     }
 
     public ImmutableList<Element> getElements() {

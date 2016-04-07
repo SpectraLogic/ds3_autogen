@@ -17,11 +17,9 @@ package com.spectralogic.ds3autogen.net.model.response;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.net.NetHelper;
 
 public class BaseResponse {
 
-    private final NetHelper netHelper = NetHelper.getInstance();
     private final String name;
     private final ImmutableList<Arguments> arguments;
 
@@ -38,10 +36,6 @@ public class BaseResponse {
 
     public ImmutableList<Arguments> getArguments() {
         return arguments;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
     }
 }
 

@@ -20,8 +20,6 @@ import com.spectralogic.ds3autogen.api.models.Action;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.utils.Helper;
 
 public class Request {
     private final String packageName;
@@ -43,9 +41,6 @@ public class Request {
     /** List of class imports required for compilation */
     private final ImmutableList<String> imports;
 
-    private final Helper helper;
-    private final JavaHelper javaHelper;
-
     public Request(final String packageName,
                    final String name,
                    final HttpVerb verb,
@@ -66,9 +61,6 @@ public class Request {
         this.constructors = constructors;
         this.classVariables = classVariables;
         this.imports = imports;
-
-        this.helper = Helper.getInstance();
-        this.javaHelper = JavaHelper.getInstance();
     }
 
     public String getPackageName() {
@@ -95,17 +87,11 @@ public class Request {
         return imports;
     }
 
-    public Helper getHelper() {
-        return helper;
-    }
-
     public Operation getOperation() { return operation; }
 
     public Action getAction() {
         return action;
     }
-
-    public JavaHelper getJavaHelper() { return javaHelper; }
 
     public ImmutableList<Variable> getClassVariables() {
         return classVariables;

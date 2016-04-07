@@ -20,7 +20,6 @@ import com.spectralogic.ds3autogen.api.models.Action;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 
 public class Request {
     private final String name;
@@ -34,7 +33,6 @@ public class Request {
     private final boolean isResourceIdRequired;
     private final String responseType;
     private final boolean hasResponsePayload;
-    private final RequestHelper requestHelper;
 
     public Request(
             final String name,
@@ -58,7 +56,6 @@ public class Request {
         this.isResourceIdRequired = isResourceIdRequired;
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
-        this.requestHelper = RequestHelper.getInstance();
     }
 
     public String getName() {
@@ -103,9 +100,5 @@ public class Request {
 
     public boolean hasResponsePayload() {
         return hasResponsePayload;
-    }
-
-    public RequestHelper getRequestHelper() {
-        return requestHelper;
     }
 }

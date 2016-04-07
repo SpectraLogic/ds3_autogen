@@ -32,14 +32,13 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGe
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
+import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import com.spectralogic.ds3autogen.utils.Helper;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,10 +78,12 @@ public class JavaCodeGenerator implements CodeGenerator {
     private FileUtils fileUtils;
     private Path destDir;
 
-    public JavaCodeGenerator() {
+    public JavaCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(JavaCodeGenerator.class, "/tmpls");
+        config.setSharedVariable("javaHelper", JavaHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override

@@ -19,10 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
-import com.spectralogic.ds3autogen.net.NetHelper;
 
 public class BaseRequest {
-    private final NetHelper netHelper;
     private final String name;
     private final String path;
     private final HttpVerb verb;
@@ -33,7 +31,6 @@ public class BaseRequest {
     private final ImmutableList<Arguments> optionalArgs;
 
     public BaseRequest(
-            final NetHelper netHelper,
             final String name,
             final String path,
             final HttpVerb verb,
@@ -42,7 +39,6 @@ public class BaseRequest {
             final ImmutableList<Arguments> queryParams,
             final ImmutableList<Arguments> requiredArgs,
             final ImmutableList<Arguments> optionalArgs) {
-        this.netHelper = netHelper;
         this.name = name;
         this.path = path;
         this.verb = verb;
@@ -63,10 +59,6 @@ public class BaseRequest {
 
     public HttpVerb getVerb() {
         return verb;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
     }
 
     public ImmutableList<Arguments> getRequiredArgs() {

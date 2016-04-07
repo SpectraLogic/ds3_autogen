@@ -29,7 +29,7 @@
 <#-- ********************************************* -->
 <#-- Generate all "ArrayTypeParsers"               -->
 <#list getArrayTypes() as arrayType>
-${arrayType.getcTypeHelper().generateArrayMemberParser(arrayType)}
+${cTypeHelper.generateArrayMemberParser(arrayType)}
 </#list>
 
 <#-- ********************************************* -->

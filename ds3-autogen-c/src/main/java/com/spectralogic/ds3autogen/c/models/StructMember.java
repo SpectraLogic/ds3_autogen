@@ -15,19 +15,15 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-
 public class StructMember {
     private final C_Type type;
     private final String name;
-    private final StructHelper structHelper;
 
     public StructMember(
             final C_Type type,
             final String name) {
         this.type = type;
         this.name = name;
-        this.structHelper = StructHelper.getInstance();
     }
 
     public C_Type getType() {
@@ -36,10 +32,6 @@ public class StructMember {
 
     public String getName() {
         return name;
-    }
-
-    public StructHelper getStructHelper() {
-        return structHelper;
     }
 
     public String toString() {
