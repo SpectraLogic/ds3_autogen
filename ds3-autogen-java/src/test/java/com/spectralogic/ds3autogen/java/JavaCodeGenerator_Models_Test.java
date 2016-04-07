@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedModelCode;
 import com.spectralogic.ds3autogen.java.utils.TestHelper;
+import freemarker.template.TemplateModelException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -44,7 +45,7 @@ public class JavaCodeGenerator_Models_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void bucketAclType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void bucketAclType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "BucketAcl";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -82,7 +83,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void physicalPlacementApiBeanModel() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "PhysicalPlacement";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -115,7 +116,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void requestType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void requestType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "RequestType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -140,7 +141,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void checksumType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void checksumType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "ChecksumType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -169,7 +170,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void blobStoreTaskPriority() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "Priority";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -195,7 +196,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void s3Object_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void s3Object_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         final String modelName = "S3Object";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -232,7 +233,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void bulkObject_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void bulkObject_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         final String modelName = "BulkObject";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -270,7 +271,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void httpErrorResultApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void httpErrorResultApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         final String modelName = "Error";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -301,7 +302,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void JobsApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void JobsApiBean_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         //This Type is special cased AND renamed: generation relies on name detection in isJobsApiBean within JavaCodeGenerator
         final String modelName = "JobList";
         final FileUtils fileUtils = mock(FileUtils.class);
@@ -327,7 +328,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void emptyType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "EmptyType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(
@@ -339,7 +340,7 @@ public class JavaCodeGenerator_Models_Test {
     }
 
     @Test
-    public void unusedType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+    public void unusedType() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
         final String modelName = "RequestType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedModelCode testGeneratedModelCode = new TestGeneratedModelCode(

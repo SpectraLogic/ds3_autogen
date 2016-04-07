@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 
 public class Model {
 
@@ -26,8 +25,6 @@ public class Model {
     private final ImmutableList<Element> elements;
     private final ImmutableList<EnumConstant> enumConstants;
     private final ImmutableList<String> imports;
-
-    private final JavaHelper javaHelper;
 
     public Model(final String packageName,
                  final String name,
@@ -41,8 +38,6 @@ public class Model {
         this.elements = elements;
         this.enumConstants = enumConstants;
         this.imports = imports;
-
-        javaHelper = JavaHelper.getInstance();
     }
 
     public String getPackageName() {
@@ -55,10 +50,6 @@ public class Model {
 
     public ImmutableList<Element> getElements() {
         return elements;
-    }
-
-    public JavaHelper getJavaHelper() {
-        return javaHelper;
     }
 
     public ImmutableList<String> getImports() {

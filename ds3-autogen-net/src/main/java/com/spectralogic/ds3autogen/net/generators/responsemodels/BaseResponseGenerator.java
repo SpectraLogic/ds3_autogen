@@ -35,7 +35,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         final ImmutableList<Arguments> arguments = typeToArgumentsList(ds3Type);
 
         return new BaseResponse(
-                NetHelper.getInstance(),
                 name,
                 arguments);
     }
