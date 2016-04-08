@@ -39,6 +39,8 @@ public class TestGenerateCode {
     protected final ByteArrayOutputStream responseOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
+    protected ByteArrayOutputStream responseTypeOutputStream;
+    protected String typeCode;
     protected String requestCode;
     protected String responseCode;
     protected String clientCode;
@@ -54,6 +56,18 @@ public class TestGenerateCode {
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
         this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
+    }
+
+    public TestGenerateCode(
+            final FileUtils fileUtils,
+            final String requestName,
+            final String path,
+            final String responseType) throws IOException {
+        this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
+        this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
+        this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
+        this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
+        this.responseTypeOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Models/" + responseType + ".cs");
     }
 
     /**
@@ -73,6 +87,10 @@ public class TestGenerateCode {
         responseCode = new String(responseOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
+
+        if (responseTypeOutputStream != null) {
+            typeCode = new String(responseTypeOutputStream.toByteArray());
+        }
     }
 
     /**
@@ -119,5 +137,9 @@ public class TestGenerateCode {
 
     public String getIdsClientCode() {
         return this.idsClientCode;
+    }
+
+    public String getTypeCode() {
+        return this.typeCode;
     }
 }
