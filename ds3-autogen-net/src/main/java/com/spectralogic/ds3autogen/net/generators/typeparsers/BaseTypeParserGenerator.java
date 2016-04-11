@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
 import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 
+import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.createNullableVariable;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
@@ -90,9 +91,10 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
     protected static NullableVariable toNullableVariable(
             final Ds3Element ds3Element,
             final ImmutableMap<String, Ds3Type> typeMap) {
-        final String name = ds3Element.getName();
-        final String type = "";
-
-        return null;
+        return createNullableVariable(
+                ds3Element.getName(),
+                ds3Element.getType(),
+                ds3Element.getComponentType(),
+                typeMap);
     }
 }

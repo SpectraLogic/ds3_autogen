@@ -21,5 +21,5 @@ import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
 
 @FunctionalInterface
 public interface TypeParserModelGenerator <T extends BaseTypeParser>{
-    T generate (final ImmutableMap<String, Ds3Type> ds3Types);
+    T generate (final ImmutableMap<String, Ds3Type> typeMap);
 }
