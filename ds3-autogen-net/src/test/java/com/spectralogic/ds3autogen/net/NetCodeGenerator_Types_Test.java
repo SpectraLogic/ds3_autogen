@@ -83,7 +83,7 @@ public class NetCodeGenerator_Types_Test {
     }
 
     @Test
-    public void checksumType() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void checksumType() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         final String typeName = "ChecksumType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
