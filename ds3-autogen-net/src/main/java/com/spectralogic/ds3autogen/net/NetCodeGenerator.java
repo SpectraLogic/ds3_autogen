@@ -215,17 +215,23 @@ public class NetCodeGenerator implements CodeGenerator {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
         }
-        if (isEmpty(spec.getTypes())) {
+        final String responsePayloadType = getResponsePayloadType(ds3Request.getDs3ResponseCodes());
+        if ((isEmpty(responsePayloadType) || !responsePayloadType.equalsIgnoreCase("java.lang.String")) && isEmpty(spec.getTypes())) {
             LOG.error("Cannot generate response because type map is empty");
             return;
         }
-        final Ds3Type responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
-        if (responsePayload == null) {
+        if (responsePayloadType == null) {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
 
-        generateResponse(ds3Request, responsePayload);
-        generateResponseParser(ds3Request, responsePayload);
+        if (responsePayloadType.equalsIgnoreCase("java.lang.String")) {
+            generateResponse(ds3Request, null);
+            generateResponseParser(ds3Request, null);
+        } else {
+            final Ds3Type ds3TypePayload = spec.getTypes().get(responsePayloadType);
+            generateResponse(ds3Request, ds3TypePayload);
+            generateResponseParser(ds3Request, ds3TypePayload);
+        }
     }
 
     /**
@@ -234,7 +240,8 @@ public class NetCodeGenerator implements CodeGenerator {
     private void generateResponseParser(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseParserTemplate(ds3Request);
         final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(responsePayload);
-        final BaseParser parser = parserGenerator.generate(ds3Request, responsePayload);
+
+        final BaseParser parser = generateBaseParser(ds3Request, responsePayload, parserGenerator);
         final Path parserPath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(PARSER_NAMESPACE.replace(".", "/") + "/" + parser.getName() + ".cs")));
 
@@ -244,6 +251,17 @@ public class NetCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(parser, writer);
         }
+    }
+
+    /**
+     * Generates the BaseParser for use in response parser generation. This is used to handle a null Ds3Type due to
+     * a string payload
+     */
+    private static BaseParser generateBaseParser(final Ds3Request ds3Request, final Ds3Type ds3Type, final ResponseParserModelGenerator<?> generator) {
+        if (ds3Type == null) {
+            return generator.generate(ds3Request, "java.lang.String", null);
+        }
+        return generator.generate(ds3Request, ds3Type.getName(), ds3Type.getNameToMarshal());
     }
 
     /**

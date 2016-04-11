@@ -130,13 +130,14 @@ public class GeneratorUtils_Test {
     }
 
     @Test
-<<<<<<< HEAD
     public void toModelParserName_Test() {
         assertThat(toModelParserName(null), is(""));
         assertThat(toModelParserName(""), is(""));
         assertThat(toModelParserName("TestModel"), is("TestModelParser"));
         assertThat(toModelParserName("com.test.TestModel"), is("TestModelParser"));
-=======
+    }
+
+    @Test
     public void getNetType_WithComponentType_Test() {
         assertThat(getNetType("array", "MyType", false), is("IEnumerable<MyType>"));
         assertThat(getNetType("array", "MyType", true), is("IEnumerable<MyType>"));
@@ -173,6 +174,5 @@ public class GeneratorUtils_Test {
         assertThat(getNetType("String", null, false), is("string"));
         assertThat(getNetType("UUID", null, false), is("Guid"));
         assertThat(getNetType("ChecksumType", null, false), is("ChecksumType.Type"));
->>>>>>> master
     }
 }

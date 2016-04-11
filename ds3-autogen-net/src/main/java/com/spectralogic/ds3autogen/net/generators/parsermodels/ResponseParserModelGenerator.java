@@ -21,5 +21,5 @@ import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 @FunctionalInterface
 public interface ResponseParserModelGenerator<T extends BaseParser> {
-    T generate(final Ds3Request ds3Request, final Ds3Type ds3Type);
+    T generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal);
 }

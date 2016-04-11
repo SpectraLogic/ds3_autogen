@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator.getParserName;
@@ -48,8 +49,14 @@ public class BaseResponseParserGenerator_Test {
     @Test
     public void getResponseCode_Test() {
         final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(400, null));
+                new Ds3ResponseCode(
+                        200,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.test.ResponsePayload", null))),
+                new Ds3ResponseCode(
+                        400,
+                        ImmutableList.of(
+                                new Ds3ResponseType("com.test.ErrorPayload", null))));
 
         final Integer result = getResponseCode(codes);
         assertThat(result, is(200));

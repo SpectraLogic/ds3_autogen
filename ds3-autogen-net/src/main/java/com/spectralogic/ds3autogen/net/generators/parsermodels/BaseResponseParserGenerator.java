@@ -18,30 +18,29 @@ package com.spectralogic.ds3autogen.net.generators.parsermodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.toModelParserName;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
-import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getNonErrorResponseCode;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getPayloadResponseCode;
 
 public class BaseResponseParserGenerator implements ResponseParserModelGenerator<BaseParser>, ResponseParserModelGeneratorUtils {
 
     @Override
-    public BaseParser generate(final Ds3Request ds3Request, final Ds3Type ds3Type) {
+    public BaseParser generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal) {
         final String parserName = getParserName(ds3Request.getName());
         final String requestName = removePath(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
-        final String nameToMarshal = toNameToMarshal(ds3Type.getNameToMarshal(), ds3Type.getName());
-        final String modelParserName = toModelParserName(ds3Type.getName());
+        final String netNameToMarshal = toNameToMarshal(nameToMarshal, responsePayloadType);
+        final String modelParserName = toModelParserName(responsePayloadType);
         final Integer code = getResponseCode(ds3Request.getDs3ResponseCodes());
 
         return new BaseParser(
                 parserName,
                 requestName,
                 responseName,
-                nameToMarshal,
+                netNameToMarshal,
                 modelParserName,
                 code);
     }
@@ -71,6 +70,6 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
      * Gets the response code associated with the payload
      */
     protected static Integer getResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        return getNonErrorResponseCode(responseCodes);
+        return getPayloadResponseCode(responseCodes);
     }
 }

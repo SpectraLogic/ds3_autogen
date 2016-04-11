@@ -81,6 +81,9 @@ public final class Ds3TypeClassificationUtil {
      * which is renamed to JobList in the NameMapper
      */
     public static boolean isJobsApiBean(final Ds3Type ds3Type) {
+        if (ds3Type == null) {
+            return false;
+        }
         return removePath(ds3Type.getName()).equals("JobList");
     }
 

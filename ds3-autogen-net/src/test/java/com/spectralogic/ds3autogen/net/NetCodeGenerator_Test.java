@@ -39,6 +39,7 @@ import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasPayload;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasResponseCode;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalChecksum;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalMetadata;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -73,7 +74,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        assertTrue(isEmpty(parserCode));
+        assertTrue(hasContent(parserCode));
     }
 
     @Test
@@ -360,7 +361,8 @@ public class NetCodeGenerator_Test {
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 requestName,
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "JobList");
 
         codeGenerator.generateCode(fileUtils, "/input/getJobsRequest.xml");
 
@@ -1059,7 +1061,7 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         LOG.info("Generated code:\n" + responseCode);
 
-        assertFalse(isEmpty(responseCode));
+        assertTrue(hasContent(responseCode));
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final ImmutableList<Arguments> responseArgs = ImmutableList.of(

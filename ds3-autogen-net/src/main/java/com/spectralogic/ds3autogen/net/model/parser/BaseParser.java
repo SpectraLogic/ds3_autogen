@@ -15,11 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.model.parser;
 
-import com.spectralogic.ds3autogen.net.NetHelper;
-
 public class BaseParser {
-
-    private final static NetHelper netHelper = NetHelper.getInstance();
 
     private final String name;
     private final String requestName;
@@ -57,10 +53,6 @@ public class BaseParser {
 
     public String getNameToMarshal() {
         return nameToMarshal;
-    }
-
-    public NetHelper getNetHelper() {
-        return netHelper;
     }
 
     public String getModelParserName() {

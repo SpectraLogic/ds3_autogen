@@ -153,9 +153,9 @@ public class ResponsePayloadUtil_Test {
     @Test
     public void getAllNonErrorResponseCodes_FullList_Test() {
         final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(204, null),
-                new Ds3ResponseCode(400, null));
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))),
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))),
+                new Ds3ResponseCode(400, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))));
 
         final ImmutableList<Integer> result = getAllNonErrorResponseCodes(codes);
         assertThat(result.size(), is(2));
@@ -163,33 +163,27 @@ public class ResponsePayloadUtil_Test {
         assertThat(result, hasItem(204));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void getNonErrorResponseCode_NullList_Test() {
-        getNonErrorResponseCode(null);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void getNonErrorResponseCode_EmptyList_Test() {
-        getNonErrorResponseCode(ImmutableList.of());
+    @Test
+    public void removeNullPayloads_NullList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(null);
+        assertThat(result.size(), is(0));
     }
 
     @Test
-    public void getNonErrorResponseCode_FullList_Test() {
-        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
-                new Ds3ResponseCode(204, null),
-                new Ds3ResponseCode(400, null));
-
-        final Integer result = getNonErrorResponseCode(codes);
-        assertThat(result, is(204));
+    public void removeNullPayloads_EmptyList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(ImmutableList.of());
+        assertThat(result.size(), is(0));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void getNonErrorResponseCode_TwoNonErrorCodes_Test() {
+    @Test
+    public void removeNullPayloads_FullList_Test() {
         final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(204, null),
-                new Ds3ResponseCode(400, null));
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("null", null))),
+                new Ds3ResponseCode(207, ImmutableList.of(new Ds3ResponseType("com.test.ResponsePayload", null)))
+        );
 
-        getNonErrorResponseCode(codes);
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(codes);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getCode(), is(207));
     }
 }

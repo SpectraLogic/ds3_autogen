@@ -104,9 +104,10 @@ public final class ResponsePayloadUtil {
     }
 
     /**
-     * Gets the non-error code associated with a list of Ds3ResponseCodes
+     * Gets the non-error, non-null code associated with a list of Ds3ResponseCodes
      */
-    public static Integer getNonErrorResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    public static Integer getPayloadResponseCode(final ImmutableList<Ds3ResponseCode> responseCodes) {
+
         final ImmutableList<Integer> codes = getAllNonErrorResponseCodes(responseCodes);
         switch (codes.size()) {
             case 0:
@@ -119,7 +120,7 @@ public final class ResponsePayloadUtil {
     }
 
     /**
-     * Gets the list of non-error Response Codes from a list of Ds3ResponseCodes
+     * Gets the list of non-error and non-null Response Codes from a list of Ds3ResponseCodes
      */
     protected static ImmutableList<Integer> getAllNonErrorResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
         final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
@@ -127,9 +128,31 @@ public final class ResponsePayloadUtil {
             LOG.error("Could not retrieve response codes because list was empty");
             return ImmutableList.of();
         }
-        for (final Ds3ResponseCode responseCode : responseCodes) {
+        final ImmutableList<Ds3ResponseCode> codesWithPayloads = removeNullPayloads(responseCodes);
+        if (isEmpty(codesWithPayloads)) {
+            LOG.error("There were no response codes with payloads");
+            return ImmutableList.of();
+        }
+        for (final Ds3ResponseCode responseCode : codesWithPayloads) {
             if (isNonErrorCode(responseCode.getCode())) {
                 builder.add(responseCode.getCode());
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Removes response codes with null payloads
+     */
+    protected static ImmutableList<Ds3ResponseCode> removeNullPayloads(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
+        for (final Ds3ResponseCode code : responseCodes) {
+            final String payloadType = getResponseType(code.getDs3ResponseTypes());
+            if (!payloadType.equalsIgnoreCase("null")) {
+                builder.add(code);
             }
         }
         return builder.build();
