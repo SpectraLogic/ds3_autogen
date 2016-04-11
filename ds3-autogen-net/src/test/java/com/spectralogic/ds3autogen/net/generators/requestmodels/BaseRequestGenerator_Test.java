@@ -59,8 +59,8 @@ public class BaseRequestGenerator_Test {
     @Test
     public void toOptionalArgumentsList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType"),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath"));
+                new Ds3Param("SimpleArg", "SimpleType", false),
+                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false));
 
         final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
         assertThat(result.size(), is(2));
@@ -68,5 +68,13 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(0).getType(), is("SimpleType"));
         assertThat(result.get(1).getName(), is("ArgWithPath"));
         assertThat(result.get(1).getType(), is("TypeWithPath"));
+    }
+
+    @Test
+    public void toQueryParamsList_Test() {
+        final ImmutableList<Arguments> result = generator.toQueryParamsList(getRequestMultiFileDelete());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("Delete"));
+        assertThat(result.get(0).getType(), is("void"));
     }
 }

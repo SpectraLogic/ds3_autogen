@@ -19,6 +19,7 @@ import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
+import freemarker.template.TemplateModelException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class TestGenerateCode {
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
     protected final ByteArrayOutputStream parserOutputStream;
+    protected ByteArrayOutputStream responseTypeOutputStream;
+    protected String typeCode;
     protected String requestCode;
     protected String responseCode;
     protected String clientCode;
@@ -59,13 +62,22 @@ public class TestGenerateCode {
         this.parserOutputStream = setupOutputStream(fileUtils, PARSER_PATH + requestName.replace("Request", "ResponseParser") + ".cs");
     }
 
+    public TestGenerateCode(
+            final FileUtils fileUtils,
+            final String requestName,
+            final String path,
+            final String responseType) throws IOException {
+        this(fileUtils, requestName, path);
+        this.responseTypeOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Models/" + responseType + ".cs");
+    }
+
     /**
      * Generates the .net code associated with an input file. This captures the
      * Request, Client, and IDsClient code
      */
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+            final String inputFileName) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
@@ -77,6 +89,10 @@ public class TestGenerateCode {
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
         parserCode = new String(parserOutputStream.toByteArray());
+
+        if (responseTypeOutputStream != null) {
+            typeCode = new String(responseTypeOutputStream.toByteArray());
+        }
     }
 
     /**
@@ -128,5 +144,9 @@ public class TestGenerateCode {
 
     public String getParserCode() {
         return this.parserCode;
+    }
+
+    public String getTypeCode() {
+        return this.typeCode;
     }
 }

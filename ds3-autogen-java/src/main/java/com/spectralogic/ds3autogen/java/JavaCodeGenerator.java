@@ -32,6 +32,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGe
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
+import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
@@ -41,6 +42,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import com.spectralogic.ds3autogen.utils.Helper;
+import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +57,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
 
@@ -79,10 +84,12 @@ public class JavaCodeGenerator implements CodeGenerator {
     private FileUtils fileUtils;
     private Path destDir;
 
-    public JavaCodeGenerator() {
+    public JavaCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(JavaCodeGenerator.class, "/tmpls");
+        config.setSharedVariable("javaHelper", JavaHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override
@@ -163,7 +170,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated type model generator for the specified Ds3TYpe
      */
     private TypeModelGenerator<?> getModelGenerator(final Ds3Type ds3Type) {
-        if (isChecksum(ds3Type)) {
+        if (isChecksumType(ds3Type)) {
             return new ChecksumTypeGenerator();
         }
         if (Ds3TypeClassificationUtil.isJobsApiBean(ds3Type)) {
@@ -185,7 +192,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isHttpErrorType(ds3Type)) {
             return config.getTemplate("models/http_error_template.ftl");
         }
-        if (isChecksum(ds3Type)) {
+        if (isChecksumType(ds3Type)) {
             return config.getTemplate("models/checksum_type_template.ftl");
         }
         if (isS3Object(ds3Type)) {
@@ -215,15 +222,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isS3Object(final Ds3Type ds3type) {
         return ds3type.getName().endsWith(".S3Object");
-    }
-
-    /**
-     * Determines if a given Ds3Type is the Checksum Type
-     * @param ds3Type A Ds3Type
-     * @return True if the Ds3Type describes the ChecksumType, else false
-     */
-    private boolean isChecksum(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".ChecksumType");
     }
 
     /**
@@ -445,6 +443,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated request generator for the specified Ds3Request
      */
     private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
+        }
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         }
@@ -469,6 +470,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new CompleteMultipartUploadRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -482,6 +486,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
+        } else if(hasStringRequestPayload(ds3Request)) {
+            return config.getTemplate("request/request_with_string_payload_template.ftl");
         } else if (hasListObjectsRequestPayload(ds3Request)) {
             return config.getTemplate("request/objects_request_payload_request_template.ftl");
         } else if (isMultiFileDeleteRequest(ds3Request)) {
@@ -498,6 +504,8 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/get_notification_request_template.ftl");
         } else if (isGetJobRequest(ds3Request)) {
             return config.getTemplate("request/get_job_request_template.ftl");
+        } else if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return config.getTemplate("request/complete_multipart_upload_template.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

@@ -148,7 +148,8 @@ public final class RemoveDollarSignConverter {
     protected static Ds3Param removeDollarSignFromParam(final Ds3Param param) {
         return new Ds3Param(
                 param.getName(),
-                removeDollarSignFromName(param.getType()));
+                removeDollarSignFromName(param.getType()),
+                param.isNullable());
     }
 
     /**
@@ -229,7 +230,8 @@ public final class RemoveDollarSignConverter {
                 element.getName(),
                 removeDollarSignFromName(element.getType()),
                 removeDollarSignFromName(element.getComponentType()),
-                removeDollarSignFromAllAnnotations(element.getDs3Annotations()));
+                removeDollarSignFromAllAnnotations(element.getDs3Annotations()),
+                element.isNullable());
     }
 
     /**

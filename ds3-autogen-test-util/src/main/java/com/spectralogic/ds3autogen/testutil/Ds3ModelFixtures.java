@@ -97,11 +97,11 @@ public class Ds3ModelFixtures {
                 false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("Format", "com.spectralogic.util.http.HttpResponseFormatType"),
-                        new Ds3Param("NamingConvention", "com.spectralogic.util.lang.NamingConventionType"),
-                        new Ds3Param("NotificationHttpMethod", "com.spectralogic.util.http.RequestType")),
+                        new Ds3Param("Format", "com.spectralogic.util.http.HttpResponseFormatType", false),
+                        new Ds3Param("NamingConvention", "com.spectralogic.util.lang.NamingConventionType", false),
+                        new Ds3Param("NotificationHttpMethod", "com.spectralogic.util.http.RequestType", false)),
                 ImmutableList.of(
-                        new Ds3Param("NotificationEndPoint","java.lang.String")));
+                        new Ds3Param("NotificationEndPoint","java.lang.String", true)));
     }
 
     /**
@@ -154,10 +154,10 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(
                                         new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
-                        new Ds3Param("FullDetails", "void"),
-                        new Ds3Param("StorageDomainId", "java.util.UUID")),
+                        new Ds3Param("FullDetails", "void", false),
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
     }
 
     /**
@@ -179,10 +179,10 @@ public class Ds3ModelFixtures {
                 true,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"),
-                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
+                        new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
     }
 
     /**
@@ -204,13 +204,13 @@ public class Ds3ModelFixtures {
                 true,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("Aggregating", "boolean"),
-                        new Ds3Param("IgnoreNamingConflicts", "void"),
-                        new Ds3Param("MaxUploadSize", "long"),
-                        new Ds3Param("Name", "java.lang.String"),
-                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority")),
+                        new Ds3Param("Aggregating", "boolean", false),
+                        new Ds3Param("IgnoreNamingConflicts", "void", false),
+                        new Ds3Param("MaxUploadSize", "long", false),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
     }
 
     /**
@@ -232,9 +232,9 @@ public class Ds3ModelFixtures {
                 false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("RollBack", "void")),
+                        new Ds3Param("RollBack", "void", false)),
                 ImmutableList.of(
-                        new Ds3Param("Delete", "void")));
+                        new Ds3Param("Delete", "void", false)));
     }
 
     /**
@@ -256,8 +256,8 @@ public class Ds3ModelFixtures {
                 false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("Job", "java.util.UUID"),
-                        new Ds3Param("Offset", "long")),
+                        new Ds3Param("Job", "java.util.UUID", false),
+                        new Ds3Param("Offset", "long", false)),
                 null);
     }
 
@@ -280,8 +280,8 @@ public class Ds3ModelFixtures {
                 false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("Job", "java.util.UUID"),
-                        new Ds3Param("Offset", "long")),
+                        new Ds3Param("Job", "java.util.UUID", false),
+                        new Ds3Param("Offset", "long", false)),
                 null);
     }
 
@@ -305,7 +305,7 @@ public class Ds3ModelFixtures {
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 ImmutableList.of(
-                        new Ds3Param("BucketId", "java.util.UUID")));
+                        new Ds3Param("BucketId", "java.util.UUID", false)));
     }
 
     /**
@@ -336,6 +336,55 @@ public class Ds3ModelFixtures {
     }
 
     /**
+     * Creates the SpectraDs3 Replicate Put Job request handler as
+     * described in the Contract, excluding the response codes
+     */
+    public static Ds3Request getReplicatePutJob() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ReplicatePutJobRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.START_BULK_PUT,
+                true,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("ConflictResolutionMode", "com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode", false),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                        new Ds3Param("Replicate", "void", false)));
+    }
+
+    /**
+     * Creates the SpectraDs3 Get Blob Persistence request handler as
+     * described in the Contract
+     */
+    public static Ds3Request getGetBlobPersistence() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetBlobPersistenceRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.LIST,
+                Resource.BLOB_PERSISTENCE,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(new Ds3ResponseType("java.lang.String", null)))),
+                null,
+                null);
+    }
+
+    /**
      * Creates the AmazonS3  CreateMultiPartUploadPartRequestHandler as
      * described in the contract, excluding the response codes
      */
@@ -354,8 +403,8 @@ public class Ds3ModelFixtures {
                 null, //Request has response codes in Contract, but they are currently omitted
                 null,
                 ImmutableList.of(
-                        new Ds3Param("PartNumber", "int"),
-                        new Ds3Param("UploadId", "java.util.UUID")));
+                        new Ds3Param("PartNumber", "int", false),
+                        new Ds3Param("UploadId", "java.util.UUID", false)));
     }
 
     /**
@@ -376,11 +425,33 @@ public class Ds3ModelFixtures {
                 false,
                 null, //Request has response codes in Contract, but they are currently omitted
                 ImmutableList.of(
-                        new Ds3Param("BucketId", "java.util.UUID"),
-                        new Ds3Param("EjectLabel", "java.lang.String"),
-                        new Ds3Param("EjectLocation", "java.lang.String")),
+                        new Ds3Param("BucketId", "java.util.UUID", false),
+                        new Ds3Param("EjectLabel", "java.lang.String", true),
+                        new Ds3Param("EjectLocation", "java.lang.String", true)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                        new Ds3Param("StorageDomainId", "java.util.UUID")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)));
+    }
+
+    /**
+     * Creates the AmazonS3 Complete Multi Part Upload Request Handler as described
+     * in the contract, excluding the response codes
+     */
+    public static Ds3Request getCompleteMultipartUploadRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.CompleteMultiPartUploadRequestHandler",
+                HttpVerb.POST,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                null,
+                ImmutableList.of(
+                        new Ds3Param("UploadId", "java.util.UUID", false)));
     }
 }

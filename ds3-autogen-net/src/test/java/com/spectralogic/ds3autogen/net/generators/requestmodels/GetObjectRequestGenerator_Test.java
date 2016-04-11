@@ -44,8 +44,8 @@ public class GetObjectRequestGenerator_Test {
     @Test
     public void toOptionalArgumentsList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType"),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath"));
+                new Ds3Param("SimpleArg", "SimpleType", false),
+                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false));
 
         final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
         assertThat(result.size(), is(0));

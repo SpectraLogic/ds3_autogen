@@ -139,11 +139,11 @@ public class ConverterUtil_Test {
     @Test
     public void getUsedTypesFromParams_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("Type1", "java.util.UUID"),
-                new Ds3Param("Type2", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
-                new Ds3Param("Type3", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission"),
-                new Ds3Param("Type4", "long"),
-                new Ds3Param("Type5", "com.spectralogic.s3.common.dao.domain.pool.PoolHealth")
+                new Ds3Param("Type1", "java.util.UUID", false),
+                new Ds3Param("Type2", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission", false),
+                new Ds3Param("Type3", "com.spectralogic.s3.common.dao.domain.ds3.BucketAclPermission", false),
+                new Ds3Param("Type4", "long", false),
+                new Ds3Param("Type5", "com.spectralogic.s3.common.dao.domain.pool.PoolHealth", false)
         );
         final ImmutableSet<String> fullResult = getUsedTypesFromParams(params);
         assertThat(fullResult.size(), is(2));
@@ -260,7 +260,7 @@ public class ConverterUtil_Test {
                         false,
                         ImmutableList.of(
                                 createDs3ParamTestData("java.util.UUID"),
-                                new Ds3Param(null, parentType)),
+                                new Ds3Param(null, parentType, false)),
                         null));
 
         final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(

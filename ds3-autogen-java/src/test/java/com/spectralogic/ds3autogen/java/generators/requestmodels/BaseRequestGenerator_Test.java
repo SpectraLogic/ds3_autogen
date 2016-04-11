@@ -297,11 +297,11 @@ public class BaseRequestGenerator_Test {
     @Test
     public void getImportsFromParamList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("BucketId", "java.util.UUID"),
-                new Ds3Param("MaxUploadSize", "long"),
-                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"),
-                new Ds3Param("Name", "java.lang.String"));
+                new Ds3Param("BucketId", "java.util.UUID", false),
+                new Ds3Param("MaxUploadSize", "long", false),
+                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false),
+                new Ds3Param("Name", "java.lang.String", true));
 
         final ImmutableSet<String> result = getImportsFromParamList(params);
         assertThat(result.size(), is(3));
@@ -312,7 +312,7 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.AbstractRequest"));
+        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
     }
 
     @Test
@@ -322,7 +322,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<String> result = generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3");
 
         assertThat(result.size(), is(5));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.AbstractRequest"));
+        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.JobRequestType"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
         assertTrue(result.contains("java.util.UUID"));
@@ -391,9 +391,9 @@ public class BaseRequestGenerator_Test {
     @Test
     public void updateDs3RequestParamTypes_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("Arg1", "String"),
-                new Ds3Param("Arg2", "java.util.UUID"),
-                new Ds3Param("BucketId", "java.util.UUID"));
+                new Ds3Param("Arg1", "String", false),
+                new Ds3Param("Arg2", "java.util.UUID", false),
+                new Ds3Param("BucketId", "java.util.UUID", false));
         final Ds3Request request = createDs3RequestTestData(false, params, params);
 
         final Ds3Request result = updateDs3RequestParamTypes(request);
@@ -432,9 +432,9 @@ public class BaseRequestGenerator_Test {
     @Test
     public void updateDs3ParamListTypes_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("Arg1", "String"),
-                new Ds3Param("Arg2", "java.util.UUID"),
-                new Ds3Param("BucketId", "java.util.UUID"));
+                new Ds3Param("Arg1", "String", false),
+                new Ds3Param("Arg2", "java.util.UUID", false),
+                new Ds3Param("BucketId", "java.util.UUID", false));
 
         final ImmutableList<Ds3Param> result = updateDs3ParamListTypes(params);
         assertThat(result.size(), is(3));

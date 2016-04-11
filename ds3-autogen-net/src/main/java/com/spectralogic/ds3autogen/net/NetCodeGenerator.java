@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -30,10 +31,15 @@ import com.spectralogic.ds3autogen.net.generators.parsermodels.ResponseParserMod
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.net.model.type.BaseType;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import freemarker.template.*;
 import org.slf4j.Logger;
@@ -46,9 +52,11 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -59,6 +67,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
     private static final String PARSER_NAMESPACE = CLIENT_NAMESPACE + "ResponseParsers";
+    private static final String TYPES_NAMESPACE = CLIENT_NAMESPACE + "Models";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -67,10 +76,12 @@ public class NetCodeGenerator implements CodeGenerator {
     private FileUtils fileUtils;
     private Path destDir;
 
-    public NetCodeGenerator() {
+    public NetCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(NetCodeGenerator.class, "/tmpls/net");
+        config.setSharedVariable("netHelper", NetHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override
@@ -83,9 +94,65 @@ public class NetCodeGenerator implements CodeGenerator {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
             generateCommands(requests);
             generateClient(requests);
+
+            final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
+            generateAllTypes(typeMap);
         } catch (final TemplateException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Generates the .net code for the types
+     */
+    private void generateAllTypes(final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        if (isEmpty(typeMap)) {
+            LOG.info("There were no types to generate");
+            return;
+        }
+        for (final Ds3Type ds3Type : typeMap.values()) {
+            generateType(ds3Type);
+        }
+    }
+
+    /**
+     * Generates the .net code for the specified Ds3Type
+     */
+    private void generateType(final Ds3Type ds3Type) throws IOException, TemplateException {
+        final Template tmpl = getTypeTemplate(ds3Type);
+        final TypeModelGenerator<?> modelGenerator = getTypeGenerator(ds3Type);
+        final BaseType type = modelGenerator.generate(ds3Type);
+        final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(TYPES_NAMESPACE.replace(".", "/") + "/" + type.getName() + ".cs")));
+
+        LOG.info("Getting OutputStream for file:" + requestPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(requestPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(type, writer);
+        }
+    }
+
+    /**
+     * Gets the associated Type Generator for the specified Ds3Type
+     */
+    private TypeModelGenerator getTypeGenerator(final Ds3Type ds3Type) {
+        if (isChecksumType(ds3Type)) {
+            return new NoneEnumGenerator();
+        }
+        return new BaseTypeGenerator();
+    }
+
+    /**
+     * Gets the template used to generate the .net code for the specified Ds3Type
+     */
+    private Template getTypeTemplate(final Ds3Type ds3Type) throws IOException {
+        if (hasContent(ds3Type.getEnumConstants())) {
+            return config.getTemplate("types/enum_type.ftl");
+        }
+        if (hasContent(ds3Type.getElements())) {
+            return config.getTemplate("types/type_template.ftl");
+        }
+        throw new IllegalArgumentException("Type must have Elements and/or EnumConstants");
     }
 
     /**
@@ -216,10 +283,10 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Retrieves the non-error response type from within the response codes. If no non-error
+     * Retrieves the non-error response type from within the response codes.  If no non-error
      * response type is found, then null is returned.
      */
-    private Ds3Type getResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    private String getResponsePayloadType(final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) {
             LOG.error("There are no response codes to generate the response");
             return null;
@@ -227,7 +294,7 @@ public class NetCodeGenerator implements CodeGenerator {
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final String responseType = ResponsePayloadUtil.getResponseType(responseCode.getDs3ResponseTypes());
             if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
-                return spec.getTypes().get(responseType);
+                return responseType;
             }
         }
         return null;
@@ -278,6 +345,18 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
+        if (isCreateObjectRequest(ds3Request)
+                || isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return new StreamRequestPayloadGenerator();
+        }
+        if (isEjectStorageDomainRequest(ds3Request)
+                || isPhysicalPlacementRequest(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)) {
+            return new ObjectsRequestPayloadGenerator();
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -285,15 +364,30 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the .net request handler
      * code for this Ds3Request
      */
-    private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        if (isGetObjectRequest(request)) {
+    private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isBulkPutRequest(request)) {
+        if (isBulkPutRequest(ds3Request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
         }
-        if (isBulkGetRequest(request)) {
+        if (isBulkGetRequest(ds3Request)) {
             return config.getTemplate("request/bulk_get_request.ftl");
+        }
+        if (isCreateObjectRequest(ds3Request)) {
+            return config.getTemplate("request/put_object_request.ftl");
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return config.getTemplate("request/stream_request_payload.ftl");
+        }
+        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return config.getTemplate("request/objects_request_payload.ftl");
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return config.getTemplate("request/multi_file_delete_request.ftl");
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return config.getTemplate("request/string_request_payload.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

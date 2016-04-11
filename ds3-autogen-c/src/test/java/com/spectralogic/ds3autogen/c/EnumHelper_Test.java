@@ -33,8 +33,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
