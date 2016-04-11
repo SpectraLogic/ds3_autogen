@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.containsOptionalAnnotation;
+import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.getEnumConstantsList;
 import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.toElement;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -158,5 +159,31 @@ public class BaseTypeGenerator_Test {
                 new Ds3Annotation("com.spectralogic.util.bean.lang.Optional", null));
 
         assertTrue(containsOptionalAnnotation(annotations));
+    }
+
+    @Test
+    public void getEnumConstants_NullList_Test() {
+        final ImmutableList<EnumConstant> result = getEnumConstantsList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getEnumConstants_EmptyList_Test() {
+        final ImmutableList<EnumConstant> result = getEnumConstantsList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getEnumConstants_FullList_Test() {
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(
+                new Ds3EnumConstant("one", null),
+                new Ds3EnumConstant("two", null),
+                new Ds3EnumConstant("three", null));
+
+        final ImmutableList<EnumConstant> result = getEnumConstantsList(enumConstants);
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getName(), is("one"));
+        assertThat(result.get(1).getName(), is("two"));
+        assertThat(result.get(2).getName(), is("three"));
     }
 }
