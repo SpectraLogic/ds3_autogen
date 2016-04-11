@@ -1186,7 +1186,7 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
         assertTrue(extendsClass(requestName, "AbstractGetNotificationRequest", requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration\"", requestGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
