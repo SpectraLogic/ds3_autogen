@@ -380,8 +380,8 @@ public class Ds3RequestClassificationUtil_Test {
     @Test
     public void paramListContainsParam_test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("Name1", "Type1"),
-                new Ds3Param("Name2", "Type2"));
+                new Ds3Param("Name1", "Type1", false),
+                new Ds3Param("Name2", "Type2", false));
 
         assertTrue(paramListContainsParam(params, "Name1", "Type1"));
         assertTrue(paramListContainsParam(params, "Name2", "Type2"));

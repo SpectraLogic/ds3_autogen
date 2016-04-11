@@ -19,10 +19,12 @@ public class Ds3Param {
 
     private final String name;
     private final String type;
+    private final boolean nullable;
 
-    public Ds3Param(final String name, final String type) {
+    public Ds3Param(final String name, final String type, final boolean nullable) {
         this.name = name;
         this.type = type;
+        this.nullable = nullable;
     }
 
     public String getName() {
@@ -30,4 +32,8 @@ public class Ds3Param {
     }
 
     public String getType() { return type; }
+
+    public boolean isNullable() {
+        return nullable;
+    }
 }

@@ -43,9 +43,9 @@ public class BulkGetRequestGenerator_Test {
     @Test
     public void toOptionalArgumentsList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("IntArg", "int"),
-                new Ds3Param("StringArg", "java.lang.String"),
-                new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"));
+                new Ds3Param("IntArg", "int", false),
+                new Ds3Param("StringArg", "java.lang.String", true),
+                new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false));
 
         final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
         assertThat(result.size(), is(2));
