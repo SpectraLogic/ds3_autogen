@@ -18,12 +18,13 @@ package com.spectralogic.ds3autogen.net.generators.responsemodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator.toArgType;
 import static com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator.toArgument;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class BaseResponseGenerator_Test {
 
@@ -45,11 +46,11 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toArgument_Test() {
-        final Arguments simpleResult = toArgument(new Ds3Element("com.test.Name", "com.test.SimpleType", null));
+        final Arguments simpleResult = toArgument(new Ds3Element("com.test.Name", "com.test.SimpleType", null, false));
         assertThat(simpleResult.getName(), is("Name"));
         assertThat(simpleResult.getType(), is("SimpleType"));
 
-        final Arguments componentResult = toArgument(new Ds3Element("com.test.Name", "array", "com.test.ComponentType"));
+        final Arguments componentResult = toArgument(new Ds3Element("com.test.Name", "array", "com.test.ComponentType", false));
         assertThat(componentResult.getName(), is("Name"));
         assertThat(componentResult.getType(), is("IEnumerable<ComponentType>"));
     }
@@ -69,9 +70,9 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toArgumentsList_FullList_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("com.test.SimpleArg", "com.test.SimpleType", null),
-                new Ds3Element("com.test.ComponentArg", "array", "com.test.ComponentType"),
-                new Ds3Element("com.test.IntArg", "Integer", null));
+                new Ds3Element("com.test.SimpleArg", "com.test.SimpleType", null, false),
+                new Ds3Element("com.test.ComponentArg", "array", "com.test.ComponentType", false),
+                new Ds3Element("com.test.IntArg", "Integer", null, false));
 
         final ImmutableList<Arguments> result = generator.toArgumentsList(elements);
         assertThat(result.size(), is(3));
@@ -81,5 +82,24 @@ public class BaseResponseGenerator_Test {
         assertThat(result.get(1).getType(), is("IEnumerable<ComponentType>"));
         assertThat(result.get(2).getName(), is("IntArg"));
         assertThat(result.get(2).getType(), is("int"));
+    }
+
+    @Test
+    public void typeToArgumentsList_NullType_Test() {
+        final ImmutableList<Arguments> result = generator.typeToArgumentsList(null);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("ResponsePayload"));
+        assertThat(result.get(0).getType(), is("String"));
+    }
+
+    @Test
+    public void typeToArgumentsList_Test() {
+        final ImmutableList<Ds3Element> elements = ImmutableList.of(
+                new Ds3Element("com.test.SimpleArg", "com.test.SimpleType", null, false));
+
+        final Ds3Type type = new Ds3Type("TestType", elements);
+        final ImmutableList<Arguments> result = generator.typeToArgumentsList(type);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("SimpleArg"));
     }
 }

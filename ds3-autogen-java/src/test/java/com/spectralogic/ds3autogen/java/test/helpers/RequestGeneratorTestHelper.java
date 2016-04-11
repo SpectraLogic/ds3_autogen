@@ -40,11 +40,11 @@ public final class RequestGeneratorTestHelper {
                 true,
                 null,
                 ImmutableList.of(
-                        new Ds3Param("RequestType", "com.spectralogic.s3.common.dao.domain.ds3.JobRequestType")),
+                        new Ds3Param("RequestType", "com.spectralogic.s3.common.dao.domain.ds3.JobRequestType", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"),
-                        new Ds3Param("NotificationEndPoint", "java.lang.String")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false),
+                        new Ds3Param("NotificationEndPoint", "java.lang.String", true)));
     }
 
     /**
@@ -53,10 +53,10 @@ public final class RequestGeneratorTestHelper {
      */
     public static ImmutableList<Ds3Param> createTestDs3ParamList() {
         return ImmutableList.of(
-                new Ds3Param("IgnoreNamingConflicts", "void"),
-                new Ds3Param("MaxUploadSize", "long"),
-                new Ds3Param("Name", "java.lang.String"),
-                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"),
-                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+                new Ds3Param("IgnoreNamingConflicts", "void", false),
+                new Ds3Param("MaxUploadSize", "long", false),
+                new Ds3Param("Name", "java.lang.String", true),
+                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false));
     }
 }

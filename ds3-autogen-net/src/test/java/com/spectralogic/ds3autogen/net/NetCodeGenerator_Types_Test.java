@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
+import freemarker.template.TemplateModelException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class NetCodeGenerator_Types_Test {
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Types_Test.class);
 
     @Test
-    public void databasePhysicalSpaceState() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException {
+    public void databasePhysicalSpaceState() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
         final String typeName = "DatabasePhysicalSpaceState";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -57,7 +58,7 @@ public class NetCodeGenerator_Types_Test {
     }
 
     @Test
-    public void testElementsType() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+    public void testElementsType() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
         final String typeName = "TestElementsType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(

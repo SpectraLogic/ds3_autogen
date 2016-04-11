@@ -53,7 +53,8 @@ public class JobsApiBeanTypeGenerator_Test {
                 "Jobs",
                 "array",
                 "com.spectralogic.s3.server.domain.JobApiBean",
-                annotations);
+                annotations,
+                false);
 
         final Element result = generator.toElement(ds3Element);
         assertThat(result.hasWrapper(), is(false));
@@ -78,7 +79,8 @@ public class JobsApiBeanTypeGenerator_Test {
                 "NotJobs",
                 "array",
                 "com.spectralogic.s3.server.domain.JobApiBean",
-                annotations);
+                annotations,
+                false);
 
         final Element result = generator.toElement(ds3Element);
         assertThat(result.hasWrapper(), is(true));

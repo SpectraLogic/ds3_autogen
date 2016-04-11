@@ -35,8 +35,8 @@ import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.net.model.type.BaseType;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
-import freemarker.core.ParseException;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,10 +70,12 @@ public class NetCodeGenerator implements CodeGenerator {
     private FileUtils fileUtils;
     private Path destDir;
 
-    public NetCodeGenerator() {
+    public NetCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(NetCodeGenerator.class, "/tmpls/net");
+        config.setSharedVariable("netHelper", NetHelper.getInstance());
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override
@@ -207,17 +209,18 @@ public class NetCodeGenerator implements CodeGenerator {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
         }
-        if (isEmpty(spec.getTypes())) {
+        final String responsePayloadType = getResponsePayloadType(ds3Request.getDs3ResponseCodes());
+        if ((isEmpty(responsePayloadType) || !responsePayloadType.equalsIgnoreCase("java.lang.String")) && isEmpty(spec.getTypes())) {
             LOG.error("Cannot generate response because type map is empty");
             return;
         }
-        final Ds3Type responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
-        if (responsePayload == null) {
+
+        if (responsePayloadType == null) {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
-        final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
+        final BaseResponse response = responseGenerator.generate(ds3Request, spec.getTypes().get(responsePayloadType));
         final Path responsePath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" +
                         response.getName() + ".cs")));
@@ -231,10 +234,10 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Retrieves the non-error response type from within the response codes. If no non-error
+     * Retrieves the non-error response type from within the response codes.  If no non-error
      * response type is found, then null is returned.
      */
-    private Ds3Type getResponsePayload(final ImmutableList<Ds3ResponseCode> responseCodes) {
+    private String getResponsePayloadType(final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) {
             LOG.error("There are no response codes to generate the response");
             return null;
@@ -242,7 +245,7 @@ public class NetCodeGenerator implements CodeGenerator {
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final String responseType = ResponsePayloadUtil.getResponseType(responseCode.getDs3ResponseTypes());
             if (ResponsePayloadUtil.isNonErrorCode(responseCode.getCode()) && !responseType.equals("null")) {
-                return spec.getTypes().get(responseType);
+                return responseType;
             }
         }
         return null;
@@ -293,6 +296,18 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
+        if (isCreateObjectRequest(ds3Request)
+                || isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return new StreamRequestPayloadGenerator();
+        }
+        if (isEjectStorageDomainRequest(ds3Request)
+                || isPhysicalPlacementRequest(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)) {
+            return new ObjectsRequestPayloadGenerator();
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -300,15 +315,30 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the .net request handler
      * code for this Ds3Request
      */
-    private Template getRequestTemplate(final Ds3Request request) throws IOException {
-        if (isGetObjectRequest(request)) {
+    private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isBulkPutRequest(request)) {
+        if (isBulkPutRequest(ds3Request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
         }
-        if (isBulkGetRequest(request)) {
+        if (isBulkGetRequest(ds3Request)) {
             return config.getTemplate("request/bulk_get_request.ftl");
+        }
+        if (isCreateObjectRequest(ds3Request)) {
+            return config.getTemplate("request/put_object_request.ftl");
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return config.getTemplate("request/stream_request_payload.ftl");
+        }
+        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return config.getTemplate("request/objects_request_payload.ftl");
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return config.getTemplate("request/multi_file_delete_request.ftl");
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return config.getTemplate("request/string_request_payload.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

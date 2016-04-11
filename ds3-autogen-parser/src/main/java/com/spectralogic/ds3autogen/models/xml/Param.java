@@ -18,6 +18,8 @@ package com.spectralogic.ds3autogen.models.xml;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 
+import static com.spectralogic.ds3autogen.utils.NullableVariableUtil.isNullableType;
+
 public class Param {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
@@ -41,7 +43,7 @@ public class Param {
     }
 
     public Ds3Param toDs3Param() {
-        final Ds3Param ds3Param = new Ds3Param(name, type);
+        final Ds3Param ds3Param = new Ds3Param(name, type, isNullableType(type));
         return ds3Param;
     }
 }

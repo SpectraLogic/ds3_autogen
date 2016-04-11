@@ -32,9 +32,9 @@ public class ChecksumTypeGenerator_Test {
     @Test
     public void getAllImports_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1"),
-                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2"),
-                new Ds3Element("ElementName3", "ElementType3", null));
+                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1", false),
+                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2", false),
+                new Ds3Element("ElementName3", "ElementType3", null, false));
 
         final Ds3Type ds3Type = new Ds3Type(
                 "TypeName",

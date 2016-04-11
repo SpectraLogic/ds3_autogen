@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.c;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
@@ -22,8 +23,14 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Enum;
+import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
+import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
+import freemarker.template.TemplateModelException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,21 +45,21 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorAmazonS3Requests_Test.class);
 
     @Test
-    public void testGenerateAmazonS3HeadBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateAmazonS3HeadBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3HeadBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
         LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* s3_head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
 
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));
@@ -74,26 +81,32 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     }
 
     @Test
-    public void testGenerateAmazonS3HeadObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateAmazonS3HeadObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3HeadObjectRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3HeadRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* s3_head_object_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* head_object_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
 
         assertTrue(output.contains("    ds3_string_multimap* return_headers = NULL;"));
         assertTrue(output.contains("    ds3_metadata* metadata = NULL;"));
 
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
         assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");"));
         assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
@@ -112,21 +125,20 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     }
 
     @Test
-    public void testGenerateAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+    public void testGenerateAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "AmazonS3DeleteRequest.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("Generated code:\n" + output);
 
-        assertTrue(output.contains("ds3_error* s3_delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
 
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
@@ -136,5 +148,97 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         assertTrue(output.contains("}"));
     }
+
+    @Test
+    public void testGenerateAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+        final String inputSpecFile = "/input/AmazonS3GetBucketsRequest_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        assertTrue(output.contains("ds3_error* get_service_request(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** response) {"));
+
+        assertTrue(output.contains("    return _parse_ds3_list_all_my_buckets_result_response(client->log, response);"));
+
+        assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateAmazonS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+        final String inputSpecFile = "/input/AmazonS3GetBucketRequest_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        assertTrue(output.contains("ds3_error* get_bucket_request(const ds3_client* client, const ds3_request* request, const ds3_list_bucket_result_response** response) {"));
+
+        assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return _parse_ds3_list_bucket_result_response(client->log, response);"));
+
+        assertTrue(output.contains("}"));
+    }
+
+    /*
+    // Need to Update function signature to be:
+    // ds3_error* ds3_get_object(const ds3_client* client, const ds3_request* request, void* user_data, size_t(*callback)(void*,size_t, size_t, void*)) {
+
+    @Test
+    public void testGenerateAmazonS3GetObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException {
+        final String inputSpecFile = "/input/AmazonS3GetObjectRequest.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of()), CCodeGenerator.getAllRequests(spec));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "request-templates/AmazonS3GetRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info("Generated code:\n" + output);
+
+        assertTrue(output.contains("ds3_error* get_object_request(const ds3_client* client, const ds3_request* request) {"));
+
+        assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
+        assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");"));
+        assertTrue(output.contains("    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
+        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
+        assertTrue(output.contains("    }"));
+
+        assertTrue(output.contains("    return _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL);"));
+
+        assertTrue(output.contains("}"));
+    }
+     */
 }
 

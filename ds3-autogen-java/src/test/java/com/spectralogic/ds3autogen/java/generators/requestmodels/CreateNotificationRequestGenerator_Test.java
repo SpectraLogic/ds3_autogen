@@ -36,7 +36,7 @@ public class CreateNotificationRequestGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest"));
+        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.interfaces.AbstractCreateNotificationRequest"));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class CreateNotificationRequestGenerator_Test {
     public void toConstructorList_Test() {
         final ImmutableList.Builder<Ds3Param> builder = ImmutableList.builder();
         builder.addAll(createTestDs3ParamList());
-        builder.add(new Ds3Param("NotificationEndPoint", "String"));
+        builder.add(new Ds3Param("NotificationEndPoint", "String", false));
 
         final Ds3Request request = createDs3RequestTestData(true, null, builder.build());
 

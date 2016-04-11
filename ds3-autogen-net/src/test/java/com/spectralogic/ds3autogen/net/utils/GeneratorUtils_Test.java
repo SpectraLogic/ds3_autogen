@@ -29,12 +29,12 @@ public class GeneratorUtils_Test {
 
     @Test
     public void toArgument_Test() {
-        final Ds3Param simpleParam = new Ds3Param("ArgName", "SimpleType");
+        final Ds3Param simpleParam = new Ds3Param("ArgName", "SimpleType", false);
         final Arguments simpleArg = toArgument(simpleParam);
         assertThat(simpleArg.getName(), is("ArgName"));
         assertThat(simpleArg.getType(), is("SimpleType"));
 
-        final Ds3Param pathParam = new Ds3Param("ArgName", "com.spectralogic.test.TypeWithPath");
+        final Ds3Param pathParam = new Ds3Param("ArgName", "com.spectralogic.test.TypeWithPath", false);
         final Arguments pathArg = toArgument(pathParam);
         assertThat(pathArg.getName(), is("ArgName"));
         assertThat(pathArg.getType(), is("TypeWithPath"));
@@ -55,9 +55,9 @@ public class GeneratorUtils_Test {
     @Test
     public void getArgsFromParamList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType"),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath"),
-                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"));
+                new Ds3Param("SimpleArg", "SimpleType", false),
+                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false),
+                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false));
 
         final ImmutableList<Arguments> result = getArgsFromParamList(params);
         assertThat(result.size(), is(2));

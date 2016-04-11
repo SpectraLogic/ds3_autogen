@@ -130,22 +130,3 @@ static ds3_error* _get_request_xml_nodes(
     g_byte_array_free(xml_blob, TRUE);
     return NULL;
 }
-
-static void _parse_build_information(const ds3_log* log, xmlDocPtr doc, xmlNodePtr build_info_node, ds3_build_information** _build_info_response) {
-    ds3_build_information* build_info_response;
-    xmlNodePtr build_element;
-    build_info_response = g_new0(ds3_build_information, 1);
-
-    for (build_element = build_info_node->xmlChildrenNode; build_element != NULL; build_element = build_element->next) {
-        if (element_equal(build_element, "Branch") == true) {
-            build_info_response->branch = xml_get_string(doc, build_element);
-        } else if (element_equal(build_element, "Revision")) {
-            build_info_response->revision = xml_get_string(doc, build_element);
-        } else if (element_equal(build_element, "Version")) {
-            build_info_response->version = xml_get_string(doc, build_element);
-        } else {
-            ds3_log_message(log, DS3_ERROR, "Unknown element: (%s)\n", build_element->name);
-        }
-    }
-    *_build_info_response = build_info_response;
-}
