@@ -47,7 +47,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class StructHelper_Test {
-    final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
+    final static Logger LOG = LoggerFactory.getLogger(StructHelper_Test.class);
 
     @Test
     public void testTypeRequiresNewParser() {
