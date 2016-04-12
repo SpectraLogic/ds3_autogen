@@ -57,9 +57,9 @@ public final class SplitConverterTestHelper {
      */
     public static ImmutableList<Ds3Param> getPopulatedDs3ParamList() {
         return ImmutableList.of(
-                new Ds3Param("BucketId", "java.util.UUID"),
-                new Ds3Param("FullDetails", "void"),
-                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"));
+                new Ds3Param("BucketId", "java.util.UUID", false),
+                new Ds3Param("FullDetails", "void", false),
+                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false));
     }
 
     /**
@@ -109,7 +109,7 @@ public final class SplitConverterTestHelper {
                                         new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.Tape", null),
                                         new Ds3ResponseType("com.spectralogic.s3.server.domain.TapeApiBean", null)))),
                 ImmutableList.of(
-                        new Ds3Param("FullDetails", "void")),
+                        new Ds3Param("FullDetails", "void", false)),
                 null);
     }
 
@@ -135,7 +135,7 @@ public final class SplitConverterTestHelper {
                                         new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.tape.TapePartition", null),
                                         new Ds3ResponseType("com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapePartitionRequestHandler$DetailedTapePartition", null)))),
                 ImmutableList.of(
-                        new Ds3Param("FullDetails", "void")),
+                        new Ds3Param("FullDetails", "void", false)),
                 null);
     }
 
@@ -161,10 +161,10 @@ public final class SplitConverterTestHelper {
                                         new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean", null),
                                         new Ds3ResponseType("com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer", null)))),
                 ImmutableList.of(
-                        new Ds3Param("FullDetails", "void"),
-                        new Ds3Param("StorageDomainId", "java.util.UUID")),
+                        new Ds3Param("FullDetails", "void", false),
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType")));
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
     }
 
 }

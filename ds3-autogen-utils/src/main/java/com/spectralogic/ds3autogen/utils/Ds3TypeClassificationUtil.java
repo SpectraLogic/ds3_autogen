@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 /**
  * Contains utilities for classifying Ds3Types that are special cased
@@ -73,5 +74,25 @@ public final class Ds3TypeClassificationUtil {
             builder.add(element.getName());
         }
         return builder.build();
+    }
+
+    /**
+     * Determines if a given Ds3Type is the JobsApiBean type
+     * which is renamed to JobList in the NameMapper
+     */
+    public static boolean isJobsApiBean(final Ds3Type ds3Type) {
+        if (ds3Type == null) {
+            return false;
+        }
+        return removePath(ds3Type.getName()).equals("JobList");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the Checksum Type
+     * @param ds3Type A Ds3Type
+     * @return True if the Ds3Type describes the ChecksumType, else false
+     */
+    public static boolean isChecksumType(final Ds3Type ds3Type) {
+        return ds3Type.getName().endsWith(".ChecksumType");
     }
 }

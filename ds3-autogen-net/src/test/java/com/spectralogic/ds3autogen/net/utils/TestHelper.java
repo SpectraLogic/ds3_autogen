@@ -31,6 +31,32 @@ public final class TestHelper {
     }
 
     /**
+     * Checks that the response parser has the specified response type and name to marshal
+     */
+    public static boolean parserHasPayload(
+            final String responseType,
+            final String nameToMarshal,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "\\s+XmlExtensions" +
+                        "\\s+.ReadDocument\\(stream\\)" +
+                        "\\s+.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)" +
+                        "\\s+.Select\\(" + responseType + "Parser\\)"
+                , Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Checks that the response parser has the specified Http Status Code
+     */
+    public static boolean parserHasResponseCode(final int responseCode, final String parserCode) {
+        final String searchString = "ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)"
+                + Integer.toString(responseCode) + ");";
+        return parserCode.contains(searchString);
+    }
+
+    /**
      * Determines if the request handler code contains the data for optional checksum
      */
     public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {

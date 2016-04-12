@@ -51,7 +51,7 @@ public class CommonPrefixGenerator extends BaseTypeGenerator {
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();
         for (final Ds3Element ds3Element : ds3Elements) {
             if (ds3Element.getName().equals(COMMON_PREFIX_ELEMENT)) {
-                final Ds3Element commonPrefixes = new Ds3Element("CommonPrefixes", "array", "CommonPrefixes");
+                final Ds3Element commonPrefixes = new Ds3Element("CommonPrefixes", "array", "CommonPrefixes", false);
                 builder.add(toElement(commonPrefixes));
             } else {
                 builder.add(toElement(ds3Element));

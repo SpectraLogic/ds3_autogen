@@ -13,27 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
-public class Ds3Param {
+import org.junit.Test;
 
-    private final String name;
-    private final String type;
-    private final boolean nullable;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    public Ds3Param(final String name, final String type, final boolean nullable) {
-        this.name = name;
-        this.type = type;
-        this.nullable = nullable;
-    }
+public class JobListPayloadParserGenerator_Test {
 
-    public String getName() {
-        return name;
-    }
+    private static final JobListPayloadParserGenerator generator = new JobListPayloadParserGenerator();
 
-    public String getType() { return type; }
-
-    public boolean isNullable() {
-        return nullable;
+    @Test
+    public void toNameToMarshal_Test() {
+        assertThat(generator.toNameToMarshal(null, null), is("Jobs"));
     }
 }

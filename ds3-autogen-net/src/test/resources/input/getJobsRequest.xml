@@ -1,0 +1,41 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="FullDetails" Type="void"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobsApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.A91ACBDE9427D4617DBA938B01FD4A65</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.JobsApiBean" NameToMarshal="">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.JobApiBean" Name="Jobs" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Jobs" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Job" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

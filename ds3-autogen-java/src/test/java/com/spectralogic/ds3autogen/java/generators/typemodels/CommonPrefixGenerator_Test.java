@@ -46,8 +46,8 @@ public class CommonPrefixGenerator_Test {
     @Test
     public void toElementList_List_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("CommonPrefixes", "array", "java.lang.String"),
-                new Ds3Element("CreationDate", "java.util.Date", null));
+                new Ds3Element("CommonPrefixes", "array", "java.lang.String", false),
+                new Ds3Element("CreationDate", "java.util.Date", null, false));
 
         final ImmutableList<Element> result = generator.toElementList(elements);
         assertThat(result.size(), is(2));
@@ -63,9 +63,9 @@ public class CommonPrefixGenerator_Test {
     @Test
     public void getAllImports_Test() {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1"),
-                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2"),
-                new Ds3Element("ElementName3", "ElementType3", null));
+                new Ds3Element("ElementName1", "com.spectralogic.test.ElementType1", "ElementComponentType1", false),
+                new Ds3Element("ElementName2", "ElementType2", "com.spectralogic.test.ElementComponentType2", false),
+                new Ds3Element("ElementName3", "ElementType3", null, false));
 
         final Ds3Type ds3Type = new Ds3Type(
                 "TypeName",

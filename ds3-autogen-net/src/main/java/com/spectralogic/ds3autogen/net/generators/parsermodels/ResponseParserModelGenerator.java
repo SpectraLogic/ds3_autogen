@@ -13,27 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
-public class Ds3Param {
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
-    private final String name;
-    private final String type;
-    private final boolean nullable;
-
-    public Ds3Param(final String name, final String type, final boolean nullable) {
-        this.name = name;
-        this.type = type;
-        this.nullable = nullable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() { return type; }
-
-    public boolean isNullable() {
-        return nullable;
-    }
+@FunctionalInterface
+public interface ResponseParserModelGenerator<T extends BaseParser> {
+    T generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal);
 }

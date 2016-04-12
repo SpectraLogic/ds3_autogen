@@ -47,14 +47,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<BaseType>, TypeMode
      */
     @Override
     public ImmutableList<EnumConstant> toEnumConstantsList(final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
-        if (isEmpty(ds3EnumConstants)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
-        for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
-            builder.add(new EnumConstant(ds3EnumConstant.getName()));
-        }
-        return builder.build();
+        return getEnumConstantsList(ds3EnumConstants);
     }
 
     /**
@@ -68,6 +61,21 @@ public class BaseTypeGenerator implements TypeModelGenerator<BaseType>, TypeMode
         final ImmutableList.Builder<Element> builder = ImmutableList.builder();
         for (final Ds3Element ds3Element : ds3Elements) {
             builder.add(toElement(ds3Element));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a list of Ds3EnumConstants to a list of Enum Constants
+     */
+    protected static ImmutableList<EnumConstant> getEnumConstantsList(
+            final ImmutableList<Ds3EnumConstant> ds3EnumConstants) {
+        if (isEmpty(ds3EnumConstants)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
+        for (final Ds3EnumConstant ds3EnumConstant : ds3EnumConstants) {
+            builder.add(new EnumConstant(ds3EnumConstant.getName()));
         }
         return builder.build();
     }

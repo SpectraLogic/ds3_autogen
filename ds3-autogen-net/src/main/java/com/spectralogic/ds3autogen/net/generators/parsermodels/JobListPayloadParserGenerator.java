@@ -13,27 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.ds3autogen.net.generators.parsermodels;
 
-public class Ds3Param {
-
-    private final String name;
-    private final String type;
-    private final boolean nullable;
-
-    public Ds3Param(final String name, final String type, final boolean nullable) {
-        this.name = name;
-        this.type = type;
-        this.nullable = nullable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() { return type; }
-
-    public boolean isNullable() {
-        return nullable;
+/**
+ * Generates the BaseParser model for requests that have a JobList response payload.
+ */
+public class JobListPayloadParserGenerator extends BaseResponseParserGenerator {
+    
+    /**
+     * The name to marshal value for the JobList payload is Jobs, which is not
+     * specified within the contract
+     */
+    @Override
+    public String toNameToMarshal(final String nameToMarshal, final String typeName) {
+        return "Jobs";
     }
 }

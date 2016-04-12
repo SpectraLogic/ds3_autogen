@@ -25,12 +25,17 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.JobListPayloadParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsermodels.ResponseParserModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
+import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.net.model.type.BaseType;
@@ -50,6 +55,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -59,7 +66,8 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
-    private static final String TYPES_NAMESPACE = "Ds3.Models";
+    private static final String PARSER_NAMESPACE = CLIENT_NAMESPACE + "ResponseParsers";
+    private static final String TYPES_NAMESPACE = CLIENT_NAMESPACE + "Models";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -128,6 +136,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * Gets the associated Type Generator for the specified Ds3Type
      */
     private TypeModelGenerator getTypeGenerator(final Ds3Type ds3Type) {
+        if (isChecksumType(ds3Type)) {
+            return new NoneEnumGenerator();
+        }
         return new BaseTypeGenerator();
     }
 
@@ -192,14 +203,14 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         for (final Ds3Request request : requests) {
             generateRequest(request);
-            generateResponse(request);
+            generateResponseAndParser(request);
         }
     }
 
     /**
-     * Generates the .net code for the response handler described in the Ds3Request
+     * Generates the .net code for the response handler and parser described in the Ds3Request
      */
-    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateResponseAndParser(final Ds3Request ds3Request) throws IOException, TemplateException {
         if (!ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
@@ -209,13 +220,74 @@ public class NetCodeGenerator implements CodeGenerator {
             LOG.error("Cannot generate response because type map is empty");
             return;
         }
-
         if (responsePayloadType == null) {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
+
+        if (responsePayloadType.equalsIgnoreCase("java.lang.String")) {
+            generateResponse(ds3Request, null);
+            generateResponseParser(ds3Request, null);
+        } else {
+            final Ds3Type ds3TypePayload = spec.getTypes().get(responsePayloadType);
+            generateResponse(ds3Request, ds3TypePayload);
+            generateResponseParser(ds3Request, ds3TypePayload);
+        }
+    }
+
+    /**
+     * Generates the .net code for the response parser
+     */
+    private void generateResponseParser(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
+        final Template tmpl = getResponseParserTemplate(ds3Request);
+        final ResponseParserModelGenerator<?> parserGenerator = getResponseParserGenerator(responsePayload);
+
+        final BaseParser parser = generateBaseParser(ds3Request, responsePayload, parserGenerator);
+        final Path parserPath = destDir.resolve(BASE_PROJECT_PATH.resolve(
+                Paths.get(PARSER_NAMESPACE.replace(".", "/") + "/" + parser.getName() + ".cs")));
+
+        LOG.info("Getting OutputStream for file:" + parserPath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(parserPath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(parser, writer);
+        }
+    }
+
+    /**
+     * Generates the BaseParser for use in response parser generation. This is used to handle a null Ds3Type due to
+     * a string payload
+     */
+    private static BaseParser generateBaseParser(final Ds3Request ds3Request, final Ds3Type ds3Type, final ResponseParserModelGenerator<?> generator) {
+        if (ds3Type == null) {
+            return generator.generate(ds3Request, "java.lang.String", null);
+        }
+        return generator.generate(ds3Request, ds3Type.getName(), ds3Type.getNameToMarshal());
+    }
+
+    /**
+     * Retrieves the response parser generator for the specified Ds3Request
+     */
+    private ResponseParserModelGenerator getResponseParserGenerator(final Ds3Type responsePayload) {
+        if (isJobsApiBean(responsePayload)) {
+            return new JobListPayloadParserGenerator();
+        }
+        return new BaseResponseParserGenerator();
+    }
+
+    /**
+     * Retrieves the response parser template for the specified Ds3Request
+     */
+    private Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
+        return config.getTemplate("parser/parser_template.ftl");
+    }
+
+    /**
+     * Generates the .net code for the response handler
+     */
+    private void generateResponse(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
-        final BaseResponse response = responseGenerator.generate(ds3Request, spec.getTypes().get(responsePayloadType));
+        final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
         final Path responsePath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" +
                         response.getName() + ".cs")));

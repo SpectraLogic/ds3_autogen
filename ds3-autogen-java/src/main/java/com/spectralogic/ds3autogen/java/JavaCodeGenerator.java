@@ -37,6 +37,11 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import com.spectralogic.ds3autogen.utils.Helper;
 import freemarker.template.*;
 import org.slf4j.Logger;
@@ -53,6 +58,7 @@ import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
 
@@ -164,10 +170,10 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated type model generator for the specified Ds3TYpe
      */
     private TypeModelGenerator<?> getModelGenerator(final Ds3Type ds3Type) {
-        if (isChecksum(ds3Type)) {
+        if (isChecksumType(ds3Type)) {
             return new ChecksumTypeGenerator();
         }
-        if (isJobsApiBean(ds3Type)) {
+        if (Ds3TypeClassificationUtil.isJobsApiBean(ds3Type)) {
             return new JobsApiBeanTypeGenerator();
         }
         if (isCommonPrefixesType(ds3Type)) {
@@ -186,7 +192,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isHttpErrorType(ds3Type)) {
             return config.getTemplate("models/http_error_template.ftl");
         }
-        if (isChecksum(ds3Type)) {
+        if (isChecksumType(ds3Type)) {
             return config.getTemplate("models/checksum_type_template.ftl");
         }
         if (isS3Object(ds3Type)) {
@@ -216,23 +222,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isS3Object(final Ds3Type ds3type) {
         return ds3type.getName().endsWith(".S3Object");
-    }
-
-    /**
-     * Determines if a given Ds3Type is the Checksum Type
-     * @param ds3Type A Ds3Type
-     * @return True if the Ds3Type describes the ChecksumType, else false
-     */
-    private boolean isChecksum(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".ChecksumType");
-    }
-
-    /**
-     * Determines if a given Ds3Type is the JobsApiBean type
-     * which is renamed to JobList in the NameMapper
-     */
-    private boolean isJobsApiBean(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".JobList");
     }
 
     /**

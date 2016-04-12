@@ -81,4 +81,29 @@ public class NetCodeGenerator_Types_Test {
         assertTrue(typeCode.contains("public long Length { get; set; }"));
         assertTrue(typeCode.contains("public Guid ObjectId { get; set; }"));
     }
+
+    @Test
+    public void checksumType() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+        final String typeName = "ChecksumType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                PLACEHOLDER_REQUEST_NAME,
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/checksumType.xml");
+        final String typeCode = codeGenerator.getTypeCode();
+
+        LOG.info("Generated code:\n" + typeCode);
+
+        assertTrue(typeCode.contains("public enum " + typeName));
+        assertTrue(typeCode.contains("CRC_32,"));
+        assertTrue(typeCode.contains("CRC_32C,"));
+        assertTrue(typeCode.contains("MD5,"));
+        assertTrue(typeCode.contains("SHA_256,"));
+        assertTrue(typeCode.contains("SHA_512,"));
+        assertTrue(typeCode.contains("NONE"));
+
+    }
 }

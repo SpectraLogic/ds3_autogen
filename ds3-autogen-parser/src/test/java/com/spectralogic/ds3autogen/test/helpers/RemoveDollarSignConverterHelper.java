@@ -56,8 +56,8 @@ public final class RemoveDollarSignConverterHelper {
      */
     public static ImmutableList<Ds3Element> createPopulatedElements() {
         return ImmutableList.of(
-                new Ds3Element("Name", "com.test.package.One$Two", "com.test.package.Three$Four"),
-                new Ds3Element("Name", "com.test.package.Five$Six", "com.test.package.Seven$Eight", createPopulatedAnnotations()));
+                new Ds3Element("Name", "com.test.package.One$Two", "com.test.package.Three$Four", false),
+                new Ds3Element("Name", "com.test.package.Five$Six", "com.test.package.Seven$Eight", createPopulatedAnnotations(), false));
     }
 
     /**
@@ -66,8 +66,8 @@ public final class RemoveDollarSignConverterHelper {
      */
     public static ImmutableList<Ds3Element> createElementsForMap(final String variation) {
         return ImmutableList.of(
-                new Ds3Element("ElementOne" + variation, "Type", "ComponentType"),
-                new Ds3Element("ElementTwo" + variation, "Type", "ComponentType"));
+                new Ds3Element("ElementOne" + variation, "Type", "ComponentType", false),
+                new Ds3Element("ElementTwo" + variation, "Type", "ComponentType", false));
     }
 
     /**
@@ -85,8 +85,8 @@ public final class RemoveDollarSignConverterHelper {
      */
     public static ImmutableList<Ds3Param> createPopulatedParams(final String variation) {
         return ImmutableList.of(
-                new Ds3Param("Name" + variation, "com.test.package.Base$TypeOne" + variation),
-                new Ds3Param("Name" + variation, "com.test.package.Base$TypeTwo" + variation));
+                new Ds3Param("Name" + variation, "com.test.package.Base$TypeOne" + variation, false),
+                new Ds3Param("Name" + variation, "com.test.package.Base$TypeTwo" + variation, false));
     }
 
     /**

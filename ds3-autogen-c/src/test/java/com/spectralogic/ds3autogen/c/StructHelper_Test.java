@@ -132,8 +132,8 @@ public class StructHelper_Test {
 
     @Test
     public void testGenerateStructMembers() throws ParseException {
-        final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null);
-        final Ds3Element testElement2 = new Ds3Element("beanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
+        final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null, false);
+        final Ds3Element testElement2 = new Ds3Element("beanElement", "com.spectralogic.s3.server.domain.UserApiBean", null, false);
         final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
@@ -146,8 +146,8 @@ public class StructHelper_Test {
 
     @Test
     public void testGenerateResponseParser() throws ParseException {
-        final Ds3Element testElement1 = new Ds3Element("BoolElement", "boolean", null);
-        final Ds3Element testElement2 = new Ds3Element("BeanElement", "com.spectralogic.s3.server.domain.UserApiBean", null);
+        final Ds3Element testElement1 = new Ds3Element("BoolElement", "boolean", null, false);
+        final Ds3Element testElement2 = new Ds3Element("BeanElement", "com.spectralogic.s3.server.domain.UserApiBean", null, false);
         final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1, testElement2);
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 

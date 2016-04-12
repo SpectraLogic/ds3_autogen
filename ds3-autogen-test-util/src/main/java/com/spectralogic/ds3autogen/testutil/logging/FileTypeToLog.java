@@ -13,27 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models;
+package com.spectralogic.ds3autogen.testutil.logging;
 
-public class Ds3Param {
-
-    private final String name;
-    private final String type;
-    private final boolean nullable;
-
-    public Ds3Param(final String name, final String type, final boolean nullable) {
-        this.name = name;
-        this.type = type;
-        this.nullable = nullable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() { return type; }
-
-    public boolean isNullable() {
-        return nullable;
-    }
+/**
+ * Types of generated files. This is used by GeneratedCodeLogger.
+ */
+public enum  FileTypeToLog {
+    ALL,
+    CLIENT,
+    NONE,
+    PARSER,
+    REQUEST,
+    RESPONSE
 }

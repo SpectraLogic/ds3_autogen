@@ -106,7 +106,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         final ImmutableList.Builder<Ds3Param> builder = ImmutableList.builder();
         for (final Ds3Param param : params) {
             if (param.getName().equalsIgnoreCase("BucketId")) {
-                builder.add(new Ds3Param("BucketId", "String"));
+                builder.add(new Ds3Param("BucketId", "String", false));
             } else {
                 builder.add(param);
             }
