@@ -130,6 +130,14 @@ public class GeneratorUtils_Test {
     }
 
     @Test
+    public void toModelParserName_Test() {
+        assertThat(toModelParserName(null), is(""));
+        assertThat(toModelParserName(""), is(""));
+        assertThat(toModelParserName("TestModel"), is("TestModelParser"));
+        assertThat(toModelParserName("com.test.TestModel"), is("TestModelParser"));
+    }
+
+    @Test
     public void getNetType_WithComponentType_Test() {
         assertThat(getNetType("array", "MyType", false), is("IEnumerable<MyType>"));
         assertThat(getNetType("array", "MyType", true), is("IEnumerable<MyType>"));

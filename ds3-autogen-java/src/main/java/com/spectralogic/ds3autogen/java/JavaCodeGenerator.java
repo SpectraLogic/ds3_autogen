@@ -37,6 +37,11 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import com.spectralogic.ds3autogen.utils.Helper;
 import freemarker.template.*;
 import org.slf4j.Logger;
@@ -168,7 +173,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isChecksumType(ds3Type)) {
             return new ChecksumTypeGenerator();
         }
-        if (isJobsApiBean(ds3Type)) {
+        if (Ds3TypeClassificationUtil.isJobsApiBean(ds3Type)) {
             return new JobsApiBeanTypeGenerator();
         }
         if (isCommonPrefixesType(ds3Type)) {
@@ -217,14 +222,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     private boolean isS3Object(final Ds3Type ds3type) {
         return ds3type.getName().endsWith(".S3Object");
-    }
-
-    /**
-     * Determines if a given Ds3Type is the JobsApiBean type
-     * which is renamed to JobList in the NameMapper
-     */
-    private boolean isJobsApiBean(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".JobList");
     }
 
     /**

@@ -84,6 +84,13 @@ public class Ds3TypeClassificationUtil_Test {
     }
 
     @Test
+    public void isJobsApiBean_Test() {
+        assertTrue(isJobsApiBean(createDs3TypeTestData("JobList")));
+        assertTrue(isJobsApiBean(createDs3TypeTestData("com.test.JobList")));
+        assertFalse(isJobsApiBean(createDs3TypeTestData("JobListApiBean")));
+    }
+
+    @Test
     public void isChecksumType_Test() {
         assertTrue(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumType")));
         assertFalse(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumTypeApiBean")));

@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
@@ -135,5 +136,54 @@ public class ResponsePayloadUtil_Test {
                 new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("ResponseType", null))),
                 new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("ResponseType2", null))));
         getResponsePayload(codes);
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_NullList_Test() {
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_EmptyList_Test() {
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getAllNonErrorResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))),
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))),
+                new Ds3ResponseCode(400, ImmutableList.of(new Ds3ResponseType("com.test.ResponseType", null))));
+
+        final ImmutableList<Integer> result = getAllNonErrorResponseCodes(codes);
+        assertThat(result.size(), is(2));
+        assertThat(result, hasItem(200));
+        assertThat(result, hasItem(204));
+    }
+
+    @Test
+    public void removeNullPayloads_NullList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeNullPayloads_EmptyList_Test() {
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeNullPayloads_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> codes = ImmutableList.of(
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("null", null))),
+                new Ds3ResponseCode(207, ImmutableList.of(new Ds3ResponseType("com.test.ResponsePayload", null)))
+        );
+
+        final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(codes);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getCode(), is(207));
     }
 }
