@@ -93,7 +93,7 @@ public final class EnumHelper {
         outputBuilder.append(indent(2)).append("ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning ").append(enumName).append(" for safety.\", text);\n");
         outputBuilder.append(indent(2)).append("return ").append(enumName).append(";\n");
 
-        outputBuilder.append(indent(1)).append("}").append("\n");
+        outputBuilder.append(indent(1)).append("}");
         return outputBuilder.toString();
     }
 }

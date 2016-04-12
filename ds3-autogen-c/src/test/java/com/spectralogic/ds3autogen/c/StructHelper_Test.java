@@ -25,11 +25,12 @@ import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.c.models.Enum;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -42,9 +43,8 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StructHelper_Test {
     final static Logger LOG = LoggerFactory.getLogger(CCodeGenerator_Test.class);
@@ -81,53 +81,6 @@ public class StructHelper_Test {
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
         final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
-    }
-
-    @Test
-    public void testGetArrayStructMemberTypes() {
-        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
-        final StructMember testStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
-        final Struct testStructWithArrayMembers = new Struct("testStruct", "Data", ImmutableList.of(testStructMember1), false);
-        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers));
-        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
-        assertEquals(arrayStructMemberTypes.size(), 1);
-    }
-
-    @Test
-    public void testGetArrayStructMembersUnique() {
-        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
-        final C_Type ds3TapeTypeArray = new FreeableType("ds3_tape_type", true);
-        final StructMember testArrayStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
-        final StructMember testArrayStructMember2 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember1");
-        final StructMember testArrayStructMember3 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember2");
-        final StructMember testStructMember3 = new StructMember(new FreeableType("ds3_bucket", false), "bucketTypeArrayMember");
-        final ImmutableList<StructMember> testArrayStructMembers1 = ImmutableList.of(testArrayStructMember1, testArrayStructMember2);
-        final ImmutableList<StructMember> testArrayStructMembers2 = ImmutableList.of(testArrayStructMember2, testArrayStructMember3);
-        final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStructMember3);
-        final Struct testStructWithArrayMembers1 = new Struct("testStruct", "Data", testArrayStructMembers1, false);
-        final Struct testStructWithArrayMembers2 = new Struct("testStruct", "Data", testArrayStructMembers2, false);
-        final Struct testStructWithoutArrayMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembers, false);
-        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayMembers1, testStructWithArrayMembers2, testStructWithoutArrayMember));
-        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
-        assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
-        assertEquals(arrayStructMemberTypes.size(), 2);
-    }
-
-    @Test
-    public void testGetArrayStructMembersUnique2() {
-        final C_Type ds3BoolArray = new PrimitiveType("ds3_bool", true);
-        final C_Type ds3TapeTypeArray = new FreeableType("ds3_tape_type", true);
-        final StructMember testStructMember1 = new StructMember(ds3BoolArray, "boolArrayMember");
-        final StructMember testStructMember2 = new StructMember(ds3TapeTypeArray, "tapeTypeArrayMember");
-        final StructMember testStructMember3 = new StructMember(new FreeableType("ds3_bucket", false), "bucketTypeArrayMember");
-        final ImmutableList<StructMember> testArrayStructMemberTypes = ImmutableList.of(testStructMember1, testStructMember2);
-        final ImmutableList<StructMember> testStructMembersWithoutArrays = ImmutableList.of(testStructMember3);
-        final Struct testStructWithArrayTypeMembers = new Struct("testStruct", "Data", testArrayStructMemberTypes, false);
-        final Struct testStructWithoutArrayTypeMember = new Struct("testStructWithoutArrayMembers", "Data", testStructMembersWithoutArrays, false);
-        final ImmutableSet<C_Type>  arrayStructMemberTypes = StructHelper.getArrayStructMemberTypes(ImmutableList.of(testStructWithArrayTypeMembers, testStructWithoutArrayTypeMember));
-        assertTrue(arrayStructMemberTypes.contains(ds3BoolArray));
-        assertTrue(arrayStructMemberTypes.contains(ds3TapeTypeArray));
-        assertEquals(arrayStructMemberTypes.size(), 2);
     }
 
     @Test
@@ -175,14 +128,14 @@ public class StructHelper_Test {
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
-        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = new Source(allEnums, allOrderedStructs, allRequests);
+        final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
+        LOG.info(output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
@@ -240,7 +193,7 @@ public class StructHelper_Test {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = new Source(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
