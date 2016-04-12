@@ -24,20 +24,18 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.cr
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Type;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class Ds3TypeClassificationUtil_Test {
 
     @Test
     public void isHttpErrorType_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("Code", "java.lang.String", null),
-                new Ds3Element("HttpErrorCode", "int", null),
-                new Ds3Element("Message", "java.lang.String", null),
-                new Ds3Element("Resource", "java.lang.String", null),
-                new Ds3Element("ResourceId", "long", null));
+                new Ds3Element("Code", "java.lang.String", null, true),
+                new Ds3Element("HttpErrorCode", "int", null, false),
+                new Ds3Element("Message", "java.lang.String", null, true),
+                new Ds3Element("Resource", "java.lang.String", null, true),
+                new Ds3Element("ResourceId", "long", null, false));
 
         final Ds3Type errorType = new Ds3Type(
                 "com.spectralogic.s3.server.domain.HttpErrorResultApiBean",
@@ -54,8 +52,8 @@ public class Ds3TypeClassificationUtil_Test {
     @Test
     public void containsElement_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("Code", "java.lang.String", null),
-                new Ds3Element("HttpErrorCode", "int", null));
+                new Ds3Element("Code", "java.lang.String", null, true),
+                new Ds3Element("HttpErrorCode", "int", null, false));
 
         final Ds3Type type = createDs3TypeTestData("TestType", elements);
         assertTrue(containsElement(type, "Code"));
@@ -67,8 +65,8 @@ public class Ds3TypeClassificationUtil_Test {
     @Test
     public void getElementNames_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("Code", "java.lang.String", null),
-                new Ds3Element("HttpErrorCode", "int", null));
+                new Ds3Element("Code", "java.lang.String", null, true),
+                new Ds3Element("HttpErrorCode", "int", null, false));
         final Ds3Type type = createDs3TypeTestData("TestType", elements);
 
         final ImmutableList<String> result = getElementNames(type);
@@ -80,8 +78,21 @@ public class Ds3TypeClassificationUtil_Test {
     @Test
     public void isCommonPrefixesType_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("CommonPrefixes", "array", "java.lang.String"));
+                new Ds3Element("CommonPrefixes", "array", "java.lang.String", true));
         final Ds3Type type = createDs3TypeTestData("TestType", elements);
         assertTrue(isCommonPrefixesType(type));
+    }
+
+    @Test
+    public void isJobsApiBean_Test() {
+        assertTrue(isJobsApiBean(createDs3TypeTestData("JobList")));
+        assertTrue(isJobsApiBean(createDs3TypeTestData("com.test.JobList")));
+        assertFalse(isJobsApiBean(createDs3TypeTestData("JobListApiBean")));
+    }
+
+    @Test
+    public void isChecksumType_Test() {
+        assertTrue(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumType")));
+        assertFalse(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumTypeApiBean")));
     }
 }

@@ -44,6 +44,16 @@ public final class GeneratorUtils {
     }
 
     /**
+     * Gets the name of the type/model parser
+     */
+    public static String toModelParserName(final String modelName) {
+        if (isEmpty(modelName)) {
+            return "";
+        }
+        return removePath(modelName) + "Parser";
+    }
+
+    /**
      * Creates the C# request path code for a Ds3 request
      */
     public static String toRequestPath(final Ds3Request ds3Request) {
@@ -199,5 +209,21 @@ public final class GeneratorUtils {
             default:
                 return false;
         }
+    }
+
+    /**
+     * Gets the .net type that represents the described type
+     * @param type The type of the element without path
+     * @param componentType The component type of the element without path, if one exists
+     * @param optional Whether or not the element is optional, therefore should be nullable
+     */
+    public static String getNetType(final String type, final String componentType, final boolean optional) {
+        if (hasContent(componentType)) {
+            return "IEnumerable<" + NetHelper.toNetType(componentType) + ">";
+        }
+        if (optional) {
+            return NetHelper.getNullableType(type);
+        }
+        return NetHelper.toNetType(type);
     }
 }

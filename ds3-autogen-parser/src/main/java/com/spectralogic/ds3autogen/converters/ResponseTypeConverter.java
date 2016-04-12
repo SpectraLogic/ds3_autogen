@@ -206,7 +206,8 @@ public final class ResponseTypeConverter {
                                 English.plural(stripPath(encapsulatingType.getSdkName())),
                                 "array",
                                 encapsulatingType.getSdkName(),
-                                annotations)));
+                                annotations,
+                                false)));
     }
 
     /**

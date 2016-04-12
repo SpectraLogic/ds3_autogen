@@ -29,12 +29,12 @@ public class GeneratorUtils_Test {
 
     @Test
     public void toArgument_Test() {
-        final Ds3Param simpleParam = new Ds3Param("ArgName", "SimpleType");
+        final Ds3Param simpleParam = new Ds3Param("ArgName", "SimpleType", false);
         final Arguments simpleArg = toArgument(simpleParam);
         assertThat(simpleArg.getName(), is("ArgName"));
         assertThat(simpleArg.getType(), is("SimpleType"));
 
-        final Ds3Param pathParam = new Ds3Param("ArgName", "com.spectralogic.test.TypeWithPath");
+        final Ds3Param pathParam = new Ds3Param("ArgName", "com.spectralogic.test.TypeWithPath", false);
         final Arguments pathArg = toArgument(pathParam);
         assertThat(pathArg.getName(), is("ArgName"));
         assertThat(pathArg.getType(), is("TypeWithPath"));
@@ -55,9 +55,9 @@ public class GeneratorUtils_Test {
     @Test
     public void getArgsFromParamList_FullList_Test() {
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType"),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath"),
-                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType"));
+                new Ds3Param("SimpleArg", "SimpleType", false),
+                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false),
+                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false));
 
         final ImmutableList<Arguments> result = getArgsFromParamList(params);
         assertThat(result.size(), is(2));
@@ -127,5 +127,52 @@ public class GeneratorUtils_Test {
         assertThat(toRequestPath(getRequestMultiFileDelete()), is("\"/\" + BucketName"));
         assertThat(toRequestPath(getRequestCreateObject()), is("\"/\" + BucketName + \"/\" + ObjectName"));
         assertThat(toRequestPath(getRequestAmazonS3GetObject()), is("\"/\" + BucketName + \"/\" + ObjectName"));
+    }
+
+    @Test
+    public void toModelParserName_Test() {
+        assertThat(toModelParserName(null), is(""));
+        assertThat(toModelParserName(""), is(""));
+        assertThat(toModelParserName("TestModel"), is("TestModelParser"));
+        assertThat(toModelParserName("com.test.TestModel"), is("TestModelParser"));
+    }
+
+    @Test
+    public void getNetType_WithComponentType_Test() {
+        assertThat(getNetType("array", "MyType", false), is("IEnumerable<MyType>"));
+        assertThat(getNetType("array", "MyType", true), is("IEnumerable<MyType>"));
+
+        assertThat(getNetType("array", "Void", false), is("IEnumerable<bool>"));
+        assertThat(getNetType("array", "Boolean", false), is("IEnumerable<bool>"));
+        assertThat(getNetType("array", "Integer", false), is("IEnumerable<int>"));
+        assertThat(getNetType("array", "String", false), is("IEnumerable<string>"));
+        assertThat(getNetType("array", "UUID", false), is("IEnumerable<Guid>"));
+        assertThat(getNetType("array", "ChecksumType", false), is("IEnumerable<ChecksumType.Type>"));
+    }
+
+    @Test
+    public void getNetType_Optional_Test() {
+        assertThat(getNetType("MyType", null, true), is("MyType?"));
+        assertThat(getNetType("MyType", "", true), is("MyType?"));
+
+        assertThat(getNetType("Void", null, true), is("bool?"));
+        assertThat(getNetType("Boolean", null, true), is("bool?"));
+        assertThat(getNetType("Integer", null, true), is("int?"));
+        assertThat(getNetType("String", null, true), is("string"));
+        assertThat(getNetType("UUID", null, true), is("Guid?"));
+        assertThat(getNetType("ChecksumType", null, true), is("ChecksumType.Type?"));
+    }
+
+    @Test
+    public void getNetType_Test() {
+        assertThat(getNetType("MyType", null, false), is("MyType"));
+        assertThat(getNetType("MyType", "", false), is("MyType"));
+
+        assertThat(getNetType("Void", null, false), is("bool"));
+        assertThat(getNetType("Boolean", null, false), is("bool"));
+        assertThat(getNetType("Integer", null, false), is("int"));
+        assertThat(getNetType("String", null, false), is("string"));
+        assertThat(getNetType("UUID", null, false), is("Guid"));
+        assertThat(getNetType("ChecksumType", null, false), is("ChecksumType.Type"));
     }
 }

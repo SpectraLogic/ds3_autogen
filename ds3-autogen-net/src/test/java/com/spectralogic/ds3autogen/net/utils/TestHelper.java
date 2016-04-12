@@ -31,6 +31,53 @@ public final class TestHelper {
     }
 
     /**
+     * Checks that the response parser has the specified response type and name to marshal
+     */
+    public static boolean parserHasPayload(
+            final String responseType,
+            final String nameToMarshal,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "\\s+XmlExtensions" +
+                        "\\s+.ReadDocument\\(stream\\)" +
+                        "\\s+.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)" +
+                        "\\s+.Select\\(" + responseType + "Parser\\)"
+                , Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Checks that the response parser has the specified Http Status Code
+     */
+    public static boolean parserHasResponseCode(final int responseCode, final String parserCode) {
+        final String searchString = "ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)"
+                + Integer.toString(responseCode) + ");";
+        return parserCode.contains(searchString);
+    }
+
+    /**
+     * Determines if the request handler code contains the data for optional checksum
+     */
+    public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {
+        return generatedCode.contains("private Checksum _checksum = Checksum.None")
+                && generatedCode.contains("private Checksum.ChecksumType _checksumType")
+                && generatedCode.contains("internal override Checksum ChecksumValue")
+                && generatedCode.contains("internal override Checksum.ChecksumType ChecksumType")
+                && generatedCode.contains("public Checksum Checksum")
+                && generatedCode.contains("public " + requestName + " WithChecksum(Checksum checksum, Checksum.ChecksumType checksumType = Checksum.ChecksumType.Md5)");
+    }
+
+    /**
+     * Determines if the request handler code contains the data for optional headers
+     */
+    public static boolean hasOptionalMetadata(final String requestName, final String generatedCode) {
+        return generatedCode.contains("private IDictionary<string, string> _metadata = new Dictionary<string, string>()")
+                && generatedCode.contains("public IDictionary<string, string> Metadata")
+                && generatedCode.contains("public " + requestName + " WithMetadata(IDictionary<string, string> metadata)");
+    }
+
+    /**
      * Checks if the generated code extends the specified class
      */
     public static boolean extendsClass(final String getObjectRequestHandler, final String abstractRequest, final String generatedCode) {

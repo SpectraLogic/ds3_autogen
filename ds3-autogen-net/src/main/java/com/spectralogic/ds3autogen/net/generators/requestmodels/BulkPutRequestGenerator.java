@@ -18,33 +18,11 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-public class BulkPutRequestGenerator extends BaseRequestGenerator {
-
-    /**
-     * Gets the list of required Arguments from a Bulk Put request and adds a list
-     * of Ds3Objects
-     */
-    @Override
-    public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.add(new Arguments("List<Ds3Object>", "Objects"));
-        return builder.build();
-    }
-
-    /**
-     * Gets the list of Arguments for creating the constructor, which is derived from the
-     * required parameters for standard commands
-     */
-    @Override
-    public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
-        return toRequiredArgumentsList(ds3Request);
-    }
+public class BulkPutRequestGenerator extends ObjectsRequestPayloadGenerator {
 
     /**
      * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Params

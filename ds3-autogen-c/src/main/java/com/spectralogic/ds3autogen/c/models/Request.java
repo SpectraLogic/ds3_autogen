@@ -16,8 +16,10 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
+import com.spectralogic.ds3autogen.api.models.Action;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.Operation;
 
 public class Request {
     private final String name;
@@ -26,12 +28,11 @@ public class Request {
     private final String buildPathArgs;
     private final Operation operation;
     private final Action action;
+    private final ImmutableList<Parameter> paramList;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
-    private final ImmutableList<Arguments> requiredArguments;
-    private final ImmutableList<Arguments> optionalArguments;
-    private final ImmutableList<Ds3ResponseCode> responseCodes;
-    private final RequestHelper requestHelper;
+    private final String responseType;
+    private final boolean hasResponsePayload;
 
     public Request(
             final String name,
@@ -40,23 +41,21 @@ public class Request {
             final String buildPathArgs,
             final Operation operation,
             final Action action,
+            final ImmutableList<Parameter> paramList,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
-            final ImmutableList<Arguments> requiredArguments,
-            final ImmutableList<Arguments> optionalArguments,
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
+            final String responseType) {
         this.name = name;
         this.classification = classification;
         this.verb = verb;
         this.buildPathArgs = buildPathArgs;
         this.operation = operation;
         this.action = action;
+        this.paramList = paramList;
         this.isResourceRequired = isResourceRequired;
         this.isResourceIdRequired = isResourceIdRequired;
-        this.requiredArguments = requiredArguments;
-        this.optionalArguments = optionalArguments;
-        this.responseCodes = responseCodes;
-        this.requestHelper = RequestHelper.getInstance();
+        this.responseType = responseType;
+        this.hasResponsePayload = !responseType.isEmpty();
     }
 
     public String getName() {
@@ -83,6 +82,10 @@ public class Request {
         return action;
     }
 
+    public ImmutableList<Parameter> getParamList() {
+        return paramList;
+    }
+
     public boolean isResourceRequired() {
         return isResourceRequired;
     }
@@ -91,18 +94,11 @@ public class Request {
         return isResourceIdRequired;
     }
 
-    public ImmutableList<Arguments> getRequiredArguments() {
-        return requiredArguments;
+    public String getResponseType() {
+        return responseType;
     }
 
-    public ImmutableList<Arguments> getOptionalArguments() {
-        return optionalArguments;
-    }
-
-    public ImmutableList<Ds3ResponseCode> getResponseCodes() {
-        return responseCodes;
-    }
-    public RequestHelper getRequestHelper() {
-        return requestHelper;
+    public boolean hasResponsePayload() {
+        return hasResponsePayload;
     }
 }

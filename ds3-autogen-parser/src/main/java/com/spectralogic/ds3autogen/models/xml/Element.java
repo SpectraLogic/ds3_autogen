@@ -24,6 +24,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 
 import java.util.List;
 
+import static com.spectralogic.ds3autogen.utils.NullableVariableUtil.isNullableElement;
+
 public class Element {
 
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
@@ -72,11 +74,13 @@ public class Element {
     }
 
     public Ds3Element toDs3Element() {
+        final ImmutableList<Ds3Annotation> ds3Annotations = toDs3Annotations();
         final Ds3Element ds3Element = new Ds3Element(
                 name,
                 type,
                 componentType,
-                toDs3Annotations());
+                ds3Annotations,
+                isNullableElement(type, ds3Annotations));
 
         return ds3Element;
     }

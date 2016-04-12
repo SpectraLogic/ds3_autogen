@@ -176,7 +176,8 @@ public class Ds3SpecConverter_Test {
                         "testName",
                         "com.spectralogic.s3.common.dao.domain.ds3.Bucket",
                         "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority",
-                        null));
+                        null,
+                        false));
         final ImmutableList<Ds3Element> result = convertAllElements(input, nameMapper);
 
         assertThat(result.get(0).getType(), is("com.spectralogic.s3.common.dao.domain.ds3.TEST_Bucket"));
@@ -266,7 +267,8 @@ public class Ds3SpecConverter_Test {
         final ImmutableList<Ds3Param> input = ImmutableList.of(
                 new Ds3Param(
                         "testName",
-                        "com.spectralogic.s3.common.dao.domain.ds3.Bucket"));
+                        "com.spectralogic.s3.common.dao.domain.ds3.Bucket",
+                        false));
         final ImmutableList<Ds3Param> result = convertAllParams(input, nameMapper);
 
         assertThat(result.get(0).getType(), is("com.spectralogic.s3.common.dao.domain.ds3.TEST_Bucket"));
@@ -328,8 +330,8 @@ public class Ds3SpecConverter_Test {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("Param1", "Swap1"),
-                new Ds3Param("Param2", "Swap2"));
+                new Ds3Param("Param1", "Swap1", false),
+                new Ds3Param("Param2", "Swap2", false));
         final Ds3Request request1 = createDs3RequestTestData("com.spectralogic.test.RequestSwap1", params);
         final Ds3Request request2 = createDs3RequestTestData("com.spectralogic.test.RequestSwap2", null);
         final ImmutableList<Ds3Request> requests = ImmutableList.of(request1, request2);

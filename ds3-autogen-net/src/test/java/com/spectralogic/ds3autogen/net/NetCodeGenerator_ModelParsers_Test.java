@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
+import freemarker.template.TemplateModelException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -40,12 +41,13 @@ public class NetCodeGenerator_ModelParsers_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void bucketObjectApiBean_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+    public void bucketObjectApiBean_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
                 "GetBucketRequest",
-                "./Ds3/Calls/");
+                "./Ds3/Calls/",
+                "ListBucketResult");
 
         codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
         final String typeParserCode = codeGenerator.getTypeParser();

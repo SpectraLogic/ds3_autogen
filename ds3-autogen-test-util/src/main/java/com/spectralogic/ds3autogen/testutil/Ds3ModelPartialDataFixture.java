@@ -110,7 +110,7 @@ public final class Ds3ModelPartialDataFixture {
      * Creates an empty Ds3Element
      */
     public static Ds3Element createEmptyDs3Element() {
-        return new Ds3Element(null, null, null);
+        return new Ds3Element(null, null, null, false);
     }
 
     /**
@@ -176,7 +176,7 @@ public final class Ds3ModelPartialDataFixture {
             final String elementName,
             final String elementType,
             final String elementComponentType) {
-        return new Ds3Element(elementName, elementType, elementComponentType, null);
+        return new Ds3Element(elementName, elementType, elementComponentType, null, false);
     }
 
     /**
@@ -190,6 +190,6 @@ public final class Ds3ModelPartialDataFixture {
      * Creates a Ds3Param that only has a type
      */
     public static Ds3Param createDs3ParamTestData(final String paramType) {
-        return new Ds3Param(null, paramType);
+        return new Ds3Param(null, paramType, false);
     }
 }
