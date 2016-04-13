@@ -458,7 +458,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isCreateNotificationRequest(ds3Request)) {
             return new CreateNotificationRequestGenerator();
         }
-        if (isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) {
+        if ((isGetNotificationRequest(ds3Request) || isDeleteNotificationRequest(ds3Request)) && ds3Request.includeIdInPath()) {
             return new NotificationRequestGenerator();
         }
         if (isGetObjectRequest(ds3Request)) {
@@ -500,7 +500,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/delete_notification_request_template.ftl");
         } else if (isCreateNotificationRequest(ds3Request)) {
             return config.getTemplate("request/create_notification_request_template.ftl");
-        } else if (isGetNotificationRequest(ds3Request)) {
+        } else if (isGetNotificationRequest(ds3Request) && ds3Request.includeIdInPath()) {
             return config.getTemplate("request/get_notification_request_template.ftl");
         } else if (isGetJobRequest(ds3Request)) {
             return config.getTemplate("request/get_job_request_template.ftl");

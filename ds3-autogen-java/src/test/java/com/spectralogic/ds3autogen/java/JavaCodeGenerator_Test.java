@@ -1185,12 +1185,12 @@ public class JavaCodeGenerator_Test {
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
-        assertTrue(extendsClass(requestName, "AbstractGetNotificationRequest", requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_completed_notification_registration\"", requestGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
 
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOptParamOfType("LastPage", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("PageLength", "int", requestName, requestGeneratedCode, false));
@@ -1203,10 +1203,7 @@ public class JavaCodeGenerator_Test {
         assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
         assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
 
-        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("UUID", "NotificationId"));
-        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(constructorArgs, "UUID", "String"), requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, ImmutableList.of(), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
