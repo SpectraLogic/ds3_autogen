@@ -18,6 +18,9 @@ package com.spectralogic.ds3autogen.c.models;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+/**
+ * A model to represent the ds3.c source file
+ */
 public class Source {
     private final ImmutableList<Enum> enums;
     private final ImmutableList<Struct> arrayStructs;

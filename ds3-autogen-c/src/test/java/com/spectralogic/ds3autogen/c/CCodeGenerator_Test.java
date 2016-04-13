@@ -52,7 +52,7 @@ public class CCodeGenerator_Test {
     public void testGenerateSingleTypedefEnum() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
-        final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED")); // "CANCELED" is intentionally spelled wrong, as in the API
+        final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED"));
         testMap.put("enumEntry", enumEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -74,7 +74,7 @@ public class CCodeGenerator_Test {
     public void testGenerateSingleTypeEnumConstantMatcher() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
-        final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED")); // "CANCELED" is intentionally spelled wrong, as in the API
+        final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED"));
         testMap.put("enumEntry", enumEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
