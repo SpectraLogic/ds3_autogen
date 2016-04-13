@@ -1,0 +1,21 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.PlaceHolderRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler$NamedDetailedTape" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D14152B32BAE4D9F43B0E7DFE275A88E</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
