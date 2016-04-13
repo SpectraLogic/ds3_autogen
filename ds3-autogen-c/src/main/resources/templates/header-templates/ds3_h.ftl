@@ -104,9 +104,16 @@ typedef struct _ds3_client {
 }ds3_client;
 
 <#-- **************************************** -->
-<#-- Generate all "Models" from EnumConstants -->
+<#-- Generate all Models                      -->
 <#list getEnums() as enumEntry>
     <#include "TypedefEnum.ftl">
+</#list>
+<#-- **************************************** -->
+
+<#-- **************************************** -->
+<#-- Generate all Structs                     -->
+<#list getStructs() as structEntry>
+    <#include "TypedefStruct.ftl">
 </#list>
 <#-- **************************************** -->
 

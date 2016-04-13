@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
+import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
@@ -72,10 +73,9 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
             final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, allRequests);
-            final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
 
-            generateHeader(allEnums, allOrderedStructs, allRequests);
-            generateSource(allEnums, allOrderedStructs, allRequests);
+            generateHeader(allEnums, allStructs, allRequests);
+            generateSource(allEnums, allStructs, allRequests);
         } catch (final ParseException e) {
             LOG.error("Caught exception: ", e);
         }
@@ -83,19 +83,19 @@ public class CCodeGenerator implements CodeGenerator {
 
     public void generateHeader(
             final ImmutableList<Enum> allEnums,
-            final ImmutableList<Struct> allOrderedStructs,
+            final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
-        final Header header = new Header(allEnums,allOrderedStructs,allRequests);
+        final Header header = new Header(allEnums,allStructs,allRequests);
         processTemplate(header, "ds3_h.ftl", fileUtils.getOutputFile(path));
     }
 
     public void generateSource(
         final ImmutableList<Enum> allEnums,
-        final ImmutableList<Struct> allOrderedStructs,
+        final ImmutableList<Struct> allStructs,
         final ImmutableList<Request> allRequests) throws IOException, ParseException {
 
-        final Source source = new Source(allEnums,allOrderedStructs,allRequests);
+        final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
         final Path path = Paths.get("src/ds3.c");
         processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
 

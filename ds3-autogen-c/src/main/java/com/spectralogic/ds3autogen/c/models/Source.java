@@ -17,23 +17,27 @@ package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 
+/**
+ * A model to represent the ds3.c source file
+ */
 public class Source {
-    final ImmutableList<Enum> enums;
-    final ImmutableList<Struct> arrayStructs;
-    final ImmutableSet<C_Type> arrayTypes;
-    final ImmutableList<Struct> structs;
-    final ImmutableList<Request> requests;
+    private final ImmutableList<Enum> enums;
+    private final ImmutableList<Struct> arrayStructs;
+    private final ImmutableSet<C_Type> arrayTypes;
+    private final ImmutableList<Struct> structs;
+    private final ImmutableList<Request> requests;
 
     public Source(
             final ImmutableList<Enum> enums,
+            final ImmutableSet<C_Type> arrayTypes,
+            final ImmutableList<Struct> arrayStructs,
             final ImmutableList<Struct> structs,
             final ImmutableList<Request> requests) {
         this.enums = enums;
-        this.arrayTypes = StructHelper.getArrayStructMemberTypes(structs);
-        this.arrayStructs = StructHelper.getArrayStructs(structs, arrayTypes);
-        this.structs = StructHelper.filterArrayStructs(structs, arrayTypes);
+        this.arrayTypes = arrayTypes;
+        this.arrayStructs = arrayStructs;
+        this.structs = structs;
         this.requests = requests;
     }
 
