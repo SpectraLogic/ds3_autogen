@@ -154,7 +154,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     @Test
     public void testGenerateSpectraS3GetBucketRequestPrototype() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        Map<String,Object> testMap = new HashMap<>();
+        final Map<String,Object> testMap = new HashMap<>();
         final String responseType = StructHelper.getResponseTypeName("ListBucketResult");
         final Request requestEntry = new Request(
                 "GetBucketRequest",

@@ -73,7 +73,7 @@ public class CCodeGenerator_Test {
     @Test
     public void testGenerateSingleTypeEnumConstantMatcher() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        Map<String,Object> testMap = new HashMap<>();
+        final Map<String,Object> testMap = new HashMap<>();
         final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED")); // "CANCELED" is intentionally spelled wrong, as in the API
         testMap.put("enumEntry", enumEntry);
 
@@ -102,7 +102,7 @@ public class CCodeGenerator_Test {
     @Test
     public void testGenerateSimpleTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        Map<String,Object> testMap = new HashMap<>();
+        final Map<String,Object> testMap = new HashMap<>();
         final Struct structEntry = new Struct("ds3_bucket_response",
                 null,
                 ImmutableList.of(
@@ -140,7 +140,7 @@ public class CCodeGenerator_Test {
     @Test
     public void testGenerateComplexTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        Map<String,Object> testMap = new HashMap<>();
+        final Map<String,Object> testMap = new HashMap<>();
 
         final Struct structEntry = new Struct("ds3_list_all_my_buckets_result_response",
                 null,
