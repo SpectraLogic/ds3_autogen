@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -46,7 +47,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -66,7 +69,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -86,7 +91,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -106,7 +113,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
