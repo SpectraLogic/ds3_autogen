@@ -23,7 +23,10 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
+import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
@@ -142,13 +145,14 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
 
-        final Struct structEntry = new Struct("ds3_list_all_my_buckets_result_response",
-                null,
-                ImmutableList.of(
-                        new StructMember( new PrimitiveType("ds3_bucket_response*", true), "buckets"),
-                        new StructMember( new PrimitiveType("ds3_user_response*", false), "owner")
-                ),
-                true);
+        final Struct structEntry = StructConverter.toStruct(
+                new Ds3Type("ListAllMyBucketsResult",
+                        ImmutableList.of(
+                                // When converting the following array element, a StructMember to track the array size should be added also.
+                                new Ds3Element("Buckets", "array", "Bucket", false),
+                                new Ds3Element("Owner", "User", null, false))),
+                ImmutableSet.of(),
+                ImmutableList.of());
         testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -159,7 +163,7 @@ public class CCodeGenerator_Test {
 
         final String expectedOutput = "typedef struct {" + "\n"
                                     + "    ds3_bucket_response** buckets;" + "\n"
-                                    + "    size_t num_buckets;" + "\n"
+                                    + "    size_t num_buckets;" + "\n" // Verify that the number of array elements is added to the model
                                     + "    ds3_user_response* owner;" + "\n"
                                     + "}ds3_list_all_my_buckets_result_response;" + "\n";
 
