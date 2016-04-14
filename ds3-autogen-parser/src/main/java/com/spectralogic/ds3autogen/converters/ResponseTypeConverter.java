@@ -214,14 +214,13 @@ public final class ResponseTypeConverter {
 
     /**
      * Determines the name to marshal value for the encapsulating type.
-     * Note: NameToMarshal = "" denotes no encapsulating tag
-     * NameToMarshal = null denotes 'Data' encapsulating tag
+     * Note: NameToMarshal = "" denotes no encapsulating xml tag
      */
     protected static String getNameToMarshalForEncapsulatingType(final EncapsulatingTypeNames encapsulatingType) {
         if (hasNoRootElement(encapsulatingType)) {
             return "";
         }
-        return null;
+        return "Data";
     }
 
     /**

@@ -343,7 +343,7 @@ public class JavaCodeGenerator_Models_Test {
         final String modelCode = testGeneratedCode.getEncapsulatingTypeGeneratedCode();
         LOG.info("Generated code:\n" + modelCode);
 
-        assertFalse(modelCode.contains("@JacksonXmlRootElement(namespace = \"Data\")"));
+        assertFalse(modelCode.contains("@JacksonXmlRootElement(namespace = "));
         assertFalse(modelCode.contains("@JsonProperty(\"NamedDetailedTape\")"));
         assertTrue(modelCode.contains("@JsonProperty(\"Tape\")"));
     }
