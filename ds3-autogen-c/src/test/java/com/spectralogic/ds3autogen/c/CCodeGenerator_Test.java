@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 
@@ -69,7 +70,7 @@ public class CCodeGenerator_Test {
                                     + "    COMPLETED," + "\n"
                                     + "    CANCELED" + "\n"
                                     + "}ds3_job_status;" + "\n";
-        assertEquals(expectedOutput, output);
+        assertThat(expectedOutput, is(output));
         assertFalse(output.contains("    CANCELED,")); // verify no trailing comma
     }
 
@@ -99,7 +100,7 @@ public class CCodeGenerator_Test {
                                     + "    }" + "\n"
                                     + "}" + "\n";
 
-        assertEquals(expectedOutput, output);
+        assertThat(expectedOutput, is(output));
     }
 
     @Test
@@ -137,7 +138,7 @@ public class CCodeGenerator_Test {
                                     + "    ds3_str* user_id;" + "\n"
                                     + "}ds3_bucket_response;" + "\n";
 
-        assertEquals(expectedOutput, output);
+        assertThat(expectedOutput, is(output));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class CCodeGenerator_Test {
                                     + "    ds3_user_response* owner;" + "\n"
                                     + "}ds3_list_all_my_buckets_result_response;" + "\n";
 
-        assertEquals(expectedOutput, output);
+        assertThat(expectedOutput, is(output));
     }
 
     @Test

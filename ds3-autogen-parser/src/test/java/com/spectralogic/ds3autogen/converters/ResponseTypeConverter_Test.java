@@ -30,6 +30,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -445,5 +446,20 @@ public class ResponseTypeConverter_Test {
         assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", null)), is("Type1"));
         assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", "")), is("Type1"));
         assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", "ContractType")), is("ContractType"));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType")), is("Tape"));
+    }
+
+    @Test
+    public void hasNoRootElement_Test() {
+        assertFalse(hasNoRootElement(new EncapsulatingTypeNames(null, null)));
+        assertFalse(hasNoRootElement(new EncapsulatingTypeNames("com.test.Type1", "ContractType")));
+        assertTrue(hasNoRootElement(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType")));
+    }
+
+    @Test
+    public void getNameToMarshalForEncapsulatingType_Test() {
+        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames(null, null)), is(nullValue()));
+        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames("com.test.Type1", "ContractType")), is(nullValue()));
+        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType")), is(""));
     }
 }
