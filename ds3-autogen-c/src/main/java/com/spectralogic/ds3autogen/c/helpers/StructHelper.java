@@ -230,10 +230,6 @@ public final class StructHelper {
 
         for (final StructMember member : structMembers) {
             outputBuilder.append(indent(1)).append(member.getType()).append(" ").append(member.getName()).append(";\n");
-
-            if (member.getType().isArray()) {
-                outputBuilder.append(indent(1)).append("size_t").append(" num_").append(member.getName()).append(";\n");
-            }
         }
 
         return outputBuilder.toString();
