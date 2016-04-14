@@ -458,8 +458,8 @@ public class ResponseTypeConverter_Test {
 
     @Test
     public void getNameToMarshalForEncapsulatingType_Test() {
-        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames(null, null)), is(nullValue()));
-        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames("com.test.Type1", "ContractType")), is(nullValue()));
+        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames(null, null)), is("Data"));
+        assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames("com.test.Type1", "ContractType")), is("Data"));
         assertThat(getNameToMarshalForEncapsulatingType(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType")), is(""));
     }
 }
