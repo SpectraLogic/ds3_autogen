@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
+import com.spectralogic.ds3autogen.net.model.typeparser.NullableElement;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
@@ -154,16 +155,43 @@ public final class GeneratorUtils {
 
     //TODO unit test
     /**
+     * Creates a Nullable Element from the provided parameters
+     */
+    public static NullableElement createNullableElement(
+            final String name,
+            final String type,
+            final String componentType,
+            final boolean nullable,
+            final String xmlName,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        if (hasContent(componentType)) {
+            final String netType = "IEnumerable<" + toNetType(stripPath(componentType)) + ">";
+            return new NullableElement(name, netType, false, false, xmlName);
+        }
+
+        final boolean questionMarkForNullable = isEnumType(type, typeMap) || isPrimitive(type);
+        final String netType = toNetType(stripPath(type));
+        return new NullableElement(
+                name,
+                netType,
+                questionMarkForNullable,
+                nullable,
+                xmlName);
+    }
+
+    //TODO unit test
+    /**
      * Creates a NullableVariable from the provided parameters
      */
     public static NullableVariable createNullableVariable(
             final String name,
             final String type,
             final String componentType,
+            final boolean nullable,
             final ImmutableMap<String, Ds3Type> typeMap) {
         if (hasContent(componentType)) {
             final String netType = "IEnumerable<" + toNetType(stripPath(componentType)) + ">";
-            return new NullableVariable(name, netType, false);
+            return new NullableVariable(name, netType, false, false);
         }
 
         final boolean questionMarkForNullable = isEnumType(type, typeMap) || isPrimitive(type);
@@ -171,7 +199,8 @@ public final class GeneratorUtils {
         return new NullableVariable(
                 name,
                 netType,
-                questionMarkForNullable);
+                questionMarkForNullable,
+                nullable);
     }
 
     //TODO unit test

@@ -19,6 +19,8 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
 
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getXmlTagName;
+
 public class JobsApiBeanTypeGenerator extends BaseTypeGenerator {
 
     /**

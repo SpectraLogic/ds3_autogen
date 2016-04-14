@@ -20,18 +20,28 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 public class NullableVariable extends Arguments {
 
     /** Denotes if the type must be followed by a '?' in order for the type to be nullable */
-    final private boolean questionMarkForNullable;
+    private final boolean questionMarkForNullable;
 
-    public NullableVariable(final String name, final String type, final boolean questionMarkForNullable) {
+    /** Denotes if the type should be nullable */
+    private final boolean nullable;
+
+    public NullableVariable(
+            final String name,
+            final String type,
+            final boolean questionMarkForNullable,
+            final boolean nullable) {
         super(type, name);
         this.questionMarkForNullable = questionMarkForNullable;
+        this.nullable = nullable;
     }
 
     /**
-     * Retrieves the nullable version of a type
+     * Retrieves the .net type described by this variable. It the
+     * type is both nullable and primitive, then the type will be
+     * followed by a '?' for nullability
      */
-    public String getNullableType() {
-        if (questionMarkForNullable) {
+    public String getNetType() {
+        if (questionMarkForNullable && nullable) {
             return type + "?";
         }
         return type;
@@ -39,5 +49,9 @@ public class NullableVariable extends Arguments {
 
     public boolean isQuestionMarkForNullable() {
         return questionMarkForNullable;
+    }
+
+    public boolean isNullable() {
+        return nullable;
     }
 }

@@ -15,23 +15,34 @@
 
 package com.spectralogic.ds3autogen.net.model.typeparser;
 
-import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
 
-public class TypeParser {
+public class NullableElement extends NullableVariable {
 
-    private final String name;
-    private final ImmutableList<NullableElement> elements;
+    private final String xmlTag;
 
-    public TypeParser(final String name, final ImmutableList<NullableElement> elements) {
-        this.name = name;
-        this.elements = elements;
+    /** The name of the model parser associated with this type */
+    private final String parserName;
+
+
+    public NullableElement(
+            final String name,
+            final String type,
+            final boolean questionMarkForNullable,
+            final boolean nullable,
+            final String xmlTag,
+            final String parserName) {
+        super(name, type, questionMarkForNullable, nullable);
+
+        this.xmlTag = xmlTag;
+        this.parserName = parserName;
     }
 
-    public String getName() {
-        return name;
+    public String getXmlTag() {
+        return xmlTag;
     }
 
-    public ImmutableList<NullableElement> getElements() {
-        return elements;
+    public String getParserName() {
+        return parserName;
     }
 }

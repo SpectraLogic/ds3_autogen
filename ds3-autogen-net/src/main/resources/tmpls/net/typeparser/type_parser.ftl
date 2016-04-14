@@ -3,8 +3,8 @@
             return new ${parser.getName()}
             {
                 //TODO
-                <#list parser.getVariables() as var>
-                ${var.getNullableType()} ${var.getName()}
+                <#list parser.getElements() as elmt>
+                ${elmt.getNetType()} ${elmt.getName()} = Parse${elmt.getType()?cap_first}(element.Element("${elmt.getXmlTag()}")),
                 </#list>
             };
         }
