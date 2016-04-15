@@ -193,6 +193,22 @@ public final class NetHelper {
                 .collect(Collectors.joining(",\n"));
     }
 
+    /**
+     * Creates a comma separated list of strings with the specified indentation.
+     * Used in Net model generation.
+     */
+    public static String commaSeparateStrings(
+            final ImmutableList<String> strings,
+            final int indent) {
+        if (isEmpty(strings)) {
+            return "";
+        }
+        return strings
+                .stream()
+                .map(i -> i)
+                .collect(Collectors.joining(",\n" + indent(indent)));
+    }
+
     private final static NetHelper instance = new NetHelper();
 
     public static NetHelper getInstance() {

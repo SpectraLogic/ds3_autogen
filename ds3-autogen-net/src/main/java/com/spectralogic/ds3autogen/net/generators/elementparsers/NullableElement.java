@@ -13,17 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.testutil.logging;
+package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
-/**
- * Types of generated files. This is used by GeneratedCodeLogger.
- */
-public enum  FileTypeToLog {
-    ALL,
-    CLIENT,
-    NONE,
-    PARSER,
-    REQUEST,
-    RESPONSE,
-    MODEL_PARSERS
+@FunctionalInterface
+public interface NullableElement {
+    String printParseElement();
 }

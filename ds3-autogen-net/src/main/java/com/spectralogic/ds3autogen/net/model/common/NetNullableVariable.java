@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.net.model.common;
 
 import com.spectralogic.ds3autogen.api.models.Arguments;
 
-public class NullableVariable extends Arguments {
+public class NetNullableVariable extends Arguments {
 
     /** Denotes if the type must be followed by a '?' in order for the type to be nullable */
     private final boolean questionMarkForNullable;
@@ -25,7 +25,7 @@ public class NullableVariable extends Arguments {
     /** Denotes if the type should be nullable */
     private final boolean nullable;
 
-    public NullableVariable(
+    public NetNullableVariable(
             final String name,
             final String type,
             final boolean questionMarkForNullable,

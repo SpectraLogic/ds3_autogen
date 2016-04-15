@@ -19,13 +19,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
 import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
-import com.spectralogic.ds3autogen.net.model.typeparser.NullableElement;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 
-import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.createNullableElement;
+import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.createNullableElement;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getXmlTagName;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTypeParser> {
@@ -38,7 +38,6 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
         return new BaseTypeParser(typeParsers);
     }
 
-    //TODO unit test
     /**
      * Converts a list of Ds3Types into a list of TypeParsers
      */
@@ -50,54 +49,66 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
 
         final ImmutableList.Builder<TypeParser> builder = ImmutableList.builder();
         for (final Ds3Type ds3Type : typeMap.values().asList()) {
-            builder.add(toTypeParser(ds3Type, typeMap));
+            builder.add(toTypeParser(ds3Type));
         }
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Converts a Ds3Type into a TypeParser
      */
     protected static TypeParser toTypeParser(
-            final Ds3Type ds3Type,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+            final Ds3Type ds3Type) {
         final String typeName = removePath(ds3Type.getName());
-        final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Type.getElements(), typeMap);
+        final ImmutableList<String> parseElements = toParseElements(ds3Type.getElements());
 
-        return new TypeParser(typeName, elements);
+        return new TypeParser(typeName, parseElements);
     }
 
-    //TODO unit test
+    /**
+     * Converts a list of NullableElements into their .net parsing code
+     */
+    protected static ImmutableList<String> toParseElements(
+            final ImmutableList<Ds3Element> ds3Elements) {
+        final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Elements);
+        if (isEmpty(elements)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final NullableElement nullableElement : elements) {
+            builder.add(nullableElement.printParseElement());
+        }
+        return builder.build();
+    }
+
     /**
      * Converts a list of Ds3Elements into a list of Nullable Element
      */
     protected static ImmutableList<NullableElement> toNullableElementsList(
-            final ImmutableList<Ds3Element> ds3Elements,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+            final ImmutableList<Ds3Element> ds3Elements) {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
         final ImmutableList.Builder<NullableElement> builder = ImmutableList.builder();
         for (final Ds3Element ds3Element : ds3Elements) {
-            builder.add(toNullableElement(ds3Element, typeMap));
+            builder.add(toNullableElement(ds3Element));
         }
         return builder.build();
     }
 
-    //TODO unit test
     /**
      * Converts a Ds3Element into a Nullable Element
      */
     protected static NullableElement toNullableElement(
-            final Ds3Element ds3Element,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+            final Ds3Element ds3Element) {
+
         return createNullableElement(
                 ds3Element.getName(),
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
                 ds3Element.isNullable(),
                 getXmlTagName(ds3Element),
-                typeMap);
+                getEncapsulatingTagAnnotations(ds3Element.getDs3Annotations()),
+                isAttribute(ds3Element.getDs3Annotations()));
     }
 }

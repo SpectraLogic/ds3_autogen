@@ -2,10 +2,7 @@
         {
             return new ${parser.getName()}
             {
-                //TODO
-                <#list parser.getElements() as elmt>
-                ${elmt.getNetType()} ${elmt.getName()} = Parse${elmt.getType()?cap_first}(element.Element("${elmt.getXmlTag()}")),
-                </#list>
+                ${netHelper.commaSeparateStrings(parser.getParseElements(), 4)}
             };
         }
 

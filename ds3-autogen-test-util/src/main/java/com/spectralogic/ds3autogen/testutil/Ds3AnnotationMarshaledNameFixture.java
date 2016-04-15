@@ -28,7 +28,7 @@ public final class Ds3AnnotationMarshaledNameFixture {
         return new Ds3Annotation(
                 "com.spectralogic.util.marshal.CustomMarshaledName",
                 ImmutableList.of(
-                        new Ds3AnnotationElement("CollectionValue", "", "java.lang.String"),
+                        new Ds3AnnotationElement("CollectionValue", "TestCollectionValue", "java.lang.String"),
                         new Ds3AnnotationElement(
                                 "CollectionValueRenderingMode",
                                 "UNDEFINED",

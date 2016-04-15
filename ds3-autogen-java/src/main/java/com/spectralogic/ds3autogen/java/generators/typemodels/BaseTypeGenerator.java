@@ -27,6 +27,8 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getXmlTagName;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.hasWrapperAnnotations;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.isAttribute;
 
 public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGeneratorUtil {
 
@@ -88,61 +90,10 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
         return new Element(
                 ds3Element.getName(),
                 getXmlTagName(ds3Element),
-                toElementAsAttribute(ds3Element.getDs3Annotations()),
+                isAttribute(ds3Element.getDs3Annotations()),
                 hasWrapperAnnotations(ds3Element.getDs3Annotations()),
                 ds3Element.getType(),
                 ds3Element.getComponentType());
-    }
-
-    /**
-     * Determines if the element associated with this list of annotations
-     * has an Xml wrapper
-     */
-    protected static boolean hasWrapperAnnotations(
-            final ImmutableList<Ds3Annotation> annotations) {
-        if (isEmpty(annotations)) {
-            return false;
-        }
-        for (final Ds3Annotation annotation : annotations) {
-            if (annotation.getName().endsWith("CustomMarshaledName")
-                    && hasWrapperAnnotationElements(annotation.getDs3AnnotationElements())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Determines if the element associated with this list of annotation elements
-     * has an Xml wrapper
-     */
-    protected static boolean hasWrapperAnnotationElements(
-            final ImmutableList<Ds3AnnotationElement> annotationElements) {
-        if (isEmpty(annotationElements)) {
-            return false;
-        }
-        for (final Ds3AnnotationElement annotationElement : annotationElements) {
-            if (annotationElement.getName().equals("CollectionValue")
-                    && hasContent(annotationElement.getValue())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Determines if an element is an attribute
-     */
-    protected static boolean toElementAsAttribute(final ImmutableList<Ds3Annotation> annotations) {
-        if (isEmpty(annotations)) {
-            return false;
-        }
-        for (final Ds3Annotation annotation : annotations) {
-            if (annotation.getName().endsWith("MarshalXmlAsAttribute")) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -208,7 +159,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
                 builder.add("java.util.ArrayList");
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
             }
-            if (toElementAsAttribute(element.getDs3Annotations())) {
+            if (isAttribute(element.getDs3Annotations())) {
                 builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty");
             }
         }

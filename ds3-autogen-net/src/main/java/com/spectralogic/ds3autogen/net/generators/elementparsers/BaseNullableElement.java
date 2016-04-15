@@ -13,27 +13,27 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model.typeparser;
+package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
-import com.spectralogic.ds3autogen.net.model.common.NullableVariable;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
-public class NullableElement extends NullableVariable {
+/**
+ * Represents an element within a .net model parser whose data
+ * is within an xml tag
+ */
+public class BaseNullableElement implements NullableElement {
 
-    private final String xmlTag;
+    protected final String name;
+    protected final String xmlTag;
 
     /** The name of the model parser associated with this type */
-    private final String parserName;
+    protected final String parserName;
 
-
-    public NullableElement(
+    public BaseNullableElement(
             final String name,
-            final String type,
-            final boolean questionMarkForNullable,
-            final boolean nullable,
             final String xmlTag,
             final String parserName) {
-        super(name, type, questionMarkForNullable, nullable);
-
+        this.name = name;
         this.xmlTag = xmlTag;
         this.parserName = parserName;
     }
@@ -44,5 +44,13 @@ public class NullableElement extends NullableVariable {
 
     public String getParserName() {
         return parserName;
+    }
+
+    /**
+     * Gets the .net code for parsing this element
+     */
+    @Override
+    public String printParseElement() {
+        return uncapFirst(name) + " = " + parserName + "(element.Element(\"" + xmlTag + "\"))";
     }
 }

@@ -20,6 +20,8 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
+import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
+import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import freemarker.template.TemplateModelException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,12 +32,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class NetCodeGenerator_ModelParsers_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -49,9 +53,24 @@ public class NetCodeGenerator_ModelParsers_Test {
                 "./Ds3/Calls/",
                 "ListBucketResult");
 
-        codeGenerator.generateCode(fileUtils, "/input/getBucketRequest.xml");
+        codeGenerator.generateCode(fileUtils, "/input/modelparsing/modelParsingSimpleType.xml");
         final String typeParserCode = codeGenerator.getTypeParser();
 
-        LOG.info("Generated code:\n" + typeParserCode);
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+
+        assertTrue(typeParserCode.contains("internal static ListBucketResult ParseListBucketResult(XElement element)"));
+        assertTrue(typeParserCode.contains("public static ListBucketResult ParseNullableListBucketResult(XElement element)"));
+
+        assertTrue(typeParserCode.contains("bucketName = ParseNullableString(element.AttributeText(\"BucketName\"))"));
+        assertTrue(typeParserCode.contains("truncated = ParseBool(element.Element(\"IsTruncated\"))"));
+        assertTrue(typeParserCode.contains("truncatedNullable = ParseNullableBool(element.Element(\"IsTruncated\"))"));
+        assertTrue(typeParserCode.contains("maxKeys = ParseInt(element.Element(\"MaxKeys\"))"));
+        assertTrue(typeParserCode.contains("maxKeysNullable = ParseNullableInt(element.Element(\"MaxKeysNullable\"))"));
+        assertTrue(typeParserCode.contains("creationDate = ParseDateTime(element.Element(\"CreationDate\"))"));
+        assertTrue(typeParserCode.contains("creationDateNullable = ParseNullableDateTime(element.Element(\"CreationDateNullable\"))"));
+        assertTrue(typeParserCode.contains("delimiter = ParseNullableString(element.Element(\"Delimiter\"))"));
+        assertTrue(typeParserCode.contains("commonPrefixes = element.Element(\"CommonPrefixes\").Elements(\"Prefix\").Select(ParseString).ToList()"));
+        assertTrue(typeParserCode.contains("objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
+        assertTrue(typeParserCode.contains("buckets = element.Element(\"Buckets\").Elements(\"Bucket\").Select(ParseDs3Bucket).ToList()"));
     }
 }

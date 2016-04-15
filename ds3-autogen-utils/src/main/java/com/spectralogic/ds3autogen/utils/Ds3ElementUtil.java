@@ -86,4 +86,89 @@ public final class Ds3ElementUtil {
         }
         return "";
     }
+
+    /**
+     * Determines if the element associated with this list of annotations
+     * has an encapsulating Xml tag
+     */
+    public static boolean hasWrapperAnnotations(
+            final ImmutableList<Ds3Annotation> annotations) {
+        if (isEmpty(annotations)) {
+            return false;
+        }
+        for (final Ds3Annotation annotation : annotations) {
+            if (annotation.getName().endsWith("CustomMarshaledName")
+                    && hasWrapperAnnotationElements(annotation.getDs3AnnotationElements())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determines if the element associated with this list of annotation elements
+     * has an encapsulating Xml tag
+     */
+    protected static boolean hasWrapperAnnotationElements(
+            final ImmutableList<Ds3AnnotationElement> annotationElements) {
+        if (isEmpty(annotationElements)) {
+            return false;
+        }
+        for (final Ds3AnnotationElement annotationElement : annotationElements) {
+            if (annotationElement.getName().equals("CollectionValue")
+                    && hasContent(annotationElement.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Retrieves the encapsulating xml tag from a list of annotations
+     */
+    public static String getEncapsulatingTagAnnotations(
+            final ImmutableList<Ds3Annotation> annotations) {
+        if (isEmpty(annotations)) {
+            return "";
+        }
+        for (final Ds3Annotation annotation : annotations) {
+            if (annotation.getName().endsWith("CustomMarshaledName")
+                    && hasWrapperAnnotationElements(annotation.getDs3AnnotationElements())) {
+                return getEncapsulatingTagAnnotationElements(annotation.getDs3AnnotationElements());
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Retrieves the encapsulating xml tag from a list of annotation elements
+     */
+    protected static String getEncapsulatingTagAnnotationElements(
+            final ImmutableList<Ds3AnnotationElement> annotationElements) {
+        if (isEmpty(annotationElements)) {
+            return "";
+        }
+        for (final Ds3AnnotationElement annotationElement : annotationElements) {
+            if (annotationElement.getName().equals("CollectionValue")
+                    && hasContent(annotationElement.getValue())) {
+                return annotationElement.getValue();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Determines if an element is an attribute
+     */
+    public static boolean isAttribute(final ImmutableList<Ds3Annotation> annotations) {
+        if (isEmpty(annotations)) {
+            return false;
+        }
+        for (final Ds3Annotation annotation : annotations) {
+            if (annotation.getName().endsWith("MarshalXmlAsAttribute")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

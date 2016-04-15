@@ -16,22 +16,25 @@
 package com.spectralogic.ds3autogen.net.model.typeparser;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
 
 public class TypeParser {
 
     private final String name;
-    private final ImmutableList<NullableElement> elements;
 
-    public TypeParser(final String name, final ImmutableList<NullableElement> elements) {
+    /** Lines for parsing the type's elements */
+    private final ImmutableList<String> parseElements;
+
+    public TypeParser(final String name, final ImmutableList<String> parseElements) {
         this.name = name;
-        this.elements = elements;
+        this.parseElements = parseElements;
     }
 
     public String getName() {
         return name;
     }
 
-    public ImmutableList<NullableElement> getElements() {
-        return elements;
+    public ImmutableList<String> getParseElements() {
+        return parseElements;
     }
 }

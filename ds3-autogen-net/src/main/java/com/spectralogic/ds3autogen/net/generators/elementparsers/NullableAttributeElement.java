@@ -13,17 +13,28 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.testutil.logging;
+package com.spectralogic.ds3autogen.net.generators.elementparsers;
+
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
 /**
- * Types of generated files. This is used by GeneratedCodeLogger.
+ * Represents an element within a .net model parser whose data is within
+ * an attribute of the current xml tag
  */
-public enum  FileTypeToLog {
-    ALL,
-    CLIENT,
-    NONE,
-    PARSER,
-    REQUEST,
-    RESPONSE,
-    MODEL_PARSERS
+public class NullableAttributeElement extends BaseNullableElement {
+
+    public NullableAttributeElement(
+            final String name,
+            final String xmlTag,
+            final String parserName) {
+        super(name, xmlTag, parserName);
+    }
+
+    /**
+     * Gets the .net code for parsing this element from an element's attribute
+     */
+    @Override
+    public String printParseElement() {
+        return uncapFirst(name) + " = " + parserName + "(element.AttributeText(\"" + xmlTag + "\"))";
+    }
 }
