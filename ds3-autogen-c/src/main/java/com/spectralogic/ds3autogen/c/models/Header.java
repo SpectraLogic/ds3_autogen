@@ -18,9 +18,9 @@ package com.spectralogic.ds3autogen.c.models;
 import com.google.common.collect.ImmutableList;
 
 public class Header {
-    final ImmutableList<Enum> enums;
-    final ImmutableList<Struct> structs;
-    final ImmutableList<Request> requests;
+    private final ImmutableList<Enum> enums;
+    private final ImmutableList<Struct> structs;
+    private final ImmutableList<Request> requests;
 
     public Header(
             final ImmutableList<Enum> enums,

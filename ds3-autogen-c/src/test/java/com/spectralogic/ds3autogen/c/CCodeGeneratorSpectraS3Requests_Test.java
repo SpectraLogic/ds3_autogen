@@ -22,7 +22,13 @@ import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.c.converters.RequestConverter;
+import com.spectralogic.ds3autogen.c.converters.SourceConverter;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -33,7 +39,10 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CCodeGeneratorSpectraS3Requests_Test {
@@ -46,13 +55,14 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info("output:\n" + output);
 
         assertTrue(output.contains("ds3_error* delete_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
@@ -73,7 +83,9 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -92,7 +104,9 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -118,7 +132,9 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Source source = new Source(CCodeGenerator.getAllEnums(spec), CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()), CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -133,5 +149,34 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         assertTrue(output.contains("    return _parse_ds3_bucket_list_response(client->log, response);"));
         assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testGenerateSpectraS3GetBucketRequestPrototype() throws IOException, TemplateModelException {
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Map<String,Object> testMap = new HashMap<>();
+        final String responseType = StructHelper.getResponseTypeName("ListBucketResult");
+        final Request requestEntry = new Request(
+                "GetBucketRequest",
+                Classification.spectrads3,
+                HttpVerb.GET,
+                "\"/_rest_/\", bucket_name, NULL",
+                null,
+                null,
+                RequestConverter.getParamList(responseType),
+                true,
+                false,
+                responseType
+        );
+        testMap.put("requestEntry", requestEntry);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(testMap, "header-templates/RequestPrototype.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput = "ds3_error* get_bucket_request(const ds3_client* client, const ds3_request* request, const ds3_list_bucket_result_response** response);";
+        assertEquals(expectedOutput, output);
     }
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 <#include "../imports.ftl"/>
 
-<#if nameToMarshal??>
+<#if javaHelper.stringHasContent(nameToMarshal)>
 @JacksonXmlRootElement(namespace = "${nameToMarshal}")
 </#if>
 public class ${name} {

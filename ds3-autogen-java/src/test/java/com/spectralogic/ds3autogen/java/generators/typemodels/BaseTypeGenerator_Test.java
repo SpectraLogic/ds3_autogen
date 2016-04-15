@@ -170,14 +170,14 @@ public class BaseTypeGenerator_Test {
     public void toNameToMarshal_NullValue_Test() {
         final Ds3Type type = new Ds3Type("Name", null, null, null);
         final String result = generator.toNameToMarshal(type);
-        assertThat(result, is("Data"));
+        assertThat(result, is(nullValue()));
     }
 
     @Test
     public void toNameToMarshal_EmptyValue_Test() {
         final Ds3Type type = new Ds3Type("Name", "", null, null);
         final String result = generator.toNameToMarshal(type);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(""));
     }
 
     @Test

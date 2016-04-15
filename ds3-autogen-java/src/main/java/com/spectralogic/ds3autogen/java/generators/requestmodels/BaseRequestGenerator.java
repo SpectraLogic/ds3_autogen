@@ -432,6 +432,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
 
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
+                && ds3Request.includeIdInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
             builder.append("/\"").append(" + this.getNotificationId().toString()");

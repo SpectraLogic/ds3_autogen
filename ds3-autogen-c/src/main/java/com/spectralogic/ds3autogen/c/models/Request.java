@@ -101,4 +101,22 @@ public class Request {
     public boolean hasResponsePayload() {
         return hasResponsePayload;
     }
+
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("\nRequest[").append(getName()).append("]\n");
+        builder.append("  Classification[").append(getClassification()).append("]\n");
+        builder.append("  Verb[").append(getVerb()).append("]\n");
+        builder.append("  BuildPathArgs[").append(getBuildPathArgs()).append("]\n");
+        builder.append("  Operation[").append(getOperation()).append("]\n");
+        builder.append("  Action[").append(getAction()).append("]\n");
+        for (final Parameter parm: getParamList()) {
+            builder.append(parm.toString()).append("\n");
+        }
+        builder.append("  isResourceRequired[").append(isResourceRequired()).append("]\n");
+        builder.append("  isResourceIdRequired[").append(isResourceIdRequired()).append("]\n");
+        builder.append("  ResponseType[").append(getResponseType()).append("]\n");
+        builder.append("  hasResponsePayload[").append(hasResponsePayload()).append("]\n");
+        return builder.toString();
+    }
 }

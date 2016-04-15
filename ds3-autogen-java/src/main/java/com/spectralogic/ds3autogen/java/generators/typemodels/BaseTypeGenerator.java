@@ -54,12 +54,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
      */
     @Override
     public String toNameToMarshal(final Ds3Type ds3Type) {
-        if (ds3Type.getNameToMarshal() == null) {
-            return "Data";
-        }
-        if (ds3Type.getNameToMarshal().equals("")) {
-            return null;
-        }
         return ds3Type.getNameToMarshal();
     }
 

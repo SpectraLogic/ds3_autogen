@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.c.models.C_Type;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -29,7 +28,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
@@ -232,54 +230,9 @@ public final class StructHelper {
 
         for (final StructMember member : structMembers) {
             outputBuilder.append(indent(1)).append(member.getType()).append(" ").append(member.getName()).append(";\n");
-
-            if (member.getType().isArray()) {
-                outputBuilder.append(indent(1)).append("size_t").append(" num_").append(member.getName()).append(";\n");
-            }
         }
 
         return outputBuilder.toString();
-    }
-
-    public static ImmutableSet<C_Type> getArrayStructMemberTypes(final ImmutableList<Struct> allOrderedStructs) {
-        final ImmutableSet.Builder<C_Type> arrayStructMemberTypesBuilder = ImmutableSet.builder();
-        for (final Struct currentStruct : allOrderedStructs) {
-            currentStruct.getStructMembers().stream()
-                    .filter(currentStructMember -> currentStructMember.getType().isArray())
-                    .map(StructMember::getType)
-                    .forEach(arrayStructMemberTypesBuilder::add);
-        }
-
-        return arrayStructMemberTypesBuilder.build();
-    }
-
-    public static ImmutableList<Struct> getArrayStructs(final ImmutableList<Struct> allOrderedStructs, final ImmutableSet<C_Type> arrayTypes) {
-        final Set<String> typeKeys = arrayTypes.stream()
-                .map(C_Type::getTypeName)
-                .collect(Collectors.toCollection(HashSet::new));
-
-        final ImmutableList.Builder<Struct> arrayStructsBuilder = ImmutableList.builder();
-        allOrderedStructs.stream()
-                .filter(currentStruct -> typeKeys.contains(currentStruct.getName()))
-                .forEach(arrayStructsBuilder::add);
-
-        return arrayStructsBuilder.build();
-    }
-
-    /**
-     * Remove Structs from allOrderedStructs that exist in arrayTypes
-     */
-    public static ImmutableList<Struct> filterArrayStructs(final ImmutableList<Struct> allOrderedStructs, final ImmutableSet<C_Type> arrayTypes) {
-        final Set<String> typeKeys = arrayTypes.stream()
-                .map(C_Type::getTypeName)
-                .collect(Collectors.toCollection(HashSet::new));
-
-        final ImmutableList.Builder<Struct> filteredStructsBuilder = ImmutableList.builder();
-        allOrderedStructs.stream()
-                .filter(currentStruct -> !typeKeys.contains(currentStruct.getName()))
-                .forEach(filteredStructsBuilder::add);
-
-        return filteredStructsBuilder.build();
     }
 
 }
