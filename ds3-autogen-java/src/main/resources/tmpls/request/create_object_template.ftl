@@ -22,7 +22,7 @@ public class ${name} extends AbstractRequest {
     // Constructor
     <#list constructors as constructor>
     <#if constructor.isDeprecated() == true>
-    /** @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
+    /** @deprecated use {@link #${name}(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
     </#if>
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
