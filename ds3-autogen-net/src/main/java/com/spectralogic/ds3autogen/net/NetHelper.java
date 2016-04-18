@@ -205,7 +205,6 @@ public final class NetHelper {
         }
         return strings
                 .stream()
-                .map(i -> i)
                 .collect(Collectors.joining(",\n" + indent(indent)));
     }
 
