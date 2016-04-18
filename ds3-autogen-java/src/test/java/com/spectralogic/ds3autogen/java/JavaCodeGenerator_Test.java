@@ -813,6 +813,8 @@ public class JavaCodeGenerator_Test {
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
+        assertFalse(requestGeneratedCode.contains("CreateObjectRequest"));
+
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
