@@ -150,7 +150,7 @@ public final class ConverterUtil {
     /**
      * Determines if a Ds3Type is describing an Enum
      */
-    protected static boolean isEnum(final Ds3Type ds3Type) {
+    public static boolean isEnum(final Ds3Type ds3Type) {
         return hasContent(ds3Type.getEnumConstants());
     }
 

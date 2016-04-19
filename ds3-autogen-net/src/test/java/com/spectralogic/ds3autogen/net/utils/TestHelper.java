@@ -167,4 +167,74 @@ public final class TestHelper {
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return searchString.matcher(idsClientCode).find();
     }
+
+    /**
+     * Determines if the .net code contains the specified nullable enum parser
+     * that takes a string input
+     */
+    public static boolean parseNullableEnumString(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "private static " + enumName + "\\? ParseNullable" + enumName + "\\(string " + uncapFirst(enumName) + "OrNull\\)"
+                + "\\s+\\{"
+                + "\\s+return string.IsNullOrWhiteSpace\\(" + uncapFirst(enumName) + "OrNull\\)"
+                + "\\s+\\? \\(" + enumName + "\\?\\) null"
+                + "\\s+: Parse" + enumName + "\\(" + uncapFirst(enumName) + "OrNull\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified non-nullable enum
+     * parser that takes a string input
+     */
+    public static boolean parseEnumString(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "private static " + enumName + " Parse" + enumName + "\\(string " + uncapFirst(enumName) + "\\)"
+                + "\\s+\\{"
+                + "\\s+return ParseEnumType<" + enumName + ">\\(" + uncapFirst(enumName) + "\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified nullable enum parser
+     * that takes an XElement input
+     */
+    public static boolean parseNullableEnumElement(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "private static " + enumName + "\\? ParseNullable" + enumName + "\\(XElement element\\)"
+                + "\\s+\\{"
+                + "\\s+return ParseNullable" + enumName + "\\(element\\.Value\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified non-nullable enum
+     * parser that takes an XElement input
+     */
+    public static boolean parseEnumElement(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "private static " + enumName + " Parse" + enumName + "\\(XElement element\\)"
+                + "\\s+\\{"
+                + "\\s+return Parse" + enumName + "\\(element\\.Value\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
 }

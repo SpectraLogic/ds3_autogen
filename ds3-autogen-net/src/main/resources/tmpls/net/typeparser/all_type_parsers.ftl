@@ -10,5 +10,11 @@ namespace Ds3.ResponseParsers
 <#include "type_parser.ftl" />
 </#list>
 
+<#list enumParsers as enum>
+<#include "enum_parser.ftl" />
+</#list>
+
+<#include "primitive_parsers.ftl" />
+
     }
 }
