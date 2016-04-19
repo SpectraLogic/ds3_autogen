@@ -12,15 +12,11 @@ namespace Ds3.Calls
 {
     public class ${name}
     {
-        <#list arguments as arg>
-        public ${netHelper.getType(arg)} ${arg.getName()?cap_first} { get; private set; }
-        </#list>
+        public ${responseType} ResponsePayload { get; private set; }
 
-        public ${name}(${netHelper.constructor(arguments)})
+        public ${name}(${responseType} responsePayload)
         {
-            <#list arguments as arg>
-            this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
-            </#list>
+            this.ResponsePayload = responsePayload;
         }
     }
 }

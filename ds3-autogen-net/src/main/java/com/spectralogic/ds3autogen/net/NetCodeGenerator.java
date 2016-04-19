@@ -252,12 +252,12 @@ public class NetCodeGenerator implements CodeGenerator {
             throw new IllegalArgumentException("Cannot generate a response because there are no non-error payloads: " + ds3Request.getName());
         }
 
+        generateResponse(ds3Request, responsePayloadType);
+
         if (responsePayloadType.equalsIgnoreCase("java.lang.String")) {
-            generateResponse(ds3Request, null);
             generateResponseParser(ds3Request, null);
         } else {
             final Ds3Type ds3TypePayload = spec.getTypes().get(responsePayloadType);
-            generateResponse(ds3Request, ds3TypePayload);
             generateResponseParser(ds3Request, ds3TypePayload);
         }
     }
@@ -312,7 +312,7 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Generates the .net code for the response handler
      */
-    private void generateResponse(final Ds3Request ds3Request, final Ds3Type responsePayload) throws IOException, TemplateException {
+    private void generateResponse(final Ds3Request ds3Request, final String responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
         final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
