@@ -35,6 +35,6 @@ public class NullableAttributeElement extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return uncapFirst(name) + " = " + parserName + "(element.AttributeText(\"" + xmlTag + "\"))";
+        return uncapFirst(getName()) + " = " + getParserName() + "(element.AttributeText(\"" + getXmlTag() + "\"))";
     }
 }

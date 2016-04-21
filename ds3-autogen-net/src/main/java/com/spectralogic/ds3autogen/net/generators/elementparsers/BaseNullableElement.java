@@ -23,11 +23,11 @@ import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
  */
 public class BaseNullableElement implements NullableElement {
 
-    protected final String name;
-    protected final String xmlTag;
+    private final String name;
+    private final String xmlTag;
 
     /** The name of the model parser associated with this type */
-    protected final String parserName;
+    private final String parserName;
 
     public BaseNullableElement(
             final String name,
@@ -36,6 +36,10 @@ public class BaseNullableElement implements NullableElement {
         this.name = name;
         this.xmlTag = xmlTag;
         this.parserName = parserName;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getXmlTag() {

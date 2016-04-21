@@ -35,8 +35,8 @@ public class NullableListElement extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return uncapFirst(name) + " = element" +
-                ".Elements(\"" + xmlTag + "\")" +
-                ".Select(" + parserName + ").ToList()";
+        return uncapFirst(getName()) + " = element" +
+                ".Elements(\"" + getXmlTag() + "\")" +
+                ".Select(" + getParserName() + ").ToList()";
     }
 }

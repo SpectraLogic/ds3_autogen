@@ -24,7 +24,7 @@ import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 public class NullableEncapsulatedListElement  extends BaseNullableElement {
 
     /** The encapsulating xml tag for the list described by this element */
-    protected final String encapsulatingTag;
+    private final String encapsulatingTag;
 
     public NullableEncapsulatedListElement(
             final String name,
@@ -40,9 +40,9 @@ public class NullableEncapsulatedListElement  extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return uncapFirst(name) + " = element" +
+        return uncapFirst(getName()) + " = element" +
                 ".Element(\"" + encapsulatingTag + "\")" +
-                ".Elements(\"" + xmlTag + "\")" +
-                ".Select(" + parserName + ").ToList()";
+                ".Elements(\"" + getXmlTag() + "\")" +
+                ".Select(" + getParserName() + ").ToList()";
     }
 }

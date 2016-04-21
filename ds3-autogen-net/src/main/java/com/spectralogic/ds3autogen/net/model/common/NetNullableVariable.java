@@ -42,9 +42,9 @@ public class NetNullableVariable extends Arguments {
      */
     public String getNetType() {
         if (questionMarkForNullable && nullable) {
-            return type + "?";
+            return getType() + "?";
         }
-        return type;
+        return getType();
     }
 
     public boolean isQuestionMarkForNullable() {
