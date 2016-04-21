@@ -101,6 +101,7 @@ public final class NetHelper {
         }
     }
 
+    //TODO delete once removed from all templates
     /**
      * Gets the nullable type of an argument, converting the argument from a Contract
      * type to a nullable .net type.
@@ -190,6 +191,21 @@ public final class NetHelper {
                 .stream()
                 .map(i -> indent(indent) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    /**
+     * Creates a comma separated list of strings with the specified indentation.
+     * Used in Net model generation.
+     */
+    public static String commaSeparateStrings(
+            final ImmutableList<String> strings,
+            final int indent) {
+        if (isEmpty(strings)) {
+            return "";
+        }
+        return strings
+                .stream()
+                .collect(Collectors.joining(",\n" + indent(indent)));
     }
 
     private final static NetHelper instance = new NetHelper();

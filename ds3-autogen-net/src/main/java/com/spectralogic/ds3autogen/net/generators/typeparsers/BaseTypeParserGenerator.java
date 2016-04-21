@@ -1,0 +1,114 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+package com.spectralogic.ds3autogen.net.generators.typeparsers;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
+import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
+
+import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.createNullableElement;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
+
+public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTypeParser> {
+
+    @Override
+    public BaseTypeParser generate(
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        final ImmutableList<TypeParser> typeParsers = toTypeParserList(typeMap);
+
+        return new BaseTypeParser(typeParsers);
+    }
+
+    /**
+     * Converts a list of Ds3Types into a list of TypeParsers
+     */
+    protected static ImmutableList<TypeParser> toTypeParserList(
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeMap)) {
+            return ImmutableList.of();
+        }
+
+        final ImmutableList.Builder<TypeParser> builder = ImmutableList.builder();
+        for (final Ds3Type ds3Type : typeMap.values().asList()) {
+            builder.add(toTypeParser(ds3Type));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a Ds3Type into a TypeParser
+     */
+    protected static TypeParser toTypeParser(
+            final Ds3Type ds3Type) {
+        final String typeName = removePath(ds3Type.getName());
+        final ImmutableList<String> parseElements = toParseElements(ds3Type.getElements());
+
+        return new TypeParser(typeName, parseElements);
+    }
+
+    /**
+     * Converts a list of NullableElements into their .net parsing code
+     */
+    protected static ImmutableList<String> toParseElements(
+            final ImmutableList<Ds3Element> ds3Elements) {
+        final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Elements);
+        if (isEmpty(elements)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final NullableElement nullableElement : elements) {
+            builder.add(nullableElement.printParseElement());
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a list of Ds3Elements into a list of Nullable Element
+     */
+    protected static ImmutableList<NullableElement> toNullableElementsList(
+            final ImmutableList<Ds3Element> ds3Elements) {
+        if (isEmpty(ds3Elements)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<NullableElement> builder = ImmutableList.builder();
+        for (final Ds3Element ds3Element : ds3Elements) {
+            builder.add(toNullableElement(ds3Element));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a Ds3Element into a Nullable Element
+     */
+    protected static NullableElement toNullableElement(
+            final Ds3Element ds3Element) {
+
+        return createNullableElement(
+                ds3Element.getName(),
+                ds3Element.getType(),
+                ds3Element.getComponentType(),
+                ds3Element.isNullable(),
+                getXmlTagName(ds3Element),
+                getEncapsulatingTagAnnotations(ds3Element.getDs3Annotations()),
+                isAttribute(ds3Element.getDs3Annotations()));
+    }
+}

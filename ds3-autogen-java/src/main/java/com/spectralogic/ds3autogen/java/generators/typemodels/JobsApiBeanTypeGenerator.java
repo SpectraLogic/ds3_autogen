@@ -19,6 +19,10 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
 
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getXmlTagName;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.hasWrapperAnnotations;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.isAttribute;
+
 public class JobsApiBeanTypeGenerator extends BaseTypeGenerator {
 
     /**
@@ -45,7 +49,7 @@ public class JobsApiBeanTypeGenerator extends BaseTypeGenerator {
         return new Element(
                 ds3Element.getName(),
                 getXmlTagName(ds3Element),
-                toElementAsAttribute(ds3Element.getDs3Annotations()),
+                isAttribute(ds3Element.getDs3Annotations()),
                 hasWrapper,
                 ds3Element.getType(),
                 ds3Element.getComponentType());

@@ -34,11 +34,14 @@ import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGe
 import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.typeparsers.TypeParserModelGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.net.model.type.BaseType;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import freemarker.template.*;
@@ -55,8 +58,8 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -66,6 +69,7 @@ public class NetCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(NetCodeGenerator.class);
     private static final String COMMANDS_NAMESPACE = "Ds3.Calls";
     private static final String CLIENT_NAMESPACE = "Ds3.";
+    private static final String MODEL_PARSER_NAMESPACE = "Ds3.ResponseParsers";
     private static final String PARSER_NAMESPACE = CLIENT_NAMESPACE + "ResponseParsers";
     private static final String TYPES_NAMESPACE = CLIENT_NAMESPACE + "Models";
     private static final Path BASE_PROJECT_PATH = Paths.get("");
@@ -92,13 +96,37 @@ public class NetCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
+            final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
+
             generateCommands(requests);
             generateClient(requests);
-
-            final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
+            generateModelParsers(spec.getTypes());
             generateAllTypes(typeMap);
         } catch (final TemplateException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Generates the .net code for the type/model parsers
+     */
+    private void generateModelParsers(
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        if (isEmpty(typeMap)) {
+            LOG.info("Not generating model parsers: no types.");
+            return;
+        }
+        final Template tmpl = config.getTemplate("typeparser/all_type_parsers.ftl");
+        final TypeParserModelGenerator<?> generator = new BaseTypeParserGenerator();
+        final BaseTypeParser parser = generator.generate(typeMap);
+        final Path path = destDir.resolve(
+                BASE_PROJECT_PATH.resolve(Paths.get(MODEL_PARSER_NAMESPACE.replace(".", "/") + "/ModelParsers.cs")));
+
+        LOG.info("Getting OutputStream for file:" + path.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(path);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(parser, writer);
         }
     }
 

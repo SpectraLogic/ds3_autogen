@@ -13,17 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.testutil.logging;
+package com.spectralogic.ds3autogen.net.generators.typeparsers;
 
-/**
- * Types of generated files. This is used by GeneratedCodeLogger.
- */
-public enum  FileTypeToLog {
-    ALL,
-    CLIENT,
-    NONE,
-    PARSER,
-    REQUEST,
-    RESPONSE,
-    MODEL_PARSERS
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
+
+@FunctionalInterface
+public interface TypeParserModelGenerator <T extends BaseTypeParser>{
+    T generate (final ImmutableMap<String, Ds3Type> typeMap);
 }

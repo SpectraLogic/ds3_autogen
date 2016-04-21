@@ -171,4 +171,24 @@ public class NetHelper_Test {
         final String result = getEnumValues(enumConstants, 0);
         assertThat(result, is(expected));
     }
+
+    @Test
+    public void commaSeparateStrings_NullList_Test() {
+        final String result = commaSeparateStrings(null, 0);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void commaSeparateStrings_EmptyList_Test() {
+        final String result = commaSeparateStrings(ImmutableList.of(), 0);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void commaSeparateStrings_FullList_Test() {
+        final String expected = "One,\n    Two,\n    Three";
+        final ImmutableList<String> input = ImmutableList.of("One", "Two", "Three");
+        final String result = commaSeparateStrings(input, 1);
+        assertThat(result, is(expected));
+    }
 }
