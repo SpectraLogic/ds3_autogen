@@ -1,6 +1,6 @@
         //DateTime parsers
 
-		private static DateTime? ParseNullableDateTime(XElement element)
+        private static DateTime? ParseNullableDateTime(XElement element)
         {
             return ParseNullableDateTime(element.Value);
         }
@@ -22,9 +22,9 @@
             return DateTime.Parse(dateTimeString);
         }
 
-		//Boolean parsers
+        //Boolean parsers
 
-		private static bool? ParseNullableBool(XElement element)
+        private static bool? ParseNullableBool(XElement element)
         {
             return ParseNullableBool(element.Value);
         }
@@ -46,9 +46,9 @@
             return bool.Parse(boolString);
         }
 
-		//String parsers
+        //String parsers
 
-		private static string ParseNullableString(XElement element)
+        private static string ParseNullableString(XElement element)
         {
             return ParseNullableString(element.Value);
         }
@@ -70,9 +70,9 @@
             return str;
         }
 
-		//Integer parsers
+        //Integer parsers
 
-		private static int? ParseNullableInt(XElement element)
+        private static int? ParseNullableInt(XElement element)
         {
             return ParseNullableInt(element.Value);
         }
@@ -94,9 +94,9 @@
             return int.Parse(intString);
         }
 
-		//Long parsers
+        //Long parsers
 
-		private static long? ParseNullableLong(XElement element)
+        private static long? ParseNullableLong(XElement element)
         {
             return ParseNullableLong(element.Value);
         }
@@ -118,9 +118,9 @@
             return long.Parse(longString);
         }
 
-		//Double parsers
+        //Double parsers
 
-		private static double? ParseNullableDouble(XElement element)
+        private static double? ParseNullableDouble(XElement element)
         {
             return ParseNullableDouble(element.Value);
         }
@@ -142,9 +142,9 @@
             return double.Parse(doubleString);
         }
 
-		//Enum parser
+        //Enum parser
 
-		private static T ParseEnumType<T>(string enumString)
+        private static T ParseEnumType<T>(string enumString)
             where T : struct
         {
             T result;
@@ -155,7 +155,7 @@
             return result;
         }
 
-		private static string ConvertToPascalCase(string uppercaseUnderscore)
+        private static string ConvertToPascalCase(string uppercaseUnderscore)
         {
             var sb = new StringBuilder();
             foreach (var word in uppercaseUnderscore.Split('_'))
