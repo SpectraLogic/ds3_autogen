@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -43,6 +44,7 @@ public class TestGenerateCode {
     protected final ByteArrayOutputStream typeParserOutputStream;
     protected final ByteArrayOutputStream parserOutputStream;
     protected ByteArrayOutputStream responseTypeOutputStream;
+    protected ImmutableList<ByteArrayOutputStream> ignorableFiles; /** List of generated files to ignore for this test */
     protected String typeCode;
     protected String requestCode;
     protected String responseCode;
@@ -75,6 +77,17 @@ public class TestGenerateCode {
     }
 
     /**
+     * Captures generated files that are ignorable during testing
+     */
+    public void withIgnorableFiles(final FileUtils fileUtils, final ImmutableList<String> ignorableFileNames) throws IOException {
+        final ImmutableList.Builder<ByteArrayOutputStream> builder = ImmutableList.builder();
+        for (final String pathName : ignorableFileNames) {
+            builder.add(setupOutputStream(fileUtils, pathName));
+        }
+        this.ignorableFiles = builder.build();
+    }
+
+    /**
      * Generates the .net code associated with an input file. This captures the
      * Request, Client, and IDsClient code
      */
@@ -103,7 +116,7 @@ public class TestGenerateCode {
      * Sets up an output stream to capture the content of generated code that would otherwise
      * have been written to a file
      */
-    protected static ByteArrayOutputStream setupOutputStream(
+    public static ByteArrayOutputStream setupOutputStream(
             final FileUtils fileUtils,
             final String pathName) throws IOException {
         final Path path = Paths.get(pathName);

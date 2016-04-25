@@ -16,16 +16,15 @@
 package com.spectralogic.ds3autogen.net.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.net.model.type.Element;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.containsOptionalAnnotation;
-import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.getEnumConstantsList;
-import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.toElement;
+import static com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -61,13 +60,13 @@ public class BaseTypeGenerator_Test {
 
     @Test
     public void toElementsList_NullList_Test() {
-        final ImmutableList<Element> result = generator.toElementsList(null);
+        final ImmutableList<NetNullableVariable> result = generator.toElementsList(null, null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toElementsList_EmptyList_Test() {
-        final ImmutableList<Element> result = generator.toElementsList(ImmutableList.of());
+        final ImmutableList<NetNullableVariable> result = generator.toElementsList(ImmutableList.of(), ImmutableMap.of());
         assertThat(result.size(), is(0));
     }
 
@@ -77,59 +76,60 @@ public class BaseTypeGenerator_Test {
                 new Ds3Annotation("com.spectralogic.util.bean.lang.Optional", null));
 
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
-                new Ds3Element("Element1", "SimpleType", null, false),
-                new Ds3Element("Element2", "SimpleType", null, optionalAnnotation, false),
-                new Ds3Element("Element3", "array", "ComponentType", false));
+                new Ds3Element("Element1", "java.lang.Integer", null, false),
+                new Ds3Element("Element2", "java.lang.Integer", null, optionalAnnotation, true),
+                new Ds3Element("Element3", "array", "java.lang.Integer", false));
 
-        final ImmutableList<Element> result = generator.toElementsList(ds3Elements);
+        final ImmutableList<NetNullableVariable> result = generator.toElementsList(ds3Elements, ImmutableMap.of());
         assertThat(result.size(), is(3));
         assertThat(result.get(0).getName(), is("Element1"));
-        assertThat(result.get(0).getType(), is("SimpleType"));
+        assertThat(result.get(0).getNetType(), is("int"));
         assertThat(result.get(1).getName(), is("Element2"));
-        assertThat(result.get(1).getType(), is("SimpleType?"));
+        assertThat(result.get(1).getNetType(), is("int?"));
         assertThat(result.get(2).getName(), is("Element3"));
-        assertThat(result.get(2).getType(), is("IEnumerable<ComponentType>"));
+        assertThat(result.get(2).getNetType(), is("IEnumerable<int>"));
     }
 
     @Test
     public void toElement_SimpleElement_Test() {
         final Ds3Element ds3Element = new Ds3Element(
                 "TestElement",
-                "com.spectralogic.test.TestType",
+                "java.lang.Integer",
                 null,
                 false);
 
-        final Element result = toElement(ds3Element);
+        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
-        assertThat(result.getType(), is("TestType"));
+        assertThat(result.getNetType(), is("int"));
     }
 
     @Test
-    public void toElement_OptionalElement_Test() {
+    public void toElement_EnumElement_Test() {
         final Ds3Element ds3Element = new Ds3Element(
                 "TestElement",
-                "com.spectralogic.test.TestType",
+                "java.lang.Integer",
                 null,
                 ImmutableList.of(
                         new Ds3Annotation("com.spectralogic.util.bean.lang.Optional", null)),
-                false);
+                true);
 
-        final Element result = toElement(ds3Element);
+        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
-        assertThat(result.getType(), is("TestType?"));
+        assertThat(result.getNetType(), is("int?"));
     }
+
 
     @Test
     public void toElement_ComponentElement_Test() {
         final Ds3Element ds3Element = new Ds3Element(
                 "TestElement",
                 "array",
-                "com.spectralogic.test.TestComponentType",
-                false);
+                "java.lang.Integer",
+                true);
 
-        final Element result = toElement(ds3Element);
+        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
-        assertThat(result.getType(), is("IEnumerable<TestComponentType>"));
+        assertThat(result.getNetType(), is("IEnumerable<int>"));
     }
 
     @Test

@@ -16,28 +16,32 @@
 package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.NetHelper;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
+import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.createNullableVariable;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
 
     @Override
-    public BaseRequest generate(final Ds3Request ds3Request) {
+    public BaseRequest generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap) {
 
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
         final ImmutableList<Arguments> constructorArgs = Helper.removeVoidArguments(toConstructorArgsList(ds3Request));
         final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
         final ImmutableList<Arguments> requiredArgs = Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request));
-        final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
+        final ImmutableList<NetNullableVariable> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams(), typeMap);
 
         return new BaseRequest(
                 name,
@@ -62,16 +66,31 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param
      */
     @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
+    public ImmutableList<NetNullableVariable> toOptionalArgumentsList(
+            final ImmutableList<Ds3Param> optionalParams,
+            final ImmutableMap<String, Ds3Type> typeMap) {
         if(isEmpty(optionalParams)) {
             return ImmutableList.of();
         }
 
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<NetNullableVariable> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : optionalParams) {
-            argsBuilder.add(GeneratorUtils.toArgument(ds3Param));
+            argsBuilder.add(toNullableArgument(ds3Param, typeMap));
         }
         return argsBuilder.build();
+    }
+
+    /**
+     * Converts a Ds3Param into a NetNullableVariable
+     */
+    protected static NetNullableVariable toNullableArgument(
+            final Ds3Param optionalParam,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        return createNullableVariable(
+                optionalParam.getName(),
+                optionalParam.getType(),
+                optionalParam.isNullable(),
+                typeMap);
     }
 
     /**

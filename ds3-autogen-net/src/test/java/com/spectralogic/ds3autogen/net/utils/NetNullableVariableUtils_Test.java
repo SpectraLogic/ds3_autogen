@@ -91,6 +91,12 @@ public class NetNullableVariableUtils_Test {
     }
 
     @Test
+    public void createNullableVariable_Array_Test() {
+        final NetNullableVariable var = createNullableVariable("Name", "array", "java.lang.Integer", true, null);
+        assertThat(var.getNetType(), is("IEnumerable<int>"));
+    }
+
+    @Test
     public void isEnumType_NullValues_Test() {
         assertFalse(isEnumType(null, null));
         assertFalse(isEnumType(null, getTestTypeMap()));

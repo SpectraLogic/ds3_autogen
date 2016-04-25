@@ -74,6 +74,48 @@
                     </Element>
                 </Elements>
             </Type>
+            <Type Name="com.spectralogic.util.security.ChecksumType">
+                <Elements>
+                    <Element Name="AlgorithmName" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="HttpHeaderName" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+                <EnumConstants>
+                    <EnumConstant Name="CRC_32">
+                        <Properties>
+                            <Property Name="AlgorithmName" Value="CRC-32" ValueType="java.lang.String"/>
+                            <Property Name="HttpHeaderName" Value="Content-CRC32" ValueType="java.lang.String"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="CRC_32C">
+                        <Properties>
+                            <Property Name="AlgorithmName" Value="CRC-32C" ValueType="java.lang.String"/>
+                            <Property Name="HttpHeaderName" Value="Content-CRC32C" ValueType="java.lang.String"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="MD5">
+                        <Properties>
+                            <Property Name="AlgorithmName" Value="MD5" ValueType="java.lang.String"/>
+                            <Property Name="HttpHeaderName" Value="Content-MD5" ValueType="java.lang.String"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="SHA_256">
+                        <Properties>
+                            <Property Name="AlgorithmName" Value="SHA-256" ValueType="java.lang.String"/>
+                            <Property Name="HttpHeaderName" Value="Content-SHA256" ValueType="java.lang.String"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="SHA_512">
+                        <Properties>
+                            <Property Name="AlgorithmName" Value="SHA-512" ValueType="java.lang.String"/>
+                            <Property Name="HttpHeaderName" Value="Content-SHA512" ValueType="java.lang.String"/>
+                        </Properties>
+                    </EnumConstant>
+                </EnumConstants>
+            </Type>
         </Types>
     </Contract>
 </Data>

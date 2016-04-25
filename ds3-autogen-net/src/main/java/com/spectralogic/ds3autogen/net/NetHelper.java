@@ -101,33 +101,6 @@ public final class NetHelper {
         }
     }
 
-    //TODO delete once removed from all templates
-    /**
-     * Gets the nullable type of an argument, converting the argument from a Contract
-     * type to a nullable .net type.
-     */
-    public static String getNullableType(final Arguments arg) {
-        return getNullableType(arg.getType());
-    }
-
-    /**
-     * Gets the nullable .net type from the provided Contract type
-     */
-    public static String getNullableType(final String type) {
-        if (isEmpty(type)) {
-            return "";
-        }
-        final String netType = toNetType(type);
-        switch (netType) {
-            case "":
-                return "";
-            case "string":
-                return netType;
-            default:
-                return netType + "?";
-        }
-    }
-
     /**
      * Creates the .net code for converting an argument to a String.
      */
