@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 
-import static com.spectralogic.ds3autogen.net.NetHelper.toNetType;
+import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.getNetType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
@@ -42,8 +42,20 @@ public final class NetNullableVariableUtils {
             final String type,
             final boolean nullable,
             final ImmutableMap<String, Ds3Type> typeMap) {
+        return createNullableVariable(name, type, null, nullable, typeMap);
+    }
+
+    /**
+     * Crates a NullableVariable from the provided parameters
+     */
+    public static NetNullableVariable createNullableVariable(
+            final String name,
+            final String type,
+            final String componentType,
+            final boolean nullable,
+            final ImmutableMap<String, Ds3Type> typeMap) {
         final boolean questionMarkForNullable = isEnumType(type, typeMap) || isPrimitive(type);
-        final String netType = toNetType(stripPath(type));
+        final String netType = getNetType(stripPath(type), stripPath(componentType));
         return new NetNullableVariable(
                 name,
                 netType,
@@ -61,10 +73,7 @@ public final class NetNullableVariableUtils {
             return false;
         }
         final Ds3Type type = typeMap.get(typeName);
-        if (type == null || isEmpty(type.getEnumConstants())) {
-            return false;
-        }
-        return true;
+        return !(type == null || isEmpty(type.getEnumConstants()));
     }
 
     /**

@@ -139,17 +139,17 @@ public class NetCodeGenerator implements CodeGenerator {
             return;
         }
         for (final Ds3Type ds3Type : typeMap.values()) {
-            generateType(ds3Type);
+            generateType(ds3Type, typeMap);
         }
     }
 
     /**
      * Generates the .net code for the specified Ds3Type
      */
-    private void generateType(final Ds3Type ds3Type) throws IOException, TemplateException {
+    private void generateType(final Ds3Type ds3Type, final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         final Template tmpl = getTypeTemplate(ds3Type);
         final TypeModelGenerator<?> modelGenerator = getTypeGenerator(ds3Type);
-        final BaseType type = modelGenerator.generate(ds3Type);
+        final BaseType type = modelGenerator.generate(ds3Type, typeMap);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(TYPES_NAMESPACE.replace(".", "/") + "/" + type.getName() + ".cs")));
 
         LOG.info("Getting OutputStream for file:" + requestPath.toString());

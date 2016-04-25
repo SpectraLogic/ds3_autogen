@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
@@ -25,8 +26,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.net.utils.TestGenerateCode.setupOutputStream;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -66,6 +69,9 @@ public class NetCodeGenerator_Types_Test {
                 PLACEHOLDER_REQUEST_NAME,
                 "./Ds3/Calls/",
                 typeName);
+
+        final ImmutableList<String> ignorableFiles = ImmutableList.of("./Ds3/Models/ChecksumType.cs");
+        codeGenerator.withIgnorableFiles(fileUtils, ignorableFiles);
 
         codeGenerator.generateCode(fileUtils, "/input/types/testElementsType.xml");
         final String typeCode = codeGenerator.getTypeCode();

@@ -152,14 +152,10 @@ public final class GeneratorUtils {
      * Gets the .net type that represents the described type
      * @param type The type of the element without path
      * @param componentType The component type of the element without path, if one exists
-     * @param optional Whether or not the element is optional, therefore should be nullable
      */
-    public static String getNetType(final String type, final String componentType, final boolean optional) {
+    public static String getNetType(final String type, final String componentType) {
         if (hasContent(componentType)) {
             return "IEnumerable<" + NetHelper.toNetType(componentType) + ">";
-        }
-        if (optional) {
-            return NetHelper.getNullableType(type);
         }
         return NetHelper.toNetType(type);
     }

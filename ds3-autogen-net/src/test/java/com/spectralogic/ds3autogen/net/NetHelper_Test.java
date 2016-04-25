@@ -85,39 +85,6 @@ public class NetHelper_Test {
     }
 
     @Test
-    public void getNullableType_Argument_Test() {
-        assertThat(getNullableType(new Arguments(null, "ArgName")), is(""));
-        assertThat(getNullableType(new Arguments("", "ArgName")), is(""));
-        assertThat(getNullableType(new Arguments("void", "ArgName")), is("bool?"));
-        assertThat(getNullableType(new Arguments("Void", "ArgName")), is("bool?"));
-        assertThat(getNullableType(new Arguments("boolean", "ArgName")), is("bool?"));
-        assertThat(getNullableType(new Arguments("Boolean", "ArgName")), is("bool?"));
-        assertThat(getNullableType(new Arguments("Integer", "ArgName")), is("int?"));
-        assertThat(getNullableType(new Arguments("int", "ArgName")), is("int?"));
-        assertThat(getNullableType(new Arguments("String", "ArgName")), is("string"));
-        assertThat(getNullableType(new Arguments("string", "ArgName")), is("string"));
-        assertThat(getNullableType(new Arguments("UUID", "ArgName")), is("Guid?"));
-        assertThat(getNullableType(new Arguments("ChecksumType", "ArgName")), is("ChecksumType.Type?"));
-        assertThat(getNullableType(new Arguments("OtherType", "ArgName")), is("OtherType?"));
-    }
-
-    @Test
-    public void getNullableType_String_Test() {
-        assertThat(getNullableType(""), is(""));
-        assertThat(getNullableType("void"), is("bool?"));
-        assertThat(getNullableType("Void"), is("bool?"));
-        assertThat(getNullableType("boolean"), is("bool?"));
-        assertThat(getNullableType("Boolean"), is("bool?"));
-        assertThat(getNullableType("Integer"), is("int?"));
-        assertThat(getNullableType("int"), is("int?"));
-        assertThat(getNullableType("String"), is("string"));
-        assertThat(getNullableType("string"), is("string"));
-        assertThat(getNullableType("UUID"), is("Guid?"));
-        assertThat(getNullableType("ChecksumType"), is("ChecksumType.Type?"));
-        assertThat(getNullableType("OtherType"), is("OtherType?"));
-    }
-
-    @Test
     public void argToString_Test() {
         assertThat(argToString(new Arguments(null, "ArgName")), is(""));
         assertThat(argToString(new Arguments("", "ArgName")), is(""));

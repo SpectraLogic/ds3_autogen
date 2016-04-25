@@ -1,9 +1,11 @@
 package com.spectralogic.ds3autogen.net.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.net.model.type.Element;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 
 /**
@@ -18,7 +20,7 @@ public interface TypeModelGeneratorUtils {
     ImmutableList<EnumConstant> toEnumConstantsList(final ImmutableList<Ds3EnumConstant> ds3EnumConstants);
 
     /**
-     * Converts a list of Ds3Elements into a list of Elements
+     * Converts a list of Ds3Elements into a list of NetNullableVariables
      */
-    ImmutableList<Element> toElementsList(final ImmutableList<Ds3Element> ds3Elements);
+    ImmutableList<NetNullableVariable> toElementsList(final ImmutableList<Ds3Element> ds3Elements, final ImmutableMap<String, Ds3Type> typeMap);
 }
