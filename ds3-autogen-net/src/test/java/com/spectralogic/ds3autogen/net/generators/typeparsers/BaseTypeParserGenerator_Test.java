@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3EnumConstantList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -111,14 +112,50 @@ public class BaseTypeParserGenerator_Test {
     public void toTypeParserList_FullList_Test() {
         final Ds3Type type1 = createDs3TypeTestData("TypeName1");
         final Ds3Type type2 = createDs3TypeTestData("TypeName2");
+        final Ds3Type enumType = new Ds3Type(
+                "EnumTypeName",
+                null,
+                null,
+                createEmptyDs3EnumConstantList());
 
         final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(
                 type1.getName(), type1,
-                type2.getName(), type2);
+                type2.getName(), type2,
+                enumType.getName(), enumType);
 
         final ImmutableList<TypeParser> result = toTypeParserList(typeMap);
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getName(), is(type1.getName()));
         assertThat(result.get(1).getName(), is(type2.getName()));
+    }
+
+    @Test
+    public void toEnumList_NullList_Test() {
+        final ImmutableList<String> result = toEnumList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toEnumList_EmptyList_Test() {
+        final ImmutableList<String> result = toEnumList(ImmutableMap.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toEnumList_FullList_Test() {
+        final Ds3Type nonEnumType = createDs3TypeTestData("TypeName1");
+        final Ds3Type enumType = new Ds3Type(
+                "EnumTypeName",
+                null,
+                null,
+                createEmptyDs3EnumConstantList());
+
+        final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(
+                nonEnumType.getName(), nonEnumType,
+                enumType.getName(), enumType);
+
+        final ImmutableList<String> result = toEnumList(typeMap);
+        assertThat(result.size(), is(1));
+        assertThat(result, hasItem(enumType.getName()));
     }
 }

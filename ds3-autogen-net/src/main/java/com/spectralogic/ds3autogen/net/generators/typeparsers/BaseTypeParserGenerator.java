@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.createNullableElement;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
@@ -34,12 +35,31 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
     public BaseTypeParser generate(
             final ImmutableMap<String, Ds3Type> typeMap) {
         final ImmutableList<TypeParser> typeParsers = toTypeParserList(typeMap);
+        final ImmutableList<String> enumParsers = toEnumList(typeMap);
 
-        return new BaseTypeParser(typeParsers);
+        return new BaseTypeParser(
+                typeParsers,
+                enumParsers);
     }
 
     /**
-     * Converts a list of Ds3Types into a list of TypeParsers
+     * Retrieves the list of enum type names from within a Ds3Types list
+     */
+    protected static ImmutableList<String> toEnumList(final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeMap)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final Ds3Type ds3Type : typeMap.values().asList()) {
+            if (isEnum(ds3Type)) {
+                builder.add(removePath(ds3Type.getName()));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts all non-enum types within a Ds3Types list into a list of TypeParsers
      */
     protected static ImmutableList<TypeParser> toTypeParserList(
             final ImmutableMap<String, Ds3Type> typeMap) {
@@ -49,7 +69,9 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
 
         final ImmutableList.Builder<TypeParser> builder = ImmutableList.builder();
         for (final Ds3Type ds3Type : typeMap.values().asList()) {
-            builder.add(toTypeParser(ds3Type));
+            if (!isEnum(ds3Type)) {
+                builder.add(toTypeParser(ds3Type));
+            }
         }
         return builder.build();
     }

@@ -19,13 +19,24 @@ import com.google.common.collect.ImmutableList;
 
 public class BaseTypeParser {
 
+    /** List of non-enum types (described by elements) */
     private final ImmutableList<TypeParser> typeParsers;
 
-    public BaseTypeParser(final ImmutableList<TypeParser> typeParsers) {
+    /** List of enum type names */
+    private final ImmutableList<String> enumParsers;
+
+    public BaseTypeParser(
+            final ImmutableList<TypeParser> typeParsers,
+            final ImmutableList<String> enumParsers) {
         this.typeParsers = typeParsers;
+        this.enumParsers = enumParsers;
     }
 
     public ImmutableList<TypeParser> getTypeParsers() {
         return typeParsers;
+    }
+
+    public ImmutableList<String> getEnumParsers() {
+        return enumParsers;
     }
 }

@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.*;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -72,5 +72,29 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("commonPrefixes = element.Element(\"CommonPrefixes\").Elements(\"Prefix\").Select(ParseString).ToList()"));
         assertTrue(typeParserCode.contains("objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
         assertTrue(typeParserCode.contains("buckets = element.Element(\"Buckets\").Elements(\"Bucket\").Select(ParseDs3Bucket).ToList()"));
+    }
+
+    @Test
+    public void checksumType_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+        final String enumName = "ChecksumType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                "PlaceHolderRequest",
+                "./Ds3/Calls/",
+                enumName);
+
+        codeGenerator.generateCode(fileUtils, "/input/modelparsing/modelParsingEnumType.xml");
+        final String typeParserCode = codeGenerator.getTypeParser();
+
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+
+        assertFalse(typeParserCode.contains("AlgorithmName"));
+        assertFalse(typeParserCode.contains("HttpHeaderName"));
+
+        assertTrue(parseNullableEnumString(enumName, typeParserCode));
+        assertTrue(parseEnumString(enumName, typeParserCode));
+        assertTrue(parseNullableEnumElement(enumName, typeParserCode));
+        assertTrue(parseEnumElement(enumName, typeParserCode));
     }
 }
