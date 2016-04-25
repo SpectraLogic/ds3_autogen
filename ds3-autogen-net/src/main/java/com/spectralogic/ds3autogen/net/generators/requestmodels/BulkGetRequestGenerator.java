@@ -16,9 +16,12 @@
 package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -51,14 +54,16 @@ public class BulkGetRequestGenerator extends BaseRequestGenerator {
      * excluding the ChunkClientProcessingOrderGuarantee argument
      */
     @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
+    public ImmutableList<NetNullableVariable> toOptionalArgumentsList(
+            final ImmutableList<Ds3Param> optionalParams,
+            final ImmutableMap<String, Ds3Type> typeMap) {
         if(isEmpty(optionalParams)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<NetNullableVariable> argsBuilder = ImmutableList.builder();
         for (final Ds3Param ds3Param : optionalParams) {
             if (!ds3Param.getName().equals("ChunkClientProcessingOrderGuarantee")) {
-                argsBuilder.add(GeneratorUtils.toArgument(ds3Param));
+                argsBuilder.add(toNullableArgument(ds3Param, typeMap));
             }
         }
         return argsBuilder.build();

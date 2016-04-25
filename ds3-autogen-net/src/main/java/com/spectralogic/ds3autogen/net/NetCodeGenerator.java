@@ -98,7 +98,7 @@ public class NetCodeGenerator implements CodeGenerator {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
             final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
 
-            generateCommands(requests);
+            generateCommands(requests, typeMap);
             generateClient(requests);
             generateModelParsers(spec.getTypes());
             generateAllTypes(typeMap);
@@ -224,13 +224,15 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Generates all code associated with the Ds3ApiSpec
      */
-    private void generateCommands(final ImmutableList<Ds3Request> requests) throws TemplateException, IOException {
+    private void generateCommands(
+            final ImmutableList<Ds3Request> requests,
+            final ImmutableMap<String, Ds3Type> typeMap) throws TemplateException, IOException {
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
         }
         for (final Ds3Request request : requests) {
-            generateRequest(request);
+            generateRequest(request, typeMap);
             generateResponseAndParser(request);
         }
     }
@@ -364,10 +366,12 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Generates the .net code for the request handler described in the Ds3Request
      */
-    private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateRequest(
+            final Ds3Request ds3Request,
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
-        final BaseRequest request = modelGenerator.generate(ds3Request);
+        final BaseRequest request = modelGenerator.generate(ds3Request, typeMap);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".cs")));
 
         LOG.info("Getting OutputStream for file:" + requestPath.toString());
