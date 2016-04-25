@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -122,22 +122,12 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<string>", "CommonPrefixes"),
-                new Arguments("DateTime", "CreationDate"),
-                new Arguments("string", "Delimiter"),
-                new Arguments("string", "Marker"),
-                new Arguments("int", "MaxKeys"),
-                new Arguments("string", "Name"),
-                new Arguments("string", "NextMarker"),
-                new Arguments("IEnumerable<Contents>", "Objects"),
-                new Arguments("string", "Prefix"),
-                new Arguments("bool", "Truncated"));
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "ListBucketResult";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
@@ -252,19 +242,12 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("Guid", "BucketId"),
-                new Arguments("DateTime", "CreationDate"),
-                new Arguments("Guid", "Id"),
-                new Arguments("bool", "Latest"),
-                new Arguments("string", "Name"),
-                new Arguments("S3ObjectType", "Type"),
-                new Arguments("long", "Version"));
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "S3Object";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
@@ -321,31 +304,12 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("bool", "Aggregating"),
-                new Arguments("string", "BucketName"),
-                new Arguments("long", "CachedSizeInBytes"),
-                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
-                new Arguments("long", "CompletedSizeInBytes"),
-                new Arguments("Guid", "JobId"),
-                new Arguments("bool", "Naked"),
-                new Arguments("string", "Name"),
-                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
-                new Arguments("IEnumerable<Objects>", "Objects"),
-                new Arguments("long", "OriginalSizeInBytes"),
-                new Arguments("Priority", "Priority"),
-                new Arguments("JobRequestType", "RequestType"),
-                new Arguments("DateTime", "StartDate"),
-                new Arguments("JobStatus", "Status"),
-                new Arguments("Guid", "UserId"),
-                new Arguments("string", "UserName"),
-                new Arguments("WriteOptimization", "WriteOptimization"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "MasterObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
@@ -396,14 +360,12 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<Job>", "Jobs"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "JobList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
@@ -475,31 +437,12 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("bool", "Aggregating"),
-                new Arguments("string", "BucketName"),
-                new Arguments("long", "CachedSizeInBytes"),
-                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
-                new Arguments("long", "CompletedSizeInBytes"),
-                new Arguments("Guid", "JobId"),
-                new Arguments("bool", "Naked"),
-                new Arguments("string", "Name"),
-                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
-                new Arguments("IEnumerable<Objects>", "Objects"),
-                new Arguments("long", "OriginalSizeInBytes"),
-                new Arguments("Priority", "Priority"),
-                new Arguments("JobRequestType", "RequestType"),
-                new Arguments("DateTime", "StartDate"),
-                new Arguments("JobStatus", "Status"),
-                new Arguments("Guid", "UserId"),
-                new Arguments("string", "UserName"),
-                new Arguments("WriteOptimization", "WriteOptimization"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "MasterObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
@@ -520,7 +463,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/createObjectRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -546,12 +489,12 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
@@ -572,7 +515,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/createMultiPartUploadPartRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -597,12 +540,12 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
@@ -624,7 +567,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/createVerifyJobRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -645,45 +588,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("bool", "Aggregating"),
-                new Arguments("string", "BucketName"),
-                new Arguments("long", "CachedSizeInBytes"),
-                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
-                new Arguments("long", "CompletedSizeInBytes"),
-                new Arguments("Guid", "JobId"),
-                new Arguments("bool", "Naked"),
-                new Arguments("string", "Name"),
-                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
-                new Arguments("IEnumerable<Objects>", "Objects"),
-                new Arguments("long", "OriginalSizeInBytes"),
-                new Arguments("Priority", "Priority"),
-                new Arguments("JobRequestType", "RequestType"),
-                new Arguments("DateTime", "StartDate"),
-                new Arguments("JobStatus", "Status"),
-                new Arguments("Guid", "UserId"),
-                new Arguments("string", "UserName"),
-                new Arguments("WriteOptimization", "WriteOptimization"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "MasterObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -698,7 +622,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/ejectStorageDomainBlobsRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -721,12 +645,12 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
@@ -748,7 +672,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/ejectStorageDomainRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -769,28 +693,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<TapeFailure>", "Failures"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "TapeFailureList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -806,7 +728,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/getPhysicalPlacementForObjects.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -825,29 +747,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<Pool>", "Pools"),
-                new Arguments("IEnumerable<Tape>", "Tapes"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "PhysicalPlacement";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -863,7 +782,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjects.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -882,29 +801,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<Pool>", "Pools"),
-                new Arguments("IEnumerable<Tape>", "Tapes"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "PhysicalPlacement";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -920,7 +836,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacementForObjectsFullDetails.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -940,28 +856,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<BulkObject>", "Objects"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "BulkObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -977,7 +891,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/deleteObjectsRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -996,29 +910,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("IEnumerable<S3ObjectToDelete>", "DeletedObjects"),
-                new Arguments("IEnumerable<DeleteObjectError>", "Errors"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "DeleteResult";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -1033,7 +944,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/getBlobPersistenceRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -1048,30 +959,26 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
-
-        assertTrue(hasContent(responseCode));
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("string", "ResponsePayload"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "string";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 
     @Test
@@ -1087,7 +994,7 @@ public class NetCodeGenerator_Test {
         codeGenerator.generateCode(fileUtils, "/input/replicatePutJobRequest.xml");
         final String requestCode = codeGenerator.getRequestCode();
 
-        LOG.info("Generated code:\n" + requestCode);
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
@@ -1107,44 +1014,25 @@ public class NetCodeGenerator_Test {
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
         final String clientCode = codeGenerator.getClientCode();
-        LOG.info("Generated code:\n" + clientCode);
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
-        LOG.info("Generated code:\n" + idsClientCode);
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
-        LOG.info("Generated code:\n" + responseCode);
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
         final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
-        final ImmutableList<Arguments> responseArgs = ImmutableList.of(
-                new Arguments("bool", "Aggregating"),
-                new Arguments("string", "BucketName"),
-                new Arguments("long", "CachedSizeInBytes"),
-                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
-                new Arguments("long", "CompletedSizeInBytes"),
-                new Arguments("Guid", "JobId"),
-                new Arguments("bool", "Naked"),
-                new Arguments("string", "Name"),
-                new Arguments("IEnumerable<Ds3Node>", "Nodes"),
-                new Arguments("IEnumerable<Objects>", "Objects"),
-                new Arguments("long", "OriginalSizeInBytes"),
-                new Arguments("Priority", "Priority"),
-                new Arguments("JobRequestType", "RequestType"),
-                new Arguments("DateTime", "StartDate"),
-                new Arguments("JobStatus", "Status"),
-                new Arguments("Guid", "UserId"),
-                new Arguments("string", "UserName"),
-                new Arguments("WriteOptimization", "WriteOptimization"));
-
-        assertTrue(TestHelper.hasConstructor(responseName, responseArgs, responseCode));
-
-        for (final Arguments arg : responseArgs) {
-            assertTrue(TestHelper.hasRequiredParam(arg.getName(), arg.getType(), responseCode));
-        }
+        final String responsePayloadType = "MasterObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
     }
 }
