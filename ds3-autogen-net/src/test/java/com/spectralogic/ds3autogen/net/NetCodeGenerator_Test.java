@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -501,6 +501,11 @@ public class NetCodeGenerator_Test {
         //Generate Responses (should be empty due to no response payload)
         final String responseCode = codeGenerator.getResponseCode();
         assertTrue(isEmpty(responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(isEmpty(parserCode));
     }
 
     @Test
@@ -552,6 +557,11 @@ public class NetCodeGenerator_Test {
         //Generate Responses (should be empty due to no response payload)
         final String responseCode = codeGenerator.getResponseCode();
         assertTrue(isEmpty(responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(isEmpty(parserCode));
     }
 
     @Test
@@ -608,6 +618,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 
     @Test
@@ -657,6 +674,11 @@ public class NetCodeGenerator_Test {
         //Generate Responses (should be empty due to no response payload)
         final String responseCode = codeGenerator.getResponseCode();
         assertTrue(isEmpty(responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(isEmpty(parserCode));
     }
 
     @Test
@@ -713,6 +735,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(207, parserCode));
+        assertTrue(parserHasPayload("TapeFailureList", "Data", parserCode));
     }
 
     @Test
@@ -767,6 +796,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("PhysicalPlacement", "Data", parserCode));
     }
 
     @Test
@@ -821,6 +857,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("PhysicalPlacement", "Data", parserCode));
     }
 
     @Test
@@ -876,6 +919,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("BulkObjectList", "Data", parserCode));
     }
 
     @Test
@@ -930,6 +980,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("DeleteResult", "DeleteResult", parserCode));
     }
 
     @Test
@@ -979,6 +1036,13 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("String", "Data", parserCode));
     }
 
     @Test
@@ -1034,5 +1098,83 @@ public class NetCodeGenerator_Test {
                 ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
                 responseCode));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
+    }
+
+    @Test
+    public void getTapesWithFullDetails_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "GetTapesWithFullDetailsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                "NamedDetailedTapeList");
+
+        codeGenerator.generateCode(fileUtils, "/input/getTapesWithFullDetails.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "AssignedToStorageDomain", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "BarCode", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "BucketId", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "FullOfData", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "LastPage", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageLength", "int", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageOffset", "int", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageStartMarker", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PartitionId", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PreviousState", "TapeState", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "SerialNumber", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "State", "TapeState", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Type", "TapeType", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "WriteProtected", "bool", requestCode));
+
+        assertTrue(TestHelper.hasConstructor(requestName, ImmutableList.of(), requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final String responsePayloadType = "NamedDetailedTapeList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("NamedDetailedTapeList", "Data", parserCode));
     }
 }

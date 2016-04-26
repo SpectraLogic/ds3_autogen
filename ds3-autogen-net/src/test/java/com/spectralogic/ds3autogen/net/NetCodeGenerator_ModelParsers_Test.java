@@ -97,4 +97,25 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(parseNullableEnumElement(enumName, typeParserCode));
         assertTrue(parseEnumElement(enumName, typeParserCode));
     }
+
+    @Test
+    public void getTapesWithFullDetails_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "NamedDetailedTapeList";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                "GetTapesWithFullDetailsSpectraS3Request",
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/getTapesWithFullDetails.xml");
+        final String typeParserCode = codeGenerator.getTypeParser();
+
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+
+        assertTrue(typeParserCode.contains("internal static NamedDetailedTapeList ParseNamedDetailedTapeList(XElement element)"));
+        assertTrue(typeParserCode.contains("public static NamedDetailedTapeList ParseNullableNamedDetailedTapeList(XElement element)"));
+
+        assertTrue(typeParserCode.contains("namedDetailedTapes = element.Elements(\"Tape\").Select(ParseNamedDetailedTape).ToList()"));
+    }
 }
