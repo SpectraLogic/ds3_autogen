@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
-
 /**
  * Represents an element within a .net model that contains
  * a list of elements that do not have an encapsulating tag
@@ -35,7 +33,7 @@ public class NullableListElement extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return uncapFirst(getName()) + " = element" +
+        return getName() + " = element" +
                 ".Elements(\"" + getXmlTag() + "\")" +
                 ".Select(" + getParserName() + ").ToList()";
     }

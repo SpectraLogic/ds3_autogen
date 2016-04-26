@@ -176,7 +176,7 @@ public final class TestHelper {
             final String enumName,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "private static " + enumName + "\\? ParseNullable" + enumName + "\\(string " + uncapFirst(enumName) + "OrNull\\)"
+                "public static " + enumName + "\\? ParseNullable" + enumName + "\\(string " + uncapFirst(enumName) + "OrNull\\)"
                 + "\\s+\\{"
                 + "\\s+return string.IsNullOrWhiteSpace\\(" + uncapFirst(enumName) + "OrNull\\)"
                 + "\\s+\\? \\(" + enumName + "\\?\\) null"
@@ -195,7 +195,7 @@ public final class TestHelper {
             final String enumName,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "private static " + enumName + " Parse" + enumName + "\\(string " + uncapFirst(enumName) + "\\)"
+                "public static " + enumName + " Parse" + enumName + "\\(string " + uncapFirst(enumName) + "\\)"
                 + "\\s+\\{"
                 + "\\s+return ParseEnumType<" + enumName + ">\\(" + uncapFirst(enumName) + "\\);"
                 + "\\s+\\}",
@@ -212,7 +212,7 @@ public final class TestHelper {
             final String enumName,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "private static " + enumName + "\\? ParseNullable" + enumName + "\\(XElement element\\)"
+                "public static " + enumName + "\\? ParseNullable" + enumName + "\\(XElement element\\)"
                 + "\\s+\\{"
                 + "\\s+return ParseNullable" + enumName + "\\(element\\.Value\\);"
                 + "\\s+\\}",
@@ -229,7 +229,7 @@ public final class TestHelper {
             final String enumName,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "private static " + enumName + " Parse" + enumName + "\\(XElement element\\)"
+                "public static " + enumName + " Parse" + enumName + "\\(XElement element\\)"
                 + "\\s+\\{"
                 + "\\s+return Parse" + enumName + "\\(element\\.Value\\);"
                 + "\\s+\\}",

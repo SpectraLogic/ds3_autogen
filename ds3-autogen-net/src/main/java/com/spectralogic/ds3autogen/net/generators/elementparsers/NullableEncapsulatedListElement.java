@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
-
 /**
  * Represents an element within a .net model that contains
  * a list of elements that have an encapsulating xml tag
@@ -40,7 +38,7 @@ public class NullableEncapsulatedListElement  extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return uncapFirst(getName()) + " = element" +
+        return getName() + " = element" +
                 ".Element(\"" + encapsulatingTag + "\")" +
                 ".Elements(\"" + getXmlTag() + "\")" +
                 ".Select(" + getParserName() + ").ToList()";
