@@ -82,6 +82,7 @@ public class NetHelper_Test {
         assertThat(toNetType("ChecksumType"), is("ChecksumType.Type"));
         assertThat(toNetType("Date"), is("DateTime"));
         assertThat(toNetType("OtherType"), is("OtherType"));
+        assertThat(toNetType("Long"), is("long"));
     }
 
     @Test

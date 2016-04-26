@@ -110,4 +110,28 @@ public class NetCodeGenerator_Types_Test {
         assertTrue(typeCode.contains("NONE"));
 
     }
+
+    @Test
+    public void bucket_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "Bucket";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                PLACEHOLDER_REQUEST_NAME,
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/bucket.xml");
+        final String typeCode = codeGenerator.getTypeCode();
+
+        LOG.info("Generated code:\n" + typeCode);
+
+        assertTrue(typeCode.contains("public DateTime CreationDate { get; set; }"));
+        assertTrue(typeCode.contains("public Guid DataPolicyId { get; set; }"));
+        assertTrue(typeCode.contains("public Guid Id { get; set; }"));
+        assertTrue(typeCode.contains("public long? LastPreferredChunkSizeInBytes { get; set; }"));
+        assertTrue(typeCode.contains("public long? LogicalUsedCapacity { get; set; }"));
+        assertTrue(typeCode.contains("public string Name { get; set; }"));
+        assertTrue(typeCode.contains("public Guid UserId { get; set; }"));
+    }
 }
