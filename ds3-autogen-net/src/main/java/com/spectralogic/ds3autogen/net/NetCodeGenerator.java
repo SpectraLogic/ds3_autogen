@@ -57,6 +57,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
@@ -96,11 +97,13 @@ public class NetCodeGenerator implements CodeGenerator {
 
         try {
             final ImmutableList<Ds3Request> requests = spec.getRequests();
-            final ImmutableMap<String, Ds3Type> typeMap = spec.getTypes();
+            final ImmutableMap<String, Ds3Type> typeMap = removeUnusedTypes(
+                    spec.getTypes(),
+                    spec.getRequests());
 
             generateCommands(requests, typeMap);
             generateClient(requests);
-            generateModelParsers(spec.getTypes());
+            generateModelParsers(typeMap);
             generateAllTypes(typeMap);
         } catch (final TemplateException e) {
             e.printStackTrace();

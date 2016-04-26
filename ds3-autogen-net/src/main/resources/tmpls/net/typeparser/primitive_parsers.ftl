@@ -1,3 +1,27 @@
+        //Guid parsers
+
+        public static Guid? ParseNullableGuid(XElement element)
+        {
+            return ParseNullableGuid(element.Value);
+        }
+
+        public static Guid? ParseNullableGuid(string guidStringOrNull)
+        {
+            return string.IsNullOrWhiteSpace(guidStringOrNull)
+                ? (Guid?)null
+                : ParseGuid(guidStringOrNull);
+        }
+
+        public static Guid ParseGuid(XElement element)
+        {
+            return ParseGuid(element.Value);
+        }
+
+        public static Guid ParseGuid(string guidString)
+        {
+            return Guid.Parse(guidString);
+        }
+
         //DateTime parsers
 
         public static DateTime? ParseNullableDateTime(XElement element)

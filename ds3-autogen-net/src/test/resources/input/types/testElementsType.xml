@@ -5,7 +5,7 @@
                 <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
                     <OptionalQueryParams/>
                     <RequiredQueryParams>
-                        <Param Name="Placeholder" Type="com.spectralogic.util.db.manager.DatabasePhysicalSpaceState"/>
+                        <Param Name="Placeholder" Type="com.spectralogic.s3.common.dao.domain.TestElementsType"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
