@@ -32,12 +32,8 @@ public class BaseResponseParserGenerator_Test {
     @Test
     public void toNameToMarshal_Test() {
         assertThat(generator.toNameToMarshal(null, "TypeName"), is("Data"));
+        assertThat(generator.toNameToMarshal("", "TypeName"), is("Data"));
         assertThat(generator.toNameToMarshal("ResponsePayload", "TypeName"), is("ResponsePayload"));
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void toNameToMarshal_EmptyString_Test() {
-        generator.toNameToMarshal("", "TypeName");
     }
 
     @Test

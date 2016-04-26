@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.toModelParserName;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getPayloadResponseCode;
@@ -50,11 +51,8 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
      */
     @Override
     public String toNameToMarshal(final String nameToMarshal, final String typeName) {
-        if (nameToMarshal == null) {
+        if (isEmpty(nameToMarshal)) {
             return "Data";
-        }
-        if (nameToMarshal.equals("")) {
-            throw new IllegalArgumentException("The name to marshal value is empty: " + typeName);
         }
         return nameToMarshal;
     }

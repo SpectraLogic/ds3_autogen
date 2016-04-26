@@ -26,10 +26,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.net.utils.TestGenerateCode.setupOutputStream;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
