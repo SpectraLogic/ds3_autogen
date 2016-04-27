@@ -59,12 +59,12 @@ public final class TestHelper {
      * Determines if the request handler code contains the data for optional checksum
      */
     public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {
-        return generatedCode.contains("private Checksum _checksum = Checksum.None")
-                && generatedCode.contains("private Checksum.ChecksumType _checksumType")
-                && generatedCode.contains("internal override Checksum ChecksumValue")
-                && generatedCode.contains("internal override Checksum.ChecksumType ChecksumType")
-                && generatedCode.contains("public Checksum Checksum")
-                && generatedCode.contains("public " + requestName + " WithChecksum(Checksum checksum, Checksum.ChecksumType checksumType = Checksum.ChecksumType.Md5)");
+        return generatedCode.contains("private ChecksumType _checksum = ChecksumType.None")
+                && generatedCode.contains("private ChecksumType.Type _type")
+                && generatedCode.contains("internal override ChecksumType ChecksumValue")
+                && generatedCode.contains("internal override ChecksumType.Type Type")
+                && generatedCode.contains("public ChecksumType Checksum")
+                && generatedCode.contains("public " + requestName + " WithChecksum(ChecksumType checksum, ChecksumType.Type type = ChecksumType.Type.MD5)");
     }
 
     /**

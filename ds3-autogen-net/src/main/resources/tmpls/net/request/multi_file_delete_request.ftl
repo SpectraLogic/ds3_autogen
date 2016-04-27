@@ -40,9 +40,9 @@ namespace Ds3.Calls
                 .WriteToMemoryStream();
         }
 
-        internal override Checksum ChecksumValue
+        internal override ChecksumType ChecksumValue
         {
-            get { return Checksum.Compute; }
+            get { return ChecksumType.Compute; }
         }
 
         <#include "common/http_verb_and_path.ftl" />

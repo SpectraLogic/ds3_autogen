@@ -1,25 +1,25 @@
-        private Checksum _checksum = Checksum.None;
-        private Checksum.ChecksumType _checksumType;
+        private ChecksumType _checksum = ChecksumType.None;
+        private ChecksumType.Type _type;
 
-        internal override Checksum ChecksumValue
+        internal override ChecksumType ChecksumValue
         {
             get { return this._checksum; }
         }
 
-        internal override Checksum.ChecksumType ChecksumType
+        internal override ChecksumType.Type Type
         {
-            get { return this._checksumType; }
+            get { return this._type; }
         }
 
-        public Checksum Checksum
+        public ChecksumType Checksum
         {
             get { return this._checksum; }
             set { this.WithChecksum(value); }
         }
 
-        public ${name} WithChecksum(Checksum checksum, Checksum.ChecksumType checksumType = Checksum.ChecksumType.Md5)
+        public ${name} WithChecksum(ChecksumType checksum, ChecksumType.Type type = ChecksumType.Type.MD5)
         {
             this._checksum = checksum;
-            this._checksumType = checksumType;
+            this._type = type;
             return this;
         }

@@ -92,10 +92,10 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertFalse(typeParserCode.contains("AlgorithmName"));
         assertFalse(typeParserCode.contains("HttpHeaderName"));
 
-        assertTrue(parseNullableEnumString(enumName, typeParserCode));
-        assertTrue(parseEnumString(enumName, typeParserCode));
-        assertTrue(parseNullableEnumElement(enumName, typeParserCode));
-        assertTrue(parseEnumElement(enumName, typeParserCode));
+        assertFalse(parseNullableEnumString(enumName, typeParserCode));
+        assertFalse(parseEnumString(enumName, typeParserCode));
+        assertFalse(parseNullableEnumElement(enumName, typeParserCode));
+        assertFalse(parseEnumElement(enumName, typeParserCode));
     }
 
     @Test

@@ -62,6 +62,12 @@ public final class NetNullableElementUtils {
         if (nullable) {
             builder.append("Nullable");
         }
+        if (netType.equals("ChecksumType.Type")) {
+            return builder.append("ChecksumType").toString();
+        }
+        if (netType.equals("Object")) {
+            return builder.append("String").toString();
+        }
         builder.append(capFirst(netType));
         return builder.toString();
     }

@@ -1,3 +1,28 @@
+        //ChecksumType parsers
+
+        public static ChecksumType.Type? ParseNullableChecksumType(string checksumTypeOrNull)
+        {
+            return string.IsNullOrWhiteSpace(checksumTypeOrNull)
+                ? (ChecksumType.Type?) null
+                : ParseChecksumType(checksumTypeOrNull);
+        }
+
+        public static ChecksumType.Type ParseChecksumType(string checksumType)
+        {
+            return
+                ParseEnumType<ChecksumType.Type>(checksumType);
+        }
+
+        public static ChecksumType.Type? ParseNullableChecksumType(XElement element)
+        {
+            return ParseNullableChecksumType(element.Value);
+        }
+
+        public static ChecksumType.Type ParseChecksumType(XElement element)
+        {
+            return ParseChecksumType(element.Value);
+        }
+
         //Guid parsers
 
         public static Guid? ParseNullableGuid(XElement element)
