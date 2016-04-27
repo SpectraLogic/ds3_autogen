@@ -86,8 +86,8 @@ public class BaseTypeParserGenerator_Test {
 
         final ImmutableList<String> result = toParseElements(elements);
         assertThat(result.size(), is(2));
-        assertThat(result, hasItem("name1 = ParseInt(element.Element(\"Name1\"))"));
-        assertThat(result, hasItem("name2 = element.Elements(\"Name2\").Select(ParseComponent).ToList()"));
+        assertThat(result, hasItem("Name1 = ParseInt(element.Element(\"Name1\"))"));
+        assertThat(result, hasItem("Name2 = element.Elements(\"Name2\").Select(ParseComponent).ToList()"));
     }
 
     @Test

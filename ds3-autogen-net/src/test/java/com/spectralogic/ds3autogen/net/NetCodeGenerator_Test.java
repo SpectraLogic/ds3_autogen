@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -277,12 +277,12 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
         assertTrue(TestHelper.hasRequiredParam("MaxUploadSize", "long?", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
@@ -584,7 +584,7 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
@@ -592,7 +592,7 @@ public class NetCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -648,7 +648,7 @@ public class NetCodeGenerator_Test {
         assertFalse(TestHelper.hasRequiredParam("Blobs", "bool", requestCode));
         assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
         assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
@@ -656,7 +656,7 @@ public class NetCodeGenerator_Test {
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("Guid", "BucketId"),
                 new Arguments("Guid", "StorageDomainId"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -701,7 +701,7 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
@@ -709,7 +709,7 @@ public class NetCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("Guid", "StorageDomainId"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -764,13 +764,13 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -825,13 +825,13 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -886,14 +886,14 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
         assertFalse(TestHelper.hasRequiredParam("FullDetails", "bool", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -948,13 +948,13 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "List<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "RollBack", "bool", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code

@@ -1,4 +1,4 @@
-        internal static ${parser.getName()} Parse${parser.getName()}(XElement element)
+        public static ${parser.getName()} Parse${parser.getName()}(XElement element)
         {
             return new ${parser.getName()}
             {
@@ -10,5 +10,5 @@
         {
             return element == null || element.IsEmpty
                 ? null
-                : Parse${parser.getName()}(content);
+                : Parse${parser.getName()}(element);
         }

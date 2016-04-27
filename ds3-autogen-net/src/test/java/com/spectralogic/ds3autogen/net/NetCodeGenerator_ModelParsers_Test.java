@@ -58,20 +58,20 @@ public class NetCodeGenerator_ModelParsers_Test {
 
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
 
-        assertTrue(typeParserCode.contains("internal static ListBucketResult ParseListBucketResult(XElement element)"));
+        assertTrue(typeParserCode.contains("public static ListBucketResult ParseListBucketResult(XElement element)"));
         assertTrue(typeParserCode.contains("public static ListBucketResult ParseNullableListBucketResult(XElement element)"));
 
-        assertTrue(typeParserCode.contains("bucketName = ParseNullableString(element.AttributeText(\"BucketName\"))"));
-        assertTrue(typeParserCode.contains("truncated = ParseBool(element.Element(\"IsTruncated\"))"));
-        assertTrue(typeParserCode.contains("truncatedNullable = ParseNullableBool(element.Element(\"IsTruncated\"))"));
-        assertTrue(typeParserCode.contains("maxKeys = ParseInt(element.Element(\"MaxKeys\"))"));
-        assertTrue(typeParserCode.contains("maxKeysNullable = ParseNullableInt(element.Element(\"MaxKeysNullable\"))"));
-        assertTrue(typeParserCode.contains("creationDate = ParseDateTime(element.Element(\"CreationDate\"))"));
-        assertTrue(typeParserCode.contains("creationDateNullable = ParseNullableDateTime(element.Element(\"CreationDateNullable\"))"));
-        assertTrue(typeParserCode.contains("delimiter = ParseNullableString(element.Element(\"Delimiter\"))"));
-        assertTrue(typeParserCode.contains("commonPrefixes = element.Element(\"CommonPrefixes\").Elements(\"Prefix\").Select(ParseString).ToList()"));
-        assertTrue(typeParserCode.contains("objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
-        assertTrue(typeParserCode.contains("buckets = element.Element(\"Buckets\").Elements(\"Bucket\").Select(ParseDs3Bucket).ToList()"));
+        assertTrue(typeParserCode.contains("BucketName = ParseNullableString(element.AttributeText(\"BucketName\"))"));
+        assertTrue(typeParserCode.contains("Truncated = ParseBool(element.Element(\"IsTruncated\"))"));
+        assertTrue(typeParserCode.contains("TruncatedNullable = ParseNullableBool(element.Element(\"IsTruncated\"))"));
+        assertTrue(typeParserCode.contains("MaxKeys = ParseInt(element.Element(\"MaxKeys\"))"));
+        assertTrue(typeParserCode.contains("MaxKeysNullable = ParseNullableInt(element.Element(\"MaxKeysNullable\"))"));
+        assertTrue(typeParserCode.contains("CreationDate = ParseDateTime(element.Element(\"CreationDate\"))"));
+        assertTrue(typeParserCode.contains("CreationDateNullable = ParseNullableDateTime(element.Element(\"CreationDateNullable\"))"));
+        assertTrue(typeParserCode.contains("Delimiter = ParseNullableString(element.Element(\"Delimiter\"))"));
+        assertTrue(typeParserCode.contains("CommonPrefixes = element.Element(\"CommonPrefixes\").Elements(\"Prefix\").Select(ParseString).ToList()"));
+        assertTrue(typeParserCode.contains("Objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
+        assertTrue(typeParserCode.contains("Buckets = element.Element(\"Buckets\").Elements(\"Bucket\").Select(ParseDs3Bucket).ToList()"));
     }
 
     @Test
@@ -113,9 +113,9 @@ public class NetCodeGenerator_ModelParsers_Test {
 
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
 
-        assertTrue(typeParserCode.contains("internal static NamedDetailedTapeList ParseNamedDetailedTapeList(XElement element)"));
+        assertTrue(typeParserCode.contains("public static NamedDetailedTapeList ParseNamedDetailedTapeList(XElement element)"));
         assertTrue(typeParserCode.contains("public static NamedDetailedTapeList ParseNullableNamedDetailedTapeList(XElement element)"));
 
-        assertTrue(typeParserCode.contains("namedDetailedTapes = element.Elements(\"Tape\").Select(ParseNamedDetailedTape).ToList()"));
+        assertTrue(typeParserCode.contains("NamedDetailedTapes = element.Elements(\"Tape\").Select(ParseNamedDetailedTape).ToList()"));
     }
 }

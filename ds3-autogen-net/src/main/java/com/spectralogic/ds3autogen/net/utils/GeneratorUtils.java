@@ -46,7 +46,7 @@ public final class GeneratorUtils {
         if (isEmpty(modelName)) {
             return "";
         }
-        return removePath(modelName) + "Parser";
+        return "Parse" + removePath(modelName);
     }
 
     /**
@@ -100,6 +100,7 @@ public final class GeneratorUtils {
 
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
         if (isNotificationRequest(ds3Request)
+                && ds3Request.includeIdInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
             builder.append(" + NotificationId.ToString()");
@@ -121,6 +122,9 @@ public final class GeneratorUtils {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
         requiredArgs.addAll(RequestConverterUtil.getRequiredArgsFromRequestHeader(ds3Request));
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        if (ds3Request.includeIdInPath() && isResourceNotification(ds3Request.getResource())) {
+            requiredArgs.add(new Arguments("Guid", "NotificationId"));
+        }
         return requiredArgs.build();
     }
 

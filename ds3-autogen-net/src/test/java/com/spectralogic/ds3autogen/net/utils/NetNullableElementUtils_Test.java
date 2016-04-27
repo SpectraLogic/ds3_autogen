@@ -36,37 +36,37 @@ public class NetNullableElementUtils_Test {
     @Test
     public void toNullableAttributeElement_Nullable_Test() {
         final NullableElement element = toNullableAttributeElement("Name", "Type", true, "XmlTag");
-        assertThat(element.printParseElement(), is("name = ParseNullableType(element.AttributeText(\"XmlTag\"))"));
+        assertThat(element.printParseElement(), is("Name = ParseNullableType(element.AttributeText(\"XmlTag\"))"));
     }
 
     @Test
     public void toNullableAttributeElement_Test() {
         final NullableElement element = toNullableAttributeElement("Name", "Type", false, "XmlTag");
-        assertThat(element.printParseElement(), is("name = ParseType(element.AttributeText(\"XmlTag\"))"));
+        assertThat(element.printParseElement(), is("Name = ParseType(element.AttributeText(\"XmlTag\"))"));
     }
 
     @Test
     public void toNullableEncapsulatedListElement_Test() {
         final NullableElement element = toNullableEncapsulatedListElement("Name", "ComponentType", "XmlTag", "OuterTag");
-        assertThat(element.printParseElement(), is("name = element.Element(\"OuterTag\").Elements(\"XmlTag\").Select(ParseComponentType).ToList()"));
+        assertThat(element.printParseElement(), is("Name = element.Element(\"OuterTag\").Elements(\"XmlTag\").Select(ParseComponentType).ToList()"));
     }
 
     @Test
     public void toBaseNullableElement_Nullable_Test() {
         final NullableElement element = toBaseNullableElement("Name", "Type", true, "XmlTag");
-        assertThat(element.printParseElement(), is("name = ParseNullableType(element.Element(\"XmlTag\"))"));
+        assertThat(element.printParseElement(), is("Name = ParseNullableType(element.Element(\"XmlTag\"))"));
     }
 
     @Test
     public void toBaseNullableElement_Test() {
         final NullableElement element = toBaseNullableElement("Name", "Type", false, "XmlTag");
-        assertThat(element.printParseElement(), is("name = ParseType(element.Element(\"XmlTag\"))"));
+        assertThat(element.printParseElement(), is("Name = ParseType(element.Element(\"XmlTag\"))"));
     }
 
     @Test
     public void toNullableListElement_Test() {
         final NullableElement element = toNullableListElement("Name", "ComponentType", "XmlTag");
-        assertThat(element.printParseElement(), is("name = element.Elements(\"XmlTag\").Select(ParseComponentType).ToList()"));
+        assertThat(element.printParseElement(), is("Name = element.Elements(\"XmlTag\").Select(ParseComponentType).ToList()"));
     }
 
     @Test

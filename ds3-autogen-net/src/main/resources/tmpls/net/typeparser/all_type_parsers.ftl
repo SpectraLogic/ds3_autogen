@@ -1,9 +1,15 @@
 <#include "../common/copyright.ftl" />
 
+using Ds3.Models;
+using Ds3.Runtime;
+using System;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Ds3.ResponseParsers
 {
-    internal class ModelParsers
+    public class ModelParsers
     {
 
 <#list typeParsers as parser>

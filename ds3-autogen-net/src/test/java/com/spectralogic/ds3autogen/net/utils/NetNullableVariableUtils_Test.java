@@ -131,6 +131,7 @@ public class NetNullableVariableUtils_Test {
         assertTrue(isPrimitive("double"));
         assertTrue(isPrimitive("java.lang.Double"));
         assertTrue(isPrimitive("java.util.Date"));
+        assertTrue(isPrimitive("java.util.UUID"));
 
         assertFalse(isPrimitive(null));
         assertFalse(isPrimitive(""));

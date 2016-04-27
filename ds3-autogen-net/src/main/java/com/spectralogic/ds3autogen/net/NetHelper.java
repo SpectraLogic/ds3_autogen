@@ -123,7 +123,7 @@ public final class NetHelper {
             case "long":
                 return  capFirst(arg.getName()) + ".ToString()";
             default:
-                return uncapFirst(arg.getName()) + ".ToString()";
+                return capFirst(arg.getName()) + ".ToString()";
         }
     }
 

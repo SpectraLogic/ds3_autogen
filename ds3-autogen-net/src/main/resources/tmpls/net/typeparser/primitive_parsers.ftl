@@ -1,150 +1,174 @@
+        //Guid parsers
+
+        public static Guid? ParseNullableGuid(XElement element)
+        {
+            return ParseNullableGuid(element.Value);
+        }
+
+        public static Guid? ParseNullableGuid(string guidStringOrNull)
+        {
+            return string.IsNullOrWhiteSpace(guidStringOrNull)
+                ? (Guid?)null
+                : ParseGuid(guidStringOrNull);
+        }
+
+        public static Guid ParseGuid(XElement element)
+        {
+            return ParseGuid(element.Value);
+        }
+
+        public static Guid ParseGuid(string guidString)
+        {
+            return Guid.Parse(guidString);
+        }
+
         //DateTime parsers
 
-        private static DateTime? ParseNullableDateTime(XElement element)
+        public static DateTime? ParseNullableDateTime(XElement element)
         {
             return ParseNullableDateTime(element.Value);
         }
 
-        private static DateTime? ParseNullableDateTime(string dateTimeStringOrNull)
+        public static DateTime? ParseNullableDateTime(string dateTimeStringOrNull)
         {
             return string.IsNullOrWhiteSpace(dateTimeStringOrNull)
                 ? (DateTime?)null
                 : ParseDateTime(dateTimeStringOrNull);
         }
 
-        private static DateTime ParseDateTime(XElement element)
+        public static DateTime ParseDateTime(XElement element)
         {
             return ParseDateTime(element.Value);
         }
 
-        private static DateTime ParseDateTime(string dateTimeString)
+        public static DateTime ParseDateTime(string dateTimeString)
         {
             return DateTime.Parse(dateTimeString);
         }
 
         //Boolean parsers
 
-        private static bool? ParseNullableBool(XElement element)
+        public static bool? ParseNullableBool(XElement element)
         {
             return ParseNullableBool(element.Value);
         }
 
-        private static bool? ParseNullableBool(string boolStringOrNull)
+        public static bool? ParseNullableBool(string boolStringOrNull)
         {
             return string.IsNullOrWhiteSpace(boolStringOrNull)
                 ? (bool?)null
                 : ParseBool(boolStringOrNull);
         }
 
-        private static bool ParseBool(XElement element)
+        public static bool ParseBool(XElement element)
         {
             return ParseBool(element.Value);
         }
 
-        private static bool ParseBool(string boolString)
+        public static bool ParseBool(string boolString)
         {
             return bool.Parse(boolString);
         }
 
         //String parsers
 
-        private static string ParseNullableString(XElement element)
+        public static string ParseNullableString(XElement element)
         {
             return ParseNullableString(element.Value);
         }
 
-        private static string ParseNullableString(string stringOrNull)
+        public static string ParseNullableString(string stringOrNull)
         {
             return string.IsNullOrWhiteSpace(stringOrNull)
                 ? (string)null
                 : ParseString(stringOrNull);
         }
 
-        private static string ParseString(XElement element)
+        public static string ParseString(XElement element)
         {
             return ParseString(element.Value);
         }
 
-        private static string ParseString(string str)
+        public static string ParseString(string str)
         {
             return str;
         }
 
         //Integer parsers
 
-        private static int? ParseNullableInt(XElement element)
+        public static int? ParseNullableInt(XElement element)
         {
             return ParseNullableInt(element.Value);
         }
 
-        private static int? ParseNullableInt(string intStringOrNull)
+        public static int? ParseNullableInt(string intStringOrNull)
         {
             return string.IsNullOrWhiteSpace(intStringOrNull)
                 ? (int?)null
                 : ParseInt(intStringOrNull);
         }
 
-        private static int ParseInt(XElement element)
+        public static int ParseInt(XElement element)
         {
             return ParseInt(element.Value);
         }
 
-        private static int ParseInt(string intString)
+        public static int ParseInt(string intString)
         {
             return int.Parse(intString);
         }
 
         //Long parsers
 
-        private static long? ParseNullableLong(XElement element)
+        public static long? ParseNullableLong(XElement element)
         {
             return ParseNullableLong(element.Value);
         }
 
-        private static long? ParseNullableLong(string longStringOrNull)
+        public static long? ParseNullableLong(string longStringOrNull)
         {
             return string.IsNullOrWhiteSpace(longStringOrNull)
                 ? (long?)null
                 : ParseLong(longStringOrNull);
         }
 
-        private static long ParseLong(XElement element)
+        public static long ParseLong(XElement element)
         {
             return ParseLong(element.Value);
         }
 
-        private static long ParseLong(string longString)
+        public static long ParseLong(string longString)
         {
             return long.Parse(longString);
         }
 
         //Double parsers
 
-        private static double? ParseNullableDouble(XElement element)
+        public static double? ParseNullableDouble(XElement element)
         {
             return ParseNullableDouble(element.Value);
         }
 
-        private static double? ParseNullableDouble(string doubleStringOrNull)
+        public static double? ParseNullableDouble(string doubleStringOrNull)
         {
             return string.IsNullOrWhiteSpace(doubleStringOrNull)
                 ? (double?)null
                 : ParseDouble(doubleStringOrNull);
         }
 
-        private static double ParseDouble(XElement element)
+        public static double ParseDouble(XElement element)
         {
             return ParseDouble(element.Value);
         }
 
-        private static double ParseDouble(string doubleString)
+        public static double ParseDouble(string doubleString)
         {
             return double.Parse(doubleString);
         }
 
         //Enum parser
 
-        private static T ParseEnumType<T>(string enumString)
+        public static T ParseEnumType<T>(string enumString)
             where T : struct
         {
             T result;
@@ -155,7 +179,7 @@
             return result;
         }
 
-        private static string ConvertToPascalCase(string uppercaseUnderscore)
+        public static string ConvertToPascalCase(string uppercaseUnderscore)
         {
             var sb = new StringBuilder();
             foreach (var word in uppercaseUnderscore.Split('_'))
