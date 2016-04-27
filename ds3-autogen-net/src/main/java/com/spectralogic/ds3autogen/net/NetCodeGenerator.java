@@ -177,6 +177,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * Gets the template used to generate the .net code for the specified Ds3Type
      */
     private Template getTypeTemplate(final Ds3Type ds3Type) throws IOException {
+        if (isChecksumType(ds3Type)) {
+            return config.getTemplate("types/checksum_type.ftl");
+        }
         if (hasContent(ds3Type.getEnumConstants())) {
             return config.getTemplate("types/enum_type.ftl");
         }

@@ -31,6 +31,12 @@ public class NetNullableElementUtils_Test {
         assertThat(getParserName("Type", false), is("ParseType"));
         assertThat(getParserName("type", true), is("ParseNullableType"));
         assertThat(getParserName("Type", true), is("ParseNullableType"));
+
+        assertThat(getParserName("ChecksumType.Type", false), is("ParseChecksumType"));
+        assertThat(getParserName("ChecksumType.Type", true), is("ParseNullableChecksumType"));
+
+        assertThat(getParserName("Object", false), is("ParseString"));
+        assertThat(getParserName("Object", true), is("ParseNullableString"));
     }
 
     @Test

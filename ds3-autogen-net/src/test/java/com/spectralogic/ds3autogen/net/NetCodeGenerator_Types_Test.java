@@ -101,7 +101,7 @@ public class NetCodeGenerator_Types_Test {
 
         LOG.info("Generated code:\n" + typeCode);
 
-        assertTrue(typeCode.contains("public enum " + typeName));
+        assertTrue(typeCode.contains("public abstract class " + typeName));
         assertTrue(typeCode.contains("CRC_32,"));
         assertTrue(typeCode.contains("CRC_32C,"));
         assertTrue(typeCode.contains("MD5,"));

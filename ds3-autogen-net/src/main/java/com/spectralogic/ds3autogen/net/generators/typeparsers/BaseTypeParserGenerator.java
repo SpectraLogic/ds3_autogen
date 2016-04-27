@@ -27,6 +27,7 @@ import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.crea
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTypeParser> {
@@ -51,7 +52,7 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
         }
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
         for (final Ds3Type ds3Type : typeMap.values().asList()) {
-            if (isEnum(ds3Type)) {
+            if (isEnum(ds3Type) && !isChecksumType(ds3Type)) {
                 builder.add(removePath(ds3Type.getName()));
             }
         }
