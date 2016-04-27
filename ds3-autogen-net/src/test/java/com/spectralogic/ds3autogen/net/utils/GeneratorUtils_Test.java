@@ -85,7 +85,7 @@ public class GeneratorUtils_Test {
         assertThat(getSpectraDs3RequestPath(getRequestBulkGet()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(getSpectraDs3RequestPath(getRequestBulkPut()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(getSpectraDs3RequestPath(getRequestSpectraS3GetObject()), is("\"/_rest_/object/\" + ObjectName"));
-        assertThat(getSpectraDs3RequestPath(getRequestGetJob()), is("\"/_rest_/job/\" + jobId.ToString()"));
+        assertThat(getSpectraDs3RequestPath(getRequestGetJob()), is("\"/_rest_/job/\" + JobId.ToString()"));
 
         //Amazon requests
         assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete()), is(""));
@@ -121,7 +121,7 @@ public class GeneratorUtils_Test {
         assertThat(toRequestPath(getRequestBulkGet()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(toRequestPath(getRequestBulkPut()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(toRequestPath(getRequestSpectraS3GetObject()), is("\"/_rest_/object/\" + ObjectName"));
-        assertThat(toRequestPath(getRequestGetJob()), is("\"/_rest_/job/\" + jobId.ToString()"));
+        assertThat(toRequestPath(getRequestGetJob()), is("\"/_rest_/job/\" + JobId.ToString()"));
 
         //Amazon requests
         assertThat(toRequestPath(getRequestMultiFileDelete()), is("\"/\" + BucketName"));
@@ -133,8 +133,8 @@ public class GeneratorUtils_Test {
     public void toModelParserName_Test() {
         assertThat(toModelParserName(null), is(""));
         assertThat(toModelParserName(""), is(""));
-        assertThat(toModelParserName("TestModel"), is("TestModelParser"));
-        assertThat(toModelParserName("com.test.TestModel"), is("TestModelParser"));
+        assertThat(toModelParserName("TestModel"), is("ParseTestModel"));
+        assertThat(toModelParserName("com.test.TestModel"), is("ParseTestModel"));
     }
 
     @Test

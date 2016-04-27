@@ -1,5 +1,6 @@
 <#include "../common/copyright.ftl" />
 
+using Ds3.Models;
 using System;
 using System.IO;
 

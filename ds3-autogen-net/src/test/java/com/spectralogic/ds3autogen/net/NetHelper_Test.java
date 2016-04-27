@@ -101,9 +101,9 @@ public class NetHelper_Test {
         assertThat(argToString(new Arguments("long", "ArgName")), is("ArgName.ToString()"));
         assertThat(argToString(new Arguments("String", "ArgName")), is("ArgName"));
         assertThat(argToString(new Arguments("string", "ArgName")), is("ArgName"));
-        assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.ToString()"));
-        assertThat(argToString(new Arguments("ChecksumType", "ArgName")), is("argName.ToString()"));
-        assertThat(argToString(new Arguments("OtherType", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("UUID", "ArgName")), is("ArgName.ToString()"));
+        assertThat(argToString(new Arguments("ChecksumType", "ArgName")), is("ArgName.ToString()"));
+        assertThat(argToString(new Arguments("OtherType", "ArgName")), is("ArgName.ToString()"));
     }
 
     @Test

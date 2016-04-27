@@ -38,11 +38,10 @@ public final class TestHelper {
             final String nameToMarshal,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "\\s+XmlExtensions" +
-                        "\\s+.ReadDocument\\(stream\\)" +
-                        "\\s+.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)" +
-                        "\\s+.Select\\(" + responseType + "Parser\\)"
-                , Pattern.MULTILINE | Pattern.UNIX_LINES);
+                "\\s+ModelParsers\\.Parse" + responseType + "\\(" +
+                        "\\s+XmlExtensions\\.ReadDocument\\(stream\\)" +
+                        "\\.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
 
         return searchString.matcher(parserCode).find();
     }

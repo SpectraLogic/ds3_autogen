@@ -2,6 +2,7 @@
 
 using Ds3.Models;
 using Ds3.Runtime;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Ds3.Calls
 
         <#include "common/optional_args.ftl" />
 
-        public ${name}(${netHelper.constructor(constructorArgs)}) {
+        public ${name}(${netHelper.constructor(constructorArgs)})
         {
             <#list constructorArgs as arg>
             this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
@@ -32,8 +33,8 @@ namespace Ds3.Calls
             return new XDocument()
                 .AddFluent(
                     new XElement("Delete").AddAllFluent(
-                        from object in this.Objects
-                        select new XElement("Object").AddFluent(new XElement("Key").SetValueFluent(object.Name))
+                        from curObject in this.Objects
+                        select new XElement("Object").AddFluent(new XElement("Key").SetValueFluent(curObject.Name))
                     )
                 )
                 .WriteToMemoryStream();

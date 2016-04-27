@@ -91,6 +91,7 @@ public final class NetNullableVariableUtils {
             case "long":
             case "double":
             case "date":
+            case "uuid":
                 return true;
             default:
                 return false;
