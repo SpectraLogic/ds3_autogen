@@ -2,7 +2,7 @@
         {
             get
             {
-                return HttpVerb.${verb.toString()}
+                return HttpVerb.${verb.toString()};
             }
         }
 
