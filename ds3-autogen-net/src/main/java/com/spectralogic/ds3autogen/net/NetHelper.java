@@ -88,6 +88,8 @@ public final class NetHelper {
                 return "bool";
             case "integer":
                 return "int";
+            case "long":
+                return "long";
             case "string":
                 return "string";
             case "uuid":
