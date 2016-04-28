@@ -791,6 +791,7 @@
                 <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="Force" Type="void"/>
+                        <Param Name="Replicate" Type="void"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -820,7 +821,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.7E0B95E1E222BB82689E2AA8CD3FE344</Version>
+                <Version>1.BE9F50190869FF00D830F25AC4C2B52A</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="BUCKET" ResourceType="NON_SINGLETON">
@@ -1799,6 +1800,43 @@
                 </ResponseCodes>
                 <Version>1.4DB23DDC56235578526ECD74A1E1D151</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CancelActiveJobRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="ACTIVE_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Force" Type="void"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.278BB8E0110D66EDACF595107C09427A</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CancelAllActiveJobsRequestHandler">
+                <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="ACTIVE_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Force" Type="void"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.5787086FAAD0AEFD6965BE9007AEF32F</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CancelAllJobsRequestHandler">
                 <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="JOB" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -2302,6 +2340,25 @@
                 </ResponseCodes>
                 <Version>1.A91ACBDE9427D4617DBA938B01FD4A65</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ModifyActiveJobRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="ACTIVE_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="CreatedAt" Type="java.util.Date"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.46852EDC36DDDB68792432241EBAB228</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.ModifyJobRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="JOB" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -2359,6 +2416,39 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.92183B3AB123832B01E23ECC06BF35FE</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.TruncateActiveJobRequestHandler">
+                <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="ACTIVE_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.A1093E63522E0D37459A3DD2ED4BA382</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.TruncateAllActiveJobsRequestHandler">
+                <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="ACTIVE_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.381372DCEE1323BA3EC6135F28BD40E7</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.TruncateAllJobsRequestHandler">
                 <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="JOB" ResourceType="NON_SINGLETON">
@@ -5680,6 +5770,21 @@
                 </ResponseCodes>
                 <Version>1.9F2F0F9EE78721BF80AD83701F9736A0</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ForceTargetEnvironmentRefreshRequestHandler">
+                <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="TARGET_ENVIRONMENT" ResourceType="SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.38E575DC2AF4B7D7CF3203E6B7BDA74D</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetFailuresRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DS3_TARGET_FAILURE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -5771,6 +5876,7 @@
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PermitGoingOutOfSync" Type="boolean"/>
                         <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
                         <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.target.TargetState"/>
                     </OptionalQueryParams>
@@ -5784,7 +5890,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.823F884CA0C7AEAF9A7AFCD407667292</Version>
+                <Version>1.59EDE43992354790A3285458462F5271</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ModifyAllDs3TargetsRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
@@ -5822,6 +5928,7 @@
                         <Param Name="DataPathVerifyCertificate" Type="boolean"/>
                         <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PermitGoingOutOfSync" Type="boolean"/>
                         <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
                         <Param Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String"/>
                     </OptionalQueryParams>
@@ -5841,7 +5948,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D3E7D893527D29E8EDF53997B868BF8A</Version>
+                <Version>1.E3F4EAD686CF2EBC5185CD9720A6002F</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.PairBackRegisteredDs3TargetRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="PAIR_BACK" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
@@ -5856,6 +5963,7 @@
                         <Param Name="DataPathVerifyCertificate" Type="boolean"/>
                         <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PermitGoingOutOfSync" Type="boolean"/>
                         <Param Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -5870,7 +5978,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.19CC49630639ECE29DC6F7885BD3AE88</Version>
+                <Version>1.234CFFA6B5F3E6163AE022B0A6E3B7E4</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.RegisterDs3TargetRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
@@ -5881,6 +5989,7 @@
                         <Param Name="DataPathProxy" Type="java.lang.String"/>
                         <Param Name="DataPathVerifyCertificate" Type="boolean"/>
                         <Param Name="DefaultReadPreference" Type="com.spectralogic.s3.common.dao.domain.target.TargetReadPreference"/>
+                        <Param Name="PermitGoingOutOfSync" Type="boolean"/>
                         <Param Name="ReplicatedUserDefaultDataPolicy" Type="java.lang.String"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -5898,7 +6007,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D9F2BAD11DD0A379A76196EFDBCD096A</Version>
+                <Version>1.FD7C645E890501F8B6A8AA458854C881</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.VerifyDs3TargetRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="VERIFY" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
@@ -10737,6 +10846,15 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="PermitGoingOutOfSync" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
@@ -13480,6 +13598,11 @@
                     <EnumConstant Name="TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="TARGET_ENVIRONMENT">
+                        <Properties>
+                            <Property Name="ResourceType" Value="SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="USER">
