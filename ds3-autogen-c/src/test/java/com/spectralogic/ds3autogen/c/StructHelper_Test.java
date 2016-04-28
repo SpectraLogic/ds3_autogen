@@ -135,7 +135,6 @@ public class StructHelper_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         assertTrue(output.contains("static ds3_error* _parse_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));

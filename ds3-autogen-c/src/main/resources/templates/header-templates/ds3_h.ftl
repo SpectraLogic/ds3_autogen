@@ -144,14 +144,10 @@ LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
 
 
 <#-- **************************************** -->
-<#-- Generate all "RequestHandler" prototypes -->
-
-<#-- Template not implemented yet
+<#-- Generate all "RequestPrototypes"         -->
 <#list getRequests() as requestEntry>
-    <#include "RequestHandlerPrototype.ftl">
+    <#include "RequestPrototype.ftl">
 </#list>
--->
-
 <#-- **************************************** -->
 
 

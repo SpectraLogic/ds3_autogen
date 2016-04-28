@@ -44,6 +44,8 @@ public final class RequestConverter {
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
                 getParamList(responseType),
+                getRequiredQueryParams(ds3Request),
+                getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
                 responseType);
@@ -96,37 +98,35 @@ public final class RequestConverter {
 
         return builder.toString();
     }
-    private static ImmutableList<Arguments> getRequiredArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting required args...");
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-            LOG.debug("\tbucket name REQUIRED.");
-            requiredArgsBuilder.add(new Arguments("String", "bucketName"));
-            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                LOG.debug("\tobject name REQUIRED.");
-                requiredArgsBuilder.add(new Arguments("String", "objectName"));
-            }
-        }
-
+    private static ImmutableList<Parameter> getRequiredQueryParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required query params...");
-        if (ConverterUtil.isEmpty(ds3Request.getRequiredQueryParams())) {
-            return requiredArgsBuilder.build();
-        }
 
         for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-            if (ds3Param == null) break;
+            if (ds3Param == null) continue;
 
-            LOG.debug("\tquery param " + ds3Param.getType());
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("\tparam " + paramType + " is required.");
-            requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param);
+            LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
+            requiredArgsBuilder.add(requiredParam);
+        }
+
+        // Add 'length' if 'offset' is given
+        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+            if (ds3Param == null) continue;
+
+            if (ds3Param.getName().equalsIgnoreCase("Offset")) {
+                final Parameter lengthParam = new Parameter(
+                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.NONE);
+                LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
+                requiredArgsBuilder.add(lengthParam);
+            }
         }
 
         return requiredArgsBuilder.build();
     }
 
-    private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> optionalArgsBuilder = ImmutableList.builder();
+    private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Parameter> optionalArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting optional args...");
         if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
@@ -135,7 +135,7 @@ public final class RequestConverter {
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
             LOG.debug("\tparam " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
-            optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param));
         }
 
         return optionalArgsBuilder.build();
@@ -159,6 +159,8 @@ public final class RequestConverter {
     }
 
     public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (responseCodes == null) return "";
+
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
             if (rc < 200 || rc >= 300) continue;

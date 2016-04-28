@@ -33,10 +33,10 @@ import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class EnumHelper_Test {
     @Test
@@ -65,5 +65,17 @@ public class EnumHelper_Test {
 
         final String result = EnumHelper.getEnumValues(stringsList);
         assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void testEnumToString() {
+        final String expectedOutput = "    if (input == CHARLIE) {"      + "\n"
+                                    + "        return \"CHARLIE\";"      + "\n"
+                                    + "    } else if (input == DELTA) {" + "\n"
+                                    + "        return \"DELTA\";"        + "\n"
+                                    + "    } else {"                     + "\n"
+                                    + "        return \"\";"             + "\n"
+                                    + "    }"                            + "\n";
+        assertThat(EnumHelper.generateToString(ImmutableList.of("CHARLIE", "DELTA")), is(expectedOutput));
     }
 }

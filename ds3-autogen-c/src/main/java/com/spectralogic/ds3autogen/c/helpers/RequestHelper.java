@@ -20,9 +20,11 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.InvalidParameterException;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -64,18 +66,37 @@ public final class RequestHelper {
         if (isEmpty(paramList)) {
             return "";
         }
-        return paramList
-                .stream()
-                .map(parm -> parm.toString())
+
+        return paramList.stream()
+                .map(Parameter::toString)
                 .collect(Collectors.joining(", "));
     }
 
+    public static String joinStrings(final ImmutableList<String> stringsList) {
+        if (isEmpty(stringsList)) return "";
+
+        return stringsList.stream().collect(Collectors.joining(", "));
+    }
+
     public static String generateInitRequestFunctionSignature(final Request request) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+
         if (request.getClassification() == Classification.amazons3) {
-            return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()) + ")";
+            builder.add(getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()));
+        } else {
+            builder.add(getSpectraS3InitParams(request.isResourceIdRequired()));
         }
 
-        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getSpectraS3InitParams(request.isResourceIdRequired()) + ")";
+        builder.addAll(request.getRequiredQueryParams().stream()
+                .filter(parm -> !parm.getParameterType().equals("ds3_bool")) // for required bool / void query param nothing to specify
+                .map(Parameter::toString)
+                .collect(GuavaCollectors.immutableList()));
+        builder.addAll(request.getOptionalQueryParams().stream()
+                .map(Parameter::toString)
+                .collect(GuavaCollectors.immutableList()));
+        final ImmutableList<String> allParams = builder.build();
+
+        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
     }
 
     public static String generateRequestFunctionSignature(final Request request) {
@@ -115,6 +136,37 @@ public final class RequestHelper {
             }
         }
 
+        return builder.toString();
+    }
+
+    public static String generateInitParamBlock(final Parameter parm, final boolean isRequired) {
+        final StringBuilder builder = new StringBuilder();
+
+        if (parm.getName().equalsIgnoreCase("length")) {
+            builder.append(indent(1)).append("request->length = length;\n");
+        } else {
+            builder.append(indent(1)).append("if (").append(parm.getName()).append(" != NULL) {\n");
+            if (parm.getParameterType().equals("uint64_t")) {
+                builder.append(indent(2)).append("char tmp_buff[32];\n");
+                builder.append(indent(2)).append("sprintf(tmp_buff, \"%llu\", (unsigned long long) ").append(parm.getName()).append(");\n");
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", tmp_buff);\n");
+            } else if(parm.getParameterType().equals("int")){
+                builder.append(indent(2)).append("char tmp_buff[32];\n");
+                builder.append(indent(2)).append("sprintf(tmp_buff, \"%d\", ").append(parm.getName()).append(");\n");
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", tmp_buff);\n");
+            } else if(parm.getParameterType().equals("ds3_bool")){
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", NULL);\n");
+            } else if(parm.getParameterType().startsWith("ds3_")){  // For enums, call local method to convert to string
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, _get_").append(parm.getParameterType()).append("_str(").append(parm.getName()).append("));\n");
+            } else if(parm.getParameterType().equals("ds3_job_with_chunks_response")){ // special case bulk request payload
+                builder.append(indent(2)).append(" request->object_list = , ").append(parm.getName()).append(";\n");
+            } else if(parm.getParameterType().equals("char")){ // default string param
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", ").append(parm.getName()).append(");\n");
+            } else {
+                throw new InvalidParameterException("Unknown type: " + parm.getParameterType());
+            }
+            builder.append(indent(1)).append("}");
+        }
         return builder.toString();
     }
 }

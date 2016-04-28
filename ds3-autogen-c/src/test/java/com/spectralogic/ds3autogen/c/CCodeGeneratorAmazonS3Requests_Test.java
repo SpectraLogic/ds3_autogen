@@ -181,7 +181,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         assertTrue(output.contains("ds3_error* get_service_request(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** response) {"));
 
-        assertTrue(output.contains("    return _parse_ds3_list_all_my_buckets_result_response(client->log, response);"));
+        assertTrue(output.contains("    return _parse_ds3_list_all_my_buckets_result_response(client, response);"));
 
         assertTrue(output.contains("}"));
     }
@@ -212,7 +212,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_list_bucket_result_response(client->log, response);"));
+        assertTrue(output.contains("    return _parse_ds3_list_bucket_result_response(client, response);"));
 
         assertTrue(output.contains("}"));
     }
@@ -230,6 +230,8 @@ public class CCodeGeneratorAmazonS3Requests_Test {
                 null,
                 null,
                 RequestConverter.getParamList(responseType),
+                ImmutableList.of(),
+                ImmutableList.of(),
                 true,
                 false,
                 responseType

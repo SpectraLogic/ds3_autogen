@@ -29,6 +29,8 @@ public class Request {
     private final Operation operation;
     private final Action action;
     private final ImmutableList<Parameter> paramList;
+    private final ImmutableList<Parameter> requiredQueryParams;
+    private final ImmutableList<Parameter> optionalQueryParams;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
     private final String responseType;
@@ -42,6 +44,8 @@ public class Request {
             final Operation operation,
             final Action action,
             final ImmutableList<Parameter> paramList,
+            final ImmutableList<Parameter> requiredQueryParams,
+            final ImmutableList<Parameter> optionalQueryParams,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
             final String responseType) {
@@ -52,6 +56,8 @@ public class Request {
         this.operation = operation;
         this.action = action;
         this.paramList = paramList;
+        this.requiredQueryParams = requiredQueryParams;
+        this.optionalQueryParams = optionalQueryParams;
         this.isResourceRequired = isResourceRequired;
         this.isResourceIdRequired = isResourceIdRequired;
         this.responseType = responseType;
@@ -86,6 +92,14 @@ public class Request {
         return paramList;
     }
 
+    public ImmutableList<Parameter> getOptionalQueryParams() {
+        return optionalQueryParams;
+    }
+
+    public ImmutableList<Parameter> getRequiredQueryParams() {
+        return requiredQueryParams;
+    }
+
     public boolean isResourceRequired() {
         return isResourceRequired;
     }
@@ -110,7 +124,16 @@ public class Request {
         builder.append("  BuildPathArgs[").append(getBuildPathArgs()).append("]\n");
         builder.append("  Operation[").append(getOperation()).append("]\n");
         builder.append("  Action[").append(getAction()).append("]\n");
+        builder.append("  ParameterList:\n");
         for (final Parameter parm: getParamList()) {
+            builder.append(parm.toString()).append("\n");
+        }
+        builder.append("  OptionalQueryParams:\n");
+        for (final Parameter parm: getOptionalQueryParams()) {
+            builder.append(parm.toString()).append("\n");
+        }
+        builder.append("  RequiredQueryParams:\n");
+        for (final Parameter parm: getRequiredQueryParams()) {
             builder.append(parm.toString()).append("\n");
         }
         builder.append("  isResourceRequired[").append(isResourceRequired()).append("]\n");

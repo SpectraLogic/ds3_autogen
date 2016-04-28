@@ -96,4 +96,32 @@ public final class EnumHelper {
         outputBuilder.append(indent(1)).append("}");
         return outputBuilder.toString();
     }
+
+    public static String generateToString(final ImmutableList<String> enumValues) {
+        final StringBuilder outputBuilder = new StringBuilder();
+        final int numEnumValues = enumValues.size();
+
+        if (numEnumValues <= 0) {
+            LOG.warn("Empty enumValues list.");
+            return "";
+        }
+
+        for (int currentEnum = 0; currentEnum < numEnumValues; currentEnum++) {
+            outputBuilder.append(indent(1));
+
+            if (currentEnum > 0) {
+                outputBuilder.append("} else ");
+            }
+
+            final String currentEnumName = enumValues.get(currentEnum);
+            outputBuilder.append("if (input == ").append(currentEnumName).append(") {\n");
+            outputBuilder.append(indent(2)).append("return \"").append(currentEnumName).append("\";\n");
+        }
+
+        outputBuilder.append(indent(1)).append("} else {\n");
+        outputBuilder.append(indent(2)).append("return \"\";\n");
+        outputBuilder.append(indent(1)).append("}\n");
+
+        return outputBuilder.toString();
+    }
 }

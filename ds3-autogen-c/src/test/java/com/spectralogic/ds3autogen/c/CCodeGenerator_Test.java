@@ -109,13 +109,13 @@ public class CCodeGenerator_Test {
         final Struct structEntry = new Struct("ds3_bucket_response",
                 null,
                 ImmutableList.of(
-                        new StructMember( new PrimitiveType("ds3_str*", false), "creation_date"),
-                        new StructMember( new PrimitiveType("ds3_str*", false), "data_policy_id"),
-                        new StructMember( new PrimitiveType("ds3_str*", false), "id"),
+                        new StructMember( new FreeableType("ds3_str", false), "creation_date"),
+                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id"),
+                        new StructMember( new FreeableType("ds3_str", false), "id"),
                         new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes"),
                         new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity"),
-                        new StructMember( new PrimitiveType("ds3_str*", false), "name"),
-                        new StructMember( new PrimitiveType("ds3_str*", false), "user_id")
+                        new StructMember( new FreeableType("ds3_str", false), "name"),
+                        new StructMember( new FreeableType("ds3_str", false), "user_id")
                 ),
                 true);
         testMap.put("structEntry", structEntry);
@@ -190,37 +190,46 @@ public class CCodeGenerator_Test {
 
     @Test
     public void testSimpleFreeTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
-        final String inputSpecFile = "/input/SimpleTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
-        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
-        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Map<String,Object> testMap = new HashMap<>();
+        final Struct structEntry = new Struct("ds3_bucket_response",
+                null,
+                ImmutableList.of(
+                        new StructMember( new FreeableType("ds3_str", false), "creation_date"),
+                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id"),
+                        new StructMember( new FreeableType("ds3_str", false), "id"),
+                        new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes"),
+                        new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity"),
+                        new StructMember( new FreeableType("ds3_str", false), "name"),
+                        new StructMember( new FreeableType("ds3_str", false), "user_id")
+                ),
+                true);
+        testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(testMap, "source-templates/FreeStruct.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
+        LOG.info(output);
 
-        assertTrue(output.contains("void ds3_bucket_response_free(ds3_bucket_response* response) {"));
-        assertTrue(output.contains("    if (response == NULL) {"));
-        assertTrue(output.contains("        return;"));
-        assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    ds3_str_free(response->creation_date);"));
-        assertTrue(output.contains("    ds3_str_free(response->data_policy_id);"));
-        assertTrue(output.contains("    ds3_str_free(response->id);"));
-        assertTrue(output.contains("    ds3_str_free(response->name);"));
-        assertTrue(output.contains("    ds3_str_free(response->user_id);"));
 
-        assertTrue(output.contains("    g_free(response);"));
-        assertTrue(output.contains("}"));
+        final String expectedOutput = "void ds3_bucket_response_free(ds3_bucket_response* response) {" + "\n"
+                                    + "    if (response == NULL) {" + "\n"
+                                    + "        return;" + "\n"
+                                    + "    }" + "\n"
+                                    + "\n"
+                                    + "    ds3_str_free(response->creation_date);" + "\n"
+                                    + "    ds3_str_free(response->data_policy_id);" + "\n"
+                                    + "    ds3_str_free(response->id);" + "\n"
+                                    + "    ds3_str_free(response->name);" + "\n"
+                                    + "    ds3_str_free(response->user_id);" + "\n"
+                                    + "\n"
+                                    + "    g_free(response);" + "\n"
+                                    + "}" + "\n";
+
+        assertEquals(expectedOutput, output);
     }
 
     @Test
