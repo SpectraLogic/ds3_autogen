@@ -32,7 +32,7 @@ public class ${name} extends AbstractResponse {
                 final WebResponse response = this.getResponse();
                 final InputStream responseStream = response.getResponseStream()) {
             final long startTime = PerformanceUtils.getCurrentTime();
-            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false);
             destinationChannel.close();
             final long endTime = PerformanceUtils.getCurrentTime();
 
