@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 
 public class BaseRequest {
     private final String name;
@@ -28,7 +29,7 @@ public class BaseRequest {
     private final ImmutableList<Arguments> constructorArgs;
     private final ImmutableList<Arguments> queryParams;
     private final ImmutableList<Arguments> requiredArgs;
-    private final ImmutableList<Arguments> optionalArgs;
+    private final ImmutableList<NetNullableVariable> optionalArgs;
 
     public BaseRequest(
             final String name,
@@ -38,7 +39,7 @@ public class BaseRequest {
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> queryParams,
             final ImmutableList<Arguments> requiredArgs,
-            final ImmutableList<Arguments> optionalArgs) {
+            final ImmutableList<NetNullableVariable> optionalArgs) {
         this.name = name;
         this.path = path;
         this.verb = verb;
@@ -65,7 +66,7 @@ public class BaseRequest {
         return requiredArgs;
     }
 
-    public ImmutableList<Arguments> getOptionalArgs() {
+    public ImmutableList<NetNullableVariable> getOptionalArgs() {
         return optionalArgs;
     }
 

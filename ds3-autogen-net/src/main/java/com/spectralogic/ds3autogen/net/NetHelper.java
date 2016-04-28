@@ -88,6 +88,8 @@ public final class NetHelper {
                 return "bool";
             case "integer":
                 return "int";
+            case "long":
+                return "long";
             case "string":
                 return "string";
             case "uuid":
@@ -98,32 +100,6 @@ public final class NetHelper {
                 return "DateTime";
             default:
                 return contractType;
-        }
-    }
-
-    /**
-     * Gets the nullable type of an argument, converting the argument from a Contract
-     * type to a nullable .net type.
-     */
-    public static String getNullableType(final Arguments arg) {
-        return getNullableType(arg.getType());
-    }
-
-    /**
-     * Gets the nullable .net type from the provided Contract type
-     */
-    public static String getNullableType(final String type) {
-        if (isEmpty(type)) {
-            return "";
-        }
-        final String netType = toNetType(type);
-        switch (netType) {
-            case "":
-                return "";
-            case "string":
-                return netType;
-            default:
-                return netType + "?";
         }
     }
 
@@ -147,7 +123,7 @@ public final class NetHelper {
             case "long":
                 return  capFirst(arg.getName()) + ".ToString()";
             default:
-                return uncapFirst(arg.getName()) + ".ToString()";
+                return capFirst(arg.getName()) + ".ToString()";
         }
     }
 
@@ -190,6 +166,21 @@ public final class NetHelper {
                 .stream()
                 .map(i -> indent(indent) + i.getName())
                 .collect(Collectors.joining(",\n"));
+    }
+
+    /**
+     * Creates a comma separated list of strings with the specified indentation.
+     * Used in Net model generation.
+     */
+    public static String commaSeparateStrings(
+            final ImmutableList<String> strings,
+            final int indent) {
+        if (isEmpty(strings)) {
+            return "";
+        }
+        return strings
+                .stream()
+                .collect(Collectors.joining(",\n" + indent(indent)));
     }
 
     private final static NetHelper instance = new NetHelper();

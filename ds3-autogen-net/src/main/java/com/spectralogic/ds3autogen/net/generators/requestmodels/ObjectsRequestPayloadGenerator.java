@@ -33,7 +33,7 @@ public class ObjectsRequestPayloadGenerator extends BaseRequestGenerator {
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.add(new Arguments("List<Ds3Object>", "Objects"));
+        builder.add(new Arguments("IEnumerable<Ds3Object>", "Objects"));
         return builder.build();
     }
 

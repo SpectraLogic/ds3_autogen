@@ -1,0 +1,41 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="TAPE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="AssignedToStorageDomain" Type="boolean"/>
+                        <Param Name="BarCode" Type="java.lang.String"/>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="EjectLabel" Type="java.lang.String"/>
+                        <Param Name="EjectLocation" Type="java.lang.String"/>
+                        <Param Name="FullOfData" Type="boolean"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartitionId" Type="java.util.UUID"/>
+                        <Param Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="SerialNumber" Type="java.lang.String"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                        <Param Name="WriteProtected" Type="boolean"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="FullDetails" Type="void"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler$NamedDetailedTape" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.27ABF60BB787927C349EC424F8F349B4</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
@@ -67,6 +68,9 @@ public class NetCodeGenerator_Types_Test {
                 "./Ds3/Calls/",
                 typeName);
 
+        final ImmutableList<String> ignorableFiles = ImmutableList.of("./Ds3/Models/ChecksumType.cs");
+        codeGenerator.withIgnorableFiles(fileUtils, ignorableFiles);
+
         codeGenerator.generateCode(fileUtils, "/input/types/testElementsType.xml");
         final String typeCode = codeGenerator.getTypeCode();
 
@@ -97,7 +101,7 @@ public class NetCodeGenerator_Types_Test {
 
         LOG.info("Generated code:\n" + typeCode);
 
-        assertTrue(typeCode.contains("public enum " + typeName));
+        assertTrue(typeCode.contains("public abstract class " + typeName));
         assertTrue(typeCode.contains("CRC_32,"));
         assertTrue(typeCode.contains("CRC_32C,"));
         assertTrue(typeCode.contains("MD5,"));
@@ -105,5 +109,29 @@ public class NetCodeGenerator_Types_Test {
         assertTrue(typeCode.contains("SHA_512,"));
         assertTrue(typeCode.contains("NONE"));
 
+    }
+
+    @Test
+    public void bucket_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "Bucket";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                PLACEHOLDER_REQUEST_NAME,
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/bucket.xml");
+        final String typeCode = codeGenerator.getTypeCode();
+
+        LOG.info("Generated code:\n" + typeCode);
+
+        assertTrue(typeCode.contains("public DateTime CreationDate { get; set; }"));
+        assertTrue(typeCode.contains("public Guid DataPolicyId { get; set; }"));
+        assertTrue(typeCode.contains("public Guid Id { get; set; }"));
+        assertTrue(typeCode.contains("public long? LastPreferredChunkSizeInBytes { get; set; }"));
+        assertTrue(typeCode.contains("public long? LogicalUsedCapacity { get; set; }"));
+        assertTrue(typeCode.contains("public string Name { get; set; }"));
+        assertTrue(typeCode.contains("public Guid UserId { get; set; }"));
     }
 }

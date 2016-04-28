@@ -38,11 +38,10 @@ public final class TestHelper {
             final String nameToMarshal,
             final String parserCode) {
         final Pattern searchString = Pattern.compile(
-                "\\s+XmlExtensions" +
-                        "\\s+.ReadDocument\\(stream\\)" +
-                        "\\s+.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)" +
-                        "\\s+.Select\\(" + responseType + "Parser\\)"
-                , Pattern.MULTILINE | Pattern.UNIX_LINES);
+                "\\s+ModelParsers\\.Parse" + responseType + "\\(" +
+                        "\\s+XmlExtensions\\.ReadDocument\\(stream\\)" +
+                        "\\.ElementOrThrow\\(\"" + nameToMarshal + "\"\\)\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
 
         return searchString.matcher(parserCode).find();
     }
@@ -60,12 +59,12 @@ public final class TestHelper {
      * Determines if the request handler code contains the data for optional checksum
      */
     public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {
-        return generatedCode.contains("private Checksum _checksum = Checksum.None")
-                && generatedCode.contains("private Checksum.ChecksumType _checksumType")
-                && generatedCode.contains("internal override Checksum ChecksumValue")
-                && generatedCode.contains("internal override Checksum.ChecksumType ChecksumType")
-                && generatedCode.contains("public Checksum Checksum")
-                && generatedCode.contains("public " + requestName + " WithChecksum(Checksum checksum, Checksum.ChecksumType checksumType = Checksum.ChecksumType.Md5)");
+        return generatedCode.contains("private ChecksumType _checksum = ChecksumType.None")
+                && generatedCode.contains("private ChecksumType.Type _type")
+                && generatedCode.contains("internal override ChecksumType ChecksumValue")
+                && generatedCode.contains("internal override ChecksumType.Type Type")
+                && generatedCode.contains("public ChecksumType Checksum")
+                && generatedCode.contains("public " + requestName + " WithChecksum(ChecksumType checksum, ChecksumType.Type type = ChecksumType.Type.MD5)");
     }
 
     /**
@@ -166,5 +165,75 @@ public final class TestHelper {
                 "(" + commandName + "Response)?(void)? " + commandName + "\\(" + commandName + "Request request\\);",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return searchString.matcher(idsClientCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified nullable enum parser
+     * that takes a string input
+     */
+    public static boolean parseNullableEnumString(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "public static " + enumName + "\\? ParseNullable" + enumName + "\\(string " + uncapFirst(enumName) + "OrNull\\)"
+                + "\\s+\\{"
+                + "\\s+return string.IsNullOrWhiteSpace\\(" + uncapFirst(enumName) + "OrNull\\)"
+                + "\\s+\\? \\(" + enumName + "\\?\\) null"
+                + "\\s+: Parse" + enumName + "\\(" + uncapFirst(enumName) + "OrNull\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified non-nullable enum
+     * parser that takes a string input
+     */
+    public static boolean parseEnumString(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "public static " + enumName + " Parse" + enumName + "\\(string " + uncapFirst(enumName) + "\\)"
+                + "\\s+\\{"
+                + "\\s+return ParseEnumType<" + enumName + ">\\(" + uncapFirst(enumName) + "\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified nullable enum parser
+     * that takes an XElement input
+     */
+    public static boolean parseNullableEnumElement(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "public static " + enumName + "\\? ParseNullable" + enumName + "\\(XElement element\\)"
+                + "\\s+\\{"
+                + "\\s+return ParseNullable" + enumName + "\\(element\\.Value\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
+    }
+
+    /**
+     * Determines if the .net code contains the specified non-nullable enum
+     * parser that takes an XElement input
+     */
+    public static boolean parseEnumElement(
+            final String enumName,
+            final String parserCode) {
+        final Pattern searchString = Pattern.compile(
+                "public static " + enumName + " Parse" + enumName + "\\(XElement element\\)"
+                + "\\s+\\{"
+                + "\\s+return Parse" + enumName + "\\(element\\.Value\\);"
+                + "\\s+\\}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+
+        return searchString.matcher(parserCode).find();
     }
 }

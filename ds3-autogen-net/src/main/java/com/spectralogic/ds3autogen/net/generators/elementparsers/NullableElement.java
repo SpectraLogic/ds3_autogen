@@ -13,20 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.responsemodels;
+package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-
-/**
- * Contains the interface for functions that are used to convert a Ds3Request into
- * the Response model within Response Generators
- */
-public interface ResponseModelGeneratorUtils {
-
-    /**
-     * Converts a list of Ds3Elements into Arguments
-     */
-    ImmutableList<Arguments> toArgumentsList(final ImmutableList<Ds3Element> elements);
+@FunctionalInterface
+public interface NullableElement {
+    String printParseElement();
 }

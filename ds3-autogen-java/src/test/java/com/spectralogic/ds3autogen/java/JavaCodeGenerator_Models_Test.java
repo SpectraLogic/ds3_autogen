@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedModelCode;
 import com.spectralogic.ds3autogen.java.utils.TestHelper;
 import freemarker.template.TemplateModelException;
@@ -325,6 +326,26 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(modelGeneratedCode.contains("@JsonProperty(\"Job\")"));
         assertTrue(modelGeneratedCode.contains("@JacksonXmlElementWrapper(useWrapping = false)"));
         assertTrue(modelGeneratedCode.contains("private List<Job> jobs = new ArrayList<>();"));
+    }
+
+    @Test
+    public void NamedDetailedTapeList_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+        final String requestName = "PlaceHolderRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedComponentResponseCode testGeneratedCode = new TestGeneratedComponentResponseCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/",
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/NamedDetailedTapeList.java");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/namedDetailedTapeList.xml");
+
+        final String modelCode = testGeneratedCode.getEncapsulatingTypeGeneratedCode();
+        LOG.info("Generated code:\n" + modelCode);
+
+        assertFalse(modelCode.contains("@JacksonXmlRootElement(namespace = "));
+        assertFalse(modelCode.contains("@JsonProperty(\"NamedDetailedTape\")"));
+        assertTrue(modelCode.contains("@JsonProperty(\"Tape\")"));
     }
 
     @Test(expected = IllegalArgumentException.class)

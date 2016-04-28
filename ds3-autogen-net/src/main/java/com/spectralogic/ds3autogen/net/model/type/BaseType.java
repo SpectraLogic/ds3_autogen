@@ -16,17 +16,18 @@
 package com.spectralogic.ds3autogen.net.model.type;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 
 public class BaseType {
 
     private final String name;
     private final ImmutableList<EnumConstant> enumConstants;
-    private final ImmutableList<Element> elements;
+    private final ImmutableList<NetNullableVariable> elements;
 
     public BaseType(
             final String name,
             final ImmutableList<EnumConstant> enumConstants,
-            final ImmutableList<Element> elements) {
+            final ImmutableList<NetNullableVariable> elements) {
         this.name = name;
         this.enumConstants = enumConstants;
         this.elements = elements;
@@ -40,7 +41,7 @@ public class BaseType {
         return enumConstants;
     }
 
-    public ImmutableList<Element> getElements() {
+    public ImmutableList<NetNullableVariable> getElements() {
         return elements;
     }
 }

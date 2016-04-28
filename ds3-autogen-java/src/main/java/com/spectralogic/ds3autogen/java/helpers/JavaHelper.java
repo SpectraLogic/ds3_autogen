@@ -720,4 +720,12 @@ public final class JavaHelper {
         }
         return "@" + annotationName + "(\"" + annotationValue + "\")";
     }
+
+    /**
+     * Determines if a string has content. This is a wrapper for a utility function so that
+     * it is accessible from within the templates
+     */
+    public static boolean stringHasContent(final String string) {
+        return hasContent(string);
+    }
 }

@@ -2,13 +2,14 @@
 
 
 using System;
+using System.Collections.Generic;
 
 namespace Ds3.Models
 {
     public class ${name}
     {
         <#list elements as elmt>
-        public ${elmt.getType()} ${elmt.getName()} { get; set; }
+        public ${elmt.getNetType()} ${elmt.getName()} { get; set; }
         </#list>
     }
 }

@@ -24,5 +24,6 @@ public enum  FileTypeToLog {
     NONE,
     PARSER,
     REQUEST,
-    RESPONSE
+    RESPONSE,
+    MODEL_PARSERS
 }

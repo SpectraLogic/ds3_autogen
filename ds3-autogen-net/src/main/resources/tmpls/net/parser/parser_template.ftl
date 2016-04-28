@@ -20,11 +20,8 @@ namespace Ds3.ResponseParsers
                 using (var stream = response.GetResponseStream())
                 {
                     return new ${responseName}(
-                        XmlExtensions
-                            .ReadDocument(stream)
-                            .ElementOrThrow("${nameToMarshal}")
-                            .Select(${modelParserName})
-                            .ToList()
+                        ModelParsers.${modelParserName}(
+                            XmlExtensions.ReadDocument(stream).ElementOrThrow("${nameToMarshal}"))
                     );
                 }
             }

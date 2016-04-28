@@ -1,5 +1,7 @@
 <#include "../common/copyright.ftl" />
 
+using Ds3.Models;
+using System;
 using System.Net;
 
 namespace Ds3.Calls

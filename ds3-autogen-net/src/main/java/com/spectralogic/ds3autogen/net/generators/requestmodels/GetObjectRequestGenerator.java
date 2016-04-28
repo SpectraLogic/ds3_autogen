@@ -16,9 +16,12 @@
 package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 public class GetObjectRequestGenerator extends BaseRequestGenerator {
@@ -27,7 +30,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
      * The get object request has no optional arguments
      */
     @Override
-    public ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams) {
+    public ImmutableList<NetNullableVariable> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams, final ImmutableMap<String, Ds3Type> typeMap) {
         return ImmutableList.of();
     }
 

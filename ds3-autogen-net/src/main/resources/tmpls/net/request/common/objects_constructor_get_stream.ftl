@@ -7,7 +7,7 @@
             </#if>
             <#include "add_query_params.ftl" />
 
-            if (!objects.TrueForAll(obj => obj.Size.HasValue))
+            if (!objects.ToList().TrueForAll(obj => obj.Size.HasValue))
             {
                 throw new Ds3RequestException(Resources.ObjectsMissingSizeException);
             }

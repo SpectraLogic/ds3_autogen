@@ -16,8 +16,10 @@
 package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestBulkGet;
@@ -30,13 +32,13 @@ public class BulkGetRequestGenerator_Test {
 
     @Test
     public void toOptionalArgumentsList_NullList_Test() {
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(null);
+        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(null, null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toOptionalArgumentsList_EmptyList_Test() {
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(ImmutableList.of());
+        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(ImmutableList.of(), ImmutableMap.of());
         assertThat(result.size(), is(0));
     }
 
@@ -47,12 +49,12 @@ public class BulkGetRequestGenerator_Test {
                 new Ds3Param("StringArg", "java.lang.String", true),
                 new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false));
 
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
+        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(params, ImmutableMap.of());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getName(), is("IntArg"));
-        assertThat(result.get(0).getType(), is("int"));
+        assertThat(result.get(0).getNetType(), is("int"));
         assertThat(result.get(1).getName(), is("StringArg"));
-        assertThat(result.get(1).getType(), is("String"));
+        assertThat(result.get(1).getNetType(), is("string"));
     }
 
     @Test

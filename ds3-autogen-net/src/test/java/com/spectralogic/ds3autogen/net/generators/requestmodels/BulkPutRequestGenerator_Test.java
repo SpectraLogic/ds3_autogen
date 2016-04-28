@@ -16,8 +16,9 @@
 package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -29,13 +30,14 @@ public class BulkPutRequestGenerator_Test {
 
     @Test
     public void toOptionalArgumentsList_NullList_Test() {
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(null);
+        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(null, null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toOptionalArgumentsList_EmptyList_Test() {
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(ImmutableList.of());
+        final ImmutableList<NetNullableVariable> result = generator
+                .toOptionalArgumentsList(ImmutableList.of(), ImmutableMap.of());
         assertThat(result.size(), is(0));
     }
 
@@ -46,7 +48,8 @@ public class BulkPutRequestGenerator_Test {
                 new Ds3Param("MaxUploads", "int", false),
                 new Ds3Param("Prefix", "java.lang.String", true));
 
-        final ImmutableList<Arguments> result = generator.toOptionalArgumentsList(params);
+        final ImmutableList<NetNullableVariable> result = generator
+                .toOptionalArgumentsList(params, ImmutableMap.of());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getName(), is("MaxUploads"));
         assertThat(result.get(1).getName(), is("Prefix"));

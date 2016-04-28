@@ -813,6 +813,8 @@ public class JavaCodeGenerator_Test {
         final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
+        assertFalse(requestGeneratedCode.contains("CreateObjectRequest"));
+
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
@@ -958,6 +960,9 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.utils.IOUtils", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.utils.PerformanceUtils", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException", responseGeneratedCode));
+
+        assertTrue(responseGeneratedCode.contains("final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false)"));
+        assertFalse(responseGeneratedCode.contains("final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

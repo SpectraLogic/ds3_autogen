@@ -392,4 +392,11 @@ public class Ds3SpecConverter_Test {
         assertThat(getOriginalType("NotRenamedType", nameMapper), is(nullValue()));
         assertThat(getOriginalType("Bucket", nameMapper), is("Bucket"));
     }
+
+    @Test
+    public void toNameToMarshal_Test() {
+        assertThat(toNameToMarshal(null), is("Data"));
+        assertThat(toNameToMarshal(""), is(""));
+        assertThat(toNameToMarshal("MyNameToMarshal"), is("MyNameToMarshal"));
+    }
 }

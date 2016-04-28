@@ -201,13 +201,35 @@ public final class ResponseTypeConverter {
                                 new Ds3AnnotationElement("Value", getAnnotationName(encapsulatingType), "java.lang.String"))));
         return new Ds3Type(
                 encapsulatingType.getSdkName() + NAMESPACE_ARRAY_RESPONSE_TYPES,
+                getNameToMarshalForEncapsulatingType(encapsulatingType),
                 ImmutableList.of(
                         new Ds3Element(
                                 English.plural(stripPath(encapsulatingType.getSdkName())),
                                 "array",
                                 encapsulatingType.getSdkName(),
                                 annotations,
-                                false)));
+                                false)),
+                null);
+    }
+
+    /**
+     * Determines the name to marshal value for the encapsulating type.
+     * Note: NameToMarshal = "" denotes no encapsulating xml tag
+     */
+    protected static String getNameToMarshalForEncapsulatingType(final EncapsulatingTypeNames encapsulatingType) {
+        if (hasNoRootElement(encapsulatingType)) {
+            return "";
+        }
+        return "Data";
+    }
+
+    /**
+     * Determines if this encapsulating type lacks a root element. This
+     * is used to special case NamedDetailedTypeList
+     */
+    protected static boolean hasNoRootElement(final EncapsulatingTypeNames encapsulatingType) {
+        return hasContent(encapsulatingType.getSdkName())
+                && encapsulatingType.getSdkName().endsWith(".NamedDetailedTape");
     }
 
     /**
@@ -216,6 +238,9 @@ public final class ResponseTypeConverter {
      * object.
      */
     protected static String getAnnotationName(final EncapsulatingTypeNames encapsulatingType) {
+        if (hasNoRootElement(encapsulatingType)) {
+            return "Tape";
+        }
         if (hasContent(encapsulatingType.getOriginalName())) {
             return encapsulatingType.getOriginalName();
         }

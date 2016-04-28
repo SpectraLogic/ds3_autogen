@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
@@ -40,14 +41,17 @@ public class TestGenerateCode {
     protected final ByteArrayOutputStream responseOutputStream;
     protected final ByteArrayOutputStream clientOutputStream;
     protected final ByteArrayOutputStream idsClientOutputStream;
+    protected final ByteArrayOutputStream typeParserOutputStream;
     protected final ByteArrayOutputStream parserOutputStream;
     protected ByteArrayOutputStream responseTypeOutputStream;
+    protected ImmutableList<ByteArrayOutputStream> ignorableFiles; /** List of generated files to ignore for this test */
     protected String typeCode;
     protected String requestCode;
     protected String responseCode;
     protected String clientCode;
     protected String idsClientCode;
-    protected String parserCode;
+    protected String typeParser; /** Type/model parser code */
+    protected String parserCode; /** Request handler parser code */
 
     public enum PathType { REQUEST, RESPONSE }
 
@@ -59,6 +63,7 @@ public class TestGenerateCode {
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
         this.clientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.cs");
         this.idsClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "IDs3Client.cs");
+        this.typeParserOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "ResponseParsers/ModelParsers.cs");
         this.parserOutputStream = setupOutputStream(fileUtils, PARSER_PATH + requestName.replace("Request", "ResponseParser") + ".cs");
     }
 
@@ -69,6 +74,17 @@ public class TestGenerateCode {
             final String responseType) throws IOException {
         this(fileUtils, requestName, path);
         this.responseTypeOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Models/" + responseType + ".cs");
+    }
+
+    /**
+     * Captures generated files that are ignorable during testing
+     */
+    public void withIgnorableFiles(final FileUtils fileUtils, final ImmutableList<String> ignorableFileNames) throws IOException {
+        final ImmutableList.Builder<ByteArrayOutputStream> builder = ImmutableList.builder();
+        for (final String pathName : ignorableFileNames) {
+            builder.add(setupOutputStream(fileUtils, pathName));
+        }
+        this.ignorableFiles = builder.build();
     }
 
     /**
@@ -88,6 +104,7 @@ public class TestGenerateCode {
         responseCode = new String(responseOutputStream.toByteArray());
         clientCode = new String(clientOutputStream.toByteArray());
         idsClientCode = new String(idsClientOutputStream.toByteArray());
+        typeParser = new String(typeParserOutputStream.toByteArray());
         parserCode = new String(parserOutputStream.toByteArray());
 
         if (responseTypeOutputStream != null) {
@@ -99,7 +116,7 @@ public class TestGenerateCode {
      * Sets up an output stream to capture the content of generated code that would otherwise
      * have been written to a file
      */
-    protected static ByteArrayOutputStream setupOutputStream(
+    public static ByteArrayOutputStream setupOutputStream(
             final FileUtils fileUtils,
             final String pathName) throws IOException {
         final Path path = Paths.get(pathName);
@@ -140,6 +157,10 @@ public class TestGenerateCode {
 
     public String getIdsClientCode() {
         return this.idsClientCode;
+    }
+
+    public String getTypeParser() {
+        return this.typeParser;
     }
 
     public String getParserCode() {

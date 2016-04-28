@@ -15,27 +15,24 @@
 
 package com.spectralogic.ds3autogen.net.model.response;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-
 public class BaseResponse {
 
     private final String name;
-    private final ImmutableList<Arguments> arguments;
+    private final String responseType;
 
     public BaseResponse(
             final String name,
-            final ImmutableList<Arguments> arguments) {
+            final String responseType) {
         this.name = name;
-        this.arguments = arguments;
+        this.responseType = responseType;
     }
 
     public String getName() {
         return name;
     }
 
-    public ImmutableList<Arguments> getArguments() {
-        return arguments;
+    public String getResponseType() {
+        return responseType;
     }
 }
 
