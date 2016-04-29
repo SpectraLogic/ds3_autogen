@@ -38,19 +38,19 @@ public class BaseTypeParserGenerator_Test {
     @Test
     public void toNullableElement_Test() {
         final Ds3Element element = new Ds3Element("Name", "int", "", false);
-        final NullableElement result = toNullableElement(element);
+        final NullableElement result = toNullableElement(element, false);
         assertThat(result, instanceOf(BaseNullableElement.class));
     }
 
     @Test
     public void toNullableElementsList_NullList_Test() {
-        final ImmutableList<NullableElement> result = toNullableElementsList(null);
+        final ImmutableList<NullableElement> result = toNullableElementsList(null, false);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toNullableElementsList_EmptyList_Test() {
-        final ImmutableList<NullableElement> result = toNullableElementsList(ImmutableList.of());
+        final ImmutableList<NullableElement> result = toNullableElementsList(ImmutableList.of(), false);
         assertThat(result.size(), is(0));
     }
 
@@ -60,7 +60,7 @@ public class BaseTypeParserGenerator_Test {
                 new Ds3Element("Name1", "int", "", false),
                 new Ds3Element("Name2", "Type", "Component", false));
 
-        final ImmutableList<NullableElement> result = toNullableElementsList(elements);
+        final ImmutableList<NullableElement> result = toNullableElementsList(elements, false);
         assertThat(result.size(), is(2));
         assertThat(result.get(0), instanceOf(BaseNullableElement.class));
         assertThat(result.get(1), instanceOf(NullableListElement.class));
@@ -68,13 +68,13 @@ public class BaseTypeParserGenerator_Test {
 
     @Test
     public void toParseElements_NullList_Test() {
-        final ImmutableList<String> result = toParseElements(null);
+        final ImmutableList<String> result = toParseElements(null, false);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toParseElements_EmptyList_Test() {
-        final ImmutableList<String> result = toParseElements(ImmutableList.of());
+        final ImmutableList<String> result = toParseElements(ImmutableList.of(), false);
         assertThat(result.size(), is(0));
     }
 
@@ -84,7 +84,7 @@ public class BaseTypeParserGenerator_Test {
                 new Ds3Element("Name1", "int", "", false),
                 new Ds3Element("Name2", "Type", "Component", false));
 
-        final ImmutableList<String> result = toParseElements(elements);
+        final ImmutableList<String> result = toParseElements(elements, false);
         assertThat(result.size(), is(2));
         assertThat(result, hasItem("Name1 = ParseInt(element.Element(\"Name1\"))"));
         assertThat(result, hasItem("Name2 = element.Elements(\"Name2\").Select(ParseComponent).ToList()"));
@@ -157,5 +157,13 @@ public class BaseTypeParserGenerator_Test {
         final ImmutableList<String> result = toEnumList(typeMap);
         assertThat(result.size(), is(1));
         assertThat(result, hasItem(enumType.getName()));
+    }
+
+    @Test
+    public void toNullableElementName_Test() {
+        assertThat(toNullableElementName("Objects", true), is("ObjectsList"));
+        assertThat(toNullableElementName("ObjectsApiBean", true), is("ObjectsApiBean"));
+        assertThat(toNullableElementName("Objects", false), is("Objects"));
+        assertThat(toNullableElementName("ObjectsApiBean", false), is("ObjectsApiBean"));
     }
 }

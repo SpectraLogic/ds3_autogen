@@ -134,4 +134,27 @@ public class NetCodeGenerator_Types_Test {
         assertTrue(typeCode.contains("public string Name { get; set; }"));
         assertTrue(typeCode.contains("public Guid UserId { get; set; }"));
     }
+
+    @Test
+    public void jobChunkApiBean_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "Objects";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                PLACEHOLDER_REQUEST_NAME,
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.withIgnorableFiles(fileUtils, ImmutableList.of("./Ds3/Models/BulkObject.cs"));
+
+        codeGenerator.generateCode(fileUtils, "/input/types/jobChunkApiBean.xml");
+        final String typeCode = codeGenerator.getTypeCode();
+
+        LOG.info("Generated code:\n" + typeCode);
+
+        assertTrue(typeCode.contains("public Guid ChunkId { get; set; }"));
+        assertTrue(typeCode.contains("public int ChunkNumber { get; set; }"));
+        assertTrue(typeCode.contains("public Guid? NodeId { get; set; }"));
+        assertTrue(typeCode.contains("public IEnumerable<BulkObject> ObjectsList { get; set; }"));
+    }
 }
