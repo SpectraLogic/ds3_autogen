@@ -61,11 +61,10 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final String expectedOutput = "ds3_request* init_delete_bucket(const char* resource_id, const ds3_bool force) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_DELETE, _build_path(\"/_rest_/bucket\", resource_id, NULL));" + "\n"
-                + "    if (force != NULL) {"                                                                                          + "\n"
+                + "    if (force) {"                                                                                                  + "\n"
                 + "        _set_query_param((ds3_request*) request, \"force\", NULL);"                                                + "\n"
                 + "    }"                                                                                                             + "\n"
                 + "\n"
@@ -101,7 +100,6 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final String expectedOutput = "ds3_request* init_create_bucket(const char* resource_id, const char* name, const char* data_policy_id, const char* user_id) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_POST, _build_path(\"/_rest_/bucket\", NULL, NULL));" + "\n"
@@ -145,7 +143,6 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final String expectedOutput = "ds3_request* init_get_system_information(void) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/system_information\", NULL, NULL));" + "\n"
@@ -188,14 +185,13 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final String expectedOutput = "ds3_request* init_get_buckets(const char* resource_id, const char* data_policy_id, const ds3_bool last_page, const char* name, const int page_length, const int page_offset, const char* page_start_marker, const char* user_id) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", NULL, NULL));" + "\n"
                 + "    if (data_policy_id != NULL) {"                                                                                + "\n"
                 + "        _set_query_param((ds3_request*) request, \"data_policy_id\", data_policy_id);"                            + "\n"
                 + "    }"                                                                                                            + "\n"
-                + "    if (last_page != NULL) {"                                                                                     + "\n"
+                + "    if (last_page) {"                                                                                             + "\n"
                 + "        _set_query_param((ds3_request*) request, \"last_page\", NULL);"                                           + "\n"
                 + "    }"                                                                                                            + "\n"
                 + "    if (name != NULL) {"                                                                                          + "\n"
@@ -219,6 +215,47 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                            + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                               + "\n"
+                + "}";
+        assertEquals(expectedOutput, output);
+    }
+
+    @Test
+    public void testGenerateInitSpectraS3RequiredBoolQueryParamOmittedFromFunctionSig()
+            throws IOException, TemplateModelException {
+        final Map<String,Object> testMap = new HashMap<>();
+        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.ExampleRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, // bucketRequirement
+                null, // objectRequirement
+                Action.LIST, // action
+                Resource.BUCKET, // resource
+                ResourceType.NON_SINGLETON, // resourceType
+                null, // operation
+                false,// includeIdInPath
+                null, // ds3ResponseCodes
+                ImmutableList.of(new Ds3Param("OptionalBool", "void", false)), // optionalQueryParams
+                ImmutableList.of(new Ds3Param("RequiredBool", "void", false)))); // requiredQueryParams
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info(output);
+
+        final String expectedOutput = "ds3_request* init_example(const char* resource_id, const ds3_bool optional_bool) {"          + "\n"
+                + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", NULL, NULL));" + "\n"
+                + "    _set_query_param((ds3_request*) request, \"required_bool\", NULL);"                                          + "\n"
+                + "\n"
+                + "    if (optional_bool) {"                                                                                        + "\n"
+                + "        _set_query_param((ds3_request*) request, \"optional_bool\", NULL);"                                      + "\n"
+                + "    }"                                                                                                           + "\n"
+                + "\n"
+                + "    return (ds3_request*) request;"                                                                              + "\n"
                 + "}";
         assertEquals(expectedOutput, output);
     }

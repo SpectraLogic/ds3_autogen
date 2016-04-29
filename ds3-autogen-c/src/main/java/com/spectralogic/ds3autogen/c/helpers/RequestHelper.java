@@ -144,18 +144,25 @@ public final class RequestHelper {
 
         if (parm.getName().equalsIgnoreCase("length")) {
             builder.append(indent(1)).append("request->length = length;\n");
+        } else if (parm.getParameterType().equals("ds3_bool")) {
+            if (isRequired) {
+                builder.append(indent(1)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", NULL);\n");
+            } else {
+                builder.append(indent(1)).append("if (").append(parm.getName()).append(") {\n");
+                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", NULL);\n");
+                builder.append(indent(1)).append("}");
+            }
         } else {
             builder.append(indent(1)).append("if (").append(parm.getName()).append(" != NULL) {\n");
-            if (parm.getParameterType().equals("uint64_t")) {
+
+            if (parm.getParameterType().equals("uint64_t")) { // TODO how do we know if this needs to be set if its optional, rather than 0 etc
                 builder.append(indent(2)).append("char tmp_buff[32];\n");
                 builder.append(indent(2)).append("sprintf(tmp_buff, \"%llu\", (unsigned long long) ").append(parm.getName()).append(");\n");
                 builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", tmp_buff);\n");
-            } else if(parm.getParameterType().equals("int")){
+            } else if(parm.getParameterType().equals("int")){ // TODO how do we know if this needs to be set if its optional, rather than 0 etc
                 builder.append(indent(2)).append("char tmp_buff[32];\n");
                 builder.append(indent(2)).append("sprintf(tmp_buff, \"%d\", ").append(parm.getName()).append(");\n");
                 builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", tmp_buff);\n");
-            } else if(parm.getParameterType().equals("ds3_bool")){
-                builder.append(indent(2)).append("_set_query_param((ds3_request*) request, \"").append(parm.getName()).append("\", NULL);\n");
             } else if(parm.getParameterType().startsWith("ds3_")){  // For enums, call local method to convert to string
                 builder.append(indent(2)).append("_set_query_param((ds3_request*) request, _get_").append(parm.getParameterType()).append("_str(").append(parm.getName()).append("));\n");
             } else if(parm.getParameterType().equals("ds3_job_with_chunks_response")){ // special case bulk request payload
@@ -165,6 +172,7 @@ public final class RequestHelper {
             } else {
                 throw new InvalidParameterException("Unknown type: " + parm.getParameterType());
             }
+
             builder.append(indent(1)).append("}");
         }
         return builder.toString();

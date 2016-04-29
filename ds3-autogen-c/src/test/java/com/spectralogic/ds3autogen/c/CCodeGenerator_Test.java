@@ -212,9 +212,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
-
-
 
         final String expectedOutput = "void ds3_bucket_response_free(ds3_bucket_response* response) {" + "\n"
                                     + "    if (response == NULL) {" + "\n"
