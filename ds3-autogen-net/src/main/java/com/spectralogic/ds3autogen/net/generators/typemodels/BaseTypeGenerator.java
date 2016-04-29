@@ -86,15 +86,29 @@ public class BaseTypeGenerator implements TypeModelGenerator<BaseType>, TypeMode
     /**
      * Converts a Ds3Element into an NetNullableVariable
      */
-    protected static NetNullableVariable toElement(
+    @Override
+    public NetNullableVariable toElement(
             final Ds3Element ds3Element,
             final ImmutableMap<String, Ds3Type> typeMap) {
+        final String elementName = toElementName(ds3Element.getName());
         return createNullableVariable(
-                ds3Element.getName(),
+                elementName,
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
                 ds3Element.isNullable(),
                 typeMap);
+    }
+
+    /**
+     * Converts a Ds3Element name into the sdk's name for that element.
+     * The base type generator does not rename any elements.
+     */
+    @Override
+    public String toElementName(final String elementName) {
+        if (isEmpty(elementName)) {
+            throw new IllegalArgumentException("Element name is empty");
+        }
+        return elementName;
     }
 
     /**

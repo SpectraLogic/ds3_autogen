@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
@@ -117,5 +118,31 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("public static NamedDetailedTapeList ParseNullableNamedDetailedTapeList(XElement element)"));
 
         assertTrue(typeParserCode.contains("NamedDetailedTapes = element.Elements(\"Tape\").Select(ParseNamedDetailedTape).ToList()"));
+    }
+
+    @Test
+    public void jobChunkApiBean_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String typeName = "Objects";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                "PlaceHolderRequest",
+                "./Ds3/Calls/",
+                typeName);
+
+        codeGenerator.withIgnorableFiles(fileUtils, ImmutableList.of("./Ds3/Models/BulkObject.cs"));
+
+        codeGenerator.generateCode(fileUtils, "/input/types/jobChunkApiBean.xml");
+        final String typeParserCode = codeGenerator.getTypeParser();
+
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+
+        assertTrue(typeParserCode.contains("public static Objects ParseObjects(XElement element)"));
+        assertTrue(typeParserCode.contains("public static Objects ParseNullableObjects(XElement element)"));
+
+        assertTrue(typeParserCode.contains("ChunkId = ParseGuid(element.AttributeText(\"ChunkId\"))"));
+        assertTrue(typeParserCode.contains("ChunkNumber = ParseInt(element.AttributeText(\"ChunkNumber\"))"));
+        assertTrue(typeParserCode.contains("NodeId = ParseNullableGuid(element.AttributeText(\"NodeId\"))"));
+        assertTrue(typeParserCode.contains("ObjectsList = element.Elements(\"object\").Select(ParseBulkObject).ToList()"));
     }
 }

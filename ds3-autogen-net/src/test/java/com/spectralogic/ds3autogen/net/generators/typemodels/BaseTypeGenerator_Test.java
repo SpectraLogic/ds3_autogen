@@ -98,7 +98,7 @@ public class BaseTypeGenerator_Test {
                 null,
                 false);
 
-        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
+        final NetNullableVariable result = generator.toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
         assertThat(result.getNetType(), is("int"));
     }
@@ -113,7 +113,7 @@ public class BaseTypeGenerator_Test {
                         new Ds3Annotation("com.spectralogic.util.bean.lang.Optional", null)),
                 true);
 
-        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
+        final NetNullableVariable result = generator.toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
         assertThat(result.getNetType(), is("int?"));
     }
@@ -127,7 +127,7 @@ public class BaseTypeGenerator_Test {
                 "java.lang.Integer",
                 true);
 
-        final NetNullableVariable result = toElement(ds3Element, ImmutableMap.of());
+        final NetNullableVariable result = generator.toElement(ds3Element, ImmutableMap.of());
         assertThat(result.getName(), is("TestElement"));
         assertThat(result.getNetType(), is("IEnumerable<int>"));
     }
@@ -185,5 +185,21 @@ public class BaseTypeGenerator_Test {
         assertThat(result.get(0).getName(), is("one"));
         assertThat(result.get(1).getName(), is("two"));
         assertThat(result.get(2).getName(), is("three"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toElementName_NullString_Test() {
+        generator.toElementName(null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toElementName_EmptyString_Test() {
+        generator.toElementName("");
+    }
+
+    @Test
+    public void toElementName_Test() {
+        assertThat(generator.toElementName("ElementName"), is("ElementName"));
+        assertThat(generator.toElementName("Objects"), is("Objects"));
     }
 }
