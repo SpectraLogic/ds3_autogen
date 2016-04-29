@@ -28,6 +28,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTypeParser> {
@@ -83,8 +84,7 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
     protected static TypeParser toTypeParser(
             final Ds3Type ds3Type) {
         final String typeName = removePath(ds3Type.getName());
-        final ImmutableList<String> parseElements = toParseElements(ds3Type.getElements());
-
+        final ImmutableList<String> parseElements = toParseElements(ds3Type.getElements(), isObjectsType(ds3Type));
         return new TypeParser(typeName, parseElements);
     }
 
@@ -92,8 +92,9 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
      * Converts a list of NullableElements into their .net parsing code
      */
     protected static ImmutableList<String> toParseElements(
-            final ImmutableList<Ds3Element> ds3Elements) {
-        final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Elements);
+            final ImmutableList<Ds3Element> ds3Elements,
+            final boolean isObjectsType) {
+        final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Elements, isObjectsType);
         if (isEmpty(elements)) {
             return ImmutableList.of();
         }
@@ -108,13 +109,14 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
      * Converts a list of Ds3Elements into a list of Nullable Element
      */
     protected static ImmutableList<NullableElement> toNullableElementsList(
-            final ImmutableList<Ds3Element> ds3Elements) {
+            final ImmutableList<Ds3Element> ds3Elements,
+            final boolean isObjectsType) {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
         final ImmutableList.Builder<NullableElement> builder = ImmutableList.builder();
         for (final Ds3Element ds3Element : ds3Elements) {
-            builder.add(toNullableElement(ds3Element));
+            builder.add(toNullableElement(ds3Element, isObjectsType));
         }
         return builder.build();
     }
@@ -123,15 +125,28 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
      * Converts a Ds3Element into a Nullable Element
      */
     protected static NullableElement toNullableElement(
-            final Ds3Element ds3Element) {
+            final Ds3Element ds3Element,
+            final boolean isObjectsType) {
 
         return createNullableElement(
-                ds3Element.getName(),
+                toNullableElementName(ds3Element.getName(), isObjectsType),
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
                 ds3Element.isNullable(),
                 getXmlTagName(ds3Element),
                 getEncapsulatingTagAnnotations(ds3Element.getDs3Annotations()),
                 isAttribute(ds3Element.getDs3Annotations()));
+    }
+
+    /**
+     * Converts an element's contract name into its sdk name
+     */
+    protected static String toNullableElementName(
+            final String elementName,
+            final boolean isObjectsType) {
+        if (isObjectsType && elementName.equals("Objects")) {
+            return elementName + "List";
+        }
+        return elementName;
     }
 }

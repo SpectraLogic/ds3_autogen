@@ -33,6 +33,7 @@ import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGen
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
+import com.spectralogic.ds3autogen.net.generators.typemodels.ObjectsGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.typeparsers.TypeParserModelGenerator;
@@ -61,6 +62,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -169,6 +171,9 @@ public class NetCodeGenerator implements CodeGenerator {
     private TypeModelGenerator getTypeGenerator(final Ds3Type ds3Type) {
         if (isChecksumType(ds3Type)) {
             return new NoneEnumGenerator();
+        }
+        if (isObjectsType(ds3Type)) {
+            return new ObjectsGenerator();
         }
         return new BaseTypeGenerator();
     }

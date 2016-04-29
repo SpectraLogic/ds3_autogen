@@ -25,6 +25,6 @@ namespace Ds3
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        IDs3ClientFactory BuildFactory(IEnumerable<Node> nodes);
+        IDs3ClientFactory BuildFactory(IEnumerable<Ds3Node> nodes);
     }
 }

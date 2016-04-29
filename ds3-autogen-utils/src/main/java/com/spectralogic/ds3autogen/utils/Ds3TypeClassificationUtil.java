@@ -93,6 +93,13 @@ public final class Ds3TypeClassificationUtil {
      * @return True if the Ds3Type describes the ChecksumType, else false
      */
     public static boolean isChecksumType(final Ds3Type ds3Type) {
-        return ds3Type.getName().endsWith(".ChecksumType");
+        return removePath(ds3Type.getName()).equals("ChecksumType");
+    }
+
+    /**
+     * Determines if a given Ds3Type is the Objects Type
+     */
+    public static boolean isObjectsType(final Ds3Type ds3Type) {
+        return removePath(ds3Type.getName()).equals("Objects");
     }
 }

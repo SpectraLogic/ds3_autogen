@@ -92,7 +92,15 @@ public class Ds3TypeClassificationUtil_Test {
 
     @Test
     public void isChecksumType_Test() {
+        assertTrue(isChecksumType(createDs3TypeTestData("ChecksumType")));
         assertTrue(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumType")));
         assertFalse(isChecksumType(createDs3TypeTestData("com.spectralogic.util.security.ChecksumTypeApiBean")));
+    }
+
+    @Test
+    public void isObjectsType_Test() {
+        assertTrue(isObjectsType(createDs3TypeTestData("Objects")));
+        assertFalse(isObjectsType(createDs3TypeTestData("com.test.ObjectsList")));
+        assertFalse(isObjectsType(createDs3TypeTestData("ObjectsApiBean")));
     }
 }
