@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1226,7 +1226,7 @@ public class NetCodeGenerator_Test {
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(hasContent(parserCode));
-        assertTrue(parserHasResponseCode(200, parserCode));
+        assertFalse(parserHasResponseCode(200, parserCode));
         assertTrue(parserHasPayload("Objects", "Objects", parserCode));
     }
 }
