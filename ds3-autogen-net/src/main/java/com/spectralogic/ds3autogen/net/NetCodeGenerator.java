@@ -371,6 +371,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * code for this Ds3Request
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return config.getTemplate("response/allocate_job_chunk_response.ftl");
+        }
         return config.getTemplate("response/response_template.ftl");
     }
 
