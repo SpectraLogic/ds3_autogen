@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1176,5 +1176,109 @@ public class NetCodeGenerator_Test {
         assertTrue(hasContent(parserCode));
         assertTrue(parserHasResponseCode(200, parserCode));
         assertTrue(parserHasPayload("NamedDetailedTapeList", "Data", parserCode));
+    }
+
+    @Test
+    public void allocateJobChunkRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+        final String requestName = "AllocateJobChunkSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                "Objects");
+
+        codeGenerator.generateCode(fileUtils, "/input/allocateJobChunkRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("JobChunkId", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("Guid", "JobChunkId"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responsePayloadType = "Objects";
+        assertFalse(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertFalse(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("Objects", "Objects", parserCode));
+    }
+
+    @Test
+    public void getJobChunksReadyForClientProcessingRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+        final String requestName = "GetJobChunksReadyForClientProcessingSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                "MasterObjectList");
+
+        codeGenerator.generateCode(fileUtils, "/input/getJobChunksRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("Job", "Guid", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("Guid", "Job"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responsePayloadType = "Objects";
+        assertFalse(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+        assertFalse(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 }
