@@ -245,7 +245,6 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final String expectedOutput = "ds3_request* init_example(const char* resource_id, const ds3_bool optional_bool) {"          + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", NULL, NULL));" + "\n"
