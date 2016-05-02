@@ -186,7 +186,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* init_get_buckets(const char* resource_id, const char* data_policy_id, const ds3_bool last_page, const char* name, const int page_length, const int page_offset, const char* page_start_marker, const char* user_id) {" + "\n"
+        final String expectedOutput = "ds3_request* init_get_buckets(const char* resource_id, const char* data_policy_id, const ds3_bool last_page, const char* name, const int* page_length, const int* page_offset, const char* page_start_marker, const char* user_id) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", NULL, NULL));" + "\n"
                 + "    if (data_policy_id != NULL) {"                                                                                + "\n"
                 + "        _set_query_param((ds3_request*) request, \"data_policy_id\", data_policy_id);"                            + "\n"
@@ -199,12 +199,12 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                            + "\n"
                 + "    if (page_length != NULL) {"                                                                                   + "\n"
                 + "        char tmp_buff[32];"                                                                                       + "\n"
-                + "        sprintf(tmp_buff, \"%d\", page_length);"                                                                  + "\n"
+                + "        sprintf(tmp_buff, \"%d\", *page_length);"                                                                  + "\n"
                 + "        _set_query_param((ds3_request*) request, \"page_length\", tmp_buff);"                                     + "\n"
                 + "    }"                                                                                                            + "\n"
                 + "    if (page_offset != NULL) {"                                                                                   + "\n"
                 + "        char tmp_buff[32];"                                                                                       + "\n"
-                + "        sprintf(tmp_buff, \"%d\", page_offset);"                                                                  + "\n"
+                + "        sprintf(tmp_buff, \"%d\", *page_offset);"                                                                  + "\n"
                 + "        _set_query_param((ds3_request*) request, \"page_offset\", tmp_buff);"                                     + "\n"
                 + "    }"                                                                                                            + "\n"
                 + "    if (page_start_marker != NULL) {"                                                                             + "\n"

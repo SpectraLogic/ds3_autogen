@@ -91,7 +91,7 @@ public final class SourceConverter {
     }
 
     /**
-     * All Request query parameters than are Enums require a _get_enum_str() function to be generated
+     * All Request query parameters that are Enums require a _get_enum_str() function to be generated
      */
     public static ImmutableSet<Enum> filterQueryParamEnums(final ImmutableList<Enum> allEnums, final ImmutableList<Request> allRequests) {
         final ImmutableSet<String> enumTypes = allEnums.stream()

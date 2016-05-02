@@ -69,6 +69,7 @@ public class ParameterConverter {
             case "void":
             case "java.lang.Boolean":
             case "boolean":
+                return ParameterPointerType.NONE;
 
             case "java.lang.Integer":
             case "int":
@@ -78,7 +79,6 @@ public class ParameterConverter {
 
             case "java.lang.Double":
             case "double":
-                return ParameterPointerType.NONE;
 
             case "java.lang.Object":
             case "java.lang.String":

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.InvalidParameterException;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
 public final class RequestConverter {
@@ -116,7 +117,7 @@ public final class RequestConverter {
 
             if (ds3Param.getName().equalsIgnoreCase("Offset")) {
                 final Parameter lengthParam = new Parameter(
-                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.NONE);
+                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER);
                 LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
                 requiredArgsBuilder.add(lengthParam);
             }
@@ -127,14 +128,14 @@ public final class RequestConverter {
 
     private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Parameter> optionalArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting optional args...");
-        if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
+        LOG.debug("Getting optional query parameters...");
+        if (isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("\tparam " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
+            LOG.debug("\tds3Param " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
             optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param));
         }
 
@@ -159,7 +160,7 @@ public final class RequestConverter {
     }
 
     public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (responseCodes == null) return "";
+        if (isEmpty(responseCodes)) return "";
 
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
