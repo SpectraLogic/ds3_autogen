@@ -34,20 +34,22 @@ namespace Ds3.Calls
 
         internal Stream DestinationStream { get; private set; }
 
-        public ${name}(${netHelper.constructor(constructorArgs)}) {
-            <#list constructorArgs as arg>
-            this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
+        <#list constructors as constructor>
+        public ${name}(${netHelper.constructor(constructor.constructorArgs)}) {
+            <#list constructor.constructorArgs as arg>
+            this.${arg.getName()?cap_first} = ${netHelper.paramAssignmentRightValue(arg)};
             </#list>
             <#include "common/add_query_params.ftl" />
 
-            <#if netHelper.containsArgument(constructorArgs, "Job")>
-            if (job != Guid.Empty)
+            <#if netHelper.containsArgument(constructor.constructorArgs, "Job")>
+            if (job != null)
             {
                 QueryParams.Add("job", job.ToString());
                 QueryParams.Add("offset", offset.ToString());
             }
             </#if>
         }
+        </#list>
 
         <#include "common/http_verb_and_path.ftl" />
     }

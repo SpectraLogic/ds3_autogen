@@ -146,6 +146,9 @@ public final class NetHelper {
         if (isEmpty(arg.getName()) || isEmpty(arg.getType())) {
             return "";
         }
+        if (arg.getType().equals("UUID")) {
+            return uncapFirst(argToString(arg));
+        }
         final Pattern patternIEnumerable = Pattern.compile("IEnumerable<\\w+>");
         if (patternIEnumerable.matcher(arg.getType()).find()) {
             return Helper.uncapFirst(arg.getName()) + ".ToList()";
