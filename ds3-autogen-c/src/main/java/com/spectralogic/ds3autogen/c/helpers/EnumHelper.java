@@ -97,14 +97,13 @@ public final class EnumHelper {
     }
 
     public static String generateToString(final ImmutableList<String> enumValues) {
-        final StringBuilder outputBuilder = new StringBuilder();
-        final int numEnumValues = enumValues.size();
-
-        if (numEnumValues <= 0) {
+        if (isEmpty(enumValues)) {
             LOG.warn("Empty enumValues list.");
             return "";
         }
 
+        final int numEnumValues = enumValues.size();
+        final StringBuilder outputBuilder = new StringBuilder();
         for (int currentEnum = 0; currentEnum < numEnumValues; currentEnum++) {
             outputBuilder.append(indent(1));
 
