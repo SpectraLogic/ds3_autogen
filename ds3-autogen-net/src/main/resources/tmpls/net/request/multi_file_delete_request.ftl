@@ -16,17 +16,19 @@ namespace Ds3.Calls
 
         <#include "common/optional_args.ftl" />
 
-        public ${name}(${netHelper.constructor(constructorArgs)})
+        <#list constructors as constructor>
+        public ${name}(${netHelper.constructor(constructor.constructorArgs)})
         {
-            <#list constructorArgs as arg>
-            this.${arg.getName()?cap_first} = ${arg.getName()?uncap_first};
+            <#list constructor.constructorArgs as arg>
+            this.${arg.getName()?cap_first} = ${netHelper.paramAssignmentRightValue(arg)};
             </#list>
-            <#if operation??>
+            <#if constructor.operation??>
             this.QueryParams.Add("operation", "${operation.toString()?lower_case}");
             </#if>
             <#include "common/add_query_params.ftl" />
 
         }
+        </#list>
 
         internal override Stream GetContentStream()
         {

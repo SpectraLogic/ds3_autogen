@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
+import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
 
 public interface RequestModelGeneratorUtils {
 
@@ -44,4 +45,9 @@ public interface RequestModelGeneratorUtils {
      * Gets the list of Arguments that are added to query params list in constructor
      */
     ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of constructors for this request
+     */
+    ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request);
 }

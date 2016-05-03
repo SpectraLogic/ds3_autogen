@@ -39,6 +39,7 @@ import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasPayload;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasResponseCode;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalChecksum;
 import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalMetadata;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
@@ -48,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -157,7 +158,7 @@ public class NetCodeGenerator_Test {
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Job", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Job", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Offset", "long", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
@@ -167,6 +168,7 @@ public class NetCodeGenerator_Test {
                 new Arguments("UUID", "Job"),
                 new Arguments("long", "Offset"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         assertTrue(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertTrue(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
@@ -214,13 +216,14 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("BucketId", "string", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "ObjectName"),
                 new Arguments("UUID", "BucketId"),
                 new Arguments("Stream", "DestinationStream"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         assertFalse(requestCode.contains("QueryParams.Add(\"job\", job.ToString());"));
         assertFalse(requestCode.contains("QueryParams.Add(\"offset\", offset.ToString());"));
@@ -646,8 +649,8 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertFalse(TestHelper.hasRequiredParam("Blobs", "bool", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("BucketId", "Guid", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("BucketId", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
@@ -658,6 +661,7 @@ public class NetCodeGenerator_Test {
                 new Arguments("Guid", "StorageDomainId"),
                 new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
@@ -700,7 +704,7 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
-        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
@@ -711,6 +715,7 @@ public class NetCodeGenerator_Test {
                 new Arguments("Guid", "StorageDomainId"),
                 new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
@@ -1197,11 +1202,12 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
-        assertTrue(TestHelper.hasRequiredParam("JobChunkId", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("JobChunkId", "string", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("Guid", "JobChunkId"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
@@ -1249,11 +1255,12 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
-        assertTrue(TestHelper.hasRequiredParam("Job", "Guid", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Job", "string", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("Guid", "Job"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
