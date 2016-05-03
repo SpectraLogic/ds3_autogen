@@ -19,10 +19,13 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
@@ -163,5 +166,14 @@ public final class GeneratorUtils {
             return "IEnumerable<" + NetHelper.toNetType(componentType) + ">";
         }
         return NetHelper.toNetType(type);
+    }
+
+    /**
+     * Determines if a Ds3Request should generate a response handler and parser despite
+     * not having a response payload
+     */
+    public static boolean hasResponseHandlerAndParser(final Ds3Request ds3Request) {
+        return isGetObjectAmazonS3Request(ds3Request);
+                //TODO special case HeadBucket: || isHeadBucketRequest(ds3Request);
     }
 }

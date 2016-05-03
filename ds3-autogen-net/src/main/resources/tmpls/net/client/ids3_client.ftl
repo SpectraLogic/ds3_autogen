@@ -18,6 +18,9 @@ namespace Ds3
         <#list voidCommands as cmd>
         ${cmd.getResponseType()} ${cmd.getCommandName()}(${cmd.getRequestName()} request);
         </#list>
+        <#list specializedCommands as cmd>
+        ${cmd.getResponseType()} ${cmd.getCommandName()}(${cmd.getRequestName()} request);
+        </#list>
 
         /// <summary>
         /// For multi-node support (planned), this provides a means of creating

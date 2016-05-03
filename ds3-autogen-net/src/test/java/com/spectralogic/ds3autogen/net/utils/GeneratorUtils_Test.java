@@ -23,7 +23,9 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class GeneratorUtils_Test {
 
@@ -159,5 +161,11 @@ public class GeneratorUtils_Test {
         assertThat(getNetType("String", null), is("string"));
         assertThat(getNetType("UUID", null), is("Guid"));
         assertThat(getNetType("ChecksumType", null), is("ChecksumType.Type"));
+    }
+
+    @Test
+    public void hasResponseHandlerAndParser_Test() {
+        assertTrue(hasResponseHandlerAndParser(getRequestAmazonS3GetObject()));
+        assertFalse(hasResponseHandlerAndParser(getRequestSpectraS3GetObject()));
     }
 }

@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
+import com.spectralogic.ds3autogen.net.model.client.SpecializedCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
@@ -28,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
 
 public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
 
@@ -37,8 +39,41 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
     public BaseClient generate(final ImmutableList<Ds3Request> ds3Requests) {
         final ImmutableList<PayloadCommand> payloadCommands = toPayloadCommands(ds3Requests);
         final ImmutableList<VoidCommand> voidCommands = toVoidCommands(ds3Requests);
+        final ImmutableList<SpecializedCommand> specializedCommands = toSpecializedCommands(ds3Requests);
 
-        return new BaseClient(payloadCommands, voidCommands);
+        return new BaseClient(payloadCommands, voidCommands, specializedCommands);
+    }
+
+    /**
+     * Creates the list of specialized commands for the client
+     */
+    protected static ImmutableList<SpecializedCommand> toSpecializedCommands(final ImmutableList<Ds3Request> ds3Requests) {
+        if (isEmpty(ds3Requests)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<SpecializedCommand> builder = ImmutableList.builder();
+        for (final Ds3Request ds3Request : ds3Requests) {
+            if (isGetObjectAmazonS3Request(ds3Request)) {
+                builder.add(toGetObjectCommand(ds3Request));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Creates the specialized command for GetObjectRequest (amazons3)
+     */
+    protected static SpecializedCommand toGetObjectCommand(final Ds3Request ds3Request) {
+        if (!isGetObjectAmazonS3Request(ds3Request)) {
+            throw new IllegalArgumentException("Cannot generate the get object command from the request: " + ds3Request.getName());
+        }
+        final String commandName = ClientGeneratorUtil.toCommandName(ds3Request.getName());
+        return new SpecializedCommand(
+                NormalizingContractNamesUtil.removePath(ds3Request.getName()),
+                commandName,
+                NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
+                "return new " + commandName + "ResponseParser(_netLayer.CopyBufferSize).Parse(request, _netLayer.Invoke(request));"
+        );
     }
 
     /**
@@ -130,7 +165,8 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         }
         final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
         for (final Ds3Request ds3Request : ds3Requests) {
-            if (ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload) {
+            if (ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload
+                    && !isGetObjectAmazonS3Request(ds3Request)) {
                 builder.add(ds3Request);
             }
         }

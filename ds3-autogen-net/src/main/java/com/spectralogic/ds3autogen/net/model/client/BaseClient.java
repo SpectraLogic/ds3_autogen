@@ -21,12 +21,15 @@ public class BaseClient {
 
     private final ImmutableList<PayloadCommand> payloadCommands;
     private final ImmutableList<VoidCommand> voidCommands;
+    private final ImmutableList<SpecializedCommand> specializedCommands;
 
     public BaseClient(
             final ImmutableList<PayloadCommand> payloadCommands,
-            final ImmutableList<VoidCommand> voidCommands) {
+            final ImmutableList<VoidCommand> voidCommands,
+            final ImmutableList<SpecializedCommand> specializedCommands) {
         this.payloadCommands = payloadCommands;
         this.voidCommands = voidCommands;
+        this.specializedCommands = specializedCommands;
     }
 
     public ImmutableList<PayloadCommand> getPayloadCommands() {
@@ -35,5 +38,9 @@ public class BaseClient {
 
     public ImmutableList<VoidCommand> getVoidCommands() {
         return voidCommands;
+    }
+
+    public ImmutableList<SpecializedCommand> getSpecializedCommands() {
+        return specializedCommands;
     }
 }

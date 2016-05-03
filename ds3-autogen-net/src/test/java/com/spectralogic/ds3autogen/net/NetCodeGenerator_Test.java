@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -178,7 +178,8 @@ public class NetCodeGenerator_Test {
         final String clientCode = codeGenerator.getClientCode();
         CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
 
-        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+        assertTrue(clientCode.contains("public GetObjectResponse GetObject(GetObjectRequest request)"));
+        assertTrue(clientCode.contains("return new GetObjectResponseParser(_netLayer.CopyBufferSize).Parse(request, _netLayer.Invoke(request));"));
 
         final String idsClientCode = codeGenerator.getIdsClientCode();
         CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
@@ -187,12 +188,14 @@ public class NetCodeGenerator_Test {
 
         //Generate Responses (should be empty due to no response payload)
         final String responseCode = codeGenerator.getResponseCode();
-        assertTrue(isEmpty(responseCode));
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("public GetObjectResponse(IDictionary<string, string> metadata)"));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        assertTrue(isEmpty(parserCode));
+        assertTrue(hasContent(parserCode));
     }
 
     @Test

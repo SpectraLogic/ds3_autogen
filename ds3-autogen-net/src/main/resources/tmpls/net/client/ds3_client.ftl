@@ -23,6 +23,7 @@ namespace Ds3
 
         <#include "payload_command.ftl" />
         <#include "void_command.ftl" />
+        <#include "specialized_command.ftl" />
 
         public IDs3ClientFactory BuildFactory(IEnumerable<Ds3Node> nodes)
         {

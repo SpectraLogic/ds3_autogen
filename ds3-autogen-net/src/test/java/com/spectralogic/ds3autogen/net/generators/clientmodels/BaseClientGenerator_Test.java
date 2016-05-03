@@ -19,10 +19,13 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
+import com.spectralogic.ds3autogen.net.model.client.SpecializedCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestAmazonS3GetObject;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestSpectraS3GetObject;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestRequestWithResponseCodes;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static org.hamcrest.CoreMatchers.is;
@@ -160,5 +163,42 @@ public class BaseClientGenerator_Test {
 
         final String result = getHttpStatusCode(responseCodes);
         assertThat(result, is("OK"));
+    }
+
+    @Test
+    public void toGetObjectCommand_Test() {
+        final SpecializedCommand result = toGetObjectCommand(getRequestAmazonS3GetObject());
+        assertThat(result.getRequestName(), is("GetObjectRequestHandler"));
+        assertThat(result.getResponseType(), is("GetObjectResponseHandler"));
+        assertThat(result.getCommandName(), is("GetObjectHandler"));
+        assertThat(result.getFunctionBody(), is("return new GetObjectHandlerResponseParser(_netLayer.CopyBufferSize).Parse(request, _netLayer.Invoke(request));"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toGetObjectCommand_Error_Test() {
+        toGetObjectCommand(getRequestSpectraS3GetObject());
+    }
+
+    @Test
+    public void toSpecializedCommands_NullList_Test() {
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toSpecializedCommands_EmptyList_Test() {
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toSpecializedCommands_FullList_Test() {
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                getRequestAmazonS3GetObject(),
+                getRequestSpectraS3GetObject());
+
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(requests);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getRequestName(), is("GetObjectRequestHandler"));
     }
 }
