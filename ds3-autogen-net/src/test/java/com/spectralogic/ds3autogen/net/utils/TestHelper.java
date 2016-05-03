@@ -100,14 +100,41 @@ public final class TestHelper {
             final String paramName,
             final String paramType,
             final String generatedCode) {
+        if (paramType.equals("Guid")) {
+            return hasOptionalParamGetSet(paramName, "string", generatedCode)
+                    && hasWithConstructor(requestName, paramName, paramType, generatedCode)
+                    && hasWithConstructor(requestName, paramName, "string", generatedCode);
+        }
+        return hasOptionalParamGetSet(paramName, paramType, generatedCode)
+                && hasWithConstructor(requestName, paramName, paramType, generatedCode);
+    }
+
+    /**
+     * Determines if the code contains the parameter gettter and setter functions
+     */
+    private static boolean hasOptionalParamGetSet(
+            final String paramName,
+            final String paramType,
+            final String generatedCode) {
         final Pattern searchString = Pattern.compile("private\\s" + paramType + "\\???\\s_" + uncapFirst(paramName) + ";"
-                + "\\s+public\\s" + paramType + "\\???\\s" + paramName + "\\s+\\{"
-                + "\\s+get\\s\\{\\sreturn\\s_" + uncapFirst(paramName) + ";\\s\\}"
-                + "\\s+set\\s\\{\\sWith" + capFirst(paramName) + "\\(value\\);\\s\\}"
-                + "\\s+\\}"
-                + "\\s+public\\s" + requestName + "\\sWith" + capFirst(paramName) + "\\(" + paramType + "\\???\\s" + uncapFirst(paramName) + "\\)",
+                        + "\\s+public\\s" + paramType + "\\???\\s" + paramName + "\\s+\\{"
+                        + "\\s+get\\s\\{\\sreturn\\s_" + uncapFirst(paramName) + ";\\s\\}"
+                        + "\\s+set\\s\\{\\sWith" + capFirst(paramName) + "\\(value\\);\\s\\}"
+                        + "\\s+\\}",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
+
         return searchString.matcher(generatedCode).find();
+    }
+
+    private static boolean hasWithConstructor(
+            final String requestName,
+            final String paramName,
+            final String paramType,
+            final String generatedCode) {
+        final Pattern withConstructor = Pattern.compile(
+                "\\s+public\\s" + requestName + "\\sWith" + capFirst(paramName) + "\\(" + paramType + "\\???\\s" + uncapFirst(paramName) + "\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return withConstructor.matcher(generatedCode).find();
     }
 
     /**

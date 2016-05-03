@@ -17,18 +17,17 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.net.NetHelper;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.createNullableVariable;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
+import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
@@ -38,20 +37,116 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
 
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
-        final ImmutableList<Arguments> constructorArgs = Helper.removeVoidArguments(toConstructorArgsList(ds3Request));
-        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
-        final ImmutableList<Arguments> requiredArgs = Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request));
+        final ImmutableList<Arguments> requiredArgs = convertUuidToString(Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request)));
         final ImmutableList<NetNullableVariable> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams(), typeMap);
+        final ImmutableList<NetNullableVariable> withConstructors = toWithConstructorList(optionalArgs);
+        final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request);
 
         return new BaseRequest(
                 name,
                 path,
                 ds3Request.getHttpVerb(),
-                ds3Request.getOperation(),
+                requiredArgs,
+                convertGuidToStringList(optionalArgs),
+                withConstructors,
+                constructors);
+    }
+
+    /**
+     * Converts all NetNullableVariables of type Guid to type string
+     */
+    protected static ImmutableList<NetNullableVariable> convertGuidToStringList(
+            final ImmutableList<NetNullableVariable> variables) {
+        if (isEmpty(variables)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<NetNullableVariable> builder = ImmutableList.builder();
+        for (final NetNullableVariable var : variables) {
+            if (var.getType().equals("Guid")) {
+                builder.add(convertGuidToString(var));
+            } else {
+                builder.add(var);
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts the list of optional arguments into a list of arguments requiring a with constructor. There may
+     * be more with-constructors that optional arguments if an optional argument is of type Guid.
+     */
+    protected static ImmutableList<NetNullableVariable> toWithConstructorList(
+            final ImmutableList<NetNullableVariable> optionalArgs) {
+        if (isEmpty(optionalArgs)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<NetNullableVariable> builder = ImmutableList.builder();
+        for (final NetNullableVariable arg : optionalArgs) {
+            builder.add(arg);
+            if (arg.getType().equals("Guid")) {
+                builder.add(convertGuidToString(arg));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a NetNullableVariable of type Guid to type string
+     */
+    protected static NetNullableVariable convertGuidToString(final NetNullableVariable var) {
+        if (!var.getType().equals("Guid")) {
+            throw new IllegalArgumentException("Cannot convert variables of type " + var.getType() + " to string");
+        }
+        return new NetNullableVariable(var.getName(), "string", false, true);
+    }
+
+    /**
+     * Creates the request constructors. There will be multiple constructors if there are
+     * constructor parameters of type Guid
+     */
+    @Override
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> constructorArgs = Helper.removeVoidArguments(toConstructorArgsList(ds3Request));
+        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+
+        final RequestConstructor standardConstructor = new RequestConstructor(
                 constructorArgs,
                 queryParams,
-                requiredArgs,
-                optionalArgs);
+                ds3Request.getOperation());
+
+        return splitGuidConstructor(standardConstructor);
+    }
+
+    /**
+     * Splits a constructor in two if the original constructor contains a parameter of type Guid
+     */
+    protected static ImmutableList<RequestConstructor> splitGuidConstructor(final RequestConstructor constructor) {
+        final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
+        builder.add(constructor);
+        if (!containsType(constructor.getConstructorArgs(), "UUID")) {
+            return builder.build();
+        }
+        builder.add(convertGuidToStringConstructor(constructor));
+        return builder.build();
+    }
+
+    /**
+     * Converts all Guid types into strings within a given request constructor
+     */
+    protected static RequestConstructor convertGuidToStringConstructor(final RequestConstructor  constructor) {
+        return new RequestConstructor(
+                convertUuidToString(constructor.getConstructorArgs()),
+                convertUuidToString(constructor.getQueryParams()),
+                constructor.getOperation());
+    }
+
+    /**
+     * Modifies a list of Arguments from type UUID to String
+     */
+    protected static ImmutableList<Arguments> convertUuidToString(final ImmutableList<Arguments> arguments) {
+        final String curType = "UUID";
+        final String newType = "String";
+        return modifyType(arguments, curType, newType);
     }
 
     /**
@@ -89,7 +184,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         return createNullableVariable(
                 optionalParam.getName(),
                 optionalParam.getType(),
-                optionalParam.isNullable(),
+                true, //Optional parameters are always nullable
                 typeMap);
     }
 

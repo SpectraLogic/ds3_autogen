@@ -454,4 +454,27 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("UploadId", "java.util.UUID", false)));
     }
+
+    /**
+     * Gets the SpectraS3 Allocate Job Chunk Request Handler as described in the contract,
+     * excluding the response codes
+     */
+    public static Ds3Request getAllocateJobChunkRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.AllocateJobChunkRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.JOB_CHUNK,
+                ResourceType.NON_SINGLETON,
+                Operation.ALLOCATE,
+                true,
+                null,
+                null,
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
+        );
+    }
 }

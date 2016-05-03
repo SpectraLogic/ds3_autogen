@@ -25,29 +25,27 @@ public class BaseRequest {
     private final String name;
     private final String path;
     private final HttpVerb verb;
-    private final Operation operation;
-    private final ImmutableList<Arguments> constructorArgs;
-    private final ImmutableList<Arguments> queryParams;
     private final ImmutableList<Arguments> requiredArgs;
     private final ImmutableList<NetNullableVariable> optionalArgs;
+    /** List of NetNullableVariables that represent a With-Constructor */
+    private final ImmutableList<NetNullableVariable> withConstructors;
+    private final ImmutableList<RequestConstructor> constructors;
 
     public BaseRequest(
             final String name,
             final String path,
             final HttpVerb verb,
-            final Operation operation,
-            final ImmutableList<Arguments> constructorArgs,
-            final ImmutableList<Arguments> queryParams,
             final ImmutableList<Arguments> requiredArgs,
-            final ImmutableList<NetNullableVariable> optionalArgs) {
+            final ImmutableList<NetNullableVariable> optionalArgs,
+            final ImmutableList<NetNullableVariable> withConstructors,
+            final ImmutableList<RequestConstructor> constructors) {
         this.name = name;
         this.path = path;
         this.verb = verb;
-        this.operation = operation;
-        this.constructorArgs = constructorArgs;
-        this.queryParams = queryParams;
         this.requiredArgs = requiredArgs;
         this.optionalArgs = optionalArgs;
+        this.withConstructors = withConstructors;
+        this.constructors = constructors;
     }
 
     public String getName() {
@@ -70,15 +68,11 @@ public class BaseRequest {
         return optionalArgs;
     }
 
-    public ImmutableList<Arguments> getConstructorArgs() {
-        return constructorArgs;
+    public ImmutableList<RequestConstructor> getConstructors() {
+        return constructors;
     }
 
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public ImmutableList<Arguments> getQueryParams() {
-        return queryParams;
+    public ImmutableList<NetNullableVariable> getWithConstructors() {
+        return withConstructors;
     }
 }
