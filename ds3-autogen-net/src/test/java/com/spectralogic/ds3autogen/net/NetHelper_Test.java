@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import org.junit.Test;
 
@@ -93,17 +94,17 @@ public class NetHelper_Test {
         assertThat(argToString(new Arguments("Void", "ArgName")), is("null"));
         assertThat(argToString(new Arguments("boolean", "ArgName")), is("null"));
         assertThat(argToString(new Arguments("Boolean", "ArgName")), is("null"));
-        assertThat(argToString(new Arguments("Integer", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("int", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("Double", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("double", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("Long", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("long", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("String", "ArgName")), is("ArgName"));
-        assertThat(argToString(new Arguments("string", "ArgName")), is("ArgName"));
-        assertThat(argToString(new Arguments("UUID", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("ChecksumType", "ArgName")), is("ArgName.ToString()"));
-        assertThat(argToString(new Arguments("OtherType", "ArgName")), is("ArgName.ToString()"));
+        assertThat(argToString(new Arguments("Integer", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("int", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("Double", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("double", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("Long", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("long", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("String", "ArgName")), is("argName"));
+        assertThat(argToString(new Arguments("string", "ArgName")), is("argName"));
+        assertThat(argToString(new Arguments("UUID", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("ChecksumType", "ArgName")), is("argName.ToString()"));
+        assertThat(argToString(new Arguments("OtherType", "ArgName")), is("argName.ToString()"));
     }
 
     @Test
@@ -159,5 +160,16 @@ public class NetHelper_Test {
         final ImmutableList<String> input = ImmutableList.of("One", "Two", "Three");
         final String result = commaSeparateStrings(input, 1);
         assertThat(result, is(expected));
+    }
+
+    @Test
+    public void paramAssignmentRightValue_NetNullableVar_Test() {
+        assertThat(paramAssignmentRightValue(
+                new NetNullableVariable("ArgName", "ArgType", false, false)),
+                is("argName"));
+
+        assertThat(paramAssignmentRightValue(
+                new NetNullableVariable("ArgName", "Guid", false, false)),
+                is("argName.ToString()"));
     }
 }
