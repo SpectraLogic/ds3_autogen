@@ -52,7 +52,7 @@ public class BulkGetRequestGenerator_Test {
         final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(params, ImmutableMap.of());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getName(), is("IntArg"));
-        assertThat(result.get(0).getNetType(), is("int"));
+        assertThat(result.get(0).getNetType(), is("int?"));
         assertThat(result.get(1).getName(), is("StringArg"));
         assertThat(result.get(1).getNetType(), is("string"));
     }

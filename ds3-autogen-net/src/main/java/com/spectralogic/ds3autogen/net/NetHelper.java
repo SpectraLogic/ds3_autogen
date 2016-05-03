@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.type.EnumConstant;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
@@ -116,14 +117,14 @@ public final class NetHelper {
             case "void":
                 return "null";
             case "string":
-                return capFirst(arg.getName());
+                return uncapFirst(arg.getName());
             case "double":
             case "integer":
             case "int":
             case "long":
-                return  capFirst(arg.getName()) + ".ToString()";
+                return  uncapFirst(arg.getName()) + ".ToString()";
             default:
-                return capFirst(arg.getName()) + ".ToString()";
+                return uncapFirst(arg.getName()) + ".ToString()";
         }
     }
 
@@ -140,6 +141,7 @@ public final class NetHelper {
      * Returns the .net code for the right-hand-side of an assignment. This is
      * used to assign required variables within a constructor. Return examples:
      * IEnumerable list: myList.ToList()
+     * UUID: myId.ToString()
      * Default: myArgument
      */
     public static String paramAssignmentRightValue(final Arguments arg) {
@@ -154,6 +156,20 @@ public final class NetHelper {
             return Helper.uncapFirst(arg.getName()) + ".ToList()";
         }
         return Helper.uncapFirst(arg.getName());
+    }
+
+    /**
+     * Returns the .net code for the right-hand-side of an assignment. This
+     * is used in the request with constructors for assignment of variables.
+     */
+    public static String paramAssignmentRightValue(final NetNullableVariable var) {
+        if (isEmpty(var.getName()) || isEmpty(var.getType())) {
+            return "";
+        }
+        if (var.getType().equals("Guid")) {
+            return uncapFirst(var.getName()) + ".ToString()";
+        }
+        return Helper.uncapFirst(var.getName());
     }
 
     /**

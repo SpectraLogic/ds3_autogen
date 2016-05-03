@@ -39,6 +39,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         final String path = GeneratorUtils.toRequestPath(ds3Request);
         final ImmutableList<Arguments> requiredArgs = convertUuidToString(Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request)));
         final ImmutableList<NetNullableVariable> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams(), typeMap);
+        final ImmutableList<NetNullableVariable> withConstructors = toWithConstructorList(optionalArgs);
         final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request);
 
         return new BaseRequest(
@@ -46,8 +47,57 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 path,
                 ds3Request.getHttpVerb(),
                 requiredArgs,
-                optionalArgs,
+                convertGuidToStringList(optionalArgs),
+                withConstructors,
                 constructors);
+    }
+
+    /**
+     * Converts all NetNullableVariables of type Guid to type string
+     */
+    protected static ImmutableList<NetNullableVariable> convertGuidToStringList(
+            final ImmutableList<NetNullableVariable> variables) {
+        if (isEmpty(variables)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<NetNullableVariable> builder = ImmutableList.builder();
+        for (final NetNullableVariable var : variables) {
+            if (var.getType().equals("Guid")) {
+                builder.add(convertGuidToString(var));
+            } else {
+                builder.add(var);
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts the list of optional arguments into a list of arguments requiring a with constructor. There may
+     * be more with-constructors that optional arguments if an optional argument is of type Guid.
+     */
+    protected static ImmutableList<NetNullableVariable> toWithConstructorList(
+            final ImmutableList<NetNullableVariable> optionalArgs) {
+        if (isEmpty(optionalArgs)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<NetNullableVariable> builder = ImmutableList.builder();
+        for (final NetNullableVariable arg : optionalArgs) {
+            builder.add(arg);
+            if (arg.getType().equals("Guid")) {
+                builder.add(convertGuidToString(arg));
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Converts a NetNullableVariable of type Guid to type string
+     */
+    protected static NetNullableVariable convertGuidToString(final NetNullableVariable var) {
+        if (!var.getType().equals("Guid")) {
+            throw new IllegalArgumentException("Cannot convert variables of type " + var.getType() + " to string");
+        }
+        return new NetNullableVariable(var.getName(), "string", false, true);
     }
 
     /**
@@ -134,7 +184,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         return createNullableVariable(
                 optionalParam.getName(),
                 optionalParam.getType(),
-                optionalParam.isNullable(),
+                true, //Optional parameters are always nullable
                 typeMap);
     }
 

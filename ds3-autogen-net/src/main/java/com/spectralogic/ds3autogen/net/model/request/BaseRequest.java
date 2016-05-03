@@ -27,6 +27,8 @@ public class BaseRequest {
     private final HttpVerb verb;
     private final ImmutableList<Arguments> requiredArgs;
     private final ImmutableList<NetNullableVariable> optionalArgs;
+    /** List of NetNullableVariables that represent a With-Constructor */
+    private final ImmutableList<NetNullableVariable> withConstructors;
     private final ImmutableList<RequestConstructor> constructors;
 
     public BaseRequest(
@@ -35,12 +37,14 @@ public class BaseRequest {
             final HttpVerb verb,
             final ImmutableList<Arguments> requiredArgs,
             final ImmutableList<NetNullableVariable> optionalArgs,
+            final ImmutableList<NetNullableVariable> withConstructors,
             final ImmutableList<RequestConstructor> constructors) {
         this.name = name;
         this.path = path;
         this.verb = verb;
         this.requiredArgs = requiredArgs;
         this.optionalArgs = optionalArgs;
+        this.withConstructors = withConstructors;
         this.constructors = constructors;
     }
 
@@ -66,5 +70,9 @@ public class BaseRequest {
 
     public ImmutableList<RequestConstructor> getConstructors() {
         return constructors;
+    }
+
+    public ImmutableList<NetNullableVariable> getWithConstructors() {
+        return withConstructors;
     }
 }

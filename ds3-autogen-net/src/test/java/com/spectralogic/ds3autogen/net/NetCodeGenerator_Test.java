@@ -402,10 +402,10 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
         assertTrue(TestHelper.hasRequiredParam("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee?", requestCode));
 
-        assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool?", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
-        assertTrue(TestHelper.hasOptionalParam(requestName, "Priority", "Priority", requestCode));
-        assertFalse(TestHelper.hasOptionalParam(requestName, "ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Priority", "Priority?", requestCode));
+        assertFalse(TestHelper.hasOptionalParam(requestName, "ChunkClientProcessingOrderGuarantee?", "JobChunkClientProcessingOrderGuarantee", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),

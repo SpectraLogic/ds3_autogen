@@ -98,9 +98,10 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void toNullableArgument_NonNullablePrimitive_Test() {
+        //Note: optional parameters are always nullable
         final Ds3Param param = new Ds3Param("MyParam", "java.lang.Integer", false);
         final NetNullableVariable result = toNullableArgument(param, ImmutableMap.of());
-        assertThat(result.getNetType(), is("int"));
+        assertThat(result.getNetType(), is("int?"));
     }
 
     @Test
@@ -195,5 +196,73 @@ public class BaseRequestGenerator_Test {
         assertThat(result.size(), is(2));
         assertTrue(containsType(result.get(0).getConstructorArgs(), "UUID"));
         assertFalse(containsType(result.get(1).getConstructorArgs(), "UUID"));
+    }
+
+    @Test
+    public void convertGuidToString_Test() {
+        final NetNullableVariable guidVar = new NetNullableVariable("GuidVar", "Guid", true, true);
+        final NetNullableVariable guidResult = convertGuidToString(guidVar);
+        assertThat(guidResult.getType(), is("string"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void convertGuidToString_Error_Test() {
+        convertGuidToString(new NetNullableVariable("IntVar", "int", true, true));
+    }
+
+    @Test
+    public void toWithConstructorList_NullList_Test() {
+        final ImmutableList<NetNullableVariable> result = toWithConstructorList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toWithConstructorList_EmptyList_Test() {
+        final ImmutableList<NetNullableVariable> result = toWithConstructorList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toWithConstructorList_FullList_Test() {
+        final ImmutableList<NetNullableVariable> vars = ImmutableList.of(
+                new NetNullableVariable("GuidVar", "Guid", true, true),
+                new NetNullableVariable("IntVar", "int", true, true));
+
+        final ImmutableList<NetNullableVariable> result = toWithConstructorList(vars);
+        assertThat(result.size(), is(3));
+
+        assertThat(result.get(0).getName(), is("GuidVar"));
+        assertThat(result.get(0).getType(), is("Guid"));
+        assertThat(result.get(1).getName(), is("GuidVar"));
+        assertThat(result.get(1).getType(), is("string"));
+        assertThat(result.get(2).getName(), is("IntVar"));
+        assertThat(result.get(2).getType(), is("int"));
+    }
+
+    @Test
+    public void convertGuidToStringList_NullList_Test() {
+        final ImmutableList<NetNullableVariable> result = convertGuidToStringList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void convertGuidToStringList_EmptyList_Test() {
+        final ImmutableList<NetNullableVariable> result = convertGuidToStringList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void convertGuidToStringList_FullList_Test() {
+        final ImmutableList<NetNullableVariable> vars = ImmutableList.of(
+                new NetNullableVariable("GuidVar", "Guid", true, true),
+                new NetNullableVariable("IntVar", "int", true, true));
+
+        final ImmutableList<NetNullableVariable> result = convertGuidToStringList(vars);
+        assertThat(result.size(), is(2));
+
+        assertThat(result.get(0).getName(), is("GuidVar"));
+        assertThat(result.get(0).getType(), is("string"));
+        assertThat(result.get(1).getName(), is("IntVar"));
+        assertThat(result.get(1).getType(), is("int"));
     }
 }

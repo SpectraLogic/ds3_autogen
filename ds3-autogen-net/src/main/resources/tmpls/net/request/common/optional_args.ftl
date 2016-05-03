@@ -5,10 +5,12 @@
             get { return _${arg.getName()?uncap_first}; }
             set { With${arg.getName()?cap_first}(value); }
         }
+        </#list>
 
+        <#list withConstructors as arg>
         public ${name} With${arg.getName()?cap_first}(${arg.getNetType()} ${arg.getName()?uncap_first})
         {
-            this._${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
+            this._${arg.getName()?uncap_first} = ${netHelper.paramAssignmentRightValue(arg)};
             if (${arg.getName()?uncap_first} != null) {
                 this.QueryParams.Add("${netHelper.camelToUnderscore(arg.getName())}", ${netHelper.argToString(arg)});
             }
