@@ -26,12 +26,13 @@ import org.slf4j.LoggerFactory;
 public class ParameterConverter {
     private static final Logger LOG = LoggerFactory.getLogger(ParameterConverter.class);
 
-    public static Parameter toParameter(final Ds3Param ds3Param) {
+    public static Parameter toParameter(final Ds3Param ds3Param, final boolean isRequired) {
         return new Parameter(
                 ParameterModifier.CONST,
                 getParameterType(ds3Param),
                 StructHelper.getNameUnderscores(ds3Param.getName()),
-                getPointerType(ds3Param));
+                getPointerType(ds3Param),
+                isRequired);
     }
 
     public static String getParameterType(final Ds3Param ds3Param) {

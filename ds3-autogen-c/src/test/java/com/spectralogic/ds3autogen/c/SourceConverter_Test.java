@@ -95,7 +95,7 @@ public class SourceConverter_Test {
                         ImmutableList.of(),
                         ImmutableList.of(),
                         ImmutableList.of(
-                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE)),
+                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE, false)),
                         false,
                         false,
                         "ds3_pool"));
@@ -120,7 +120,7 @@ public class SourceConverter_Test {
                         null,
                         ImmutableList.of(),
                         ImmutableList.of(
-                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE)),
+                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE, false)),
                         ImmutableList.of(),
                         false,
                         false,
@@ -147,9 +147,9 @@ public class SourceConverter_Test {
                         null,
                         ImmutableList.of(),
                         ImmutableList.of(
-                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE)),
+                                new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE, false)),
                         ImmutableList.of(
-                                new Parameter(ParameterModifier.CONST, "ds3_checksum_type", "type", ParameterPointerType.NONE)),
+                                new Parameter(ParameterModifier.CONST, "ds3_checksum_type", "type", ParameterPointerType.NONE, false)),
                         false,
                         false,
                         "ds3_widget"));

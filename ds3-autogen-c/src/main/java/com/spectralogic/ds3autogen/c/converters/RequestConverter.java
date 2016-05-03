@@ -106,7 +106,7 @@ public final class RequestConverter {
         for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
             if (ds3Param == null) continue;
 
-            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param);
+            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
             LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
             requiredArgsBuilder.add(requiredParam);
         }
@@ -117,7 +117,7 @@ public final class RequestConverter {
 
             if (ds3Param.getName().equalsIgnoreCase("Offset")) {
                 final Parameter lengthParam = new Parameter(
-                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER);
+                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER, true);
                 LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
                 requiredArgsBuilder.add(lengthParam);
             }
@@ -136,7 +136,7 @@ public final class RequestConverter {
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
             LOG.debug("\tds3Param " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
-            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param));
+            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param, false));
         }
 
         return optionalArgsBuilder.build();
@@ -180,11 +180,11 @@ public final class RequestConverter {
 
     public static ImmutableList<Parameter> getParamList(final String responseType) {
         final ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER));
-        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER, true));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER, true));
 
         if (!responseType.isEmpty()) {
-            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER));
+            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
         }
 
         return builder.build();

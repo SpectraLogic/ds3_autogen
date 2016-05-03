@@ -51,8 +51,8 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 true,// includeIdInPath
                 null, // ds3ResponseCodes
                 ImmutableList.of(
-                        new Ds3Param("Force", "void", false)),
-                ImmutableList.of()));
+                        new Ds3Param("Force", "void", false)), // optional query params
+                ImmutableList.of())); // required query params
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
