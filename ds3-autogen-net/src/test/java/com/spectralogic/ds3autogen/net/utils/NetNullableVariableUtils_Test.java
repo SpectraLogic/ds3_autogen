@@ -61,6 +61,12 @@ public class NetNullableVariableUtils_Test {
     }
 
     @Test
+    public void createNullableVariable_Void_Test() {
+        final NetNullableVariable var = createNullableVariable("Name", "void", true, null);
+        assertThat(var.getNetType(), is("bool?"));
+    }
+
+    @Test
     public void createNullableVariable_Enum_Test() {
         final NetNullableVariable var = createNullableVariable("Name", "TestEnumType", false, getTestTypeMap());
         assertThat(var.getNetType(), is("TestEnumType"));
