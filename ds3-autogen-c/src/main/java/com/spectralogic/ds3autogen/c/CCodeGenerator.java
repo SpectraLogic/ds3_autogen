@@ -26,10 +26,7 @@ import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
-import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
-import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
-import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
-import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.helpers.*;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
@@ -62,6 +59,7 @@ public class CCodeGenerator implements CodeGenerator {
         config.setSharedVariable("requestHelper", RequestHelper.getInstance());
         config.setSharedVariable("helper", Helper.getInstance());
         config.setSharedVariable("structHelper", StructHelper.getInstance());
+        config.setSharedVariable("parameterHelper", ParameterHelper.getInstance());
     }
 
     @Override

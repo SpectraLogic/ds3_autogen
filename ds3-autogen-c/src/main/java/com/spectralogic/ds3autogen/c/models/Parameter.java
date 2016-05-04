@@ -20,15 +20,18 @@ public class Parameter {
     private final ParameterModifier typeModifier; // const, static etc
     private final String name;
     private final ParameterPointerType parameterPointerType; // *, **, &
+    private final boolean isRequired;
 
     public Parameter(final ParameterModifier typeModifier,
                      final String parameterType,
                      final String name,
-                     final ParameterPointerType parameterPointerType) {
+                     final ParameterPointerType parameterPointerType,
+                     final boolean isRequired) {
         this.parameterType = parameterType;
         this.typeModifier = typeModifier;
         this.name = name;
         this.parameterPointerType = parameterPointerType;
+        this.isRequired = isRequired;
     }
 
     public String getParameterType() {
@@ -45,6 +48,10 @@ public class Parameter {
 
     public ParameterPointerType getParameterPointerType() {
         return parameterPointerType;
+    }
+
+    public boolean isRequired() {
+        return isRequired;
     }
 
     @Override

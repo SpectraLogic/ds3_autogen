@@ -26,19 +26,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class Parameter_Test {
     @Test
     public void testConstParameterToString() {
-        final Parameter param1 = new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.NONE);
+        final Parameter param1 = new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.NONE, false);
         assertThat(param1.toString(), is("const ds3_request request"));
     }
 
     @Test
     public void testParameterToStringWithPointer() {
-        final Parameter param1 = new Parameter(ParameterModifier.NONE, "ds3_error", "ds3Error", ParameterPointerType.SINGLE_POINTER);
+        final Parameter param1 = new Parameter(ParameterModifier.NONE, "ds3_error", "ds3Error", ParameterPointerType.SINGLE_POINTER, false);
         assertThat(param1.toString(), is("ds3_error* ds3Error"));
     }
 
     @Test
     public void testParameterToStringWithDoublePointer() {
-        final Parameter param1 = new Parameter(ParameterModifier.NONE, "ds3_widget", "myWidget", ParameterPointerType.DOUBLE_POINTER);
+        final Parameter param1 = new Parameter(ParameterModifier.NONE, "ds3_widget", "myWidget", ParameterPointerType.DOUBLE_POINTER, false);
         assertThat(param1.toString(), is("ds3_widget** myWidget"));
     }
 }

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.InvalidParameterException;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
 public final class RequestConverter {
@@ -44,6 +45,8 @@ public final class RequestConverter {
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
                 getParamList(responseType),
+                getRequiredQueryParams(ds3Request),
+                getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
                 responseType);
@@ -96,46 +99,44 @@ public final class RequestConverter {
 
         return builder.toString();
     }
-    private static ImmutableList<Arguments> getRequiredArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> requiredArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting required args...");
-        if (ds3Request.getBucketRequirement() == Requirement.REQUIRED) {
-            LOG.debug("\tbucket name REQUIRED.");
-            requiredArgsBuilder.add(new Arguments("String", "bucketName"));
-            if (ds3Request.getObjectRequirement() == Requirement.REQUIRED) {
-                LOG.debug("\tobject name REQUIRED.");
-                requiredArgsBuilder.add(new Arguments("String", "objectName"));
-            }
-        }
-
+    private static ImmutableList<Parameter> getRequiredQueryParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required query params...");
-        if (ConverterUtil.isEmpty(ds3Request.getRequiredQueryParams())) {
-            return requiredArgsBuilder.build();
-        }
 
         for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-            if (ds3Param == null) break;
+            if (ds3Param == null) continue;
 
-            LOG.debug("\tquery param " + ds3Param.getType());
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("\tparam " + paramType + " is required.");
-            requiredArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
+            LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
+            requiredArgsBuilder.add(requiredParam);
+        }
+
+        // Add 'length' if 'offset' is given
+        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+            if (ds3Param == null) continue;
+
+            if (ds3Param.getName().equalsIgnoreCase("Offset")) {
+                final Parameter lengthParam = new Parameter(
+                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER, true);
+                LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
+                requiredArgsBuilder.add(lengthParam);
+            }
         }
 
         return requiredArgsBuilder.build();
     }
 
-    private static ImmutableList<Arguments> getOptionalArgs(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> optionalArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting optional args...");
-        if (ConverterUtil.isEmpty(ds3Request.getOptionalQueryParams())) {
+    private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Parameter> optionalArgsBuilder = ImmutableList.builder();
+        LOG.debug("Getting optional query parameters...");
+        if (isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
             final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("\tparam " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
-            optionalArgsBuilder.add(new Arguments(paramType, ds3Param.getName()));
+            LOG.debug("\tds3Param " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
+            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param, false));
         }
 
         return optionalArgsBuilder.build();
@@ -159,6 +160,8 @@ public final class RequestConverter {
     }
 
     public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) return "";
+
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
             if (rc < 200 || rc >= 300) continue;
@@ -177,11 +180,11 @@ public final class RequestConverter {
 
     public static ImmutableList<Parameter> getParamList(final String responseType) {
         final ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER));
-        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER, true));
+        builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER, true));
 
         if (!responseType.isEmpty()) {
-            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER));
+            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
         }
 
         return builder.build();
