@@ -263,7 +263,7 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the AmazonS3 Get Object request GetObjectRequestHandler
-     * as described in the Contract, excluding the response codes
+     * as described in the Contract
      * @return An AmazonS3 Get Object request
      */
     public static Ds3Request getRequestAmazonS3GetObject() {
@@ -278,7 +278,17 @@ public class Ds3ModelFixtures {
                 null,
                 null,
                 false,
-                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("null", null))),
+                        new Ds3ResponseCode(206,
+                                ImmutableList.of(new Ds3ResponseType("null", null))),
+                        new Ds3ResponseCode(307,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                        new Ds3ResponseCode(400,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                        new Ds3ResponseCode(503,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID", false),
                         new Ds3Param("Offset", "long", false)),
@@ -475,6 +485,33 @@ public class Ds3ModelFixtures {
                 null,
                 ImmutableList.of(
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
+        );
+    }
+
+    /**
+     * Gets the AmazonS3 Head Bucket Request Handler as described in the contract,
+     */
+    public static Ds3Request getHeadBucketRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.HeadBucketRequestHandler",
+                HttpVerb.HEAD,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.NOT_ALLOWED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("null", null))),
+                        new Ds3ResponseCode(403,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                        new Ds3ResponseCode(404,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
+                null,
+                null
         );
     }
 }

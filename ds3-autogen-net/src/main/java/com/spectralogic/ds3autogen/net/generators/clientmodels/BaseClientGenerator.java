@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
 
 public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
 
@@ -162,13 +163,24 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
             LOG.debug("There were no Ds3Requests to generate the client");
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Ds3Request> builder = ImmutableList.builder();
-        for (final Ds3Request ds3Request : ds3Requests) {
-            if (ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload
-                    && !isGetObjectAmazonS3Request(ds3Request)) {
-                builder.add(ds3Request);
-            }
+        return ds3Requests.stream()
+                .filter(request -> requestPayloadStatus(request, hasPayload))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Determines if a Ds3Request either has no payload, or if it has a payload, based
+     * on hasPayload parameter.
+     */
+    protected static boolean requestPayloadStatus(final Ds3Request ds3Request, final boolean hasPayload) {
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            //The amazonS3 GetObject command is special cased within the client generation
+            return false;
         }
-        return builder.build();
+        if (isHeadBucketRequest(ds3Request)) {
+            //The HeadBucket command has a response handler and parser that is not specified in the contract
+            return hasPayload;
+        }
+        return ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload;
     }
 }

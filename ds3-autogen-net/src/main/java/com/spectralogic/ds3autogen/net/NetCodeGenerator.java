@@ -334,6 +334,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("parser/get_object_parser.ftl");
         }
+        if (isHeadBucketRequest(ds3Request)) {
+            return config.getTemplate("parser/head_bucket_parser.ftl");
+        }
         return config.getTemplate("parser/parser_template.ftl");
     }
 
@@ -394,6 +397,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("response/get_object_response.ftl");
+        }
+        if (isHeadBucketRequest(ds3Request)) {
+            return config.getTemplate("response/head_bucket_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }
