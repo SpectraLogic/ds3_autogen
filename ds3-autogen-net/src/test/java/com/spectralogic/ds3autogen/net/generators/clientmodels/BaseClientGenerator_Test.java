@@ -24,12 +24,13 @@ import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestAmazonS3GetObject;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestSpectraS3GetObject;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestRequestWithResponseCodes;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BaseClientGenerator_Test {
 
@@ -200,5 +201,22 @@ public class BaseClientGenerator_Test {
         final ImmutableList<SpecializedCommand> result = toSpecializedCommands(requests);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getRequestName(), is("GetObjectRequestHandler"));
+    }
+
+    @Test
+    public void requestPayloadStatus_Test() {
+        assertFalse(requestPayloadStatus(getRequestAmazonS3GetObject(), true));
+        assertFalse(requestPayloadStatus(getRequestAmazonS3GetObject(), false));
+
+        assertTrue(requestPayloadStatus(getHeadBucketRequest(), true));
+        assertFalse(requestPayloadStatus(getHeadBucketRequest(), false));
+
+        //Request with payload
+        assertTrue(requestPayloadStatus(getGetBlobPersistence(), true));
+        assertFalse(requestPayloadStatus(getGetBlobPersistence(), false));
+
+        //Request with no payload
+        assertFalse(requestPayloadStatus(getRequestDeleteNotification(), true));
+        assertTrue(requestPayloadStatus(getRequestDeleteNotification(), false));
     }
 }

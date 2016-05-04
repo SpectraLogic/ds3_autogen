@@ -166,6 +166,7 @@ public class GeneratorUtils_Test {
     @Test
     public void hasResponseHandlerAndParser_Test() {
         assertTrue(hasResponseHandlerAndParser(getRequestAmazonS3GetObject()));
+        assertTrue(hasResponseHandlerAndParser(getHeadBucketRequest()));
         assertFalse(hasResponseHandlerAndParser(getRequestSpectraS3GetObject()));
     }
 }

@@ -173,7 +173,7 @@ public final class GeneratorUtils {
      * not having a response payload
      */
     public static boolean hasResponseHandlerAndParser(final Ds3Request ds3Request) {
-        return isGetObjectAmazonS3Request(ds3Request);
-                //TODO special case HeadBucket: || isHeadBucketRequest(ds3Request);
+        return isGetObjectAmazonS3Request(ds3Request)
+                || isHeadBucketRequest(ds3Request);
     }
 }
