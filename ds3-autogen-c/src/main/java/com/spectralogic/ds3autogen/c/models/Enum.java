@@ -36,6 +36,7 @@ public class Enum {
         return values;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("Enum[" + getName() + "]\n");

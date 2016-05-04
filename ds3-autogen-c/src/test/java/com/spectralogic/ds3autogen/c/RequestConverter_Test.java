@@ -16,17 +16,16 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.Request;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class RequestHelper_Test {
+public class RequestConverter_Test {
 
     @Test
     public void testHasResponsePayload() {
@@ -62,5 +61,46 @@ public class RequestHelper_Test {
         final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response");
         assertEquals(paramList.size(), 3);
         assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, const ds3_get_service_response** response");
+    }
+
+    @Test
+    public void testConvertDs3RequestWithRequestPayload() {
+        final Request testRequest = RequestConverter.toRequest(
+                new Ds3Request("CreateObjectRequestHandler",
+                        HttpVerb.PUT,
+                        Classification.amazons3,
+                        Requirement.REQUIRED,
+                        Requirement.REQUIRED,
+                        null, // Action
+                        null, //Resource
+                        null, // ResourceType
+                        null, // Operation
+                        false, // includeIdInPath
+                        null, // ds3ResponseCodes,
+                        ImmutableList.of(
+                                new Ds3Param("Job", "java.util.UUID", true),
+                                new Ds3Param("Offset", "long", false)), // optionalQueryParams
+                        ImmutableList.of(
+                                new Ds3Param("Length", "long", true))));// requiredQueryParams
+        assertTrue(testRequest.hasRequestPayload());
+    }
+
+    @Test
+    public void testConvertDs3RequestWithoutRequestPayload() {
+        final Request testRequest = RequestConverter.toRequest(
+                new Ds3Request("CreateBucketRequestHandler",
+                        HttpVerb.PUT,
+                        Classification.amazons3,
+                        Requirement.REQUIRED,
+                        Requirement.NOT_ALLOWED,
+                        null, // Action
+                        null, //Resource
+                        null, // ResourceType
+                        null, // Operation
+                        false, // includeIdInPath
+                        null, // ds3ResponseCodes,
+                        ImmutableList.of(), // optionalQueryParams
+                        ImmutableList.of()));// requiredQueryParams
+        assertFalse(testRequest.hasRequestPayload());
     }
 }

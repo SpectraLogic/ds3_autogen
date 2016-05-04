@@ -33,6 +33,7 @@ public class Request {
     private final ImmutableList<Parameter> optionalQueryParams;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
+    private final boolean hasRequestPayload;
     private final String responseType;
     private final boolean hasResponsePayload;
 
@@ -48,6 +49,7 @@ public class Request {
             final ImmutableList<Parameter> optionalQueryParams,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
+            final boolean hasRequestPayload,
             final String responseType) {
         this.name = name;
         this.classification = classification;
@@ -60,6 +62,7 @@ public class Request {
         this.optionalQueryParams = optionalQueryParams;
         this.isResourceRequired = isResourceRequired;
         this.isResourceIdRequired = isResourceIdRequired;
+        this.hasRequestPayload = hasRequestPayload;
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
     }
@@ -108,6 +111,10 @@ public class Request {
         return isResourceIdRequired;
     }
 
+    public boolean hasRequestPayload() {
+        return hasRequestPayload;
+    }
+
     public String getResponseType() {
         return responseType;
     }
@@ -116,6 +123,7 @@ public class Request {
         return hasResponsePayload;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("\nRequest[").append(getName()).append("]\n");
