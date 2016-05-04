@@ -10,4 +10,3 @@ void ${structEntry.getName()}_free(${structEntry.getName()}* response) {
 ${structHelper.generateFreeStructMembers(structEntry.getStructMembers())}
     g_free(response);
 }
-

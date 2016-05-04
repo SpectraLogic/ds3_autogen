@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,18 +65,37 @@ public final class RequestHelper {
         if (isEmpty(paramList)) {
             return "";
         }
-        return paramList
-                .stream()
-                .map(parm -> parm.toString())
+
+        return paramList.stream()
+                .map(Parameter::toString)
                 .collect(Collectors.joining(", "));
     }
 
+    public static String joinStrings(final ImmutableList<String> stringsList) {
+        if (isEmpty(stringsList)) return "";
+
+        return stringsList.stream().collect(Collectors.joining(", "));
+    }
+
     public static String generateInitRequestFunctionSignature(final Request request) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+
         if (request.getClassification() == Classification.amazons3) {
-            return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()) + ")";
+            builder.add(getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()));
+        } else {
+            builder.add(getSpectraS3InitParams(request.isResourceIdRequired()));
         }
 
-        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + getSpectraS3InitParams(request.isResourceIdRequired()) + ")";
+        builder.addAll(request.getRequiredQueryParams().stream()
+                .filter(parm -> !parm.getParameterType().equals("ds3_bool")) // for required bool / void query param nothing to specify
+                .map(Parameter::toString)
+                .collect(GuavaCollectors.immutableList()));
+        builder.addAll(request.getOptionalQueryParams().stream()
+                .map(Parameter::toString)
+                .collect(GuavaCollectors.immutableList()));
+        final ImmutableList<String> allParams = builder.build();
+
+        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
     }
 
     public static String generateRequestFunctionSignature(final Request request) {

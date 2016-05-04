@@ -93,7 +93,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final String output = new String(bstream.toByteArray());
 
         assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** response) {"));
-        assertTrue(output.contains("    return _parse_ds3_system_information_response(client->log, response);"));
+        assertTrue(output.contains("    return _parse_ds3_system_information_response(client, response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -121,7 +121,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_bucket_response(client->log, response);"));
+        assertTrue(output.contains("    return _parse_ds3_bucket_response(client, response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -147,7 +147,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_bucket_list_response(client->log, response);"));
+        assertTrue(output.contains("    return _parse_ds3_bucket_list_response(client, response);"));
         assertTrue(output.contains("}"));
     }
 
@@ -164,6 +164,8 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 null,
                 null,
                 RequestConverter.getParamList(responseType),
+                ImmutableList.of(),
+                ImmutableList.of(),
                 true,
                 false,
                 responseType

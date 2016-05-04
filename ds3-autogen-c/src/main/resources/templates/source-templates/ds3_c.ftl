@@ -39,6 +39,12 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 </#list>
 
 <#-- ********************************************* -->
+<#-- Generate "_get_enum_str()"                    -->
+<#list getQueryParamEnums() as enumEntry>
+    <#include "EnumToString.ftl">
+</#list>
+
+<#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>

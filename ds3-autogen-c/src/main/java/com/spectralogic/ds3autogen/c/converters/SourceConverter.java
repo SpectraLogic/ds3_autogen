@@ -39,8 +39,9 @@ public final class SourceConverter {
         final ImmutableSet<C_Type> arrayTypes = getArrayStructMemberTypes(allOrderedStructs);
         final ImmutableList<Struct> arrayStructs = getArrayStructs(allOrderedStructs, arrayTypes);
         final ImmutableList<Struct> filteredOrderedStructs = filterArrayStructs(allOrderedStructs, arrayTypes);
-
+        final ImmutableSet<Enum> queryParamEnums = filterQueryParamEnums(allEnums, allRequests);
         return new Source( allEnums,
+                queryParamEnums,
                 arrayTypes,
                 arrayStructs,
                 filteredOrderedStructs,
@@ -58,6 +59,10 @@ public final class SourceConverter {
                 .collect(GuavaCollectors.immutableSet());
     }
 
+    /**
+     * Get all Structs that are used as an Array element inside of another Struct, to be used by
+     * StructHelper::generateStructMemberArrayParserBlock
+     */
     private static ImmutableList<Struct> getArrayStructs(
             final ImmutableList<Struct> allOrderedStructs,
             final ImmutableSet<C_Type> arrayTypes) {
@@ -85,4 +90,27 @@ public final class SourceConverter {
                 .collect(GuavaCollectors.immutableList());
     }
 
+    /**
+     * All Request query parameters that are Enums require a _get_enum_str() function to be generated
+     */
+    public static ImmutableSet<Enum> filterQueryParamEnums(final ImmutableList<Enum> allEnums, final ImmutableList<Request> allRequests) {
+        final ImmutableSet<String> enumTypes = allEnums.stream()
+                .map(Enum::getName)
+                .collect(GuavaCollectors.immutableSet());
+
+        final ImmutableSet.Builder<Enum> queryEnumsBuilder = ImmutableSet.builder();
+        for (final Request currentRequest : allRequests) {
+            currentRequest.getRequiredQueryParams().stream()
+                    .filter(currentRequiredParam -> enumTypes.contains(currentRequiredParam.getParameterType()))
+                    .forEach(currentRequiredParam -> allEnums.stream()
+                            .filter(currentEnum -> currentEnum.getName().equals(currentRequiredParam.getParameterType()))
+                            .forEach(queryEnumsBuilder::add));
+            currentRequest.getOptionalQueryParams().stream()
+                    .filter(currentOptionalParam -> enumTypes.contains(currentOptionalParam.getParameterType()))
+                    .forEach(currentOptionalParam -> allEnums.stream()
+                            .filter(currentEnum -> currentEnum.getName().equals(currentOptionalParam.getParameterType()))
+                            .forEach(queryEnumsBuilder::add));
+        }
+        return queryEnumsBuilder.build();
+    }
 }
