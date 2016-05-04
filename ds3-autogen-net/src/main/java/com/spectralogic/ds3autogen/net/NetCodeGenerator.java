@@ -56,6 +56,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.hasResponseHandlerAndParser;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
@@ -253,6 +254,11 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private void generateResponseAndParser(final Ds3Request ds3Request) throws IOException, TemplateException {
         if (!ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
+            //Check if the request is an exception for generating response and parser files
+            if (hasResponseHandlerAndParser(ds3Request)) {
+                generateResponse(ds3Request, null);
+                generateResponseParser(ds3Request, null);
+            }
             //There is no payload for this Ds3Request, so do not generate any response handling code
             return;
         }
@@ -325,6 +331,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
             return config.getTemplate("parser/get_job_chunks_parser.ftl");
         }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("parser/get_object_parser.ftl");
+        }
         return config.getTemplate("parser/parser_template.ftl");
     }
 
@@ -382,6 +391,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
             return config.getTemplate("response/get_job_chunks_response.ftl");
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("response/get_object_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }

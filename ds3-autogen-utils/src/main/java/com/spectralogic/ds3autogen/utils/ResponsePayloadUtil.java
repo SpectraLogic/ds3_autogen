@@ -111,7 +111,9 @@ public final class ResponsePayloadUtil {
         final ImmutableList<Integer> codes = getAllNonErrorResponseCodes(responseCodes);
         switch (codes.size()) {
             case 0:
-                throw new IllegalArgumentException("There are no non-error response codes for this request");
+                //Log instead of throw error since GetObject and HeadBucket will have no values
+                LOG.debug("There are no non-error non-null response codes for this request");
+                return null;
             case 1:
                 return codes.get(0);
             default:
