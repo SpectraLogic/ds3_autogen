@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
@@ -34,6 +35,22 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceA
 
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
+    private static final ImmutableSet<String> hasRequestPayload = ImmutableSet.of(
+            "CompleteMultiPartUploadRequestHandler",
+            "CreateGetJobRequestHandler",
+            "CreateMultiPartUploadPartRequestHandler",
+            "CreateObjectRequestHandler",
+            "CreatePutJobRequestHandler",
+            "CreateVerifyJobRequestHandler",
+            "DeleteObjectsRequestHandler",
+            "DeleteObjectsRequestHandler",
+            "EjectStorageDomainBlobsRequestHandler",
+            "EjectStorageDomainRequestHandler",
+            "GetBlobPersistenceRequestHandler",
+            "GetPhysicalPlacementForObjectsRequestHandler",
+            "ReplicatePutJobRequestHandler",
+            "VerifyPhysicalPlacementForObjectsRequestHandler",
+            "VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler");
 
     public static Request toRequest(final Ds3Request ds3Request) {
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
@@ -49,6 +66,7 @@ public final class RequestConverter {
                 getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
+                hasRequestPayload.contains(ds3Request.getName()),
                 responseType);
     }
 
