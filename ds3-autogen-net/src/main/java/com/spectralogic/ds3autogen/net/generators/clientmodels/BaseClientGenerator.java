@@ -23,8 +23,10 @@ import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.SpecializedCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,13 +53,10 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<SpecializedCommand> builder = ImmutableList.builder();
-        for (final Ds3Request ds3Request : ds3Requests) {
-            if (isGetObjectAmazonS3Request(ds3Request)) {
-                builder.add(toGetObjectCommand(ds3Request));
-            }
-        }
-        return builder.build();
+        return ds3Requests.stream()
+                .filter(Ds3RequestClassificationUtil::isGetObjectAmazonS3Request)
+                .map(BaseClientGenerator::toGetObjectCommand)
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
