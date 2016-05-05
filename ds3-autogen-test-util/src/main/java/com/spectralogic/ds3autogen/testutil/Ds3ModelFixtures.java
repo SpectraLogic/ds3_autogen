@@ -489,7 +489,7 @@ public class Ds3ModelFixtures {
     }
 
     /**
-     * Gets the AmazonS3 Head Bucket Request Handler as described in the contract,
+     * Gets the AmazonS3 Head Bucket Request Handler as described in the contract
      */
     public static Ds3Request getHeadBucketRequest() {
         return new Ds3Request(
@@ -512,6 +512,30 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 null,
                 null
+        );
+    }
+
+    /**
+     * Gets the SpectraS3 GetJobChunksReadyForClientProcessingRequest Handler as
+     * described in the contract, excluding the response codes
+     */
+    public static Ds3Request getJobChunksReadyForClientProcessingRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobChunksReadyForClientProcessingRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.LIST,
+                Resource.JOB_CHUNK,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("PreferredNumberOfChunks", "int", true)),
+                ImmutableList.of(
+                        new Ds3Param("Job", "java.util.UUID", false))
         );
     }
 }
