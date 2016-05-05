@@ -60,11 +60,11 @@ public final class TestHelper {
      */
     public static boolean hasOptionalChecksum(final String requestName, final String generatedCode) {
         return generatedCode.contains("private ChecksumType _checksum = ChecksumType.None")
-                && generatedCode.contains("private ChecksumType.Type _type")
+                && generatedCode.contains("private ChecksumType.Type _ctype")
                 && generatedCode.contains("internal override ChecksumType ChecksumValue")
-                && generatedCode.contains("internal override ChecksumType.Type Type")
+                && generatedCode.contains("internal override ChecksumType.Type CType")
                 && generatedCode.contains("public ChecksumType Checksum")
-                && generatedCode.contains("public " + requestName + " WithChecksum(ChecksumType checksum, ChecksumType.Type type = ChecksumType.Type.MD5)");
+                && generatedCode.contains("public " + requestName + " WithChecksum(ChecksumType checksum, ChecksumType.Type ctype = ChecksumType.Type.MD5)");
     }
 
     /**
