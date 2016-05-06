@@ -21,11 +21,15 @@ package com.spectralogic.ds3autogen.net.generators.elementparsers;
  */
 public class NullableAttributeElement extends BaseNullableElement {
 
+    private final String parseAttributeFunc;
+
     public NullableAttributeElement(
             final String name,
             final String xmlTag,
-            final String parserName) {
+            final String parserName,
+            final String parseAttributeFunc) {
         super(name, xmlTag, parserName);
+        this.parseAttributeFunc = parseAttributeFunc;
     }
 
     /**
@@ -33,6 +37,6 @@ public class NullableAttributeElement extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return getName() + " = " + getParserName() + "(element.AttributeText(\"" + getXmlTag() + "\"))";
+        return getName() + " = " + getParserName() + "(element." + parseAttributeFunc + "(\"" + getXmlTag() + "\"))";
     }
 }
