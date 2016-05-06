@@ -197,20 +197,9 @@
             where T : struct
         {
             T result;
-            if (!Enum.TryParse(ConvertToPascalCase(enumString), out result))
+            if (!Enum.TryParse(enumString, out result))
             {
                 throw new ArgumentException(string.Format(Resources.InvalidValueForTypeException, typeof(T).Name));
             }
             return result;
-        }
-
-        public static string ConvertToPascalCase(string uppercaseUnderscore)
-        {
-            var sb = new StringBuilder();
-            foreach (var word in uppercaseUnderscore.Split('_'))
-            {
-                sb.Append(word[0]);
-                sb.Append(word.Substring(1).ToLowerInvariant());
-            }
-            return sb.ToString();
         }

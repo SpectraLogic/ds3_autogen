@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.net.generators.elementparsers;
 
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+
 /**
  * Represents an element within a .net model parser whose data
  * is within an xml tag
@@ -53,6 +55,6 @@ public class BaseNullableElement implements NullableElement {
      */
     @Override
     public String printParseElement() {
-        return name + " = " + parserName + "(element.Element(\"" + xmlTag + "\"))";
+        return name + " = " + parserName + "(element.Element(\"" + capFirst(xmlTag) + "\"))";
     }
 }

@@ -102,17 +102,19 @@ public final class GeneratorUtils {
             return builder.append("\"/_rest_/\"").toString();
         }
 
-        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("/\"");
+        builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
                 && ds3Request.includeIdInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
-            builder.append(" + NotificationId.ToString()");
+            builder.append("/\"").append(" + NotificationId.ToString()");
         } else if (hasBucketNameInPath(ds3Request)) {
-            builder.append(" + BucketName");
+            builder.append("/\"").append(" + BucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
-            builder.append(" + ").append(capFirst(NetHelper.argToString(resourceArg)));
+            builder.append("/\"").append(" + ").append(capFirst(NetHelper.argToString(resourceArg)));
+        } else {
+            builder.append("\"");
         }
         return builder.toString();
     }

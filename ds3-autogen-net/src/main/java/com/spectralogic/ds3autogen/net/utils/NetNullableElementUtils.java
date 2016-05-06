@@ -82,11 +82,24 @@ public final class NetNullableElementUtils {
             final String xmlTag) {
         final String netType = toNetType(stripPath(type));
         final String parserName = getParserName(netType, nullable);
+        final String parseAttributeFuncName = toParseAttributeFuncName(nullable);
         return new NullableAttributeElement(
                 name,
                 xmlTag,
-                parserName);
+                parserName,
+                parseAttributeFuncName);
     }
+
+    /**
+     * Gets the name of the parse attribute function
+     */
+    public static String toParseAttributeFuncName(final boolean nullable) {
+        if (nullable) {
+            return "AttributeTextOrNull";
+        }
+        return "AttributeText";
+    }
+
 
     /**
      * Creates a Nullable Encapsulated List element
