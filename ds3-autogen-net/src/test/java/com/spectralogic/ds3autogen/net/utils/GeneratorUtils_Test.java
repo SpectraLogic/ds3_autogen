@@ -118,7 +118,7 @@ public class GeneratorUtils_Test {
     public void toRequestPath_Test() {
         //Spectra requests
         assertThat(toRequestPath(getRequestDeleteNotification()), is("\"/_rest_/job_created_notification_registration/\" + NotificationId.ToString()"));
-        assertThat(toRequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration/\""));
+        assertThat(toRequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration\""));
         assertThat(toRequestPath(getRequestGetNotification()), is("\"/_rest_/job_completed_notification_registration/\" + NotificationId.ToString()"));
         assertThat(toRequestPath(getRequestVerifyPhysicalPlacement()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(toRequestPath(getRequestBulkGet()), is("\"/_rest_/bucket/\" + BucketName"));
