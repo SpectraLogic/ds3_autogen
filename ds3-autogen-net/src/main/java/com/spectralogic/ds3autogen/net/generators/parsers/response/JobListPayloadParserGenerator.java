@@ -13,27 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model.typeparser;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-import com.google.common.collect.ImmutableList;
-
-public class TypeParser {
-
-    private final String name;
-
-    /** Lines for parsing the type's elements */
-    private final ImmutableList<String> parseElements;
-
-    public TypeParser(final String name, final ImmutableList<String> parseElements) {
-        this.name = name;
-        this.parseElements = parseElements;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ImmutableList<String> getParseElements() {
-        return parseElements;
+/**
+ * Generates the BaseParser model for requests that have a JobList response payload.
+ */
+public class JobListPayloadParserGenerator extends BaseResponseParserGenerator {
+    
+    /**
+     * The name to marshal value for the JobList payload is Jobs, which is not
+     * specified within the contract
+     */
+    @Override
+    public String toNameToMarshal(final String nameToMarshal, final String typeName) {
+        return "Jobs";
     }
 }

@@ -25,9 +25,9 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
-import com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator;
-import com.spectralogic.ds3autogen.net.generators.parsermodels.JobListPayloadParserGenerator;
-import com.spectralogic.ds3autogen.net.generators.parsermodels.ResponseParserModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.response.JobListPayloadParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.response.ResponseParserModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
@@ -35,14 +35,14 @@ import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.ObjectsGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
-import com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator;
-import com.spectralogic.ds3autogen.net.generators.typeparsers.TypeParserModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.typeset.BaseTypeParserSetGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.typeset.TypeParserSetGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.net.model.type.BaseType;
-import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParserSet;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import freemarker.template.*;
@@ -123,8 +123,8 @@ public class NetCodeGenerator implements CodeGenerator {
             return;
         }
         final Template tmpl = config.getTemplate("typeparser/all_type_parsers.ftl");
-        final TypeParserModelGenerator<?> generator = new BaseTypeParserGenerator();
-        final BaseTypeParser parser = generator.generate(typeMap);
+        final TypeParserSetGenerator<?> generator = new BaseTypeParserSetGenerator();
+        final BaseTypeParserSet parser = generator.generate(typeMap);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(Paths.get(MODEL_PARSER_NAMESPACE.replace(".", "/") + "/ModelParsers.cs")));
 

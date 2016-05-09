@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.elementparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.element;
 
 /**
  * Represents an element within a .net model that contains
