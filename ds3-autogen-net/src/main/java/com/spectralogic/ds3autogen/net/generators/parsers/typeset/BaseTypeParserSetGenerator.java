@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.parsers.type.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.JobListParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.type.TypeParserGenerator;
 import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParserSet;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
@@ -26,6 +27,7 @@ import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseTypeParserSetGenerator implements TypeParserSetGenerator<BaseTypeParserSet> {
@@ -84,11 +86,13 @@ public class BaseTypeParserSetGenerator implements TypeParserSetGenerator<BaseTy
         return typeGenerator.generate(ds3Type);
     }
 
-    //TODO unit test
     /**
      * Retrieves the type parser generator for the specified Ds3Type
      */
     protected static TypeParserGenerator getTypeParserGenerator(final Ds3Type ds3Type) {
+        if (isJobsApiBean(ds3Type)) {
+            return new JobListParserGenerator();
+        }
         return new BaseTypeParserGenerator();
     }
 }
