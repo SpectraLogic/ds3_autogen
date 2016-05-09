@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.net.model.typeparser;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
 
 public class TypeParser {
 

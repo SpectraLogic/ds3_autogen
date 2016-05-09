@@ -13,19 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.parsermodels;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class JobListPayloadParserGenerator_Test {
-
-    private static final JobListPayloadParserGenerator generator = new JobListPayloadParserGenerator();
-
-    @Test
-    public void toNameToMarshal_Test() {
-        assertThat(generator.toNameToMarshal(null, null), is("Jobs"));
+/**
+ * Generates the BaseParser model for requests that have a JobList response payload.
+ */
+public class JobListPayloadParserGenerator extends BaseResponseParserGenerator {
+    
+    /**
+     * The name to marshal value for the JobList payload is Jobs, which is not
+     * specified within the contract
+     */
+    @Override
+    public String toNameToMarshal(final String nameToMarshal, final String typeName) {
+        return "Jobs";
     }
 }

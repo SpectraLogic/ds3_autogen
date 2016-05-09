@@ -13,28 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.elementparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-/**
- * Represents an element within a .net model that contains
- * a list of elements that do not have an encapsulating tag
- */
-public class NullableListElement extends BaseNullableElement {
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
-    public NullableListElement(
-            final String name,
-            final String xmlTag,
-            final String parserName) {
-        super(name, xmlTag, parserName);
-    }
-
-    /**
-     * Gets the .net code for parsing this list of elements
-     */
-    @Override
-    public String printParseElement() {
-        return getName() + " = element" +
-                ".Elements(\"" + getXmlTag() + "\")" +
-                ".Select(" + getParserName() + ").ToList()";
-    }
+@FunctionalInterface
+public interface ResponseParserModelGenerator<T extends BaseParser> {
+    T generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal);
 }
