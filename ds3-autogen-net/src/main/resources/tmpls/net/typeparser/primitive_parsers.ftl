@@ -15,6 +15,10 @@
 
         public static ChecksumType.Type? ParseNullableChecksumType(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableChecksumType(element.Value);
         }
 
@@ -27,6 +31,10 @@
 
         public static Guid? ParseNullableGuid(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableGuid(element.Value);
         }
 
@@ -51,6 +59,10 @@
 
         public static DateTime? ParseNullableDateTime(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableDateTime(element.Value);
         }
 
@@ -75,6 +87,10 @@
 
         public static bool? ParseNullableBool(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableBool(element.Value);
         }
 
@@ -99,6 +115,10 @@
 
         public static string ParseNullableString(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableString(element.Value);
         }
 
@@ -123,6 +143,10 @@
 
         public static int? ParseNullableInt(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableInt(element.Value);
         }
 
@@ -147,6 +171,10 @@
 
         public static long? ParseNullableLong(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableLong(element.Value);
         }
 
@@ -171,6 +199,10 @@
 
         public static double? ParseNullableDouble(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullableDouble(element.Value);
         }
 
@@ -197,20 +229,9 @@
             where T : struct
         {
             T result;
-            if (!Enum.TryParse(ConvertToPascalCase(enumString), out result))
+            if (!Enum.TryParse(enumString, out result))
             {
                 throw new ArgumentException(string.Format(Resources.InvalidValueForTypeException, typeof(T).Name));
             }
             return result;
-        }
-
-        public static string ConvertToPascalCase(string uppercaseUnderscore)
-        {
-            var sb = new StringBuilder();
-            foreach (var word in uppercaseUnderscore.Split('_'))
-            {
-                sb.Append(word[0]);
-                sb.Append(word.Substring(1).ToLowerInvariant());
-            }
-            return sb.ToString();
         }

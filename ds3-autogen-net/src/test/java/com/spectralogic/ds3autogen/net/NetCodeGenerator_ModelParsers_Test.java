@@ -62,7 +62,7 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("public static ListBucketResult ParseListBucketResult(XElement element)"));
         assertTrue(typeParserCode.contains("public static ListBucketResult ParseNullableListBucketResult(XElement element)"));
 
-        assertTrue(typeParserCode.contains("BucketName = ParseNullableString(element.AttributeText(\"BucketName\"))"));
+        assertTrue(typeParserCode.contains("BucketName = ParseNullableString(element.AttributeTextOrNull(\"BucketName\"))"));
         assertTrue(typeParserCode.contains("Truncated = ParseBool(element.Element(\"IsTruncated\"))"));
         assertTrue(typeParserCode.contains("TruncatedNullable = ParseNullableBool(element.Element(\"IsTruncated\"))"));
         assertTrue(typeParserCode.contains("MaxKeys = ParseInt(element.Element(\"MaxKeys\"))"));
@@ -142,7 +142,7 @@ public class NetCodeGenerator_ModelParsers_Test {
 
         assertTrue(typeParserCode.contains("ChunkId = ParseGuid(element.AttributeText(\"ChunkId\"))"));
         assertTrue(typeParserCode.contains("ChunkNumber = ParseInt(element.AttributeText(\"ChunkNumber\"))"));
-        assertTrue(typeParserCode.contains("NodeId = ParseNullableGuid(element.AttributeText(\"NodeId\"))"));
+        assertTrue(typeParserCode.contains("NodeId = ParseNullableGuid(element.AttributeTextOrNull(\"NodeId\"))"));
         assertTrue(typeParserCode.contains("ObjectsList = element.Elements(\"object\").Select(ParseBulkObject).ToList()"));
     }
 }

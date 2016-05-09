@@ -471,7 +471,10 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return config.getTemplate("request/stream_request_payload.ftl");
         }
-        if (isEjectStorageDomainRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+        if (isEjectStorageDomainRequest(ds3Request)) {
+            return config.getTemplate("request/eject_storage_domain.ftl");
+        }
+        if (isPhysicalPlacementRequest(ds3Request)) {
             return config.getTemplate("request/objects_request_payload.ftl");
         }
         if (isMultiFileDeleteRequest(ds3Request)) {

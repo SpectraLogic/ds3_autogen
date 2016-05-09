@@ -1,3 +1,21 @@
+<#include "../common/copyright.ftl" />
+
+using Ds3.Models;
+using Ds3.Runtime;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+
+namespace Ds3.Calls
+{
+    public class ${name} : Ds3Request
+    {
+        <#include "common/required_args.ftl" />
+
+        <#include "common/optional_args.ftl" />
+
         <#list constructors as constructor>
         public ${name}(${netHelper.constructor(constructor.constructorArgs)}) {
             <#list constructor.constructorArgs as arg>
@@ -6,8 +24,12 @@
             <#if constructor.operation??>
             this.QueryParams.Add("operation", "${constructor.operation.toString()?lower_case}");
             </#if>
-            <#include "add_query_params.ftl" />
+            <#include "common/add_query_params.ftl" />
 
+            if (!objects.ToList().TrueForAll(obj => obj.Size.HasValue))
+            {
+                throw new Ds3RequestException(Resources.ObjectsMissingSizeException);
+            }
         }
         </#list>
 
@@ -19,17 +41,12 @@
                         from obj in this.Objects
                         select new XElement("Object")
                             .SetAttributeValueFluent("Name", obj.Name)
-                            .SetAttributeValueFluent("Size", toDs3ObjectSize(obj))
+                            .SetAttributeValueFluent("Size", obj.Size.Value.ToString("D"))
                     )
                 )
                 .WriteToMemoryStream();
         }
 
-        internal string toDs3ObjectSize(Ds3Object ds3Object)
-        {
-            if (ds3Object.Size == null)
-            {
-                return null;
-            }
-            return ds3Object.Size.Value.ToString("D");
-        }
+        <#include "common/http_verb_and_path.ftl" />
+    }
+}

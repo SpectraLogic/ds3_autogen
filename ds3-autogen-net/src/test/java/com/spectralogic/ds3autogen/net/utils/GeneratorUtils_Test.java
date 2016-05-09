@@ -81,13 +81,14 @@ public class GeneratorUtils_Test {
     public void getSpectraDs3RequestPath_Test() {
         //Spectra requests
         assertThat(getSpectraDs3RequestPath(getRequestDeleteNotification()), is("\"/_rest_/job_created_notification_registration/\" + NotificationId.ToString()"));
-        assertThat(getSpectraDs3RequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration/\""));
+        assertThat(getSpectraDs3RequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration\""));
         assertThat(getSpectraDs3RequestPath(getRequestGetNotification()), is("\"/_rest_/job_completed_notification_registration/\" + NotificationId.ToString()"));
         assertThat(getSpectraDs3RequestPath(getRequestVerifyPhysicalPlacement()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(getSpectraDs3RequestPath(getRequestBulkGet()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(getSpectraDs3RequestPath(getRequestBulkPut()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(getSpectraDs3RequestPath(getRequestSpectraS3GetObject()), is("\"/_rest_/object/\" + ObjectName"));
         assertThat(getSpectraDs3RequestPath(getRequestGetJob()), is("\"/_rest_/job/\" + JobId.ToString()"));
+        assertThat(getSpectraDs3RequestPath(getJobChunksReadyForClientProcessingRequest()), is("\"/_rest_/job_chunk\""));
 
         //Amazon requests
         assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete()), is(""));
@@ -117,7 +118,7 @@ public class GeneratorUtils_Test {
     public void toRequestPath_Test() {
         //Spectra requests
         assertThat(toRequestPath(getRequestDeleteNotification()), is("\"/_rest_/job_created_notification_registration/\" + NotificationId.ToString()"));
-        assertThat(toRequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration/\""));
+        assertThat(toRequestPath(getRequestCreateNotification()), is("\"/_rest_/job_created_notification_registration\""));
         assertThat(toRequestPath(getRequestGetNotification()), is("\"/_rest_/job_completed_notification_registration/\" + NotificationId.ToString()"));
         assertThat(toRequestPath(getRequestVerifyPhysicalPlacement()), is("\"/_rest_/bucket/\" + BucketName"));
         assertThat(toRequestPath(getRequestBulkGet()), is("\"/_rest_/bucket/\" + BucketName"));

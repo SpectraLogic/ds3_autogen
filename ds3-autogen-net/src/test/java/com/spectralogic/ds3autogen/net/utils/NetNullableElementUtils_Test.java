@@ -42,7 +42,7 @@ public class NetNullableElementUtils_Test {
     @Test
     public void toNullableAttributeElement_Nullable_Test() {
         final NullableElement element = toNullableAttributeElement("Name", "Type", true, "XmlTag");
-        assertThat(element.printParseElement(), is("Name = ParseNullableType(element.AttributeText(\"XmlTag\"))"));
+        assertThat(element.printParseElement(), is("Name = ParseNullableType(element.AttributeTextOrNull(\"XmlTag\"))"));
     }
 
     @Test
