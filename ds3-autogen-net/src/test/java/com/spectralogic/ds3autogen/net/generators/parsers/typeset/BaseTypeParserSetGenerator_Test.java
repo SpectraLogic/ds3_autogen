@@ -18,6 +18,9 @@ package com.spectralogic.ds3autogen.net.generators.parsers.typeset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.JobListParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.TypeParserGenerator;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 import org.junit.Test;
 
@@ -25,6 +28,7 @@ import static com.spectralogic.ds3autogen.net.generators.parsers.typeset.BaseTyp
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3EnumConstantList;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -97,5 +101,19 @@ public class BaseTypeParserSetGenerator_Test {
         final ImmutableList<String> result = toEnumList(typeMap);
         assertThat(result.size(), is(1));
         assertThat(result, hasItem(enumType.getName()));
+    }
+
+    @Test
+    public void getTypeParserGenerator_JobsList_Test() {
+        final Ds3Type jobsList = createDs3TypeTestData("com.spectralogic.s3.server.domain.JobList");
+        final TypeParserGenerator<?> result = getTypeParserGenerator(jobsList);
+        assertThat(result, instanceOf(JobListParserGenerator.class));
+    }
+
+    @Test
+    public void getTypeParserGenerator_Test() {
+        final Ds3Type jobsList = createDs3TypeTestData("com.spectralogic.s3.server.domain.TestType");
+        final TypeParserGenerator<?> result = getTypeParserGenerator(jobsList);
+        assertThat(result, instanceOf(BaseTypeParserGenerator.class));
     }
 }
