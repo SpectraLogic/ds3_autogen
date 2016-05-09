@@ -258,4 +258,66 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "}";
         assertEquals(expectedOutput, output);
     }
+
+    @Test
+    public void testGenerateInitSpectraS3CreatePutJobRequest_WithRequiredOperationQueryParam_AndPriorityEnumOptionalQueryParam()
+            throws IOException, TemplateModelException {
+        final Map<String,Object> testMap = new HashMap<>();
+        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, // bucketRequirement
+                null, // objectRequirement
+                Action.MODIFY, // action
+                Resource.BUCKET, // resource
+                ResourceType.NON_SINGLETON, // resourceType
+                Operation.START_BULK_PUT, // operation
+                true,// includeIdInPath
+                null, // ds3ResponseCodes
+                ImmutableList.of(
+                        new Ds3Param("Aggregating", "boolean", true),
+                        new Ds3Param("IgnoreNameConflicts", "void", false),
+                        new Ds3Param("MaxUploadSize", "long", true),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), // optionalQueryParams
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
+                )); // requiredQueryParams
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "request-templates/InitRequest.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+        LOG.info(output);
+
+        final String expectedOutput = "ds3_request* init_create_put_job(const char* resource_id, const ds3_bool aggregating, const ds3_bool ignore_name_conflicts, const uint64_t* max_upload_size, const char* name, const ds3_blob_store_task_priority_response* priority) {" + "\n"
+                + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", resource_id, NULL));"     + "\n"
+                + "    _set_query_param((ds3_request*) request, \"operation\", \"START_BULK_PUT\");"                                           + "\n"
+                + "\n"
+                + "    if (aggregating) {"                                                                                                     + "\n"
+                + "        _set_query_param((ds3_request*) request, \"aggregating\", NULL);"                                                   + "\n"
+                + "    }"                                                                                                                      + "\n"
+                + "    if (ignore_name_conflicts) {"                                                                                           + "\n"
+                + "        _set_query_param((ds3_request*) request, \"ignore_name_conflicts\", NULL);"                                         + "\n"
+                + "    }"                                                                                                                      + "\n"
+                + "    if (max_upload_size != NULL) {"                                                                                         + "\n"
+                + "        char tmp_buff[32];"                                                                                                 + "\n"
+                + "        sprintf(tmp_buff, \"%llu\", (unsigned long long) *max_upload_size);"                                                + "\n"
+                + "        _set_query_param((ds3_request*) request, \"max_upload_size\", tmp_buff);"                                           + "\n"
+                + "    }"                                                                                                                      + "\n"
+                + "    if (name != NULL) {"                                                                                                    + "\n"
+                + "        _set_query_param((ds3_request*) request, \"name\", name);"                                                          + "\n"
+                + "    }"                                                                                                                      + "\n"
+                + "    if (priority != NULL) {"                                                                                                + "\n"
+                + "        _set_query_param((ds3_request*) request, \"priority\", _get_ds3_blob_store_task_priority_response_str(*priority));" + "\n"
+                + "    }"                                                                                                                      + "\n"
+                + "\n"
+                + "    return (ds3_request*) request;"                                                                                         + "\n"
+                + "}";
+        assertEquals(expectedOutput, output);
+    }
 }

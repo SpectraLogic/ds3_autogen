@@ -234,7 +234,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
                 ImmutableList.of(),
                 true,
                 false,
-                false,
+                null,
                 responseType
         );
         testMap.put("requestEntry", requestEntry);

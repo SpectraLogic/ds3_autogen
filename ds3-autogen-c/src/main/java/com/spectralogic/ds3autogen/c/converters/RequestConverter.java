@@ -16,7 +16,7 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
@@ -35,22 +35,7 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceA
 
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
-    private static final ImmutableSet<String> hasRequestPayload = ImmutableSet.of(
-            "CompleteMultiPartUploadRequestHandler",
-            "CreateGetJobRequestHandler",
-            "CreateMultiPartUploadPartRequestHandler",
-            "CreateObjectRequestHandler",
-            "CreatePutJobRequestHandler",
-            "CreateVerifyJobRequestHandler",
-            "DeleteObjectsRequestHandler",
-            "DeleteObjectsRequestHandler",
-            "EjectStorageDomainBlobsRequestHandler",
-            "EjectStorageDomainRequestHandler",
-            "GetBlobPersistenceRequestHandler",
-            "GetPhysicalPlacementForObjectsRequestHandler",
-            "ReplicatePutJobRequestHandler",
-            "VerifyPhysicalPlacementForObjectsRequestHandler",
-            "VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler");
+    private static final ImmutableMap<String, Parameter> hasRequestPayload = buildRequestPayloadMap();
 
     public static Request toRequest(final Ds3Request ds3Request) {
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
@@ -66,7 +51,7 @@ public final class RequestConverter {
                 getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
-                hasRequestPayload.contains(ds3Request.getName()),
+                hasRequestPayload.get(ds3Request.getName()),
                 responseType);
     }
 
@@ -121,12 +106,20 @@ public final class RequestConverter {
         final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required query params...");
 
+
         for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
             if (ds3Param == null) continue;
 
-            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
-            LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
-            requiredArgsBuilder.add(requiredParam);
+            if (ds3Request.getClassification() == Classification.spectrads3
+             && ds3Request.getOperation() != null
+             && ds3Param.getName() == "Operation") { // Special Case - Parameter.Type needs to be Request.Operation value
+                LOG.debug("\tRequired QueryParam: " + ds3Param.getName() + "=" + ds3Request.getOperation().name());
+                requiredArgsBuilder.add(new Parameter(ParameterModifier.CONST, "operation", ds3Request.getOperation().name(), ParameterPointerType.NONE, true));
+            } else {
+                final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
+                LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
+                requiredArgsBuilder.add(requiredParam);
+            }
         }
 
         // Add 'length' if 'offset' is given
@@ -206,5 +199,36 @@ public final class RequestConverter {
         }
 
         return builder.build();
+    }
+
+    public static ImmutableMap<String, Parameter> buildRequestPayloadMap() {
+        final ImmutableMap.Builder<String, Parameter> requestPayloadMap =  ImmutableMap.builder();
+        requestPayloadMap.put("CreateGetJobRequestHandler",
+                new Parameter(
+                        ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreatePutJobRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateVerifyJobRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("EjectStorageDomainBlobsRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("EjectStorageDomainRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("GetPhysicalPlacementForObjectsRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("VerifyPhysicalPlacementForObjectsRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+
+        /*
+        requestPayloadMap.put("CompleteMultiPartUploadRequestHandler",                          "CompleteMultipartUpload");
+        requestPayloadMap.put("CreateMultiPartUploadPartRequestHandler",                        "InputStream");
+        requestPayloadMap.put("CreateObjectRequestHandler",                                     "InputStream");
+        requestPayloadMap.put("DeleteObjectsRequestHandler",                                    "List<String>");
+        requestPayloadMap.put("GetBlobPersistenceRequestHandler",                               "String");
+        requestPayloadMap.put("ReplicatePutJobRequestHandler",                                  "String");
+        */
+        return requestPayloadMap.build();
     }
 }

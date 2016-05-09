@@ -9,6 +9,9 @@ ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
 
 ${requestHelper.generateParameterValidationBlock(requestEntry)}
 
+    error = _init_request_payload(_request, &send_buff, ${requestEntry.getAction().toString()});
+    if (error != NULL) return error;
+
     xml_blob = g_byte_array_new();
     error = _internal_request_dispatcher(client, request, xml_blob, ds3_load_buffer, (void*) &send_buff, _ds3_send_xml_buff, NULL);
 
