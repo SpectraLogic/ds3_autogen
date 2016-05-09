@@ -38,9 +38,7 @@ public class NullableEncapsulatedListElement  extends BaseNullableElement {
      */
     @Override
     public String printParseElement() {
-        return getName() + " = element" +
-                ".Element(\"" + encapsulatingTag + "\")" +
-                ".Elements(\"" + getXmlTag() + "\")" +
-                ".Select(" + getParserName() + ").ToList()";
+        return getName() + " = ParseEncapsulatedList(element, \""
+                + getXmlTag() + "\", \"" + encapsulatingTag + "\", " + getParserName() + ")";
     }
 }
