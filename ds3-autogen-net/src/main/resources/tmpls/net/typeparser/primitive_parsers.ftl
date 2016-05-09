@@ -235,3 +235,24 @@
             }
             return result;
         }
+
+        //List Parser
+
+        public static IEnumerable<TResult> ParseEncapsulatedList<TResult>(
+            XElement element,
+            string xmlTag,
+            string encapsulatingXmlTag,
+            Func<XElement, TResult> parser)
+        {
+            var encapsulatingElement = element.Element(encapsulatingXmlTag);
+            if (null == encapsulatingElement || encapsulatingElement.IsEmpty)
+            {
+                return null;
+            }
+            var elements = encapsulatingElement.Elements(xmlTag);
+            if (null == elements)
+            {
+                return null;
+            }
+            return elements.Select(parser);
+        }
