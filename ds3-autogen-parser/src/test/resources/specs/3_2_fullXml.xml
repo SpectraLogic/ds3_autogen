@@ -4243,6 +4243,7 @@
                         <Param Name="MaxTapeFragmentationPercent" Type="int"/>
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
@@ -4270,7 +4271,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.557A5EF0EA9E28FEE37CF128F53EB147</Version>
+                <Version>1.8AE796519F914C715120E002185BC801</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.CreateTapeStorageDomainMemberRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
@@ -4430,6 +4431,7 @@
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -4442,7 +4444,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.6BE5B1401717A4938BB5D1E7B6FC9F50</Version>
+                <Version>1.C7CE8CF71088F3DB585CD3B02AD6C01E</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.ModifyStorageDomainMemberRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
@@ -4474,6 +4476,7 @@
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
@@ -4493,7 +4496,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.832F90CA6FC16E59FB29F43790D5032E</Version>
+                <Version>1.AECDE2908ED8F6DF5A278383A9D309CB</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemFailuresRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="SYSTEM_FAILURE" ResourceType="NON_SINGLETON">
@@ -5366,23 +5369,6 @@
                 </ResponseCodes>
                 <Version>1.A0A9BFEABE8E3C638E51660CF67D0B3C</Version>
             </RequestHandler>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapeWithFullDetailsRequestHandler">
-                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="TAPE" ResourceType="NON_SINGLETON">
-                    <OptionalQueryParams/>
-                    <RequiredQueryParams>
-                        <Param Name="FullDetails" Type="void"/>
-                    </RequiredQueryParams>
-                </Request>
-                <ResponseCodes>
-                    <ResponseCode>
-                        <Code>200</Code>
-                        <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.DetailedTape"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                </ResponseCodes>
-                <Version>1.F786EC53664801780874F7651B563B24</Version>
-            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -5415,41 +5401,6 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.EBFAE6C7A1D4F5503F1D0D89D02C2B94</Version>
-            </RequestHandler>
-            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler">
-                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="TAPE" ResourceType="NON_SINGLETON">
-                    <OptionalQueryParams>
-                        <Param Name="AssignedToStorageDomain" Type="boolean"/>
-                        <Param Name="BarCode" Type="java.lang.String"/>
-                        <Param Name="BucketId" Type="java.util.UUID"/>
-                        <Param Name="EjectLabel" Type="java.lang.String"/>
-                        <Param Name="EjectLocation" Type="java.lang.String"/>
-                        <Param Name="FullOfData" Type="boolean"/>
-                        <Param Name="LastPage" Type="void"/>
-                        <Param Name="PageLength" Type="int"/>
-                        <Param Name="PageOffset" Type="int"/>
-                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
-                        <Param Name="PartitionId" Type="java.util.UUID"/>
-                        <Param Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
-                        <Param Name="SerialNumber" Type="java.lang.String"/>
-                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
-                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
-                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
-                        <Param Name="WriteProtected" Type="boolean"/>
-                    </OptionalQueryParams>
-                    <RequiredQueryParams>
-                        <Param Name="FullDetails" Type="void"/>
-                    </RequiredQueryParams>
-                </Request>
-                <ResponseCodes>
-                    <ResponseCode>
-                        <Code>200</Code>
-                        <ResponseTypes>
-                            <ResponseType ComponentType="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler$NamedDetailedTape" Type="array"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                </ResponseCodes>
-                <Version>1.27ABF60BB787927C349EC424F8F349B4</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -5784,6 +5735,21 @@
                     </ResponseCode>
                 </ResponseCodes>
                 <Version>1.38E575DC2AF4B7D7CF3203E6B7BDA74D</Version>
+            </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetDataPoliciesRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DS3_TARGET_DATA_POLICIES" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="java.util.TreeSet"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.496A9334045EC97BFFE3A5116694FF85</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetFailuresRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="DS3_TARGET_FAILURE" ResourceType="NON_SINGLETON">
@@ -6406,6 +6372,17 @@
         <Types>
             <Type Name="com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean">
                 <Elements>
+                    <Element ComponentType="com.spectralogic.s3.common.dao.domain.target.Ds3Target" Name="Ds3Targets" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Ds3Targets" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Ds3Target" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element ComponentType="com.spectralogic.s3.common.dao.domain.pool.Pool" Name="Pools" Type="array">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
@@ -6928,7 +6905,6 @@
                 <EnumConstants>
                     <EnumConstant Name="STANDARD"/>
                     <EnumConstant Name="BUCKET_ISOLATED"/>
-                    <EnumConstant Name="SECURE_BUCKET_ISOLATED"/>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend">
@@ -7919,6 +7895,15 @@
                             <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value=".+" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="SecureMediaAllocation" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -9546,6 +9531,11 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
@@ -9868,6 +9858,11 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
@@ -11743,231 +11738,6 @@
                     </Element>
                 </Elements>
             </Type>
-            <Type Name="com.spectralogic.s3.server.domain.DetailedTape">
-                <Elements>
-                    <Element Name="AssignedToStorageDomain" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="AvailableRawCapacity" Type="java.lang.Long">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="BarCode" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="3" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="BucketId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="DescriptionForIdentification" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectDate" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectLabel" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectLocation" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectPending" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="FullOfData" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="Id" Type="java.util.UUID">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="LastAccessed" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastCheckpoint" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastModified" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastVerified" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="MostRecentFailure" Type="com.spectralogic.s3.common.dao.domain.tape.TapeFailure">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="PartitionId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.TapePartition" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="SerialNumber" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="PENDING_INSPECTION" ValueType="java.lang.String"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="StorageDomainId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.StorageDomain" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="TakeOwnershipPending" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="TotalRawCapacity" Type="java.lang.Long">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="2" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="VerifyPending" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="WriteProtected" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                </Elements>
-            </Type>
             <Type Name="com.spectralogic.s3.server.domain.DetailedTapePartition">
                 <Elements>
                     <Element Name="DriveType" Type="com.spectralogic.s3.common.dao.domain.tape.TapeDriveType">
@@ -12907,231 +12677,6 @@
                     </Element>
                 </Elements>
             </Type>
-            <Type Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetTapesWithFullDetailsRequestHandler$NamedDetailedTape" NameToMarshal="Tape">
-                <Elements>
-                    <Element Name="AssignedToStorageDomain" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="AvailableRawCapacity" Type="java.lang.Long">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="BarCode" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="3" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="BucketId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="DescriptionForIdentification" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectDate" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectLabel" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectLocation" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="EjectPending" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="FullOfData" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="Id" Type="java.util.UUID">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="LastAccessed" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastCheckpoint" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastModified" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="LastVerified" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="MostRecentFailure" Type="com.spectralogic.s3.common.dao.domain.tape.TapeFailure">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="PartitionId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.TapePartition" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="SerialNumber" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="PENDING_INSPECTION" ValueType="java.lang.String"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="StorageDomainId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.StorageDomain" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="TakeOwnershipPending" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="TotalRawCapacity" Type="java.lang.Long">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
-                                    <AnnotationElement Name="Value" Value="2" ValueType="java.lang.Integer"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="VerifyPending" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="WriteProtected" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                </Elements>
-            </Type>
             <Type Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.TapeFailuresResponseBuilder$TapeFailureApiBean">
                 <Elements>
                     <Element Name="Cause" Type="java.lang.String">
@@ -13361,6 +12906,11 @@
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="DS3_TARGET">
+                        <Properties>
+                            <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="DS3_TARGET_DATA_POLICIES">
                         <Properties>
                             <Property Name="ResourceType" Value="NON_SINGLETON" ValueType="com.spectralogic.s3.server.request.rest.RestResourceType"/>
                         </Properties>
