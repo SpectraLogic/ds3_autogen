@@ -198,15 +198,15 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final String output = new String(bstream.toByteArray());
         LOG.info(output);
 
-        final String expectedOutput = "ds3_request* init_create_put_job(const char* resource_id, const ds3_bool aggregating, const ds3_bool ignore_name_conflicts, const uint64_t* max_upload_size, const char* name, const ds3_blob_store_task_priority_response* priority) {" + "\n"
-                + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/bucket\", resource_id, NULL));"     + "\n"
+        final String expectedOutput = "ds3_request* init_create_put_job(const char* resource_id, const ds3_bool aggregating, const ds3_bool ignore_naming_conflicts, const uint64_t* max_upload_size, const char* name, const ds3_blob_store_task_priority_response* priority) {" + "\n"
+                + "    struct _ds3_request* request = _common_request_init(HTTP_PUT, _build_path(\"/_rest_/bucket\", resource_id, NULL));"     + "\n"
                 + "    _set_query_param((ds3_request*) request, \"operation\", \"START_BULK_PUT\");"                                           + "\n"
                 + "\n"
                 + "    if (aggregating) {"                                                                                                     + "\n"
                 + "        _set_query_param((ds3_request*) request, \"aggregating\", NULL);"                                                   + "\n"
                 + "    }"                                                                                                                      + "\n"
-                + "    if (ignore_name_conflicts) {"                                                                                           + "\n"
-                + "        _set_query_param((ds3_request*) request, \"ignore_name_conflicts\", NULL);"                                         + "\n"
+                + "    if (ignore_naming_conflicts) {"                                                                                         + "\n"
+                + "        _set_query_param((ds3_request*) request, \"ignore_naming_conflicts\", NULL);"                                       + "\n"
                 + "    }"                                                                                                                      + "\n"
                 + "    if (max_upload_size != NULL) {"                                                                                         + "\n"
                 + "        char tmp_buff[32];"                                                                                                 + "\n"
