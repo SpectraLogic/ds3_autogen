@@ -85,7 +85,7 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
         final Header header = new Header(allEnums,allStructs,allRequests);
-        processTemplate(header, "ds3_h.ftl", fileUtils.getOutputFile(path));
+        processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputFile(path));
     }
 
     public void generateSource(
@@ -95,7 +95,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
         final Path path = Paths.get("src/ds3.c");
-        processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
+        processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputFile(path));
 
     }
 

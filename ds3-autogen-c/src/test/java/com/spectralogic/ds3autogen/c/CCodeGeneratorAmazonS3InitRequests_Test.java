@@ -183,7 +183,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                                     + "    }"                                                                                                            + "\n"
                                     + "\n"
                                     + "    return (ds3_request*) request;"                                                                               + "\n"
-                                    + "}";
+                                    + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -229,7 +229,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 + "    }"                                                                                                             + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                                + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 }
