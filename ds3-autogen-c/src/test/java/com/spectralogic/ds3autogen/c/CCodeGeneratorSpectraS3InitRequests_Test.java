@@ -15,10 +15,9 @@
 
 package com.spectralogic.ds3autogen.c;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -38,21 +37,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3DeleteBucketRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.DeleteBucketRequestHandler",
-                HttpVerb.DELETE,
-                Classification.spectrads3,
-                null,
-                null,
-                Action.DELETE,
-                Resource.BUCKET, // resource
-                ResourceType.NON_SINGLETON, // resourceType
-                null, // operation
-                true,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(
-                        new Ds3Param("Force", "void", false)), // optional query params
-                ImmutableList.of())); // required query params
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.deleteBucketRequest());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -76,22 +61,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3PutBucketRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.CreateBucketRequestHandler",
-                HttpVerb.POST,
-                Classification.spectrads3,
-                null, // bucketRequirement
-                null, // objectRequirement
-                Action.CREATE, // action
-                Resource.BUCKET, // resource
-                ResourceType.NON_SINGLETON, // resourceType
-                null, // operation
-                false,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(
-                        new Ds3Param("DataPolicyId", "java.util.UUID", false),
-                        new Ds3Param("UserId", "java.util.UUID", false)), // optionalQueryParams
-                ImmutableList.of(new Ds3Param("Name", "java.lang.String", false)))); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest()); // requiredQueryParams
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -121,20 +91,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3GetSystemInfoRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemInformationRequestHandler",
-                HttpVerb.GET,
-                Classification.spectrads3,
-                null, // bucketRequirement
-                null, // objectRequirement
-                Action.LIST, // action
-                Resource.SYSTEM_INFORMATION, // resource
-                ResourceType.SINGLETON, // resourceType
-                null, // operation
-                false,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(), // optionalQueryParams
-                ImmutableList.of())); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getSystemInformationRequest()); // requiredQueryParams
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -156,27 +113,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3GetBucketsRequest_WithOptionalQueryParams()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler",
-                HttpVerb.GET,
-                Classification.spectrads3,
-                null, // bucketRequirement
-                null, // objectRequirement
-                Action.LIST, // action
-                Resource.BUCKET, // resource
-                ResourceType.NON_SINGLETON, // resourceType
-                null, // operation
-                false,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(
-                        new Ds3Param("DataPolicyId", "java.util.UUID", false),
-                        new Ds3Param("LastPage", "void", false),
-                        new Ds3Param("Name", "java.lang.String", false),
-                        new Ds3Param("PageLength", "int", false),
-                        new Ds3Param("PageOffset", "int", false),
-                        new Ds3Param("PageStartMarker", "java.util.UUID", false),
-                        new Ds3Param("UserId", "java.util.UUID", false)), // optionalQueryParams
-                ImmutableList.of())); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsRequest()); // requiredQueryParams
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -223,20 +160,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3RequiredBoolQueryParamOmittedFromFunctionSig()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.ExampleRequestHandler",
-                HttpVerb.GET,
-                Classification.spectrads3,
-                null, // bucketRequirement
-                null, // objectRequirement
-                Action.LIST, // action
-                Resource.BUCKET, // resource
-                ResourceType.NON_SINGLETON, // resourceType
-                null, // operation
-                false,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(new Ds3Param("OptionalBool", "void", false)), // optionalQueryParams
-                ImmutableList.of(new Ds3Param("RequiredBool", "void", false)))); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.exampleRequestWithOptionalAndRequiredBooleanQueryParam());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -263,27 +187,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3CreatePutJobRequest_WithRequiredOperationQueryParam_AndPriorityEnumOptionalQueryParam()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler",
-                HttpVerb.GET,
-                Classification.spectrads3,
-                null, // bucketRequirement
-                null, // objectRequirement
-                Action.MODIFY, // action
-                Resource.BUCKET, // resource
-                ResourceType.NON_SINGLETON, // resourceType
-                Operation.START_BULK_PUT, // operation
-                true,// includeIdInPath
-                null, // ds3ResponseCodes
-                ImmutableList.of(
-                        new Ds3Param("Aggregating", "boolean", true),
-                        new Ds3Param("IgnoreNameConflicts", "void", false),
-                        new Ds3Param("MaxUploadSize", "long", true),
-                        new Ds3Param("Name", "java.lang.String", true),
-                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), // optionalQueryParams
-                ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
-                )); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkPut()); // requiredQueryParams
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

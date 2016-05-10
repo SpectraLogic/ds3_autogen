@@ -220,15 +220,18 @@ public final class RequestConverter {
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-
-        /*
-        requestPayloadMap.put("CompleteMultiPartUploadRequestHandler",                          "CompleteMultipartUpload");
-        requestPayloadMap.put("CreateMultiPartUploadPartRequestHandler",                        "InputStream");
-        requestPayloadMap.put("CreateObjectRequestHandler",                                     "InputStream");
-        requestPayloadMap.put("DeleteObjectsRequestHandler",                                    "List<String>");
-        requestPayloadMap.put("GetBlobPersistenceRequestHandler",                               "String");
-        requestPayloadMap.put("ReplicatePutJobRequestHandler",                                  "String");
-        */
+        requestPayloadMap.put("CompleteMultiPartUploadRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_complete_multipart_upload_result", "complete_mpu_payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateMultiPartUploadPartRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateObjectRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("DeleteObjectsRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_metadata_keys_result", "payload", ParameterPointerType.SINGLE_POINTER, true)); // List<String>
+        requestPayloadMap.put("GetBlobPersistenceRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+        requestPayloadMap.put("ReplicatePutJobRequestHandler",
+                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
         return requestPayloadMap.build();
     }
 }
