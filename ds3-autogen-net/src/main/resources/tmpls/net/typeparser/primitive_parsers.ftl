@@ -247,12 +247,12 @@
             var encapsulatingElement = element.Element(encapsulatingXmlTag);
             if (null == encapsulatingElement || encapsulatingElement.IsEmpty)
             {
-                return return Enumerable.Empty<TResult>();
+                return Enumerable.Empty<TResult>();
             }
             var elements = encapsulatingElement.Elements(xmlTag);
             if (null == elements)
             {
-                return return Enumerable.Empty<TResult>();
+                return Enumerable.Empty<TResult>();
             }
             return elements.Select(parser);
         }
