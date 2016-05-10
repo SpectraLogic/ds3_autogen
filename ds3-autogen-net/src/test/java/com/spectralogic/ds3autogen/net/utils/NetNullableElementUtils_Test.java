@@ -54,7 +54,7 @@ public class NetNullableElementUtils_Test {
     @Test
     public void toNullableEncapsulatedListElement_Test() {
         final NullableElement element = toNullableEncapsulatedListElement("Name", "ComponentType", "XmlTag", "OuterTag");
-        assertThat(element.printParseElement(), is("Name = element.Element(\"OuterTag\").Elements(\"XmlTag\").Select(ParseComponentType).ToList()"));
+        assertThat(element.printParseElement(), is("Name = ParseEncapsulatedList(element, \"XmlTag\", \"OuterTag\", ParseComponentType)"));
     }
 
     @Test

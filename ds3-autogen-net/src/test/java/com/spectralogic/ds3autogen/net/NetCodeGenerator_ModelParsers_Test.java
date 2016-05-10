@@ -70,9 +70,9 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("CreationDate = ParseDateTime(element.Element(\"CreationDate\"))"));
         assertTrue(typeParserCode.contains("CreationDateNullable = ParseNullableDateTime(element.Element(\"CreationDateNullable\"))"));
         assertTrue(typeParserCode.contains("Delimiter = ParseNullableString(element.Element(\"Delimiter\"))"));
-        assertTrue(typeParserCode.contains("CommonPrefixes = element.Element(\"CommonPrefixes\").Elements(\"Prefix\").Select(ParseString).ToList()"));
+        assertTrue(typeParserCode.contains("CommonPrefixes = ParseEncapsulatedList(element, \"Prefix\", \"CommonPrefixes\", ParseString)"));
         assertTrue(typeParserCode.contains("Objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
-        assertTrue(typeParserCode.contains("Buckets = element.Element(\"Buckets\").Elements(\"Bucket\").Select(ParseDs3Bucket).ToList()"));
+        assertTrue(typeParserCode.contains("Buckets = ParseEncapsulatedList(element, \"Bucket\", \"Buckets\", ParseDs3Bucket)"));
     }
 
     @Test
