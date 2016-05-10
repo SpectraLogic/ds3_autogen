@@ -13,13 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.parsermodels;
+package com.spectralogic.ds3autogen.net.generators.parsers.type;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
+import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 
 @FunctionalInterface
-public interface ResponseParserModelGenerator<T extends BaseParser> {
-    T generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal);
+public interface TypeParserGenerator<T extends TypeParser> {
+    T generate (final Ds3Type ds3Type);
 }

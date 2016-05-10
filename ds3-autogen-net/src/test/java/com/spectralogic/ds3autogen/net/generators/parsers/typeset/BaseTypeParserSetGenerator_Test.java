@@ -13,19 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.typeparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.typeset;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.net.generators.elementparsers.BaseNullableElement;
-import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
-import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableListElement;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.JobListParserGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.type.TypeParserGenerator;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.net.generators.typeparsers.BaseTypeParserGenerator.*;
+import static com.spectralogic.ds3autogen.net.generators.parsers.typeset.BaseTypeParserSetGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3EnumConstantList;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -33,62 +32,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BaseTypeParserGenerator_Test {
-
-    @Test
-    public void toNullableElement_Test() {
-        final Ds3Element element = new Ds3Element("Name", "int", "", false);
-        final NullableElement result = toNullableElement(element, false);
-        assertThat(result, instanceOf(BaseNullableElement.class));
-    }
-
-    @Test
-    public void toNullableElementsList_NullList_Test() {
-        final ImmutableList<NullableElement> result = toNullableElementsList(null, false);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toNullableElementsList_EmptyList_Test() {
-        final ImmutableList<NullableElement> result = toNullableElementsList(ImmutableList.of(), false);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toNullableElementsList_FullList_Test() {
-        final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("Name1", "int", "", false),
-                new Ds3Element("Name2", "Type", "Component", false));
-
-        final ImmutableList<NullableElement> result = toNullableElementsList(elements, false);
-        assertThat(result.size(), is(2));
-        assertThat(result.get(0), instanceOf(BaseNullableElement.class));
-        assertThat(result.get(1), instanceOf(NullableListElement.class));
-    }
-
-    @Test
-    public void toParseElements_NullList_Test() {
-        final ImmutableList<String> result = toParseElements(null, false);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toParseElements_EmptyList_Test() {
-        final ImmutableList<String> result = toParseElements(ImmutableList.of(), false);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toParseElements_FullList_Test() {
-        final ImmutableList<Ds3Element> elements = ImmutableList.of(
-                new Ds3Element("Name1", "int", "", false),
-                new Ds3Element("Name2", "Type", "Component", false));
-
-        final ImmutableList<String> result = toParseElements(elements, false);
-        assertThat(result.size(), is(2));
-        assertThat(result, hasItem("Name1 = ParseInt(element.Element(\"Name1\"))"));
-        assertThat(result, hasItem("Name2 = element.Elements(\"Name2\").Select(ParseComponent).ToList()"));
-    }
+public class BaseTypeParserSetGenerator_Test {
 
     @Test
     public void toTypeParser_Test() {
@@ -160,10 +104,16 @@ public class BaseTypeParserGenerator_Test {
     }
 
     @Test
-    public void toNullableElementName_Test() {
-        assertThat(toNullableElementName("Objects", true), is("ObjectsList"));
-        assertThat(toNullableElementName("ObjectsApiBean", true), is("ObjectsApiBean"));
-        assertThat(toNullableElementName("Objects", false), is("Objects"));
-        assertThat(toNullableElementName("ObjectsApiBean", false), is("ObjectsApiBean"));
+    public void getTypeParserGenerator_JobsList_Test() {
+        final Ds3Type jobsList = createDs3TypeTestData("com.spectralogic.s3.server.domain.JobList");
+        final TypeParserGenerator<?> result = getTypeParserGenerator(jobsList);
+        assertThat(result, instanceOf(JobListParserGenerator.class));
+    }
+
+    @Test
+    public void getTypeParserGenerator_Test() {
+        final Ds3Type jobsList = createDs3TypeTestData("com.spectralogic.s3.server.domain.TestType");
+        final TypeParserGenerator<?> result = getTypeParserGenerator(jobsList);
+        assertThat(result, instanceOf(BaseTypeParserGenerator.class));
     }
 }

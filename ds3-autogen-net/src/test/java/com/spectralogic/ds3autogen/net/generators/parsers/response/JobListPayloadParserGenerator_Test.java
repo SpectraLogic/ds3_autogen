@@ -13,9 +13,20 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.elementparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-@FunctionalInterface
-public interface NullableElement {
-    String printParseElement();
+import com.spectralogic.ds3autogen.net.generators.parsers.response.JobListPayloadParserGenerator;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class JobListPayloadParserGenerator_Test {
+
+    private static final JobListPayloadParserGenerator generator = new JobListPayloadParserGenerator();
+
+    @Test
+    public void toNameToMarshal_Test() {
+        assertThat(generator.toNameToMarshal(null, null), is("Jobs"));
+    }
 }

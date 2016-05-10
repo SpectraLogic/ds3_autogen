@@ -13,15 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.parsermodels;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator.getParserName;
-import static com.spectralogic.ds3autogen.net.generators.parsermodels.BaseResponseParserGenerator.getResponseCode;
+import static com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator.getParserName;
+import static com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator.getResponseCode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
