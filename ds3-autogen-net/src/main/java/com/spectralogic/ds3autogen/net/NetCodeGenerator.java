@@ -64,6 +64,7 @@ import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasSpecifiedPayload;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -122,7 +123,7 @@ public class NetCodeGenerator implements CodeGenerator {
             LOG.info("Not generating model parsers: no types.");
             return;
         }
-        final Template tmpl = config.getTemplate("typeparser/all_type_parsers.ftl");
+        final Template tmpl = config.getTemplate("parsers/typeset/all_type_parsers.ftl");
         final TypeParserSetGenerator<?> generator = new BaseTypeParserSetGenerator();
         final BaseTypeParserSet parser = generator.generate(typeMap);
         final Path path = destDir.resolve(
@@ -326,18 +327,22 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
         if (isAllocateJobChunkRequest(ds3Request)) {
-            return config.getTemplate("parser/allocate_job_chunk_parser.ftl");
+            return config.getTemplate("parsers/response/allocate_job_chunk_parser.ftl");
         }
         if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
-            return config.getTemplate("parser/get_job_chunks_parser.ftl");
+            return config.getTemplate("parsers/response/get_job_chunks_parser.ftl");
         }
         if (isGetObjectAmazonS3Request(ds3Request)) {
-            return config.getTemplate("parser/get_object_parser.ftl");
+            return config.getTemplate("parsers/response/get_object_parser.ftl");
         }
         if (isHeadBucketRequest(ds3Request)) {
-            return config.getTemplate("parser/head_bucket_parser.ftl");
+            return config.getTemplate("parsers/response/head_bucket_parser.ftl");
         }
-        return config.getTemplate("parser/parser_template.ftl");
+        //Perform this check last so that individual special cased requests take precedence
+        if (hasSpecifiedPayload(ds3Request, "MasterObjectList")) {
+            return config.getTemplate("parsers/response/master_object_list_parser.ftl");
+        }
+        return config.getTemplate("parsers/response/parser_template.ftl");
     }
 
     /**

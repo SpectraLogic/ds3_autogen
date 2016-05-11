@@ -20,6 +20,9 @@ import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getGetBlobPersistence;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestGetJob;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -185,5 +188,16 @@ public class ResponsePayloadUtil_Test {
         final ImmutableList<Ds3ResponseCode> result = removeNullPayloads(codes);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getCode(), is(207));
+    }
+
+    @Test
+    public void hasSpecifiedPayload_Test() {
+        assertThat(hasSpecifiedPayload(getGetBlobPersistence(), "java.lang.String"), is(true));
+        assertThat(hasSpecifiedPayload(getGetBlobPersistence(), "String"), is(true));
+        assertThat(hasSpecifiedPayload(getGetBlobPersistence(), "JobWithChunksApiBean"), is(false));
+
+        assertThat(hasSpecifiedPayload(getRequestGetJob(), "com.spectralogic.s3.server.domain.JobWithChunksApiBean"), is(true));
+        assertThat(hasSpecifiedPayload(getRequestGetJob(), "JobWithChunksApiBean"), is(true));
+        assertThat(hasSpecifiedPayload(getRequestGetJob(), "String"), is(false));
     }
 }

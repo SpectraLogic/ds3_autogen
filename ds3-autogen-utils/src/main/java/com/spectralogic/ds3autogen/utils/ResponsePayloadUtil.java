@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import org.slf4j.Logger;
@@ -175,5 +176,22 @@ public final class ResponsePayloadUtil {
             default:
                 throw new IllegalArgumentException("Response code has multiple associated types");
         }
+    }
+
+    /**
+     * Determines if the provided Ds3Request contains the specified response payload.
+     * The specified payload does not need to include the path
+     */
+    public static boolean hasSpecifiedPayload(final Ds3Request ds3Request, final String payload) {
+        if (isEmpty(ds3Request.getDs3ResponseCodes())) {
+            return false;
+        }
+        final ImmutableList<String> responseTypes = getAllResponseTypes(ds3Request.getDs3ResponseCodes());
+        for (final String responseType : responseTypes) {
+            if (responseType.endsWith(payload)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

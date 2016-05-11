@@ -1,4 +1,4 @@
-<#include "../common/copyright.ftl" />
+<#include "../../common/copyright.ftl" />
 
 using Ds3.Models;
 using Ds3.Runtime;

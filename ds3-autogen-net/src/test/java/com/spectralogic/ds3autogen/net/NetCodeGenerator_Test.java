@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -320,7 +320,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)200, HttpStatusCode.ServiceUnavailable)"));
         assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 
@@ -453,7 +453,7 @@ public class NetCodeGenerator_Test {
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
-        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)200, HttpStatusCode.ServiceUnavailable)"));
         assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 
@@ -629,7 +629,7 @@ public class NetCodeGenerator_Test {
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(hasContent(parserCode));
-        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)200, HttpStatusCode.ServiceUnavailable)"));
         assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 
@@ -1111,7 +1111,7 @@ public class NetCodeGenerator_Test {
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(hasContent(parserCode));
-        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)200, HttpStatusCode.ServiceUnavailable)"));
         assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 
