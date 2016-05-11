@@ -81,7 +81,7 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
-        final Header header = HeaderConverter.toHeader(allEnums,allStructs,allRequests);
+        final Header header = HeaderConverter.toHeader(allEnums, allStructs, allRequests);
         processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputFile(path));
     }
 
