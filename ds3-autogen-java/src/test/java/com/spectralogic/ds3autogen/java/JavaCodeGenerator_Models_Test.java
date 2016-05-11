@@ -250,7 +250,6 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
 
-        assertTrue(hasModelVariable("Id", "UUID", modelGeneratedCode));
         assertTrue(hasParamAttribute("InCache", "Boolean", modelGeneratedCode));
         assertTrue(hasParamAttribute("Latest", "boolean", modelGeneratedCode));
         assertTrue(hasParamAttribute("Length", "long", modelGeneratedCode));
@@ -262,7 +261,6 @@ public class JavaCodeGenerator_Models_Test {
         assertTrue(hasImport("com.fasterxml.jackson.annotation.JsonProperty", modelGeneratedCode));
         assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement", modelGeneratedCode));
         assertTrue(hasImport("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty", modelGeneratedCode));
-        assertTrue(hasImport("java.util.UUID", modelGeneratedCode));
 
         assertTrue(hasModelConstructor(modelName, ImmutableList.<Element>of(), modelGeneratedCode));
 

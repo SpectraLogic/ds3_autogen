@@ -26,6 +26,7 @@ import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequest
 import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.removeDollarSigns;
 import static com.spectralogic.ds3autogen.converters.RemoveSpectraInternalConverter.removeInternalRequestsFromSpec;
 import static com.spectralogic.ds3autogen.converters.ResponseTypeConverter.convertResponseTypes;
+import static com.spectralogic.ds3autogen.converters.UpdateElementsConverter.updateElementsInSpec;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -51,10 +52,11 @@ public final class Ds3SpecNormalizer {
             final Ds3ApiSpec spec,
             final boolean generateInternal) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
         verifySingleResponsePayloadRequests(spec.getRequests());
-        return renameRequests( //Rename requests from RequestHandler to Request
+        return updateElementsInSpec( //Updates Ds3Elements to account for ExcludeFromMarshaler values
+                renameRequests( //Rename requests from RequestHandler to Request
                 convertResponseTypes( //Converts response types with components into new encapsulating types
                 removeDollarSigns( //Converts all type names containing '$' into proper type names
-                removeInternalRequestsFromSpec(spec, generateInternal)))); //Removes/keeps spectra internal requests
+                removeInternalRequestsFromSpec(spec, generateInternal))))); //Removes/keeps spectra internal requests
     }
 
     /**
