@@ -76,6 +76,13 @@ typedef enum {
 </#list>
 <#-- **************************************** -->
 
+<#-- **************************************** -->
+<#-- Generate all Structs                     -->
+<#list getStructs() as structEntry>
+    <#include "TypedefStruct.ftl">
+</#list>
+<#-- **************************************** -->
+
 typedef struct {
     ds3_error_code      code;
     ds3_str*            message;
@@ -96,14 +103,6 @@ typedef struct _ds3_client {
                                 size_t (*write_handler_func)(void*, size_t, size_t, void*),
                                 ds3_string_multimap** return_headers);
 }ds3_client;
-
-<#-- **************************************** -->
-<#-- Generate all Structs                     -->
-<#list getStructs() as structEntry>
-    <#include "TypedefStruct.ftl">
-</#list>
-<#-- **************************************** -->
-
 
 <#-- ********************************************* -->
 <#-- Generate all "FreeStruct" functions prototypes -->
