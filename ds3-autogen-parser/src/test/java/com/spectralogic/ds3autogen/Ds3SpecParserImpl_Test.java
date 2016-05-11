@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
@@ -110,6 +111,34 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getTypes().containsKey("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(true));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.ds3.Priority"), is(notNullValue()));
         assertThat(spec.getTypes().get("com.spectralogic.s3.common.dao.domain.tape.DetailedTapeFailure"), is(notNullValue()));
+    }
+
+    @Test
+    public void blobApiBean() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/blobApiBean.xml"));
+        assertThat(spec.getTypes().size(), is(1));
+
+        final Ds3Type blobApiBean = spec.getTypes().get("com.spectralogic.s3.common.platform.domain.BulkObject");
+        assertThat(blobApiBean, is(notNullValue()));
+
+
+        final ImmutableList<Ds3Element> elements = blobApiBean.getElements();
+        assertThat(elements.size(), is(7));
+        assertThat(elements.get(0).getName(), is("InCache"));
+        assertThat(elements.get(0).isNullable(), is(true));
+        assertThat(elements.get(1).getName(), is("Latest"));
+        assertThat(elements.get(1).isNullable(), is(false));
+        assertThat(elements.get(2).getName(), is("Length"));
+        assertThat(elements.get(2).isNullable(), is(false));
+        assertThat(elements.get(3).getName(), is("Name"));
+        assertThat(elements.get(3).isNullable(), is(true));
+        assertThat(elements.get(4).getName(), is("Offset"));
+        assertThat(elements.get(4).isNullable(), is(false));
+        assertThat(elements.get(5).getName(), is("PhysicalPlacement"));
+        assertThat(elements.get(5).isNullable(), is(true));
+        assertThat(elements.get(6).getName(), is("Version"));
+        assertThat(elements.get(6).isNullable(), is(false));
     }
 
     @Test
