@@ -1,4 +1,4 @@
-<#include "../common/copyright.ftl" />
+<#include "../../common/copyright.ftl" />
 
 
 using System;
