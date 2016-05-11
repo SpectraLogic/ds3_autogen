@@ -341,8 +341,14 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(
                                         new Ds3ResponseType(
                                                 "com.spectralogic.s3.server.domain.JobWithChunksApiBean", null)))),
-                null,
-                null);
+
+                ImmutableList.of(
+                        new Ds3Param("Aggregating", "boolean", false),
+                        new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), // optionalQueryParams
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", true)));// requiredQueryParams
     }
 
     /**
@@ -581,6 +587,22 @@ public class Ds3ModelFixtures {
     }
 
     public static Ds3Request createBucketRequest() {
+        return new Ds3Request("CreateBucketRequestHandler",
+                HttpVerb.PUT,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.NOT_ALLOWED,
+                null, // Action
+                null, //Resource
+                null, // ResourceType
+                null, // Operation
+                false, // includeIdInPath
+                null, // ds3ResponseCodes,
+                ImmutableList.of(), // optionalQueryParams
+                ImmutableList.of());// requiredQueryParams
+    }
+
+    public static Ds3Request createBucketSpectraS3Request() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.CreateBucketRequestHandler",
                 HttpVerb.POST,

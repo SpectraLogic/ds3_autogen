@@ -17,11 +17,13 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -66,25 +68,7 @@ public class RequestConverter_Test {
 
     @Test
     public void testConvertDs3RequestWithRequestPayload() {
-        final Request testRequest = RequestConverter.toRequest(
-                new Ds3Request("CreateGetJobRequestHandler",
-                        HttpVerb.PUT,
-                        Classification.spectrads3,
-                        null, // bucketRequirement
-                        null, // objectRequirement
-                        Action.MODIFY, // Action
-                        Resource.BUCKET, //Resource
-                        ResourceType.NON_SINGLETON, // ResourceType
-                        Operation.START_BULK_GET, // Operation
-                        true, // includeIdInPath
-                        null, // ds3ResponseCodes,
-                        ImmutableList.of(
-                                new Ds3Param("Aggregating", "boolean", false),
-                                new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false),
-                                new Ds3Param("Name", "java.lang.String", true),
-                                new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), // optionalQueryParams
-                        ImmutableList.of(
-                                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", true))));// requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkGet());
         assertTrue(testRequest.hasRequestPayload());
     }
 
@@ -96,20 +80,7 @@ public class RequestConverter_Test {
 
     @Test
     public void testConvertDs3RequestWithoutRequestPayload() {
-        final Request testRequest = RequestConverter.toRequest(
-                new Ds3Request("CreateBucketRequestHandler",
-                        HttpVerb.PUT,
-                        Classification.amazons3,
-                        Requirement.REQUIRED,
-                        Requirement.NOT_ALLOWED,
-                        null, // Action
-                        null, //Resource
-                        null, // ResourceType
-                        null, // Operation
-                        false, // includeIdInPath
-                        null, // ds3ResponseCodes,
-                        ImmutableList.of(), // optionalQueryParams
-                        ImmutableList.of()));// requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest());
         assertFalse(testRequest.hasRequestPayload());
         assertEquals(testRequest.getRequestPayload(), null);
     }
