@@ -13,30 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.model.typeparser;
+package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-import com.google.common.collect.ImmutableList;
+/**
+ * Contains the interface for functions that are used to convert a Ds3Request into
+ * the response Parser Model within Parser Generators
+ */
+public interface ResponseParserModelGeneratorUtils {
 
-public class BaseTypeParser {
-
-    /** List of non-enum types (described by elements) */
-    private final ImmutableList<TypeParser> typeParsers;
-
-    /** List of enum type names */
-    private final ImmutableList<String> enumParsers;
-
-    public BaseTypeParser(
-            final ImmutableList<TypeParser> typeParsers,
-            final ImmutableList<String> enumParsers) {
-        this.typeParsers = typeParsers;
-        this.enumParsers = enumParsers;
-    }
-
-    public ImmutableList<TypeParser> getTypeParsers() {
-        return typeParsers;
-    }
-
-    public ImmutableList<String> getEnumParsers() {
-        return enumParsers;
-    }
+    /**
+     * Gets the name of the encapsulating tag (i.e. name to marshal) for the response payload
+     */
+    String toNameToMarshal(final String nameToMarshal, final String typeName);
 }

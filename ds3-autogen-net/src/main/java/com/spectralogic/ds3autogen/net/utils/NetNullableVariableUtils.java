@@ -76,7 +76,6 @@ public final class NetNullableVariableUtils {
         return !(type == null || isEmpty(type.getEnumConstants()));
     }
 
-    //TODO unit test improve
     /**
      * Determines if a contract type is a primitive .net type. This is
      * used to determine if the type requires a '?' to make it nullable
