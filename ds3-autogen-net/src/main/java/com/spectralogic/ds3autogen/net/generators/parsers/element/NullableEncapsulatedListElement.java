@@ -13,30 +13,32 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.elementparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.element;
 
 /**
- * Represents an element within a .net model parser whose data is within
- * an attribute of the current xml tag
+ * Represents an element within a .net model that contains
+ * a list of elements that have an encapsulating xml tag
  */
-public class NullableAttributeElement extends BaseNullableElement {
+public class NullableEncapsulatedListElement  extends BaseNullableElement {
 
-    private final String parseAttributeFunc;
+    /** The encapsulating xml tag for the list described by this element */
+    private final String encapsulatingTag;
 
-    public NullableAttributeElement(
+    public NullableEncapsulatedListElement(
             final String name,
             final String xmlTag,
             final String parserName,
-            final String parseAttributeFunc) {
+            final String encapsulatingTag) {
         super(name, xmlTag, parserName);
-        this.parseAttributeFunc = parseAttributeFunc;
+        this.encapsulatingTag = encapsulatingTag;
     }
 
     /**
-     * Gets the .net code for parsing this element from an element's attribute
+     * Gets the .net code for parsing this encapsulated list of elements
      */
     @Override
     public String printParseElement() {
-        return getName() + " = " + getParserName() + "(element." + parseAttributeFunc + "(\"" + getXmlTag() + "\"))";
+        return getName() + " = ParseEncapsulatedList(element, \""
+                + getXmlTag() + "\", \"" + encapsulatingTag + "\", " + getParserName() + ")";
     }
 }

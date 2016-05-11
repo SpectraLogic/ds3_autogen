@@ -13,16 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.parsermodels;
+package com.spectralogic.ds3autogen.net.generators.parsers.element;
 
-/**
- * Contains the interface for functions that are used to convert a Ds3Request into
- * the response Parser Model within Parser Generators
- */
-public interface ResponseParserModelGeneratorUtils {
-
-    /**
-     * Gets the name of the encapsulating tag (i.e. name to marshal) for the response payload
-     */
-    String toNameToMarshal(final String nameToMarshal, final String typeName);
+@FunctionalInterface
+public interface NullableElement {
+    String printParseElement();
 }

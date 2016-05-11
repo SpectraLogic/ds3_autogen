@@ -13,85 +13,41 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.typeparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.type;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.net.generators.elementparsers.NullableElement;
-import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
+import com.spectralogic.ds3autogen.net.generators.parsers.element.NullableElement;
 import com.spectralogic.ds3autogen.net.model.typeparser.TypeParser;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.createNullableElement;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
-import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getEncapsulatingTagAnnotations;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getXmlTagName;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.isAttribute;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
-public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTypeParser> {
+/**
+ * Generates TypeParser model which describes how to create the .net parser for
+ * the specified type.
+ */
+public class BaseTypeParserGenerator implements TypeParserGenerator<TypeParser>, TypeParserGeneratorUtils {
 
     @Override
-    public BaseTypeParser generate(
-            final ImmutableMap<String, Ds3Type> typeMap) {
-        final ImmutableList<TypeParser> typeParsers = toTypeParserList(typeMap);
-        final ImmutableList<String> enumParsers = toEnumList(typeMap);
-
-        return new BaseTypeParser(
-                typeParsers,
-                enumParsers);
-    }
-
-    /**
-     * Retrieves the list of enum type names from within a Ds3Types list
-     */
-    protected static ImmutableList<String> toEnumList(final ImmutableMap<String, Ds3Type> typeMap) {
-        if (isEmpty(typeMap)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Ds3Type ds3Type : typeMap.values().asList()) {
-            if (isEnum(ds3Type) && !isChecksumType(ds3Type)) {
-                builder.add(removePath(ds3Type.getName()));
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts all non-enum types within a Ds3Types list into a list of TypeParsers
-     */
-    protected static ImmutableList<TypeParser> toTypeParserList(
-            final ImmutableMap<String, Ds3Type> typeMap) {
-        if (isEmpty(typeMap)) {
-            return ImmutableList.of();
-        }
-
-        final ImmutableList.Builder<TypeParser> builder = ImmutableList.builder();
-        for (final Ds3Type ds3Type : typeMap.values().asList()) {
-            if (!isEnum(ds3Type)) {
-                builder.add(toTypeParser(ds3Type));
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Converts a Ds3Type into a TypeParser
-     */
-    protected static TypeParser toTypeParser(
-            final Ds3Type ds3Type) {
+    public TypeParser generate(final Ds3Type ds3Type) {
         final String typeName = removePath(ds3Type.getName());
         final ImmutableList<String> parseElements = toParseElements(ds3Type.getElements(), isObjectsType(ds3Type));
+
         return new TypeParser(typeName, parseElements);
     }
 
     /**
-     * Converts a list of NullableElements into their .net parsing code
+     * Converts a list of Ds3Elements into their .net parsing code
      */
-    protected static ImmutableList<String> toParseElements(
+    @Override
+    public ImmutableList<String> toParseElements(
             final ImmutableList<Ds3Element> ds3Elements,
             final boolean isObjectsType) {
         final ImmutableList<NullableElement> elements = toNullableElementsList(ds3Elements, isObjectsType);
@@ -108,7 +64,8 @@ public class BaseTypeParserGenerator implements TypeParserModelGenerator<BaseTyp
     /**
      * Converts a list of Ds3Elements into a list of Nullable Element
      */
-    protected static ImmutableList<NullableElement> toNullableElementsList(
+    @Override
+    public ImmutableList<NullableElement> toNullableElementsList(
             final ImmutableList<Ds3Element> ds3Elements,
             final boolean isObjectsType) {
         if (isEmpty(ds3Elements)) {

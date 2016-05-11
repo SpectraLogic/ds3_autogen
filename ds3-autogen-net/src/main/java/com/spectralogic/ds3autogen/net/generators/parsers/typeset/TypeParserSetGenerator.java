@@ -13,13 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.generators.typeparsers;
+package com.spectralogic.ds3autogen.net.generators.parsers.typeset;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParser;
+import com.spectralogic.ds3autogen.net.model.typeparser.BaseTypeParserSet;
 
 @FunctionalInterface
-public interface TypeParserModelGenerator <T extends BaseTypeParser>{
+public interface TypeParserSetGenerator<T extends BaseTypeParserSet>{
     T generate (final ImmutableMap<String, Ds3Type> typeMap);
 }

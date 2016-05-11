@@ -12,6 +12,10 @@
 
         public static ${enum}? ParseNullable${enum}(XElement element)
         {
+            if (null == element)
+            {
+                return null;
+            }
             return ParseNullable${enum}(element.Value);
         }
 

@@ -254,5 +254,5 @@
             {
                 return Enumerable.Empty<TResult>();
             }
-            return elements.Select(parser);
+            return elements.Select(parser).ToList();
         }
