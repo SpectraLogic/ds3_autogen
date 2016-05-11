@@ -16,17 +16,19 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class RequestHelper_Test {
+public class RequestConverter_Test {
 
     @Test
     public void testHasResponsePayload() {
@@ -62,5 +64,24 @@ public class RequestHelper_Test {
         final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response");
         assertEquals(paramList.size(), 3);
         assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, const ds3_get_service_response** response");
+    }
+
+    @Test
+    public void testConvertDs3RequestWithRequestPayload() {
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkGet());
+        assertTrue(testRequest.hasRequestPayload());
+    }
+
+    @Test
+    public void testNullResponseForNoRequestPayload() {
+        final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
+        assertEquals(requestPayloadMap.get("unknownRequest"), null);
+    }
+
+    @Test
+    public void testConvertDs3RequestWithoutRequestPayload() {
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest());
+        assertFalse(testRequest.hasRequestPayload());
+        assertEquals(testRequest.getRequestPayload(), null);
     }
 }

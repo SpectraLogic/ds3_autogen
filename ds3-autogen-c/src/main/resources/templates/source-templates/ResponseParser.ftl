@@ -3,7 +3,7 @@
 <#--   Input: Source object                                   -->
 <#-- ******************************************************** -->
 <#if structEntry.isTopLevel()>
-static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const ds3_request* request, const ${structEntry.getName()}** _response) {
+static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, const ds3_request* request, const ${structEntry.getName()}** _response, const GByteArray* xml_blob) {
     xmlDocPtr doc;
     xmlNodePtr root;
 <#else>

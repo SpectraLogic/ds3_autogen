@@ -98,6 +98,7 @@ public class SourceConverter_Test {
                                 new Parameter(ParameterModifier.CONST, "ds3_pool_type", "type", ParameterPointerType.NONE, false)),
                         false,
                         false,
+                        null,
                         "ds3_pool"));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 
@@ -124,6 +125,7 @@ public class SourceConverter_Test {
                         ImmutableList.of(),
                         false,
                         false,
+                        null,
                         "ds3_pool"));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 
@@ -152,6 +154,7 @@ public class SourceConverter_Test {
                                 new Parameter(ParameterModifier.CONST, "ds3_checksum_type", "type", ParameterPointerType.NONE, false)),
                         false,
                         false,
+                        null,
                         "ds3_widget"));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 

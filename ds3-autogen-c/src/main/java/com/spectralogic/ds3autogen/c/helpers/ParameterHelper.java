@@ -70,6 +70,8 @@ public class ParameterHelper {
             return false;
         } else if (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired()) {
             return false;
+        } else if (parm.getParameterType().equalsIgnoreCase("operation")) {
+            return false;
         }
         return true;
     }
@@ -99,6 +101,8 @@ public class ParameterHelper {
         switch(parm.getParameterType()) {
             case "ds3_bool":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", NULL);\n";
+            case "operation":
+                return indent(depth) + "_set_query_param((ds3_request*) request, \"operation\", \"" + parm.getName() + "\");\n";
             case "uint64_t":
                 return indent(depth) + "char tmp_buff[32];\n"
                      + indent(depth) + "sprintf(tmp_buff, \"%llu\", (unsigned long long) *" + parm.getName() +");\n"
@@ -115,7 +119,7 @@ public class ParameterHelper {
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", " + parm.getName() + ");\n";
             default:
                 if (parm.getParameterType().startsWith("ds3_")) {  // enum type
-                    return indent(depth) + "_set_query_param((ds3_request*) request, _get_" + parm.getParameterType() + "_str(*" + parm.getName() + "));\n";
+                    return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", _get_" + parm.getParameterType() + "_str(*" + parm.getName() + "));\n";
                 }
 
                 throw new InvalidParameterException(parm.getName() + " Unknown type: " + parm.getParameterType());

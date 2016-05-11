@@ -16,7 +16,9 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.ParameterModifier;
@@ -29,16 +31,18 @@ import org.slf4j.LoggerFactory;
 
 import java.security.InvalidParameterException;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
+    private static final ImmutableMap<String, Parameter> hasRequestPayload = buildRequestPayloadMap();
 
     public static Request toRequest(final Ds3Request ds3Request) {
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
         return new Request(
-                ds3Request.getName(),
+                RequestHelper.getNameRootUnderscores(ds3Request.getName()),
                 ds3Request.getClassification(),
                 ds3Request.getHttpVerb(),
                 getRequestPath(ds3Request),
@@ -49,6 +53,7 @@ public final class RequestConverter {
                 getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
+                hasRequestPayload.get(RequestHelper.getNameRoot(ds3Request.getName())),
                 responseType);
     }
 
@@ -103,23 +108,34 @@ public final class RequestConverter {
         final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
         LOG.debug("Getting required query params...");
 
-        for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
-            if (ds3Param == null) continue;
+        if (hasContent(ds3Request.getRequiredQueryParams())) {
+            for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
+                if (ds3Param == null) continue;
 
-            final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
-            LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
-            requiredArgsBuilder.add(requiredParam);
+                if (ds3Request.getClassification() == Classification.spectrads3
+                        && ds3Request.getOperation() != null
+                        && ds3Param.getName() == "Operation") { // Special Case - Parameter.Type needs to be Request.Operation value
+                    LOG.debug("\tRequired QueryParam: " + ds3Param.getName() + "=" + ds3Request.getOperation().name());
+                    requiredArgsBuilder.add(new Parameter(ParameterModifier.CONST, "operation", ds3Request.getOperation().name(), ParameterPointerType.NONE, true));
+                } else {
+                    final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
+                    LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
+                    requiredArgsBuilder.add(requiredParam);
+                }
+            }
         }
 
         // Add 'length' if 'offset' is given
-        for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            if (ds3Param == null) continue;
+        if (hasContent(ds3Request.getOptionalQueryParams())) {
+            for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
+                if (ds3Param == null) continue;
 
-            if (ds3Param.getName().equalsIgnoreCase("Offset")) {
-                final Parameter lengthParam = new Parameter(
-                        ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER, true);
-                LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
-                requiredArgsBuilder.add(lengthParam);
+                if (ds3Param.getName().equalsIgnoreCase("Offset")) {
+                    final Parameter lengthParam = new Parameter(
+                            ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER, true);
+                    LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
+                    requiredArgsBuilder.add(lengthParam);
+                }
             }
         }
 
@@ -188,5 +204,39 @@ public final class RequestConverter {
         }
 
         return builder.build();
+    }
+
+    public static ImmutableMap<String, Parameter> buildRequestPayloadMap() {
+        final ImmutableMap.Builder<String, Parameter> requestPayloadMap =  ImmutableMap.builder();
+        requestPayloadMap.put("CreateGetJob",
+                new Parameter(
+                        ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreatePutJob",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateVerifyJob",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("EjectStorageDomainBlobs",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("EjectStorageDomain",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("GetPhysicalPlacementForObjects",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("VerifyPhysicalPlacementForObjects",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("VerifyPhysicalPlacementForObjectsWithFullDetails",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CompleteMultiPartUpload",
+                new Parameter(ParameterModifier.CONST, "ds3_complete_multipart_upload_result", "complete_mpu_payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateMultiPartUploadPart",
+                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("CreateObject",
+                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("DeleteObjects",
+                new Parameter(ParameterModifier.CONST, "ds3_metadata_keys_result", "payload", ParameterPointerType.SINGLE_POINTER, true)); // List<String>
+        requestPayloadMap.put("GetBlobPersistence",
+                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+        requestPayloadMap.put("ReplicatePutJob",
+                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+        return requestPayloadMap.build();
     }
 }
