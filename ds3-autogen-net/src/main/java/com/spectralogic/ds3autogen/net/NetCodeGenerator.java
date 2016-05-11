@@ -64,6 +64,7 @@ import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasSpecifiedPayload;
 
 /**
  * Generates the .Net SDK code based on the contents of the Ds3ApiSpec
@@ -336,6 +337,10 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isHeadBucketRequest(ds3Request)) {
             return config.getTemplate("parser/head_bucket_parser.ftl");
+        }
+        //Perform this check last so that individual special cased requests take precedence
+        if (hasSpecifiedPayload(ds3Request, "MasterObjectList")) {
+            return config.getTemplate("parser/master_object_list_parser.ftl");
         }
         return config.getTemplate("parser/parser_template.ftl");
     }
