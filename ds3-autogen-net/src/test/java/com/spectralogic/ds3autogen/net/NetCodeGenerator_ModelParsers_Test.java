@@ -143,6 +143,6 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("ChunkId = ParseGuid(element.AttributeText(\"ChunkId\"))"));
         assertTrue(typeParserCode.contains("ChunkNumber = ParseInt(element.AttributeText(\"ChunkNumber\"))"));
         assertTrue(typeParserCode.contains("NodeId = ParseNullableGuid(element.AttributeTextOrNull(\"NodeId\"))"));
-        assertTrue(typeParserCode.contains("ObjectsList = element.Elements(\"object\").Select(ParseBulkObject).ToList()"));
+        assertTrue(typeParserCode.contains("ObjectsList = element.Elements(\"Object\").Select(ParseBulkObject).ToList()"));
     }
 }

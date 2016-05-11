@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
-import com.spectralogic.ds3autogen.net.generators.elementparsers.*;
+import com.spectralogic.ds3autogen.net.generators.parsers.element.*;
 
 import static com.spectralogic.ds3autogen.net.NetHelper.toNetType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
