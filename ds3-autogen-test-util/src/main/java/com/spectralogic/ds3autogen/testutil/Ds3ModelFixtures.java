@@ -545,6 +545,29 @@ public class Ds3ModelFixtures {
         );
     }
 
+    public static Ds3Request getBucketRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.bucket.GetBucketRequestHandler",
+                HttpVerb.GET,
+                Classification.amazons3,
+                Requirement.REQUIRED, // bucketRequirement
+                Requirement.NOT_ALLOWED, // objectRequirement
+                null, // action
+                null, // resource
+                null, // resourceType
+                null, // operation
+                false,// includeIdInPath
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.ListBucketResult", null, null)))), // ds3ResponseCodes - using NameToMarshal
+                ImmutableList.of(
+                        new Ds3Param("Delimiter", "java.lang.String", true),
+                        new Ds3Param("Marker", "java.lang.String", true),
+                        new Ds3Param("MaxKeys", "int", false),
+                        new Ds3Param("Prefix", "java.lang.String", true)), // optionalQueryParams
+                ImmutableList.of()); // requiredQueryParams
+    }
+
     public static Ds3Request getBucketsRequest() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler",

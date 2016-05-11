@@ -119,7 +119,6 @@ public final class RequestHelper {
                 builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");\n");
                 builder.append(indent(1)).append("}");
             } else if(request.isResourceRequired()) {
-                builder.append(indent(1)).append("int num_slashes = num_chars_in_ds3_str(request->path, '/');\n");
                 builder.append(indent(1)).append("if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
                 builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");\n");
                 builder.append(indent(1)).append("}");
@@ -133,7 +132,6 @@ public final class RequestHelper {
                 builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");\n");
                 builder.append(indent(1)).append("}");
             } else if(request.isResourceIdRequired()) {
-                builder.append(indent(1)).append("int num_slashes = num_chars_in_ds3_str(request->path, '/');\n");
                 builder.append(indent(1)).append("if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n");
                 builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");\n");
                 builder.append(indent(1)).append("}");

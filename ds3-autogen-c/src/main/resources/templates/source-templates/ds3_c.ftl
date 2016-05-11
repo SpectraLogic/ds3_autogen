@@ -49,13 +49,13 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
         <#include "../request-templates/HeadRequest.ftl"/>
-    <#elseif requestEntry.getVerb().toString() == "POST">
-        <#include "../request-templates/Request.ftl"/>
-    <#elseif requestEntry.getVerb().toString() == "PUT">
-        <#include "../request-templates/Request.ftl"/>
-    <#elseif requestEntry.getVerb().toString() == "GET">
-        <#include "../request-templates/Request.ftl"/>
-    <#elseif requestEntry.getVerb().toString() == "DELETE">
+    <#elseif requestEntry.hasRequestPayload()>
+        <#include "../request-templates/RequestWithRequestPayload.ftl"/>
+    <#elseif requestEntry.hasRequestPayload() && requestEntry.hasResponsePayload()>
+        <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>
+    <#elseif requestEntry.hasResponsePayload()>
+        <#include "../request-templates/RequestWithResponsePayload.ftl"/>
+    <#else>
         <#include "../request-templates/Request.ftl"/>
     </#if>
 </#list>

@@ -42,11 +42,6 @@ typedef enum {
 }http_verb;
 
 typedef enum {
-    DATA,
-    FOLDER
-}ds3_object_type;
-
-typedef enum {
     DS3_ERROR,
     DS3_WARN,
     DS3_INFO,
@@ -74,13 +69,12 @@ typedef enum {
   DS3_ERROR_TOO_MANY_REDIRECTS
 }ds3_error_code;
 
-<#--
-typedef struct {
-    uint64_t  status_code;
-    ds3_str*  status_message;
-    ds3_str*  error_body;
-}ds3_error_response;
--->
+<#-- **************************************** -->
+<#-- Generate all Models                      -->
+<#list getEnums() as enumEntry>
+    <#include "TypedefEnum.ftl">
+</#list>
+<#-- **************************************** -->
 
 typedef struct {
     ds3_error_code      code;
@@ -104,18 +98,12 @@ typedef struct _ds3_client {
 }ds3_client;
 
 <#-- **************************************** -->
-<#-- Generate all Models                      -->
-<#list getEnums() as enumEntry>
-    <#include "TypedefEnum.ftl">
-</#list>
-<#-- **************************************** -->
-
-<#-- **************************************** -->
 <#-- Generate all Structs                     -->
 <#list getStructs() as structEntry>
     <#include "TypedefStruct.ftl">
 </#list>
 <#-- **************************************** -->
+
 
 <#-- ********************************************* -->
 <#-- Generate all "FreeStruct" functions prototypes -->
