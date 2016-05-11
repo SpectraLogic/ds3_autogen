@@ -41,7 +41,6 @@ public final class RequestConverter {
 
     public static Request toRequest(final Ds3Request ds3Request) {
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
-        LOG.info("ds3Request name root: " + RequestHelper.getNameRoot(ds3Request.getName()));
         return new Request(
                 RequestHelper.getNameRootUnderscores(ds3Request.getName()),
                 ds3Request.getClassification(),
