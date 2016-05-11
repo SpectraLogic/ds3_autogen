@@ -34,6 +34,7 @@ public class StructMember {
         return name;
     }
 
+    @Override
     public String toString() {
         return getType().toString() + "    " + getName();
     }

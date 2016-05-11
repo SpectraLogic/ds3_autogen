@@ -88,6 +88,7 @@ public final class RequestHelper {
 
         builder.addAll(request.getRequiredQueryParams().stream()
                 .filter(parm -> !parm.getParameterType().equals("ds3_bool")) // for required bool / void query param nothing to specify
+                .filter(parm -> !parm.getParameterType().equals("operation")) // for required spectrads3 operation query param nothing to specify
                 .map(Parameter::toString)
                 .collect(GuavaCollectors.immutableList()));
         builder.addAll(request.getOptionalQueryParams().stream()
@@ -104,6 +105,10 @@ public final class RequestHelper {
 
     public static String generateParameterCheckingBlock(final Request request) {
         final StringBuilder builder = new StringBuilder();
+
+        builder.append(indent(1)).append("if (client == NULL || request == NULL) {\n");
+        builder.append(indent(2)).append("return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"All arguments must be filled in for request processing\");\n");
+        builder.append(indent(1)).append("}\n");
 
         if (request.getClassification() == Classification.amazons3) {
             if (request.isResourceIdRequired()) {

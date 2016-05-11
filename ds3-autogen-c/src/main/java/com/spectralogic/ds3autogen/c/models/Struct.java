@@ -50,6 +50,7 @@ public class Struct {
         return isTopLevel;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("Struct[" + getName() + "]\n");

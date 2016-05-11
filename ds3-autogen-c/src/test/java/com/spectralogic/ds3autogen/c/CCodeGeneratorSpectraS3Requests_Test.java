@@ -168,6 +168,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 ImmutableList.of(),
                 true,
                 false,
+                null,
                 responseType
         );
         testMap.put("requestEntry", requestEntry);

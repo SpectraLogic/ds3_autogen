@@ -33,6 +33,8 @@ public class Request {
     private final ImmutableList<Parameter> optionalQueryParams;
     private final boolean isResourceRequired;
     private final boolean isResourceIdRequired;
+    private final Parameter  requestPayload;
+    private final boolean hasRequestPayload;
     private final String responseType;
     private final boolean hasResponsePayload;
 
@@ -48,6 +50,7 @@ public class Request {
             final ImmutableList<Parameter> optionalQueryParams,
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
+            final Parameter requestPayload,
             final String responseType) {
         this.name = name;
         this.classification = classification;
@@ -60,6 +63,8 @@ public class Request {
         this.optionalQueryParams = optionalQueryParams;
         this.isResourceRequired = isResourceRequired;
         this.isResourceIdRequired = isResourceIdRequired;
+        this.requestPayload = requestPayload;
+        this.hasRequestPayload = requestPayload != null;
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
     }
@@ -108,6 +113,14 @@ public class Request {
         return isResourceIdRequired;
     }
 
+    public Parameter getRequestPayload() {
+        return requestPayload;
+    }
+
+    public boolean hasRequestPayload() {
+        return hasRequestPayload;
+    }
+
     public String getResponseType() {
         return responseType;
     }
@@ -116,6 +129,7 @@ public class Request {
         return hasResponsePayload;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("\nRequest[").append(getName()).append("]\n");
@@ -138,6 +152,8 @@ public class Request {
         }
         builder.append("  isResourceRequired[").append(isResourceRequired()).append("]\n");
         builder.append("  isResourceIdRequired[").append(isResourceIdRequired()).append("]\n");
+        builder.append("  RequestPayload[").append(getRequestPayload()).append("]\n");
+        builder.append("  hasRequestPayload[").append(hasRequestPayload()).append("]\n");
         builder.append("  ResponseType[").append(getResponseType()).append("]\n");
         builder.append("  hasResponsePayload[").append(hasResponsePayload()).append("]\n");
         return builder.toString();
