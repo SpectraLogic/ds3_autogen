@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.c.helpers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
@@ -60,10 +61,10 @@ public final class EnumHelper {
         return ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
     }
 
-    public static ImmutableList<String> convertDs3EnumConstants(final ImmutableList<Ds3EnumConstant> enums) {
+    public static ImmutableList<String> convertDs3EnumConstants(final Ds3Type ds3Type) {
         final ImmutableList.Builder<String> stringListBuilder = ImmutableList.builder();
-        for (final Ds3EnumConstant currentEnum : enums) {
-            stringListBuilder.add(currentEnum.getName());
+        for (final Ds3EnumConstant currentEnum : ds3Type.getEnumConstants()) {
+            stringListBuilder.add(getNameUnderscores(ds3Type.getName()).toUpperCase() + '_' + currentEnum.getName());
         }
         return stringListBuilder.build();
     }

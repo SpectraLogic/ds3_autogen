@@ -103,7 +103,7 @@ public final class RequestHelper {
         return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
     }
 
-    public static String generateParameterCheckingBlock(final Request request) {
+    public static String generateParameterValidationBlock(final Request request) {
         final StringBuilder builder = new StringBuilder();
 
         builder.append(indent(1)).append("if (client == NULL || request == NULL) {\n");

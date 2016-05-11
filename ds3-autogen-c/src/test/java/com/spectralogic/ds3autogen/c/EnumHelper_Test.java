@@ -30,6 +30,7 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import org.junit.Test;
 
@@ -44,24 +45,27 @@ public class EnumHelper_Test {
         final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
         final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("Ds3Type", null, null, enumConstants);
 
-        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
+        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(testDs3Type);
         assertFalse(stringsList.isEmpty());
         assertEquals(2, stringsList.size());
-        assertEquals("ALPHA", stringsList.get(0));
-        assertEquals("BRAVO", stringsList.get(1));
+        assertEquals("DS3_TYPE_ALPHA", stringsList.get(0));
+        assertEquals("DS3_TYPE_BRAVO", stringsList.get(1));
     }
+
     @Test
     public void testGetEnumValues() {
         final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
         final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("Ds3Type", null, null, enumConstants);
 
-        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
+        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(testDs3Type);
 
         final String expectedResult =
-                "    ALPHA,\n" +
-                "    BRAVO";
+                "    DS3_TYPE_ALPHA,\n" +
+                "    DS3_TYPE_BRAVO";
 
         final String result = EnumHelper.getEnumValues(stringsList);
         assertThat(result, is(expectedResult));

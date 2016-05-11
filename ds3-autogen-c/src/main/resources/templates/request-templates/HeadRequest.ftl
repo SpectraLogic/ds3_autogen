@@ -7,7 +7,7 @@ ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
     ds3_string_multimap* return_headers = NULL;
     ds3_metadata* metadata = NULL;
 
-${requestHelper.generateParameterCheckingBlock(requestEntry)}
+${requestHelper.generateParameterValidationBlock(requestEntry)}
 
     error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);
     if (error == NULL) {

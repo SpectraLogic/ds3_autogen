@@ -24,7 +24,7 @@ public final class EnumConverter {
     private EnumConverter() {}
 
     public static Enum toEnum(final Ds3Type ds3Type) {
-        final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(ds3Type.getEnumConstants());
+        final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(ds3Type);
         return new Enum(
                 EnumHelper.getDs3Type(ds3Type.getName()),
                 valuesList);
