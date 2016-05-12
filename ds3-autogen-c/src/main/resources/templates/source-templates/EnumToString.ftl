@@ -4,5 +4,5 @@
 <#--   Input: Source object                           -->
 <#-- ************************************************ -->
 static char* _get_${enumEntry.getName()}_str(${enumEntry.getName()} input) {
-${enumHelper.generateToString(enumEntry.getValues())}
+${enumHelper.generateToString(enumEntry)}
 }
