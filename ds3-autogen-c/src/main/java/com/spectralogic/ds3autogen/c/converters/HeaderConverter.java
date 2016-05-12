@@ -16,17 +16,25 @@
 package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
+import com.spectralogic.ds3autogen.c.models.Header;
+import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.c.models.Struct;
 
-public final class EnumConverter {
-    private EnumConverter() {}
+import java.text.ParseException;
 
-    public static Enum toEnum(final Ds3Type ds3Type) {
-        final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(ds3Type);
-        return new Enum(
-                EnumHelper.getDs3Type(ds3Type.getName()),
-                valuesList);
+public class HeaderConverter {
+    public static Header toHeader(
+            final ImmutableList<Enum> allEnums,
+            final ImmutableList<Struct> allStructs,
+            final ImmutableList<Request> allRequests) throws ParseException {
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        return new Header( allEnums,
+                allOrderedStructs,
+                allRequests);
     }
 }

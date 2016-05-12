@@ -2,4 +2,4 @@
 <#-- Generate "Request Prototype"       -->
 <#--   Input: Header object             -->
 <#-- ********************************** -->
-${requestHelper.generateRequestFunctionSignature(requestEntry)};
+LIBRARY_API ${requestHelper.generateRequestFunctionSignature(requestEntry)};

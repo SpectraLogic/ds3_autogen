@@ -30,7 +30,10 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.models.Enum;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -41,27 +44,30 @@ import static org.junit.Assert.assertFalse;
 public class EnumHelper_Test {
     @Test
     public void testConvertDs3EnumConstants() {
-        final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
-        final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("Alpha", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("Type", null, null, enumConstants);
 
-        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
+        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(testDs3Type);
         assertFalse(stringsList.isEmpty());
         assertEquals(2, stringsList.size());
-        assertEquals("ALPHA", stringsList.get(0));
-        assertEquals("BRAVO", stringsList.get(1));
+        assertEquals("DS3_TYPE_ALPHA", stringsList.get(0));
+        assertEquals("DS3_TYPE_BRAVO", stringsList.get(1));
     }
+
     @Test
     public void testGetEnumValues() {
-        final Ds3EnumConstant alpha = new Ds3EnumConstant("ALPHA", null);
-        final Ds3EnumConstant bravo = new Ds3EnumConstant("BRAVO", null);
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("Alpha", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("Type", null, null, enumConstants);
 
-        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(enumConstants);
+        final ImmutableList<String> stringsList = EnumHelper.convertDs3EnumConstants(testDs3Type);
 
         final String expectedResult =
-                "    ALPHA,\n" +
-                "    BRAVO";
+                "    DS3_TYPE_ALPHA,\n" +
+                "    DS3_TYPE_BRAVO";
 
         final String result = EnumHelper.getEnumValues(stringsList);
         assertThat(result, is(expectedResult));
@@ -69,13 +75,19 @@ public class EnumHelper_Test {
 
     @Test
     public void testEnumToString() {
-        final String expectedOutput = "    if (input == CHARLIE) {"      + "\n"
-                                    + "        return \"CHARLIE\";"      + "\n"
-                                    + "    } else if (input == DELTA) {" + "\n"
-                                    + "        return \"DELTA\";"        + "\n"
-                                    + "    } else {"                     + "\n"
-                                    + "        return \"\";"             + "\n"
-                                    + "    }"                            + "\n";
-        assertThat(EnumHelper.generateToString(ImmutableList.of("CHARLIE", "DELTA")), is(expectedOutput));
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("Charlie", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("Delta", null);
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("TypePrefix", null, null, enumConstants);
+        final Enum testEnum= EnumConverter.toEnum(testDs3Type);
+
+        final String expectedOutput = "    if (input == DS3_TYPE_PREFIX_CHARLIE) {"      + "\n"
+                + "        return \"CHARLIE\";"      + "\n"
+                + "    } else if (input == DS3_TYPE_PREFIX_DELTA) {" + "\n"
+                + "        return \"DELTA\";"        + "\n"
+                + "    } else {"                     + "\n"
+                + "        return \"\";"             + "\n"
+                + "    }"                            + "\n";
+        assertThat(EnumHelper.generateToString(testEnum), is(expectedOutput));
     }
 }

@@ -24,7 +24,9 @@ import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
@@ -78,7 +80,11 @@ public class CCodeGenerator_Test {
     public void testGenerateSingleTypeEnumConstantMatcher() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
-        final Enum enumEntry = new Enum("ds3_job_status", ImmutableList.of("IN_PROGRESS", "COMPLETED", "CANCELED"));
+        final Ds3EnumConstant inProgress = new Ds3EnumConstant("IN_PROGRESS", null);
+        final Ds3EnumConstant completed = new Ds3EnumConstant("COMPLETED", null);
+        final Ds3EnumConstant canceled = new Ds3EnumConstant("CANCELED", null);
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(inProgress, completed, canceled);
+        final Enum enumEntry = EnumConverter.toEnum(new Ds3Type("JobStatus", null, null, enumConstants));
         testMap.put("enumEntry", enumEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -89,14 +95,14 @@ public class CCodeGenerator_Test {
 
         final String expectedOutput = "static ds3_job_status _match_ds3_job_status(const ds3_log* log, const xmlChar* text) {" + "\n"
                                     + "    if (xmlStrcmp(text, (const xmlChar*) \"IN_PROGRESS\") == 0) {" + "\n"
-                                    + "        return IN_PROGRESS;" + "\n"
+                                    + "        return DS3_JOB_STATUS_IN_PROGRESS;" + "\n"
                                     + "    } else if (xmlStrcmp(text, (const xmlChar*) \"COMPLETED\") == 0) {" + "\n"
-                                    + "        return COMPLETED;" + "\n"
+                                    + "        return DS3_JOB_STATUS_COMPLETED;" + "\n"
                                     + "    } else if (xmlStrcmp(text, (const xmlChar*) \"CANCELED\") == 0) {" + "\n"
-                                    + "        return CANCELED;" + "\n"
+                                    + "        return DS3_JOB_STATUS_CANCELED;" + "\n"
                                     + "    } else {" + "\n"
-                                    + "        ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning IN_PROGRESS for safety.\", text);" + "\n"
-                                    + "        return IN_PROGRESS;" + "\n"
+                                    + "        ds3_log_message(log, DS3_ERROR, \"ERROR: Unknown value of '%s'.  Returning DS3_JOB_STATUS_IN_PROGRESS for safety.\", text);" + "\n"
+                                    + "        return DS3_JOB_STATUS_IN_PROGRESS;" + "\n"
                                     + "    }" + "\n"
                                     + "}" + "\n";
 
@@ -562,7 +568,6 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote(
                 "static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));

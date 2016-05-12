@@ -23,5 +23,5 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
         return error;
     }
 
-    return _parse_get_service_response(client, request, _response, xml_blob);
+    return _parse_${requestEntry.getResponseType()}(client, request, _response, xml_blob);
 }

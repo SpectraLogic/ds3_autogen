@@ -5,6 +5,7 @@
 ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
     ds3_error* error;
     GByteArray* xml_blob;
+
 ${requestHelper.generateParameterValidationBlock(requestEntry)}
 
     xml_blob = g_byte_array_new();
@@ -14,5 +15,5 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
         return error;
     }
 
-    return _parse_get_service_response(client, request, _response, xml_blob);
+    return _parse_${requestEntry.getResponseType()}(client, request, response, xml_blob);
 }

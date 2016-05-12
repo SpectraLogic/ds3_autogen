@@ -54,7 +54,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                             + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                                + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -84,7 +84,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                            + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                               + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -105,7 +105,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/_rest_/system_information\", NULL, NULL));" + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                               + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -152,7 +152,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                            + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                               + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -179,7 +179,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                           + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                              + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 
@@ -220,7 +220,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "    }"                                                                                                                      + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                                         + "\n"
-                + "}";
+                + "}\n";
         assertEquals(expectedOutput, output);
     }
 }

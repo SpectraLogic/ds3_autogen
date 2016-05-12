@@ -22,10 +22,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.c.converters.EnumConverter;
-import com.spectralogic.ds3autogen.c.converters.RequestConverter;
-import com.spectralogic.ds3autogen.c.converters.SourceConverter;
-import com.spectralogic.ds3autogen.c.converters.StructConverter;
+import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.helpers.*;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
@@ -84,8 +81,8 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws IOException, ParseException {
         final Path path = Paths.get("src/ds3.h");
-        final Header header = new Header(allEnums,allStructs,allRequests);
-        processTemplate(header, "ds3_h.ftl", fileUtils.getOutputFile(path));
+        final Header header = HeaderConverter.toHeader(allEnums, allStructs, allRequests);
+        processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputFile(path));
     }
 
     public void generateSource(
@@ -95,7 +92,7 @@ public class CCodeGenerator implements CodeGenerator {
 
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
         final Path path = Paths.get("src/ds3.c");
-        processTemplate(source, "ds3_c.ftl", fileUtils.getOutputFile(path));
+        processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputFile(path));
 
     }
 
