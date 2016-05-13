@@ -184,10 +184,11 @@ public final class RequestConverter {
             if (rc < 200 || rc >= 300) continue;
 
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
+                if (ConverterUtil.hasContent(responseType.getType())
+                 && !responseType.getType().contentEquals("null")) {
                     responseTypeName = responseType.getType();
-                }
-                if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
+                } else if (ConverterUtil.hasContent(responseType.getComponentType())
+                        && !responseType.getComponentType().contentEquals("null")) {
                     responseTypeName = responseType.getComponentType();
                 }
             }

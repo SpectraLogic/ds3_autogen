@@ -73,8 +73,8 @@
       "SdkName": "MultiPartUploadPart"
     },
     {
-      "ContractName": "NodeApiBean",
-      "SdkName": "Endpoint"
+      "ContractName": "Node",
+      "SdkName": "NodeDetails"
     },
     {
       "ContractName": "S3ObjectToDeleteApiBean",
