@@ -207,9 +207,7 @@ ds3_creds* ds3_create_creds(const char* access_id, const char* secret_key) {
     }
 
     creds = g_new0(ds3_creds, 1);
-
     creds->access_id = ds3_str_init(access_id);
-
     creds->secret_key = ds3_str_init(secret_key);
 
     return creds;
@@ -238,11 +236,8 @@ ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds) {
     }
 
     client = g_new0(ds3_client, 1);
-
     client->endpoint = ds3_str_init(endpoint);
-
     client->creds = creds;
-
     client->num_redirects = 5L; //default to 5 redirects before failing
 
     ds3_client_register_net( client, net_process_request );
@@ -309,15 +304,6 @@ static void _set_header(ds3_request* _request, const char* key, const char* valu
     _set_map_value(request->headers, key, value);
 }
 
-static char* _get_ds3_object_type(const ds3_object_type type) {
-    switch(type) {
-        case DATA: return "DATA";
-        case FOLDER: return "FOLDER";
-    }
-
-    return NULL;
-}
-
 void ds3_client_proxy(ds3_client* client, const char* proxy) {
     client->proxy = ds3_str_init(proxy);
 }
@@ -367,31 +353,31 @@ void ds3_request_set_creation_date(ds3_request* _request, const char* creation_d
 
 void ds3_request_set_md5(ds3_request* _request, const char* md5) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_MD5;
+    request->checksum_type = DS3_CHECKSUM_TYPE_MD5;
     request->checksum = ds3_str_init(md5);
 }
 
 void ds3_request_set_sha256(ds3_request* _request, const char* sha256) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_SHA256;
+    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_256;
     request->checksum = ds3_str_init(sha256);
 }
 
 void ds3_request_set_sha512(ds3_request* _request, const char* sha512) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_SHA512;
+    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_512;
     request->checksum = ds3_str_init(sha512);
 }
 
 void ds3_request_set_crc32(ds3_request* _request, const char* crc32) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CRC32;
+    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32;
     request->checksum = ds3_str_init(crc32);
 }
 
 void ds3_request_set_crc32c(ds3_request* _request, const char* crc32c) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CRC32C;
+    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32C;
     request->checksum = ds3_str_init(crc32c);
 }
 
@@ -436,8 +422,8 @@ void ds3_request_set_id(ds3_request* _request, const char* id) {
     _set_query_param(_request, "id", id);
 }
 
-void ds3_request_set_type(ds3_request* _request, ds3_object_type type) {
-    const char* type_as_string = _get_ds3_object_type(type);
+void ds3_request_set_type(ds3_request* _request, ds3_s3_object_type type) {
+    const char* type_as_string = _get_ds3_s3_object_type_str(type);
     if (type_as_string != NULL) {
         _set_query_param(_request, "type", type_as_string);
     }
@@ -455,12 +441,12 @@ void ds3_request_set_version(ds3_request* _request, const char* version) {
     _set_query_param(_request, "version", version);
 }
 
-static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* buildPathArgs) {
+static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) {
     struct _ds3_request* request = g_new0(struct _ds3_request, 1);
     request->headers = _create_hash_table();
     request->query_params = _create_hash_table();
     request->verb = verb;
-    request->buildPathArgs = buildPathArgs;
+    request->path = path;
     return request;
 }
 

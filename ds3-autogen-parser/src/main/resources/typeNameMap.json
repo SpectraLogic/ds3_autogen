@@ -18,7 +18,7 @@
     },
     {
       "ContractName": "BucketApiBean",
-      "SdkName": "Ds3Bucket"
+      "SdkName": "BucketDetails"
     },
     {
       "ContractName": "BucketObjectsApiBean",
@@ -74,7 +74,7 @@
     },
     {
       "ContractName": "NodeApiBean",
-      "SdkName": "Ds3Node"
+      "SdkName": "JobNode"
     },
     {
       "ContractName": "S3ObjectToDeleteApiBean",

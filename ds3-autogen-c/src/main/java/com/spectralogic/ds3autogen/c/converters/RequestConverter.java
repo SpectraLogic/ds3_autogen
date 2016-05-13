@@ -114,7 +114,7 @@ public final class RequestConverter {
 
                 if (ds3Request.getClassification() == Classification.spectrads3
                         && ds3Request.getOperation() != null
-                        && ds3Param.getName() == "Operation") { // Special Case - Parameter.Type needs to be Request.Operation value
+                        && ds3Param.getName().equalsIgnoreCase("Operation")) { // Special Case - Parameter.Type needs to be Request.Operation value
                     LOG.debug("\tRequired QueryParam: " + ds3Param.getName() + "=" + ds3Request.getOperation().name());
                     requiredArgsBuilder.add(new Parameter(ParameterModifier.CONST, "operation", ds3Request.getOperation().name(), ParameterPointerType.NONE, true));
                 } else {
@@ -178,18 +178,26 @@ public final class RequestConverter {
     public static String getResponseType(final ImmutableList<Ds3ResponseCode> responseCodes) {
         if (isEmpty(responseCodes)) return "";
 
+        String responseTypeName = "";
         for (final Ds3ResponseCode responseCode : responseCodes) {
             final int rc = responseCode.getCode();
             if (rc < 200 || rc >= 300) continue;
 
             for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                if (ConverterUtil.hasContent(responseType.getType()) && !responseType.getType().contentEquals("null")) {
-                    return StructHelper.getResponseTypeName(responseType.getType());
-                }
-                if (ConverterUtil.hasContent(responseType.getComponentType()) && !responseType.getComponentType().contentEquals("null")) {
-                    return StructHelper.getResponseTypeName(responseType.getComponentType());
+                if (ConverterUtil.hasContent(responseType.getType())
+                 && !responseType.getType().contentEquals("null")) {
+                    responseTypeName = responseType.getType();
+                } else if (ConverterUtil.hasContent(responseType.getComponentType())
+                        && !responseType.getComponentType().contentEquals("null")) {
+                    responseTypeName = responseType.getComponentType();
                 }
             }
+        }
+
+        if (responseTypeName.equalsIgnoreCase("java.lang.String")) {
+            return "ds3_str";
+        } else if (!responseTypeName.isEmpty()) {
+            return StructHelper.getResponseTypeName(responseTypeName);
         }
         return "";
     }
@@ -200,7 +208,11 @@ public final class RequestConverter {
         builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER, true));
 
         if (!responseType.isEmpty()) {
-            builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
+            if (responseType.equalsIgnoreCase("ds3_str")) {
+                builder.add(new Parameter(ParameterModifier.CONST, "ds3_str", "response", ParameterPointerType.SINGLE_POINTER, true));
+            } else {
+                builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
+            }
         }
 
         return builder.build();

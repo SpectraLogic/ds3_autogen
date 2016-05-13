@@ -72,7 +72,7 @@ public class NetCodeGenerator_ModelParsers_Test {
         assertTrue(typeParserCode.contains("Delimiter = ParseNullableString(element.Element(\"Delimiter\"))"));
         assertTrue(typeParserCode.contains("CommonPrefixes = ParseEncapsulatedList(element, \"Prefix\", \"CommonPrefixes\", ParseString)"));
         assertTrue(typeParserCode.contains("Objects = element.Elements(\"Contents\").Select(ParseContents).ToList()"));
-        assertTrue(typeParserCode.contains("Buckets = ParseEncapsulatedList(element, \"Bucket\", \"Buckets\", ParseDs3Bucket)"));
+        assertTrue(typeParserCode.contains("Buckets = ParseEncapsulatedList(element, \"Bucket\", \"Buckets\", ParseBucketDetails)"));
     }
 
     @Test

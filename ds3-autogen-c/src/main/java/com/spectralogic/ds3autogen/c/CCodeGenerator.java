@@ -71,6 +71,7 @@ public class CCodeGenerator implements CodeGenerator {
 
             generateHeader(allEnums, allStructs, allRequests);
             generateSource(allEnums, allStructs, allRequests);
+            generateStaticFiles();
         } catch (final ParseException e) {
             LOG.error("Caught exception: ", e);
         }
@@ -94,6 +95,11 @@ public class CCodeGenerator implements CodeGenerator {
         final Path path = Paths.get("src/ds3.c");
         processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputFile(path));
 
+    }
+
+    public void generateStaticFiles() throws IOException {
+        final Path path = Paths.get("src/ds3_request.h");
+        processTemplate(null, "other-templates/ds3_request_h.ftl", fileUtils.getOutputFile(path));
     }
 
     public static ImmutableList<Enum> getAllEnums(final Ds3ApiSpec spec) throws ParseException {

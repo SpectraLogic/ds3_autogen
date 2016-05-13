@@ -2,6 +2,12 @@
 
 <#include "source_includes.ftl"/>
 
+<#-- ********************************************* -->
+<#-- Generate "_get_enum_str()"                    -->
+<#list getQueryParamEnums() as enumEntry>
+    <#include "EnumToString.ftl">
+</#list>
+
 <#include "source_pre_init_functions.ftl"/>
 
 <#-- ***************************************** -->
@@ -9,7 +15,6 @@
 <#list getRequests() as requestEntry>
     <#include "../request-templates/InitRequest.ftl">
 </#list>
-<#-- ***************************************** -->
 
 <#include "source_post_init_pre_response_parsers.ftl"/>
 
@@ -18,7 +23,6 @@
 <#list getEnums() as enumEntry>
     <#include "TypedefEnumMatcher.ftl">
 </#list>
-<#-- ******************************************* -->
 
 <#-- ********************************************* -->
 <#-- Generate all "ResponseParsers" that are used by arrayParsers -->
@@ -39,12 +43,6 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 </#list>
 
 <#-- ********************************************* -->
-<#-- Generate "_get_enum_str()"                    -->
-<#list getQueryParamEnums() as enumEntry>
-    <#include "EnumToString.ftl">
-</#list>
-
-<#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
@@ -59,7 +57,6 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
         <#include "../request-templates/Request.ftl"/>
     </#if>
 </#list>
-<#-- ********************************************* -->
 
 <#include "source_post_response_matchers.ftl"/>
 
@@ -68,4 +65,3 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 <#list getStructs() as structEntry>
     <#include "FreeStruct.ftl">
 </#list>
-<#-- *********************************************** -->

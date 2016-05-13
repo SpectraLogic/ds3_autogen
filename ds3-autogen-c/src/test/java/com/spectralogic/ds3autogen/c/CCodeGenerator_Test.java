@@ -262,7 +262,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    for (index = 0; index < response->num_buckets; index++) {"));
-        assertTrue(output.contains("        ds3_bucket_response_free(response->buckets[index]);"));
+        assertTrue(output.contains("        ds3_bucket_details_response_free(response->buckets[index]);"));
         assertTrue(output.contains("    }"));
         assertTrue(output.contains("    g_free(response->buckets);"));
 
@@ -504,15 +504,15 @@ public class CCodeGenerator_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
+        assertTrue(output.contains("static ds3_error* _parse_ds3_bucket_details_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
         assertTrue(output.contains("    ds3_error* error = NULL;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
-        assertTrue(output.contains("    GPtrArray* ds3_bucket_response_array = g_ptr_array_new();"));
+        assertTrue(output.contains("    GPtrArray* ds3_bucket_details_response_array = g_ptr_array_new();"));
 
         assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
-        assertTrue(output.contains("        ds3_bucket_response* response;"));
-        assertTrue(output.contains("        error = _parse_ds3_bucket_response(client, doc, child_node, &response)"));
-        assertTrue(output.contains("        g_ptr_array_add(ds3_bucket_response_array, response);"));
+        assertTrue(output.contains("        ds3_bucket_details_response* response;"));
+        assertTrue(output.contains("        error = _parse_ds3_bucket_details_response(client, doc, child_node, &response)"));
+        assertTrue(output.contains("        g_ptr_array_add(ds3_bucket_details_response_array, response);"));
 
         assertTrue(output.contains("        if (error != NULL) {"));
         assertTrue(output.contains("            break;"));
@@ -546,7 +546,7 @@ public class CCodeGenerator_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.indexOf("_parse_ds3_bucket_response_array") > output.indexOf("_parse_ds3_bucket_response"));
+        assertTrue(output.indexOf("_parse_ds3_bucket_details_response_array") > output.indexOf("_parse_ds3_bucket_response"));
         assertTrue(output.indexOf("_parse_ds3_list_all_my_buckets_result_response") > output.indexOf("_parse_ds3_bucket_response_array"));
     }
 
@@ -570,7 +570,7 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
 
         final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote(
-                "static ds3_error* _parse_ds3_bucket_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
+                "static ds3_error* _parse_ds3_bucket_details_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
         final Pattern arrayParserPattern = Pattern.compile(Pattern.quote(
                 "static ds3_error* _parse_ds3_user_response(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, const ds3_user_response** _response) {"));
         final Pattern structParserPattern = Pattern.compile(Pattern.quote(

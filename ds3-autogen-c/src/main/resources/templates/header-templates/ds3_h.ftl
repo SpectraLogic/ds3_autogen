@@ -29,6 +29,19 @@ extern "C" {
 
 typedef struct _ds3_request ds3_request;
 
+typedef struct {
+    ds3_str*    name;
+    ds3_str**   values;
+    uint64_t    num_values;
+}ds3_metadata_entry;
+
+typedef struct {
+    ds3_str**  keys;
+    uint64_t   num_keys;
+}ds3_metadata_keys_result;
+
+typedef struct _ds3_metadata ds3_metadata;
+
 typedef enum {
     False, True
 }ds3_bool;
@@ -116,6 +129,8 @@ LIBRARY_API ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* metad
 LIBRARY_API unsigned int ds3_metadata_size(const ds3_metadata* metadata);
 LIBRARY_API ds3_metadata_keys_result* ds3_metadata_keys(const ds3_metadata* metadata);
 
+LIBRARY_API void ds3_free_metadata_entry(ds3_metadata_entry* entry);
+
 LIBRARY_API ds3_creds*  ds3_create_creds(const char* access_id, const char* secret_key);
 LIBRARY_API ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds);
 LIBRARY_API ds3_error*  ds3_create_client_from_env(ds3_client** client);
@@ -147,10 +162,10 @@ LIBRARY_API size_t ds3_read_from_file(void* buffer, size_t size, size_t nmemb, v
 LIBRARY_API size_t ds3_write_to_fd(void* buffer, size_t size, size_t nmemb, void* user_data);
 LIBRARY_API size_t ds3_read_from_fd(void* buffer, size_t size, size_t nmemb, void* user_data);
 
-LIBRARY_API ds3_bulk_object_list* ds3_convert_file_list(const char** file_list, uint64_t num_files);
-LIBRARY_API ds3_bulk_object_list* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path);
-LIBRARY_API ds3_bulk_object_list* ds3_convert_object_list(const ds3_object* objects, uint64_t num_objects);
-LIBRARY_API ds3_bulk_object_list* ds3_init_bulk_object_list(uint64_t num_files);
+LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list(const char** file_list, uint64_t num_files);
+LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path);
+LIBRARY_API ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_s3_object_response* objects, uint64_t num_objects);
+LIBRARY_API ds3_bulk_object_list_response* ds3_init_bulk_object_list(uint64_t num_files);
 
 
 #ifdef __cplusplus

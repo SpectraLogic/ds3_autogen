@@ -137,6 +137,37 @@ void ds3_free_metadata(ds3_metadata* _metadata) {
     g_free(metadata);
 }
 
+void ds3_free_metadata_entry(ds3_metadata_entry* entry) {
+    int value_index;
+    ds3_str* value;
+    if (entry->name != NULL) {
+        ds3_str_free(entry->name);
+    }
+    if (entry->values != NULL) {
+        for (value_index = 0; value_index < entry->num_values; value_index++) {
+            value = entry->values[value_index];
+            ds3_str_free(value);
+        }
+        g_free(entry->values);
+    }
+    g_free(entry);
+}
+
+void ds3_free_metadata_keys(ds3_metadata_keys_result* metadata_keys) {
+    uint64_t key_index;
+    if (metadata_keys == NULL) {
+        return;
+    }
+
+    if (metadata_keys->keys != NULL) {
+        for (key_index = 0; key_index < metadata_keys->num_keys; key_index++) {
+            ds3_str_free(metadata_keys->keys[key_index]);
+        }
+        g_free(metadata_keys->keys);
+    }
+    g_free(metadata_keys);
+}
+
 void ds3_free_error(ds3_error* error) {
     if (error == NULL) {
         return;

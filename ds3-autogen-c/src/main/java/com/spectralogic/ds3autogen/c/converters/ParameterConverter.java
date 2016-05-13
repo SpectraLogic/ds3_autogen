@@ -61,7 +61,7 @@ public class ParameterConverter {
                 return "char";
 
             default:
-                return StructHelper.getResponseTypeName(ds3Param.getType());
+                return StructHelper.getDs3TypeName(ds3Param.getType());
         }
     }
 
