@@ -197,7 +197,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* init_create_put_job(const char* resource_id, const ds3_bool aggregating, const ds3_bool ignore_naming_conflicts, const uint64_t* max_upload_size, const char* name, const ds3_blob_store_task_priority_response* priority) {" + "\n"
+        final String expectedOutput = "ds3_request* init_create_put_job(const char* resource_id, const ds3_bool aggregating, const ds3_bool ignore_naming_conflicts, const uint64_t* max_upload_size, const char* name, const ds3_blob_store_task_priority* priority) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_PUT, _build_path(\"/_rest_/bucket\", resource_id, NULL));"     + "\n"
                 + "    _set_query_param((ds3_request*) request, \"operation\", \"START_BULK_PUT\");"                                           + "\n"
                 + "\n"
@@ -216,7 +216,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
                 + "        _set_query_param((ds3_request*) request, \"name\", name);"                                                          + "\n"
                 + "    }"                                                                                                                      + "\n"
                 + "    if (priority != NULL) {"                                                                                                + "\n"
-                + "        _set_query_param((ds3_request*) request, \"priority\", _get_ds3_blob_store_task_priority_response_str(*priority));" + "\n"
+                + "        _set_query_param((ds3_request*) request, \"priority\", _get_ds3_blob_store_task_priority_str(*priority));"          + "\n"
                 + "    }"                                                                                                                      + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                                         + "\n"
