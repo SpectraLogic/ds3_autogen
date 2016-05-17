@@ -122,7 +122,18 @@ public class CCodeGenerator implements CodeGenerator {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                allStructsBuilder.add(StructConverter.toStruct(ds3TypeEntry, enumNames, allRequests));
+                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry, enumNames, allRequests);
+
+                allStructsBuilder.add(structEntry);
+
+                /* WIP
+                // For Source files, also add a non-top level struct entry to generate the alternate parser for
+                // and embedded type.
+                if (structEntry.isTopLevel()) {
+                    final Struct structEntryAlt = new Struct(structEntry.getName(), structEntry.getNameToMarshall(), structEntry.getStructMembers(), false);
+                    allStructsBuilder.add(structEntryAlt);
+                }
+                */
             }
         }
         return allStructsBuilder.build();

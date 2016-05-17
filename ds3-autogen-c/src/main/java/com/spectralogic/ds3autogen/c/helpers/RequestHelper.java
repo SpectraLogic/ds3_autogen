@@ -47,7 +47,7 @@ public final class RequestHelper {
 
     public static String getAmazonS3InitParams(final boolean isBucketRequired, final boolean isObjectRequired) {
         if (!isBucketRequired) {
-            return "void";
+            return "";
         } else if (isObjectRequired) {
             return "const char* bucket_name, const char* object_name";
         }
@@ -58,7 +58,7 @@ public final class RequestHelper {
         if (isResourceIdRequired) {
             return "const char* resource_id";
         }
-        return "void";
+        return "";
     }
 
     public static String paramListToString(final ImmutableList<Parameter> paramList) {
@@ -81,9 +81,15 @@ public final class RequestHelper {
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
 
         if (request.getClassification() == Classification.amazons3) {
-            builder.add(getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()));
+            final String amazonS3InitParams = getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired());
+            if (!amazonS3InitParams.isEmpty()) {
+                builder.add(amazonS3InitParams);
+            }
         } else {
-            builder.add(getSpectraS3InitParams(request.isResourceIdRequired()));
+            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceIdRequired());
+            if (!spectraS3InitParams.isEmpty()) {
+                builder.add(spectraS3InitParams);
+            }
         }
 
         builder.addAll(request.getRequiredQueryParams().stream()
@@ -95,6 +101,11 @@ public final class RequestHelper {
                 .map(Parameter::toString)
                 .collect(GuavaCollectors.immutableList()));
         final ImmutableList<String> allParams = builder.build();
+
+        LOG.info("allParams:");
+        for (final String currentParam : allParams) {
+            LOG.info("  " + currentParam.toString());
+        }
 
         return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
     }

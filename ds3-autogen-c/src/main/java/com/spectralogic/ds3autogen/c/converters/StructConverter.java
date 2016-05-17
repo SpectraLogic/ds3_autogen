@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +76,7 @@ public final class StructConverter {
     private static boolean isTopLevelStruct(final String responseTypeName, final ImmutableList<Request> allRequests) {
         for (final Request currentRequest : allRequests) {
             if (currentRequest.getResponseType().equals(responseTypeName))
+                LOG.info("****isTopLevel: " + responseTypeName);
                 return true;
         }
         return false;

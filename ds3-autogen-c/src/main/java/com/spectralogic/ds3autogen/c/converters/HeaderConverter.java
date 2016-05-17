@@ -23,16 +23,23 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.Header;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Struct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
 public class HeaderConverter {
+    private static final Logger LOG = LoggerFactory.getLogger(HeaderConverter.class);
+
     public static Header toHeader(
             final ImmutableList<Enum> allEnums,
             final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        for (final Struct currentStruct : allOrderedStructs) {
+            LOG.info(currentStruct.toString());
+        }
         return new Header( allEnums,
                 allOrderedStructs,
                 allRequests);

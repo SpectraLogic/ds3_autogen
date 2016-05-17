@@ -157,13 +157,16 @@ public final class StructHelper {
         if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeName()) {
                 case "uint64_t":
+                case "size_t":
                 case "double":
+                case "float":
                 case "long":
                     return generateStructMemberParserLine(structMember, "xml_get_uint64(doc, child_node);");
                 case "int":
                     return generateStructMemberParserLine(structMember, "xml_get_uint16(doc, child_node);");
                 case "ds3_bool":
-                    return generateStructMemberParserLine(structMember, "xml_get_bool(doc, child_node);");
+                    // TODO c_sdk inconsistent: xml_get_bool is the only func to log a parse error
+                    return generateStructMemberParserLine(structMember, "xml_get_bool(client->log, doc, child_node);");
                 default: // Enum
                     return generateStructMemberEnumParserBlock(structMember);
             }
@@ -234,5 +237,4 @@ public final class StructHelper {
 
         return outputBuilder.toString();
     }
-
 }

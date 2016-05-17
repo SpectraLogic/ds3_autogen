@@ -11,9 +11,7 @@ static ds3_error* _parse_${structEntry.getName()}(const ds3_client* client, cons
 </#if>
     xmlNodePtr child_node;
     ${structEntry.getName()}* response;
-    <#if structEntry.isTopLevel() || structHelper.hasComplexMembers(structEntry)>
-    ds3_error* error;
-    </#if>
+    ds3_error* error = NULL;
 
     <#if structEntry.isTopLevel()>
     error = _get_request_xml_nodes(client, request, &doc, &root, "${structEntry.getNameToMarshall()}");
