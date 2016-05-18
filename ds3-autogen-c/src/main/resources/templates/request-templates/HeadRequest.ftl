@@ -12,7 +12,7 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
     error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);
     if (error == NULL) {
         metadata = _init_metadata(return_headers);
-        *_metadata = metadata;
+        *_response = metadata;
         ds3_string_multimap_free(return_headers);
     }
 

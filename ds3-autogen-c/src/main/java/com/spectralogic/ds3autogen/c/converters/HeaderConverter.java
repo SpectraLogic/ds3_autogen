@@ -37,11 +37,8 @@ public class HeaderConverter {
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        for (final Struct currentStruct : allOrderedStructs) {
-            LOG.info(currentStruct.toString());
-        }
         return new Header( allEnums,
-                allOrderedStructs,
+                StructHelper.filterTopLevelStructs(allOrderedStructs),
                 allRequests);
     }
 }

@@ -126,14 +126,14 @@ public class CCodeGenerator implements CodeGenerator {
 
                 allStructsBuilder.add(structEntry);
 
-                /* WIP
                 // For Source files, also add a non-top level struct entry to generate the alternate parser for
-                // and embedded type.
+                // an embedded type.
                 if (structEntry.isTopLevel()) {
-                    final Struct structEntryAlt = new Struct(structEntry.getName(), structEntry.getNameToMarshall(), structEntry.getStructMembers(), false);
-                    allStructsBuilder.add(structEntryAlt);
+                    final Struct embeddedStructEntry = new Struct(structEntry.getName(),
+                            structEntry.getNameToMarshall(),
+                            structEntry.getStructMembers(), false);
+                    allStructsBuilder.add(embeddedStructEntry);
                 }
-                */
             }
         }
         return allStructsBuilder.build();

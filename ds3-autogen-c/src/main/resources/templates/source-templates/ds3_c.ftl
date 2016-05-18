@@ -24,22 +24,28 @@
     <#include "TypedefEnumMatcher.ftl">
 </#list>
 
-<#-- ********************************************* -->
+//************ ARRAY STRUCT PARSERS **************
 <#-- Generate all "ResponseParsers" that are used by arrayParsers -->
 <#list getArrayStructs() as structEntry>
     <#include "ResponseParser.ftl">
 </#list>
 
-<#-- ********************************************* -->
+//************ ARRAY TYPE PARSERS **************
 <#-- Generate all "ArrayTypeParsers"               -->
 <#list getArrayTypes() as arrayType>
 ${cTypeHelper.generateArrayMemberParser(arrayType)}
 </#list>
 
-<#-- ********************************************* -->
-<#-- Generate remaining "ResponseParsers"          -->
-<#list getStructs() as structEntry>
+//************ EMBEDDED STRUCT PARSERS **************
+<#-- Generate embedded struct "ResponseParsers"    -->
+<#list getEmbeddedStructs() as structEntry>
     <#include "ResponseParser.ftl">
+</#list>
+
+//************ TOP LEVEL STRUCT PARSERS **************
+<#-- Generate top level struct "ResponseParsers"   -->
+<#list getTopLevelStructs() as structEntry>
+    <#include "ResponseParserTopLevel.ftl">
 </#list>
 
 <#-- ********************************************* -->
@@ -62,6 +68,7 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 
 <#-- *********************************************** -->
 <#-- Generate all "StructFreeFunctions" from Structs -->
-<#list getStructs() as structEntry>
+<#list getEmbeddedStructs() as structEntry>
     <#include "FreeStruct.ftl">
 </#list>
+

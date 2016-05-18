@@ -102,11 +102,6 @@ public final class RequestHelper {
                 .collect(GuavaCollectors.immutableList()));
         final ImmutableList<String> allParams = builder.build();
 
-        LOG.info("allParams:");
-        for (final String currentParam : allParams) {
-            LOG.info("  " + currentParam.toString());
-        }
-
         return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
     }
 

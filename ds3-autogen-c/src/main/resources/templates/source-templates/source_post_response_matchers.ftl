@@ -45,39 +45,12 @@ static xmlDocPtr _generate_xml_objects_list(const ds3_bulk_object_list* obj_list
 }
 
 static object_list_type _bulk_request_type(const struct _ds3_request* request) {
-
-    char* value = (char *) g_hash_table_lookup(request->query_params, "operation");static ds3_error* _common_job(const ds3_client* client, const ds3_request* request, ds3_bulk_response** response) {
-    ds3_error* error;
-    GByteArray* xml_blob = g_byte_array_new();
-    ds3_bulk_response* bulk_response;
-    xmlDocPtr doc;
-
-    error = net_process_request(client, request, xml_blob, ds3_load_buffer, NULL, NULL, NULL);
-
-    if (error != NULL) {
-        g_byte_array_free(xml_blob, TRUE);
-        return error;
-    }
-
-    // Start processing the data that was received back.
-    doc = xmlParseMemory((const char*) xml_blob->data, xml_blob->len);
-    if (doc == NULL) {
-        g_byte_array_free(xml_blob, TRUE);
-        return ds3_create_error(DS3_ERROR_REQUEST_FAILED, "Unexpected empty response body.");
-    }
-
-    _parse_master_object_list(client->log, doc, &bulk_response);
-
-    xmlFreeDoc(doc);
-    g_byte_array_free(xml_blob, TRUE);
-
-    *response = bulk_response;
-    return NULL;
-}
-
+    char* value = (char *) g_hash_table_lookup(request->query_params, "operation");
 
     if (strcmp(value, "start_bulk_get") == 0) {
         return BULK_GET;
+    } else if (strcmp(value, "get_physical_placement") == 0) {
+        return GET_PHYSICAL_PLACEMENT;
     }
     return BULK_PUT;
 }
@@ -178,8 +151,8 @@ void ds3_free_error(ds3_error* error) {
     if (error->error != NULL) {
         ds3_error_response* error_response = error->error;
 
-        ds3_str_free(error_response->status_message);
-        ds3_str_free(error_response->error_body);
+        ds3_str_free(error_response->message);
+        ds3_str_free(error_response->resource);
 
         g_free(error_response);
     }

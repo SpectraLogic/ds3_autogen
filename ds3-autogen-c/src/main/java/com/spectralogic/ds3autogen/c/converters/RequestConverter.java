@@ -40,9 +40,11 @@ public final class RequestConverter {
     private static final ImmutableMap<String, Parameter> hasRequestPayload = buildRequestPayloadMap();
 
     public static Request toRequest(final Ds3Request ds3Request) {
+        final String requestName = RequestHelper.getNameRootUnderscores(ds3Request.getName());
+        LOG.debug("Request: " + requestName);
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
         return new Request(
-                RequestHelper.getNameRootUnderscores(ds3Request.getName()),
+                requestName,
                 ds3Request.getClassification(),
                 ds3Request.getHttpVerb(),
                 getRequestPath(ds3Request),
@@ -106,7 +108,6 @@ public final class RequestConverter {
     }
     private static ImmutableList<Parameter> getRequiredQueryParams(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting required query params...");
 
         if (hasContent(ds3Request.getRequiredQueryParams())) {
             for (final Ds3Param ds3Param : ds3Request.getRequiredQueryParams()) {
@@ -144,14 +145,13 @@ public final class RequestConverter {
 
     private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Parameter> optionalArgsBuilder = ImmutableList.builder();
-        LOG.debug("Getting optional query parameters...");
         if (isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-            LOG.debug("\tds3Param " + ds3Param.getName() + ":" + paramType + " is optional. " + ds3Param.getType());
+            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, true);
+            LOG.debug("\tOptional QueryParam: " + optionalQueryParam.toString());
             optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param, false));
         }
 

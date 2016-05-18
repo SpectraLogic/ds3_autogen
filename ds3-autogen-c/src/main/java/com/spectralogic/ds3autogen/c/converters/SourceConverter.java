@@ -36,15 +36,41 @@ public final class SourceConverter {
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        LOG.info("**** allOrderedStructs:" + allOrderedStructs.size() + " ****");
+        for (final Struct currentStruct : allOrderedStructs) {
+            LOG.info(currentStruct.toString());
+        }
+
         final ImmutableSet<C_Type> arrayTypes = getArrayStructMemberTypes(allOrderedStructs);
-        final ImmutableList<Struct> arrayStructs = getArrayStructs(allOrderedStructs, arrayTypes);
-        final ImmutableList<Struct> filteredOrderedStructs = filterArrayStructs(allOrderedStructs, arrayTypes);
+        LOG.info("**** arrayTypes:" + arrayTypes.size() + " ****");
+        for (final C_Type currentType : arrayTypes) {
+            LOG.info(currentType.toString());
+        }
+        final ImmutableList<Struct> arrayStructs = StructHelper.filterTopLevelStructs(
+                getArrayStructs(allOrderedStructs, arrayTypes));
+        LOG.info("**** arrayStructs:" + arrayStructs.size() + " ****");
+        for (final Struct currentStruct : arrayStructs) {
+            LOG.info(currentStruct.toString());
+        }
+        final ImmutableList<Struct> embeddedStructs = StructHelper.filterTopLevelStructs(
+                filterArrayStructs(allOrderedStructs, arrayTypes));
+        LOG.info("**** embeddedStructs:" + embeddedStructs.size() + " ****");
+        for (final Struct currentStruct : embeddedStructs) {
+            LOG.info(currentStruct.toString());
+        }
+        final ImmutableList<Struct> topLevelStructs = StructHelper.getTopLevelStructs(
+                filterArrayStructs(allOrderedStructs, arrayTypes));
+        LOG.info("**** topLevelStructs:" + topLevelStructs.size() + " ****");
+        for (final Struct currentStruct : topLevelStructs) {
+            LOG.info(currentStruct.toString());
+        }
         final ImmutableSet<Enum> queryParamEnums = filterQueryParamEnums(allEnums, allRequests);
         return new Source( allEnums,
                 queryParamEnums,
                 arrayTypes,
                 arrayStructs,
-                filteredOrderedStructs,
+                embeddedStructs,
+                topLevelStructs,
                 allRequests);
     }
 
@@ -53,6 +79,7 @@ public final class SourceConverter {
      */
     public static ImmutableSet<C_Type> getArrayStructMemberTypes(final ImmutableList<Struct> allOrderedStructs) {
         return allOrderedStructs.stream()
+                .filter(Struct::isTopLevel)
                 .flatMap(currentStruct -> currentStruct.getStructMembers().stream())
                 .filter(currentStructMember -> currentStructMember.getType().isArray())
                 .map(StructMember::getType)
@@ -113,4 +140,5 @@ public final class SourceConverter {
         }
         return queryEnumsBuilder.build();
     }
+
 }

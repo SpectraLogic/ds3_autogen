@@ -100,7 +100,7 @@ public final class C_TypeHelper {
         outputBuilder.append(indent(2)).append("}\n");
         outputBuilder.append(indent(1)).append("}\n");
         outputBuilder.append("\n");
-        outputBuilder.append(indent(1)).append("*_response = response;\n");
+        outputBuilder.append(indent(1)).append("*_response = ").append(cType.getTypeName()).append("_array;\n");
         outputBuilder.append("\n");
         outputBuilder.append(indent(1)).append("return error;\n");
         outputBuilder.append("}\n");

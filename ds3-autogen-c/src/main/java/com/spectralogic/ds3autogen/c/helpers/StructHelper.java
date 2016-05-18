@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,10 @@ public final class StructHelper {
         return getDs3TypeName(name) + "_response";
     }
 
-    public static String getParserFunctionName(final String name) {
+    public static String getParserFunctionName(final String name, final boolean isTopLevel) {
+        if (isTopLevel) {
+            return "_parse_top_level_" + getResponseTypeName(name);
+        }
         return "_parse_" + getResponseTypeName(name);
     }
 
@@ -153,7 +157,9 @@ public final class StructHelper {
              + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
     }
 
-    public static String getParseStructMemberBlock(final String structName, final StructMember structMember) throws ParseException {
+    public static String getParseStructMemberBlock(final String structName,
+                                                   final StructMember structMember,
+                                                   final boolean isTopLevel) throws ParseException {
         if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeName()) {
                 case "uint64_t":
@@ -176,10 +182,16 @@ public final class StructHelper {
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         }
 
-        return indent(3) + "error = " + getParserFunctionName(structMember.getName()) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
+        if (isTopLevel) {
+            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), isTopLevel) + "(client, request, response, &response->" + structMember.getName() + ");\n";
+        } else {
+            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), isTopLevel) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
+        }
     }
 
-    public static String generateResponseParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
+    public static String generateResponseParser(final String structName,
+                                                final ImmutableList<StructMember> structMembers,
+                                                final boolean isTopLevel) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
@@ -191,7 +203,7 @@ public final class StructHelper {
 
             final StructMember currentStructMember = structMembers.get(structMemberIndex);
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
-            outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember));
+            outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember, isTopLevel));
         }
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
@@ -236,5 +248,23 @@ public final class StructHelper {
         }
 
         return outputBuilder.toString();
+    }
+
+    /**
+     * Get all structs for which topLevel is true
+     */
+    public static ImmutableList<Struct> getTopLevelStructs(final ImmutableList<Struct> allOrderedStructs) {
+        return allOrderedStructs.stream()
+                .filter(Struct::isTopLevel)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Filter out any structs where topLevel is false
+     */
+    public static ImmutableList<Struct> filterTopLevelStructs(final ImmutableList<Struct> allOrderedStructs) {
+        return allOrderedStructs.stream()
+                .filter(s -> !s.isTopLevel())
+                .collect(GuavaCollectors.immutableList());
     }
 }
