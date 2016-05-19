@@ -48,7 +48,6 @@ public final class JavaCodeGeneratorTestHelper {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.ConnectionDetails", clientCode));
 
         assertTrue(hasImport("java.io.IOException", clientCode));
-        assertTrue(hasImport("java.security.SignatureException", clientCode));
     }
 
     /**
