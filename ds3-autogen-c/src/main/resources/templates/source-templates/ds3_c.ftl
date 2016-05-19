@@ -24,9 +24,15 @@
     <#include "TypedefEnumMatcher.ftl">
 </#list>
 
+//************ EMBEDDED STRUCT PARSERS **************
+<#-- Generate embedded struct "ResponseParsers"    -->
+<#list getEmbeddedStructs() as structEntry>
+    <#include "ResponseParser.ftl">
+</#list>
+
 //************ ARRAY STRUCT PARSERS **************
 <#-- Generate all "ResponseParsers" that are used by arrayParsers -->
-<#list getArrayStructs() as structEntry>
+<#list getEmbeddedArrayStructs() as structEntry>
     <#include "ResponseParser.ftl">
 </#list>
 
@@ -36,11 +42,6 @@
 ${cTypeHelper.generateArrayMemberParser(arrayType)}
 </#list>
 
-//************ EMBEDDED STRUCT PARSERS **************
-<#-- Generate embedded struct "ResponseParsers"    -->
-<#list getEmbeddedStructs() as structEntry>
-    <#include "ResponseParser.ftl">
-</#list>
 
 //************ TOP LEVEL STRUCT PARSERS **************
 <#-- Generate top level struct "ResponseParsers"   -->

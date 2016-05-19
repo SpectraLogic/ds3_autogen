@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
@@ -43,6 +44,15 @@ public final class RequestHelper {
 
     public static String getNameRootUnderscores(final String name) {
         return Helper.camelToUnderscore(getNameRoot(name));
+    }
+
+    /**
+     * Find all response types of all requests
+     */
+    public static ImmutableSet<String> getResponseTypes(final ImmutableList<Request> allRequests) {
+        return allRequests.stream()
+                .map(Request::getResponseType)
+                .collect(GuavaCollectors.immutableSet());
     }
 
     public static String getAmazonS3InitParams(final boolean isBucketRequired, final boolean isObjectRequired) {

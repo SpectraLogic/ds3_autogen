@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public final class EnumHelper {
     }
 
     public static ImmutableSet<String> getEnumNamesSet(final ImmutableList<Enum> allEnums) {
-        return ImmutableSet.copyOf(allEnums.stream().map(Enum::getName).collect(Collectors.toSet()));
+        return allEnums.stream().map(Enum::getName).collect(GuavaCollectors.immutableSet());
     }
 
     public static ImmutableList<String> convertDs3EnumConstants(final Ds3Type ds3Type) {

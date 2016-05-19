@@ -24,26 +24,26 @@ import com.google.common.collect.ImmutableSet;
 public class Source {
     private final ImmutableList<Enum> enums;
     private final ImmutableSet<Enum> queryParamEnums;
-    private final ImmutableSet<C_Type> arrayTypes;
-    private final ImmutableList<Struct> arrayStructs;
     private final ImmutableList<Struct> embeddedStructs;
+    private final ImmutableSet<C_Type> arrayTypes;
+    private final ImmutableList<Struct> embeddedArrayStructs;
     private final ImmutableList<Struct> topLevelStructs;
     private final ImmutableList<Request> requests;
 
     public Source(
             final ImmutableList<Enum> enums,
             final ImmutableSet<Enum> queryParamEnums,
-            final ImmutableSet<C_Type> arrayTypes,
-            final ImmutableList<Struct> arrayStructs,
-            final ImmutableList<Struct> embeddedStructs,
             final ImmutableList<Struct> topLevelStructs,
+            final ImmutableList<Struct> embeddedStructs,
+            final ImmutableSet<C_Type> arrayTypes,
+            final ImmutableList<Struct> embeddedArrayStructs,
             final ImmutableList<Request> requests) {
         this.enums = enums;
         this.queryParamEnums = queryParamEnums;
-        this.arrayTypes = arrayTypes;
-        this.arrayStructs = arrayStructs;
-        this.embeddedStructs = embeddedStructs;
         this.topLevelStructs = topLevelStructs;
+        this.embeddedStructs = embeddedStructs;
+        this.arrayTypes = arrayTypes;
+        this.embeddedArrayStructs = embeddedArrayStructs;
         this.requests = requests;
     }
 
@@ -59,8 +59,8 @@ public class Source {
         return arrayTypes;
     }
 
-    public ImmutableList<Struct> getArrayStructs() {
-        return arrayStructs;
+    public ImmutableList<Struct> getEmbeddedArrayStructs() {
+        return embeddedArrayStructs;
     }
 
     public ImmutableList<Struct> getEmbeddedStructs() {

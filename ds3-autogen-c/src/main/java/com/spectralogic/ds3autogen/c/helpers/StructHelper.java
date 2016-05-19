@@ -74,6 +74,8 @@ public final class StructHelper {
                 if (structMember.getType().getTypeName().equals("ds3_str")) continue; // ds3_str is not an auto-generated API typeName.
 
                 return true;
+            } else if (structMember.getType().isArray()) {
+                return true;
             }
         }
         return false;
@@ -137,6 +139,20 @@ public final class StructHelper {
         return orderedStructsBuilder.build();
     }
 
+
+   public static ImmutableSet<String> getEmbeddedArrayTypes(final ImmutableList<Struct> allStructs) {
+       final ImmutableSet.Builder<String> embeddedArrayTypesBuilder = ImmutableSet.builder();
+       for (final Struct currentStruct :  allStructs) {
+           currentStruct.getStructMembers().stream()
+                   .filter(currentStructMember -> currentStructMember.getType().isArray())
+                   .forEach(currentStructMember -> {
+               embeddedArrayTypesBuilder.add(currentStructMember.getType().getTypeName());
+           });
+       }
+
+       return embeddedArrayTypesBuilder.build();
+   }
+
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
@@ -157,6 +173,19 @@ public final class StructHelper {
              + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
     }
 
+    public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {
+        return indent(3) + "xmlNodePtr loop_node;\n"
+             + indent(3) + "int num_nodes = 0;\n"
+             + indent(3) + "for (loop_node = child_node->xmlChilrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {"
+             + indent(4) + "xmlChar* text = xmlNodeListGetString(doc, loop_node, 1);\n"
+             + indent(4) + "if (text == NULL) {\n"
+             + indent(5) + "continue;\n"
+             + indent(4) + "}\n"
+             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(3) + "}\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+    }
+
     public static String getParseStructMemberBlock(final String structName,
                                                    final StructMember structMember,
                                                    final boolean isTopLevel) throws ParseException {
@@ -174,6 +203,9 @@ public final class StructHelper {
                     // TODO c_sdk inconsistent: xml_get_bool is the only func to log a parse error
                     return generateStructMemberParserLine(structMember, "xml_get_bool(client->log, doc, child_node);");
                 default: // Enum
+                    if (structMember.getType().isArray()) {
+                        return generateStructMemberEnumArrayParserBlock(structMember);
+                    }
                     return generateStructMemberEnumParserBlock(structMember);
             }
         } else if (structMember.getType().isArray()) {
@@ -183,9 +215,9 @@ public final class StructHelper {
         }
 
         if (isTopLevel) {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), isTopLevel) + "(client, request, response, &response->" + structMember.getName() + ");\n";
+            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), true) + "(client, request, response, &response->" + structMember.getName() + ");\n";
         } else {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), isTopLevel) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
+            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), false) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
         }
     }
 
@@ -195,13 +227,15 @@ public final class StructHelper {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
+            final StructMember currentStructMember = structMembers.get(structMemberIndex);
+            if (currentStructMember.getName().startsWith("num_")) continue; // skip - these are used for array iteration and are not a part of the response
+
             outputBuilder.append(indent(2));
 
             if (structMemberIndex > 0) {
                 outputBuilder.append("} else ");
             }
 
-            final StructMember currentStructMember = structMembers.get(structMemberIndex);
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
             outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember, isTopLevel));
         }

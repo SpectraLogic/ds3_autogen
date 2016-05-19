@@ -67,7 +67,12 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Request> allRequests = getAllRequests(spec);
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, allRequests);
+            final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec);
+
+            final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+
 
             generateHeader(allEnums, allStructs, allRequests);
             generateSource(allEnums, allStructs, allRequests);
@@ -116,27 +121,31 @@ public class CCodeGenerator implements CodeGenerator {
 
     public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec,
                                                       final ImmutableSet<String> enumNames,
-                                                      final ImmutableList<Request> allRequests) throws ParseException {
+                                                      final ImmutableSet<String> responseTypes,
+                                                      final ImmutableSet<String> arrayMemberTypes) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry, enumNames, allRequests);
-
+                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes);
                 allStructsBuilder.add(structEntry);
-
-                // For Source files, also add a non-top level struct entry to generate the alternate parser for
-                // an embedded type.
-                if (structEntry.isTopLevel()) {
-                    final Struct embeddedStructEntry = new Struct(structEntry.getName(),
-                            structEntry.getNameToMarshall(),
-                            structEntry.getStructMembers(), false);
-                    allStructsBuilder.add(embeddedStructEntry);
-                }
             }
         }
         return allStructsBuilder.build();
+    }
+
+    /**
+     * Find all types that are used as an array member
+     */
+    public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec) {
+        final ImmutableSet.Builder<String> allArrayMemberTypesBuilder = ImmutableSet.builder();
+            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
+                ds3TypeEntry.getElements().stream()
+                        .filter(element -> element.getType().equalsIgnoreCase("array"))
+                        .forEach(element -> allArrayMemberTypesBuilder.add(StructHelper.getDs3TypeName(element.getComponentType())));
+            }
+        return allArrayMemberTypesBuilder.build();
     }
 
     public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {

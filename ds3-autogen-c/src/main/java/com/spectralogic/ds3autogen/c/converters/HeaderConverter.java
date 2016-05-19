@@ -38,7 +38,7 @@ public class HeaderConverter {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         return new Header( allEnums,
-                StructHelper.filterTopLevelStructs(allOrderedStructs),
+                allOrderedStructs,
                 allRequests);
     }
 }
