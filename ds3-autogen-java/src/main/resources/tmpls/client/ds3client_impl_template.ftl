@@ -3,7 +3,6 @@
 package ${packageName};
 
 import java.io.IOException;
-import java.security.SignatureException;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
@@ -30,14 +29,14 @@ public class Ds3ClientImpl implements Ds3Client {
 
     <#list commands as cmd>
     @Override
-    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException, SignatureException {
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException {
         return new ${cmd.getResponseName()}(this.netClient.getResponse(request));
     }
     </#list>
 
     <#list customCommands as cmd>
     @Override
-    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException, SignatureException {
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException {
         ${cmd.getCustomBody()}
     }
     </#list>

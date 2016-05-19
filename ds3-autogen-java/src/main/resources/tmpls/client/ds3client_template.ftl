@@ -13,7 +13,6 @@ import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.security.SignatureException;
 
 public interface Ds3Client extends Closeable {
 
@@ -22,12 +21,12 @@ public interface Ds3Client extends Closeable {
     <#list commands as cmd>
     ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
-            throws IOException, SignatureException;
+            throws IOException;
     </#list>
     <#list customCommands as cmd>
     ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
     ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
-            throws IOException, SignatureException;
+            throws IOException;
     </#list>
 
     Ds3Client newForNode(final JobNode node);
