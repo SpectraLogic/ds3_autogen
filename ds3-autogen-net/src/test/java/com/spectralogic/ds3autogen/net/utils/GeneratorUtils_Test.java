@@ -17,57 +17,14 @@ package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GeneratorUtils_Test {
-
-    @Test
-    public void toArgument_Test() {
-        final Ds3Param simpleParam = new Ds3Param("ArgName", "SimpleType", false);
-        final Arguments simpleArg = toArgument(simpleParam);
-        assertThat(simpleArg.getName(), is("ArgName"));
-        assertThat(simpleArg.getType(), is("SimpleType"));
-
-        final Ds3Param pathParam = new Ds3Param("ArgName", "com.spectralogic.test.TypeWithPath", false);
-        final Arguments pathArg = toArgument(pathParam);
-        assertThat(pathArg.getName(), is("ArgName"));
-        assertThat(pathArg.getType(), is("TypeWithPath"));
-    }
-
-    @Test
-    public void getArgsFromParamList_NullList_Test() {
-        final ImmutableList<Arguments> result = getArgsFromParamList(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getArgsFromParamList_EmptyList_Test() {
-        final ImmutableList<Arguments> result = getArgsFromParamList(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getArgsFromParamList_FullList_Test() {
-        final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType", false),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false),
-                new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false));
-
-        final ImmutableList<Arguments> result = getArgsFromParamList(params);
-        assertThat(result.size(), is(2));
-        assertThat(result.get(0).getName(), is("SimpleArg"));
-        assertThat(result.get(0).getType(), is("SimpleType"));
-        assertThat(result.get(1).getName(), is("ArgWithPath"));
-        assertThat(result.get(1).getType(), is("TypeWithPath"));
-    }
 
     @Test
     public void getRequiredArgs_Test() {

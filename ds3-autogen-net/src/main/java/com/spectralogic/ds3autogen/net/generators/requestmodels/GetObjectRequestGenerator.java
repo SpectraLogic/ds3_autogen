@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
+import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 
 public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
@@ -41,7 +42,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.addAll(GeneratorUtils.getArgsFromParamList(ds3Request.getOptionalQueryParams()));
+        builder.addAll(RequestConverterUtil.getArgsFromParamList(ds3Request.getOptionalQueryParams()));
         return builder.build();
     }
 

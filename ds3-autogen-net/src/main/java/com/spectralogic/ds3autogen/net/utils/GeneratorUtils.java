@@ -16,17 +16,17 @@
 package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Classification;
+import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
-import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
@@ -132,30 +132,6 @@ public final class GeneratorUtils {
             requiredArgs.add(new Arguments("Guid", "NotificationId"));
         }
         return requiredArgs.build();
-    }
-
-    /**
-     * Converts a list of Ds3Params into a list of Arguments, excluding the Operations param
-     */
-    public static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
-        if(isEmpty(paramList)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : paramList) {
-            if (!ds3Param.getName().equals("Operation")) {
-                argsBuilder.add(toArgument(ds3Param));
-            }
-        }
-        return argsBuilder.build();
-    }
-
-    /**
-     * Converts a Ds3Param into an argument
-     */
-    public static Arguments toArgument(final Ds3Param ds3Param) {
-        final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-        return new Arguments(paramType, ds3Param.getName());
     }
 
     /**
