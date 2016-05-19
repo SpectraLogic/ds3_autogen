@@ -15,10 +15,13 @@
 
 package com.spectralogic.ds3autogen.python;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
+import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.python.utils.TestPythonGeneratedCode;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
 import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
@@ -31,8 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasOperation;
+import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasRequestHandler;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class PythonFunctionalTests {
@@ -54,7 +58,12 @@ public class PythonFunctionalTests {
 
         CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
 
-        //TODO add asserts
+        final ImmutableList<String> reqArgs = ImmutableList.of("bucket_name");
+        final ImmutableList<String> optArgs = ImmutableList.of("delimiter", "marker", "max_keys", "prefix");
+        final ImmutableList<String> voidArgs = ImmutableList.of("test_void_param");
+
+        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, ds3Code);
+        hasOperation(Operation.START_BULK_PUT, ds3Code);
     }
 
     @Test
@@ -68,6 +77,9 @@ public class PythonFunctionalTests {
 
         CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
 
-        //TODO add asserts
+        final ImmutableList<String> reqArgs = ImmutableList.of("notification_id");
+
+        hasRequestHandler(requestName, HttpVerb.DELETE, reqArgs, null, null, ds3Code);
+        assertTrue(ds3Code.contains("self.path = '/_rest_/job_created_notification_registration/' + notification_id"));
     }
 }
