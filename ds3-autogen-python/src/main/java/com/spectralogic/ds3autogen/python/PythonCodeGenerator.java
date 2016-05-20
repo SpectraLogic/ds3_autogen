@@ -30,6 +30,7 @@ import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 
 public class PythonCodeGenerator implements CodeGenerator {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(PythonCodeGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PythonCodeGenerator.class);
     private static final Path BASE_PROJECT_PATH = Paths.get("ds3");
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
