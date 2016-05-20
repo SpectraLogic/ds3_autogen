@@ -143,7 +143,7 @@ public class CCodeGenerator implements CodeGenerator {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 ds3TypeEntry.getElements().stream()
                         .filter(element -> element.getType().equalsIgnoreCase("array"))
-                        .forEach(element -> allArrayMemberTypesBuilder.add(StructHelper.getDs3TypeName(element.getComponentType())));
+                        .forEach(element -> allArrayMemberTypesBuilder.add(StructHelper.getResponseTypeName(element.getComponentType())));
             }
         return allArrayMemberTypesBuilder.build();
     }

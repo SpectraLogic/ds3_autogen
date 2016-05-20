@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,11 +57,11 @@ public final class StructHelper {
         return getDs3TypeName(name) + "_response";
     }
 
-    public static String getParserFunctionName(final String name, final boolean isTopLevel) {
+    public static String getParserFunctionName(final String type, final boolean isTopLevel) {
         if (isTopLevel) {
-            return "_parse_top_level_" + getResponseTypeName(name);
+            return "_parse_top_level_" + type;
         }
-        return "_parse_" + getResponseTypeName(name);
+        return "_parse_" + type;
     }
 
     /**
@@ -139,28 +138,23 @@ public final class StructHelper {
         return orderedStructsBuilder.build();
     }
 
-
-   public static ImmutableSet<String> getEmbeddedArrayTypes(final ImmutableList<Struct> allStructs) {
-       final ImmutableSet.Builder<String> embeddedArrayTypesBuilder = ImmutableSet.builder();
-       for (final Struct currentStruct :  allStructs) {
-           currentStruct.getStructMembers().stream()
-                   .filter(currentStructMember -> currentStructMember.getType().isArray())
-                   .forEach(currentStructMember -> {
-               embeddedArrayTypesBuilder.add(currentStructMember.getType().getTypeName());
-           });
-       }
-
-       return embeddedArrayTypesBuilder.build();
-   }
-
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
-    public static String generateStructMemberArrayParserBlock(final String structResponseTypeName, final StructMember structMember) throws ParseException {
+    public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
+        return indent(3) + "xmlNodePtr loop_node;\n"
+             + indent(3) + "int num_nodes = 0;\n"
+             + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
+             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = xml_get_string(doc, loop_node);\n"
+             + indent(3) + "}\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+    }
+
+    public static String generateStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
         return indent(3) + "GPtrArray* " + structMember.getName() + "_array;\n"
-             + indent(3) + "error = _parse_" + structResponseTypeName + "_array(client, doc, child_node, &" + structMember.getName() + "_array);\n"
-             + indent(3) + "response->" + structMember.getName() + " = (" + structResponseTypeName + "**)" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "error = _parse_" + structMember.getType().getTypeName() + "_array(client, doc, child_node, &" + structMember.getName() + "_array);\n"
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() + "_array->pdata;\n"
              + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
@@ -176,7 +170,7 @@ public final class StructHelper {
     public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {
         return indent(3) + "xmlNodePtr loop_node;\n"
              + indent(3) + "int num_nodes = 0;\n"
-             + indent(3) + "for (loop_node = child_node->xmlChilrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {"
+             + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
              + indent(4) + "xmlChar* text = xmlNodeListGetString(doc, loop_node, 1);\n"
              + indent(4) + "if (text == NULL) {\n"
              + indent(5) + "continue;\n"
@@ -186,8 +180,7 @@ public final class StructHelper {
              + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
     }
 
-    public static String getParseStructMemberBlock(final String structName,
-                                                   final StructMember structMember,
+    public static String getParseStructMemberBlock(final StructMember structMember,
                                                    final boolean isTopLevel) throws ParseException {
         if (structMember.getType().isPrimitive()) {
             switch (structMember.getType().getTypeName()) {
@@ -208,21 +201,23 @@ public final class StructHelper {
                     }
                     return generateStructMemberEnumParserBlock(structMember);
             }
-        } else if (structMember.getType().isArray()) {
-            return generateStructMemberArrayParserBlock(structName, structMember);
         } else if (structMember.getType().getTypeName().equals("ds3_str")) { // special case
+            if (structMember.getType().isArray()) {
+                return generateStructMemberDs3StrArrayBlock(structMember);
+            }
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
+        } else if (structMember.getType().isArray()) {
+            return generateStructMemberArrayParserBlock(structMember);
         }
 
         if (isTopLevel) {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), true) + "(client, request, response, &response->" + structMember.getName() + ");\n";
+            return indent(3) + "error = " + getParserFunctionName(structMember.getType().getTypeName(), true) + "(client, request, response, &response->" + structMember.getName() + ");\n";
         } else {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getName(), false) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
+            return indent(3) + "error = " + getParserFunctionName(structMember.getType().getTypeName(), false) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
         }
     }
 
-    public static String generateResponseParser(final String structName,
-                                                final ImmutableList<StructMember> structMembers,
+    public static String generateResponseParser(final ImmutableList<StructMember> structMembers,
                                                 final boolean isTopLevel) throws ParseException {
         final StringBuilder outputBuilder = new StringBuilder();
 
@@ -237,7 +232,7 @@ public final class StructHelper {
             }
 
             outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
-            outputBuilder.append(getParseStructMemberBlock(structName, currentStructMember, isTopLevel));
+            outputBuilder.append(getParseStructMemberBlock(currentStructMember, isTopLevel));
         }
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
@@ -282,23 +277,5 @@ public final class StructHelper {
         }
 
         return outputBuilder.toString();
-    }
-
-    /**
-     * Get all structs for which topLevel is true
-     */
-    public static ImmutableList<Struct> getTopLevelStructs(final ImmutableList<Struct> allOrderedStructs) {
-        return allOrderedStructs.stream()
-                .filter(Struct::isTopLevel)
-                .collect(GuavaCollectors.immutableList());
-    }
-
-    /**
-     * Filter out any structs where topLevel is false
-     */
-    public static ImmutableList<Struct> filterTopLevelStructs(final ImmutableList<Struct> allOrderedStructs) {
-        return allOrderedStructs.stream()
-                .filter(s -> !s.isTopLevel())
-                .collect(GuavaCollectors.immutableList());
     }
 }

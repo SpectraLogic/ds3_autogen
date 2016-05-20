@@ -60,7 +60,7 @@ public class Struct {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel\n" : "\n"));
+        builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + "\n");
         for (final StructMember structMember: getStructMembers()) {
             builder.append("  " + structMember.toString() + "\n");
         }

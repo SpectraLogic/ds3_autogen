@@ -16,7 +16,7 @@ static ds3_error* _parse_top_level_${structEntry.getName()}(const ds3_client* cl
 
     response = g_new0(${structEntry.getName()}, 1);
     for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-${structHelper.generateResponseParser(structEntry.getName(), structEntry.getStructMembers(), false)}
+${structHelper.generateResponseParser(structEntry.getStructMembers(), false)}
     }
 
     xmlFreeDoc(doc);

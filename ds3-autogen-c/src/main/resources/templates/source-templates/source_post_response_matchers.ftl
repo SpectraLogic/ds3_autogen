@@ -1,10 +1,10 @@
 
 #define LENGTH_BUFF_SIZE 21
 
-static xmlDocPtr _generate_xml_objects_list(const ds3_bulk_object_list* obj_list, object_list_type list_type, ds3_chunk_ordering order) {
+static xmlDocPtr _generate_xml_objects_list(const ds3_objects_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
     char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
     xmlDocPtr doc;
-    ds3_bulk_object obj;
+    ds3_bulk_object_response obj;
     xmlNodePtr objects_node, object_node;
     int i;
     // Start creating the xml body to send to the server.
@@ -16,14 +16,14 @@ static xmlDocPtr _generate_xml_objects_list(const ds3_bulk_object_list* obj_list
     }
 
     if (list_type == BULK_GET) {
-        xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (xmlChar*) _get_chunk_order_str(order));
+        xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (xmlChar*) _get_ds3_job_chunk_client_processing_order_guarantee_str(order));
     }
 
-    for (i = 0; i < obj_list->size; i++) {
-        memset(&obj, 0, sizeof(ds3_bulk_object));
+    for (i = 0; i < obj_list->num_objects; i++) {
+        memset(&obj, 0, sizeof(ds3_bulk_object_response));
         memset(size_buff, 0, sizeof(char) * LENGTH_BUFF_SIZE);
 
-        obj = obj_list->list[i];
+        obj = obj_list->objects[i];
         g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj.length);
 
         object_node = xmlNewNode(NULL, (xmlChar*) "Object");
@@ -181,13 +181,13 @@ size_t ds3_read_from_fd(void* buffer, size_t size, size_t nmemb, void* user_data
     return read(*(int*)user_data, buffer, size * nmemb);
 }
 
-static ds3_bulk_object _ds3_bulk_object_from_file(const char* file_name, const char* base_path) {
+static ds3_bulk_object_response _ds3_bulk_object_from_file(const char* file_name, const char* base_path) {
     struct stat file_info;
     int result;
-    ds3_bulk_object obj;
+    ds3_bulk_object_response obj;
     char* file_to_stat;
     memset(&file_info, 0, sizeof(struct stat));
-    memset(&obj, 0, sizeof(ds3_bulk_object));
+    memset(&obj, 0, sizeof(ds3_bulk_object_response));
 
     if (base_path != NULL) {
         file_to_stat = g_strconcat(base_path, file_name, NULL);
@@ -200,7 +200,7 @@ static ds3_bulk_object _ds3_bulk_object_from_file(const char* file_name, const c
         fprintf(stderr, "Failed to get file info for %s\n", file_name);
     }
 
-    memset(&obj, 0, sizeof(ds3_bulk_object));
+    memset(&obj, 0, sizeof(ds3_bulk_object_response));
 
     obj.name = ds3_str_init(file_name);
 
@@ -215,78 +215,40 @@ static ds3_bulk_object _ds3_bulk_object_from_file(const char* file_name, const c
     return obj;
 }
 
-ds3_bulk_object_list* ds3_convert_file_list(const char** file_list, uint64_t num_files) {
+ds3_objects_response* ds3_convert_file_list(const char** file_list, uint64_t num_files) {
     return ds3_convert_file_list_with_basepath(file_list, num_files, NULL);
 }
 
-ds3_bulk_object_list* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path) {
+ds3_objects_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path) {
     uint64_t file_index;
-    ds3_bulk_object_list* obj_list = ds3_init_bulk_object_list(num_files);
+    ds3_objects_response* obj_list = ds3_init_bulk_object_list(num_files);
 
     for (file_index = 0; file_index < num_files; file_index++) {
-        obj_list->list[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
+        obj_list->objects[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
     }
 
     return obj_list;
 }
 
-ds3_bulk_object_list* ds3_convert_object_list(const ds3_object* objects, uint64_t num_objects) {
+ds3_objects_response* ds3_convert_object_list(const ds3_object* objects, uint64_t num_objects) {
     uint64_t object_index;
-    ds3_bulk_object_list* obj_list = ds3_init_bulk_object_list(num_objects);
+    ds3_objects_response* obj_list = ds3_init_bulk_object_list(num_objects);
 
     for (object_index = 0; object_index < num_objects; object_index++) {
-        ds3_bulk_object obj;
-        memset(&obj, 0, sizeof(ds3_bulk_object));
+        ds3_bulk_object_response obj;
+        memset(&obj, 0, sizeof(ds3_bulk_object_response));
         obj.name = ds3_str_dup(objects[object_index].name);
-        obj_list->list[object_index] = obj;
+        obj_list->objects[object_index] = obj;
     }
 
     return obj_list;
 }
 
-ds3_bulk_object_list* ds3_init_bulk_object_list(uint64_t num_files) {
-    ds3_bulk_object_list* obj_list = g_new0(ds3_bulk_object_list, 1);
-    obj_list->size = num_files;
-    obj_list->list = g_new0(ds3_bulk_object, num_files);
+ds3_objects_response* ds3_init_bulk_object_list(uint64_t num_files) {
+    ds3_objects_response* obj_list = g_new0(ds3_objects_response, 1);
+    obj_list->num_objects = num_files;
+    obj_list->objects = g_new0(ds3_bulk_object_response, num_files);
 
     return obj_list;
 }
-
-void ds3_free_bulk_object_list(ds3_bulk_object_list* object_list) {
-    uint64_t list_index, count;
-    if (object_list == NULL) {
-        return;
-    }
-
-    count = object_list->size;
-    for (list_index = 0; list_index < count; list_index++) {
-        ds3_str_free(object_list->list[list_index].name);
-    }
-
-    ds3_str_free(object_list->server_id);
-    ds3_str_free(object_list->node_id);
-    ds3_str_free(object_list->chunk_id);
-
-    g_free(object_list->list);
-    g_free(object_list);
-}
-
-void ds3_free_nodes_list(ds3_nodes_list* nodes_list) {
-    uint64_t list_index;
-    if (nodes_list == NULL || nodes_list->list == NULL) {
-        return;
-    }
-
-    for (list_index = 0; list_index < nodes_list->size; list_index++) {
-        ds3_node* current_node = nodes_list->list[list_index];
-
-        ds3_str_free(current_node->endpoint);
-        ds3_str_free(current_node->id);
-        g_free(current_node);
-    }
-
-    g_free(nodes_list->list);
-    g_free(nodes_list);
-}
-
 
