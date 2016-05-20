@@ -41,7 +41,6 @@ public final class RequestConverter {
 
     public static Request toRequest(final Ds3Request ds3Request) {
         final String requestName = RequestHelper.getNameRootUnderscores(ds3Request.getName());
-        LOG.debug("Request: " + requestName);
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
         return new Request(
                 requestName,
