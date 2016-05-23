@@ -82,7 +82,7 @@ public final class RequestHelper {
     }
 
     public static String joinStrings(final ImmutableList<String> stringsList) {
-        if (isEmpty(stringsList)) return "";
+        if (isEmpty(stringsList)) return "void";
 
         return stringsList.stream().collect(Collectors.joining(", "));
     }

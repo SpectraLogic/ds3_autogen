@@ -56,7 +56,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -84,7 +84,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -93,7 +93,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final String output = new String(bstream.toByteArray());
 
         assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** response) {"));
-        assertTrue(output.contains("    return _parse_ds3_system_information_response(client, request, response, xml_blob);"));
+        assertTrue(output.contains("    return _parse_top_level_ds3_system_information_response(client, request, response, xml_blob);"));
         assertTrue(output.contains("}"));
     }
 
@@ -105,7 +105,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -121,7 +121,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_bucket_response(client, request, response, xml_blob);"));
+        assertTrue(output.contains("    return _parse_top_level_ds3_bucket_response(client, request, response, xml_blob);"));
         assertTrue(output.contains("}"));
     }
 
@@ -133,7 +133,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -146,7 +146,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_bucket_list_response(client, request, response, xml_blob);"));
+        assertTrue(output.contains("    return _parse_top_level_ds3_bucket_list_response(client, request, response, xml_blob);"));
         assertTrue(output.contains("}"));
     }
 
