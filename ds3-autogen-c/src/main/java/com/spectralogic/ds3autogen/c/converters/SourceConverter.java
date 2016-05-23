@@ -24,13 +24,10 @@ import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
 public final class SourceConverter {
-    private static final Logger LOG = LoggerFactory.getLogger(SourceConverter.class);
 
     public static Source toSource(
             final ImmutableList<Enum> allEnums,

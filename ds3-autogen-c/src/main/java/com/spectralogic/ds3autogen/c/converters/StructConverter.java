@@ -26,13 +26,10 @@ import com.spectralogic.ds3autogen.c.models.PrimitiveType;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
 public final class StructConverter {
-    private static final Logger LOG = LoggerFactory.getLogger(StructConverter.class);
     private StructConverter() {}
 
     public static Struct toStruct(final Ds3Type ds3Type,

@@ -21,8 +21,6 @@ import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,7 +30,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class CCodeGeneratorSpectraS3InitRequests_Test {
-    final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorSpectraS3InitRequests_Test.class);
 
     @Test
     public void testGenerateInitSpectraS3DeleteBucketRequest() throws TemplateModelException, IOException {

@@ -35,8 +35,6 @@ import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,7 +46,6 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class StructHelper_Test {
-    final static Logger LOG = LoggerFactory.getLogger(StructHelper_Test.class);
 
     @Test
     public void testTypeRequiresNewParser() {

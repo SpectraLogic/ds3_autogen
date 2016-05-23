@@ -22,8 +22,6 @@ import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
@@ -31,7 +29,6 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class RequestHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
     private final static RequestHelper requestHelper = new RequestHelper();
 
     public static RequestHelper getInstance() {

@@ -20,13 +20,10 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.C_Type;
 import com.spectralogic.ds3autogen.c.models.FreeableType;
 import com.spectralogic.ds3autogen.c.models.PrimitiveType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
 public final class C_TypeHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
     private final static C_TypeHelper cTypeHelper = new C_TypeHelper();
 

@@ -16,15 +16,12 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.spectralogic.ds3autogen.c.models.Parameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.InvalidParameterException;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public class ParameterHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(ParameterHelper.class);
     private final static ParameterHelper parameterHelper = new ParameterHelper();
 
     public static ParameterHelper getInstance() {
