@@ -17,7 +17,10 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
+
+import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -187,13 +190,10 @@ public final class RequestConverterUtil {
         if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : paramList) {
-            if (!ds3Param.getName().equals("Operation") && ds3Param.getType().equals("void")) {
-                argsBuilder.add(toArgument(ds3Param));
-            }
-        }
-        return argsBuilder.build();
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation") && param.getType().equals("void"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
@@ -203,13 +203,10 @@ public final class RequestConverterUtil {
         if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : paramList) {
-            if (!ds3Param.getName().equals("Operation") && !ds3Param.getType().equals("void")) {
-                argsBuilder.add(toArgument(ds3Param));
-            }
-        }
-        return argsBuilder.build();
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation") && !param.getType().equals("void"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
@@ -219,13 +216,10 @@ public final class RequestConverterUtil {
         if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : paramList) {
-            if (!ds3Param.getName().equals("Operation")) {
-                argsBuilder.add(toArgument(ds3Param));
-            }
-        }
-        return argsBuilder.build();
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
