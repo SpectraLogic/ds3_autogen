@@ -116,6 +116,7 @@ public final class RequestConverterUtil {
             case TAPE_DRIVE:
             case TAPE_LIBRARY:
             case USER:
+            case DATA_POLICY:
                 return true;
         }
         return false;
