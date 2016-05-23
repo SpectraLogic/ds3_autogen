@@ -154,12 +154,6 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
 
-    /*
-    public static Struct toStruct(final Ds3Type ds3Type,
-                                  final ImmutableSet<String> enumNames,
-                                  final ImmutableSet<String> responseTypes,
-                                  final ImmutableSet<String> arrayMemberTypes) throws ParseException {
-    */
         final Struct structEntry = StructConverter.toStruct(
                 new Ds3Type("ListAllMyBucketsResult",
                         ImmutableList.of(
