@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
+import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.createNullableVariable;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
@@ -154,7 +155,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      */
     @Override
     public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        return GeneratorUtils.getArgsFromParamList(ds3Request.getRequiredQueryParams());
+        return RequestConverterUtil.getArgsFromParamList(ds3Request.getRequiredQueryParams());
     }
 
     /**

@@ -16,11 +16,13 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Requirement;
-import com.spectralogic.ds3autogen.api.models.Resource;
+import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
+
+import java.util.stream.Collectors;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
  * Series of static utility functions to help in converting Ds3Requests
@@ -179,5 +181,52 @@ public final class RequestConverterUtil {
             default:
                 return false;
         }
+    }
+
+    /**
+     * Converts all void Ds3Params into a list of Arguments, excluding the Operations param
+     */
+    public static ImmutableList<Arguments> getVoidArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+        if(isEmpty(paramList)) {
+            return ImmutableList.of();
+        }
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation") && param.getType().equals("void"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts all non-void Ds3Params into a list of Arguments, excluding the Operations param
+     */
+    public static ImmutableList<Arguments> getNonVoidArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+        if(isEmpty(paramList)) {
+            return ImmutableList.of();
+        }
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation") && !param.getType().equals("void"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a list of Ds3Params into a list of Arguments, excluding the Operations param
+     */
+    public static ImmutableList<Arguments> getArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+        if(isEmpty(paramList)) {
+            return ImmutableList.of();
+        }
+        return paramList.stream()
+                .filter(param -> !param.getName().equals("Operation"))
+                .map(RequestConverterUtil::toArgument)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a Ds3Param into an argument
+     */
+    public static Arguments toArgument(final Ds3Param ds3Param) {
+        final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
+        return new Arguments(paramType, ds3Param.getName());
     }
 }
