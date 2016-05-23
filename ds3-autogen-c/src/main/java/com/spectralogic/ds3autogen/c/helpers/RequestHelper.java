@@ -16,13 +16,12 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
@@ -30,7 +29,6 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 public final class RequestHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(RequestHelper.class);
     private final static RequestHelper requestHelper = new RequestHelper();
 
     public static RequestHelper getInstance() {
@@ -45,9 +43,18 @@ public final class RequestHelper {
         return Helper.camelToUnderscore(getNameRoot(name));
     }
 
+    /**
+     * Find all response types of all requests
+     */
+    public static ImmutableSet<String> getResponseTypes(final ImmutableList<Request> allRequests) {
+        return allRequests.stream()
+                .map(Request::getResponseType)
+                .collect(GuavaCollectors.immutableSet());
+    }
+
     public static String getAmazonS3InitParams(final boolean isBucketRequired, final boolean isObjectRequired) {
         if (!isBucketRequired) {
-            return "void";
+            return "";
         } else if (isObjectRequired) {
             return "const char* bucket_name, const char* object_name";
         }
@@ -58,7 +65,7 @@ public final class RequestHelper {
         if (isResourceIdRequired) {
             return "const char* resource_id";
         }
-        return "void";
+        return "";
     }
 
     public static String paramListToString(final ImmutableList<Parameter> paramList) {
@@ -72,7 +79,7 @@ public final class RequestHelper {
     }
 
     public static String joinStrings(final ImmutableList<String> stringsList) {
-        if (isEmpty(stringsList)) return "";
+        if (isEmpty(stringsList)) return "void";
 
         return stringsList.stream().collect(Collectors.joining(", "));
     }
@@ -81,9 +88,15 @@ public final class RequestHelper {
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
 
         if (request.getClassification() == Classification.amazons3) {
-            builder.add(getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired()));
+            final String amazonS3InitParams = getAmazonS3InitParams(request.isResourceRequired(), request.isResourceIdRequired());
+            if (!amazonS3InitParams.isEmpty()) {
+                builder.add(amazonS3InitParams);
+            }
         } else {
-            builder.add(getSpectraS3InitParams(request.isResourceIdRequired()));
+            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceIdRequired());
+            if (!spectraS3InitParams.isEmpty()) {
+                builder.add(spectraS3InitParams);
+            }
         }
 
         builder.addAll(request.getRequiredQueryParams().stream()

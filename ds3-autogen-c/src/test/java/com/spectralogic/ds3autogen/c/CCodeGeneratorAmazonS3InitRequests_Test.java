@@ -30,8 +30,6 @@ import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,7 +41,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CCodeGeneratorAmazonS3InitRequests_Test {
-    final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorAmazonS3InitRequests_Test.class);
 
     @Test
     public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
@@ -53,7 +50,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -76,7 +73,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final Request requestEntry = source.getRequests().get(0);
@@ -103,7 +100,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -126,7 +123,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

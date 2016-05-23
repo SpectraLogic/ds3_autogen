@@ -24,22 +24,19 @@
     <#include "TypedefEnumMatcher.ftl">
 </#list>
 
-<#-- ********************************************* -->
-<#-- Generate all "ResponseParsers" that are used by arrayParsers -->
-<#list getArrayStructs() as structEntry>
-    <#include "ResponseParser.ftl">
-</#list>
-
-<#-- ********************************************* -->
-<#-- Generate all "ArrayTypeParsers"               -->
-<#list getArrayTypes() as arrayType>
-${cTypeHelper.generateArrayMemberParser(arrayType)}
-</#list>
-
-<#-- ********************************************* -->
-<#-- Generate remaining "ResponseParsers"          -->
+//************ STRUCT PARSERS **************
 <#list getStructs() as structEntry>
     <#include "ResponseParser.ftl">
+    <#if structEntry.isArrayMember()>
+        <#include "StructArrayParser.ftl">
+    </#if>
+</#list>
+
+//************ TOP LEVEL STRUCT PARSERS **************
+<#list getStructs() as structEntry>
+    <#if structEntry.isTopLevel()>
+        <#include "ResponseParserTopLevel.ftl">
+    </#if>
 </#list>
 
 <#-- ********************************************* -->
@@ -65,3 +62,4 @@ ${cTypeHelper.generateArrayMemberParser(arrayType)}
 <#list getStructs() as structEntry>
     <#include "FreeStruct.ftl">
 </#list>
+

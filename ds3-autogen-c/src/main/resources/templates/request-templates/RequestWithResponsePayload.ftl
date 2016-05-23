@@ -15,5 +15,5 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
         return error;
     }
 
-    return _parse_${requestEntry.getResponseType()}(client, request, response, xml_blob);
+    return _parse_top_level_${requestEntry.getResponseType()}(client, request, response, xml_blob);
 }

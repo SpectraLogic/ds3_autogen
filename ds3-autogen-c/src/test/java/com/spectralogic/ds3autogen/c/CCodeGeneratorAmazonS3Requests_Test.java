@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.Request;
@@ -35,8 +36,6 @@ import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,7 +47,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CCodeGeneratorAmazonS3Requests_Test {
-    final static Logger LOG = LoggerFactory.getLogger(CCodeGeneratorAmazonS3Requests_Test.class);
 
     @Test
     public void testGenerateAmazonS3HeadBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
@@ -58,7 +56,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -79,7 +77,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("    error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);"));
         assertTrue(output.contains("    if (error == NULL) {"));
         assertTrue(output.contains("        metadata = _init_metadata(return_headers);"));
-        assertTrue(output.contains("        *_metadata = metadata;"));
+        assertTrue(output.contains("        *response = metadata;"));
         assertTrue(output.contains("        ds3_string_multimap_free(return_headers);"));
         assertTrue(output.contains("    }"));
 
@@ -96,8 +94,10 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -123,7 +123,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("    error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);"));
         assertTrue(output.contains("    if (error == NULL) {"));
         assertTrue(output.contains("        metadata = _init_metadata(return_headers);"));
-        assertTrue(output.contains("        *_metadata = metadata;"));
+        assertTrue(output.contains("        *response = metadata;"));
         assertTrue(output.contains("        ds3_string_multimap_free(return_headers);"));
         assertTrue(output.contains("    }"));
 
@@ -139,7 +139,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableList.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -167,8 +167,10 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, allRequests);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -180,7 +182,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         assertTrue(output.contains("ds3_error* get_service_request(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** response) {"));
 
-        assertTrue(output.contains("    return _parse_ds3_list_all_my_buckets_result_response(client, request, response, xml_blob);"));
+        assertTrue(output.contains("    return _parse_top_level_ds3_list_all_my_buckets_result_response(client, request, response, xml_blob);"));
 
         assertTrue(output.contains("}"));
     }
@@ -204,7 +206,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
-        assertTrue(output.contains("    return _parse_ds3_list_bucket_result_response(client, request, response, xml_blob);"));
+        assertTrue(output.contains("    return _parse_top_level_ds3_list_bucket_result_response(client, request, response, xml_blob);"));
 
         assertTrue(output.contains("}"));
     }

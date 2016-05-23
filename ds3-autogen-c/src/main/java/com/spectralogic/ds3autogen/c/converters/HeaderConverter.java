@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.c.models.Struct;
 import java.text.ParseException;
 
 public class HeaderConverter {
+
     public static Header toHeader(
             final ImmutableList<Enum> allEnums,
             final ImmutableList<Struct> allStructs,

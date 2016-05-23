@@ -5,11 +5,25 @@ static ds3_error* _internal_request_dispatcher(
         void* read_user_struct,
         size_t (*read_handler_func)(void*, size_t, size_t, void*),
         void* write_user_struct,
-        size_t (*write_handler_func)(void*, size_t, size_t, void*)) {
+        size_t (*write_handler_func)(void*, size_t, size_t, void*),
+        ds3_string_multimap** return_headers) {
     if (client == NULL || request == NULL) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "All arguments must be filled in for request processing");
     }
-    return net_process_request(client, request, read_user_struct, read_handler_func, write_user_struct, write_handler_func, NULL);
+    return net_process_request(client, request, read_user_struct, read_handler_func, write_user_struct, write_handler_func, return_headers);
+}
+
+static int num_chars_in_ds3_str(const ds3_str* str, char ch) {
+    int num_matches = 0;
+    int index;
+
+    for (index = 0; index < str->size; index++) {
+        if (str->value[index] == '/') {
+            num_matches++;
+        }
+    }
+
+    return num_matches;
 }
 
 static bool attribute_equal(const struct _xmlAttr* attribute, const char* attribute_name) {
@@ -89,23 +103,15 @@ static uint64_t xml_get_bool_from_attribute(const ds3_log* log, xmlDocPtr doc, s
     return xml_get_bool(log, doc, (xmlNodePtr) attribute);
 }
 
+
 static ds3_error* _get_request_xml_nodes(
-        const ds3_client* client,
-        const ds3_request* request,
+        GByteArray* xml_blob,
         xmlDocPtr* _doc,
         xmlNodePtr* _root,
         char* root_element_name) {
-    xmlDocPtr doc;
     xmlNodePtr root;
-    GByteArray* xml_blob = g_byte_array_new();
 
-    ds3_error* error = _internal_request_dispatcher(client, request, xml_blob, ds3_load_buffer, NULL, NULL);
-    if (error != NULL) {
-        g_byte_array_free(xml_blob, TRUE);
-        return error;
-    }
-
-    doc = xmlParseMemory((const char*) xml_blob->data, xml_blob->len);
+    xmlDocPtr doc = xmlParseMemory((const char*) xml_blob->data, xml_blob->len);
     if (doc == NULL) {
         char* message = g_strconcat("Failed to parse response document.  The actual response is: ", xml_blob->data, NULL);
         g_byte_array_free(xml_blob, TRUE);
@@ -130,3 +136,4 @@ static ds3_error* _get_request_xml_nodes(
     g_byte_array_free(xml_blob, TRUE);
     return NULL;
 }
+

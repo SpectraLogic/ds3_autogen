@@ -20,15 +20,10 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.c.models.C_Type;
 import com.spectralogic.ds3autogen.c.models.FreeableType;
 import com.spectralogic.ds3autogen.c.models.PrimitiveType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
-import static com.spectralogic.ds3autogen.utils.Helper.indent;
-
 public final class C_TypeHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(C_TypeHelper.class);
     private C_TypeHelper() {}
     private final static C_TypeHelper cTypeHelper = new C_TypeHelper();
 
@@ -80,31 +75,5 @@ public final class C_TypeHelper {
             default:
                 return createType(element.getType(), false, enumNames);
         }
-    }
-
-    public static String generateArrayMemberParser(final C_Type cType) {
-        final StringBuilder outputBuilder = new StringBuilder();
-
-        outputBuilder.append("static ds3_error* _parse_").append(cType.getTypeName()).append("_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {\n");
-        outputBuilder.append(indent(1)).append("ds3_error* error = NULL;\n");
-        outputBuilder.append(indent(1)).append("xmlNodePtr child_node;\n");
-        outputBuilder.append(indent(1)).append("GPtrArray* ").append(cType.getTypeName()).append("_array = g_ptr_array_new();\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(1)).append("for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n");
-        outputBuilder.append(indent(2)).append(cType.getTypeName()).append("* response;\n");
-        outputBuilder.append(indent(2)).append("error = _parse_").append(cType.getTypeName()).append("(client, doc, child_node, &response);\n");
-        outputBuilder.append(indent(2)).append("g_ptr_array_add(").append(cType.getTypeName()).append("_array, response);\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
-        outputBuilder.append(indent(3)).append("break;\n");
-        outputBuilder.append(indent(2)).append("}\n");
-        outputBuilder.append(indent(1)).append("}\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(1)).append("*_response = response;\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(1)).append("return error;\n");
-        outputBuilder.append("}\n");
-
-        return outputBuilder.toString();
     }
 }

@@ -20,11 +20,8 @@ import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.ParameterModifier;
 import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ParameterConverter {
-    private static final Logger LOG = LoggerFactory.getLogger(ParameterConverter.class);
 
     public static Parameter toParameter(final Ds3Param ds3Param, final boolean isRequired) {
         return new Parameter(

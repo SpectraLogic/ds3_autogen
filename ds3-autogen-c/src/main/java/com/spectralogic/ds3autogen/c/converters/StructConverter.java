@@ -21,28 +21,29 @@ import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.c.models.C_Type;
+import com.spectralogic.ds3autogen.c.models.PrimitiveType;
+import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 
 public final class StructConverter {
-    private static final Logger LOG = LoggerFactory.getLogger(StructConverter.class);
     private StructConverter() {}
 
     public static Struct toStruct(final Ds3Type ds3Type,
                                   final ImmutableSet<String> enumNames,
-                                  final ImmutableList<Request> allRequests) throws ParseException {
-        final ImmutableList<StructMember> variablesList = convertDs3Elements(ds3Type.getElements(), enumNames);
+                                  final ImmutableSet<String> responseTypes,
+                                  final ImmutableSet<String> arrayMemberTypes) throws ParseException {
+        final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames);
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
                 responseTypeName,
                 convertNameToMarshall(ds3Type.getNameToMarshal()),
-                variablesList,
-                isTopLevelStruct(responseTypeName, allRequests));
+                structMembersList,
+                responseTypes.contains(responseTypeName),
+                arrayMemberTypes.contains(responseTypeName));
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
@@ -69,16 +70,5 @@ public final class StructConverter {
             return "Data";
         }
         return nameToMarshall;
-    }
-
-    /**
-     * Determine if the parser for this type should _get_request_xml_nodes() for the request response
-     */
-    private static boolean isTopLevelStruct(final String responseTypeName, final ImmutableList<Request> allRequests) {
-        for (final Request currentRequest : allRequests) {
-            if (currentRequest.getResponseType().equals(responseTypeName))
-                return true;
-        }
-        return false;
     }
 }

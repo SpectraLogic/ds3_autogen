@@ -24,22 +24,16 @@ import com.google.common.collect.ImmutableSet;
 public class Source {
     private final ImmutableList<Enum> enums;
     private final ImmutableSet<Enum> queryParamEnums;
-    private final ImmutableList<Struct> arrayStructs;
-    private final ImmutableSet<C_Type> arrayTypes;
     private final ImmutableList<Struct> structs;
     private final ImmutableList<Request> requests;
 
     public Source(
             final ImmutableList<Enum> enums,
             final ImmutableSet<Enum> queryParamEnums,
-            final ImmutableSet<C_Type> arrayTypes,
-            final ImmutableList<Struct> arrayStructs,
             final ImmutableList<Struct> structs,
             final ImmutableList<Request> requests) {
         this.enums = enums;
         this.queryParamEnums = queryParamEnums;
-        this.arrayTypes = arrayTypes;
-        this.arrayStructs = arrayStructs;
         this.structs = structs;
         this.requests = requests;
     }
@@ -50,14 +44,6 @@ public class Source {
 
     public ImmutableSet<Enum> getQueryParamEnums() {
         return queryParamEnums;
-    }
-
-    public ImmutableList<Struct> getArrayStructs() {
-        return arrayStructs;
-    }
-
-    public ImmutableSet<C_Type> getArrayTypes() {
-        return arrayTypes;
     }
 
     public ImmutableList<Struct> getStructs() {
