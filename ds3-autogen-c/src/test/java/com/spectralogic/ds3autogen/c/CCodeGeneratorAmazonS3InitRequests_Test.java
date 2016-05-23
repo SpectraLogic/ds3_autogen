@@ -134,7 +134,6 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         assertTrue(output.contains("ds3_request* init_get_service_request(void) {"));
         assertTrue(output.contains("    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/\", NULL, NULL));"));
