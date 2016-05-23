@@ -28,6 +28,7 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,13 +140,11 @@ public class CCodeGenerator implements CodeGenerator {
      * Find all types that are used as an array member
      */
     public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec) {
-        final ImmutableSet.Builder<String> allArrayMemberTypesBuilder = ImmutableSet.builder();
-            for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
-                ds3TypeEntry.getElements().stream()
-                        .filter(element -> element.getType().equalsIgnoreCase("array"))
-                        .forEach(element -> allArrayMemberTypesBuilder.add(StructHelper.getResponseTypeName(element.getComponentType())));
-            }
-        return allArrayMemberTypesBuilder.build();
+            return spec.getTypes().values().stream()
+                    .flatMap(entry -> entry.getElements().stream())
+                    .filter(element -> element.getType().equalsIgnoreCase("array"))
+                    .map(element -> StructHelper.getResponseTypeName(element.getComponentType()))
+                    .collect(GuavaCollectors.immutableSet());
     }
 
     public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
