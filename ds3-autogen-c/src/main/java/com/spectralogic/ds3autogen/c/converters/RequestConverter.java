@@ -208,7 +208,7 @@ public final class RequestConverter {
 
         if (!responseType.isEmpty()) {
             if (responseType.equalsIgnoreCase("ds3_str")) {
-                builder.add(new Parameter(ParameterModifier.CONST, "ds3_str", "response", ParameterPointerType.SINGLE_POINTER, true));
+                builder.add(new Parameter(ParameterModifier.NONE, "ds3_str", "response", ParameterPointerType.SINGLE_POINTER, true));
             } else {
                 builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
             }

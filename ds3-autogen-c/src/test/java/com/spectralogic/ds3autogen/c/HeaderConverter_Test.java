@@ -48,11 +48,13 @@ public class HeaderConverter_Test {
                         new StructMember(new PrimitiveType("int", false), "structMember1"),
                         new StructMember(new PrimitiveType("ds3_str", true), "structMember2")),
                         true,
+                        false,
                         false),
                 new Struct("testStruct2", "marshallStruct2", ImmutableList.of(
                         new StructMember(new PrimitiveType("int", false), "structMember3")),
                         false,
-                        true));
+                        true,
+                        false));
 
         final Header testHeader = HeaderConverter.toHeader(allEnums, allStructs, allRequests);
         assertEquals(testHeader.getEnums(), allEnums);

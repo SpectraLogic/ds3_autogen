@@ -43,7 +43,8 @@ public final class StructConverter {
                 convertNameToMarshall(ds3Type.getNameToMarshal()),
                 structMembersList,
                 responseTypes.contains(responseTypeName),
-                arrayMemberTypes.contains(responseTypeName));
+                arrayMemberTypes.contains(responseTypeName),
+                hasComplexArrayMembers(structMembersList));
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
@@ -71,4 +72,17 @@ public final class StructConverter {
         }
         return nameToMarshall;
     }
+
+    /**
+     * Determine if a free_struct() function requires an index to traverse free'ing an array of elements
+     */
+    public static boolean hasComplexArrayMembers(final ImmutableList<StructMember> structMembersList) {
+        for (final StructMember structMember : structMembersList) {
+            if (structMember.getType().isArray() && !structMember.getType().isPrimitive()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

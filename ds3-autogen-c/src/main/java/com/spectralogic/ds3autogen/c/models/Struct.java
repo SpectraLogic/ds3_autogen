@@ -23,18 +23,21 @@ public class Struct {
     private final ImmutableList<StructMember> members;
     private final boolean isTopLevel;
     private final boolean isArrayMember;
+    private final boolean hasArrayMembers;
 
     public Struct(
             final String name,
             final String nameToMarshall,
             final ImmutableList<StructMember> members,
             final boolean isTopLevel,
-            final boolean isArrayMember) {
+            final boolean isArrayMember,
+            final boolean hasArrayMembers) {
         this.name = name;
         this.nameToMarshall = nameToMarshall;
         this.members = members;
         this.isTopLevel = isTopLevel;
         this.isArrayMember = isArrayMember;
+        this.hasArrayMembers = hasArrayMembers;
     }
 
     public String getName() {
@@ -55,6 +58,10 @@ public class Struct {
 
     public boolean isArrayMember() {
         return isArrayMember;
+    }
+
+    public boolean hasArrayMembers() {
+        return hasArrayMembers;
     }
 
     @Override
