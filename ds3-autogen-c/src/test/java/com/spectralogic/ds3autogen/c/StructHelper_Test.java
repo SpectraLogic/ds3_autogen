@@ -54,7 +54,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember");
         final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -65,7 +65,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_user_api_bean_response", false), "beanMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
         assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
     @Test
@@ -77,7 +77,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_tape_type", false), "tapeTypeMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false);
+        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 

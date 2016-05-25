@@ -7,6 +7,9 @@ void ${structEntry.getName()}_free(${structEntry.getName()}* response) {
         return;
     }
 
+<#if structEntry.hasArrayMembers()>
+    size_t index;
+</#if>
 ${structHelper.generateFreeStructMembers(structEntry.getStructMembers())}
     g_free(response);
 }

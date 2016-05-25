@@ -1,10 +1,10 @@
 
 #define LENGTH_BUFF_SIZE 21
 
-static xmlDocPtr _generate_xml_objects_list(const ds3_objects_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
+static xmlDocPtr _generate_xml_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
     char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
     xmlDocPtr doc;
-    ds3_bulk_object_response obj;
+    ds3_bulk_object_response* obj;
     xmlNodePtr objects_node, object_node;
     int i;
     // Start creating the xml body to send to the server.
@@ -20,19 +20,19 @@ static xmlDocPtr _generate_xml_objects_list(const ds3_objects_response* obj_list
     }
 
     for (i = 0; i < obj_list->num_objects; i++) {
-        memset(&obj, 0, sizeof(ds3_bulk_object_response));
-        memset(size_buff, 0, sizeof(char) * LENGTH_BUFF_SIZE);
+        //memset(&obj, 0, sizeof(ds3_bulk_object_response));
+        //memset(size_buff, 0, sizeof(char) * LENGTH_BUFF_SIZE);
 
         obj = obj_list->objects[i];
-        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj.length);
+        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj->length);
 
         object_node = xmlNewNode(NULL, (xmlChar*) "Object");
         xmlAddChild(objects_node, object_node);
 
         if (list_type == BULK_DELETE) {
-            xmlNewTextChild(object_node, NULL, (xmlChar*) "Key", (xmlChar*) obj.name->value);
+            xmlNewTextChild(object_node, NULL, (xmlChar*) "Key", (xmlChar*) obj->name->value);
         } else {
-            xmlSetProp(object_node, (xmlChar*) "Name", (xmlChar*) obj.name->value);
+            xmlSetProp(object_node, (xmlChar*) "Name", (xmlChar*) obj->name->value);
             if (list_type == BULK_PUT) {
                 xmlSetProp(object_node, (xmlChar*) "Size", (xmlChar*) size_buff);
             }
@@ -43,18 +43,6 @@ static xmlDocPtr _generate_xml_objects_list(const ds3_objects_response* obj_list
 
     return doc;
 }
-
-static object_list_type _bulk_request_type(const struct _ds3_request* request) {
-    char* value = (char *) g_hash_table_lookup(request->query_params, "operation");
-
-    if (strcmp(value, "start_bulk_get") == 0) {
-        return BULK_GET;
-    } else if (strcmp(value, "get_physical_placement") == 0) {
-        return GET_PHYSICAL_PLACEMENT;
-    }
-    return BULK_PUT;
-}
-
 
 void ds3_free_creds(ds3_creds* creds) {
     if (creds == NULL) {
@@ -86,14 +74,18 @@ void ds3_free_request(ds3_request* _request) {
     }
 
     request = (struct _ds3_request*) _request;
+
+    ds3_str_free(request->path);
+    ds3_str_free(request->checksum);
+
     if (request->headers != NULL) {
         g_hash_table_destroy(request->headers);
     }
     if (request->query_params != NULL) {
         g_hash_table_destroy(request->query_params);
     }
-    ds3_str_free(request->buildPathArgs);
-    ds3_str_free(request->checksum);
+
+    ds3_bulk_object_list_response_free(request->object_list);
     g_free(request);
 }
 
@@ -215,39 +207,39 @@ static ds3_bulk_object_response _ds3_bulk_object_from_file(const char* file_name
     return obj;
 }
 
-ds3_objects_response* ds3_convert_file_list(const char** file_list, uint64_t num_files) {
+ds3_bulk_object_list_response* ds3_convert_file_list(const char** file_list, uint64_t num_files) {
     return ds3_convert_file_list_with_basepath(file_list, num_files, NULL);
 }
 
-ds3_objects_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path) {
+ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path) {
     uint64_t file_index;
-    ds3_objects_response* obj_list = ds3_init_bulk_object_list(num_files);
+    ds3_bulk_object_list_response* obj_list = ds3_init_bulk_object_list(num_files);
 
     for (file_index = 0; file_index < num_files; file_index++) {
-        obj_list->objects[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
+        *obj_list->objects[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
     }
 
     return obj_list;
 }
 
-ds3_objects_response* ds3_convert_object_list(const ds3_object* objects, uint64_t num_objects) {
+ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response* objects, uint64_t num_objects) {
     uint64_t object_index;
-    ds3_objects_response* obj_list = ds3_init_bulk_object_list(num_objects);
+    ds3_bulk_object_list_response* obj_list = ds3_init_bulk_object_list(num_objects);
 
     for (object_index = 0; object_index < num_objects; object_index++) {
         ds3_bulk_object_response obj;
         memset(&obj, 0, sizeof(ds3_bulk_object_response));
         obj.name = ds3_str_dup(objects[object_index].name);
-        obj_list->objects[object_index] = obj;
+        obj_list->objects[object_index] = &obj;
     }
 
     return obj_list;
 }
 
-ds3_objects_response* ds3_init_bulk_object_list(uint64_t num_files) {
-    ds3_objects_response* obj_list = g_new0(ds3_objects_response, 1);
+ds3_bulk_object_list_response* ds3_init_bulk_object_list(uint64_t num_files) {
+    ds3_bulk_object_list_response* obj_list = g_new0(ds3_bulk_object_list_response, 1);
     obj_list->num_objects = num_files;
-    obj_list->objects = g_new0(ds3_bulk_object_response, num_files);
+    *obj_list->objects = g_new0(ds3_bulk_object_response, num_files);
 
     return obj_list;
 }

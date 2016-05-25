@@ -170,14 +170,19 @@ public final class StructHelper {
     public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {
         return indent(3) + "xmlNodePtr loop_node;\n"
              + indent(3) + "int num_nodes = 0;\n"
+             + indent(3) + "GByteArray* enum_array = g_byte_array_new();\n"
+             + indent(3) + structMember.getType().getTypeName() + " " + structMember.getName() + ";\n"
              + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
              + indent(4) + "xmlChar* text = xmlNodeListGetString(doc, loop_node, 1);\n"
              + indent(4) + "if (text == NULL) {\n"
              + indent(5) + "continue;\n"
              + indent(4) + "}\n"
-             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(4) + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(4) + "g_byte_array_append(enum_array, (const guint8*) &" + structMember.getName() + ", sizeof(" + structMember.getType().getTypeName() + "));\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "*)enum_array->data;\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = enum_array->len;\n"
+             + indent(3) + "g_byte_array_free(enum_array, FALSE);\n";
     }
 
     public static String getParseStructMemberBlock(final StructMember structMember,
@@ -257,9 +262,12 @@ public final class StructHelper {
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (final StructMember structMember : structMembers) {
-            if (structMember.getType().isPrimitive()) continue;
-
-            if (structMember.getType().isArray()) {
+            if (structMember.getType().isPrimitive()) { // PrimitiveTypes only need to free the base pointer
+                if (structMember.getType().isArray()) {
+                    outputBuilder.append(indent(1)).append("g_free(response->").append(structMember.getName()).append(");\n");
+                }
+                // else do nothing for single PrimitiveType
+            } else if (structMember.getType().isArray()) { // FreeableType needs to free each element
                 outputBuilder.append(generateFreeArrayStructMember(structMember));
             } else {
                 outputBuilder.append(indent(1)).append(structMember.getType().getTypeName()).append("_free(response->").append(structMember.getName()).append(");\n");
