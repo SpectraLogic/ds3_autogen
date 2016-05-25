@@ -22,6 +22,10 @@ import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.python.model.type.TypeAttribute;
+import com.spectralogic.ds3autogen.python.model.type.TypeContent;
+import com.spectralogic.ds3autogen.python.model.type.TypeElement;
+import com.spectralogic.ds3autogen.python.model.type.TypeElementList;
 import com.spectralogic.ds3autogen.python.utils.TestPythonGeneratedCode;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
 import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
@@ -34,8 +38,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasModelDescriptor;
 import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasOperation;
 import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasRequestHandler;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -85,7 +92,7 @@ public class PythonFunctionalTests {
 
     @Test
     public void simpleType() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
-        final String requestName = "PlaceHolderRequest";
+        final String modelDescriptorName = "TestElementsType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
 
@@ -93,6 +100,15 @@ public class PythonFunctionalTests {
         final String ds3Code = codeGenerator.getDs3Code();
 
         CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
-        //TODO add asserts
+        assertTrue(hasContent(ds3Code));
+
+        final ImmutableList<TypeContent> modelContents = ImmutableList.of(
+                new TypeAttribute("InCache"),
+                new TypeElement("MyBucket", "BucketDetails"),
+                new TypeElement("ByteOffset", "None"),
+                new TypeElementList("MyBucketList", "None", "BucketDetails"),
+                new TypeElementList("Pool", "Pools", "None"));
+
+        hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
     }
 }

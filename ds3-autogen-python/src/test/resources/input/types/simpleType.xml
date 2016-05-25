@@ -61,35 +61,6 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="Checksum" Type="java.lang.String">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="ChecksumType" Type="com.spectralogic.util.security.ChecksumType">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
-                    <Element Name="Id" Type="java.util.UUID">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="Length" Type="long">
-                        <Annotations/>
-                    </Element>
-                    <Element Name="ObjectId" Type="java.util.UUID">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.db.lang.References">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.S3Object" ValueType="java.lang.Class"/>
-                                </AnnotationElements>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
                 </Elements>
             </Type>
             <Type Name="com.spectralogic.util.security.ChecksumType">

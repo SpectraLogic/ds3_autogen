@@ -24,6 +24,8 @@ import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import com.spectralogic.ds3autogen.python.model.type.TypeElement;
 import com.spectralogic.ds3autogen.python.model.type.TypeElementList;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -34,6 +36,8 @@ import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isEnum
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseTypeGenerator.class);
 
     @Override
     public TypeDescriptor generate(
@@ -51,7 +55,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
                 elementLists);
     }
 
-    //TODO
     /**
      * Converts all Ds3Elements that describe an attribute into their python code representation.
      * All other Ds3Elements are removed.
@@ -66,7 +69,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
                 .collect(GuavaCollectors.immutableList());
     }
 
-    //TODO
     /**
      * Converts a Ds3Element into a TypeAttribute
      */
@@ -75,7 +77,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         return new TypeAttribute(name);
     }
 
-    //TODO
     /**
      * Converts all Ds3Elements that describe a single xml element into its python code representation.
      * All other Ds3Elements are removed.
@@ -92,7 +93,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
                 .collect(GuavaCollectors.immutableList());
     }
 
-    //TODO
     /**
      * Converts a Ds3Element into a TypeElement
      */
@@ -102,7 +102,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         return new TypeElement(xmlTag, typeModel);
     }
 
-    //TODO
     /**
      * Gets the type model name that describes the specified type, or 'None' if there
      * is no associated type model
@@ -111,6 +110,10 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
             final String type,
             final String componentType,
             final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeMap)) {
+            LOG.debug("Cannot find model type because TypeMap is empty");
+            return "None";
+        }
         if (hasContent(componentType) && typeMap.containsKey(componentType) && !isEnumType(componentType, typeMap)) {
             return removePath(componentType);
         } else if(isEmpty(componentType) && typeMap.containsKey(type) && !isEnumType(type, typeMap)) {
@@ -119,7 +122,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         return "None";
     }
 
-    //TODO
     /**
      * Converts all Ds3Elements that describe a list of xml elements into their python code representation.
      * All other Ds3Elements are removed.
@@ -136,7 +138,6 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
                 .collect(GuavaCollectors.immutableList());
     }
 
-    //TODO
     /**
      * Converts a Ds3Element into a TypeElementList
      */
