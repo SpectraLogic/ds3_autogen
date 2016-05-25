@@ -148,7 +148,14 @@ LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
 <#-- **************************************** -->
 <#-- Generate all "RequestPrototypes"         -->
 <#list getRequests() as requestEntry>
-    <#include "RequestPrototype.ftl">
+
+    <#if requestEntry.getName() == "head_bucket_request">
+LIBRARY_API ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request);
+    <#elseif requestEntry.getName() == "head_object_request">
+LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
+    <#else>
+        <#include "RequestPrototype.ftl">
+    </#if>
 </#list>
 <#-- **************************************** -->
 
@@ -164,7 +171,7 @@ LIBRARY_API size_t ds3_read_from_fd(void* buffer, size_t size, size_t nmemb, voi
 
 LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list(const char** file_list, uint64_t num_files);
 LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path);
-LIBRARY_API ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_s3_object_response* objects, uint64_t num_objects);
+LIBRARY_API ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response* objects, uint64_t num_objects);
 LIBRARY_API ds3_bulk_object_list_response* ds3_init_bulk_object_list(uint64_t num_files);
 
 

@@ -104,8 +104,11 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     public void generateStaticFiles() throws IOException {
-        final Path path = Paths.get("src/ds3_request.h");
-        processTemplate(null, "other-templates/ds3_request_h.ftl", fileUtils.getOutputFile(path));
+        final Path ds3RequestPath = Paths.get("src/ds3_request.h");
+        processTemplate(null, "other-templates/ds3_request_h.ftl", fileUtils.getOutputFile(ds3RequestPath));
+
+        final Path ds3NetPath = Paths.get("src/ds3_net.c");
+        processTemplate(null, "other-templates/ds3_net_c.ftl", fileUtils.getOutputFile(ds3NetPath));
     }
 
     public static ImmutableList<Enum> getAllEnums(final Ds3ApiSpec spec) throws ParseException {

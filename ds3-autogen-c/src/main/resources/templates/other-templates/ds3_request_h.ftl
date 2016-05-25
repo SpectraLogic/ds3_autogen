@@ -30,7 +30,6 @@ typedef struct {
     uint64_t status_code;
     ds3_str* status_message;
     size_t header_count;
-    //GHashTable* headers;
     ds3_string_multimap* headers;
 
     // These attributes are used when processing a response body

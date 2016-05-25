@@ -126,7 +126,8 @@ public class CCodeGenerator_Test {
                         new StructMember( new FreeableType("ds3_str", false), "user_id")
                 ),
                 true,
-                true);
+                true,
+                false);
         testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -218,7 +219,8 @@ public class CCodeGenerator_Test {
                         new StructMember( new FreeableType("ds3_str", false), "user_id")
                 ),
                 true,
-                true);
+                true,
+                false);
         testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -530,7 +532,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    GPtrArray* ds3_bucket_details_response_array = g_ptr_array_new();"));
 
         assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
-        assertTrue(output.contains("        ds3_bucket_details_response* response;"));
+        assertTrue(output.contains("        ds3_bucket_details_response* response = NULL;"));
         assertTrue(output.contains("        error = _parse_ds3_bucket_details_response(client, doc, child_node, &response)"));
         assertTrue(output.contains("        g_ptr_array_add(ds3_bucket_details_response_array, response);"));
 

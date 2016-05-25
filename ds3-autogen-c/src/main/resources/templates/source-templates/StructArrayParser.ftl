@@ -8,7 +8,7 @@ static ds3_error* _parse_${structEntry.getName()}_array(const ds3_client* client
     GPtrArray* ${structEntry.getName()}_array = g_ptr_array_new();
 
     for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {
-        ${structEntry.getName()}* response;
+        ${structEntry.getName()}* response = NULL;
         error = _parse_${structEntry.getName()}(client, doc, child_node, &response);
         g_ptr_array_add(${structEntry.getName()}_array, response);
 

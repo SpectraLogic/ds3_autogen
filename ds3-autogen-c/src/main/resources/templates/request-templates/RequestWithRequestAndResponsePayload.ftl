@@ -23,5 +23,12 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
         return error;
     }
 
+<#if requestEntry.hasResponsePayload() && requestEntry.getResponseType() == "ds3_str">
+    response->value = (char*)xml_blob->data;
+    response->size = xml_blob->len;
+    g_byte_array_free(xml_blob, FALSE);
+    return error;
+<#else>
     return _parse_top_level_${requestEntry.getResponseType()}(client, request, response, xml_blob);
+</#if>
 }
