@@ -20,15 +20,15 @@ import com.google.common.collect.ImmutableList;
 public class TypeDescriptor {
 
     private final String name;
-    private final ImmutableList<TypeAttribute> attributes;
-    private final ImmutableList<TypeElement> elements;
-    private final ImmutableList<TypeElementList> elementLists;
+    private final ImmutableList<String> attributes;
+    private final ImmutableList<String> elements;
+    private final ImmutableList<String> elementLists;
 
     public TypeDescriptor(
             final String name,
-            final ImmutableList<TypeAttribute> attributes,
-            final ImmutableList<TypeElement> elements,
-            final ImmutableList<TypeElementList> elementLists) {
+            final ImmutableList<String> attributes,
+            final ImmutableList<String> elements,
+            final ImmutableList<String> elementLists) {
         this.name = name;
         this.attributes = attributes;
         this.elements = elements;
@@ -39,15 +39,15 @@ public class TypeDescriptor {
         return name;
     }
 
-    public ImmutableList<TypeAttribute> getAttributes() {
+    public ImmutableList<String> getAttributes() {
         return attributes;
     }
 
-    public ImmutableList<TypeElement> getElements() {
+    public ImmutableList<String> getElements() {
         return elements;
     }
 
-    public ImmutableList<TypeElementList> getElementLists() {
+    public ImmutableList<String> getElementLists() {
         return elementLists;
     }
 }

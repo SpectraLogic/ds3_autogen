@@ -101,46 +101,22 @@ public class PythonHelper_Test {
 
     @Test
     public void toTypeContentLines_NullList_Test() {
-        final String result = toTypeContentLines(null, 1);
+        final String result = toCommaSeparatedLines(null, 1);
         assertThat(result, is(""));
     }
 
     @Test
     public void toTypeContentLines_EmptyList_Test() {
-        final String result = toTypeContentLines(ImmutableList.of(), 1);
+        final String result = toCommaSeparatedLines(ImmutableList.of(), 1);
         assertThat(result, is(""));
     }
 
     @Test
     public void toTypeContentLines_Attribute_Test() {
-        final String expected = "\n  'Attr1',\n  'Attr2'\n";
-        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
-                new TypeAttribute("Attr1"),
-                new TypeAttribute("Attr2"));
+        final String expected = "\n  Line1,\n  Line2\n";
+        final ImmutableList<String> typeContents = ImmutableList.of("Line1", "Line2");
 
-        final String result = toTypeContentLines(typeContents, 1);
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void toTypeContentLines_Element_Test() {
-        final String expected = "\n  'XmlTag1' : TypeModel(),\n  'XmlTag2' : None\n";
-        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
-                new TypeElement("XmlTag1", "TypeModel"),
-                new TypeElement("XmlTag2", "None"));
-
-        final String result = toTypeContentLines(typeContents, 1);
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void toTypeContentLines_ElementList_Test() {
-        final String expected = "\n  ('XmlTag1', None, None),\n  ('XmlTag2', 'EncapsTag', ModelType())\n";
-        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
-                new TypeElementList("XmlTag1", "None", "None"),
-                new TypeElementList("XmlTag2", "EncapsTag", "ModelType"));
-
-        final String result = toTypeContentLines(typeContents, 1);
+        final String result = toCommaSeparatedLines(typeContents, 1);
         assertThat(result, is(expected));
     }
 }

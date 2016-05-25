@@ -85,14 +85,14 @@ public class PythonCodeGenerator_Test {
     public void toTypeDescriptor_Test() {
         final Ds3Type ds3Type = createDs3TypeTestData(
                 "com.test.SimpleType",
-                createDs3ElementListTestData("ElementName", "ElementType"));
+                createDs3ElementListTestData("ElementName", "None"));
         final ImmutableMap<String, Ds3Type> testTypeMap = ImmutableMap.of(ds3Type.getName(), ds3Type);
         final TypeDescriptor result = toTypeDescriptor(ds3Type, testTypeMap);
         assertThat(result.getName(), is("SimpleType"));
         assertThat(result.getAttributes().size(), is(0));
         assertThat(result.getElementLists().size(), is(0));
         assertThat(result.getElements().size(), is(1));
-        assertThat(result.getElements().get(0).getXmlTag(), is("ElementName"));
+        assertThat(result.getElements().get(0), is("'ElementName' : None"));
     }
 
     @Test

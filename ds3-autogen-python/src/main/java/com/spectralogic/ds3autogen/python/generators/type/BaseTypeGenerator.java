@@ -40,9 +40,9 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
             final Ds3Type ds3Type,
             final ImmutableMap<String, Ds3Type> typeMap) {
         final String name = removePath(ds3Type.getName());
-        final ImmutableList<TypeAttribute> attributes = toAttributes(ds3Type.getElements());
-        final ImmutableList<TypeElement> elements = toElements(ds3Type.getElements(), typeMap);
-        final ImmutableList<TypeElementList> elementLists = toElementLists(ds3Type.getElements(), typeMap);
+        final ImmutableList<String> attributes = toAttributes(ds3Type.getElements());
+        final ImmutableList<String> elements = toElements(ds3Type.getElements(), typeMap);
+        final ImmutableList<String> elementLists = toElementLists(ds3Type.getElements(), typeMap);
 
         return new TypeDescriptor(
                 name,
@@ -53,16 +53,16 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
 
     //TODO
     /**
-     * Converts all Ds3Elements that describe an attribute into a TypeAttribute. All other
-     * Ds3Elements are removed.
+     * Converts all Ds3Elements that describe an attribute into their python code representation.
+     * All other Ds3Elements are removed.
      */
-    protected static ImmutableList<TypeAttribute> toAttributes(final ImmutableList<Ds3Element> ds3Elements) {
+    protected static ImmutableList<String> toAttributes(final ImmutableList<Ds3Element> ds3Elements) {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of();
         }
         return ds3Elements.stream()
                 .filter(ds3Element -> isAttribute(ds3Element.getDs3Annotations()))
-                .map(BaseTypeGenerator::toAttribute)
+                .map(attr -> toAttribute(attr).toPythonCode())
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -77,10 +77,10 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
 
     //TODO
     /**
-     * Converts all Ds3Elements that describe a single xml element into a TypeElement. All other
-     * Ds3Elements are removed.
+     * Converts all Ds3Elements that describe a single xml element into its python code representation.
+     * All other Ds3Elements are removed.
      */
-    protected static ImmutableList<TypeElement> toElements(
+    protected static ImmutableList<String> toElements(
             final ImmutableList<Ds3Element> ds3Elements,
             final ImmutableMap<String, Ds3Type> typeMap) {
         if (isEmpty(ds3Elements)) {
@@ -88,7 +88,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         }
         return ds3Elements.stream()
                 .filter(ds3Element -> isEmpty(ds3Element.getComponentType()) && !isAttribute(ds3Element.getDs3Annotations()))
-                .map(element -> toElement(element, typeMap))
+                .map(element -> toElement(element, typeMap).toPythonCode())
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -121,10 +121,10 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
 
     //TODO
     /**
-     * Converts all Ds3Elements that describe a list of xml elements into a TypeElementList.
+     * Converts all Ds3Elements that describe a list of xml elements into their python code representation.
      * All other Ds3Elements are removed.
      */
-    protected static ImmutableList<TypeElementList> toElementLists(
+    protected static ImmutableList<String> toElementLists(
             final ImmutableList<Ds3Element> ds3Elements,
             final ImmutableMap<String, Ds3Type> typeMap) {
         if (isEmpty(ds3Elements)) {
@@ -132,7 +132,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         }
         return ds3Elements.stream()
                 .filter(ds3Element -> hasContent(ds3Element.getComponentType()) && !isAttribute(ds3Element.getDs3Annotations()))
-                .map(element -> toElementList(element, typeMap))
+                .map(element -> toElementList(element, typeMap).toPythonCode())
                 .collect(GuavaCollectors.immutableList());
     }
 

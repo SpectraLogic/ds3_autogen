@@ -29,14 +29,6 @@ public class TypeElement implements TypeContent {
         this.typeModel = typeModel;
     }
 
-    public String getXmlTag() {
-        return xmlTag;
-    }
-
-    public String getTypeModel() {
-        return typeModel;
-    }
-
     public String toPythonCode() {
         final StringBuilder builder = new StringBuilder();
         builder.append("'").append(xmlTag).append("' : ").append(typeModel);

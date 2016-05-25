@@ -82,14 +82,14 @@ public final class PythonHelper {
     }
 
     /**
-     * Creates comma separated lines for TypeContent objects that describe types
+     * Creates comma separated lines for a list of strings. This is used to
+     * generate the lists within the python model descriptors.
      */
-    public static String toTypeContentLines(final ImmutableList<TypeContent> typeContents, final int depth) {
-        if (isEmpty(typeContents)) {
+    public static String toCommaSeparatedLines(final ImmutableList<String> lines, final int depth) {
+        if (isEmpty(lines)) {
             return "";
         }
-        return "\n" + pythonIndent(depth) + typeContents.stream()
-                .map(TypeContent::toPythonCode)
+        return "\n" + pythonIndent(depth) + lines.stream()
                 .collect(Collectors.joining(",\n" + pythonIndent(depth))) + "\n" + pythonIndent(depth - 1);
     }
 

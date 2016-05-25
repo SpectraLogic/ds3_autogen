@@ -26,10 +26,6 @@ public class TypeAttribute implements TypeContent {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String toPythonCode() {
         return "'" + name + "'";
     }
