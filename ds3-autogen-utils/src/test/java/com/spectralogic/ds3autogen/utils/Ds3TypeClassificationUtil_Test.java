@@ -16,7 +16,9 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import org.junit.Test;
 
@@ -27,6 +29,27 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class Ds3TypeClassificationUtil_Test {
+
+    /**
+     * Creates a type map with testing values
+     */
+    private static ImmutableMap<String, Ds3Type> getTestTypeMap() {
+        final Ds3Type enumType = new Ds3Type(
+                "TestEnumType",
+                "",
+                ImmutableList.of(),
+                ImmutableList.of(
+                        new Ds3EnumConstant("ONE", null)));
+
+        final Ds3Type elementType = new Ds3Type(
+                "TestElementType",
+                ImmutableList.of(
+                        new Ds3Element("Element", "int", null, false)));
+
+        return ImmutableMap.of(
+                enumType.getName(), enumType,
+                elementType.getName(), elementType);
+    }
 
     @Test
     public void isHttpErrorType_Test() {
@@ -102,5 +125,29 @@ public class Ds3TypeClassificationUtil_Test {
         assertTrue(isObjectsType(createDs3TypeTestData("Objects")));
         assertFalse(isObjectsType(createDs3TypeTestData("com.test.ObjectsList")));
         assertFalse(isObjectsType(createDs3TypeTestData("ObjectsApiBean")));
+    }
+
+    @Test
+    public void isEnumType_NullValues_Test() {
+        assertFalse(isEnumType(null, null));
+        assertFalse(isEnumType(null, getTestTypeMap()));
+        assertFalse(isEnumType("TypeName", null));
+    }
+
+    @Test
+    public void isEnumType_EmptyValues_Test() {
+        assertFalse(isEnumType("", ImmutableMap.of()));
+        assertFalse(isEnumType("", getTestTypeMap()));
+        assertFalse(isEnumType("TypeName", ImmutableMap.of()));
+    }
+
+    @Test
+    public void isEnumType_Test() {
+        final ImmutableMap<String, Ds3Type> typeMap = getTestTypeMap();
+        assertTrue(isEnumType("TestEnumType", typeMap));
+
+        assertFalse(isEnumType("java.lang.Integer", typeMap));
+        assertFalse(isEnumType("TypeName", typeMap));
+        assertFalse(isEnumType("TestElementType", typeMap));
     }
 }

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 
@@ -101,5 +102,18 @@ public final class Ds3TypeClassificationUtil {
      */
     public static boolean isObjectsType(final Ds3Type ds3Type) {
         return removePath(ds3Type.getName()).equals("Objects");
+    }
+
+    /**
+     * Determines if a contract type is an enum defined within the contract
+     */
+    public static boolean isEnumType(
+            final String typeName,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeName) || isEmpty(typeMap)) {
+            return false;
+        }
+        final Ds3Type type = typeMap.get(typeName);
+        return !(type == null || isEmpty(type.getEnumConstants()));
     }
 }

@@ -42,7 +42,7 @@ import static org.mockito.Mockito.mock;
 public class PythonFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(PythonFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -81,5 +81,18 @@ public class PythonFunctionalTests {
 
         hasRequestHandler(requestName, HttpVerb.DELETE, reqArgs, null, null, ds3Code);
         assertTrue(ds3Code.contains("self.path = '/_rest_/job_created_notification_registration/' + notification_id"));
+    }
+
+    @Test
+    public void simpleType() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "PlaceHolderRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/simpleType.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
+        //TODO add asserts
     }
 }

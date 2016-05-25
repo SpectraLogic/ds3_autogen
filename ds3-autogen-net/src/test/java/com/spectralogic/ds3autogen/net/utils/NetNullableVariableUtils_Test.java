@@ -24,7 +24,6 @@ import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.createNullableVariable;
-import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.isEnumType;
 import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.isPrimitive;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
@@ -100,30 +99,6 @@ public class NetNullableVariableUtils_Test {
     public void createNullableVariable_Array_Test() {
         final NetNullableVariable var = createNullableVariable("Name", "array", "java.lang.Integer", true, null);
         assertThat(var.getNetType(), is("IEnumerable<int>"));
-    }
-
-    @Test
-    public void isEnumType_NullValues_Test() {
-        assertFalse(isEnumType(null, null));
-        assertFalse(isEnumType(null, getTestTypeMap()));
-        assertFalse(isEnumType("TypeName", null));
-    }
-
-    @Test
-    public void isEnumType_EmptyValues_Test() {
-        assertFalse(isEnumType("", ImmutableMap.of()));
-        assertFalse(isEnumType("", getTestTypeMap()));
-        assertFalse(isEnumType("TypeName", ImmutableMap.of()));
-    }
-
-    @Test
-    public void isEnumType_Test() {
-        final ImmutableMap<String, Ds3Type> typeMap = getTestTypeMap();
-        assertTrue(isEnumType("TestEnumType", typeMap));
-
-        assertFalse(isEnumType("java.lang.Integer", typeMap));
-        assertFalse(isEnumType("TypeName", typeMap));
-        assertFalse(isEnumType("TestElementType", typeMap));
     }
 
     @Test

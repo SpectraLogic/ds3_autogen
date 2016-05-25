@@ -1,5 +1,9 @@
 <#include "../common/copyright.ftl" />
 
+# Type Descriptors
+
+<#include "types/type_descriptor.ftl" />
+
 # Request Handlers
 
 class AbstractRequest(object):

@@ -17,17 +17,28 @@ package com.spectralogic.ds3autogen.python.model.commands;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 
 public class CommandSet {
 
     /** Models describing all Request Handlers */
     private final ImmutableList<BaseRequest> requests;
 
-    public CommandSet(final ImmutableList<BaseRequest> requests) {
+    /** Models describing how to parse models */
+    private final ImmutableList<TypeDescriptor> typeDescriptors;
+
+    public CommandSet(
+            final ImmutableList<BaseRequest> requests,
+            final ImmutableList<TypeDescriptor> typeDescriptors) {
         this.requests = requests;
+        this.typeDescriptors = typeDescriptors;
     }
 
     public ImmutableList<BaseRequest> getRequests() {
         return requests;
+    }
+
+    public ImmutableList<TypeDescriptor> getTypeDescriptors() {
+        return typeDescriptors;
     }
 }

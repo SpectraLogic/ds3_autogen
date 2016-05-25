@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.python;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
@@ -24,9 +25,12 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
+import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.python.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.python.helpers.PythonHelper;
 import com.spectralogic.ds3autogen.python.model.commands.CommandSet;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
@@ -40,6 +44,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 
@@ -50,7 +55,6 @@ public class PythonCodeGenerator implements CodeGenerator {
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
-    private Ds3ApiSpec spec;
     private FileUtils fileUtils;
     private Path destDir;
 
@@ -64,7 +68,6 @@ public class PythonCodeGenerator implements CodeGenerator {
 
     @Override
     public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) {
-        this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
@@ -74,7 +77,7 @@ public class PythonCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(requests);
+            generateCommands(requests, typeMap);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -83,14 +86,17 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Generates the python code for commands
      */
-    private void generateCommands(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
+    private void generateCommands(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         if (isEmpty(ds3Requests)) {
             LOG.info("There are no requests to generate");
             return;
         }
 
         final ImmutableList<BaseRequest> baseRequests = toRequestModelList(ds3Requests);
-        final CommandSet commandSet = new CommandSet(baseRequests);
+        final ImmutableList<TypeDescriptor> baseTypes = toTypeDescriptorList(typeMap);
+        final CommandSet commandSet = new CommandSet(baseRequests, baseTypes);
 
         final Template tmpl = config.getTemplate("python/commands/all_commands.ftl");
         final Path path = toBaseProjectPath("ds3.py");
@@ -101,6 +107,36 @@ public class PythonCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(commandSet, writer);
         }
+    }
+
+    /**
+     * Generates the python models for type descriptors, which are used to describe expected responses
+     */
+    protected static ImmutableList<TypeDescriptor> toTypeDescriptorList(final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeMap)) {
+            return ImmutableList.of();
+        }
+        return typeMap.values().stream()
+                .filter(type -> isEmpty(type.getEnumConstants())) //Do not generate descriptors for enums
+                .map(ds3Type -> toTypeDescriptor(ds3Type, typeMap))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a Ds3Type into a python model descriptor
+     */
+    protected static  TypeDescriptor toTypeDescriptor(
+            final Ds3Type ds3Type,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        final TypeModelGenerator<?> typeGenerator = getTypeGenerator(ds3Type);
+        return typeGenerator.generate(ds3Type, typeMap);
+    }
+
+    /**
+     * Retrieves the Type Descriptor Generator associated with the Ds3Type
+     */
+    protected static TypeModelGenerator<?> getTypeGenerator(final Ds3Type ds3Type) {
+        return new BaseTypeGenerator();
     }
 
     /**

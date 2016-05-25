@@ -17,11 +17,10 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.python.model.type.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.toOptionalArgInitList;
-import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.toRequestInitList;
-import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.toRequiredArgInitList;
+import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -89,5 +88,59 @@ public class PythonHelper_Test {
 
         final String result = toRequestInitList(reqArgs, optArgs);
         assertThat(result, is("self, arg_one, arg_two, arg_three=None, arg_four=None"));
+    }
+
+    @Test
+    public void pythonIndent_Test() {
+        assertThat(pythonIndent(-1), is(""));
+        assertThat(pythonIndent(0), is(""));
+        assertThat(pythonIndent(1), is("  "));
+        assertThat(pythonIndent(2), is("    "));
+        assertThat(pythonIndent(3), is("      "));
+    }
+
+    @Test
+    public void toTypeContentLines_NullList_Test() {
+        final String result = toTypeContentLines(null, 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toTypeContentLines_EmptyList_Test() {
+        final String result = toTypeContentLines(ImmutableList.of(), 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toTypeContentLines_Attribute_Test() {
+        final String expected = "\n  'Attr1',\n  'Attr2'\n";
+        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
+                new TypeAttribute("Attr1"),
+                new TypeAttribute("Attr2"));
+
+        final String result = toTypeContentLines(typeContents, 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toTypeContentLines_Element_Test() {
+        final String expected = "\n  'XmlTag1' : TypeModel(),\n  'XmlTag2' : None\n";
+        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
+                new TypeElement("XmlTag1", "TypeModel"),
+                new TypeElement("XmlTag2", "None"));
+
+        final String result = toTypeContentLines(typeContents, 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toTypeContentLines_ElementList_Test() {
+        final String expected = "\n  ('XmlTag1', None, None),\n  ('XmlTag2', 'EncapsTag', ModelType())\n";
+        final ImmutableList<TypeContent> typeContents = ImmutableList.of(
+                new TypeElementList("XmlTag1", "None", "None"),
+                new TypeElementList("XmlTag2", "EncapsTag", "ModelType"));
+
+        final String result = toTypeContentLines(typeContents, 1);
+        assertThat(result, is(expected));
     }
 }
