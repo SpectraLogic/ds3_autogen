@@ -18,11 +18,13 @@ package com.spectralogic.ds3autogen.python.utils;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.python.model.type.TypeContent;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -135,5 +137,41 @@ public class FunctionalTestHelper {
     public static boolean hasOperation(final Operation operation, final String code) {
         final String search = "self.query_params['operation'] = '" + operation.toString().toLowerCase() + "'";
         return code.contains(search);
+    }
+
+    /**
+     * Verifies that the code contains the described model
+     */
+    public static void hasModelDescriptor(
+            final String modelName,
+            final ImmutableList<TypeContent> typeContents,
+            final String code) {
+        assertTrue(hasModelDescriptorDefinition(modelName, code));
+        hasModelContent(typeContents, code);
+    }
+
+    /**
+     * Verifies that the code contains all of the model contents
+     */
+    private static void hasModelContent(final ImmutableList<TypeContent> contents, final String code) {
+        if (isEmpty(contents)) {
+            return;
+        }
+        for (final TypeContent attr : contents) {
+            assertTrue(code.contains(attr.toPythonCode()));
+        }
+    }
+
+    /**
+     * Determines if the code contains the class definition for the model
+     */
+    private static boolean hasModelDescriptorDefinition(
+            final String modelName,
+            final String code) {
+        final Pattern search = Pattern.compile(
+                "class " + modelName + "\\(object\\):"
+                + "\\s+def __init__\\(self\\):",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return search.matcher(code).find();
     }
 }

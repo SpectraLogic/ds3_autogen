@@ -16,13 +16,19 @@
 package com.spectralogic.ds3autogen.python;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.PythonCodeGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateNotification;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3ElementListTestData;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -67,5 +73,48 @@ public class PythonCodeGenerator_Test {
         final ImmutableList<BaseRequest> result = toRequestModelList(requests);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
+    }
+
+    @Test
+    public void getTypeGenerator_Test() {
+        assertThat(getTypeGenerator(createDs3TypeTestData("com.test.EmptyType")), instanceOf(BaseTypeGenerator.class));
+        //TODO add additional tests as types are special cased
+    }
+
+    @Test
+    public void toTypeDescriptor_Test() {
+        final Ds3Type ds3Type = createDs3TypeTestData(
+                "com.test.SimpleType",
+                createDs3ElementListTestData("ElementName", "None"));
+        final ImmutableMap<String, Ds3Type> testTypeMap = ImmutableMap.of(ds3Type.getName(), ds3Type);
+        final TypeDescriptor result = toTypeDescriptor(ds3Type, testTypeMap);
+        assertThat(result.getName(), is("SimpleType"));
+        assertThat(result.getAttributes().size(), is(0));
+        assertThat(result.getElementLists().size(), is(0));
+        assertThat(result.getElements().size(), is(1));
+        assertThat(result.getElements().get(0), is("'ElementName' : None"));
+    }
+
+    @Test
+    public void toTypeDescriptorList_NullMap_Test() {
+        final ImmutableList<TypeDescriptor> result = toTypeDescriptorList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toTypeDescriptorList_EmptyMap_Test() {
+        final ImmutableList<TypeDescriptor> result = toTypeDescriptorList(ImmutableMap.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toTypeDescriptorList_FullMap_Test() {
+        final Ds3Type ds3Type = createDs3TypeTestData(
+                "com.test.SimpleType",
+                createDs3ElementListTestData("ElementName", "ElementType"));
+        final ImmutableMap<String, Ds3Type> testTypeMap = ImmutableMap.of(ds3Type.getName(), ds3Type);
+        final ImmutableList<TypeDescriptor> result = toTypeDescriptorList(testTypeMap);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("SimpleType"));
     }
 }
