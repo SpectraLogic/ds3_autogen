@@ -18,3 +18,26 @@ class AbstractRequest(object):
         self.body = None
 
 <#include "requests/request.ftl" />
+
+# Response Handlers
+
+class AbstractResponse(object):
+  __metaclass__ = ABCMeta
+  def __init__(self, response, request):
+    self.request = request
+    self.response = response
+    self.object_data = None
+    self.process_response(response)
+    self.result = None
+
+  def process_response(self, response):
+    # this method must be implemented
+    raise NotImplementedError("Request Implemented")
+
+  def __check_status_codes__(self, expected_codes):
+    if self.response.status not in expected_codes:
+      err = "Return Code: Expected %s - Received %s" % (expected_codes, self.response.status)
+      ds3error = XmlSerializer().to_ds3error(self.response.read())
+      raise RequestFailed(err, ds3error)
+
+<#include "responses/response.ftl" />

@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.python.model.type.TypeContent;
 
 import java.util.stream.Collectors;
 
@@ -94,11 +93,23 @@ public final class PythonHelper {
     }
 
     /**
+     * Creates a comma separated list of integers
+     */
+    public static String toCommaSeparatedList(final ImmutableList<Integer> ints) {
+        if (isEmpty(ints)) {
+            return "";
+        }
+        return ints.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
+    }
+
+    /**
      * Creates indents for python code. This is different than for the standard
      * Helper implementation of indentation because it uses 2 spaces instead of 4
      * per depth level.
      */
-    protected static String pythonIndent(final int depth) {
+    public static String pythonIndent(final int depth) {
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < depth; i++) {
             builder.append(PYTHON_INDENT);

@@ -17,9 +17,7 @@ package com.spectralogic.ds3autogen.python.utils;
 
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.getAmazonS3RequestPath;
-import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.getSpectraDs3RequestPath;
-import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.toRequestPath;
+import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -120,5 +118,13 @@ public class GeneratorUtils_Test {
         assertThat(getSpectraDs3RequestPath(getHeadBucketRequest()), is(""));
         assertThat(getSpectraDs3RequestPath(getBucketRequest()), is(""));
         assertThat(getSpectraDs3RequestPath(createBucketRequest()), is(""));
+    }
+
+    @Test
+    public void getParserModelName_Test() {
+        assertThat(getParserModelName(null), is("None"));
+        assertThat(getParserModelName(""), is("None"));
+        assertThat(getParserModelName("SimpleType"), is("SimpleType"));
+        assertThat(getParserModelName("com.test.PathType"), is("PathType"));
     }
 }

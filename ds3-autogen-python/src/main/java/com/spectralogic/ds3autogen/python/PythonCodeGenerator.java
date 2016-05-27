@@ -24,11 +24,14 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.python.helpers.PythonHelper;
 import com.spectralogic.ds3autogen.python.model.commands.CommandSet;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
@@ -93,8 +96,9 @@ public class PythonCodeGenerator implements CodeGenerator {
         }
 
         final ImmutableList<BaseRequest> baseRequests = toRequestModelList(ds3Requests);
+        final ImmutableList<BaseResponse> baseResponses = toResponseModelList(ds3Requests, typeMap);
         final ImmutableList<TypeDescriptor> baseTypes = toTypeDescriptorList(typeMap);
-        final CommandSet commandSet = new CommandSet(baseRequests, baseTypes);
+        final CommandSet commandSet = new CommandSet(baseRequests, baseResponses, baseTypes);
 
         final Template tmpl = config.getTemplate("python/commands/all_commands.ftl");
         final Path path = toBaseProjectPath("ds3.py");
@@ -169,5 +173,36 @@ public class PythonCodeGenerator implements CodeGenerator {
      */
     protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
         return new BaseRequestGenerator();
+    }
+
+    /**
+     * Converts all Ds3Requests into the python response handler models
+     */
+    protected static ImmutableList<BaseResponse> toResponseModelList(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(ds3Requests)) {
+            return ImmutableList.of();
+        }
+        return ds3Requests.stream()
+                .map(response -> toResponseModel(response, typeMap))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a Ds3Request into a python response handler model
+     */
+    protected static BaseResponse toResponseModel(
+            final Ds3Request ds3Request,
+            final ImmutableMap<String, Ds3Type> typeMap) {
+        final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
+        return responseGenerator.generate(ds3Request, typeMap);
+    }
+
+    /**
+     * Retrieves the Response Generator associated with the Ds3Request
+     */
+    protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+        return new BaseResponseGenerator();
     }
 }
