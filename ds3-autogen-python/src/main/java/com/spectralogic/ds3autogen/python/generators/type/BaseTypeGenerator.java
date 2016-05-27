@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.getParserModelName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.getEncapsulatingTagAnnotations;
@@ -115,9 +116,9 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
             return "None";
         }
         if (hasContent(componentType) && typeMap.containsKey(componentType) && !isEnumType(componentType, typeMap)) {
-            return removePath(componentType);
+            return getParserModelName(componentType);
         } else if(isEmpty(componentType) && typeMap.containsKey(type) && !isEnumType(type, typeMap)) {
-            return removePath(type);
+            return getParserModelName(type);
         }
         return "None";
     }

@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.python.model.type.TypeContent;
 
 import java.util.stream.Collectors;
 
@@ -91,6 +90,18 @@ public final class PythonHelper {
         }
         return "\n" + pythonIndent(depth) + lines.stream()
                 .collect(Collectors.joining(",\n" + pythonIndent(depth))) + "\n" + pythonIndent(depth - 1);
+    }
+
+    /**
+     * Creates a comma separated list of integers
+     */
+    public static String toCommaSeparatedList(final ImmutableList<Integer> ints) {
+        if (isEmpty(ints)) {
+            return "";
+        }
+        return ints.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
     }
 
     /**

@@ -119,4 +119,24 @@ public class PythonHelper_Test {
         final String result = toCommaSeparatedLines(typeContents, 1);
         assertThat(result, is(expected));
     }
+
+    @Test
+    public void toCommaSeparatedList_NullList_Test() {
+        final String result = toCommaSeparatedList(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toCommaSeparatedList_EmptyList_Test() {
+        final String result = toCommaSeparatedList(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toCommaSeparatedList_Test() {
+        final String expected = "1, 2, 3, 4";
+        final ImmutableList<Integer> ints = ImmutableList.of(1, 2, 3, 4);
+        final String result = toCommaSeparatedList(ints);
+        assertThat(result, is(expected));
+    }
 }

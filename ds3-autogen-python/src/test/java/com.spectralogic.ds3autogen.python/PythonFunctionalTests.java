@@ -38,11 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasModelDescriptor;
-import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasOperation;
-import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.hasRequestHandler;
+import static com.spectralogic.ds3autogen.python.utils.FunctionalTestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
