@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.getNetType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isEnumType;
 import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
@@ -61,19 +62,6 @@ public final class NetNullableVariableUtils {
                 netType,
                 questionMarkForNullable,
                 nullable);
-    }
-
-    /**
-     * Determines if a contract type is an enum defined within the contract
-     */
-    protected static boolean isEnumType(
-            final String typeName,
-            final ImmutableMap<String, Ds3Type> typeMap) {
-        if (isEmpty(typeName) || isEmpty(typeMap)) {
-            return false;
-        }
-        final Ds3Type type = typeMap.get(typeName);
-        return !(type == null || isEmpty(type.getEnumConstants()));
     }
 
     /**
