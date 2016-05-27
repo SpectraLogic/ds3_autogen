@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.getParserModelName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getPayloadResponseCode;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getResponsePayload;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 
@@ -46,7 +47,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         return new BaseResponse(name, parseResponseCode, codes);
     }
 
-    //TODO
     /**
      * Gets all non error response codes
      */
@@ -63,7 +63,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
                 .collect(GuavaCollectors.immutableList());
     }
 
-    //TODO
     /**
      * Gets the python code that will parse the response payload
      */
@@ -74,7 +73,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         return parsePayload.toPythonCode();
     }
 
-    //TODO
     /**
      * Creates the Parse Payload object which describes how to parse the specified
      * response payload for this Ds3Request
@@ -87,21 +85,24 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         }
         final String responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
         final String nameToMarshal = getNameToMarshal(responsePayload, typeMap);
+        final Integer responseCode = getPayloadResponseCode(ds3Request.getDs3ResponseCodes());
         if (isEmpty(nameToMarshal)) {
             LOG.debug("Response type does not have a NameToMarshal value");
-            return new BaseParsePayload(getParserModelName(responsePayload));
+            return new BaseParsePayload(getParserModelName(responsePayload), responseCode);
         }
-        return new EncapsulatedPayload(getParserModelName(responsePayload), nameToMarshal);
+        return new EncapsulatedPayload(getParserModelName(responsePayload), nameToMarshal, responseCode);
     }
 
-
-    //TODO
     /**
      * Gets the name to marshal value of the specified type
      */
     protected static String getNameToMarshal(
             final String typeName,
             final ImmutableMap<String, Ds3Type> typeMap) {
+        if (isEmpty(typeName) || isEmpty(typeMap)) {
+            LOG.error("Could not find NameToMarshal because input was empty");
+            return null;
+        }
         final Ds3Type ds3Type = typeMap.get(typeName);
         if (ds3Type == null || isEmpty(ds3Type.getNameToMarshal())) {
             return null;

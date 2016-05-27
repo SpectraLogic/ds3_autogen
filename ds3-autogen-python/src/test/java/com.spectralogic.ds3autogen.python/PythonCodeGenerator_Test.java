@@ -29,15 +29,10 @@ import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.PythonCodeGenerator.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateNotification;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3ElementListTestData;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PythonCodeGenerator_Test {
@@ -137,7 +132,10 @@ public class PythonCodeGenerator_Test {
         final BaseResponse result = toResponseModel(request, ImmutableMap.of());
         assertThat(result.getName(), is("GetBucketResponseHandler"));
         assertThat(result.getCodes().size(), is(1));
-        assertThat(result.getParseResponseCode(), is("parseModel(xmldom.fromstring(response.read()), ListBucketResult())"));
+
+        final String expectedParseResponse = "if self.response.status == 200:\n" +
+                "      self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
+        assertThat(result.getParseResponseCode(), is(expectedParseResponse));
     }
 
     @Test

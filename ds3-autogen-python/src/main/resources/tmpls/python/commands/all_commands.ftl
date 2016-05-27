@@ -28,6 +28,7 @@ class AbstractResponse(object):
     self.response = response
     self.object_data = None
     self.process_response(response)
+    self.result = None
 
   def process_response(self, response):
     # this method must be implemented

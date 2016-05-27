@@ -22,6 +22,6 @@ package com.spectralogic.ds3autogen.python.model.response;
 public class NoPayload implements ParsePayload {
     @Override
     public String toPythonCode() {
-        return "None";
+        return "";
     }
 }

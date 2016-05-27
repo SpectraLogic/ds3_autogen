@@ -109,7 +109,7 @@ public final class PythonHelper {
      * Helper implementation of indentation because it uses 2 spaces instead of 4
      * per depth level.
      */
-    protected static String pythonIndent(final int depth) {
+    public static String pythonIndent(final int depth) {
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < depth; i++) {
             builder.append(PYTHON_INDENT);

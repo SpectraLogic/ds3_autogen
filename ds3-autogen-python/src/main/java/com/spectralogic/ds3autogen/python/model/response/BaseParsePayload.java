@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.python.model.response;
 
+import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent;
+
 /**
  * Creates the python code within the response handler to parse
  * the response payload assuming no encapsulating xml tag
@@ -22,15 +24,20 @@ package com.spectralogic.ds3autogen.python.model.response;
 public class BaseParsePayload implements ParsePayload {
 
     private final String typeModel;
+    private final Integer code;
 
-    public BaseParsePayload(final String typeModel) {
+    public BaseParsePayload(final String typeModel, final int code) {
         this.typeModel = typeModel;
+        this.code = code;
     }
 
     @Override
     public String toPythonCode() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("parseModel(xmldom.fromstring(response.read()), ").append(typeModel);
+        builder.append("if self.response.status == ").append(code).append(":\n")
+                .append(pythonIndent(3))
+                .append("self.result = parseModel(xmldom.fromstring(response.read()), ")
+                .append(typeModel);
         if (!typeModel.equals("None")) {
             builder.append("()");
         }

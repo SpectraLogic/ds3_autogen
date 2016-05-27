@@ -23,18 +23,18 @@ import static org.junit.Assert.assertThat;
 public class TypesToPythonCode_Test {
 
     @Test
-    public void TypeAttribute_Test() {
+    public void typeAttribute_Test() {
         assertThat(new TypeAttribute("Attr").toPythonCode(), is("'Attr'"));
     }
 
     @Test
-    public void TypeElement_Test() {
+    public void typeElement_Test() {
         assertThat(new TypeElement("XmlTag", "None").toPythonCode(), is("'XmlTag' : None"));
         assertThat(new TypeElement("XmlTag", "TypeModel").toPythonCode(), is("'XmlTag' : TypeModel()"));
     }
 
     @Test
-    public void TypeElementList_Test() {
+    public void typeElementList_Test() {
         assertThat(new TypeElementList("XmlTag", "None", "None").toPythonCode(),
                 is("('XmlTag', None, None)"));
 
