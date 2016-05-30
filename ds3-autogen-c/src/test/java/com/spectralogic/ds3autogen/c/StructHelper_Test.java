@@ -136,7 +136,7 @@ public class StructHelper_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response, GByteArray* xml_blob) {"));
+        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_system_information_response(const ds3_client* client, const ds3_request* request, ds3_system_information_response** _response, GByteArray* xml_blob) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
@@ -201,7 +201,7 @@ public class StructHelper_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_system_information_response(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** _response, GByteArray* xml_blob) {"));
+        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_system_information_response(const ds3_client* client, const ds3_request* request, ds3_system_information_response** _response, GByteArray* xml_blob) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));

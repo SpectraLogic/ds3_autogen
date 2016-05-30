@@ -341,7 +341,7 @@ public class CCodeGenerator_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_bucket_response(const ds3_client* client, const ds3_request* request, const ds3_bucket_response** _response, GByteArray* xml_blob) {"));
+        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_bucket_response(const ds3_client* client, const ds3_request* request, ds3_bucket_response** _response, GByteArray* xml_blob) {"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
         assertTrue(output.contains("    ds3_error* error;"));
         assertTrue(output.contains("    ds3_bucket_response* response;"));
@@ -406,7 +406,7 @@ public class CCodeGenerator_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** _response, GByteArray* xml_blob) {"));
+        assertTrue(output.contains("static ds3_error* _parse_top_level_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, ds3_list_all_my_buckets_result_response** _response, GByteArray* xml_blob) {"));
         assertTrue(output.contains("    xmlDocPtr doc;"));
         assertTrue(output.contains("    xmlNodePtr root;"));
         assertTrue(output.contains("    xmlNodePtr child_node;"));
@@ -595,14 +595,13 @@ public class CCodeGenerator_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        LOG.info(output);
 
         final Pattern arrayStructParserPattern = Pattern.compile(Pattern.quote(
                 "static ds3_error* _parse_ds3_bucket_details_response_array(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, GPtrArray** _response) {"));
         final Pattern arrayParserPattern = Pattern.compile(Pattern.quote(
                 "static ds3_error* _parse_ds3_user_response(const ds3_client* client, const xmlDocPtr doc, const xmlNodePtr root, ds3_user_response** _response) {"));
         final Pattern structParserPattern = Pattern.compile(Pattern.quote(
-                "static ds3_error* _parse_top_level_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, const ds3_list_all_my_buckets_result_response** _response, GByteArray* xml_blob) {"));
+                "static ds3_error* _parse_top_level_ds3_list_all_my_buckets_result_response(const ds3_client* client, const ds3_request* request, ds3_list_all_my_buckets_result_response** _response, GByteArray* xml_blob) {"));
 
         final Matcher arrayStructParserMatcher = arrayStructParserPattern.matcher(output);
         final Matcher arrayParserMatcher = arrayParserPattern.matcher(output);
