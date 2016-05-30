@@ -61,8 +61,8 @@ public final class RequestHelper {
         return "const char* bucket_name";
     }
 
-    public static String getSpectraS3InitParams(final boolean isResourceIdRequired) {
-        if (isResourceIdRequired) {
+    public static String getSpectraS3InitParams(final boolean isResourceRequired) {
+        if (isResourceRequired) {
             return "const char* resource_id";
         }
         return "";
@@ -93,7 +93,7 @@ public final class RequestHelper {
                 builder.add(amazonS3InitParams);
             }
         } else {
-            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceIdRequired());
+            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceRequired());
             if (!spectraS3InitParams.isEmpty()) {
                 builder.add(spectraS3InitParams);
             }

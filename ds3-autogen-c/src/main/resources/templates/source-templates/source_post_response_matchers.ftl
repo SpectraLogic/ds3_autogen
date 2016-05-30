@@ -67,7 +67,7 @@ void ds3_free_client(ds3_client* client) {
     g_free(client);
 }
 
-void ds3_free_request(ds3_request* _request) {
+void ds3_request_free(ds3_request* _request) {
     struct _ds3_request* request;
     if (_request == NULL) {
         return;
@@ -133,7 +133,7 @@ void ds3_free_metadata_keys(ds3_metadata_keys_result* metadata_keys) {
     g_free(metadata_keys);
 }
 
-void ds3_free_error(ds3_error* error) {
+void ds3_error_free(ds3_error* error) {
     if (error == NULL) {
         return;
     }

@@ -123,6 +123,8 @@ typedef struct _ds3_client {
     <#include "FreeStructPrototype.ftl">
 </#list>
 <#-- ********************************************* -->
+LIBRARY_API void ds3_request_free(ds3_request* request);
+LIBRARY_API void ds3_error_free(ds3_error* error);
 
 
 LIBRARY_API ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* metadata, const char* name);
@@ -154,6 +156,7 @@ LIBRARY_API ds3_error* head_bucket_request(const ds3_client* client, const ds3_r
     <#elseif requestEntry.getName() == "head_object_request">
 LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
     <#else>
+        <#include "InitRequestPrototype.ftl">
         <#include "RequestPrototype.ftl">
     </#if>
 </#list>

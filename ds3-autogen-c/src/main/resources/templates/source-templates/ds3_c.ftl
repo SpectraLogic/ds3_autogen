@@ -46,9 +46,7 @@
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
-        <#-- SKIP - HARD CODED SPECIAL CASES
-        <#include "../request-templates/HeadRequest.ftl"/>
-        -->
+        <#-- SKIP - HARD CODED SPECIAL CASES -->
     <#elseif requestEntry.hasRequestPayload()>
         <#include "../request-templates/RequestWithRequestPayload.ftl"/>
     <#elseif requestEntry.hasRequestPayload() && requestEntry.hasResponsePayload()>
