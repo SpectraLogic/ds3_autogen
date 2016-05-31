@@ -23,8 +23,11 @@ import com.spectralogic.ds3autogen.python.model.type.TypeContent;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toCommandName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -171,6 +174,42 @@ public class FunctionalTestHelper {
         final Pattern search = Pattern.compile(
                 "class " + modelName + "\\(object\\):"
                 + "\\s+def __init__\\(self\\):",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return search.matcher(code).find();
+    }
+
+    /**
+     * Determines if the code contains the client class with specified requests
+     */
+    public static void hasClient(final ImmutableList<String> requestNames, final String code) {
+        assertTrue(hasClientClass(code));
+        for (final String requestName : requestNames) {
+            assertTrue(hasClientCommand(requestName, code));
+        }
+    }
+
+    /**
+     * Determines if the code contains the client command for the specified request
+     */
+    public static boolean hasClientCommand(final String requestName, final String code) {
+        final Pattern search = Pattern.compile(
+                "def " + camelToUnderscore(toCommandName(requestName)) + "\\(self, request\\):"
+                + "\\s+return " + toResponseName(requestName)
+                + "\\(self\\.net_client.get_response\\(request\\), request\\)",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
+        return search.matcher(code).find();
+    }
+
+    /**
+     * Determines if the code contains the client class
+     */
+    private static boolean hasClientClass(final String code) {
+        final Pattern search = Pattern.compile(
+                "class Client\\(object\\):"
+                + "\\s+def __init__\\(self, endpoint, credentials\\):"
+                + "\\s+self\\.net_client = NetworkClient\\(endpoint, credentials\\)"
+                + "\\s+def get_net_client\\(self\\):"
+                + "\\s+return self\\.net_client",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return search.matcher(code).find();
     }
