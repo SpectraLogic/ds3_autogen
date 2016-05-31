@@ -150,6 +150,9 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
         final String typeModel = getTypeModelName(ds3Element.getType(), ds3Element.getComponentType(), typeMap);
 
         if(hasContent(encapsulatingTag)) {
+            if (encapsulatingTag.equals("CommonPrefixes")) {
+                return new TypeElementList(encapsulatingTag, "None", encapsulatingTag);
+            }
             return new TypeElementList(xmlTag, encapsulatingTag, typeModel);
         }
         return new TypeElementList(xmlTag, "None", typeModel);
