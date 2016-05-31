@@ -199,4 +199,32 @@ public class PythonFunctionalTests {
 
         hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
     }
+
+    @Test
+    public void headBucketRequest() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String requestName = "HeadBucketRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/requests/headBucketRequest.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
+
+        final ImmutableList<String> reqArgs = ImmutableList.of("bucket_name");
+
+        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, ImmutableList.of(), ImmutableList.of(), ds3Code);
+        hasOperation(Operation.START_BULK_PUT, ds3Code);
+
+        assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
+        assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
+                "    if self.response.status == 200:\n" +
+                "      self.result = HeadBucketStatus.EXISTS\n" +
+                "    elif self.response.status == 403:\n" +
+                "      self.result = HeadBucketStatus.NOTAUTHORIZED\n" +
+                "    elif self.response.status == 404:\n" +
+                "      self.result = HeadBucketStatus.DOESNTEXIST\n" +
+                "    else:\n" +
+                "      self.result = HeadBucketStatus.UNKNOWN"));
+    }
 }

@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.HeadBucketResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
@@ -30,6 +31,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.PythonCodeGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getBucketRequest;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateNotification;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -123,7 +125,8 @@ public class PythonCodeGenerator_Test {
     public void getResponseGenerator_Test() {
         assertThat(getResponseGenerator(createDs3RequestTestData("com.test.EmptyRequest", Classification.spectrads3)),
                 instanceOf(BaseResponseGenerator.class));
-        //TODO add additional tests as responses are special cased
+
+        assertThat(getResponseGenerator(getHeadBucketRequest()), instanceOf(HeadBucketResponseGenerator.class));
     }
 
     @Test
