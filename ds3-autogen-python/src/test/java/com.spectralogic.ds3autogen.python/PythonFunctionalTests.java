@@ -108,4 +108,95 @@ public class PythonFunctionalTests {
 
         hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
     }
+
+    @Test
+    public void jobsApiBean() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+        final String modelDescriptorName = "JobList";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/jobsApiBean.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(ds3Code));
+
+        final ImmutableList<TypeContent> modelContents = ImmutableList.of(
+                new TypeElementList("Job", "Jobs", "Job"));
+
+        hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
+    }
+
+    @Test
+    public void listMultiPartUploadApiBean() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String modelDescriptorName = "ListMultiPartUploadsResult";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/listMultiPartUploadApiBean.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(ds3Code));
+
+        final ImmutableList<TypeContent> modelContents = ImmutableList.of(
+                new TypeElement("Bucket", "None"),
+                new TypeElement("Delimiter", "None"),
+                new TypeElement("KeyMarker", "None"),
+                new TypeElement("MaxUploads", "None"),
+                new TypeElement("NextKeyMarker", "None"),
+                new TypeElement("NextUploadIdMarker", "None"),
+                new TypeElement("Prefix", "None"),
+                new TypeElement("IsTruncated", "None"),
+                new TypeElement("UploadIdMarker", "None"),
+                new TypeElementList("CommonPrefixes", "None", "CommonPrefixes"),
+                new TypeElementList("Upload", "None", "None"));
+
+        hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
+    }
+
+    @Test
+    public void bucketObjectsApiBean() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String modelDescriptorName = "ListBucketResult";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/bucketObjectsApiBean.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(ds3Code));
+
+        final ImmutableList<TypeContent> modelContents = ImmutableList.of(
+                new TypeElement("CreationDate", "None"),
+                new TypeElement("Delimiter", "None"),
+                new TypeElement("Marker", "None"),
+                new TypeElement("MaxKeys", "None"),
+                new TypeElement("Name", "None"),
+                new TypeElement("NextMarker", "None"),
+                new TypeElement("Prefix", "None"),
+                new TypeElement("IsTruncated", "None"),
+                new TypeElementList("CommonPrefixes", "None", "CommonPrefixes"),
+                new TypeElementList("Contents", "None", "Contents"));
+
+        hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
+    }
+
+    @Test
+    public void namedDetailedTapeList() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+        final String modelDescriptorName = "NamedDetailedTapeList";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/types/namedDetailedTapeList.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(ds3Code));
+
+        final ImmutableList<TypeContent> modelContents = ImmutableList.of(
+                new TypeElementList("Tape", "None", "NamedDetailedTape"));
+
+        hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
+    }
 }

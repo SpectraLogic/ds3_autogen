@@ -4,6 +4,8 @@
 
 <#include "types/type_descriptor.ftl" />
 
+<#include "types/static_type_descriptors.ftl" />
+
 <#include "types/parser_function.ftl" />
 
 # Request Handlers

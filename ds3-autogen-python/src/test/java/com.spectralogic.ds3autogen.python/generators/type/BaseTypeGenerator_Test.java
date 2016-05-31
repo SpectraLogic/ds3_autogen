@@ -114,6 +114,25 @@ public class BaseTypeGenerator_Test {
     }
 
     @Test
+    public void toElementList_CommonPrefixes_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotations = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "CommonPrefixes", "java.lang.String"),
+                new Ds3AnnotationElement("CollectionValueRenderingMode", "BLOCK_FOR_EVERY_ELEMENT", "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "Prefix", "java.lang.String"));
+
+        final Ds3Element commonPrefixes = new Ds3Element(
+                "CommonPrefixes",
+                "array",
+                "java.lang.String",
+                ImmutableList.of(
+                        new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName", annotations)),
+                false);
+
+        final TypeElementList result = toElementList(commonPrefixes, ImmutableMap.of());
+        assertThat(result.toPythonCode(), is("('CommonPrefixes', None, CommonPrefixes())"));
+    }
+
+    @Test
     public void toElementList_Test() {
         final TypeElementList result = toElementList(createListDs3Element(), createTestTypeMap());
         assertThat(result.toPythonCode(), is("('ListElement', None, ListType())"));
