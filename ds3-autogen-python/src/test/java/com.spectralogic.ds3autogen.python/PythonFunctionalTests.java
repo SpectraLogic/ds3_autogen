@@ -68,6 +68,9 @@ public class PythonFunctionalTests {
 
         hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, ds3Code);
         hasOperation(Operation.START_BULK_PUT, ds3Code);
+
+        //Test Client
+        hasClient(ImmutableList.of(requestName), ds3Code);
     }
 
     @Test
@@ -85,6 +88,9 @@ public class PythonFunctionalTests {
 
         hasRequestHandler(requestName, HttpVerb.DELETE, reqArgs, null, null, ds3Code);
         assertTrue(ds3Code.contains("self.path = '/_rest_/job_created_notification_registration/' + notification_id"));
+
+        //Test Client
+        hasClient(ImmutableList.of(requestName), ds3Code);
     }
 
     @Test
