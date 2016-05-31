@@ -1,5 +1,9 @@
 <#include "../common/copyright.ftl" />
 
+# Models
+
+<#include "static_classes.ftl" />
+
 # Type Descriptors
 
 <#include "types/type_descriptor.ftl" />

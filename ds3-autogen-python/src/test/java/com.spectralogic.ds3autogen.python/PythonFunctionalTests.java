@@ -226,5 +226,7 @@ public class PythonFunctionalTests {
                 "      self.result = HeadBucketStatus.DOESNTEXIST\n" +
                 "    else:\n" +
                 "      self.result = HeadBucketStatus.UNKNOWN"));
+
+        assertTrue(ds3Code.contains("class HeadBucketStatus(object):"));
     }
 }
