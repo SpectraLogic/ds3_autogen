@@ -24,15 +24,14 @@ import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerato
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadBucketResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.PythonCodeGenerator.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getBucketRequest;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateNotification;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -81,7 +80,6 @@ public class PythonCodeGenerator_Test {
     @Test
     public void getTypeGenerator_Test() {
         assertThat(getTypeGenerator(createDs3TypeTestData("com.test.EmptyType")), instanceOf(BaseTypeGenerator.class));
-        //TODO add additional tests as types are special cased
     }
 
     @Test
@@ -159,5 +157,38 @@ public class PythonCodeGenerator_Test {
         final ImmutableList<BaseResponse> result = toResponseModelList(requests, ImmutableMap.of());
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("GetBucketResponseHandler"));
+    }
+
+    @Test
+    public void toClientCommand_Test() {
+        final BaseClient result = toClientCommand(createDs3RequestTestData("com.test.GetCompleteMultiPartUploadRequest", Classification.spectrads3));
+        assertThat(result.getCommandName(), is("get_complete_multi_part_upload"));
+        assertThat(result.getResponseName(), is("GetCompleteMultiPartUploadResponse"));
+    }
+
+    @Test
+    public void toClientCommands_NullList_Test() {
+        final ImmutableList<BaseClient> result = toClientCommands(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toClientCommands_EmptyList_Test() {
+        final ImmutableList<BaseClient> result = toClientCommands(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toClientCommands_Test() {
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                createDs3RequestTestData("com.test.PutBucketRequest", Classification.amazons3),
+                createDs3RequestTestData("com.test.PutBucketSpectraS3Request", Classification.spectrads3));
+
+        final ImmutableList<BaseClient> result = toClientCommands(requests);
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getResponseName(), is("PutBucketResponse"));
+        assertThat(result.get(0).getCommandName(), is("put_bucket"));
+        assertThat(result.get(1).getResponseName(), is("PutBucketSpectraS3Response"));
+        assertThat(result.get(1).getCommandName(), is("put_bucket_spectra_s3"));
     }
 }

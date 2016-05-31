@@ -47,3 +47,5 @@ class AbstractResponse(object):
       raise RequestFailed(err, ds3error)
 
 <#include "responses/response.ftl" />
+
+<#include "client/client_class.ftl" />

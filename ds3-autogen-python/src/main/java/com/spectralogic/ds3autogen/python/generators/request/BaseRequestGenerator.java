@@ -24,8 +24,6 @@ import com.spectralogic.ds3autogen.python.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
-import java.util.stream.Collectors;
-
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
@@ -55,7 +53,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     @Override
     public ImmutableList<String> toVoidArgumentsList(final ImmutableList<Ds3Param> requiredParams) {
         return getVoidArgsFromParamList(requiredParams).stream()
-                .map(i -> i.getName())
+                .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
     }
 
