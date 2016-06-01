@@ -82,6 +82,21 @@ typedef enum {
   DS3_ERROR_TOO_MANY_REDIRECTS
 }ds3_error_code;
 
+typedef struct {
+    ds3_str* etag;
+    int      part_number;
+}ds3_multipart_upload_part;
+
+typedef struct {
+    ds3_multipart_upload_part** parts;
+    int                         num_parts;
+}ds3_complete_multipart_upload_response;
+
+typedef struct {
+    ds3_str** strings_list;
+    int       num_strings;
+}ds3_delete_objects_response;
+
 <#-- **************************************** -->
 <#-- Generate all Models                      -->
 <#list getEnums() as enumEntry>
@@ -123,15 +138,17 @@ typedef struct _ds3_client {
     <#include "FreeStructPrototype.ftl">
 </#list>
 <#-- ********************************************* -->
+
 LIBRARY_API void ds3_request_free(ds3_request* request);
 LIBRARY_API void ds3_error_free(ds3_error* error);
-
 
 LIBRARY_API ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* metadata, const char* name);
 LIBRARY_API unsigned int ds3_metadata_size(const ds3_metadata* metadata);
 LIBRARY_API ds3_metadata_keys_result* ds3_metadata_keys(const ds3_metadata* metadata);
 
-LIBRARY_API void ds3_free_metadata_entry(ds3_metadata_entry* entry);
+LIBRARY_API void ds3_metadata_free(ds3_metadata* _metadata);
+LIBRARY_API void ds3_metadata_entry_free(ds3_metadata_entry* entry);
+LIBRARY_API void ds3_metadata_keys_free(ds3_metadata_keys_result* metadata_keys);
 
 LIBRARY_API ds3_creds*  ds3_create_creds(const char* access_id, const char* secret_key);
 LIBRARY_API ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds);
@@ -145,15 +162,24 @@ LIBRARY_API void        ds3_client_register_net(ds3_client* client, ds3_error* (
                                                                                                 size_t (*write_handler_func)(void*, size_t, size_t, void*),
                                                                                                 ds3_string_multimap** return_headers));
 LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
+LIBRARY_API void ds3_creds_free(ds3_creds* client);
+LIBRARY_API void ds3_client_free(ds3_client* client);
 
+LIBRARY_API ds3_error* ds3_get_object_with_metadata(const ds3_client* client,
+                                                    const ds3_request* request,
+                                                    void* user_data,
+                                                    size_t (* callback)(void*, size_t, size_t, void*),
+                                                    ds3_metadata** _metadata);
 
 <#-- **************************************** -->
 <#-- Generate all "RequestPrototypes"         -->
 <#list getRequests() as requestEntry>
 
     <#if requestEntry.getName() == "head_bucket_request">
+LIBRARY_API ds3_request* ds3_init_head_bucket(const char* bucket_name);
 LIBRARY_API ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request);
     <#elseif requestEntry.getName() == "head_object_request">
+LIBRARY_API ds3_request* ds3_init_head_object(const char* bucket_name, const char* object_name);
 LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
     <#else>
         <#include "InitRequestPrototype.ftl">
@@ -164,7 +190,7 @@ LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_r
 
 
 LIBRARY_API void ds3_cleanup(void);
-LIBRARY_API void ds3_print_request(const ds3_request* request);
+//LIBRARY_API void ds3_print_request(const ds3_request* request); // No implementation found
 
 // provided helpers
 LIBRARY_API size_t ds3_write_to_file(void* buffer, size_t size, size_t nmemb, void* user_data);

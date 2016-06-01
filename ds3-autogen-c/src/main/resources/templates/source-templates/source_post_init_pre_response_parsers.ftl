@@ -103,7 +103,6 @@ static uint64_t xml_get_bool_from_attribute(const ds3_log* log, xmlDocPtr doc, s
     return xml_get_bool(log, doc, (xmlNodePtr) attribute);
 }
 
-
 static ds3_error* _get_request_xml_nodes(
         GByteArray* xml_blob,
         xmlDocPtr* _doc,
@@ -134,6 +133,145 @@ static ds3_error* _get_request_xml_nodes(
     *_root = root;
 
     g_byte_array_free(xml_blob, TRUE);
+    return NULL;
+}
+
+#define LENGTH_BUFF_SIZE 21
+
+static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
+    char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
+    xmlDocPtr doc;
+    ds3_bulk_object_response* obj;
+    xmlNodePtr objects_node, object_node;
+    int i;
+
+    // Start creating the xml body to send to the server.
+    doc = xmlNewDoc((xmlChar*)"1.0");
+    objects_node = xmlNewNode(NULL, (xmlChar*) "Objects");
+
+    if (list_type == BULK_GET) {
+        xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (xmlChar*) _get_ds3_job_chunk_client_processing_order_guarantee_str(order));
+    }
+
+    for (i = 0; i < obj_list->num_objects; i++) {
+        obj = obj_list->objects[i];
+        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj->length);
+
+        object_node = xmlNewNode(NULL, (xmlChar*) "Object");
+        xmlAddChild(objects_node, object_node);
+
+        xmlSetProp(object_node, (xmlChar*) "Name", (xmlChar*) obj->name->value);
+        if (list_type == BULK_PUT) {
+            xmlSetProp(object_node, (xmlChar*) "Size", (xmlChar*) size_buff);
+        }
+    }
+
+    xmlDocSetRootElement(doc, objects_node);
+
+    return doc;
+}
+
+static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_response* mpu_list) {
+    char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
+    xmlDocPtr doc;
+    ds3_multipart_upload_part* part;
+    xmlNodePtr parts_node, part_node;
+    int part_num;
+
+    // Start creating the xml body to send to the server.
+    doc = xmlNewDoc((xmlChar*)"1.0");
+    parts_node = xmlNewNode(NULL, (xmlChar*) "CompleteMultipartUpload");
+
+    for (part_num = 0; part_num < mpu_list->num_parts; part_num++) {
+        part = mpu_list->parts[part_num];
+
+        part_node = xmlNewNode(NULL, (xmlChar*) "Part");
+        xmlAddChild(parts_node, part_node);
+
+        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%d", part->part_number);
+        xmlNewTextChild(part_node, NULL, (xmlChar*) "PartNumber", (xmlChar*) size_buff);
+
+        xmlNewTextChild(part_node, NULL, (xmlChar*) "ETag", (xmlChar*) part->etag->value);
+    }
+
+    xmlDocSetRootElement(doc, parts_node);
+    return doc;
+}
+
+static xmlDocPtr _generate_xml_delete_objects(ds3_delete_objects_response* keys_list) {
+    xmlDocPtr doc;
+    ds3_str* key;
+    xmlNodePtr del_node, obj_node;
+    int key_num;
+
+    // Start creating the xml body to send to the server.
+    doc = xmlNewDoc((xmlChar*)"1.0");
+    del_node = xmlNewNode(NULL, (xmlChar*) "Delete");
+
+    for (key_num = 0; key_num < keys_list->num_strings; key_num++) {
+        key = keys_list->strings_list[key_num];
+
+        obj_node = xmlNewNode(NULL, (xmlChar*) "Object");
+        xmlAddChild(del_node, obj_node);
+
+        xmlNewTextChild(obj_node, NULL, (xmlChar*) "Key", (xmlChar*) key->value);
+    }
+
+    xmlDocSetRootElement(doc, del_node);
+    return doc;
+}
+
+ds3_error* _init_request_payload(const ds3_request* _request,
+                                 ds3_xml_send_buff* send_buff,
+                                 const object_list_type operation_type) {
+    xmlDocPtr doc;
+
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+
+    // Clear send_buff
+    memset(send_buff, 0, sizeof(ds3_xml_send_buff));
+
+    switch(operation_type) {
+        case BULK_PUT:
+        case BULK_GET:
+        case GET_PHYSICAL_PLACEMENT:
+            if (request->object_list == NULL || request->object_list->num_objects == 0) {
+                return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bulk command requires a list of objects to process");
+            }
+            doc = _generate_xml_bulk_objects_list(request->object_list, operation_type, request->chunk_ordering);
+            break;
+
+        case COMPLETE_MPU:
+            if (request->mpu_list == NULL || request->mpu_list->num_parts == 0) {
+                return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The complete multipart upload command requires a list of objects to process");
+            }
+            doc = _generate_xml_complete_mpu(request->mpu_list);
+            break;
+
+        case BULK_DELETE:
+        case STRING_LIST:
+            if (request->delete_objects == NULL || request->delete_objects->num_strings == 0) {
+                return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The delete objects command requires a list of objects to process");
+            }
+            doc = _generate_xml_delete_objects(request->delete_objects);
+            break;
+
+        case STRING: // *** not XML - do not interpret
+            send_buff->buff = request->delete_objects->strings_list[0]->value;
+            send_buff->size = request->delete_objects->strings_list[0]->size;
+            request->length -= send_buff->size;
+            return NULL;
+            break;
+
+        default:
+            return ds3_create_error(DS3_ERROR_INVALID_XML, "Unknown request payload type");
+    }
+
+    xmlDocDumpFormatMemory(doc, (xmlChar**) &send_buff->buff, (int*) &send_buff->size, 1);
+    request->length = send_buff->size; // make sure to set the size of the request.
+
+    xmlFreeDoc(doc);
+
     return NULL;
 }
 

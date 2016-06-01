@@ -1,50 +1,5 @@
 
-#define LENGTH_BUFF_SIZE 21
-
-static xmlDocPtr _generate_xml_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
-    char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
-    xmlDocPtr doc;
-    ds3_bulk_object_response* obj;
-    xmlNodePtr objects_node, object_node;
-    int i;
-    // Start creating the xml body to send to the server.
-    doc = xmlNewDoc((xmlChar*)"1.0");
-    if (list_type == BULK_DELETE) {
-        objects_node = xmlNewNode(NULL, (xmlChar*) "Delete");
-    } else {
-        objects_node = xmlNewNode(NULL, (xmlChar*) "Objects");
-    }
-
-    if (list_type == BULK_GET) {
-        xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (xmlChar*) _get_ds3_job_chunk_client_processing_order_guarantee_str(order));
-    }
-
-    for (i = 0; i < obj_list->num_objects; i++) {
-        //memset(&obj, 0, sizeof(ds3_bulk_object_response));
-        //memset(size_buff, 0, sizeof(char) * LENGTH_BUFF_SIZE);
-
-        obj = obj_list->objects[i];
-        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj->length);
-
-        object_node = xmlNewNode(NULL, (xmlChar*) "Object");
-        xmlAddChild(objects_node, object_node);
-
-        if (list_type == BULK_DELETE) {
-            xmlNewTextChild(object_node, NULL, (xmlChar*) "Key", (xmlChar*) obj->name->value);
-        } else {
-            xmlSetProp(object_node, (xmlChar*) "Name", (xmlChar*) obj->name->value);
-            if (list_type == BULK_PUT) {
-                xmlSetProp(object_node, (xmlChar*) "Size", (xmlChar*) size_buff);
-            }
-        }
-    }
-
-    xmlDocSetRootElement(doc, objects_node);
-
-    return doc;
-}
-
-void ds3_free_creds(ds3_creds* creds) {
+void ds3_creds_free(ds3_creds* creds) {
     if (creds == NULL) {
         return;
     }
@@ -54,7 +9,7 @@ void ds3_free_creds(ds3_creds* creds) {
     g_free(creds);
 }
 
-void ds3_free_client(ds3_client* client) {
+void ds3_client_free(ds3_client* client) {
     if (client == NULL) {
       return;
     }
@@ -89,7 +44,7 @@ void ds3_request_free(ds3_request* _request) {
     g_free(request);
 }
 
-void ds3_free_metadata(ds3_metadata* _metadata) {
+void ds3_metadata_free(ds3_metadata* _metadata) {
     struct _ds3_metadata* metadata;
     if (_metadata == NULL) return;
 
@@ -102,7 +57,7 @@ void ds3_free_metadata(ds3_metadata* _metadata) {
     g_free(metadata);
 }
 
-void ds3_free_metadata_entry(ds3_metadata_entry* entry) {
+void ds3_metadata_entry_free(ds3_metadata_entry* entry) {
     int value_index;
     ds3_str* value;
     if (entry->name != NULL) {
@@ -118,7 +73,7 @@ void ds3_free_metadata_entry(ds3_metadata_entry* entry) {
     g_free(entry);
 }
 
-void ds3_free_metadata_keys(ds3_metadata_keys_result* metadata_keys) {
+void ds3_metadata_keys_free(ds3_metadata_keys_result* metadata_keys) {
     uint64_t key_index;
     if (metadata_keys == NULL) {
         return;
