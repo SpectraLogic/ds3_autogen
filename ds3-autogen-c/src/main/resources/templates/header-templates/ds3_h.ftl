@@ -190,7 +190,6 @@ LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_r
 
 
 LIBRARY_API void ds3_cleanup(void);
-//LIBRARY_API void ds3_print_request(const ds3_request* request); // No implementation found
 
 // provided helpers
 LIBRARY_API size_t ds3_write_to_file(void* buffer, size_t size, size_t nmemb, void* user_data);

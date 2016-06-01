@@ -108,13 +108,10 @@ public final class RequestHelper {
                 .map(Parameter::toString)
                 .collect(GuavaCollectors.immutableList()));
 
-        if (request.hasRequestPayload()) {
-            if (request.getName().equalsIgnoreCase("put_object_request")
-             || request.getName().equalsIgnoreCase("complete_multi_part_upload_request")) {
-                // do nothing - the request payload is handled in the request
-            } else {
-                builder.add(request.getRequestPayload().toString());
-            }
+        if (request.hasRequestPayload()
+        && !request.getName().equalsIgnoreCase("put_object_request")
+        && !request.getName().equalsIgnoreCase("complete_multi_part_upload_request")) {
+            builder.add(request.getRequestPayload().toString());
         }
 
         final ImmutableList<String> allParams = builder.build();
