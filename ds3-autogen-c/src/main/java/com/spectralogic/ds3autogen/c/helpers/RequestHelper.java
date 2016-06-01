@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import java.security.InvalidParameterException;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -199,7 +200,7 @@ public final class RequestHelper {
                 return "STRING";
 
             default:
-                return null;
+                throw new InvalidParameterException("Unknown request:" + requestName);
         }
     }
 }
