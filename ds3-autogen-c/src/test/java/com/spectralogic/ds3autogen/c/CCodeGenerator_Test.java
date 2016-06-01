@@ -357,7 +357,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("            response->creation_date = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"DataPolicyId\")) {"));
         assertTrue(output.contains("            response->data_policy_id = xml_get_string(doc, child_node);"));
-        assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"ID\")) {"));
         assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"LastPreferredChunkSizeInBytes\")) {"));
         assertTrue(output.contains("            response->last_preferred_chunk_size_in_bytes = xml_get_uint64(doc, child_node);"));
@@ -483,7 +483,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("                continue;"));
         assertTrue(output.contains("            }"));
         assertTrue(output.contains("            response->checksum_type = _match_ds3_checksum_type(client->log, text);"));
-        assertTrue(output.contains("        } else if (element_equal(child_node, \"Id\")) {"));
+        assertTrue(output.contains("        } else if (element_equal(child_node, \"ID\")) {"));
         assertTrue(output.contains("            response->id = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else if (element_equal(child_node, \"Length\")) {"));
         assertTrue(output.contains("            response->length = xml_get_uint64(doc, child_node);"));
