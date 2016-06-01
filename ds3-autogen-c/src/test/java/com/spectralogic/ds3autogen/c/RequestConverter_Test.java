@@ -68,8 +68,8 @@ public class RequestConverter_Test {
 
     @Test
     public void testConvertDs3RequestWithRequestPayload() {
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkGet());
-        assertTrue(testRequest.hasRequestPayload());
+        final ImmutableMap<String, Parameter> hasRequestPayload = RequestConverter.buildRequestPayloadMap();
+        assertNotNull(hasRequestPayload.get("get_bulk_job_spectra_s3_request"));
     }
 
     @Test
