@@ -16,18 +16,49 @@
 package com.spectralogic.ds3autogen.python.model.commands;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
+import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 
 public class CommandSet {
 
     /** Models describing all Request Handlers */
     private final ImmutableList<BaseRequest> requests;
 
-    public CommandSet(final ImmutableList<BaseRequest> requests) {
+    /** Models describing all Response Handlers */
+    private final ImmutableList<BaseResponse> responses;
+
+    /** Models describing how to parse models */
+    private final ImmutableList<TypeDescriptor> typeDescriptors;
+
+    /** Models describing the client */
+    private final ImmutableList<BaseClient> clientCommands;
+
+    public CommandSet(
+            final ImmutableList<BaseRequest> requests,
+            final ImmutableList<BaseResponse> responses,
+            final ImmutableList<TypeDescriptor> typeDescriptors,
+            final ImmutableList<BaseClient> clientCommands) {
         this.requests = requests;
+        this.responses = responses;
+        this.typeDescriptors = typeDescriptors;
+        this.clientCommands = clientCommands;
     }
 
     public ImmutableList<BaseRequest> getRequests() {
         return requests;
+    }
+
+    public ImmutableList<TypeDescriptor> getTypeDescriptors() {
+        return typeDescriptors;
+    }
+
+    public ImmutableList<BaseResponse> getResponses() {
+        return responses;
+    }
+
+    public ImmutableList<BaseClient> getClientCommands() {
+        return clientCommands;
     }
 }

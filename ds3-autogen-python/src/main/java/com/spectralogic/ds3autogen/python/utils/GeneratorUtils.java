@@ -21,9 +21,11 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 /**
@@ -93,5 +95,15 @@ public final class GeneratorUtils {
             builder.append("'");
         }
         return builder.toString();
+    }
+
+    /**
+     * Get parser model descriptor name for specified type
+     */
+    public static String getParserModelName(final String type) {
+        if (isEmpty(type)) {
+            return "None";
+        }
+        return removePath(type);
     }
 }

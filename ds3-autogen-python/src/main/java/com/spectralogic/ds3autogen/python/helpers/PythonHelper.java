@@ -30,6 +30,7 @@ import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 public final class PythonHelper {
 
     private final static PythonHelper pythonHelper = new PythonHelper();
+    private final static String PYTHON_INDENT = "  ";
 
     private PythonHelper() {
         //pass
@@ -77,5 +78,42 @@ public final class PythonHelper {
         return "self, " + requiredArgs.stream()
                 .map(i -> camelToUnderscore(i.getName()))
                 .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Creates comma separated lines for a list of strings. This is used to
+     * generate the lists within the python model descriptors.
+     */
+    public static String toCommaSeparatedLines(final ImmutableList<String> lines, final int depth) {
+        if (isEmpty(lines)) {
+            return "";
+        }
+        return "\n" + pythonIndent(depth) + lines.stream()
+                .collect(Collectors.joining(",\n" + pythonIndent(depth))) + "\n" + pythonIndent(depth - 1);
+    }
+
+    /**
+     * Creates a comma separated list of integers
+     */
+    public static String toCommaSeparatedList(final ImmutableList<Integer> ints) {
+        if (isEmpty(ints)) {
+            return "";
+        }
+        return ints.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Creates indents for python code. This is different than for the standard
+     * Helper implementation of indentation because it uses 2 spaces instead of 4
+     * per depth level.
+     */
+    public static String pythonIndent(final int depth) {
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < depth; i++) {
+            builder.append(PYTHON_INDENT);
+        }
+        return builder.toString();
     }
 }
