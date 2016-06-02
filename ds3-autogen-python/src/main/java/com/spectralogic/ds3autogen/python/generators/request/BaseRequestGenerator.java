@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
+import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 import com.spectralogic.ds3autogen.python.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
@@ -32,6 +33,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     public BaseRequest generate(final Ds3Request ds3Request) {
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
+        final RequestPayload requestPayload = toRequestPayload(ds3Request, name);
         final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
         final ImmutableList<String> voidArgs = toVoidArgumentsList(ds3Request.getRequiredQueryParams());
@@ -41,9 +43,18 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 path,
                 ds3Request.getHttpVerb(),
                 ds3Request.getOperation(),
+                requestPayload,
                 requiredArgs,
                 optionalArgs,
                 voidArgs);
+    }
+
+    /**
+     * Non-special-cased requests do not contain request payloads
+     */
+    @Override
+    public RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName) {
+        return null;
     }
 
     /**

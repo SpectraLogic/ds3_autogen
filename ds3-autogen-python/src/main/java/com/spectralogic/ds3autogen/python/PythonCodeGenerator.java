@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
@@ -50,10 +51,13 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObjectListPayload;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadObjectRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isMultiFileDeleteRequest;
 
 public class PythonCodeGenerator implements CodeGenerator {
 
@@ -201,6 +205,12 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Retrieves the Request Generator associated with the Ds3Request
      */
     protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        //TODO test
+        if (hasFileObjectListPayload(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)
+                || isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new ObjectsPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 

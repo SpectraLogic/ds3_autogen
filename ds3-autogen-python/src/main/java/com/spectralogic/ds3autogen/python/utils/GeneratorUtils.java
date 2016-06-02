@@ -22,7 +22,8 @@ import com.spectralogic.ds3autogen.api.models.Requirement;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.hasListObjectsRequestPayload;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
@@ -105,5 +106,16 @@ public final class GeneratorUtils {
             return "None";
         }
         return removePath(type);
+    }
+
+    //TODO test
+    /**
+     * Determines if the Ds3Request has a request payload of type FileObjectList
+     */
+    public static boolean hasFileObjectListPayload(final Ds3Request ds3Request) {
+        return isBulkGetRequest(ds3Request)
+                || isBulkPutRequest(ds3Request)
+                || isPhysicalPlacementRequest(ds3Request)
+                || hasListObjectsRequestPayload(ds3Request);
     }
 }
