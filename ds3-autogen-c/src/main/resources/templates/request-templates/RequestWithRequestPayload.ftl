@@ -3,21 +3,24 @@
 <#--   Input: Request object                 -->
 <#-- *************************************** -->
 ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
+<#if requestHelper.getRequestObjectListType(requestEntry.getName()) != "DATA">
     ds3_error* error;
     ds3_xml_send_buff send_buff;
-    GByteArray* xml_blob;
+</#if>
 
 ${requestHelper.generateParameterValidationBlock(requestEntry)}
 
-    error = _init_request_payload(_request, &send_buff, ${requestEntry.getAction().toString()});
+<#if requestHelper.getRequestObjectListType(requestEntry.getName()) == "DATA">
+    return _internal_request_dispatcher(client, request, NULL, NULL, user_data, callback, NULL);
+<#else>
+    error = _init_request_payload(request, &send_buff, ${requestHelper.getRequestObjectListType(requestEntry.getName())});
     if (error != NULL) return error;
 
-    xml_blob = g_byte_array_new();
-    error = _internal_request_dispatcher(client, request, xml_blob, ds3_load_buffer, (void*) &send_buff, _ds3_send_xml_buff, NULL);
+    error = _internal_request_dispatcher(client, request, NULL, NULL, (void*) &send_buff, _ds3_send_xml_buff, NULL);
 
     // Clean up the data sent to the server
     xmlFree(send_buff.buff);
-    g_byte_array_free(xml_blob, TRUE);
 
     return error;
+</#if>
 }

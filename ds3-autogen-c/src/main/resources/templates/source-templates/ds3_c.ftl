@@ -39,24 +39,27 @@
     </#if>
 </#list>
 
-<#include "../other-templates/HeadBucketRequest.ftl"/>
-<#include "../other-templates/HeadObjectRequest.ftl"/>
+<#-- ********************************************* -->
+<#-- Special cased requests                        -->
+<#include "../request-templates/HeadBucketRequest.ftl"/>
+<#include "../request-templates/HeadObjectRequest.ftl"/>
+<#include "../request-templates/GetObjectWithMetadataRequest.ftl"/>
 
 <#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
-    <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
-        <#-- SKIP - HARD CODED SPECIAL CASES
-        <#include "../request-templates/HeadRequest.ftl"/>
-        -->
-    <#elseif requestEntry.hasRequestPayload()>
+    <#if requestEntry.hasRequestPayload()>
         <#include "../request-templates/RequestWithRequestPayload.ftl"/>
     <#elseif requestEntry.hasRequestPayload() && requestEntry.hasResponsePayload()>
         <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>
     <#elseif requestEntry.hasResponsePayload()>
         <#include "../request-templates/RequestWithResponsePayload.ftl"/>
     <#else>
-        <#include "../request-templates/Request.ftl"/>
+        <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
+            <#-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
+        <#else>
+            <#include "../request-templates/Request.ftl"/>
+        </#if>
     </#if>
 </#list>
 

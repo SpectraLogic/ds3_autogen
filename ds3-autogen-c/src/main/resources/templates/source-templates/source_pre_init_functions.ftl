@@ -13,7 +13,11 @@ typedef enum {
     BULK_PUT,
     BULK_GET,
     BULK_DELETE,
-    GET_PHYSICAL_PLACEMENT
+    GET_PHYSICAL_PLACEMENT,
+    COMPLETE_MPU,
+    STRING,
+    STRING_LIST,
+    DATA
 }object_list_type;
 
 void ds3_client_register_logging(ds3_client* client, ds3_log_lvl log_lvl, void (* log_callback)(const char* log_message, void* user_data), void* user_data) {
@@ -32,7 +36,7 @@ void ds3_client_register_logging(ds3_client* client, ds3_log_lvl log_lvl, void (
     client->log = log;
 }
 
-static void _ds3_free_metadata_entry(gpointer pointer) {
+static void _ds3_metadata_entry_free(gpointer pointer) {
     ds3_metadata_entry* entry;
     if (pointer == NULL) {
         return; // do nothing
@@ -40,7 +44,7 @@ static void _ds3_free_metadata_entry(gpointer pointer) {
 
     entry = (ds3_metadata_entry*) pointer;
 
-    ds3_free_metadata_entry(entry);
+    ds3_metadata_entry_free(entry);
 }
 
 /*
@@ -86,13 +90,12 @@ static ds3_metadata* _init_metadata(ds3_string_multimap* response_headers) {
     gpointer _key, _value;
     ds3_str* key;
     ds3_metadata_entry* entry;
-    metadata->metadata = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, _ds3_free_metadata_entry);
+    metadata->metadata = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, _ds3_metadata_entry_free);
 
     if (response_headers == NULL) {
         fprintf(stderr, "response headers was null\n");
     }
 
-    //TODO refactor out glib: ds3_string_multimap needs a lookup_prefix()
     g_hash_table_iter_init(&iter, ds3_string_multimap_get_hashtable(response_headers));
     while(g_hash_table_iter_next(&iter, &_key, &_value)) {
         key = (ds3_str*) _key;

@@ -236,7 +236,8 @@ public final class StructHelper {
                 outputBuilder.append("} else ");
             }
 
-            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.underscoreToCamel(currentStructMember.getName())).append("\")) {").append("\n");
+            final String structMemberName = currentStructMember.getName().equalsIgnoreCase("id") ? "ID" : Helper.underscoreToCamel(currentStructMember.getName());
+            outputBuilder.append("if (element_equal(child_node, \"").append(structMemberName).append("\")) {").append("\n");
             outputBuilder.append(getParseStructMemberBlock(currentStructMember, isTopLevel));
         }
 

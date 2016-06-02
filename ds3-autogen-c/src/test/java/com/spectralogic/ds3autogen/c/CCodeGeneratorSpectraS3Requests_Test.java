@@ -89,7 +89,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_system_information_response** response) {"));
+        assertTrue(output.contains("ds3_error* get_system_information_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_system_information_response** response) {"));
         assertTrue(output.contains("    return _parse_top_level_ds3_system_information_response(client, request, response, xml_blob);"));
         assertTrue(output.contains("}"));
     }
@@ -110,7 +110,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* get_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_bucket_response** response) {"));
+        assertTrue(output.contains("ds3_error* get_bucket_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_bucket_response** response) {"));
         assertTrue(output.contains("    int num_slashes = num_chars_in_ds3_str(request->path, '/');"));
         assertTrue(output.contains("    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource id parameter is required.\");"));
@@ -138,7 +138,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, const ds3_bucket_list_response** response) {"));
+        assertTrue(output.contains("ds3_error* get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_bucket_list_response** response) {"));
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
         assertTrue(output.contains("    }"));
@@ -175,7 +175,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "LIBRARY_API ds3_error* get_bucket_request(const ds3_client* client, const ds3_request* request, const ds3_list_bucket_result_response** response);\n";
+        final String expectedOutput = "LIBRARY_API ds3_error* get_bucket_request(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response);";
         assertEquals(expectedOutput, output);
     }
 }

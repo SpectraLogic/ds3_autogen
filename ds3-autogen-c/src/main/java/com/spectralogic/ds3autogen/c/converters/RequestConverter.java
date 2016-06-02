@@ -33,7 +33,6 @@ import java.security.InvalidParameterException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
 public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
@@ -54,7 +53,7 @@ public final class RequestConverter {
                 getOptionalQueryParams(ds3Request),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
-                hasRequestPayload.get(RequestHelper.getNameRoot(ds3Request.getName())),
+                hasRequestPayload.get(requestName),
                 responseType);
     }
 
@@ -96,7 +95,7 @@ public final class RequestConverter {
         final StringBuilder builder = new StringBuilder();
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase()).append("\"");
 
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        if (isResourceRequired(ds3Request)) {
             // _build_path() will URL escape the resource_id at runtime
             builder.append(", resource_id, NULL");
         } else {
@@ -149,9 +148,9 @@ public final class RequestConverter {
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, true);
+            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, false);
             LOG.debug("\tOptional QueryParam: " + optionalQueryParam.toString());
-            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param, false));
+            optionalArgsBuilder.add(optionalQueryParam);
         }
 
         return optionalArgsBuilder.build();
@@ -210,7 +209,7 @@ public final class RequestConverter {
             if (responseType.equalsIgnoreCase("ds3_str")) {
                 builder.add(new Parameter(ParameterModifier.NONE, "ds3_str", "response", ParameterPointerType.SINGLE_POINTER, true));
             } else {
-                builder.add(new Parameter(ParameterModifier.CONST, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
+                builder.add(new Parameter(ParameterModifier.NONE, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
             }
         }
 
@@ -219,35 +218,36 @@ public final class RequestConverter {
 
     public static ImmutableMap<String, Parameter> buildRequestPayloadMap() {
         final ImmutableMap.Builder<String, Parameter> requestPayloadMap =  ImmutableMap.builder();
-        requestPayloadMap.put("CreateGetJob",
-                new Parameter(
-                        ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("CreatePutJob",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("CreateVerifyJob",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("EjectStorageDomainBlobs",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("EjectStorageDomain",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("GetPhysicalPlacementForObjects",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("VerifyPhysicalPlacementForObjects",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("VerifyPhysicalPlacementForObjectsWithFullDetails",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("CompleteMultiPartUpload",
-                new Parameter(ParameterModifier.CONST, "ds3_complete_multipart_upload_result", "complete_mpu_payload", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("CreateMultiPartUploadPart",
-                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("CreateObject",
-                new Parameter(ParameterModifier.CONST, "ds3_request_payload", "payload", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("DeleteObjects",
-                new Parameter(ParameterModifier.CONST, "ds3_metadata_keys_result", "payload", ParameterPointerType.SINGLE_POINTER, true)); // List<String>
-        requestPayloadMap.put("GetBlobPersistence",
-                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
-        requestPayloadMap.put("ReplicatePutJob",
-                new Parameter(ParameterModifier.CONST, "ds3_str", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+        requestPayloadMap.put("get_bulk_job_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("put_bulk_job_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("verify_bulk_job_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("eject_storage_domain_blobs_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("eject_storage_domain_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("get_physical_placement_for_objects_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("get_physical_placement_for_objects_with_full_details_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("verify_physical_placement_for_objects_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("verify_physical_placement_for_objects_with_full_details_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("complete_multi_part_upload_request",
+                new Parameter(ParameterModifier.CONST, "ds3_complete_multipart_upload_response", "complete_mpu_payload", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("put_multi_part_upload_part_request",
+                new Parameter(ParameterModifier.NONE, "void", "user_data", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("put_object_request",
+                new Parameter(ParameterModifier.NONE, "void", "user_data", ParameterPointerType.SINGLE_POINTER, true));
+        requestPayloadMap.put("delete_objects_request",
+                new Parameter(ParameterModifier.CONST, "ds3_delete_objects_response", "payload", ParameterPointerType.SINGLE_POINTER, true)); // List<String>
+        requestPayloadMap.put("get_blob_persistence_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "char", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+        requestPayloadMap.put("replicate_put_job_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "char", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
         return requestPayloadMap.build();
     }
 }

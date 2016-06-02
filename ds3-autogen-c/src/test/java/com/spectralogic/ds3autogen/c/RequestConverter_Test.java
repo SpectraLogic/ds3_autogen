@@ -63,13 +63,13 @@ public class RequestConverter_Test {
     public void testGetRequestParameterListWithResponseType() {
         final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response");
         assertEquals(paramList.size(), 3);
-        assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, const ds3_get_service_response** response");
+        assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, ds3_get_service_response** response");
     }
 
     @Test
     public void testConvertDs3RequestWithRequestPayload() {
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkGet());
-        assertTrue(testRequest.hasRequestPayload());
+        final ImmutableMap<String, Parameter> hasRequestPayload = RequestConverter.buildRequestPayloadMap();
+        assertNotNull(hasRequestPayload.get("get_bulk_job_spectra_s3_request"));
     }
 
     @Test

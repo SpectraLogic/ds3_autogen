@@ -76,7 +76,10 @@ public class ParameterHelper {
     public static String getParameterCondition(final Parameter parm, final int depth) {
         switch(parm.getParameterType()) {
             case "ds3_bool":
-                return indent(depth) + "if (" + parm.getName() + ") {\n";
+                if (parm.isRequired()) {
+                    throw new InvalidParameterException(parm.getName() + " Required bool query param should not require a condition: " + parm.getParameterType());
+                }
+                return indent(depth) + "if (" + parm.getName() + " && *" + parm.getName() + ") {\n";
             case "uint64_t":
             case "float":
             case "int":

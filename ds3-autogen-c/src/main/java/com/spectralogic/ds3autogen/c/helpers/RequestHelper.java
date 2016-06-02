@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import java.security.InvalidParameterException;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -61,8 +62,8 @@ public final class RequestHelper {
         return "const char* bucket_name";
     }
 
-    public static String getSpectraS3InitParams(final boolean isResourceIdRequired) {
-        if (isResourceIdRequired) {
+    public static String getSpectraS3InitParams(final boolean isResourceRequired) {
+        if (isResourceRequired) {
             return "const char* resource_id";
         }
         return "";
@@ -93,7 +94,7 @@ public final class RequestHelper {
                 builder.add(amazonS3InitParams);
             }
         } else {
-            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceIdRequired());
+            final String spectraS3InitParams = getSpectraS3InitParams(request.isResourceRequired());
             if (!spectraS3InitParams.isEmpty()) {
                 builder.add(spectraS3InitParams);
             }
@@ -107,12 +108,25 @@ public final class RequestHelper {
         builder.addAll(request.getOptionalQueryParams().stream()
                 .map(Parameter::toString)
                 .collect(GuavaCollectors.immutableList()));
+
+        if (request.hasRequestPayload()
+        && !request.getName().equalsIgnoreCase("put_object_request")
+        && !request.getName().equalsIgnoreCase("complete_multi_part_upload_request")) {
+            builder.add(request.getRequestPayload().toString());
+        }
+
         final ImmutableList<String> allParams = builder.build();
 
         return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
     }
 
     public static String generateRequestFunctionSignature(final Request request) {
+        if (request.getName().equalsIgnoreCase("put_object_request")
+         || request.getName().equalsIgnoreCase("get_object_request")
+         || request.getName().equalsIgnoreCase("put_multi_part_upload_part_request")) {
+            return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ", void* user_data, size_t (*callback)(void*, size_t, size_t, void*))";
+        }
+
         return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
     }
 
@@ -152,5 +166,41 @@ public final class RequestHelper {
         }
 
         return builder.toString();
+    }
+
+    public String getRequestObjectListType(final String requestName) {
+        switch(requestName) {
+            case "get_bulk_job_spectra_s3_request":
+                return "BULK_GET";
+
+            case "put_bulk_job_spectra_s3_request":
+                return "BULK_PUT";
+
+            case "verify_bulk_job_spectra_s3_request":
+            case "eject_storage_domain_spectra_s3_request":
+            case "eject_storage_domain_blobs_spectra_s3_request":
+            case "get_physical_placement_for_objects_spectra_s3_request":
+            case "get_physical_placement_for_objects_with_full_details_spectra_s3_request":
+            case "verify_physical_placement_for_objects_spectra_s3_request":
+            case "verify_physical_placement_for_objects_with_full_details_spectra_s3_request":
+                return "GET_PHYSICAL_PLACEMENT";
+
+            case "complete_multi_part_upload_request":
+                return "COMPLETE_MPU";
+
+            case "put_multi_part_upload_part_request":
+            case "put_object_request":
+                return "DATA";
+
+            case "delete_objects_request":
+                return "STRING_LIST";
+
+            case "get_blob_persistence_spectra_s3_request":
+            case "replicate_put_job_spectra_s3_request":
+                return "STRING";
+
+            default:
+                throw new InvalidParameterException("Unknown request:" + requestName);
+        }
     }
 }
