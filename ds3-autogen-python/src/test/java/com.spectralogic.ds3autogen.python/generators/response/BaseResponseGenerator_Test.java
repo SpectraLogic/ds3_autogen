@@ -35,6 +35,8 @@ import static org.junit.Assert.assertThat;
 
 public class BaseResponseGenerator_Test {
 
+    private final static BaseResponseGenerator generator = new BaseResponseGenerator();
+
     private static Ds3Type typeWithoutNameToMarshal() {
         return new Ds3Type("com.test.TypeWithoutNameToMarshal", null, null, null);
     }
@@ -94,7 +96,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toParseResponsePayload_NoPayload_Test() {
         final Ds3Request request = createDs3RequestTestData("com.test.Request", Classification.amazons3);
-        assertThat(toParseResponsePayload(request, testTypeMap()), is(""));
+        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(""));
     }
 
     @Test
@@ -103,7 +105,7 @@ public class BaseResponseGenerator_Test {
                 "      self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
 
         final Ds3Request request = getBucketRequest();
-        assertThat(toParseResponsePayload(request, testTypeMap()), is(expected));
+        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(expected));
     }
 
     @Test
@@ -112,25 +114,25 @@ public class BaseResponseGenerator_Test {
                 "      self.result = parseModel(xmldom.fromstring(response.read()).find('JobsTag'), JobWithChunksApiBean())";
 
         final Ds3Request request = getRequestGetJob();
-        assertThat(toParseResponsePayload(request, testTypeMap()), is(expected));
+        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(expected));
     }
 
     @Test
     public void getStatusCodes_NullList_Test() {
-        final ImmutableList<Integer> result = getStatusCodes(null, "com.test.Request");
+        final ImmutableList<Integer> result = generator.getStatusCodes(null, "com.test.Request");
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void getStatusCodes_EmptyList_Test() {
-        final ImmutableList<Integer> result = getStatusCodes(null, "com.test.Request");
+        final ImmutableList<Integer> result = generator.getStatusCodes(null, "com.test.Request");
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void getStatusCodes_Test() {
         final Ds3Request request = getRequestAmazonS3GetObject();
-        final ImmutableList<Integer> result = getStatusCodes(request.getDs3ResponseCodes(), request.getName());
+        final ImmutableList<Integer> result = generator.getStatusCodes(request.getDs3ResponseCodes(), request.getName());
         assertThat(result, hasItem(200));
         assertThat(result, hasItem(206));
     }
