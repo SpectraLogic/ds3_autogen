@@ -522,6 +522,32 @@ public class Ds3ModelFixtures {
     }
 
     /**
+     * Gets the AmazonS3 Head Object Request Handler as described in the contract
+     */
+    public static Ds3Request getHeadObjectRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.amazons3.HeadObjectRequestHandler",
+                HttpVerb.HEAD,
+                Classification.amazons3,
+                Requirement.REQUIRED,
+                Requirement.REQUIRED,
+                null,
+                null,
+                null,
+                null,
+                false,
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("null", null))),
+                        new Ds3ResponseCode(404,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))
+                ),
+                null,
+                null
+        );
+    }
+
+    /**
      * Gets the SpectraS3 GetJobChunksReadyForClientProcessingRequest Handler as
      * described in the contract, excluding the response codes
      */

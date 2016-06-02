@@ -31,7 +31,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
 
-public class BaseResponseGenerator implements ResponseModelGenerator<BaseResponse> {
+public class BaseResponseGenerator implements ResponseModelGenerator<BaseResponse>, ResponseModelGeneratorUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseResponseGenerator.class);
 
@@ -48,7 +48,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     /**
      * Gets all non error response codes
      */
-    protected static ImmutableList<Integer> getStatusCodes(
+    @Override
+    public ImmutableList<Integer> getStatusCodes(
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final String requestName) {
         if (isEmpty(ds3ResponseCodes)) {
@@ -64,7 +65,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     /**
      * Gets the python code that will parse the response payload
      */
-    protected static String toParseResponsePayload(
+    @Override
+    public String toParseResponsePayload(
             final Ds3Request ds3Request,
             final ImmutableMap<String, Ds3Type> typeMap) {
         final ParsePayload parsePayload = getParsePayload(ds3Request, typeMap);
