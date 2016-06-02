@@ -148,9 +148,9 @@ public final class RequestConverter {
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, true);
+            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, false);
             LOG.debug("\tOptional QueryParam: " + optionalQueryParam.toString());
-            optionalArgsBuilder.add(ParameterConverter.toParameter(ds3Param, false));
+            optionalArgsBuilder.add(optionalQueryParam);
         }
 
         return optionalArgsBuilder.build();
