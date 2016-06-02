@@ -26,9 +26,9 @@ import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonInde
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
- * Generates the python response model for the Head Object command
+ * Generates the python response model for the Head Object and Head Bucket commands
  */
-public class HeadObjectResponseGenerator extends BaseResponseGenerator {
+public class HeadResponseGenerator extends BaseResponseGenerator {
 
     /**
      * Gets all response codes
@@ -48,7 +48,17 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
             throw new IllegalArgumentException(requestName + " should contain the response codes 200, and 404. Actual: " + codes);
         }
 
-        return codes;
+        if (codes.contains(403)) {
+            return codes;
+        }
+
+        //If 403 is not in expected codes, add it, and sort the list
+        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        builder.addAll(codes).add(403);
+        return builder.build()
+                .stream()
+                .sorted()
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
@@ -60,10 +70,12 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
             final ImmutableMap<String, Ds3Type> typeMap) {
         return "self.status_code = self.response.status\n" +
                 pythonIndent(2) + "if self.response.status == 200:\n" +
-                pythonIndent(3) + "self.result = HeadObjectStatus.EXISTS\n" +
+                pythonIndent(3) + "self.result = HeadRequestStatus.EXISTS\n" +
+                pythonIndent(2) + "elif self.response.status == 403:\n" +
+                pythonIndent(3) + "self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
                 pythonIndent(2) + "elif self.response.status == 404:\n" +
-                pythonIndent(3) + "self.result = HeadObjectStatus.DOESNTEXIST\n" +
+                pythonIndent(3) + "self.result = HeadRequestStatus.DOESNTEXIST\n" +
                 pythonIndent(2) + "else:\n" +
-                pythonIndent(3) + "self.result = HeadObjectStatus.UNKNOWN";
+                pythonIndent(3) + "self.result = HeadRequestStatus.UNKNOWN";
     }
 }

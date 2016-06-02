@@ -21,38 +21,41 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadObjectRequest;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class HeadObjectResponseGenerator_Test {
-    private final static HeadObjectResponseGenerator generator = new HeadObjectResponseGenerator();
+public class HeadResponseGenerator_Test {
+    private final static HeadResponseGenerator generator = new HeadResponseGenerator();
 
     @Test
     public void toParseResponsePayload_Test() {
         final String expected = "self.status_code = self.response.status\n" +
                 "    if self.response.status == 200:\n" +
-                "      self.result = HeadObjectStatus.EXISTS\n" +
+                "      self.result = HeadRequestStatus.EXISTS\n" +
+                "    elif self.response.status == 403:\n" +
+                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
                 "    elif self.response.status == 404:\n" +
-                "      self.result = HeadObjectStatus.DOESNTEXIST\n" +
+                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
                 "    else:\n" +
-                "      self.result = HeadObjectStatus.UNKNOWN";
+                "      self.result = HeadRequestStatus.UNKNOWN";
         assertThat(generator.toParseResponsePayload(null, null), is(expected));
         assertThat(generator.toParseResponsePayload(getHeadObjectRequest(), ImmutableMap.of()), is(expected));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getStatusCodes_NullList_Test() {
         generator.getStatusCodes(null, "HeadObjectRequest");
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getStatusCodes_EmptyList_Test() {
         generator.getStatusCodes(ImmutableList.of(), "HeadObjectRequest");
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void getStatusCodes_MissingExpectedCode_Test() {
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
                 new Ds3ResponseCode(200, null));
@@ -61,11 +64,22 @@ public class HeadObjectResponseGenerator_Test {
     }
 
     @Test
-    public void getStatusCodes_Test() {
+    public void getStatusCodes_HeadObject_Test() {
         final Ds3Request headObject = getHeadObjectRequest();
         final ImmutableList<Integer> result = generator.getStatusCodes(headObject.getDs3ResponseCodes(), headObject.getName());
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertThat(result, hasItem(200));
+        assertThat(result, hasItem(403));
+        assertThat(result, hasItem(404));
+    }
+
+    @Test
+    public void getStatusCodes_HeadBucket_Test() {
+        final Ds3Request headBucket = getHeadBucketRequest();
+        final ImmutableList<Integer> result = generator.getStatusCodes(headBucket.getDs3ResponseCodes(), headBucket.getName());
+        assertThat(result.size(), is(3));
+        assertThat(result, hasItem(200));
+        assertThat(result, hasItem(403));
         assertThat(result, hasItem(404));
     }
 }

@@ -225,15 +225,15 @@ public class PythonFunctionalTests {
         assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
         assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
                 "    if self.response.status == 200:\n" +
-                "      self.result = HeadBucketStatus.EXISTS\n" +
+                "      self.result = HeadRequestStatus.EXISTS\n" +
                 "    elif self.response.status == 403:\n" +
-                "      self.result = HeadBucketStatus.NOTAUTHORIZED\n" +
+                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
                 "    elif self.response.status == 404:\n" +
-                "      self.result = HeadBucketStatus.DOESNTEXIST\n" +
+                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
                 "    else:\n" +
-                "      self.result = HeadBucketStatus.UNKNOWN"));
+                "      self.result = HeadRequestStatus.UNKNOWN"));
 
-        assertTrue(ds3Code.contains("class HeadBucketStatus(object):"));
+        assertTrue(ds3Code.contains("class HeadRequestStatus(object):"));
 
         //Test Client
         hasClient(ImmutableList.of(requestName), ds3Code);
@@ -255,16 +255,18 @@ public class PythonFunctionalTests {
         hasRequestHandler(requestName, HttpVerb.GET, reqArgs, ImmutableList.of(), ImmutableList.of(), ds3Code);
         hasOperation(Operation.START_BULK_PUT, ds3Code);
 
-        assertTrue(ds3Code.contains("self.__check_status_codes__([200, 404])"));
+        assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
         assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
                 "    if self.response.status == 200:\n" +
-                "      self.result = HeadObjectStatus.EXISTS\n" +
+                "      self.result = HeadRequestStatus.EXISTS\n" +
+                "    elif self.response.status == 403:\n" +
+                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
                 "    elif self.response.status == 404:\n" +
-                "      self.result = HeadObjectStatus.DOESNTEXIST\n" +
+                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
                 "    else:\n" +
-                "      self.result = HeadObjectStatus.UNKNOWN"));
+                "      self.result = HeadRequestStatus.UNKNOWN"));
 
-        assertTrue(ds3Code.contains("class HeadObjectStatus(object):"));
+        assertTrue(ds3Code.contains("class HeadRequestStatus(object):"));
 
         //Test Client
         hasClient(ImmutableList.of(requestName), ds3Code);

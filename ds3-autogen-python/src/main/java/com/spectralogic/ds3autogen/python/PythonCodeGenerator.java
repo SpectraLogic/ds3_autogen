@@ -27,8 +27,7 @@ import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.HeadBucketResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.HeadObjectResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.TypeModelGenerator;
@@ -233,10 +232,8 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Retrieves the Response Generator associated with the Ds3Request
      */
     protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
-        if (isHeadBucketRequest(ds3Request)) {
-            return new HeadBucketResponseGenerator();
-        } else if(isHeadObjectRequest(ds3Request)) {
-            return new HeadObjectResponseGenerator();
+        if(isHeadBucketRequest(ds3Request) || isHeadObjectRequest(ds3Request)) {
+            return new HeadResponseGenerator();
         }
         return new BaseResponseGenerator();
     }

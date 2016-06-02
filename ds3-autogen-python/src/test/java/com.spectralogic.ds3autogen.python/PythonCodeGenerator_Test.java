@@ -22,8 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.HeadBucketResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.HeadObjectResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
@@ -125,9 +124,7 @@ public class PythonCodeGenerator_Test {
         assertThat(getResponseGenerator(createDs3RequestTestData("com.test.EmptyRequest", Classification.spectrads3)),
                 instanceOf(BaseResponseGenerator.class));
 
-        assertThat(getResponseGenerator(getHeadBucketRequest()), instanceOf(HeadBucketResponseGenerator.class));
-
-        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
+        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadResponseGenerator.class));
     }
 
     @Test
