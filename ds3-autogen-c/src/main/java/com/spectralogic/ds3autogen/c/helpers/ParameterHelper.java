@@ -51,19 +51,25 @@ public class ParameterHelper {
     public static String generateInitParamBlock(final Parameter parm) {
         if (requiresParameterCondition(parm)) {
             return getParameterCondition(parm, 1)
-                    + getSetQueryParamBlock(parm, 2)
+                    + getSetParamBlock(parm, 2)
                     + indent(1) + "}";
         }
 
-        return getSetQueryParamBlock(parm, 1);
+        return getSetParamBlock(parm, 1);
     }
 
     public static boolean requiresParameterCondition(final Parameter parm) {
         if (parm.getName().equalsIgnoreCase("length")) {
             return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_master_object_list_response")) { // special case - bulk request payload, renamed from JobWithChunksApiBean
+        } else if (parm.getParameterType().equalsIgnoreCase("ds3_bulk_object_list_response")) { // special case - bulk request payload
             return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_chunk_order")) { // special case - currently an enum property of ds3_request
+        } else if (parm.getParameterType().equalsIgnoreCase("ds3_job_chunk_client_processing_order_guarantee")) { // special case - enum property of ds3_request for BULK_GET
+            return false;
+        } else if (parm.getParameterType().equalsIgnoreCase("ds3_complete_multipart_upload_response")) { // special case
+            return false;
+        } else if (parm.getParameterType().equalsIgnoreCase("ds3_delete_objects_response")) { // special case - delete objects list
+            return false;
+        } else if (parm.getParameterType().equalsIgnoreCase("void")) { // special case - file IO
             return false;
         } else if (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired()) {
             return false;
@@ -94,11 +100,19 @@ public class ParameterHelper {
         }
     }
 
-    public static String getSetQueryParamBlock(final Parameter parm, final int depth) {
+    public static String getSetParamBlock(final Parameter parm, final int depth) {
         if (parm.getName().equalsIgnoreCase("length")) {
             return indent(depth) + "request->length = *length;\n";
         }
         switch(parm.getParameterType()) {
+            case "ds3_bulk_object_list_response":
+                return indent(depth) + "request->object_list = " + parm.getName() + ";\n";
+            case "ds3_job_chunk_client_processing_order_guarantee":
+                return indent(depth) + "request->chunk_ordering = *" + parm.getName() + ";\n";
+            case "ds3_complete_multipart_upload_response":
+                return indent(depth) + "request->mpu_list = " + parm.getName() + ";\n";
+            case "ds3_delete_objects_response":
+                return indent(depth) + "request->delete_objects = " + parm.getName() + ";\n";
             case "ds3_bool":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", NULL);\n";
             case "operation":
