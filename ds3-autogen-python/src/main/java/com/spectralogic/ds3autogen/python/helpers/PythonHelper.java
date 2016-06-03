@@ -17,6 +17,9 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import java.util.stream.Collectors;
 
@@ -46,38 +49,57 @@ public final class PythonHelper {
      */
     public static String toRequestInitList(
             final ImmutableList<Arguments> requiredArgs,
-            final ImmutableList<Arguments> optionalArgs) {
-        final String optionalInits = toOptionalArgInitList(optionalArgs);
-        if (isEmpty(optionalInits)) {
-            return toRequiredArgInitList(requiredArgs);
+            final ImmutableList<Arguments> optionalArgs,
+            final RequestPayload requestPayload) {
+        final ImmutableList<String> requiredInits = toRequiredArgInitList(requiredArgs);
+        final ImmutableList<String> optionalInits = toOptionalArgInitList(optionalArgs);
+
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        builder.addAll(requiredInits);
+        if (requestPayload != null) {
+            if (requestPayload.isOptional()) {
+                builder.add(requestPayload.getName() + "=None");
+            } else {
+                builder.add(requestPayload.getName());
+            }
         }
-        return toRequiredArgInitList(requiredArgs) + ", " + optionalInits;
+        builder.addAll(optionalInits);
+        return builder.build().stream()
+                .collect(Collectors.joining(", "));
     }
 
     /**
      * Creates a comma separated list of all optional arguments for use in the
      * request handler init function. Optional arguments are set to None.
      */
-    protected static String toOptionalArgInitList(final ImmutableList<Arguments> optionalArgs) {
+    protected static ImmutableList<String> toOptionalArgInitList(final ImmutableList<Arguments> optionalArgs) {
         if (isEmpty(optionalArgs)) {
-            return "";
+            return ImmutableList.of();
         }
         return optionalArgs.stream()
+                .sorted(new CustomArgumentComparator())
                 .map(i -> camelToUnderscore(i.getName()) + "=None")
-                .collect(Collectors.joining(", "));
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Creates a comma separated list of all required arguments for use in the
      * request handler init function. This list will always be started with 'self'
      */
-    protected static String toRequiredArgInitList(final ImmutableList<Arguments> requiredArgs) {
+    protected static ImmutableList<String> toRequiredArgInitList(final ImmutableList<Arguments> requiredArgs) {
         if (isEmpty(requiredArgs)) {
-            return "self";
+            return ImmutableList.of("self");
         }
-        return "self, " + requiredArgs.stream()
+        final ImmutableList<String> requiredInits = requiredArgs.stream()
+                .sorted(new CustomArgumentComparator())
                 .map(i -> camelToUnderscore(i.getName()))
-                .collect(Collectors.joining(", "));
+                .collect(GuavaCollectors.immutableList());
+
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        builder.add("self")
+                .addAll(requiredInits);
+
+        return builder.build();
     }
 
     /**

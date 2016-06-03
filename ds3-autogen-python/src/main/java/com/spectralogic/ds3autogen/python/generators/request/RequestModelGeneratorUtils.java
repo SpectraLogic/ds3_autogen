@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 
 public interface RequestModelGeneratorUtils {
 
@@ -37,4 +38,9 @@ public interface RequestModelGeneratorUtils {
      * added to the query parameters.
      */
     ImmutableList<String> toVoidArgumentsList(final ImmutableList<Ds3Param> requiredParams);
+
+    /**
+     * Gets the request payload model, or null if one does not exist
+     */
+    RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName);
 }

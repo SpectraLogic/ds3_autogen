@@ -66,7 +66,7 @@ public class PythonFunctionalTests {
         final ImmutableList<String> optArgs = ImmutableList.of("delimiter", "marker", "max_keys", "prefix");
         final ImmutableList<String> voidArgs = ImmutableList.of("test_void_param");
 
-        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, ds3Code);
+        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, "object_list", ds3Code);
         hasOperation(Operation.START_BULK_PUT, ds3Code);
 
         //Test Client

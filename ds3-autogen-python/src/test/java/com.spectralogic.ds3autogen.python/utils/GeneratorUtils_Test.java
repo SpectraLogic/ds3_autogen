@@ -127,4 +127,34 @@ public class GeneratorUtils_Test {
         assertThat(getParserModelName("SimpleType"), is("SimpleType"));
         assertThat(getParserModelName("com.test.PathType"), is("PathType"));
     }
+
+    @Test
+    public void hasFileObjectListPayload_Test() {
+        assertThat(hasFileObjectListPayload(getRequestVerifyPhysicalPlacement()), is(true));
+        assertThat(hasFileObjectListPayload(getRequestBulkGet()), is(true));
+        assertThat(hasFileObjectListPayload(getRequestBulkPut()), is(true));
+        assertThat(hasFileObjectListPayload(getEjectStorageDomainRequest()), is(true));
+
+        assertThat(hasFileObjectListPayload(getRequestDeleteNotification()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestCreateNotification()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestGetNotification()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestSpectraS3GetObject()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestGetJob()), is(false));
+        assertThat(hasFileObjectListPayload(getReplicatePutJob()), is(false));
+        assertThat(hasFileObjectListPayload(getGetBlobPersistence()), is(false));
+        assertThat(hasFileObjectListPayload(getAllocateJobChunkRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getJobChunksReadyForClientProcessingRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getBucketsRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getSystemInformationRequest()), is(false));
+        assertThat(hasFileObjectListPayload(createBucketSpectraS3Request()), is(false));
+        assertThat(hasFileObjectListPayload(deleteBucketRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestMultiFileDelete()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestCreateObject()), is(false));
+        assertThat(hasFileObjectListPayload(getRequestAmazonS3GetObject()), is(false));
+        assertThat(hasFileObjectListPayload(getCreateMultiPartUploadPart()), is(false));
+        assertThat(hasFileObjectListPayload(getCompleteMultipartUploadRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getHeadBucketRequest()), is(false));
+        assertThat(hasFileObjectListPayload(getBucketRequest()), is(false));
+        assertThat(hasFileObjectListPayload(createBucketRequest()), is(false));
+    }
 }

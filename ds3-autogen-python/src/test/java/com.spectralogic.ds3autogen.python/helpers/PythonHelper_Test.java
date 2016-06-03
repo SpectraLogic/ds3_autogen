@@ -17,10 +17,11 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.python.model.type.*;
+import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.*;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,14 +29,16 @@ public class PythonHelper_Test {
 
     @Test
     public void toRequiredArgInitList_NullList_Test() {
-        final String result = toRequiredArgInitList(null);
-        assertThat(result, is("self"));
+        final ImmutableList<String> result = toRequiredArgInitList(null);
+        assertThat(result.size(), is(1));
+        assertThat(result, hasItem("self"));
     }
 
     @Test
     public void toRequiredArgInitList_EmptyList_Test() {
-        final String result = toRequiredArgInitList(ImmutableList.of());
-        assertThat(result, is("self"));
+        final ImmutableList<String> result = toRequiredArgInitList(ImmutableList.of());
+        assertThat(result.size(), is(1));
+        assertThat(result, hasItem("self"));
     }
 
     @Test
@@ -44,20 +47,23 @@ public class PythonHelper_Test {
                 new Arguments("TypeOne", "ArgOne"),
                 new Arguments("TypeTwo", "ArgTwo"));
 
-        final String result = toRequiredArgInitList(args);
-        assertThat(result, is("self, arg_one, arg_two"));
+        final ImmutableList<String> result = toRequiredArgInitList(args);
+        assertThat(result.size(), is(3));
+        assertThat(result, hasItem("self"));
+        assertThat(result, hasItem("arg_one"));
+        assertThat(result, hasItem("arg_two"));
     }
 
     @Test
     public void toOptionalArgInitList_NullList_Test() {
-        final String result = toOptionalArgInitList(null);
-        assertThat(result, is(""));
+        final ImmutableList<String> result = toOptionalArgInitList(null);
+        assertThat(result.size(), is(0));
     }
 
     @Test
     public void toOptionalArgInitList_EmptyList_Test() {
-        final String result = toOptionalArgInitList(ImmutableList.of());
-        assertThat(result, is(""));
+        final ImmutableList<String> result = toOptionalArgInitList(ImmutableList.of());
+        assertThat(result.size(), is(0));
     }
 
     @Test
@@ -66,18 +72,20 @@ public class PythonHelper_Test {
                 new Arguments("TypeOne", "ArgOne"),
                 new Arguments("TypeTwo", "ArgTwo"));
 
-        final String result = toOptionalArgInitList(args);
-        assertThat(result, is("arg_one=None, arg_two=None"));
+        final ImmutableList<String> result = toOptionalArgInitList(args);
+        assertThat(result.size(), is(2));
+        assertThat(result, hasItem("arg_one=None"));
+        assertThat(result, hasItem("arg_two=None"));
     }
 
     @Test
     public void toRequestInitList_EmptyLists_Test() {
-        assertThat(toRequestInitList(null, null), is("self"));
-        assertThat(toRequestInitList(ImmutableList.of(), ImmutableList.of()), is("self"));
+        assertThat(toRequestInitList(null, null, null), is("self"));
+        assertThat(toRequestInitList(ImmutableList.of(), ImmutableList.of(), null), is("self"));
     }
 
     @Test
-    public void toRequestInitList_Test() {
+    public void toRequestInitList_NoPayload_Test() {
         final ImmutableList<Arguments> reqArgs = ImmutableList.of(
                 new Arguments("TypeOne", "ArgOne"),
                 new Arguments("TypeTwo", "ArgTwo"));
@@ -86,8 +94,26 @@ public class PythonHelper_Test {
                 new Arguments("TypeThree", "ArgThree"),
                 new Arguments("TypeFour", "ArgFour"));
 
-        final String result = toRequestInitList(reqArgs, optArgs);
-        assertThat(result, is("self, arg_one, arg_two, arg_three=None, arg_four=None"));
+        final String result = toRequestInitList(reqArgs, optArgs, null);
+        assertThat(result, is("self, arg_one, arg_two, arg_four=None, arg_three=None"));
+    }
+
+    @Test
+    public void toRequestInitList_OptionalPayload_Test() {
+        final ImmutableList<Arguments> reqArgs = ImmutableList.of(new Arguments("ReqType", "ReqArg"));
+        final ImmutableList<Arguments> optArgs = ImmutableList.of(new Arguments("OptType", "OptArg"));
+
+        final String result = toRequestInitList(reqArgs, optArgs, new RequestPayload("request_payload", "code...", true));
+        assertThat(result, is("self, req_arg, request_payload=None, opt_arg=None"));
+    }
+
+    @Test
+    public void toRequestInitList_RequiredPayload_Test() {
+        final ImmutableList<Arguments> reqArgs = ImmutableList.of(new Arguments("ReqType", "ReqArg"));
+        final ImmutableList<Arguments> optArgs = ImmutableList.of(new Arguments("OptType", "OptArg"));
+
+        final String result = toRequestInitList(reqArgs, optArgs, new RequestPayload("request_payload", "code...", false));
+        assertThat(result, is("self, req_arg, request_payload, opt_arg=None"));
     }
 
     @Test

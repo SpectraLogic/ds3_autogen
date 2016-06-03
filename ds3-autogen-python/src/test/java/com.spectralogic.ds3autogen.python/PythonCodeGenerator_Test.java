@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
@@ -41,7 +42,14 @@ public class PythonCodeGenerator_Test {
     @Test
     public void getRequestGenerator_Test() {
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
-        //TODO add additional tests as requests are special cased
+        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(BaseRequestGenerator.class));
+
+        assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(ObjectsPayloadGenerator.class));
     }
 
     @Test
