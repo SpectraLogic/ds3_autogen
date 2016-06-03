@@ -10,6 +10,9 @@ ${parameterHelper.generateInitParamBlock(reqParam)}
 <#list requestEntry.getOptionalQueryParams() as reqParam>
 ${parameterHelper.generateInitParamBlock(reqParam)}
 </#list>
+<#if requestEntry.hasRequestPayload() && requestEntry.getRequestPayload().getParameterType() != "void">
+${parameterHelper.generateInitParamBlock(requestEntry.getRequestPayload())}
+</#if>
 
     return (ds3_request*) request;
 }

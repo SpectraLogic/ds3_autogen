@@ -199,7 +199,7 @@ LIBRARY_API size_t ds3_read_from_fd(void* buffer, size_t size, size_t nmemb, voi
 
 LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list(const char** file_list, uint64_t num_files);
 LIBRARY_API ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** file_list, uint64_t num_files, const char* base_path);
-LIBRARY_API ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response* objects, uint64_t num_objects);
+LIBRARY_API ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response** objects, uint64_t num_objects);
 LIBRARY_API ds3_bulk_object_list_response* ds3_init_bulk_object_list(uint64_t num_files);
 
 

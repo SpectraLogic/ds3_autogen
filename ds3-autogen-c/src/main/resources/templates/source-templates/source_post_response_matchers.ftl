@@ -128,13 +128,12 @@ size_t ds3_read_from_fd(void* buffer, size_t size, size_t nmemb, void* user_data
     return read(*(int*)user_data, buffer, size * nmemb);
 }
 
-static ds3_bulk_object_response _ds3_bulk_object_from_file(const char* file_name, const char* base_path) {
+static ds3_bulk_object_response* _ds3_bulk_object_from_file(const char* file_name, const char* base_path) {
     struct stat file_info;
     int result;
-    ds3_bulk_object_response obj;
+    ds3_bulk_object_response* obj = g_new0(ds3_bulk_object_response, 1);
     char* file_to_stat;
     memset(&file_info, 0, sizeof(struct stat));
-    memset(&obj, 0, sizeof(ds3_bulk_object_response));
 
     if (base_path != NULL) {
         file_to_stat = g_strconcat(base_path, file_name, NULL);
@@ -147,14 +146,12 @@ static ds3_bulk_object_response _ds3_bulk_object_from_file(const char* file_name
         fprintf(stderr, "Failed to get file info for %s\n", file_name);
     }
 
-    memset(&obj, 0, sizeof(ds3_bulk_object_response));
-
-    obj.name = ds3_str_init(file_name);
+    obj->name = ds3_str_init(file_name);
 
     if (S_ISDIR(file_info.st_mode)) {
-        obj.length = 0;
+        obj->length = 0;
     } else {
-      obj.length = file_info.st_size;
+        obj->length = file_info.st_size;
     }
 
     g_free(file_to_stat);
@@ -171,21 +168,20 @@ ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** 
     ds3_bulk_object_list_response* obj_list = ds3_init_bulk_object_list(num_files);
 
     for (file_index = 0; file_index < num_files; file_index++) {
-        *obj_list->objects[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
+        obj_list->objects[file_index] = _ds3_bulk_object_from_file(file_list[file_index], base_path);
     }
 
     return obj_list;
 }
 
-ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response* objects, uint64_t num_objects) {
+ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response** objects, uint64_t num_objects) {
     uint64_t object_index;
     ds3_bulk_object_list_response* obj_list = ds3_init_bulk_object_list(num_objects);
 
     for (object_index = 0; object_index < num_objects; object_index++) {
-        ds3_bulk_object_response obj;
-        memset(&obj, 0, sizeof(ds3_bulk_object_response));
-        obj.name = ds3_str_dup(objects[object_index].name);
-        obj_list->objects[object_index] = &obj;
+        ds3_bulk_object_response* obj = obj_list->objects[object_index];
+        obj->name = ds3_str_dup(objects[object_index]->name);
+        obj_list->objects[object_index] = obj;
     }
 
     return obj_list;
@@ -194,7 +190,7 @@ ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_res
 ds3_bulk_object_list_response* ds3_init_bulk_object_list(uint64_t num_files) {
     ds3_bulk_object_list_response* obj_list = g_new0(ds3_bulk_object_list_response, 1);
     obj_list->num_objects = num_files;
-    *obj_list->objects = g_new0(ds3_bulk_object_response, num_files);
+    obj_list->objects = g_new0(ds3_bulk_object_response*, num_files);
 
     return obj_list;
 }

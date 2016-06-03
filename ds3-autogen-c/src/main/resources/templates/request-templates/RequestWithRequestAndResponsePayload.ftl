@@ -9,7 +9,7 @@ ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
 
 ${requestHelper.generateParameterValidationBlock(requestEntry)}
 
-    error = _init_request_payload(request, &send_buff, <#if requestEntry.getAction()??>requestEntry.getAction().toString()<#else>NULL</#if>);
+    error = _init_request_payload(request, &send_buff, ${requestHelper.getRequestObjectListType(requestEntry.getName())});
     if (error != NULL) return error;
 
     xml_blob = g_byte_array_new();
