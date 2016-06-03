@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.StringPayloadGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.ResponseModelGenerator;
@@ -54,10 +55,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObjectListPayload;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadObjectRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isMultiFileDeleteRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 public class PythonCodeGenerator implements CodeGenerator {
 
@@ -209,6 +207,12 @@ public class PythonCodeGenerator implements CodeGenerator {
                 || isMultiFileDeleteRequest(ds3Request)
                 || isCompleteMultiPartUploadRequest(ds3Request)) {
             return new ObjectsPayloadGenerator();
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)
+                || isCreateObjectRequest(ds3Request)
+                || isGetBlobPersistenceRequest(ds3Request)
+                || isBulkReplicateRequest(ds3Request)) {
+            return new StringPayloadGenerator();
         }
         return new BaseRequestGenerator();
     }
