@@ -205,7 +205,6 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Retrieves the Request Generator associated with the Ds3Request
      */
     protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
-        //TODO test
         if (hasFileObjectListPayload(ds3Request)
                 || isMultiFileDeleteRequest(ds3Request)
                 || isCompleteMultiPartUploadRequest(ds3Request)) {

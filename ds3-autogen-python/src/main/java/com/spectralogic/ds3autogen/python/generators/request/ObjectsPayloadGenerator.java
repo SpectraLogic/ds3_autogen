@@ -23,7 +23,7 @@ import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObj
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 /**
- * Creates the python request model for commands with request payloads of objects list.
+ * Creates the python request model for commands with request payloads of objects list and part list.
  */
 public class ObjectsPayloadGenerator extends BaseRequestGenerator {
 
@@ -34,7 +34,6 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
     private static final String PARTS_NAME = "part_list";
     private static final String PARTS_TYPE = "PartList";
 
-    //TODO test
     /**
      * Creates the request payload model for a list of file objects
      */
@@ -55,7 +54,6 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
         throw new IllegalArgumentException("The Ds3Request does not have an objects request payload: " + ds3Request.getName());
     }
 
-    //TODO test
     /**
      * Creates the python code for assigning the specified payload type to the body of the request
      */

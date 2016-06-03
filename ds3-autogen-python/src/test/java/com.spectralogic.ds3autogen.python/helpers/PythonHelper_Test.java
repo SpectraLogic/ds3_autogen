@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.python.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.*;
@@ -84,7 +85,7 @@ public class PythonHelper_Test {
     }
 
     @Test
-    public void toRequestInitList_Test() {
+    public void toRequestInitList_NoPayload_Test() {
         final ImmutableList<Arguments> reqArgs = ImmutableList.of(
                 new Arguments("TypeOne", "ArgOne"),
                 new Arguments("TypeTwo", "ArgTwo"));
@@ -95,6 +96,24 @@ public class PythonHelper_Test {
 
         final String result = toRequestInitList(reqArgs, optArgs, null);
         assertThat(result, is("self, arg_one, arg_two, arg_four=None, arg_three=None"));
+    }
+
+    @Test
+    public void toRequestInitList_OptionalPayload_Test() {
+        final ImmutableList<Arguments> reqArgs = ImmutableList.of(new Arguments("ReqType", "ReqArg"));
+        final ImmutableList<Arguments> optArgs = ImmutableList.of(new Arguments("OptType", "OptArg"));
+
+        final String result = toRequestInitList(reqArgs, optArgs, new RequestPayload("request_payload", "code...", true));
+        assertThat(result, is("self, req_arg, request_payload=None, opt_arg=None"));
+    }
+
+    @Test
+    public void toRequestInitList_RequiredPayload_Test() {
+        final ImmutableList<Arguments> reqArgs = ImmutableList.of(new Arguments("ReqType", "ReqArg"));
+        final ImmutableList<Arguments> optArgs = ImmutableList.of(new Arguments("OptType", "OptArg"));
+
+        final String result = toRequestInitList(reqArgs, optArgs, new RequestPayload("request_payload", "code...", false));
+        assertThat(result, is("self, req_arg, request_payload, opt_arg=None"));
     }
 
     @Test

@@ -108,7 +108,6 @@ public final class GeneratorUtils {
         return removePath(type);
     }
 
-    //TODO test
     /**
      * Determines if the Ds3Request has a request payload of type FileObjectList
      */

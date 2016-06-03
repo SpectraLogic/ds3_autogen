@@ -57,7 +57,11 @@ public final class PythonHelper {
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
         builder.addAll(requiredInits);
         if (requestPayload != null) {
-            builder.add(requestPayload.getName());
+            if (requestPayload.isOptional()) {
+                builder.add(requestPayload.getName() + "=None");
+            } else {
+                builder.add(requestPayload.getName());
+            }
         }
         builder.addAll(optionalInits);
         return builder.build().stream()

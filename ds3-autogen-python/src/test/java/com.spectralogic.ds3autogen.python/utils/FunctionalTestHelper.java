@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class FunctionalTestHelper {
 
     /**
-     * Determines if the code contains the specified request handler
+     * Determines if the code contains the specified request handler without request payload
      */
     public static void hasRequestHandler(
             final String requestName,
@@ -45,8 +45,22 @@ public class FunctionalTestHelper {
             final ImmutableList<String> optArgs,
             final ImmutableList<String> voidArgs,
             final String code) {
+        hasRequestHandler(requestName, httpVerb, reqArgs, optArgs, voidArgs, null, code);
+    }
+
+    /**
+     * Determines if the code contains the specified request handler with request payload
+     */
+    public static void hasRequestHandler(
+            final String requestName,
+            final HttpVerb httpVerb,
+            final ImmutableList<String> reqArgs,
+            final ImmutableList<String> optArgs,
+            final ImmutableList<String> voidArgs,
+            final String requestPayload,
+            final String code) {
         assertTrue(hasRequestHandlerDef(requestName, code));
-        assertTrue(hasRequestHandlerInit(reqArgs, optArgs, code));
+        assertTrue(hasRequestHandlerInit(reqArgs, optArgs, requestPayload, code));
         assertTrue(hasHttpVerb(httpVerb, code));
         if (hasContent(reqArgs)) {
             for (final String arg : reqArgs) {
@@ -116,6 +130,7 @@ public class FunctionalTestHelper {
     private static boolean hasRequestHandlerInit(
             final ImmutableList<String> reqArgs,
             final ImmutableList<String> optArgs,
+            final String requestPayload,
             final String code) {
         final StringBuilder search = new StringBuilder();
         search.append("def __init__(self");
@@ -123,6 +138,9 @@ public class FunctionalTestHelper {
             final String reqArgString = reqArgs.stream()
                     .collect(Collectors.joining(", "));
             search.append(", ").append(reqArgString);
+        }
+        if (hasContent(requestPayload)) {
+            search.append(", ").append(requestPayload);
         }
         if (hasContent(optArgs)) {
             final String optArgString = optArgs.stream()
