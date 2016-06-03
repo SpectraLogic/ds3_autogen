@@ -111,7 +111,7 @@ public final class RequestHelper {
 
         if (request.hasRequestPayload()
         && !request.getName().equalsIgnoreCase("put_object_request")
-        && !request.getName().equalsIgnoreCase("complete_multi_part_upload_request")) {
+        && !request.getName().equalsIgnoreCase("put_multi_part_upload_part_request")) {
             builder.add(request.getRequestPayload().toString());
         }
 
