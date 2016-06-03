@@ -26,6 +26,9 @@ public class StringPayloadGenerator extends BaseRequestGenerator {
     private static final String PAYLOAD_NAME = "request_payload";
     private static final String ASSIGN_PAYLOAD = "self.body = " + PAYLOAD_NAME;
 
+    /**
+     * Gets the request payload model that handles string and stream payload types
+     */
     @Override
     public RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName) {
         return new RequestPayload(PAYLOAD_NAME, ASSIGN_PAYLOAD, false);
