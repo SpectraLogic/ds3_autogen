@@ -48,18 +48,18 @@
 <#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
-    <#if requestEntry.hasRequestPayload()>
-        <#include "../request-templates/RequestWithRequestPayload.ftl"/>
-    <#elseif requestEntry.hasRequestPayload() && requestEntry.hasResponsePayload()>
+    <#if (requestEntry.getClassification().toString() == "amazons3")
+      && (requestEntry.getVerb().toString() == "HEAD")>
+         #-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
+    <#elseif (requestEntry.hasRequestPayload() == true)
+          && (requestEntry.hasResponsePayload() == true)>
         <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>
+    <#elseif requestEntry.hasRequestPayload()>
+        <#include "../request-templates/RequestWithRequestPayload.ftl"/>
     <#elseif requestEntry.hasResponsePayload()>
         <#include "../request-templates/RequestWithResponsePayload.ftl"/>
     <#else>
-        <#if (requestEntry.getClassification().toString() == "amazons3") && (requestEntry.getVerb().toString() == "HEAD")>
-            <#-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
-        <#else>
-            <#include "../request-templates/Request.ftl"/>
-        </#if>
+        <#include "../request-templates/Request.ftl"/>
     </#if>
 </#list>
 

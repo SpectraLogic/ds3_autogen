@@ -106,13 +106,13 @@ public class ParameterHelper {
         }
         switch(parm.getParameterType()) {
             case "ds3_bulk_object_list_response":
-                return indent(depth) + "request->object_list = " + parm.getName() + ";\n";
+                return indent(depth) + "request->object_list = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_job_chunk_client_processing_order_guarantee":
-                return indent(depth) + "request->chunk_ordering = *" + parm.getName() + ";\n";
+                return indent(depth) + "request->chunk_ordering = *(" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_complete_multipart_upload_response":
-                return indent(depth) + "request->mpu_list = " + parm.getName() + ";\n";
+                return indent(depth) + "request->mpu_list = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_delete_objects_response":
-                return indent(depth) + "request->delete_objects = " + parm.getName() + ";\n";
+                return indent(depth) + "request->delete_objects = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_bool":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", NULL);\n";
             case "operation":
