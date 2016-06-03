@@ -50,7 +50,7 @@
 <#list getRequests() as requestEntry>
     <#if (requestEntry.getClassification().toString() == "amazons3")
       && (requestEntry.getVerb().toString() == "HEAD")>
-         #-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
+         <#-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
     <#elseif (requestEntry.hasRequestPayload() == true)
           && (requestEntry.hasResponsePayload() == true)>
         <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>

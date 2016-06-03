@@ -1,5 +1,5 @@
 <#-- ********************************** -->
 <#-- Generate "Request Prototype"       -->
-<#--   Input: Header object             -->
+<#--   Input: Request object            -->
 <#-- ********************************** -->
 LIBRARY_API ${requestHelper.generateRequestFunctionSignature(requestEntry)};

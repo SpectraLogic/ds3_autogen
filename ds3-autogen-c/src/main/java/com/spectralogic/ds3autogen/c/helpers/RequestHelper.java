@@ -110,24 +110,24 @@ public final class RequestHelper {
                 .collect(GuavaCollectors.immutableList()));
 
         if (request.hasRequestPayload()
-        && !request.getName().equalsIgnoreCase("put_object_request")
-        && !request.getName().equalsIgnoreCase("put_multi_part_upload_part_request")) {
+        && !request.getName().equalsIgnoreCase("ds3_put_object_request")
+        && !request.getName().equalsIgnoreCase("ds3_put_multi_part_upload_part_request")) {
             builder.add(request.getRequestPayload().toString());
         }
 
         final ImmutableList<String> allParams = builder.build();
 
-        return "ds3_request* init_" + getNameRootUnderscores(request.getName()) + "(" + joinStrings(allParams)+ ")";
+        return "ds3_request* " + request.getInitName() + "(" + joinStrings(allParams)+ ")";
     }
 
     public static String generateRequestFunctionSignature(final Request request) {
-        if (request.getName().equalsIgnoreCase("put_object_request")
-         || request.getName().equalsIgnoreCase("get_object_request")
-         || request.getName().equalsIgnoreCase("put_multi_part_upload_part_request")) {
-            return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ", void* user_data, size_t (*callback)(void*, size_t, size_t, void*))";
+        if (request.getName().equalsIgnoreCase("ds3_put_object_request")
+         || request.getName().equalsIgnoreCase("ds3_get_object_request")
+         || request.getName().equalsIgnoreCase("ds3_put_multi_part_upload_part_request")) {
+            return "ds3_error* " + request.getName() + "(" + paramListToString(request.getParamList()) + ", void* user_data, size_t (*callback)(void*, size_t, size_t, void*))";
         }
 
-        return "ds3_error* " + getNameRootUnderscores(request.getName()) + "(" + paramListToString(request.getParamList()) + ")";
+        return "ds3_error* " + request.getName() + "(" + paramListToString(request.getParamList()) + ")";
     }
 
     public static String generateParameterValidationBlock(final Request request) {
@@ -170,33 +170,33 @@ public final class RequestHelper {
 
     public String getRequestObjectListType(final String requestName) {
         switch(requestName) {
-            case "get_bulk_job_spectra_s3_request":
+            case "ds3_get_bulk_job_spectra_s3_request":
                 return "BULK_GET";
 
-            case "put_bulk_job_spectra_s3_request":
+            case "ds3_put_bulk_job_spectra_s3_request":
                 return "BULK_PUT";
 
-            case "verify_bulk_job_spectra_s3_request":
-            case "eject_storage_domain_spectra_s3_request":
-            case "eject_storage_domain_blobs_spectra_s3_request":
-            case "get_physical_placement_for_objects_spectra_s3_request":
-            case "get_physical_placement_for_objects_with_full_details_spectra_s3_request":
-            case "verify_physical_placement_for_objects_spectra_s3_request":
-            case "verify_physical_placement_for_objects_with_full_details_spectra_s3_request":
+            case "ds3_verify_bulk_job_spectra_s3_request":
+            case "ds3_eject_storage_domain_spectra_s3_request":
+            case "ds3_eject_storage_domain_blobs_spectra_s3_request":
+            case "ds3_get_physical_placement_for_objects_spectra_s3_request":
+            case "ds3_get_physical_placement_for_objects_with_full_details_spectra_s3_request":
+            case "ds3_verify_physical_placement_for_objects_spectra_s3_request":
+            case "ds3_verify_physical_placement_for_objects_with_full_details_spectra_s3_request":
                 return "GET_PHYSICAL_PLACEMENT";
 
-            case "complete_multi_part_upload_request":
+            case "ds3_complete_multi_part_upload_request":
                 return "COMPLETE_MPU";
 
-            case "put_multi_part_upload_part_request":
-            case "put_object_request":
+            case "ds3_put_multi_part_upload_part_request":
+            case "ds3_put_object_request":
                 return "DATA";
 
-            case "delete_objects_request":
+            case "ds3_delete_objects_request":
                 return "STRING_LIST";
 
-            case "get_blob_persistence_spectra_s3_request":
-            case "replicate_put_job_spectra_s3_request":
+            case "ds3_get_blob_persistence_spectra_s3_request":
+            case "ds3_replicate_put_job_spectra_s3_request":
                 return "STRING";
 
             default:

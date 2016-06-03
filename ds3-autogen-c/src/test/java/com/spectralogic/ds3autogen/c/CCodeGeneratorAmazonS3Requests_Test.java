@@ -64,7 +64,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* ds3_head_bucket_request(const ds3_client* client, const ds3_request* request) {"));
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
         assertTrue(output.contains("    }"));
@@ -95,7 +95,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata) {"));
+        assertTrue(output.contains("ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata) {"));
         assertTrue(output.contains("    ds3_error* error;"));
 
         assertTrue(output.contains("    ds3_string_multimap* return_headers;"));
@@ -135,7 +135,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
+        assertTrue(output.contains("ds3_error* ds3_delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
 
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
@@ -168,7 +168,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* get_service_request(const ds3_client* client, const ds3_request* request, ds3_list_all_my_buckets_result_response** response) {"));
+        assertTrue(output.contains("ds3_error* ds3_get_service_request(const ds3_client* client, const ds3_request* request, ds3_list_all_my_buckets_result_response** response) {"));
 
         assertTrue(output.contains("    return _parse_top_level_ds3_list_all_my_buckets_result_response(client, request, response, xml_blob);"));
 
@@ -188,7 +188,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_error* get_bucket(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response) {"));
+        assertTrue(output.contains("ds3_error* ds3_get_bucket(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response) {"));
 
         assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
@@ -212,7 +212,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "LIBRARY_API ds3_error* get_bucket(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response);";
+        final String expectedOutput = "LIBRARY_API ds3_error* ds3_get_bucket(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response);";
         assertEquals(expectedOutput, output);
     }
 }

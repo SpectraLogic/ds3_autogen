@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.Operation;
 
 public class Request {
     private final String name;
+    private final String initName;
     private final Classification classification;
     private final HttpVerb verb;
     private final String buildPathArgs;
@@ -52,7 +53,8 @@ public class Request {
             final boolean isResourceIdRequired,
             final Parameter requestPayload,
             final String responseType) {
-        this.name = name;
+        this.name = "ds3_" + name;
+        this.initName = "ds3_init_" + name;
         this.classification = classification;
         this.verb = verb;
         this.buildPathArgs = buildPathArgs;
@@ -71,6 +73,10 @@ public class Request {
 
     public String getName() {
         return name;
+    }
+
+    public String getInitName() {
+        return initName;
     }
 
     public Classification getClassification() {
