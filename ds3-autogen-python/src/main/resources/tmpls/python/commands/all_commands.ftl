@@ -1,5 +1,10 @@
 <#include "../common/copyright.ftl" />
 
+import xml.etree.ElementTree as xmldom
+
+from abc import ABCMeta
+import posixpath
+
 # Models
 
 <#include "static_classes.ftl" />
