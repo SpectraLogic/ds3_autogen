@@ -22,6 +22,36 @@ void ds3_client_free(ds3_client* client) {
     g_free(client);
 }
 
+void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response* response) {
+    if (response == NULL) {
+        return;
+    }
+
+    ds3_str_free(response->etag);
+}
+
+void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response) {
+    if (response == NULL) {
+        return;
+    }
+
+    int index;
+    for (index = 0; index < response->num_parts; index++) {
+        ds3_multipart_upload_part_response_free(response->parts[index]);
+    }
+}
+
+void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
+    if (response == NULL) {
+        return;
+    }
+
+    int index;
+    for (index = 0; index < response->num_strings; index++) {
+        ds3_str_free(response->strings_list[index]);
+    }
+}
+
 void ds3_request_free(ds3_request* _request) {
     struct _ds3_request* request;
     if (_request == NULL) {
@@ -41,6 +71,9 @@ void ds3_request_free(ds3_request* _request) {
     }
 
     ds3_bulk_object_list_response_free(request->object_list);
+    ds3_complete_multipart_upload_response_free(request->mpu_list);
+    ds3_delete_objects_response_free(request->delete_objects);
+
     g_free(request);
 }
 
