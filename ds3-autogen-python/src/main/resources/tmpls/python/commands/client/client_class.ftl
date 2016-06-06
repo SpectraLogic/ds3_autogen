@@ -8,4 +8,5 @@ class Client(object):
 <#list clientCommands as cmd>
   def ${cmd.commandName}(self, request):
     return ${cmd.responseName}(self.net_client.get_response(request), request)
+
 </#list>

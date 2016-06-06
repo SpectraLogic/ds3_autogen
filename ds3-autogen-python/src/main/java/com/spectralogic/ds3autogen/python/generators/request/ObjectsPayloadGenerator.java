@@ -63,7 +63,7 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
             final String payloadType,
             final boolean optional) {
         final String assignmentCode = "if " + payloadName + " is not None:\n"
-                + pythonIndent(3) + "if " + payloadName + " not isinstance(" + payloadName + ", " + payloadType + "):\n"
+                + pythonIndent(3) + "if " + payloadName + " is not isinstance(" + payloadName + ", " + payloadType + "):\n"
                 + pythonIndent(4) + "raise TypeError('" + requestName + " should have request payload of type: " + payloadType + "')\n"
                 + pythonIndent(3) + "self.body = xmldom.tostring(" + payloadName + ".to_xml())";
         return new RequestPayload(payloadName, assignmentCode, optional);
