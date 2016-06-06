@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.StringPayloadGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
@@ -42,7 +43,11 @@ public class PythonCodeGenerator_Test {
     @Test
     public void getRequestGenerator_Test() {
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(BaseRequestGenerator.class));
+
+        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StringPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(StringPayloadGenerator.class));
+        assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringPayloadGenerator.class));
+        assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringPayloadGenerator.class));
 
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));

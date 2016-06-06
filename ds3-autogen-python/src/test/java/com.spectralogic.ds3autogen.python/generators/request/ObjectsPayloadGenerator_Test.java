@@ -19,6 +19,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator.toObjectsRequestPayload;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -72,7 +73,7 @@ public class ObjectsPayloadGenerator_Test {
                 "        raise TypeError('RequestName should have request payload of type: PayloadType')\n" +
                 "      self.body = xmldom.tostring(PayloadName.to_xml())";
 
-        final RequestPayload result = generator.toObjectsRequestPayload("RequestName", "PayloadName", "PayloadType", true);
+        final RequestPayload result = toObjectsRequestPayload("RequestName", "PayloadName", "PayloadType", true);
         assertThat(result.getName(), is("PayloadName"));
         assertThat(result.getAssignmentCode(), is(expected));
     }
