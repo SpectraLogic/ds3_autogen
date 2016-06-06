@@ -1,4 +1,4 @@
-ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request) {
+ds3_error* ds3_head_bucket_request(const ds3_client* client, const ds3_request* request) {
     if (client == NULL || request == NULL) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "All arguments must be filled in for request processing");
     }

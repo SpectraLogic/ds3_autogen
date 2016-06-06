@@ -174,7 +174,7 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
 static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_response* mpu_list) {
     char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
     xmlDocPtr doc;
-    ds3_multipart_upload_part* part;
+    ds3_multipart_upload_part_response* part;
     xmlNodePtr parts_node, part_node;
     int part_num;
 
@@ -259,7 +259,7 @@ ds3_error* _init_request_payload(const ds3_request* _request,
         case STRING: // *** not XML - do not interpret
             send_buff->buff = request->delete_objects->strings_list[0]->value;
             send_buff->size = request->delete_objects->strings_list[0]->size;
-            request->length -= send_buff->size;
+            request->length = send_buff->size;
             return NULL;
             break;
 

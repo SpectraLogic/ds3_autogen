@@ -1,4 +1,4 @@
-ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata) {
+ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata) {
     ds3_error* error;
     ds3_string_multimap* return_headers;
     ds3_metadata* metadata;

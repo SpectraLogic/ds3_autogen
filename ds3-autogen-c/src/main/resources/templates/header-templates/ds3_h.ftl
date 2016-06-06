@@ -85,10 +85,10 @@ typedef enum {
 typedef struct {
     ds3_str* etag;
     int      part_number;
-}ds3_multipart_upload_part;
+}ds3_multipart_upload_part_response;
 
 typedef struct {
-    ds3_multipart_upload_part** parts;
+    ds3_multipart_upload_part_response** parts;
     int                         num_parts;
 }ds3_complete_multipart_upload_response;
 
@@ -141,6 +141,9 @@ typedef struct _ds3_client {
 
 LIBRARY_API void ds3_request_free(ds3_request* request);
 LIBRARY_API void ds3_error_free(ds3_error* error);
+LIBRARY_API void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response* response);
+LIBRARY_API void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response);
+LIBRARY_API void ds3_delete_objects_response_free(ds3_delete_objects_response* response);
 
 LIBRARY_API ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* metadata, const char* name);
 LIBRARY_API unsigned int ds3_metadata_size(const ds3_metadata* metadata);
@@ -175,12 +178,12 @@ LIBRARY_API ds3_error* ds3_get_object_with_metadata(const ds3_client* client,
 <#-- Generate all "RequestPrototypes"         -->
 <#list getRequests() as requestEntry>
 
-    <#if requestEntry.getName() == "head_bucket_request">
-LIBRARY_API ds3_request* ds3_init_head_bucket(const char* bucket_name);
-LIBRARY_API ds3_error* head_bucket_request(const ds3_client* client, const ds3_request* request);
-    <#elseif requestEntry.getName() == "head_object_request">
-LIBRARY_API ds3_request* ds3_init_head_object(const char* bucket_name, const char* object_name);
-LIBRARY_API ds3_error* head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
+    <#if requestEntry.getName() == "ds3_head_bucket_request">
+LIBRARY_API ds3_request* ds3_init_head_bucket_request(const char* bucket_name);
+LIBRARY_API ds3_error* ds3_head_bucket_request(const ds3_client* client, const ds3_request* request);
+    <#elseif requestEntry.getName() == "ds3_head_object_request">
+LIBRARY_API ds3_request* ds3_init_head_object_request(const char* bucket_name, const char* object_name);
+LIBRARY_API ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
     <#else>
         <#include "InitRequestPrototype.ftl">
         <#include "RequestPrototype.ftl">
