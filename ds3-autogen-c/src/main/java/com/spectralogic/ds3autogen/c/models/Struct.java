@@ -24,6 +24,19 @@ public class Struct {
     private final boolean isTopLevel;
     private final boolean isArrayMember;
     private final boolean hasArrayMembers;
+    private final boolean isEmbedded;
+
+    public Struct(
+            final String name,
+            final ImmutableList<StructMember> members) {
+        this.name = name;
+        this.nameToMarshall = "Data";
+        this.members = members;
+        this.isTopLevel = false;
+        this.isArrayMember = false;
+        this.hasArrayMembers = false;
+        this.isEmbedded = false;
+    }
 
     public Struct(
             final String name,
@@ -31,13 +44,15 @@ public class Struct {
             final ImmutableList<StructMember> members,
             final boolean isTopLevel,
             final boolean isArrayMember,
-            final boolean hasArrayMembers) {
+            final boolean hasArrayMembers,
+            final boolean isEmbedded) {
         this.name = name;
         this.nameToMarshall = nameToMarshall;
         this.members = members;
         this.isTopLevel = isTopLevel;
         this.isArrayMember = isArrayMember;
         this.hasArrayMembers = hasArrayMembers;
+        this.isEmbedded = isEmbedded;
     }
 
     public String getName() {
@@ -62,6 +77,10 @@ public class Struct {
 
     public boolean hasArrayMembers() {
         return hasArrayMembers;
+    }
+
+    public boolean isEmbedded() {
+        return isEmbedded;
     }
 
     @Override

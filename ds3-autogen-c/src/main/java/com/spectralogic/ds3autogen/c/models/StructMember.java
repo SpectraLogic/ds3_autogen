@@ -22,6 +22,14 @@ public class StructMember {
 
     public StructMember(
             final C_Type type,
+            final String name) {
+        this.type = type;
+        this.name = name;
+        this.isAttribute = false;
+    }
+
+    public StructMember(
+            final C_Type type,
             final String name,
             final boolean isAttribute) {
         this.type = type;
@@ -40,6 +48,7 @@ public class StructMember {
     public boolean isAttribute() {
         return isAttribute;
     }
+
     @Override
     public String toString() {
         return getType().toString() + "    " + getName();

@@ -36,7 +36,8 @@ public final class StructConverter {
     public static Struct toStruct(final Ds3Type ds3Type,
                                   final ImmutableSet<String> enumNames,
                                   final ImmutableSet<String> responseTypes,
-                                  final ImmutableSet<String> arrayMemberTypes) throws ParseException {
+                                  final ImmutableSet<String> arrayMemberTypes,
+                                  final ImmutableSet<String> embeddedTypes) throws ParseException {
         final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames);
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
@@ -45,7 +46,8 @@ public final class StructConverter {
                 structMembersList,
                 responseTypes.contains(responseTypeName),
                 arrayMemberTypes.contains(responseTypeName),
-                hasComplexArrayMembers(structMembersList));
+                hasComplexArrayMembers(structMembersList),
+                embeddedTypes.contains(responseTypeName));
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
@@ -61,8 +63,7 @@ public final class StructConverter {
             if (elementType.isArray()) {
                 builder.add(new StructMember(
                         new PrimitiveType("size_t", false),
-                        "num_" + StructHelper.getNameUnderscores(currentElement.getName()),
-                        false)
+                        "num_" + StructHelper.getNameUnderscores(currentElement.getName()))
                 );
             }
         }

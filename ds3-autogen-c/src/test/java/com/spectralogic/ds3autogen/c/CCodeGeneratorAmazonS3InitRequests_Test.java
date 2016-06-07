@@ -50,7 +50,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -73,7 +73,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final Request requestEntry = source.getRequests().get(0);
@@ -100,7 +100,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -123,7 +123,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

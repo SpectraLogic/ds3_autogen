@@ -52,10 +52,10 @@ public class StructHelper_Test {
     public void testTypeRequiresNewParser() {
         final Set<String> existingStructs = new HashSet<>();
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember", false);
-        final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember", false);
+        final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember");
+        final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -63,10 +63,10 @@ public class StructHelper_Test {
     public void testTypeRequiresNewParser2() {
         final Set<String> existingStructs = new HashSet<>();
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember", false);
-        final StructMember testStruct2 = new StructMember(new FreeableType("ds3_user_api_bean_response", false), "beanMember", false);
+        final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
+        final StructMember testStruct2 = new StructMember(new FreeableType("ds3_user_api_bean_response", false), "beanMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
     @Test
@@ -75,10 +75,10 @@ public class StructHelper_Test {
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         existingStructs.add("ds3_tape_type");
 
-        final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember", false);
-        final StructMember testStruct2 = new StructMember(new FreeableType("ds3_tape_type", false), "tapeTypeMember", false);
+        final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
+        final StructMember testStruct2 = new StructMember(new FreeableType("ds3_tape_type", false), "tapeTypeMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -90,7 +90,7 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of());
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
         final String output = StructMemberHelper.generateStructMembers(testStruct.getStructMembers());
         assertTrue(output.contains("ds3_bool bool_element;"));
         assertTrue(output.contains("ds3_user_api_bean_response* bean_element;"));
@@ -104,7 +104,7 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of());
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
         final String output = StructMemberHelper.generateResponseParser(testStruct.getStructMembers());
 
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
@@ -128,7 +128,7 @@ public class StructHelper_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -193,7 +193,7 @@ public class StructHelper_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -249,20 +249,18 @@ public class StructHelper_Test {
 
     @Test
     public void testHasAttributes() {
-        final Struct testAttributesStruct = new Struct("testAttributesStruct", null,
-                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", true)),
-                false, false, false);
+        final Struct testAttributesStruct = new Struct("testAttributesStruct",
+                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", true)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
     }
 
     @Test
     public void testHasAttributesMixed() {
-        final Struct testAttributesStruct = new Struct("testAttributesStruct", null,
+        final Struct testAttributesStruct = new Struct("testAttributesStruct",
                 ImmutableList.of(
                         new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", true),
                         new StructMember(new PrimitiveType("int", false), "num_objects", false),
-                        new StructMember(new FreeableType("ds3_object", true), "objects_node", false)),
-                false, false, false);
+                        new StructMember(new FreeableType("ds3_object", true), "objects_node", false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
         assertTrue(StructHelper.hasChildNodes(testAttributesStruct));
     }

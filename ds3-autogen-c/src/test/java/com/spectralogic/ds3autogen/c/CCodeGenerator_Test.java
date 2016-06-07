@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
@@ -115,7 +116,6 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
         final Struct structEntry = new Struct("ds3_bucket_response",
-                null,
                 ImmutableList.of(
                         new StructMember( new FreeableType("ds3_str", false), "creation_date", false),
                         new StructMember( new FreeableType("ds3_str", false), "data_policy_id", false),
@@ -124,10 +124,7 @@ public class CCodeGenerator_Test {
                         new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity", false),
                         new StructMember( new FreeableType("ds3_str", false), "name", false),
                         new StructMember( new FreeableType("ds3_str", false), "user_id", false)
-                ),
-                true,
-                true,
-                false);
+                ));
         testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -162,6 +159,7 @@ public class CCodeGenerator_Test {
                                 new Ds3Element("Owner", "User", null, false))),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
+                ImmutableSet.of(),
                 ImmutableSet.of());
         testMap.put("structEntry", structEntry);
 
@@ -191,6 +189,7 @@ public class CCodeGenerator_Test {
                 CCodeGenerator.getAllStructs(spec,
                         ImmutableSet.of(),
                         ImmutableSet.of(),
+                        ImmutableSet.of(),
                         ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec));
 
@@ -208,7 +207,6 @@ public class CCodeGenerator_Test {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
         final Struct structEntry = new Struct("ds3_bucket_response",
-                null,
                 ImmutableList.of(
                         new StructMember( new FreeableType("ds3_str", false), "creation_date", false),
                         new StructMember( new FreeableType("ds3_str", false), "data_policy_id", false),
@@ -217,10 +215,7 @@ public class CCodeGenerator_Test {
                         new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity", false),
                         new StructMember( new FreeableType("ds3_str", false), "name", false),
                         new StructMember( new FreeableType("ds3_str", false), "user_id", false)
-                ),
-                true,
-                true,
-                false);
+                ));
         testMap.put("structEntry", structEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -258,7 +253,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -296,7 +291,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -331,7 +326,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -396,7 +391,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -457,7 +452,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_blob_response"));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -516,7 +511,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -560,7 +555,8 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(
+                spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_bucket_details_response", "ds3_list_all_my_buckets_result_response"));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -586,7 +582,8 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(
+                spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_user_response"));
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -637,9 +634,10 @@ public class CCodeGenerator_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -657,14 +655,34 @@ public class CCodeGenerator_Test {
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Header header = new Header(allEnums,
                 allOrderedStructs,
                 allRequests);
         codeGenerator.processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputStream());
     }
+
+    @Test
+    public void testEmbeddedTypesSet() {
+        final Ds3Type type1 = new Ds3Type("Ds3Bucket", ImmutableList.of(
+                                new Ds3Element("ChecksumType", "Ds3ChecksumType", null, true),
+                                new Ds3Element("Size", "Ds3Size", null, true)));
+        final Ds3Type type2 = new Ds3Type("Ds3Object", ImmutableList.of(
+                new Ds3Element("Name", "java.lang.String", null, true),
+                new Ds3Element("Size", "Ds3Size", null, true)));
+        final Ds3ApiSpec embeddedTypesSet = new Ds3ApiSpec(
+                ImmutableList.of(),
+                ImmutableMap.of(
+                        type1.getName(), type1,
+                        type2.getName(), type2));
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet);
+        assertEquals(embeddedTypes.size(), 3);
+        assertTrue(embeddedTypes.contains("ds3_string_response"));
+    }
 }
+
 
