@@ -18,12 +18,15 @@ package com.spectralogic.ds3autogen.c.models;
 public class StructMember {
     private final C_Type type;
     private final String name;
+    private final boolean isAttribute;
 
     public StructMember(
             final C_Type type,
-            final String name) {
+            final String name,
+            final boolean isAttribute) {
         this.type = type;
         this.name = name;
+        this.isAttribute = isAttribute;
     }
 
     public C_Type getType() {
@@ -34,6 +37,9 @@ public class StructMember {
         return name;
     }
 
+    public boolean isAttribute() {
+        return isAttribute;
+    }
     @Override
     public String toString() {
         return getType().toString() + "    " + getName();

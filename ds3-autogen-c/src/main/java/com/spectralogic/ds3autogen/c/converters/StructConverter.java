@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.c.models.PrimitiveType;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.spectralogic.ds3autogen.utils.Ds3ElementUtil;
 
 import java.text.ParseException;
 
@@ -54,12 +55,14 @@ public final class StructConverter {
             final C_Type elementType = C_TypeHelper.convertDs3ElementType(currentElement, enumNames);
             builder.add(new StructMember(
                     elementType,
-                    StructHelper.getNameUnderscores(currentElement.getName())));
+                    StructHelper.getNameUnderscores(currentElement.getName()),
+                    Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations())));
 
             if (elementType.isArray()) {
                 builder.add(new StructMember(
                         new PrimitiveType("size_t", false),
-                        "num_" + StructHelper.getNameUnderscores(currentElement.getName()))
+                        "num_" + StructHelper.getNameUnderscores(currentElement.getName()),
+                        false)
                 );
             }
         }

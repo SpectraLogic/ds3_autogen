@@ -117,13 +117,13 @@ public class CCodeGenerator_Test {
         final Struct structEntry = new Struct("ds3_bucket_response",
                 null,
                 ImmutableList.of(
-                        new StructMember( new FreeableType("ds3_str", false), "creation_date"),
-                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id"),
-                        new StructMember( new FreeableType("ds3_str", false), "id"),
-                        new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes"),
-                        new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity"),
-                        new StructMember( new FreeableType("ds3_str", false), "name"),
-                        new StructMember( new FreeableType("ds3_str", false), "user_id")
+                        new StructMember( new FreeableType("ds3_str", false), "creation_date", false),
+                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id", false),
+                        new StructMember( new FreeableType("ds3_str", false), "id", false),
+                        new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes", false),
+                        new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity", false),
+                        new StructMember( new FreeableType("ds3_str", false), "name", false),
+                        new StructMember( new FreeableType("ds3_str", false), "user_id", false)
                 ),
                 true,
                 true,
@@ -210,13 +210,13 @@ public class CCodeGenerator_Test {
         final Struct structEntry = new Struct("ds3_bucket_response",
                 null,
                 ImmutableList.of(
-                        new StructMember( new FreeableType("ds3_str", false), "creation_date"),
-                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id"),
-                        new StructMember( new FreeableType("ds3_str", false), "id"),
-                        new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes"),
-                        new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity"),
-                        new StructMember( new FreeableType("ds3_str", false), "name"),
-                        new StructMember( new FreeableType("ds3_str", false), "user_id")
+                        new StructMember( new FreeableType("ds3_str", false), "creation_date", false),
+                        new StructMember( new FreeableType("ds3_str", false), "data_policy_id", false),
+                        new StructMember( new FreeableType("ds3_str", false), "id", false),
+                        new StructMember( new PrimitiveType("uint64_t", false), "last_preferred_chunk_size_in_bytes", false),
+                        new StructMember( new PrimitiveType("uint64_t", false), "logical_used_capacity", false),
+                        new StructMember( new FreeableType("ds3_str", false), "name", false),
+                        new StructMember( new FreeableType("ds3_str", false), "user_id", false)
                 ),
                 true,
                 true,

@@ -69,7 +69,7 @@ public class Struct {
         final StringBuilder builder = new StringBuilder();
         builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + "\n");
         for (final StructMember structMember: getStructMembers()) {
-            builder.append("  " + structMember.toString() + "\n");
+            builder.append("  " + structMember.toString() + (structMember.isAttribute() ? " ATTR" : "") + "\n");
         }
         return builder.toString();
     }

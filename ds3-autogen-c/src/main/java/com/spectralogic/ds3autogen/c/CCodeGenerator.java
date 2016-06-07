@@ -57,6 +57,7 @@ public class CCodeGenerator implements CodeGenerator {
         config.setSharedVariable("requestHelper", RequestHelper.getInstance());
         config.setSharedVariable("helper", Helper.getInstance());
         config.setSharedVariable("structHelper", StructHelper.getInstance());
+        config.setSharedVariable("structMemberHelper", StructMemberHelper.getInstance());
         config.setSharedVariable("parameterHelper", ParameterHelper.getInstance());
     }
 
