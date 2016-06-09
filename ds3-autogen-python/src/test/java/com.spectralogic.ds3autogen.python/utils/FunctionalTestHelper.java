@@ -224,8 +224,10 @@ public class FunctionalTestHelper {
     private static boolean hasClientClass(final String code) {
         final Pattern search = Pattern.compile(
                 "class Client\\(object\\):"
-                + "\\s+def __init__\\(self, endpoint, credentials\\):"
+                + "\\s+def __init__\\(self, endpoint, credentials, proxy=None\\):"
                 + "\\s+self\\.net_client = NetworkClient\\(endpoint, credentials\\)"
+                + "\\s+if proxy is not None:"
+                + "\\s+self\\.net_client = self\\.net_client\\.with_proxy\\(proxy\\)"
                 + "\\s+def get_net_client\\(self\\):"
                 + "\\s+return self\\.net_client",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);

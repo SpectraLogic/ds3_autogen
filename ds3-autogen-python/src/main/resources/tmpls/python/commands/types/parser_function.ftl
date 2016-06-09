@@ -1,4 +1,8 @@
 def parseModel(root, model):
+
+  if root is None:
+    raise TypeError('Nothing to parse: root node is None')
+
   # Primitive type
   if model is None:
     return root.text
