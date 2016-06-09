@@ -69,7 +69,7 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void toObjectsRequestPayload_Test() {
         final String expected = "if PayloadName is not None:\n" +
-                "      if PayloadName is not isinstance(PayloadName, PayloadType):\n" +
+                "      if not isinstance(PayloadName, PayloadType):\n" +
                 "        raise TypeError('RequestName should have request payload of type: PayloadType')\n" +
                 "      self.body = xmldom.tostring(PayloadName.to_xml())";
 
