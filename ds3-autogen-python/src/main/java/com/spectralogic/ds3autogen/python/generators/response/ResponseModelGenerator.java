@@ -15,12 +15,10 @@
 
 package com.spectralogic.ds3autogen.python.generators.response;
 
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
 
 @FunctionalInterface
 public interface ResponseModelGenerator<T extends BaseResponse> {
-    T generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap);
+    T generate(final Ds3Request ds3Request);
 }

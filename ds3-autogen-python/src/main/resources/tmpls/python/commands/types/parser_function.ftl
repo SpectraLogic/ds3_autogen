@@ -1,5 +1,12 @@
 def parseModel(root, model):
 
+  if root.tag is 'Data':
+    children = list(root.iter())
+    if not children:
+      return None
+    else:
+      root = children[0]
+
   if root is None:
     raise TypeError('Nothing to parse: root node is None')
 

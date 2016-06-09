@@ -143,7 +143,7 @@ public class PythonCodeGenerator_Test {
     @Test
     public void toResponseModel_Test() {
         final Ds3Request request = getBucketRequest();
-        final BaseResponse result = toResponseModel(request, ImmutableMap.of());
+        final BaseResponse result = toResponseModel(request);
         assertThat(result.getName(), is("GetBucketResponseHandler"));
         assertThat(result.getCodes().size(), is(1));
 
@@ -154,20 +154,20 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toResponseModelList_NullList_Test() {
-        final ImmutableList<BaseResponse> result = toResponseModelList(null, ImmutableMap.of());
+        final ImmutableList<BaseResponse> result = toResponseModelList(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toResponseModelList_EmptyList_Test() {
-        final ImmutableList<BaseResponse> result = toResponseModelList(ImmutableList.of(), ImmutableMap.of());
+        final ImmutableList<BaseResponse> result = toResponseModelList(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toResponseModelList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(getBucketRequest());
-        final ImmutableList<BaseResponse> result = toResponseModelList(requests, ImmutableMap.of());
+        final ImmutableList<BaseResponse> result = toResponseModelList(requests);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("GetBucketResponseHandler"));
     }

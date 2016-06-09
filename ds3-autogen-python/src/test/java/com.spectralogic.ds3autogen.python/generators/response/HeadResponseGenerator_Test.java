@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.python.generators.response;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
 import org.junit.Test;
@@ -41,8 +40,8 @@ public class HeadResponseGenerator_Test {
                 "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
                 "    else:\n" +
                 "      self.result = HeadRequestStatus.UNKNOWN";
-        assertThat(generator.toParseResponsePayload(null, null), is(expected));
-        assertThat(generator.toParseResponsePayload(getHeadObjectRequest(), ImmutableMap.of()), is(expected));
+        assertThat(generator.toParseResponsePayload(null), is(expected));
+        assertThat(generator.toParseResponsePayload(getHeadObjectRequest()), is(expected));
     }
 
     @Test(expected = IllegalArgumentException.class)

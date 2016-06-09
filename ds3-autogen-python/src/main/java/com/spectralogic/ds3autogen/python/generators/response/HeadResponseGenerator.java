@@ -16,10 +16,8 @@
 package com.spectralogic.ds3autogen.python.generators.response;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent;
@@ -65,9 +63,7 @@ public class HeadResponseGenerator extends BaseResponseGenerator {
      * Gets the python code that will parse the response payload
      */
     @Override
-    public String toParseResponsePayload(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+    public String toParseResponsePayload(final Ds3Request ds3Request) {
         return "self.status_code = self.response.status\n" +
                 pythonIndent(2) + "if self.response.status == 200:\n" +
                 pythonIndent(3) + "self.result = HeadRequestStatus.EXISTS\n" +
