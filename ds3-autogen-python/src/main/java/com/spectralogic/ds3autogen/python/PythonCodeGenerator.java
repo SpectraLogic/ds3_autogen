@@ -105,7 +105,7 @@ public class PythonCodeGenerator implements CodeGenerator {
         }
 
         final ImmutableList<BaseRequest> baseRequests = toRequestModelList(ds3Requests);
-        final ImmutableList<BaseResponse> baseResponses = toResponseModelList(ds3Requests, typeMap);
+        final ImmutableList<BaseResponse> baseResponses = toResponseModelList(ds3Requests);
         final ImmutableList<TypeDescriptor> baseTypes = toTypeDescriptorList(typeMap);
         final ImmutableList<BaseClient> clientCommands = toClientCommands(ds3Requests);
 
@@ -221,24 +221,21 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Converts all Ds3Requests into the python response handler models
      */
     protected static ImmutableList<BaseResponse> toResponseModelList(
-            final ImmutableList<Ds3Request> ds3Requests,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+            final ImmutableList<Ds3Request> ds3Requests) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
         return ds3Requests.stream()
-                .map(response -> toResponseModel(response, typeMap))
+                .map(PythonCodeGenerator::toResponseModel)
                 .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Converts a Ds3Request into a python response handler model
      */
-    protected static BaseResponse toResponseModel(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+    protected static BaseResponse toResponseModel(final Ds3Request ds3Request) {
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
-        return responseGenerator.generate(ds3Request, typeMap);
+        return responseGenerator.generate(ds3Request);
     }
 
     /**

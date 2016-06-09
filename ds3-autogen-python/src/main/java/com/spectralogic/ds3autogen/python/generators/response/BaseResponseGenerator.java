@@ -36,11 +36,9 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     private static final Logger LOG = LoggerFactory.getLogger(BaseResponseGenerator.class);
 
     @Override
-    public BaseResponse generate(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+    public BaseResponse generate(final Ds3Request ds3Request) {
         final String name = toResponseName(ds3Request.getName());
-        final String parseResponseCode = toParseResponsePayload(ds3Request, typeMap);
+        final String parseResponseCode = toParseResponsePayload(ds3Request);
         final ImmutableList<Integer> codes = getStatusCodes(ds3Request.getDs3ResponseCodes(), ds3Request.getName());
         return new BaseResponse(name, parseResponseCode, codes);
     }
@@ -66,10 +64,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
      * Gets the python code that will parse the response payload
      */
     @Override
-    public String toParseResponsePayload(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) {
-        final ParsePayload parsePayload = getParsePayload(ds3Request, typeMap);
+    public String toParseResponsePayload(final Ds3Request ds3Request) {
+        final ParsePayload parsePayload = getParsePayload(ds3Request);
         return parsePayload.toPythonCode();
     }
 
@@ -77,20 +73,13 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
      * Creates the Parse Payload object which describes how to parse the specified
      * response payload for this Ds3Request
      */
-    protected static ParsePayload getParsePayload(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) {
+    protected static ParsePayload getParsePayload(final Ds3Request ds3Request) {
         if (!hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
             return new NoPayload();
         }
         final String responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
-        final String nameToMarshal = getNameToMarshal(responsePayload, typeMap);
         final Integer responseCode = getPayloadResponseCode(ds3Request.getDs3ResponseCodes());
-        if (isEmpty(nameToMarshal)) {
-            LOG.debug("Response type does not have a NameToMarshal value");
-            return new BaseParsePayload(getParserModelName(responsePayload), responseCode);
-        }
-        return new EncapsulatedPayload(getParserModelName(responsePayload), nameToMarshal, responseCode);
+        return new BaseParsePayload(getParserModelName(responsePayload), responseCode);
     }
 
     /**

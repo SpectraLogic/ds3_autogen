@@ -21,7 +21,6 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.model.response.BaseParsePayload;
-import com.spectralogic.ds3autogen.python.model.response.EncapsulatedPayload;
 import com.spectralogic.ds3autogen.python.model.response.NoPayload;
 import org.junit.Test;
 
@@ -78,25 +77,19 @@ public class BaseResponseGenerator_Test {
     @Test
     public void getParsePayload_NoPayload_Test() {
         final Ds3Request emptyRequest = createDs3RequestTestData("com.test.Request", Classification.amazons3);
-        assertThat(getParsePayload(emptyRequest, testTypeMap()), instanceOf(NoPayload.class));
+        assertThat(getParsePayload(emptyRequest), instanceOf(NoPayload.class));
     }
 
     @Test
     public void getParsePayload_NoNameToMarshal_Test() {
         final Ds3Request request = getBucketRequest();
-        assertThat(getParsePayload(request, testTypeMap()), instanceOf(BaseParsePayload.class));
-    }
-
-    @Test
-    public void getParsePayload_WithNameToMarshal_Test() {
-        final Ds3Request request = getRequestGetJob();
-        assertThat(getParsePayload(request, testTypeMap()), instanceOf(EncapsulatedPayload.class));
+        assertThat(getParsePayload(request), instanceOf(BaseParsePayload.class));
     }
 
     @Test
     public void toParseResponsePayload_NoPayload_Test() {
         final Ds3Request request = createDs3RequestTestData("com.test.Request", Classification.amazons3);
-        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(""));
+        assertThat(generator.toParseResponsePayload(request), is(""));
     }
 
     @Test
@@ -105,16 +98,16 @@ public class BaseResponseGenerator_Test {
                 "      self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
 
         final Ds3Request request = getBucketRequest();
-        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(expected));
+        assertThat(generator.toParseResponsePayload(request), is(expected));
     }
 
     @Test
     public void toParseResponsePayload_WithNameToMarshal_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()).find('JobsTag'), JobWithChunksApiBean())";
+                "      self.result = parseModel(xmldom.fromstring(response.read()), JobWithChunksApiBean())";
 
         final Ds3Request request = getRequestGetJob();
-        assertThat(generator.toParseResponsePayload(request, testTypeMap()), is(expected));
+        assertThat(generator.toParseResponsePayload(request), is(expected));
     }
 
     @Test
