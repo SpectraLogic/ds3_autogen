@@ -45,23 +45,6 @@ public final class StructHelper {
         return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(Helper.unqualifiedName(name)));
     }
 
-    /**
-     * Need to special case underscores to camel-case conversion due to inconsistent capitalization of ID
-     * @param structMemberName
-     * @return camel-cased structMemberName
-     */
-    public static String convertStructMemberNameToCamelCase(final String structName, final String structMemberName) {
-        if (structMemberName.equals("id")) {
-            if (structName.equals("ds3_user_response")) {
-                return "Id";
-            }
-            return "ID";
-        }
-        //return Helper.underscoreToCamel(structMemberName);
-        return structMemberName;
-    }
-
-
     public static String getDs3TypeName(final String name) {
         final String name_underscores = getNameUnderscores(name);
         if (name_underscores.startsWith("ds3_")) { // some special-cased types have already been renamed with ds3_ prefix
@@ -76,6 +59,13 @@ public final class StructHelper {
 
     public static String getParserFunctionName(final String ds3TypeName) {
         return "_parse_" + ds3TypeName;
+    }
+
+    public static String getXmlTag(final StructMember structMember) {
+        if (structMember.hasWrapper()) {
+            return structMember.getEncapsulatingTag();
+        }
+        return Helper.capFirst(structMember.getNameToMarshall());
     }
 
     /**
@@ -199,7 +189,7 @@ public final class StructHelper {
                 firstElement = false;
             }
 
-            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\")) {").append("\n");
+            outputBuilder.append("if (element_equal(child_node, \"").append(getXmlTag(currentStructMember)).append("\")) {").append("\n");
             outputBuilder.append(StructMemberHelper.getParseStructMemberBlock(currentStructMember));
         }
 

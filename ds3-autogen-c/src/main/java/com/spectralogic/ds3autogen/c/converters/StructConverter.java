@@ -59,6 +59,7 @@ public final class StructConverter {
                     elementType,
                     StructHelper.getNameUnderscores(currentElement.getName()),
                     Ds3ElementUtil.getXmlTagName(currentElement),
+                    Ds3ElementUtil.getEncapsulatingTagAnnotations(currentElement.getDs3Annotations()),
                     Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations()),
                     Ds3ElementUtil.hasWrapperAnnotations(currentElement.getDs3Annotations())));
 

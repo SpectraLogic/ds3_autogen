@@ -88,7 +88,8 @@ public class Struct {
         final StringBuilder builder = new StringBuilder();
         builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + "\n");
         for (final StructMember structMember: getStructMembers()) {
-            builder.append("  " + structMember.toString() + (structMember.isAttribute() ? " ATTR" : "") + (structMember.hasWrapper() ? " WRAP" : "") + "\n");
+            builder.append("  " + structMember.toString() + " " + structMember.getNameToMarshall() + " " + structMember.getEncapsulatingTag()
+                    + (structMember.isAttribute() ? " ATTR" : "") + (structMember.hasWrapper() ? " WRAP" : "") + "\n");
         }
         return builder.toString();
     }

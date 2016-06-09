@@ -19,6 +19,7 @@ public class StructMember {
     private final C_Type type;
     private final String name;
     private final String nameToMarshall;
+    private final String encapsulatingTag;
     private final boolean isAttribute;
     private final boolean hasWrapper;
 
@@ -28,6 +29,7 @@ public class StructMember {
         this.type = type;
         this.name = name;
         this.nameToMarshall = name;
+        this.encapsulatingTag = null;
         this.isAttribute = false;
         this.hasWrapper = true;
     }
@@ -36,11 +38,13 @@ public class StructMember {
             final C_Type type,
             final String name,
             final String nameToMarshall,
+            final String encapsulatingTag,
             final boolean isAttribute,
             final boolean hasWrapper) {
         this.type = type;
         this.name = name;
         this.nameToMarshall = nameToMarshall;
+        this.encapsulatingTag = encapsulatingTag;
         this.isAttribute = isAttribute;
         this.hasWrapper = hasWrapper;
     }
@@ -55,6 +59,10 @@ public class StructMember {
 
     public String getNameToMarshall() {
         return nameToMarshall;
+    }
+
+    public String getEncapsulatingTag() {
+        return encapsulatingTag;
     }
 
     public boolean isAttribute() {
