@@ -42,7 +42,7 @@ public final class StructConverter {
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
                 responseTypeName,
-                convertNameToMarshall(ds3Type.getNameToMarshal()),
+                convertNameToMarshall(ds3Type),
                 structMembersList,
                 responseTypes.contains(responseTypeName),
                 arrayMemberTypes.contains(responseTypeName),
@@ -58,7 +58,9 @@ public final class StructConverter {
             builder.add(new StructMember(
                     elementType,
                     StructHelper.getNameUnderscores(currentElement.getName()),
-                    Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations())));
+                    Ds3ElementUtil.getXmlTagName(currentElement),
+                    Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations()),
+                    Ds3ElementUtil.hasWrapperAnnotations(currentElement.getDs3Annotations())));
 
             if (elementType.isArray()) {
                 builder.add(new StructMember(
@@ -70,11 +72,13 @@ public final class StructConverter {
         return builder.build();
     }
 
-    private static String convertNameToMarshall(final String nameToMarshall) {
-        if (ConverterUtil.isEmpty(nameToMarshall)) {
+    private static String convertNameToMarshall(final Ds3Type ds3Type) {
+        if (ds3Type.getName().equalsIgnoreCase("JobList")) {
+            return "Jobs";
+        } else if (ConverterUtil.isEmpty(ds3Type.getNameToMarshal())) {
             return "Data";
         }
-        return nameToMarshall;
+        return ds3Type.getNameToMarshal();
     }
 
     /**

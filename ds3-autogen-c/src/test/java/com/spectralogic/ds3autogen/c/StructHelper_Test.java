@@ -105,7 +105,7 @@ public class StructHelper_Test {
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
-        final String output = StructMemberHelper.generateResponseParser(testStruct.getStructMembers());
+        final String output = StructHelper.generateResponseParser(testStruct.getStructMembers());
 
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
         assertTrue(output.contains("        response->bool_element = xml_get_bool(client->log, doc, child_node);"));

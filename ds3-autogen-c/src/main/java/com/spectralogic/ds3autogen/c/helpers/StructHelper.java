@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
+
 public final class StructHelper {
     private static final Logger LOG = LoggerFactory.getLogger(StructHelper.class);
     private StructHelper() {}
@@ -42,6 +44,23 @@ public final class StructHelper {
     public static String getNameUnderscores(final String name) {
         return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(Helper.unqualifiedName(name)));
     }
+
+    /**
+     * Need to special case underscores to camel-case conversion due to inconsistent capitalization of ID
+     * @param structMemberName
+     * @return camel-cased structMemberName
+     */
+    public static String convertStructMemberNameToCamelCase(final String structName, final String structMemberName) {
+        if (structMemberName.equals("id")) {
+            if (structName.equals("ds3_user_response")) {
+                return "Id";
+            }
+            return "ID";
+        }
+        //return Helper.underscoreToCamel(structMemberName);
+        return structMemberName;
+    }
+
 
     public static String getDs3TypeName(final String name) {
         final String name_underscores = getNameUnderscores(name);
@@ -112,6 +131,7 @@ public final class StructHelper {
 
             if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
                 existingStructs.add(structEntry.getName());
+                LOG.info(structEntry.toString());
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
                 structsQueue.add(structEntry);
@@ -145,11 +165,84 @@ public final class StructHelper {
 
     /**
      * Determine if a Struct has any StructMembers which need to be parsed as a child-node
-     * @param structEntry
-     * @return boolean
      */
     public static boolean hasChildNodes(final Struct structEntry) {
         return structEntry.getStructMembers().stream()
                 .anyMatch(sm -> !sm.isAttribute());
+    }
+
+    /**
+     * Determine if any array StructMembers are not wrapped in an enclosing tag:
+     * <Objects ID="some_id">
+     *     <Object name="obj1"></Object>
+     * </Objects>
+     */
+    public static boolean hasUnwrappedChildNodes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(sm -> (!sm.isAttribute() && sm.hasWrapper()));
+    }
+
+    public static String generateResponseParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
+        boolean firstElement = true;
+        final StringBuilder outputBuilder = new StringBuilder();
+
+        for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
+            final StructMember currentStructMember = structMembers.get(structMemberIndex);
+            if (currentStructMember.isAttribute()) continue; // only parsing child nodes for a specific node
+            if (currentStructMember.getName().startsWith("num_")) continue; // skip - these are used for array iteration and are not a part of the response
+
+            outputBuilder.append(indent(2));
+
+            if (!firstElement) {
+                outputBuilder.append("} else ");
+            } else {
+                firstElement = false;
+            }
+
+            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\")) {").append("\n");
+            outputBuilder.append(StructMemberHelper.getParseStructMemberBlock(currentStructMember));
+        }
+
+        outputBuilder.append(indent(2)).append("} else {").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of " + structName + " [%s]\\n\", child_node->name, root->name);").append("\n");
+        outputBuilder.append(indent(2)).append("}").append("\n");
+        outputBuilder.append("\n");
+        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
+        outputBuilder.append(indent(3)).append("break;\n");
+        outputBuilder.append(indent(2)).append("}\n");
+
+        return outputBuilder.toString();
+    }
+
+    public static String generateResponseAttributesParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
+        boolean firstElement = true;
+        final StringBuilder outputBuilder = new StringBuilder();
+
+        for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
+            final StructMember currentStructMember = structMembers.get(structMemberIndex);
+            if (!currentStructMember.isAttribute()) continue; // only parsing attributes for a specific node
+
+            outputBuilder.append(indent(2));
+
+            if (!firstElement) {
+                outputBuilder.append("} else ");
+            } else {
+                firstElement = false;
+            }
+
+            //final String structMemberName = convertStructMemberNameToCamelCase(structName, currentStructMember.getName());
+            outputBuilder.append("if (attribute_equal(attribute, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\") == true) {").append("\n");
+            outputBuilder.append(StructMemberHelper.getParseStructMemberAttributeBlock(currentStructMember));
+        }
+
+        outputBuilder.append(indent(2)).append("} else {").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown attribute[%s] of " + structName + " [%s]\\n\", attribute->name, root->name);").append("\n");
+        outputBuilder.append(indent(2)).append("}").append("\n");
+        outputBuilder.append("\n");
+        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
+        outputBuilder.append(indent(3)).append("break;\n");
+        outputBuilder.append(indent(2)).append("}\n");
+
+        return outputBuilder.toString();
     }
 }

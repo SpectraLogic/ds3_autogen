@@ -3,6 +3,7 @@ package com.spectralogic.ds3autogen.c.helpers;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.text.ParseException;
 
@@ -15,6 +16,24 @@ public class StructMemberHelper {
 
     public static StructMemberHelper getInstance() {
         return structMemberHelper;
+    }
+
+
+    public static ImmutableList<StructMember> getWrappedListChildNodes(final ImmutableList<StructMember> structMembers) {
+        return structMembers.stream()
+                .filter(sm -> sm.getType().isArray())
+                .filter(StructMember::hasWrapper)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Used by ResponseParse.ftl and ResponseParserTopLevel.ftl
+     */
+    public static ImmutableList<StructMember> getUnwrappedListChildNodes(final ImmutableList<StructMember> structMembers) {
+        return structMembers.stream()
+                .filter(sm -> sm.getType().isArray())
+                .filter(sm -> !sm.hasWrapper())
+                .collect(GuavaCollectors.immutableList());
     }
 
     public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
@@ -36,6 +55,13 @@ public class StructMemberHelper {
              + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() + "_array->pdata;\n"
              + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
+    }
+
+    public static String generateUnwrappedStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
+        return indent(3) + structMember.getType().getTypeName() + "* " + structMember.getName() + "_response = NULL;\n"
+             + indent(3) + "error = _parse_" + structMember.getType().getTypeName() + "(client, doc, child_node, &" + structMember.getName() + "_response);\n"
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() + "_array->pdata;\n"
+             + indent(3) + "g_ptr_array_add(" + structMember.getName() + "_array, " + structMember.getName() + "_response);\n";
     }
 
     public static String generateStructMemberEnumParserBlock(final StructMember structMember) {
@@ -98,43 +124,13 @@ public class StructMemberHelper {
             }
             return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
         } else if (structMember.getType().isArray()) {
-            return generateStructMemberArrayParserBlock(structMember);
+            if (structMember.hasWrapper()) {
+                return generateStructMemberArrayParserBlock(structMember);
+            }
+            return generateUnwrappedStructMemberArrayParserBlock(structMember);
         }
 
         return indent(3) + "error = " + StructHelper.getParserFunctionName(structMember.getType().getTypeName()) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
-    }
-
-    public static String generateResponseParser(final ImmutableList<StructMember> structMembers) throws ParseException {
-        boolean firstElement = true;
-        final StringBuilder outputBuilder = new StringBuilder();
-
-        for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
-            final StructMember currentStructMember = structMembers.get(structMemberIndex);
-            if (currentStructMember.isAttribute()) continue; // only parsing child nodes for a specific node
-            if (currentStructMember.getName().startsWith("num_")) continue; // skip - these are used for array iteration and are not a part of the response
-
-            outputBuilder.append(indent(2));
-
-            if (firstElement == false) {
-                outputBuilder.append("} else ");
-            } else {
-                firstElement = false;
-            }
-
-            final String structMemberName = currentStructMember.getName().equalsIgnoreCase("id") ? "ID" : Helper.underscoreToCamel(currentStructMember.getName());
-            outputBuilder.append("if (element_equal(child_node, \"").append(structMemberName).append("\")) {").append("\n");
-            outputBuilder.append(getParseStructMemberBlock(currentStructMember));
-        }
-
-        outputBuilder.append(indent(2)).append("} else {").append("\n");
-        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
-        outputBuilder.append(indent(2)).append("}").append("\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
-        outputBuilder.append(indent(3)).append("break;\n");
-        outputBuilder.append(indent(2)).append("}\n");
-
-        return outputBuilder.toString();
     }
 
     public static String getParseStructMemberAttributeBlock(final StructMember structMember) throws ParseException {
@@ -167,38 +163,6 @@ public class StructMemberHelper {
         }
 
         throw new IllegalArgumentException("Attribute " + structMember.getType().getTypeName() + " is a complex (DS3) type");
-    }
-
-    public static String generateResponseAttributesParser(final ImmutableList<StructMember> structMembers) throws ParseException {
-        boolean firstElement = true;
-        final StringBuilder outputBuilder = new StringBuilder();
-
-        for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
-            final StructMember currentStructMember = structMembers.get(structMemberIndex);
-            if (!currentStructMember.isAttribute()) continue; // only parsing attributes for a specific node
-
-            outputBuilder.append(indent(2));
-
-            if (firstElement == false) {
-                outputBuilder.append("} else ");
-            } else {
-                firstElement = false;
-            }
-
-            final String structMemberName = currentStructMember.getName().equalsIgnoreCase("id") ? "ID" : Helper.underscoreToCamel(currentStructMember.getName());
-            outputBuilder.append("if (attribute_equal(attribute, \"").append(structMemberName).append("\") == true) {").append("\n");
-            outputBuilder.append(getParseStructMemberAttributeBlock(currentStructMember));
-        }
-
-        outputBuilder.append(indent(2)).append("} else {").append("\n");
-        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", root->name);").append("\n");
-        outputBuilder.append(indent(2)).append("}").append("\n");
-        outputBuilder.append("\n");
-        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
-        outputBuilder.append(indent(3)).append("break;\n");
-        outputBuilder.append(indent(2)).append("}\n");
-
-        return outputBuilder.toString();
     }
 
     public static String generateFreeArrayStructMember(final StructMember structMember) {

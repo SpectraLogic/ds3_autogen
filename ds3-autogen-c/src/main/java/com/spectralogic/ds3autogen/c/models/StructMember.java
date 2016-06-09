@@ -18,23 +18,31 @@ package com.spectralogic.ds3autogen.c.models;
 public class StructMember {
     private final C_Type type;
     private final String name;
+    private final String nameToMarshall;
     private final boolean isAttribute;
+    private final boolean hasWrapper;
 
     public StructMember(
             final C_Type type,
             final String name) {
         this.type = type;
         this.name = name;
+        this.nameToMarshall = name;
         this.isAttribute = false;
+        this.hasWrapper = true;
     }
 
     public StructMember(
             final C_Type type,
             final String name,
-            final boolean isAttribute) {
+            final String nameToMarshall,
+            final boolean isAttribute,
+            final boolean hasWrapper) {
         this.type = type;
         this.name = name;
+        this.nameToMarshall = nameToMarshall;
         this.isAttribute = isAttribute;
+        this.hasWrapper = hasWrapper;
     }
 
     public C_Type getType() {
@@ -45,8 +53,16 @@ public class StructMember {
         return name;
     }
 
+    public String getNameToMarshall() {
+        return nameToMarshall;
+    }
+
     public boolean isAttribute() {
         return isAttribute;
+    }
+
+    public boolean hasWrapper() {
+        return hasWrapper;
     }
 
     @Override
