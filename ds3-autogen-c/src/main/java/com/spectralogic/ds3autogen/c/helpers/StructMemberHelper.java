@@ -40,13 +40,20 @@ public class StructMemberHelper {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
+    /**
+     * Also applies to any element whose CollectionValueRenderingMode is "BLOCK_FOR_EVERY_ELEMENT"
+     */
     public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
         return indent(3) + "xmlNodePtr loop_node;\n"
+             + indent(3) + "GPtrArray* " + structMember.getName() + "_array = g_ptr_array_new();\n"
              + indent(3) + "int num_nodes = 0;\n"
              + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
-             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = xml_get_string(doc, loop_node);\n"
+             + indent(4) + structMember.getType().getTypeName() + "* " + structMember.getName() + " = xml_get_string(doc, loop_node);\n"
+             + indent(4) + "g_ptr_array_add(" + structMember.getName() + "_array, " + structMember.getName() + ");\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() +"_array->pdata;\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() +"_array->len;\n"
+             + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
     public static String generateStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
