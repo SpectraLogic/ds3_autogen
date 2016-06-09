@@ -42,20 +42,4 @@ public class ResponsesToPythonCode_Test {
 
         assertThat(new BaseParsePayload("TestType", 200).toPythonCode(), is(expected));
     }
-
-    @Test
-    public void encapsulatedPayload_PrimitiveType_Test() {
-        final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()).find('ParentTag'), None)";
-
-        assertThat(new EncapsulatedPayload("None", "ParentTag", 200).toPythonCode(), is(expected));
-    }
-
-    @Test
-    public void encapsulatedPayload_WithType_Test() {
-        final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()).find('ParentTag'), TestType())";
-
-        assertThat(new EncapsulatedPayload("TestType", "ParentTag", 200).toPythonCode(), is(expected));
-    }
 }
