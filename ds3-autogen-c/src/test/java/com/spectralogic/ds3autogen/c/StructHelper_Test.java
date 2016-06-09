@@ -105,14 +105,14 @@ public class StructHelper_Test {
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
         final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
-        final String output = StructHelper.generateResponseParser(testStruct.getStructMembers());
+        final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
 
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
         assertTrue(output.contains("        response->bool_element = xml_get_bool(client->log, doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
         assertTrue(output.contains("        error = _parse_ds3_user_api_bean_response(client, doc, child_node, &response->bean_element);"));
         assertTrue(output.contains("    } else {"));
-        assertTrue(output.contains("        ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_test_ds3_type_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("    }"));
     }
 
@@ -161,7 +161,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
         assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_system_information_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("        if (error != NULL) {"));
@@ -227,7 +227,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
         assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_system_information_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("        if (error != NULL) {"));
@@ -250,7 +250,7 @@ public class StructHelper_Test {
     @Test
     public void testHasAttributes() {
         final Struct testAttributesStruct = new Struct("testAttributesStruct",
-                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", true)));
+                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", true, false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
     }
 
@@ -258,9 +258,9 @@ public class StructHelper_Test {
     public void testHasAttributesMixed() {
         final Struct testAttributesStruct = new Struct("testAttributesStruct",
                 ImmutableList.of(
-                        new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", true),
-                        new StructMember(new PrimitiveType("int", false), "num_objects", false),
-                        new StructMember(new FreeableType("ds3_object", true), "objects_node", false)));
+                        new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", "some_attribute", true, false),
+                        new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", false, false),
+                        new StructMember(new FreeableType("ds3_object", true), "objects_node", "objects_node", false, false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
         assertTrue(StructHelper.hasChildNodes(testAttributesStruct));
     }

@@ -45,10 +45,10 @@ public class HeaderConverter_Test {
 
         final ImmutableList<Struct> allStructs = ImmutableList.of(
                 new Struct("testStruct1", ImmutableList.of(
-                        new StructMember(new PrimitiveType("int", false), "structMember1", false),
-                        new StructMember(new PrimitiveType("ds3_str", true), "structMember2", false))),
+                        new StructMember(new PrimitiveType("int", false), "structMember1"),
+                        new StructMember(new PrimitiveType("ds3_str", true), "structMember2"))),
                 new Struct("testStruct2", "marshallStruct2", ImmutableList.of(
-                        new StructMember(new PrimitiveType("int", false), "structMember3", false)),
+                        new StructMember(new PrimitiveType("int", false), "structMember3")),
                         false,
                         true,
                         false,
