@@ -85,10 +85,35 @@ public final class StructHelper {
     }
 
     /**
-     * Determine if a Struct requires a custom parser.
-     * @param struct a valid Struct to examine
-     * @return true if no StructMembers require a custom parser.
+     * Determine if a Struct has any StructMembers which need to be parsed as an attribute
      */
+    public static boolean hasAttributes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(StructMember::isAttribute);
+    }
+
+    /**
+     * Determine if a Struct has any StructMembers which need to be parsed as a child-node
+     */
+    public static boolean hasChildNodes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(sm -> !sm.isAttribute());
+    }
+
+    /**
+     * Determine if any array StructMembers are not wrapped in an enclosing tag:
+     * <Objects ID="some_id">
+     *     <Object name="obj1"></Object>
+     * </Objects>
+     */
+    public static boolean hasUnwrappedChildNodes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(sm -> (!sm.isAttribute() && sm.hasWrapper()));
+    }
+    /**
+     * Determine if a Struct requires a custom parser.
+     */
+
     public static boolean requiresNewCustomParser(final Struct struct, final Set<String> existingTypes, final ImmutableSet<String> enumNames) {
         for (final StructMember member : struct.getStructMembers()) {
             if (!member.getType().isPrimitive()) {
@@ -143,35 +168,6 @@ public final class StructHelper {
         return orderedStructsBuilder.build();
     }
 
-    /**
-     * Determine if a Struct has any StructMembers which need to be parsed as an attribute
-     * @param structEntry
-     * @return boolean
-     */
-    public static boolean hasAttributes(final Struct structEntry) {
-        return structEntry.getStructMembers().stream()
-                .anyMatch(StructMember::isAttribute);
-    }
-
-    /**
-     * Determine if a Struct has any StructMembers which need to be parsed as a child-node
-     */
-    public static boolean hasChildNodes(final Struct structEntry) {
-        return structEntry.getStructMembers().stream()
-                .anyMatch(sm -> !sm.isAttribute());
-    }
-
-    /**
-     * Determine if any array StructMembers are not wrapped in an enclosing tag:
-     * <Objects ID="some_id">
-     *     <Object name="obj1"></Object>
-     * </Objects>
-     */
-    public static boolean hasUnwrappedChildNodes(final Struct structEntry) {
-        return structEntry.getStructMembers().stream()
-                .anyMatch(sm -> (!sm.isAttribute() && sm.hasWrapper()));
-    }
-
     public static String generateResponseParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
         boolean firstElement = true;
         final StringBuilder outputBuilder = new StringBuilder();
@@ -220,7 +216,6 @@ public final class StructHelper {
                 firstElement = false;
             }
 
-            //final String structMemberName = convertStructMemberNameToCamelCase(structName, currentStructMember.getName());
             outputBuilder.append("if (attribute_equal(attribute, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\") == true) {").append("\n");
             outputBuilder.append(StructMemberHelper.getParseStructMemberAttributeBlock(currentStructMember));
         }
