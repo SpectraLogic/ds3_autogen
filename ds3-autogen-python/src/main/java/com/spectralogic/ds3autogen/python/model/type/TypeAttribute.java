@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.python.model.type;
 
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+
 /**
  * Describes an attribute of type
  */
@@ -27,6 +29,6 @@ public class TypeAttribute implements TypeContent {
     }
 
     public String toPythonCode() {
-        return "'" + name + "'";
+        return "'" + capFirst(name) + "'";
     }
 }

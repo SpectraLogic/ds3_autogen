@@ -59,8 +59,8 @@ class AbstractResponse(object):
     self.request = request
     self.response = response
     self.object_data = None
-    self.process_response(response)
     self.result = None
+    self.process_response(response)
 
   def process_response(self, response):
     # this method must be implemented
