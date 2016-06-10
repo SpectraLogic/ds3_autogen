@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.python.model.type;
 
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+
 /**
  * Describes a list of elements within a type
  */
@@ -33,11 +35,11 @@ public class TypeElementList implements TypeContent {
 
     public String toPythonCode() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("('").append(xmlTag).append("', ");
+        builder.append("('").append(capFirst(xmlTag)).append("', ");
         if (encapsulatingTag.equals("None")) {
-            builder.append(encapsulatingTag);
+            builder.append(capFirst(encapsulatingTag));
         } else {
-            builder.append("'").append(encapsulatingTag).append("'");
+            builder.append("'").append(capFirst(encapsulatingTag)).append("'");
         }
         builder.append(", ").append(typeModel);
         if (!typeModel.equals("None")) {
