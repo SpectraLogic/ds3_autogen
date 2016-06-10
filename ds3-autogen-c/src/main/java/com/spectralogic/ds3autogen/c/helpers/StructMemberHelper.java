@@ -76,7 +76,8 @@ public class StructMemberHelper {
              + indent(3) + "if (text == NULL) {\n"
              + indent(4) + "continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(3) + "xmlFree(text);\n";
     }
 
     public static String generateStructMemberEnumAttributeParserBlock(final StructMember structMember) {
@@ -84,7 +85,8 @@ public class StructMemberHelper {
                 + indent(3) + "if (text == NULL) {\n"
                 + indent(4) + "continue;\n"
                 + indent(3) + "}\n"
-                + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
+                + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+                + indent(3) + "xmlFree(text);\n";
     }
 
     public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {

@@ -70,10 +70,6 @@ void ds3_request_free(ds3_request* _request) {
         g_hash_table_destroy(request->query_params);
     }
 
-    ds3_bulk_object_list_response_free(request->object_list);
-    ds3_complete_multipart_upload_response_free(request->mpu_list);
-    ds3_delete_objects_response_free(request->delete_objects);
-
     g_free(request);
 }
 
