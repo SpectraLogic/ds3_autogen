@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.python.model.type;
 
+import static com.spectralogic.ds3autogen.utils.Helper.capFirst;
+
 /**
  * Describes a single xml element child of a given type
  */
@@ -31,7 +33,7 @@ public class TypeElement implements TypeContent {
 
     public String toPythonCode() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("'").append(xmlTag).append("' : ").append(typeModel);
+        builder.append("'").append(capFirst(xmlTag)).append("' : ").append(typeModel);
         if (!typeModel.equals("None")) {
             builder.append("()");
         }
