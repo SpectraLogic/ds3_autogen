@@ -28,6 +28,8 @@ void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response*
     }
 
     ds3_str_free(response->etag);
+
+    g_free(response);
 }
 
 void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response) {
@@ -39,6 +41,8 @@ void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_r
     for (index = 0; index < response->num_parts; index++) {
         ds3_multipart_upload_part_response_free(response->parts[index]);
     }
+    g_free(response->parts);
+    g_free(response);
 }
 
 void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
@@ -50,6 +54,8 @@ void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
     for (index = 0; index < response->num_strings; index++) {
         ds3_str_free(response->strings_list[index]);
     }
+    g_free(response->strings_list);
+    g_free(response);
 }
 
 void ds3_request_free(ds3_request* _request) {
@@ -124,14 +130,7 @@ void ds3_error_free(ds3_error* error) {
 
     ds3_str_free(error->message);
 
-    if (error->error != NULL) {
-        ds3_error_response* error_response = error->error;
-
-        ds3_str_free(error_response->message);
-        ds3_str_free(error_response->resource);
-
-        g_free(error_response);
-    }
+    ds3_error_response_free(error->error);
 
     g_free(error);
 }
