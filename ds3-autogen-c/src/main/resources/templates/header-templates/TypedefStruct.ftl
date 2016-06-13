@@ -3,4 +3,4 @@
 <#--   Input: Header object                        -->
 <#-- ********************************************* -->
 typedef struct {
-${structHelper.generateStructMembers(structEntry.getStructMembers())}}${structEntry.getName()};
+${structMemberHelper.generateStructMembers(structEntry.getStructMembers())}}${structEntry.getName()};

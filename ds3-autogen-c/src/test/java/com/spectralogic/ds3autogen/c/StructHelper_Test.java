@@ -30,6 +30,7 @@ import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
+import com.spectralogic.ds3autogen.c.helpers.StructMemberHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
@@ -54,7 +55,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("int", false), "intMember");
         final StructMember testStruct2 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -65,7 +66,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_user_api_bean_response", false), "beanMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertTrue(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
     @Test
@@ -77,7 +78,7 @@ public class StructHelper_Test {
         final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_bool", false), "boolMember");
         final StructMember testStruct2 = new StructMember(new FreeableType("ds3_tape_type", false), "tapeTypeMember");
         final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1, testStruct2);
-        final Struct testStruct = new Struct("testStruct", "Data", testStructMembers, false, false, false);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
 
@@ -89,8 +90,8 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of());
-        final String output = StructHelper.generateStructMembers(testStruct.getStructMembers());
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+        final String output = StructMemberHelper.generateStructMembers(testStruct.getStructMembers());
         assertTrue(output.contains("ds3_bool bool_element;"));
         assertTrue(output.contains("ds3_user_api_bean_response* bean_element;"));
     }
@@ -103,15 +104,15 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
 
         final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
-        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of());
-        final String output = StructHelper.generateResponseParser(testStruct.getStructMembers(), false);
+        final Struct testStruct = StructConverter.toStruct(ds3Type, enumNames.build(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+        final String output = StructHelper.generateResponseParser(testStruct.getName(), testStruct.getStructMembers());
 
         assertTrue(output.contains("    if (element_equal(child_node, \"BoolElement\")) {"));
         assertTrue(output.contains("        response->bool_element = xml_get_bool(client->log, doc, child_node);"));
         assertTrue(output.contains("    } else if (element_equal(child_node, \"BeanElement\")) {"));
         assertTrue(output.contains("        error = _parse_ds3_user_api_bean_response(client, doc, child_node, &response->bean_element);"));
         assertTrue(output.contains("    } else {"));
-        assertTrue(output.contains("        ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("        ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_test_ds3_type_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("    }"));
     }
 
@@ -127,7 +128,7 @@ public class StructHelper_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -160,7 +161,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
         assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_system_information_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("        if (error != NULL) {"));
@@ -192,7 +193,7 @@ public class StructHelper_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of());
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -226,7 +227,7 @@ public class StructHelper_Test {
         assertTrue(output.contains("        } else if (element_equal(child_node, \"SerialNumber\")) {"));
         assertTrue(output.contains("            response->serial_number = xml_get_string(doc, child_node);"));
         assertTrue(output.contains("        } else {"));
-        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);"));
+        assertTrue(output.contains("            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_system_information_response [%s]\\n\", child_node->name, root->name);"));
         assertTrue(output.contains("        }"));
 
         assertTrue(output.contains("        if (error != NULL) {"));
@@ -244,5 +245,23 @@ public class StructHelper_Test {
 
         assertTrue(output.contains("    return error;"));
         assertTrue(output.contains("}"));
+    }
+
+    @Test
+    public void testHasAttributes() {
+        final Struct testAttributesStruct = new Struct("testAttributesStruct",
+                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", true, false)));
+        assertTrue(StructHelper.hasAttributes(testAttributesStruct));
+    }
+
+    @Test
+    public void testHasAttributesMixed() {
+        final Struct testAttributesStruct = new Struct("testAttributesStruct",
+                ImmutableList.of(
+                        new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", "some_attribute", true, false),
+                        new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", false, false),
+                        new StructMember(new FreeableType("ds3_object", true), "objects_node", "objects_node", false, false)));
+        assertTrue(StructHelper.hasAttributes(testAttributesStruct));
+        assertTrue(StructHelper.hasChildNodes(testAttributesStruct));
     }
 }

@@ -24,7 +24,7 @@ struct _ds3_request{
     ds3_bulk_object_list_response*                  object_list;
     ds3_job_chunk_client_processing_order_guarantee chunk_ordering;
 
-    ds3_complete_multipart_upload_response*          mpu_list;
+    ds3_complete_multipart_upload_response*         mpu_list;
 
     ds3_delete_objects_response*                    delete_objects;
 };

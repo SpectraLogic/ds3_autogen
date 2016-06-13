@@ -44,16 +44,14 @@ public class HeaderConverter_Test {
                         "TestEnumValue4")));
 
         final ImmutableList<Struct> allStructs = ImmutableList.of(
-                new Struct("testStruct1", null, ImmutableList.of(
+                new Struct("testStruct1", ImmutableList.of(
                         new StructMember(new PrimitiveType("int", false), "structMember1"),
-                        new StructMember(new PrimitiveType("ds3_str", true), "structMember2")),
-                        true,
-                        false,
-                        false),
+                        new StructMember(new PrimitiveType("ds3_str", true), "structMember2"))),
                 new Struct("testStruct2", "marshallStruct2", ImmutableList.of(
                         new StructMember(new PrimitiveType("int", false), "structMember3")),
                         false,
                         true,
+                        false,
                         false));
 
         final Header testHeader = HeaderConverter.toHeader(allEnums, allStructs, allRequests);

@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.c.models.PrimitiveType;
 import com.spectralogic.ds3autogen.c.models.Struct;
 import com.spectralogic.ds3autogen.c.models.StructMember;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.spectralogic.ds3autogen.utils.Ds3ElementUtil;
 
 import java.text.ParseException;
 
@@ -35,16 +36,18 @@ public final class StructConverter {
     public static Struct toStruct(final Ds3Type ds3Type,
                                   final ImmutableSet<String> enumNames,
                                   final ImmutableSet<String> responseTypes,
-                                  final ImmutableSet<String> arrayMemberTypes) throws ParseException {
+                                  final ImmutableSet<String> arrayMemberTypes,
+                                  final ImmutableSet<String> embeddedTypes) throws ParseException {
         final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames);
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         return new Struct(
                 responseTypeName,
-                convertNameToMarshall(ds3Type.getNameToMarshal()),
+                convertNameToMarshall(ds3Type),
                 structMembersList,
                 responseTypes.contains(responseTypeName),
                 arrayMemberTypes.contains(responseTypeName),
-                hasComplexArrayMembers(structMembersList));
+                hasComplexArrayMembers(structMembersList),
+                embeddedTypes.contains(responseTypeName));
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
@@ -54,7 +57,10 @@ public final class StructConverter {
             final C_Type elementType = C_TypeHelper.convertDs3ElementType(currentElement, enumNames);
             builder.add(new StructMember(
                     elementType,
-                    StructHelper.getNameUnderscores(currentElement.getName())));
+                    StructHelper.getNameUnderscores(currentElement.getName()),
+                    Ds3ElementUtil.getXmlTagName(currentElement),
+                    Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations()),
+                    Ds3ElementUtil.hasWrapperAnnotations(currentElement.getDs3Annotations())));
 
             if (elementType.isArray()) {
                 builder.add(new StructMember(
@@ -66,11 +72,13 @@ public final class StructConverter {
         return builder.build();
     }
 
-    private static String convertNameToMarshall(final String nameToMarshall) {
-        if (ConverterUtil.isEmpty(nameToMarshall)) {
+    private static String convertNameToMarshall(final Ds3Type ds3Type) {
+        if (ds3Type.getName().equalsIgnoreCase("JobList")) {
+            return "Jobs";
+        } else if (ConverterUtil.isEmpty(ds3Type.getNameToMarshal())) {
             return "Data";
         }
-        return nameToMarshall;
+        return ds3Type.getNameToMarshal();
     }
 
     /**
