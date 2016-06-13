@@ -57,6 +57,7 @@ public class CCodeGenerator implements CodeGenerator {
         config.setSharedVariable("requestHelper", RequestHelper.getInstance());
         config.setSharedVariable("helper", Helper.getInstance());
         config.setSharedVariable("structHelper", StructHelper.getInstance());
+        config.setSharedVariable("structMemberHelper", StructMemberHelper.getInstance());
         config.setSharedVariable("parameterHelper", ParameterHelper.getInstance());
     }
 
@@ -69,10 +70,11 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
             final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec);
+            final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
 
             final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
 
-            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes);
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
 
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -126,13 +128,15 @@ public class CCodeGenerator implements CodeGenerator {
     public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec,
                                                       final ImmutableSet<String> enumNames,
                                                       final ImmutableSet<String> responseTypes,
-                                                      final ImmutableSet<String> arrayMemberTypes) throws ParseException {
+                                                      final ImmutableSet<String> arrayMemberTypes,
+                                                      final ImmutableSet<String> embeddedTypes) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
-                final Struct structEntry = StructConverter.toStruct(ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes);
+                final Struct structEntry = StructConverter.toStruct(
+                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
                 allStructsBuilder.add(structEntry);
             }
         }
@@ -140,7 +144,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Find all types that are used as an array member
+     * Find all types that are used as an array member, for generation of a parser for a list of a type
      */
     public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec) {
             return spec.getTypes().values().stream()
@@ -148,6 +152,18 @@ public class CCodeGenerator implements CodeGenerator {
                     .filter(element -> element.getType().equalsIgnoreCase("array"))
                     .map(element -> StructHelper.getResponseTypeName(element.getComponentType()))
                     .collect(GuavaCollectors.immutableSet());
+    }
+
+    /**
+     * Find all types that are embedded members.  Many 'top-level' types are not embedded and therefore those parsers
+     * are useless.
+     */
+    public static ImmutableSet<String> getEmbeddedTypes(final Ds3ApiSpec spec) {
+        return spec.getTypes().values().stream()
+                .flatMap(type -> type.getElements().stream())
+                .filter(element -> !element.getType().equalsIgnoreCase("array"))
+                .map(element -> StructHelper.getResponseTypeName(element.getType()))
+                .collect(GuavaCollectors.immutableSet());
     }
 
     public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {

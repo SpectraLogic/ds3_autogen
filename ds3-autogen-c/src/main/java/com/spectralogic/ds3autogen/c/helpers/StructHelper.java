@@ -45,6 +45,23 @@ public final class StructHelper {
         return Helper.camelToUnderscore(Helper.removeTrailingRequestHandler(Helper.unqualifiedName(name)));
     }
 
+    /**
+     * Need to special case underscores to camel-case conversion due to inconsistent capitalization of ID
+     * @param structMemberName
+     * @return camel-cased structMemberName
+     */
+    public static String convertStructMemberNameToCamelCase(final String structName, final String structMemberName) {
+        if (structMemberName.equals("id")) {
+            if (structName.equals("ds3_user_response")) {
+                return "Id";
+            }
+            return "ID";
+        }
+        //return Helper.underscoreToCamel(structMemberName);
+        return structMemberName;
+    }
+
+
     public static String getDs3TypeName(final String name) {
         final String name_underscores = getNameUnderscores(name);
         if (name_underscores.startsWith("ds3_")) { // some special-cased types have already been renamed with ds3_ prefix
@@ -57,11 +74,8 @@ public final class StructHelper {
         return getDs3TypeName(name) + "_response";
     }
 
-    public static String getParserFunctionName(final String type, final boolean isTopLevel) {
-        if (isTopLevel) {
-            return "_parse_top_level_" + type;
-        }
-        return "_parse_" + type;
+    public static String getParserFunctionName(final String ds3TypeName) {
+        return "_parse_" + ds3TypeName;
     }
 
     /**
@@ -117,6 +131,7 @@ public final class StructHelper {
 
             if (!StructHelper.requiresNewCustomParser(structEntry, existingStructs, enumNames)) {
                 existingStructs.add(structEntry.getName());
+                LOG.info(structEntry.toString());
                 orderedStructsBuilder.add(structEntry);
             } else {  // move to end to come back to
                 structsQueue.add(structEntry);
@@ -138,111 +153,58 @@ public final class StructHelper {
         return orderedStructsBuilder.build();
     }
 
-    public static String generateStructMemberParserLine(final StructMember structMember, final String parserFunction) throws ParseException {
-        return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
+    /**
+     * Determine if a Struct has any StructMembers which need to be parsed as an attribute
+     * @param structEntry
+     * @return boolean
+     */
+    public static boolean hasAttributes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(StructMember::isAttribute);
     }
 
-    public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
-        return indent(3) + "xmlNodePtr loop_node;\n"
-             + indent(3) + "int num_nodes = 0;\n"
-             + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
-             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = xml_get_string(doc, loop_node);\n"
-             + indent(3) + "}\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+    /**
+     * Determine if a Struct has any StructMembers which need to be parsed as a child-node
+     */
+    public static boolean hasChildNodes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(sm -> !sm.isAttribute());
     }
 
-    public static String generateStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
-        return indent(3) + "GPtrArray* " + structMember.getName() + "_array;\n"
-             + indent(3) + "error = _parse_" + structMember.getType().getTypeName() + "_array(client, doc, child_node, &" + structMember.getName() + "_array);\n"
-             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() + "_array->pdata;\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() + "_array->len;\n"
-             + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
+    /**
+     * Determine if any array StructMembers are not wrapped in an enclosing tag:
+     * <Objects ID="some_id">
+     *     <Object name="obj1"></Object>
+     * </Objects>
+     */
+    public static boolean hasUnwrappedChildNodes(final Struct structEntry) {
+        return structEntry.getStructMembers().stream()
+                .anyMatch(sm -> (!sm.isAttribute() && sm.hasWrapper()));
     }
 
-    public static String generateStructMemberEnumParserBlock(final StructMember structMember) {
-        return indent(3) + "xmlChar* text = xmlNodeListGetString(doc, child_node, 1);\n"
-             + indent(3) + "if (text == NULL) {\n"
-             + indent(4) + "continue;\n"
-             + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
-    }
-
-    public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {
-        return indent(3) + "xmlNodePtr loop_node;\n"
-             + indent(3) + "int num_nodes = 0;\n"
-             + indent(3) + "GByteArray* enum_array = g_byte_array_new();\n"
-             + indent(3) + structMember.getType().getTypeName() + " " + structMember.getName() + ";\n"
-             + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
-             + indent(4) + "xmlChar* text = xmlNodeListGetString(doc, loop_node, 1);\n"
-             + indent(4) + "if (text == NULL) {\n"
-             + indent(5) + "continue;\n"
-             + indent(4) + "}\n"
-             + indent(4) + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
-             + indent(4) + "g_byte_array_append(enum_array, (const guint8*) &" + structMember.getName() + ", sizeof(" + structMember.getType().getTypeName() + "));\n"
-             + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "*)enum_array->data;\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = enum_array->len;\n"
-             + indent(3) + "g_byte_array_free(enum_array, FALSE);\n";
-    }
-
-    public static String getParseStructMemberBlock(final StructMember structMember,
-                                                   final boolean isTopLevel) throws ParseException {
-        if (structMember.getType().isPrimitive()) {
-            switch (structMember.getType().getTypeName()) {
-                case "uint64_t":
-                case "size_t":
-                case "double":
-                case "float":
-                case "long":
-                    return generateStructMemberParserLine(structMember, "xml_get_uint64(doc, child_node);");
-                case "int":
-                    return generateStructMemberParserLine(structMember, "xml_get_uint16(doc, child_node);");
-                case "ds3_bool":
-                    // TODO c_sdk inconsistent: xml_get_bool is the only func to log a parse error
-                    return generateStructMemberParserLine(structMember, "xml_get_bool(client->log, doc, child_node);");
-                default: // Enum
-                    if (structMember.getType().isArray()) {
-                        return generateStructMemberEnumArrayParserBlock(structMember);
-                    }
-                    return generateStructMemberEnumParserBlock(structMember);
-            }
-        } else if (structMember.getType().getTypeName().equals("ds3_str")) { // special case
-            if (structMember.getType().isArray()) {
-                return generateStructMemberDs3StrArrayBlock(structMember);
-            }
-            return generateStructMemberParserLine(structMember, "xml_get_string(doc, child_node);");
-        } else if (structMember.getType().isArray()) {
-            return generateStructMemberArrayParserBlock(structMember);
-        }
-
-        if (isTopLevel) {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getType().getTypeName(), true) + "(client, request, response, &response->" + structMember.getName() + ");\n";
-        } else {
-            return indent(3) + "error = " + getParserFunctionName(structMember.getType().getTypeName(), false) + "(client, doc, child_node, &response->" + structMember.getName() + ");\n";
-        }
-    }
-
-    public static String generateResponseParser(final ImmutableList<StructMember> structMembers,
-                                                final boolean isTopLevel) throws ParseException {
+    public static String generateResponseParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
+        boolean firstElement = true;
         final StringBuilder outputBuilder = new StringBuilder();
 
         for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
             final StructMember currentStructMember = structMembers.get(structMemberIndex);
+            if (currentStructMember.isAttribute()) continue; // only parsing child nodes for a specific node
             if (currentStructMember.getName().startsWith("num_")) continue; // skip - these are used for array iteration and are not a part of the response
 
             outputBuilder.append(indent(2));
 
-            if (structMemberIndex > 0) {
+            if (!firstElement) {
                 outputBuilder.append("} else ");
+            } else {
+                firstElement = false;
             }
 
-            final String structMemberName = currentStructMember.getName().equalsIgnoreCase("id") ? "ID" : Helper.underscoreToCamel(currentStructMember.getName());
-            outputBuilder.append("if (element_equal(child_node, \"").append(structMemberName).append("\")) {").append("\n");
-            outputBuilder.append(getParseStructMemberBlock(currentStructMember, isTopLevel));
+            outputBuilder.append("if (element_equal(child_node, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\")) {").append("\n");
+            outputBuilder.append(StructMemberHelper.getParseStructMemberBlock(currentStructMember));
         }
 
         outputBuilder.append(indent(2)).append("} else {").append("\n");
-        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown element[%s]\\n\", child_node->name);").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of " + structName + " [%s]\\n\", child_node->name, root->name);").append("\n");
         outputBuilder.append(indent(2)).append("}").append("\n");
         outputBuilder.append("\n");
         outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
@@ -252,38 +214,34 @@ public final class StructHelper {
         return outputBuilder.toString();
     }
 
-    public static String generateFreeArrayStructMember(final StructMember structMember) {
-        return indent(1) + "for (index = 0; index < response->num_" + structMember.getName() + "; index++) {\n"
-             + indent(2) + structMember.getType().getTypeName() + "_free(response->" + structMember.getName() + "[index]);\n"
-             + indent(1) + "}\n"
-             + indent(1) + "g_free(response->" + structMember.getName() + ");\n";
-    }
-
-    public static String generateFreeStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
+    public static String generateResponseAttributesParser(final String structName, final ImmutableList<StructMember> structMembers) throws ParseException {
+        boolean firstElement = true;
         final StringBuilder outputBuilder = new StringBuilder();
 
-        for (final StructMember structMember : structMembers) {
-            if (structMember.getType().isPrimitive()) { // PrimitiveTypes only need to free the base pointer
-                if (structMember.getType().isArray()) {
-                    outputBuilder.append(indent(1)).append("g_free(response->").append(structMember.getName()).append(");\n");
-                }
-                // else do nothing for single PrimitiveType
-            } else if (structMember.getType().isArray()) { // FreeableType needs to free each element
-                outputBuilder.append(generateFreeArrayStructMember(structMember));
+        for (int structMemberIndex = 0; structMemberIndex < structMembers.size(); structMemberIndex++) {
+            final StructMember currentStructMember = structMembers.get(structMemberIndex);
+            if (!currentStructMember.isAttribute()) continue; // only parsing attributes for a specific node
+
+            outputBuilder.append(indent(2));
+
+            if (!firstElement) {
+                outputBuilder.append("} else ");
             } else {
-                outputBuilder.append(indent(1)).append(structMember.getType().getTypeName()).append("_free(response->").append(structMember.getName()).append(");\n");
+                firstElement = false;
             }
+
+            //final String structMemberName = convertStructMemberNameToCamelCase(structName, currentStructMember.getName());
+            outputBuilder.append("if (attribute_equal(attribute, \"").append(Helper.capFirst(currentStructMember.getNameToMarshall())).append("\") == true) {").append("\n");
+            outputBuilder.append(StructMemberHelper.getParseStructMemberAttributeBlock(currentStructMember));
         }
 
-        return outputBuilder.toString();
-    }
-
-    public static String generateStructMembers(final ImmutableList<StructMember> structMembers) throws ParseException {
-        final StringBuilder outputBuilder = new StringBuilder();
-
-        for (final StructMember member : structMembers) {
-            outputBuilder.append(indent(1)).append(member.getType()).append(" ").append(member.getName()).append(";\n");
-        }
+        outputBuilder.append(indent(2)).append("} else {").append("\n");
+        outputBuilder.append(indent(3)).append("ds3_log_message(client->log, DS3_ERROR, \"Unknown attribute[%s] of " + structName + " [%s]\\n\", attribute->name, root->name);").append("\n");
+        outputBuilder.append(indent(2)).append("}").append("\n");
+        outputBuilder.append("\n");
+        outputBuilder.append(indent(2)).append("if (error != NULL) {\n");
+        outputBuilder.append(indent(3)).append("break;\n");
+        outputBuilder.append(indent(2)).append("}\n");
 
         return outputBuilder.toString();
     }
