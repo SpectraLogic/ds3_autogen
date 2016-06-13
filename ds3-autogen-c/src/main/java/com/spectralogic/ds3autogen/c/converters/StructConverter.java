@@ -94,6 +94,12 @@ public final class StructConverter {
         return false;
     }
 
+    /**
+     * Determine if the parser for an array of this type is encapsulated in a List element
+     * <Objects>
+     *     <Object name="obj1"></Object>
+     * </Objects>
+     */
     private static boolean hasWrapper(final Ds3Element ds3Element) {
         if (ds3Element.getName().endsWith("Jobs")) {
             return false;

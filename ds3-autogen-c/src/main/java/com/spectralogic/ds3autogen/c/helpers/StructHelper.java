@@ -108,6 +108,8 @@ public final class StructHelper {
      */
     public static boolean hasUnwrappedChildNodes(final Struct structEntry) {
         return structEntry.getStructMembers().stream()
+                .filter(sm -> !sm.getType().getTypeName().equals("ds3_tape_type")) // enum list
+                .filter(sm -> !sm.getType().getTypeName().equals("ds3_tape_drive_type")) // enum list
                 .anyMatch(sm -> (!sm.isAttribute() && sm.hasWrapper()));
     }
     /**

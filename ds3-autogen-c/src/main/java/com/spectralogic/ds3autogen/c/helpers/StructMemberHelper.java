@@ -48,6 +48,8 @@ public final class StructMemberHelper {
         return structMembers.stream()
                 .filter(sm -> sm.getType().isArray())
                 .filter(sm -> !sm.hasWrapper())
+                .filter(sm -> !sm.getType().getTypeName().equals("ds3_tape_type")) // enum list
+                .filter(sm -> !sm.getType().getTypeName().equals("ds3_tape_drive_type")) // enum list
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -123,7 +125,9 @@ public final class StructMemberHelper {
     }
 
     public static String getParseStructMemberBlock(final StructMember structMember) throws ParseException {
-        if (structMember.getType().isPrimitive()) {
+        if (structMember.getType().isPrimitive()
+         || structMember.getType().getTypeName().equals("ds3_tape_type")
+         || structMember.getType().getTypeName().equals("ds3_tape_drive_type")) {
             switch (structMember.getType().getTypeName()) {
                 case "uint64_t":
                 case "size_t":
