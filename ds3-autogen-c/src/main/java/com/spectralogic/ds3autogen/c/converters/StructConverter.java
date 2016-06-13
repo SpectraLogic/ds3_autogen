@@ -59,8 +59,9 @@ public final class StructConverter {
                     elementType,
                     StructHelper.getNameUnderscores(currentElement.getName()),
                     Ds3ElementUtil.getXmlTagName(currentElement),
+                    Ds3ElementUtil.getEncapsulatingTagAnnotations(currentElement.getDs3Annotations()),
                     Ds3ElementUtil.isAttribute(currentElement.getDs3Annotations()),
-                    Ds3ElementUtil.hasWrapperAnnotations(currentElement.getDs3Annotations())));
+                    hasWrapper(currentElement)));
 
             if (elementType.isArray()) {
                 builder.add(new StructMember(
@@ -73,7 +74,7 @@ public final class StructConverter {
     }
 
     private static String convertNameToMarshall(final Ds3Type ds3Type) {
-        if (ds3Type.getName().equalsIgnoreCase("JobList")) {
+        if (ds3Type.getName().endsWith("JobList")) {
             return "Jobs";
         } else if (ConverterUtil.isEmpty(ds3Type.getNameToMarshal())) {
             return "Data";
@@ -93,4 +94,10 @@ public final class StructConverter {
         return false;
     }
 
+    private static boolean hasWrapper(final Ds3Element ds3Element) {
+        if (ds3Element.getName().endsWith("Jobs")) {
+            return false;
+        }
+        return Ds3ElementUtil.hasWrapperAnnotations(ds3Element.getDs3Annotations());
+    }
 }

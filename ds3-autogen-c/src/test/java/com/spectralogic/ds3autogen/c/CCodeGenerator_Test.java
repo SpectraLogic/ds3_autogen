@@ -414,7 +414,7 @@ public class CCodeGenerator_Test {
         assertTrue(output.contains("    }"));
 
         assertTrue(output.contains("    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {"));
-        assertTrue(output.contains("        if (element_equal(child_node, \"Bucket\")) {"));
+        assertTrue(output.contains("        if (element_equal(child_node, \"Buckets\")) {"));
         assertTrue(output.contains("            GPtrArray* buckets_array;"));
         assertTrue(output.contains("            error = _parse_ds3_bucket_details_response_array(client, doc, child_node, &buckets_array);"));
         assertTrue(output.contains("            response->buckets = (ds3_bucket_details_response**)buckets_array->pdata;"));
