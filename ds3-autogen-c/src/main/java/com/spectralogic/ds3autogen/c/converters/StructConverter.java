@@ -95,7 +95,6 @@ public final class StructConverter {
     }
 
     private static boolean hasWrapper(final Ds3Element ds3Element) {
-        System.out.println(ds3Element.getName());
         if (ds3Element.getName().endsWith("Jobs")) {
             return false;
         }
