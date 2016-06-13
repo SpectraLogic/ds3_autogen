@@ -153,6 +153,9 @@ public class BaseTypeGenerator implements TypeModelGenerator<TypeDescriptor> {
             if (encapsulatingTag.equals("CommonPrefixes")) {
                 return new TypeElementList(encapsulatingTag, "None", encapsulatingTag);
             }
+            if (encapsulatingTag.equals("Jobs")) {
+                return new TypeElementList(xmlTag, "None", typeModel);
+            }
             return new TypeElementList(xmlTag, encapsulatingTag, typeModel);
         }
         return new TypeElementList(xmlTag, "None", typeModel);

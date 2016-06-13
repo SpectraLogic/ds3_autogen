@@ -128,7 +128,7 @@ public class PythonFunctionalTests {
         assertTrue(hasContent(ds3Code));
 
         final ImmutableList<TypeContent> modelContents = ImmutableList.of(
-                new TypeElementList("Job", "Jobs", "Job"));
+                new TypeElementList("Job", "None", "Job"));
 
         hasModelDescriptor(modelDescriptorName, modelContents, ds3Code);
     }
