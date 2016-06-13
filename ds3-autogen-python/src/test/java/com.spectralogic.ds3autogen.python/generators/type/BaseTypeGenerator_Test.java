@@ -133,6 +133,27 @@ public class BaseTypeGenerator_Test {
     }
 
     @Test
+    public void toElementList_Jobs_Test() {
+        final ImmutableList<Ds3AnnotationElement> annotations = ImmutableList.of(
+                new Ds3AnnotationElement("CollectionValue", "Jobs", "java.lang.String"),
+                new Ds3AnnotationElement("CollectionValueRenderingMode", "SINGLE_BLOCK_FOR_ALL_ELEMENTS", "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                new Ds3AnnotationElement("Value", "Job", "java.lang.String"));
+
+        final Ds3Element jobs = new Ds3Element(
+                "Jobs",
+                "array",
+                "com.spectralogic.s3.server.domain.Job",
+                ImmutableList.of(
+                        new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName", annotations)),
+                false);
+
+        final Ds3Type jobApiBean = createDs3TypeTestData("com.spectralogic.s3.server.domain.Job");
+
+        final TypeElementList result = toElementList(jobs, ImmutableMap.of(jobApiBean.getName(), jobApiBean));
+        assertThat(result.toPythonCode(), is("('Job', None, Job())"));
+    }
+
+    @Test
     public void toElementList_Test() {
         final TypeElementList result = toElementList(createListDs3Element(), createTestTypeMap());
         assertThat(result.toPythonCode(), is("('ListElement', None, ListType())"));

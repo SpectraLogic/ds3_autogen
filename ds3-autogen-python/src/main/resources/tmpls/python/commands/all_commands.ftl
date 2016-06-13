@@ -69,7 +69,7 @@ class AbstractResponse(object):
   def __check_status_codes__(self, expected_codes):
     if self.response.status not in expected_codes:
       err = "Return Code: Expected %s - Received %s" % (expected_codes, self.response.status)
-      ds3_error = XmlSerializer().to_ds3error(self.response.read())
+      ds3_error = XmlSerializer().to_ds3error(self.response.read(), self.response.status, self.response.reason)
       raise RequestFailed(err, ds3_error)
 
 <#include "responses/response.ftl" />
