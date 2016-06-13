@@ -28,6 +28,8 @@ void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response*
     }
 
     ds3_str_free(response->etag);
+
+    g_free(response);
 }
 
 void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response) {
@@ -39,6 +41,8 @@ void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_r
     for (index = 0; index < response->num_parts; index++) {
         ds3_multipart_upload_part_response_free(response->parts[index]);
     }
+    g_free(response->parts);
+    g_free(response);
 }
 
 void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
@@ -50,6 +54,8 @@ void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
     for (index = 0; index < response->num_strings; index++) {
         ds3_str_free(response->strings_list[index]);
     }
+    g_free(response->strings_list);
+    g_free(response);
 }
 
 void ds3_request_free(ds3_request* _request) {
@@ -69,10 +75,6 @@ void ds3_request_free(ds3_request* _request) {
     if (request->query_params != NULL) {
         g_hash_table_destroy(request->query_params);
     }
-
-    ds3_bulk_object_list_response_free(request->object_list);
-    ds3_complete_multipart_upload_response_free(request->mpu_list);
-    ds3_delete_objects_response_free(request->delete_objects);
 
     g_free(request);
 }
@@ -128,14 +130,7 @@ void ds3_error_free(ds3_error* error) {
 
     ds3_str_free(error->message);
 
-    if (error->error != NULL) {
-        ds3_error_response* error_response = error->error;
-
-        ds3_str_free(error_response->message);
-        ds3_str_free(error_response->resource);
-
-        g_free(error_response);
-    }
+    ds3_error_response_free(error->error);
 
     g_free(error);
 }
@@ -212,7 +207,7 @@ ds3_bulk_object_list_response* ds3_convert_file_list_with_basepath(const char** 
     return obj_list;
 }
 
-ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_response** objects, size_t num_objects) {
+ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_contents_response** objects, size_t num_objects) {
     size_t object_index;
     ds3_bulk_object_list_response* obj_list = ds3_init_bulk_object_list();
 
@@ -220,7 +215,7 @@ ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_bulk_object_res
 
     for (object_index = 0; object_index < num_objects; object_index++) {
         ds3_bulk_object_response* response = g_new0(ds3_bulk_object_response, 1);
-        response->name = ds3_str_dup(objects[object_index]->name);
+        response->name = ds3_str_dup(objects[object_index]->key);
         g_ptr_array_add(ds3_bulk_object_response_array, response);
     }
 

@@ -1,3 +1,18 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.google.common.collect.ImmutableList;
@@ -9,7 +24,7 @@ import java.text.ParseException;
 
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
-public class StructMemberHelper {
+public final class StructMemberHelper {
     private StructMemberHelper() {}
 
     private final static StructMemberHelper structMemberHelper = new StructMemberHelper();
@@ -40,13 +55,20 @@ public class StructMemberHelper {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
+    /**
+     * Also applies to any element whose CollectionValueRenderingMode is "BLOCK_FOR_EVERY_ELEMENT"
+     */
     public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
         return indent(3) + "xmlNodePtr loop_node;\n"
+             + indent(3) + "GPtrArray* " + structMember.getName() + "_array = g_ptr_array_new();\n"
              + indent(3) + "int num_nodes = 0;\n"
              + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
-             + indent(4) + "response->" + structMember.getName() + "[num_nodes] = xml_get_string(doc, loop_node);\n"
+             + indent(4) + structMember.getType().getTypeName() + "* " + structMember.getName() + " = xml_get_string(doc, loop_node);\n"
+             + indent(4) + "g_ptr_array_add(" + structMember.getName() + "_array, " + structMember.getName() + ");\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->num_" + structMember.getName() + " = num_nodes;\n";
+             + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() +"_array->pdata;\n"
+             + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() +"_array->len;\n"
+             + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
     public static String generateStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
@@ -69,7 +91,8 @@ public class StructMemberHelper {
              + indent(3) + "if (text == NULL) {\n"
              + indent(4) + "continue;\n"
              + indent(3) + "}\n"
-             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(3) + "xmlFree(text);\n";
     }
 
     public static String generateStructMemberEnumAttributeParserBlock(final StructMember structMember) {
@@ -77,7 +100,8 @@ public class StructMemberHelper {
                 + indent(3) + "if (text == NULL) {\n"
                 + indent(4) + "continue;\n"
                 + indent(3) + "}\n"
-                + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n";
+                + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+                + indent(3) + "xmlFree(text);\n";
     }
 
     public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {

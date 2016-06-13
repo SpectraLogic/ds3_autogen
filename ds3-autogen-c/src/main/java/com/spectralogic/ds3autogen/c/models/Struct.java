@@ -17,6 +17,8 @@ package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
 
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+
 public class Struct {
     private final String name;
     private final String nameToMarshall;
@@ -88,7 +90,10 @@ public class Struct {
         final StringBuilder builder = new StringBuilder();
         builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + "\n");
         for (final StructMember structMember: getStructMembers()) {
-            builder.append("  " + structMember.toString() + (structMember.isAttribute() ? " ATTR" : "") + (structMember.hasWrapper() ? " WRAP" : "") + "\n");
+            builder.append("  " + structMember.toString()
+                    + (!isEmpty(structMember.getNameToMarshall()) ? " " + structMember.getNameToMarshall() :"")
+                    + (!isEmpty(structMember.getEncapsulatingTag()) ? " " + structMember.getEncapsulatingTag() : "")
+                    + (structMember.isAttribute() ? " ATTR" : "") + (structMember.hasWrapper() ? " WRAP" : "") + "\n");
         }
         return builder.toString();
     }

@@ -250,7 +250,7 @@ public class StructHelper_Test {
     @Test
     public void testHasAttributes() {
         final Struct testAttributesStruct = new Struct("testAttributesStruct",
-                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", true, false)));
+                ImmutableList.of(new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", null, true, false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
     }
 
@@ -258,9 +258,9 @@ public class StructHelper_Test {
     public void testHasAttributesMixed() {
         final Struct testAttributesStruct = new Struct("testAttributesStruct",
                 ImmutableList.of(
-                        new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", "some_attribute", true, false),
-                        new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", false, false),
-                        new StructMember(new FreeableType("ds3_object", true), "objects_node", "objects_node", false, false)));
+                        new StructMember(new PrimitiveType("uint64_t", false), "some_attribute", "some_attribute", null, true, false),
+                        new StructMember(new PrimitiveType("int", false), "num_objects", "num_objects", null, false, false),
+                        new StructMember(new FreeableType("ds3_object", true), "objects_node", "objects_node", null, false, false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
         assertTrue(StructHelper.hasChildNodes(testAttributesStruct));
     }
