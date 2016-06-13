@@ -27,6 +27,25 @@ import static org.junit.Assert.assertTrue;
 public class Ds3RequestClassificationUtil_Test {
 
     @Test
+    public void isAmazonCreateObjectRequest_test() {
+        assertTrue(isAmazonCreateObjectRequest(getRequestCreateObject()));
+
+        assertFalse(isAmazonCreateObjectRequest(getRequestDeleteNotification()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestCreateNotification()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestGetNotification()));
+        assertFalse(isAmazonCreateObjectRequest(getReplicatePutJob()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestBulkGet()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestMultiFileDelete()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isAmazonCreateObjectRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isAmazonCreateObjectRequest(getGetBlobPersistence()));
+        assertFalse(isAmazonCreateObjectRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isAmazonCreateObjectRequest(getEjectStorageDomainRequest()));
+        assertFalse(isAmazonCreateObjectRequest(getCompleteMultipartUploadRequest()));
+    }
+
+    @Test
     public void isNotificationRequest_test() {
         assertTrue(isNotificationRequest(getRequestDeleteNotification()));
         assertTrue(isNotificationRequest(getRequestCreateNotification()));

@@ -24,10 +24,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.RequestModelGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.StringPayloadGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.ResponseModelGenerator;
@@ -203,13 +200,15 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Retrieves the Request Generator associated with the Ds3Request
      */
     protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        if (isAmazonCreateObjectRequest(ds3Request)) {
+            return new PutObjectRequestGenerator();
+        }
         if (hasFileObjectListPayload(ds3Request)
                 || isMultiFileDeleteRequest(ds3Request)
                 || isCompleteMultiPartUploadRequest(ds3Request)) {
             return new ObjectsPayloadGenerator();
         }
         if (isCreateMultiPartUploadPartRequest(ds3Request)
-                || isCreateObjectRequest(ds3Request)
                 || isGetBlobPersistenceRequest(ds3Request)
                 || isBulkReplicateRequest(ds3Request)) {
             return new StringPayloadGenerator();

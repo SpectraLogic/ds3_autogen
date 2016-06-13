@@ -182,6 +182,14 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
+     * Determines if this request is an AmazonS3 Crate Object request
+     */
+    public static boolean isAmazonCreateObjectRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.amazons3
+                && isCreateObjectRequest(ds3Request);
+    }
+
+    /**
      * Determines if this request is a Get Object request
      * @param ds3Request A request
      * @return True if the request is a Get Object request, else false
