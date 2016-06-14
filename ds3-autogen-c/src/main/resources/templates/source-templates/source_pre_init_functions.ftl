@@ -346,6 +346,10 @@ void ds3_request_set_custom_header(ds3_request* _request, const char* header_nam
    _set_header(_request, header_name, header_value);
 }
 
+void ds3_request_set_custom_query_param(ds3_request* _request, const char* param_name, const char* param_value) {
+    _set_query_param(_request, param_name, param_value);
+}
+
 void ds3_request_set_bucket_name(ds3_request* _request, const char* bucket_name) {
     _set_query_param(_request, "bucket_id", bucket_name);
 }

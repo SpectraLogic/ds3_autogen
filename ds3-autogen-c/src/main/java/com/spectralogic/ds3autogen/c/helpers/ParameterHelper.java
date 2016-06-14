@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.c.helpers;
 
 import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 
 import java.security.InvalidParameterException;
 
@@ -26,26 +27,6 @@ public class ParameterHelper {
 
     public static ParameterHelper getInstance() {
         return parameterHelper;
-    }
-
-    public static String getParameterTypeConversionSpecifier(final Parameter parm) {
-        switch (parm.getParameterType()) {
-            case "ds3_bool":
-                return "VOID";
-
-            case "int":
-                return "%d";
-
-            case "uint64_t":
-                return "%llu";
-
-            case "float":
-            case "double":
-                return "%e";
-
-            default:
-                return null;
-        }
     }
 
     public static String generateInitParamBlock(final Parameter parm) {
@@ -74,6 +55,8 @@ public class ParameterHelper {
         } else if (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired()) {
             return false;
         } else if (parm.getParameterType().equalsIgnoreCase("operation")) {
+            return false;
+        } else if (parm.getParameterPointerType().equals(ParameterPointerType.NONE)) {
             return false;
         }
         return true;
@@ -123,15 +106,15 @@ public class ParameterHelper {
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"operation\", \"" + parm.getName() + "\");\n";
             case "uint64_t":
                 return indent(depth) + "char tmp_buff[32];\n"
-                     + indent(depth) + "sprintf(tmp_buff, \"%llu\", (unsigned long long) *" + parm.getName() +");\n"
+                     + indent(depth) + "sprintf(tmp_buff, \"%llu\", (unsigned long long) " + parm.getName() +");\n"
                      + indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", tmp_buff);\n";
             case "float":
                 return indent(depth) + "char tmp_buff[32];\n"
-                     + indent(depth) + "sprintf(tmp_buff, \"%f\", *" + parm.getName() +");\n"
+                     + indent(depth) + "sprintf(tmp_buff, \"%f\", " + parm.getName() +");\n"
                      + indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", tmp_buff);\n";
             case "int":
                 return indent(depth) + "char tmp_buff[32];\n"
-                     + indent(depth) + "sprintf(tmp_buff, \"%d\", *" + parm.getName() +");\n"
+                     + indent(depth) + "sprintf(tmp_buff, \"%d\", " + parm.getName() +");\n"
                      + indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", tmp_buff);\n";
             case "char":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", " + parm.getName() + ");\n";
