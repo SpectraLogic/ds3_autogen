@@ -28,7 +28,7 @@ public class ParameterConverter {
                 ParameterModifier.CONST,
                 getParameterType(ds3Param),
                 StructHelper.getNameUnderscores(ds3Param.getName()),
-                getPointerType(ds3Param, isRequired),
+                getPointerType(ds3Param),
                 isRequired);
     }
 
@@ -62,15 +62,11 @@ public class ParameterConverter {
         }
     }
 
-    public static ParameterPointerType getPointerType(final Ds3Param ds3Param, final boolean isRequired) {
+    public static ParameterPointerType getPointerType(final Ds3Param ds3Param) {
         switch (ds3Param.getType()) {
             case "void":
             case "java.lang.Boolean":
             case "boolean":
-                if (isRequired) {
-                    return ParameterPointerType.NONE;
-                }
-                return ParameterPointerType.SINGLE_POINTER;
 
             case "java.lang.Integer":
             case "int":
@@ -80,6 +76,7 @@ public class ParameterConverter {
 
             case "java.lang.Double":
             case "double":
+                return ParameterPointerType.NONE;
 
             case "java.lang.Object":
             case "java.lang.String":

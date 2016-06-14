@@ -102,7 +102,7 @@ public class ParameterHelper {
 
     public static String getSetParamBlock(final Parameter parm, final int depth) {
         if (parm.getName().equalsIgnoreCase("length")) {
-            return indent(depth) + "request->length = *length;\n";
+            return indent(depth) + "request->length = length;\n";
         }
         if (parm.getName().equalsIgnoreCase("payload")) {
             return indent(depth) + "request->delete_objects->strings_list[0]->value = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n"

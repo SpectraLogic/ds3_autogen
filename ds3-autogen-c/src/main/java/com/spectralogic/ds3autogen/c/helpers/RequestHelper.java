@@ -105,9 +105,6 @@ public final class RequestHelper {
                 .filter(parm -> !parm.getParameterType().equals("operation")) // for required spectrads3 operation query param nothing to specify
                 .map(Parameter::toString)
                 .collect(GuavaCollectors.immutableList()));
-        builder.addAll(request.getOptionalQueryParams().stream()
-                .map(Parameter::toString)
-                .collect(GuavaCollectors.immutableList()));
 
         if (request.hasRequestPayload()
         && !request.getName().equalsIgnoreCase("ds3_put_object_request")
