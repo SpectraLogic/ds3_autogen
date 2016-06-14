@@ -69,9 +69,10 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableList<Request> allRequests = getAllRequests(spec);
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
-            final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec);
-            final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
 
+            final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec, enumNames);
+
+            final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
             final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
 
             final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
@@ -146,10 +147,12 @@ public class CCodeGenerator implements CodeGenerator {
     /**
      * Find all types that are used as an array member, for generation of a parser for a list of a type
      */
-    public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec) {
+    public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
             return spec.getTypes().values().stream()
                     .flatMap(entry -> entry.getElements().stream())
                     .filter(element -> element.getType().equalsIgnoreCase("array"))
+                    .filter(element -> !element.getComponentType().contains("UUID"))
+                    .filter(element -> !enumTypes.contains(EnumHelper.getDs3Type(element.getComponentType())))
                     .map(element -> StructHelper.getResponseTypeName(element.getComponentType()))
                     .collect(GuavaCollectors.immutableSet());
     }

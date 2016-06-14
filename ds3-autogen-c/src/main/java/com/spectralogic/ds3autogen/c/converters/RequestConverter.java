@@ -132,7 +132,7 @@ public final class RequestConverter {
 
                 if (ds3Param.getName().equalsIgnoreCase("Offset")) {
                     final Parameter lengthParam = new Parameter(
-                            ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.SINGLE_POINTER, true);
+                            ParameterModifier.CONST, "uint64_t", "length", ParameterPointerType.NONE, true);
                     LOG.debug("\tFound Optional Offset, adding Length QueryParam:\n" + lengthParam.toString());
                     requiredArgsBuilder.add(lengthParam);
                 }

@@ -85,7 +85,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_request* ds3_init_get_bucket_request(const char* bucket_name, const char* delimiter, const char* marker, const int* max_keys, const char* prefix) {"));
+        assertTrue(output.contains("ds3_request* ds3_init_get_bucket_request(const char* bucket_name) {"));
         assertTrue(output.contains("    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("    "));
         assertTrue(output.contains("    return (ds3_request*) request;"));
@@ -166,18 +166,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* ds3_init_create_object(const char* bucket_name, const char* object_name, const uint64_t* length, const char* job, const uint64_t* offset) {" + "\n"
+        final String expectedOutput = "ds3_request* ds3_init_create_object(const char* bucket_name, const char* object_name, const uint64_t length) {"  + "\n"
                                     + "    struct _ds3_request* request = _common_request_init(HTTP_PUT, _build_path(\"/\", bucket_name, object_name));" + "\n"
-                                    + "    request->length = *length;"                                                                                   + "\n"
-                                    + "\n"
-                                    + "    if (job != NULL) {"                                                                                           + "\n"
-                                    + "        _set_query_param((ds3_request*) request, \"job\", job);"                                                  + "\n"
-                                    + "    }"                                                                                                            + "\n"
-                                    + "    if (offset != NULL) {"                                                                                        + "\n"
-                                    + "        char tmp_buff[32];"                                                                                       + "\n"
-                                    + "        sprintf(tmp_buff, \"%llu\", (unsigned long long) *offset);"                                               + "\n"
-                                    + "        _set_query_param((ds3_request*) request, \"offset\", tmp_buff);"                                          + "\n"
-                                    + "    }"                                                                                                            + "\n"
+                                    + "    request->length = length;"                                                                                    + "\n"
                                     + "\n"
                                     + "    return (ds3_request*) request;"                                                                               + "\n"
                                     + "}\n";
@@ -212,18 +203,9 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* ds3_init_initiate_multi_part_upload(const char* bucket_name, const char* object_name, const uint64_t* length, const char* job, const uint64_t* offset) {" + "\n"
+        final String expectedOutput = "ds3_request* ds3_init_initiate_multi_part_upload(const char* bucket_name, const char* object_name, const uint64_t length) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_POST, _build_path(\"/\", bucket_name, object_name));" + "\n"
-                + "    request->length = *length;"                                                                                    + "\n"
-                + "\n"
-                + "    if (job != NULL) {"                                                                                            + "\n"
-                + "        _set_query_param((ds3_request*) request, \"job\", job);"                                                   + "\n"
-                + "    }"                                                                                                             + "\n"
-                + "    if (offset != NULL) {"                                                                                         + "\n"
-                + "        char tmp_buff[32];"                                                                                        + "\n"
-                + "        sprintf(tmp_buff, \"%llu\", (unsigned long long) *offset);"                                                + "\n"
-                + "        _set_query_param((ds3_request*) request, \"offset\", tmp_buff);"                                           + "\n"
-                + "    }"                                                                                                             + "\n"
+                + "    request->length = length;"                                                                                    + "\n"
                 + "\n"
                 + "    return (ds3_request*) request;"                                                                                + "\n"
                 + "}\n";
