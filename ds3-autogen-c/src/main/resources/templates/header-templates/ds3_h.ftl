@@ -166,6 +166,7 @@ LIBRARY_API void        ds3_client_register_net(ds3_client* client, ds3_error* (
                                                                                                 ds3_string_multimap** return_headers));
 LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
 
+LIBRARY_API void ds3_request_set_custom_query_param(ds3_request* _request, const char* param_name, const char* param_value);
 LIBRARY_API void ds3_request_set_custom_header(ds3_request* request, const char* header_name, const char* header_value);
 LIBRARY_API void ds3_request_set_bucket_name(ds3_request* request, const char* bucket_name);
 LIBRARY_API void ds3_request_set_prefix(ds3_request* request, const char* prefix);
