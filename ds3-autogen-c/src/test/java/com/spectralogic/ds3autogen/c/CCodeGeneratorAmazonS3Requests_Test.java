@@ -115,7 +115,6 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        System.out.println(output);
 
         assertTrue(output.contains("ds3_error* ds3_get_bucket(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response) {"));
 
