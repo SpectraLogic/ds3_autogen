@@ -18,16 +18,34 @@ package com.spectralogic.ds3autogen.python.generators.request;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.VoidQueryParam;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toQueryParam;
+import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toQueryParamList;
+import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toRequiredQueryParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class BaseRequestGenerator_Test {
 
     private final static BaseRequestGenerator generator = new BaseRequestGenerator();
+
+    /**
+     * Gets a list of Ds3Params for testing purposes
+     */
+    private static ImmutableList<Ds3Param> getTestParams() {
+        return ImmutableList.of(
+                new Ds3Param("ArgOne", "TypeOne", true),
+                new Ds3Param("VoidArg", "void", false));
+    }
 
     @Test
     public void toOptionalArgumentsList_NullList_Test() {
@@ -95,25 +113,85 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void toVoidArgumentsList_NullList_Test() {
-        final ImmutableList<String> result = generator.toVoidArgumentsList(null);
+    public void toQueryParam_VoidParam_Test() {
+        final Arguments arg = new Arguments("void", "VoidArg");
+        final QueryParam result = toQueryParam(arg);
+        assertThat(result, instanceOf(VoidQueryParam.class));
+        assertThat(result.getName(), is("void_arg"));
+        assertThat(result.getAssignment(), is("''"));
+    }
+
+    @Test
+    public void toQueryParam_Test() {
+        final Arguments arg = new Arguments("int", "IntArg");
+        final QueryParam result = toQueryParam(arg);
+        assertThat(result, instanceOf(BaseQueryParam.class));
+        assertThat(result.getName(), is("int_arg"));
+        assertThat(result.getAssignment(), is("int_arg"));
+    }
+
+    @Test
+    public void toRequiredQueryParamList_NullList_Test() {
+        final ImmutableList<QueryParam> result = toRequiredQueryParamList(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidArgumentsList_EmptyList_Test() {
-        final ImmutableList<String> result = generator.toVoidArgumentsList(ImmutableList.of());
+    public void toRequiredQueryParamList_EmptyList_Test() {
+        final ImmutableList<QueryParam> result = toRequiredQueryParamList(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidArgumentsList_FullList_Test() {
-        final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("ArgOne", "TypeOne", true),
-                new Ds3Param("VoidArg", "void", false));
+    public void toRequiredQueryParamList_FullList_Test() {
+        final ImmutableList<QueryParam> result = toRequiredQueryParamList(getTestParams());
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("arg_one"));
+        assertThat(result.get(0).getAssignment(), is("arg_one"));
+        assertThat(result.get(1).getName(), is("void_arg"));
+        assertThat(result.get(1).getAssignment(), is("''"));
+    }
 
-        final ImmutableList<String> result = generator.toVoidArgumentsList(params);
+    @Test
+    public void toQueryParamList_NullList_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(null, null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toQueryParamList_NullListWithOperation_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(Operation.ALLOCATE, null);
         assertThat(result.size(), is(1));
-        assertThat(result.get(0), is("VoidArg"));
+        assertThat(result.get(0), instanceOf(OperationQueryParam.class));
+    }
+
+    @Test
+    public void toQueryParamList_EmptyList_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(null, ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toQueryParamList_EmptyListWithOperation_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(Operation.ALLOCATE, ImmutableList.of());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), instanceOf(OperationQueryParam.class));
+    }
+
+    @Test
+    public void toQueryParamList_FullList_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(null, getTestParams());
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0), instanceOf(BaseQueryParam.class));
+        assertThat(result.get(1), instanceOf(VoidQueryParam.class));
+    }
+
+    @Test
+    public void toQueryParamList_FullListWithOperation_Test() {
+        final ImmutableList<QueryParam> result = toQueryParamList(Operation.ALLOCATE, getTestParams());
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0), instanceOf(OperationQueryParam.class));
+        assertThat(result.get(1), instanceOf(BaseQueryParam.class));
+        assertThat(result.get(2), instanceOf(VoidQueryParam.class));
     }
 }

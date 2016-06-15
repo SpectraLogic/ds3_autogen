@@ -19,35 +19,33 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
 
 public class BaseRequest {
 
     private final String name;
     private final String path;
     private final HttpVerb httpVerb;
-    private final Operation operation;
     private final RequestPayload requestPayload;
     private final ImmutableList<Arguments> requiredArgs;
     private final ImmutableList<Arguments> optionalArgs;
-    private final ImmutableList<String> voidArgs;
+    private final ImmutableList<QueryParam> queryParams;
 
     public BaseRequest(
             final String name,
             final String path,
             final HttpVerb httpVerb,
-            final Operation operation,
             final RequestPayload requestPayload,
             final ImmutableList<Arguments> requiredArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<String> voidArgs) {
+            final ImmutableList<QueryParam> queryParams) {
         this.name = name;
         this.path = path;
         this.httpVerb = httpVerb;
-        this.operation = operation;
         this.requestPayload = requestPayload;
         this.requiredArgs = requiredArgs;
         this.optionalArgs = optionalArgs;
-        this.voidArgs = voidArgs;
+        this.queryParams = queryParams;
     }
 
     public String getName() {
@@ -66,22 +64,15 @@ public class BaseRequest {
         return optionalArgs;
     }
 
-    public ImmutableList<String> getVoidArgs() {
-        return voidArgs;
-    }
-
-    public String getOperation() {
-        if (operation == null) {
-            return null;
-        }
-        return operation.toString().toLowerCase();
-    }
-
     public String getPath() {
         return path;
     }
 
     public RequestPayload getRequestPayload() {
         return requestPayload;
+    }
+
+    public ImmutableList<QueryParam> getQueryParams() {
+        return queryParams;
     }
 }
