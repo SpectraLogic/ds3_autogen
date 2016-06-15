@@ -64,10 +64,11 @@ public class PythonCodeGenerator_Test {
         final BaseRequest result = toRequestModel(getRequestCreateNotification());
         assertThat(result.getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
         assertThat(result.getPath(), is("'/_rest_/job_created_notification_registration'"));
-        assertThat(result.getOperation(), is(nullValue()));
         assertThat(result.getRequiredArgs().size(), is(1));
         assertThat(result.getOptionalArgs().size(), is(3));
-        assertThat(result.getVoidArgs().size(), is(0));
+        assertThat(result.getQueryParams().size(), is(1));
+        assertThat(result.getQueryParams().get(0).getName(), is("notification_end_point"));
+        assertThat(result.getQueryParams().get(0).getAssignment(), is("notification_end_point"));
     }
 
     @Test

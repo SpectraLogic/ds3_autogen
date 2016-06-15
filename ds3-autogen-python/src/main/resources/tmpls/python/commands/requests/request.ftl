@@ -5,12 +5,9 @@ class ${request.name}(AbstractRequest):
     <#list request.requiredArgs as arg>
     self.${helper.camelToUnderscore(arg.name)} = ${helper.camelToUnderscore(arg.name)}
     </#list>
-    <#list request.voidArgs as arg>
-    self.query_params['${helper.camelToUnderscore(arg)}'] = ''
+    <#list request.queryParams as arg>
+    self.query_params['${arg.getName()}'] = ${arg.getAssignment()}
     </#list>
-    <#if request.operation??>
-    self.query_params['operation'] = '${request.operation}'
-    </#if>
 
     <#if request.requestPayload??>
     ${request.requestPayload.assignmentCode}
