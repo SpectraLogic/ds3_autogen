@@ -19,12 +19,18 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
+import com.spectralogic.ds3autogen.python.model.request.queryparam.VoidQueryParam;
 import com.spectralogic.ds3autogen.python.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
@@ -36,17 +42,16 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         final RequestPayload requestPayload = toRequestPayload(ds3Request, name);
         final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
-        final ImmutableList<String> voidArgs = toVoidArgumentsList(ds3Request.getRequiredQueryParams());
+        final ImmutableList<QueryParam> queryParams = toQueryParamList(ds3Request.getOperation(), ds3Request.getRequiredQueryParams());
 
         return new BaseRequest(
                 name,
                 path,
                 ds3Request.getHttpVerb(),
-                ds3Request.getOperation(),
                 requestPayload,
                 requiredArgs,
                 optionalArgs,
-                voidArgs);
+                queryParams);
     }
 
     /**
@@ -58,14 +63,37 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     }
 
     /**
-     * Gets a list of parameter names that are of type void. These parameters are always
-     * added to the query parameters.
+     * Creates the list of non-optional query params assigned in the constructor
      */
-    @Override
-    public ImmutableList<String> toVoidArgumentsList(final ImmutableList<Ds3Param> requiredParams) {
-        return getVoidArgsFromParamList(requiredParams).stream()
-                .map(Arguments::getName)
+    public static ImmutableList<QueryParam> toQueryParamList(
+            final Operation operation,
+            final ImmutableList<Ds3Param> requiredParams) {
+        final ImmutableList.Builder<QueryParam> builder = ImmutableList.builder();
+        if (operation != null) {
+            builder.add(new OperationQueryParam(operation.toString().toLowerCase()));
+        }
+        builder.addAll(toRequiredQueryParamList(requiredParams));
+        return builder.build();
+    }
+
+    /**
+     * Converts a list of required parameters to a list of query parameters
+     */
+    public static ImmutableList<QueryParam> toRequiredQueryParamList(
+            final ImmutableList<Ds3Param> requiredParams) {
+        return getArgsFromParamList(requiredParams).stream()
+                .map(BaseRequestGenerator::toQueryParam)
                 .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a Ds3Param into a query param
+     */
+    public static QueryParam toQueryParam(final Arguments arg) {
+        if (arg.getType().equals("void")) {
+            return new VoidQueryParam(camelToUnderscore(arg.getName()));
+        }
+        return new BaseQueryParam(camelToUnderscore(arg.getName()));
     }
 
     /**

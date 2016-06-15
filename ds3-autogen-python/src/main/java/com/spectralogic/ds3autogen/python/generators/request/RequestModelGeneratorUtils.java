@@ -34,12 +34,6 @@ public interface RequestModelGeneratorUtils {
     ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams);
 
     /**
-     * Gets a list of parameter names that are of type void. These parameters are always
-     * added to the query parameters.
-     */
-    ImmutableList<String> toVoidArgumentsList(final ImmutableList<Ds3Param> requiredParams);
-
-    /**
      * Gets the request payload model, or null if one does not exist
      */
     RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName);
