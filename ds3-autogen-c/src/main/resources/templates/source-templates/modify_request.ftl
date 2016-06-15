@@ -1,8 +1,3 @@
-
-struct _ds3_metadata {
-    GHashTable* metadata;
-};
-
 typedef struct {
     char* buff;
     size_t size;
@@ -20,161 +15,6 @@ typedef enum {
     DATA
 }object_list_type;
 
-void ds3_client_register_logging(ds3_client* client, ds3_log_lvl log_lvl, void (* log_callback)(const char* log_message, void* user_data), void* user_data) {
-    if (client == NULL) {
-        fprintf(stderr, "Cannot configure a null ds3_client for logging.\n");
-        return;
-    }
-    if (client->log != NULL) {
-        g_free(client->log);
-    }
-    ds3_log* log = g_new0(ds3_log, 1);
-    log->log_callback = log_callback;
-    log->user_data = user_data;
-    log->log_lvl = log_lvl;
-
-    client->log = log;
-}
-
-static void _ds3_metadata_entry_free(gpointer pointer) {
-    ds3_metadata_entry* entry;
-    if (pointer == NULL) {
-        return; // do nothing
-    }
-
-    entry = (ds3_metadata_entry*) pointer;
-
-    ds3_metadata_entry_free(entry);
-}
-
-/*
- * This copies all the header values in the ds3_string_multimap_entry struct so that they may be safely returned to the user
- * without having to worry about if the data is freed internally.
- */
-static const char* METADATA_PREFIX = "x-amz-meta-";
-static ds3_metadata_entry* ds3_metadata_entry_init(ds3_string_multimap_entry* header_entry) {
-    guint i;
-    ds3_str* header_value;
-    GPtrArray* values = g_ptr_array_new();
-    ds3_str* key_name;
-    ds3_str* full_key;
-    ds3_metadata_entry* response = g_new0(ds3_metadata_entry, 1);
-    int metadata_prefix_length = strlen(METADATA_PREFIX);
-
-    unsigned int num_values = ds3_string_multimap_entry_get_num_values(header_entry);
-    for (i = 0; i < num_values; i++) {
-        header_value = ds3_string_multimap_entry_get_value_by_index(header_entry, i);
-        g_ptr_array_add(values, header_value);
-    }
-
-    full_key = ds3_string_multimap_entry_get_key(header_entry);
-    key_name = ds3_str_init(full_key->value + metadata_prefix_length);
-    ds3_str_free(full_key);
-
-    response->num_values = num_values;
-    response->name = key_name;
-    response->values = (ds3_str**) g_ptr_array_free(values, FALSE);
-    fprintf(stderr, "creating metadata entry of: %s\n", key_name->value);
-    return response;
-}
-
-/* The headers hash table contains all the response headers which have the following types:
- * Key - char*
- * Value - ds3_response_header
- *
- * All values should be copied from the struct to avoid memory issues
- */
-static ds3_metadata* _init_metadata(ds3_string_multimap* response_headers) {
-    struct _ds3_metadata* metadata = g_new0(struct _ds3_metadata, 1);
-    GHashTableIter iter;
-    gpointer _key, _value;
-    ds3_str* key;
-    ds3_metadata_entry* entry;
-    metadata->metadata = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, _ds3_metadata_entry_free);
-
-    if (response_headers == NULL) {
-        fprintf(stderr, "response headers was null\n");
-    }
-
-    g_hash_table_iter_init(&iter, ds3_string_multimap_get_hashtable(response_headers));
-    while(g_hash_table_iter_next(&iter, &_key, &_value)) {
-        key = (ds3_str*) _key;
-        if (g_str_has_prefix(key->value, "x-amz-meta-")) {
-            ds3_string_multimap_entry* mm_entry = ds3_string_multimap_lookup(response_headers, key);
-            entry = ds3_metadata_entry_init(mm_entry);
-            g_hash_table_insert(metadata->metadata, g_strdup(entry->name->value), entry);
-            ds3_string_multimap_entry_free(mm_entry);
-        }
-    }
-
-    return (ds3_metadata*) metadata;
-}
-
-ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* _metadata, const char* name) {
-    ds3_metadata_entry* copy;
-    ds3_metadata_entry* orig;
-    ds3_str** metadata_copy;
-    uint64_t i;
-    struct _ds3_metadata* metadata = (struct _ds3_metadata*) _metadata;
-
-    if (_metadata == NULL) {
-        return NULL;
-    }
-
-    orig = (ds3_metadata_entry*) g_hash_table_lookup(metadata->metadata, name);
-    if (orig == NULL) {
-        return NULL;
-    }
-    copy = g_new0(ds3_metadata_entry, 1);
-    metadata_copy = g_new0(ds3_str*, orig->num_values);
-
-    for (i = 0; i < orig->num_values; i++) {
-        metadata_copy[i] = ds3_str_dup(orig->values[i]);
-    }
-
-    copy->num_values = orig->num_values;
-    copy->name = ds3_str_dup(orig->name);
-    copy->values = metadata_copy;
-
-    return copy;
-}
-
-unsigned int ds3_metadata_size(const ds3_metadata* _metadata) {
-    struct _ds3_metadata* metadata = (struct _ds3_metadata*) _metadata;
-    if (metadata == NULL) {
-        return 0;
-    }
-    return g_hash_table_size(metadata->metadata);
-}
-
-ds3_metadata_keys_result* ds3_metadata_keys(const ds3_metadata* _metadata) {
-    GPtrArray* return_keys;
-    ds3_metadata_keys_result* result;
-    struct _ds3_metadata* metadata;
-    GList* keys;
-    GList* tmp_key;
-
-    if (_metadata == NULL) {
-        return NULL;
-    }
-
-    return_keys = g_ptr_array_new();
-    result = g_new0(ds3_metadata_keys_result, 1);
-    metadata = (struct _ds3_metadata*) _metadata;
-    keys = g_hash_table_get_keys(metadata->metadata);
-    tmp_key = keys;
-
-    while(tmp_key != NULL) {
-        g_ptr_array_add(return_keys, ds3_str_init((char*)tmp_key->data));
-        tmp_key = tmp_key->next;
-    }
-
-    g_list_free(keys);
-    result->num_keys = return_keys->len;
-    result->keys = (ds3_str**) g_ptr_array_free(return_keys, FALSE);
-    return result;
-}
-
 static size_t _ds3_send_xml_buff(void* buffer, size_t size, size_t nmemb, void* user_data) {
     size_t to_read;
     size_t remaining;
@@ -191,93 +31,6 @@ static size_t _ds3_send_xml_buff(void* buffer, size_t size, size_t nmemb, void* 
     strncpy((char*)buffer, xml_buff->buff + xml_buff->total_read, to_read);
     xml_buff->total_read += to_read;
     return to_read;
-}
-
-static void _cleanup_hash_value(gpointer value) {
-    g_free(value);
-}
-
-static GHashTable* _create_hash_table(void) {
-    GHashTable* hash =  g_hash_table_new_full(g_str_hash, g_str_equal, _cleanup_hash_value, _cleanup_hash_value);
-    return hash;
-}
-
-ds3_creds* ds3_create_creds(const char* access_id, const char* secret_key) {
-    ds3_creds* creds;
-    if (access_id == NULL || secret_key == NULL) {
-        fprintf(stderr, "Arguments cannot be NULL\n");
-        return NULL;
-    }
-
-    creds = g_new0(ds3_creds, 1);
-    creds->access_id = ds3_str_init(access_id);
-    creds->secret_key = ds3_str_init(secret_key);
-
-    return creds;
-}
-
-void ds3_client_register_net(ds3_client* client, ds3_error* (* net_callback)(const ds3_client* client,
-                                                                             const ds3_request* _request,
-                                                                             void* read_user_struct,
-                                                                             size_t (*read_handler_func)(void*, size_t, size_t, void*),
-                                                                             void* write_user_struct,
-                                                                             size_t (*write_handler_func)(void*, size_t, size_t, void*),
-                                                                             ds3_string_multimap** return_headers)) {
-    if (client == NULL) {
-        fprintf(stderr, "Cannot configure a null ds3_client for net_callback.\n");
-        return;
-    }
-
-    client->net_callback = net_callback;
-}
-
-ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds) {
-    ds3_client* client;
-    if (endpoint == NULL) {
-        fprintf(stderr, "Null endpoint\n");
-        return NULL;
-    }
-
-    client = g_new0(ds3_client, 1);
-    client->endpoint = ds3_str_init(endpoint);
-    client->creds = creds;
-    client->num_redirects = 5L; //default to 5 redirects before failing
-
-    ds3_client_register_net( client, net_process_request );
-
-    return client;
-}
-
-ds3_error* ds3_create_client_from_env(ds3_client** client) {
-    ds3_creds* creds;
-    ds3_client* _client;
-    char* endpoint = getenv("DS3_ENDPOINT");
-    char* access_key = getenv("DS3_ACCESS_KEY");
-    char* secret_key = getenv("DS3_SECRET_KEY");
-    char* http_proxy = getenv("http_proxy");
-
-    if (endpoint == NULL) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "Missing enviornment variable 'DS3_ENDPOINT'");
-    }
-
-    if (access_key == NULL) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "Missing enviornment variable 'DS3_ACCESS_KEY'");
-    }
-
-    if (secret_key == NULL) {
-        return ds3_create_error(DS3_ERROR_MISSING_ARGS, "Missing enviornment variable 'DS3_SECRET_KEY'");
-    }
-
-    creds = ds3_create_creds(access_key, secret_key);
-    _client = ds3_create_client(endpoint, creds);
-
-    if (http_proxy != NULL) {
-        ds3_client_proxy(_client, http_proxy);
-    }
-
-    *client = _client;
-
-    return NULL;
 }
 
 static void _set_map_value(GHashTable* map, const char* key, const char* value) {
@@ -305,10 +58,6 @@ static void _set_query_param(ds3_request* _request, const char* key, const char*
 static void _set_header(ds3_request* _request, const char* key, const char* value) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
     _set_map_value(request->headers, key, value);
-}
-
-void ds3_client_proxy(ds3_client* client, const char* proxy) {
-    client->proxy = ds3_str_init(proxy);
 }
 
 void ds3_request_set_prefix(ds3_request* _request, const char* prefix) {
@@ -403,9 +152,9 @@ void ds3_request_set_max_keys(ds3_request* _request, uint32_t max_keys) {
     g_snprintf(max_keys_s, sizeof(char) * metadata_prefix_length, "%u", max_keys);
     _set_query_param(_request, "max-keys", max_keys_s);
 }
+
 static const char UNSIGNED_LONG_BASE_10[] = "4294967296";
 static const unsigned int UNSIGNED_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_BASE_10);
-
 void ds3_request_set_preferred_number_of_chunks(ds3_request* _request, uint32_t num_chunks) {
     char num_chunks_s[UNSIGNED_LONG_BASE_10_STR_LEN];
     memset(num_chunks_s, 0, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN);

@@ -8,7 +8,9 @@
     <#include "EnumToString.ftl">
 </#list>
 
-<#include "source_pre_init_functions.ftl"/>
+<#include "metadata.ftl"/>
+<#include "client.ftl"/>
+<#include "modify_request.ftl"/>
 
 <#-- ***************************************** -->
 <#-- Generate all "InitRequests" from Requests -->
@@ -16,7 +18,8 @@
     <#include "../request-templates/InitRequest.ftl">
 </#list>
 
-<#include "source_post_init_pre_response_parsers.ftl"/>
+<#include "xml_helpers.ftl"/>
+<#include "internal_request_processors.ftl"/>
 
 <#-- ******************************************* -->
 <#-- Generate all "EnumMatchers" from Enums      -->
@@ -65,7 +68,7 @@
     </#if>
 </#list>
 
-<#include "source_post_response_matchers.ftl"/>
+<#include "free_custom_types.ftl"/>
 
 <#-- *********************************************** -->
 <#-- Generate all "StructFreeFunctions" from Structs -->
@@ -73,3 +76,4 @@
     <#include "FreeStruct.ftl">
 </#list>
 
+<#include "file_utils.ftl"/>
