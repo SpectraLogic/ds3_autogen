@@ -32,10 +32,10 @@ public class VoidQueryParam implements QueryParam {
     }
 
     /**
-     * The assignment value for void query params is an empty string
+     * The assignment value for void query params is None
      */
     @Override
     public String getAssignment() {
-        return "''";
+        return "None";
     }
 }
