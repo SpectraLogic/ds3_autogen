@@ -54,35 +54,21 @@ static void _set_map_value(GHashTable* map, const char* key, const char* value) 
     g_hash_table_insert(map, escaped_key, escaped_value);
 }
 
-static void _set_query_param(ds3_request* _request, const char* key, const char* value) {
+static void _set_header(ds3_request* _request, const char* key, const char* value) {
     struct _ds3_request* request = (struct _ds3_request*) _request;
-    _set_map_value(request->query_params, key, value);
+    _set_map_value(request->headers, key, value);
 }
 
-static void _set_query_param_flag(ds3_request* _request, const char* key) {
-    _set_query_param(_request, key, NULL);
+void ds3_request_set_custom_header(ds3_request* _request, const char* header_name, const char* header_value) {
+   _set_header(_request, header_name, header_value);
 }
 
-static void _set_query_param_uint64_t(ds3_request* _request, const char* key, uint64_t value) {
-    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
-    memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%lu", value);
-    _set_query_param(_request, key, string_buffer);
-}
+void ds3_request_set_metadata(ds3_request* _request, const char* name, const char* value) {
+    char* prefixed_name = g_strconcat("x-amz-meta-", name, NULL);
 
-static void _set_query_param_uint32_t(ds3_request* _request, const char* key, uint64_t value) {
-    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
-    memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%u", value);
-    _set_query_param(_request, key, string_buffer);
-}
+    _set_header(_request, prefixed_name, value);
 
-void ds3_request_set_bucket_name(ds3_request* _request, const char* bucket_name) {
-    _set_query_param(_request, "bucket_id", bucket_name);
-}
-
-void ds3_request_set_creation_date(ds3_request* _request, const char* creation_date) {
-    _set_query_param(_request, "creation_date", creation_date);
+    g_free(prefixed_name);
 }
 
 void ds3_request_reset_byte_range(ds3_request* _request) {
@@ -101,80 +87,6 @@ void ds3_request_set_byte_range(ds3_request* _request, int64_t rangeStart, int64
 
     _set_header(_request, "Range", range_value);
     g_free(range_value);
-}
-
-void ds3_request_set_delimiter(ds3_request* _request, const char* delimiter) {
-    _set_query_param(_request, "delimiter", delimiter);
-}
-
-void ds3_request_set_marker(ds3_request* _request, const char* marker) {
-    _set_query_param(_request, "marker", marker);
-}
-
-void ds3_request_set_max_keys(ds3_request* _request, uint32_t max_keys) {
-    int metadata_prefix_length = strlen(METADATA_PREFIX);
-    char max_keys_s[metadata_prefix_length];
-    memset(max_keys_s, 0, sizeof(char) * metadata_prefix_length);
-    g_snprintf(max_keys_s, sizeof(char) * metadata_prefix_length, "%u", max_keys);
-    _set_query_param(_request, "max-keys", max_keys_s);
-}
-
-void ds3_request_set_preferred_number_of_chunks(ds3_request* _request, uint32_t num_chunks) {
-    char num_chunks_s[UNSIGNED_LONG_BASE_10_STR_LEN];
-    memset(num_chunks_s, 0, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN);
-    g_snprintf(num_chunks_s, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN, "%u", num_chunks);
-    _set_query_param(_request, "preferred_number_of_chunks", num_chunks_s);
-}
-
-void ds3_request_set_max_upload_size(ds3_request* _request, uint32_t max_upload_size) {
-    char max_size_s[UNSIGNED_LONG_BASE_10_STR_LEN];
-    memset(max_size_s, 0, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN);
-    g_snprintf(max_size_s, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN, "%u", max_upload_size);
-    _set_query_param(_request, "max_upload_size", max_size_s);
-}
-
-void ds3_request_set_name(ds3_request* _request, const char* name) {
-    _set_query_param(_request, "name", name);
-}
-
-void ds3_request_set_id(ds3_request* _request, const char* id) {
-    _set_query_param(_request, "id", id);
-}
-
-void ds3_request_set_type(ds3_request* _request, ds3_s3_object_type type) {
-    const char* type_as_string = _get_ds3_s3_object_type_str(type);
-    if (type_as_string != NULL) {
-        _set_query_param(_request, "type", type_as_string);
-    }
-}
-
-void ds3_request_set_page_length(ds3_request* _request, const char* page_length) {
-    _set_query_param(_request, "page_length", page_length);
-}
-
-void ds3_request_set_page_offset(ds3_request* _request, const char* page_offset) {
-    _set_query_param(_request, "page_offset", page_offset);
-}
-
-void ds3_request_set_version(ds3_request* _request, const char* version) {
-    _set_query_param(_request, "version", version);
-}
-
-static void _set_header(ds3_request* _request, const char* key, const char* value) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    _set_map_value(request->headers, key, value);
-}
-
-void ds3_request_set_custom_header(ds3_request* _request, const char* header_name, const char* header_value) {
-   _set_header(_request, header_name, header_value);
-}
-
-void ds3_request_set_metadata(ds3_request* _request, const char* name, const char* value) {
-    char* prefixed_name = g_strconcat("x-amz-meta-", name, NULL);
-
-    _set_header(_request, prefixed_name, value);
-
-    g_free(prefixed_name);
 }
 
 void ds3_request_set_md5(ds3_request* _request, const char* md5) {
@@ -206,6 +118,39 @@ void ds3_request_set_crc32c(ds3_request* _request, const char* crc32c) {
     request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32C;
     request->checksum = ds3_str_init(crc32c);
 }
+
+static void _set_query_param(const ds3_request* _request, const char* key, const char* value) {
+    const struct _ds3_request* request = (const struct _ds3_request*) _request;
+    _set_map_value(request->query_params, key, value);
+}
+
+static void _set_query_param_flag(const ds3_request* _request, const char* key) {
+    _set_query_param(_request, key, NULL);
+}
+
+static void _set_query_param_uint64_t(const ds3_request* _request, const char* key, uint64_t value) {
+    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    memset(string_buffer, 0, sizeof(string_buffer));
+    snprintf(string_buffer, sizeof(string_buffer), "%lu", value);
+    _set_query_param(_request, key, string_buffer);
+}
+
+static void _set_query_param_int(const ds3_request* _request, const char* key, int value) {
+    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    memset(string_buffer, 0, sizeof(string_buffer));
+    snprintf(string_buffer, sizeof(string_buffer), "%d", value);
+    _set_query_param(_request, key, string_buffer);
+}
+
+static void _set_query_param_float(const ds3_request* _request, const char* key, float value) {
+    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    memset(string_buffer, 0, sizeof(string_buffer));
+    snprintf(string_buffer, sizeof(string_buffer), "%f", value);
+    _set_query_param(_request, key, string_buffer);
+}
+<#list getOptionalQueryParams() as queryParam>
+    <#include "RequestSetQueryParameter.ftl">
+</#list>
 
 static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) {
     struct _ds3_request* request = g_new0(struct _ds3_request, 1);

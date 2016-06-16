@@ -166,19 +166,9 @@ LIBRARY_API void        ds3_client_register_net(ds3_client* client, ds3_error* (
                                                                                                 ds3_string_multimap** return_headers));
 LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
 
-// Set Optional Query Parameters
-LIBRARY_API void ds3_request_set_bucket_name(ds3_request* request, const char* bucket_name);
-LIBRARY_API void ds3_request_set_prefix(ds3_request* request, const char* prefix);
-LIBRARY_API void ds3_request_set_delimiter(ds3_request* request, const char* delimiter);
-LIBRARY_API void ds3_request_set_marker(ds3_request* request, const char* marker);
-LIBRARY_API void ds3_request_set_max_keys(ds3_request* request, uint32_t max_keys);
+// Set optional request query parameters
 LIBRARY_API void ds3_request_set_byte_range(ds3_request* _request, int64_t rangeStart, int64_t rangeEnd);
 LIBRARY_API void ds3_request_reset_byte_range(ds3_request* _request);
-LIBRARY_API void ds3_request_set_name(ds3_request* request, const char* name);
-LIBRARY_API void ds3_request_set_id(ds3_request* request, const char* id);
-LIBRARY_API void ds3_request_set_preferred_number_of_chunks(ds3_request* request, uint32_t preferred_number_of_chunks);
-LIBRARY_API void ds3_request_set_max_upload_size(ds3_request* request, uint32_t max_upload_size);
-
 <#list getOptionalQueryParams() as queryParam>
 LIBRARY_API ${parameterHelper.generateSetQueryParamSignature(queryParam)};
 </#list>
@@ -191,8 +181,6 @@ LIBRARY_API void ds3_request_set_sha512(ds3_request* request, const char* sha512
 LIBRARY_API void ds3_request_set_crc32(ds3_request* request, const char* crc32);
 LIBRARY_API void ds3_request_set_crc32c(ds3_request* request, const char* crc32c);
 LIBRARY_API void ds3_request_set_metadata(ds3_request* request, const char* name, const char* value);
-LIBRARY_API void ds3_request_set_type(ds3_request* request, ds3_s3_object_type type);
-LIBRARY_API void ds3_request_set_version(ds3_request* request, const char* version);
 
 LIBRARY_API void ds3_creds_free(ds3_creds* client);
 LIBRARY_API void ds3_client_free(ds3_client* client);

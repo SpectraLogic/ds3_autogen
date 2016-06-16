@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
+import static java.util.Comparator.comparing;
 
 public final class RequestHelper {
     private final static RequestHelper requestHelper = new RequestHelper();
@@ -50,6 +51,16 @@ public final class RequestHelper {
     public static ImmutableSet<String> getResponseTypes(final ImmutableList<Request> allRequests) {
         return allRequests.stream()
                 .map(Request::getResponseType)
+                .collect(GuavaCollectors.immutableSet());
+    }
+
+    /**
+     * Create a sorted (by name) set of all optional query Parameters of all Requests
+     */
+    public static ImmutableSet<Parameter> getAllOptionalQueryParams(final ImmutableList<Request> allRequest) {
+        return allRequest.stream()
+                .flatMap(r ->r.getOptionalQueryParams().stream())
+                .sorted(comparing(Parameter::getName))
                 .collect(GuavaCollectors.immutableSet());
     }
 

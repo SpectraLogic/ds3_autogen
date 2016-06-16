@@ -18,11 +18,10 @@ package com.spectralogic.ds3autogen.c.converters;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
+import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.Request;
-import com.spectralogic.ds3autogen.c.models.Source;
-import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.text.ParseException;
@@ -34,11 +33,13 @@ public final class SourceConverter {
             final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<Parameter> optionalQueryParams = RequestHelper.getAllOptionalQueryParams(allRequests);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final ImmutableSet<Enum> queryParamEnums = filterQueryParamEnums(allEnums, allRequests);
 
         return new Source( allEnums,
                 queryParamEnums,
+                optionalQueryParams,
                 allOrderedStructs,
                 allRequests);
     }
