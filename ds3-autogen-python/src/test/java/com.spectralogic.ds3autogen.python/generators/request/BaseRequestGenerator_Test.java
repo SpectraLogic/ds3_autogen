@@ -118,7 +118,7 @@ public class BaseRequestGenerator_Test {
         final QueryParam result = toQueryParam(arg);
         assertThat(result, instanceOf(VoidQueryParam.class));
         assertThat(result.getName(), is("void_arg"));
-        assertThat(result.getAssignment(), is("''"));
+        assertThat(result.getAssignment(), is("None"));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(0).getName(), is("arg_one"));
         assertThat(result.get(0).getAssignment(), is("arg_one"));
         assertThat(result.get(1).getName(), is("void_arg"));
-        assertThat(result.get(1).getAssignment(), is("''"));
+        assertThat(result.get(1).getAssignment(), is("None"));
     }
 
     @Test
