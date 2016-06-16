@@ -91,7 +91,7 @@ public class FunctionalTestHelper {
      * Determines if the code contains the void argument's query param assignment
      */
     private static boolean requestHasVoidParam(final String paramName, final String code) {
-        final String search = "self.query_params['" + paramName + "'] = ''";
+        final String search = "self.query_params['" + paramName + "'] = None";
         return code.contains(search);
     }
 
