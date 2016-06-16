@@ -47,21 +47,21 @@ public class Parameter_Test {
     public void testSetQueryParamSignatureDs3Bool() {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "ds3_bool", "force", ParameterPointerType.NONE, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
-        assertThat(parmSig, is("void ds3_request_set_force(const ds3_request* request, const ds3_bool force)"));
+        assertThat(parmSig, is("void ds3_request_set_force(const ds3_request* request)"));
     }
 
     @Test
     public void testSetQueryParamSignatureString() {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "ds3_str", "bucket_id", ParameterPointerType.SINGLE_POINTER, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
-        assertThat(parmSig, is("void ds3_request_set_bucket_id(const ds3_request* request, const char* bucket_id)"));
+        assertThat(parmSig, is("void ds3_request_set_bucket_id(const ds3_request* request, const char* value)"));
     }
 
     @Test
     public void testSetQueryParamSignatureUint64_t() {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "uint64_t", "offset", ParameterPointerType.NONE, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
-        assertThat(parmSig, is("void ds3_request_set_offset(const ds3_request* request, const uint64_t offset)"));
+        assertThat(parmSig, is("void ds3_request_set_offset(const ds3_request* request, const uint64_t value)"));
     }
 
     @Test
@@ -69,6 +69,6 @@ public class Parameter_Test {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "int", "max_keys", ParameterPointerType.NONE, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
         System.out.println(parmSig);
-        assertThat(parmSig, is("void ds3_request_set_max_keys(const ds3_request* request, const int max_keys)"));
+        assertThat(parmSig, is("void ds3_request_set_max_keys(const ds3_request* request, const int value)"));
     }
 }

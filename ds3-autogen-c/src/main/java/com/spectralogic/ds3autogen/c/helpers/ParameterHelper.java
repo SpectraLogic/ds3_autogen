@@ -132,33 +132,33 @@ public class ParameterHelper {
         */
         switch(parm.getParameterType()) {
             case "ds3_bool":
-                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* _request)";
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request)";
             case "ds3_str":
             case "char":
-                //return "void ds3_request_set_" + parm.getName() + "_str(const ds3_request* _request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const char" + parm.getParameterPointerType().toString() + " value)";
             case "float":
             case "int":
             case "uint64_t":
             case "uint32_t":
-                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* _request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
             default:
-                return "void ds3_request_set_" + parm.getName() + "_" + parm.getParameterType() + "(const ds3_request* _request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
+                return "void ds3_request_set_" + parm.getName() + "_" + parm.getParameterType() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
         }
     }
 
     public static String getQueryParameterSetter(final Parameter parm) {
         switch(parm.getParameterType()) {
             case "char":
-                return "_set_query_param(_request, \"" + parm.getName() + "\", value);\n";
+                return "_set_query_param(request, \"" + parm.getName() + "\", value);\n";
             case "float":
             case "int":
             case "uint32_t":
             case "uint64_t":
-                return "_set_query_param_" + parm.getParameterType()+ "(_request, \"" + parm.getName() + "\", value);\n";
+                return "_set_query_param_" + parm.getParameterType()+ "(request, \"" + parm.getName() + "\", value);\n";
             case "ds3_bool":
-                return "_set_query_param_flag(_request, \"" + parm.getName() + "\");\n";
+                return "_set_query_param_flag(request, \"" + parm.getName() + "\");\n";
             default:
-                return "_set_query_param(_request, \"" + parm.getName() + "\", (const char*)_get_" + parm.getParameterType() + "_str(value));\n";
+                return "_set_query_param(request, \"" + parm.getName() + "\", (const char*)_get_" + parm.getParameterType() + "_str(value));\n";
         }
     }
 }
