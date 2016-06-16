@@ -126,4 +126,9 @@ public class ParameterHelper {
                 throw new InvalidParameterException(parm.getName() + " Unknown type: " + parm.getParameterType());
         }
     }
+
+    public static String generateSetQueryParamSignature(final Parameter parm) {
+        final String parmType = (parm.getParameterType() == "ds3_str") ? "char" : parm.getParameterType();
+        return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const " + parmType + parm.getParameterPointerType().toString() + " " + parm.getName() + ")";
+    }
 }

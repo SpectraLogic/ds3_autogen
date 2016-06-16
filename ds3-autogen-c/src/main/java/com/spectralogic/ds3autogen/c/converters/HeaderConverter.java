@@ -20,11 +20,12 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
-import com.spectralogic.ds3autogen.c.models.Header;
-import com.spectralogic.ds3autogen.c.models.Request;
-import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.text.ParseException;
+
+import static java.util.Comparator.comparing;
 
 public class HeaderConverter {
 
@@ -33,9 +34,20 @@ public class HeaderConverter {
             final ImmutableList<Struct> allStructs,
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<Parameter> optionalQueryParams = getAllOptionalQueryParams(allRequests);
+        System.out.println("**** optional query params: " + optionalQueryParams.size() + "****");
+        optionalQueryParams.stream().forEach(System.out::println);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         return new Header( allEnums,
                 allOrderedStructs,
-                allRequests);
+                allRequests,
+                optionalQueryParams);
+    }
+
+    private static ImmutableSet<Parameter> getAllOptionalQueryParams(final ImmutableList<Request> allRequest) {
+        return allRequest.stream()
+                .flatMap(r ->r.getOptionalQueryParams().stream())
+                .sorted(comparing(Parameter::getName))
+                .collect(GuavaCollectors.immutableSet());
     }
 }

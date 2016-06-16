@@ -61,4 +61,17 @@ public class Parameter {
         }
         return parameterType + parameterPointerType + " " + name;
     }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof Parameter
+                && getName().equals(((Parameter) obj).getName())
+                && getParameterType().equals(((Parameter) obj).getParameterType())
+                && getParameterPointerType().equals(((Parameter) obj).getParameterPointerType())
+                && getTypeModifier().equals(((Parameter) obj).getTypeModifier());
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 }

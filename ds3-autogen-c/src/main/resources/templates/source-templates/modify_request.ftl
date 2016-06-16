@@ -1,3 +1,7 @@
+
+static const char UNSIGNED_LONG_BASE_10[] = "4294967296";
+static const unsigned int UNSIGNED_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_BASE_10);
+
 typedef struct {
     char* buff;
     size_t size;
@@ -55,22 +59,30 @@ static void _set_query_param(ds3_request* _request, const char* key, const char*
     _set_map_value(request->query_params, key, value);
 }
 
-static void _set_header(ds3_request* _request, const char* key, const char* value) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    _set_map_value(request->headers, key, value);
+static void _set_query_param_flag(ds3_request* _request, const char* key) {
+    _set_query_param(_request, key, NULL);
 }
 
-void ds3_request_set_prefix(ds3_request* _request, const char* prefix) {
-    _set_query_param(_request, "prefix", prefix);
+static void _set_query_param_uint64_t(ds3_request* _request, const char* key, uint64_t value) {
+    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    memset(string_buffer, 0, sizeof(string_buffer));
+    snprintf(string_buffer, sizeof(string_buffer), "%lu", value);
+    _set_query_param(_request, key, string_buffer);
 }
 
-void ds3_request_set_metadata(ds3_request* _request, const char* name, const char* value) {
+static void _set_query_param_uint32_t(ds3_request* _request, const char* key, uint64_t value) {
+    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    memset(string_buffer, 0, sizeof(string_buffer));
+    snprintf(string_buffer, sizeof(string_buffer), "%u", value);
+    _set_query_param(_request, key, string_buffer);
+}
 
-    char* prefixed_name = g_strconcat("x-amz-meta-", name, NULL);
+void ds3_request_set_bucket_name(ds3_request* _request, const char* bucket_name) {
+    _set_query_param(_request, "bucket_id", bucket_name);
+}
 
-    _set_header(_request, prefixed_name, value);
-
-    g_free(prefixed_name);
+void ds3_request_set_creation_date(ds3_request* _request, const char* creation_date) {
+    _set_query_param(_request, "creation_date", creation_date);
 }
 
 void ds3_request_reset_byte_range(ds3_request* _request) {
@@ -91,52 +103,6 @@ void ds3_request_set_byte_range(ds3_request* _request, int64_t rangeStart, int64
     g_free(range_value);
 }
 
-void ds3_request_set_custom_header(ds3_request* _request, const char* header_name, const char* header_value) {
-   _set_header(_request, header_name, header_value);
-}
-
-void ds3_request_set_custom_query_param(ds3_request* _request, const char* param_name, const char* param_value) {
-    _set_query_param(_request, param_name, param_value);
-}
-
-void ds3_request_set_bucket_name(ds3_request* _request, const char* bucket_name) {
-    _set_query_param(_request, "bucket_id", bucket_name);
-}
-
-void ds3_request_set_creation_date(ds3_request* _request, const char* creation_date) {
-    _set_query_param(_request, "creation_date", creation_date);
-}
-
-void ds3_request_set_md5(ds3_request* _request, const char* md5) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CHECKSUM_TYPE_MD5;
-    request->checksum = ds3_str_init(md5);
-}
-
-void ds3_request_set_sha256(ds3_request* _request, const char* sha256) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_256;
-    request->checksum = ds3_str_init(sha256);
-}
-
-void ds3_request_set_sha512(ds3_request* _request, const char* sha512) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_512;
-    request->checksum = ds3_str_init(sha512);
-}
-
-void ds3_request_set_crc32(ds3_request* _request, const char* crc32) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32;
-    request->checksum = ds3_str_init(crc32);
-}
-
-void ds3_request_set_crc32c(ds3_request* _request, const char* crc32c) {
-    struct _ds3_request* request = (struct _ds3_request*) _request;
-    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32C;
-    request->checksum = ds3_str_init(crc32c);
-}
-
 void ds3_request_set_delimiter(ds3_request* _request, const char* delimiter) {
     _set_query_param(_request, "delimiter", delimiter);
 }
@@ -153,8 +119,6 @@ void ds3_request_set_max_keys(ds3_request* _request, uint32_t max_keys) {
     _set_query_param(_request, "max-keys", max_keys_s);
 }
 
-static const char UNSIGNED_LONG_BASE_10[] = "4294967296";
-static const unsigned int UNSIGNED_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_BASE_10);
 void ds3_request_set_preferred_number_of_chunks(ds3_request* _request, uint32_t num_chunks) {
     char num_chunks_s[UNSIGNED_LONG_BASE_10_STR_LEN];
     memset(num_chunks_s, 0, sizeof(char) * UNSIGNED_LONG_BASE_10_STR_LEN);
@@ -194,6 +158,53 @@ void ds3_request_set_page_offset(ds3_request* _request, const char* page_offset)
 
 void ds3_request_set_version(ds3_request* _request, const char* version) {
     _set_query_param(_request, "version", version);
+}
+
+static void _set_header(ds3_request* _request, const char* key, const char* value) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    _set_map_value(request->headers, key, value);
+}
+
+void ds3_request_set_custom_header(ds3_request* _request, const char* header_name, const char* header_value) {
+   _set_header(_request, header_name, header_value);
+}
+
+void ds3_request_set_metadata(ds3_request* _request, const char* name, const char* value) {
+    char* prefixed_name = g_strconcat("x-amz-meta-", name, NULL);
+
+    _set_header(_request, prefixed_name, value);
+
+    g_free(prefixed_name);
+}
+
+void ds3_request_set_md5(ds3_request* _request, const char* md5) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    request->checksum_type = DS3_CHECKSUM_TYPE_MD5;
+    request->checksum = ds3_str_init(md5);
+}
+
+void ds3_request_set_sha256(ds3_request* _request, const char* sha256) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_256;
+    request->checksum = ds3_str_init(sha256);
+}
+
+void ds3_request_set_sha512(ds3_request* _request, const char* sha512) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    request->checksum_type = DS3_CHECKSUM_TYPE_SHA_512;
+    request->checksum = ds3_str_init(sha512);
+}
+
+void ds3_request_set_crc32(ds3_request* _request, const char* crc32) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32;
+    request->checksum = ds3_str_init(crc32);
+}
+
+void ds3_request_set_crc32c(ds3_request* _request, const char* crc32c) {
+    struct _ds3_request* request = (struct _ds3_request*) _request;
+    request->checksum_type = DS3_CHECKSUM_TYPE_CRC_32C;
+    request->checksum = ds3_str_init(crc32c);
 }
 
 static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) {

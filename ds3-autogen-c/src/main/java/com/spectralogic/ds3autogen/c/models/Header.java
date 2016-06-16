@@ -16,19 +16,23 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class Header {
     private final ImmutableList<Enum> enums;
     private final ImmutableList<Struct> structs;
     private final ImmutableList<Request> requests;
+    private final ImmutableSet<Parameter> optionalQueryParams;
 
     public Header(
             final ImmutableList<Enum> enums,
             final ImmutableList<Struct> structs,
-            final ImmutableList<Request> requests) {
+            final ImmutableList<Request> requests,
+            final ImmutableSet<Parameter> optionalQueryParams) {
         this.enums = enums;
         this.structs = structs;
         this.requests = requests;
+        this.optionalQueryParams = optionalQueryParams;
     }
 
     public ImmutableList<Enum> getEnums() {
@@ -41,5 +45,9 @@ public class Header {
 
     public ImmutableList<Request> getRequests() {
         return requests;
+    }
+
+    public ImmutableSet<Parameter> getOptionalQueryParams() {
+        return optionalQueryParams;
     }
 }
