@@ -75,7 +75,7 @@ public class Parameter {
     }
 
     public int hashCode() {
-        return Objects.hashCode(name.hashCode(), parameterType.hashCode());
+        return Objects.hashCode(getName(), getParameterType());
     }
 
 }
