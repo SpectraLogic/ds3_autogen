@@ -33,8 +33,6 @@ public class HeaderConverter {
             final ImmutableList<Request> allRequests) throws ParseException {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<Parameter> optionalQueryParams = RequestHelper.getAllOptionalQueryParams(allRequests);
-        System.out.println("optionalQueryParams: " + optionalQueryParams.size());
-        optionalQueryParams.stream().forEach(System.out::println);
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         return new Header( allEnums,
                 allOrderedStructs,

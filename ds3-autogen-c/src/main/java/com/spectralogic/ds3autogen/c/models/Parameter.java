@@ -74,19 +74,6 @@ public class Parameter {
 
     public int hashCode() {
         return name.hashCode() ^ parameterType.hashCode();
-        /*
-        switch(parameterType) {
-            case "char":
-            case "float":
-            case "int":
-            case "uint64_t":
-            case "uint32_t":
-            case "ds3_bool":
-                return name.hashCode();
-            default:
-                return parameterType.hashCode();
-        }
-        */
     }
 
 }
