@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
+import com.google.common.base.Objects;
+
 public class Parameter {
     private final String parameterType;
     private final ParameterModifier typeModifier; // const, static etc
@@ -73,7 +75,7 @@ public class Parameter {
     }
 
     public int hashCode() {
-        return name.hashCode() ^ parameterType.hashCode();
+        return Objects.hashCode(name.hashCode(), parameterType.hashCode());
     }
 
 }
