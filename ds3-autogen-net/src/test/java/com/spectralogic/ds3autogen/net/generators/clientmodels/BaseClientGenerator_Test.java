@@ -211,6 +211,9 @@ public class BaseClientGenerator_Test {
         assertTrue(requestPayloadStatus(getHeadBucketRequest(), true));
         assertFalse(requestPayloadStatus(getHeadBucketRequest(), false));
 
+        assertTrue(requestPayloadStatus(getHeadObjectRequest(), true));
+        assertFalse(requestPayloadStatus(getHeadObjectRequest(), false));
+
         //Request with payload
         assertTrue(requestPayloadStatus(getGetBlobPersistence(), true));
         assertFalse(requestPayloadStatus(getGetBlobPersistence(), false));
