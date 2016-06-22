@@ -65,17 +65,21 @@ public class Parameter {
     }
 
     public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
         if (!(obj instanceof Parameter)) {
             return false;
         }
-        return getName().equals(((Parameter) obj).getName())
-            && getParameterType().equals(((Parameter) obj).getParameterType())
-            && getParameterPointerType().equals(((Parameter) obj).getParameterPointerType())
-            && getTypeModifier().equals(((Parameter) obj).getTypeModifier());
+        final Parameter parameter = (Parameter) obj;
+        return getName().equals(parameter.getName())
+            && getParameterType().equals(parameter.getParameterType())
+            && getParameterPointerType().equals(parameter.getParameterPointerType())
+            && getTypeModifier().equals(parameter.getTypeModifier());
     }
 
     public int hashCode() {
-        return Objects.hashCode(getName(), getParameterType());
+        return Objects.hashCode(getName(), getParameterType(), getTypeModifier(), getParameterPointerType(), isRequired());
     }
 
 }
