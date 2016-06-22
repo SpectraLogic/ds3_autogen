@@ -82,8 +82,9 @@ public class ParameterConverter {
             case "java.lang.String":
             case "java.util.Date":
             case "java.util.UUID":
-            default:
                 return ParameterPointerType.SINGLE_POINTER;
+            default:
+                return ParameterPointerType.NONE;
 
         }
     }

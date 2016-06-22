@@ -185,13 +185,15 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final Header header = new Header(CCodeGenerator.getAllEnums(spec),
+        final Header header = new Header(
+                CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec,
                         ImmutableSet.of(),
                         ImmutableSet.of(),
                         ImmutableSet.of(),
                         ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec),
+                ImmutableSet.of());
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputStream());
@@ -662,7 +664,8 @@ public class CCodeGenerator_Test {
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Header header = new Header(allEnums,
                 allOrderedStructs,
-                allRequests);
+                allRequests,
+                ImmutableSet.of());
         codeGenerator.processTemplate(header, "header-templates/ds3_h.ftl", fileUtils.getOutputStream());
     }
 

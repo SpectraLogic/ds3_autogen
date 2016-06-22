@@ -26,14 +26,17 @@ public class Source {
     private final ImmutableSet<Enum> queryParamEnums;
     private final ImmutableList<Struct> structs;
     private final ImmutableList<Request> requests;
+    private final ImmutableSet<Parameter> optionalQueryParams;
 
     public Source(
             final ImmutableList<Enum> enums,
             final ImmutableSet<Enum> queryParamEnums,
+            final ImmutableSet<Parameter> optionalQueryParams,
             final ImmutableList<Struct> structs,
             final ImmutableList<Request> requests) {
         this.enums = enums;
         this.queryParamEnums = queryParamEnums;
+        this.optionalQueryParams = optionalQueryParams;
         this.structs = structs;
         this.requests = requests;
     }
@@ -44,6 +47,10 @@ public class Source {
 
     public ImmutableSet<Enum> getQueryParamEnums() {
         return queryParamEnums;
+    }
+
+    public ImmutableSet<Parameter> getOptionalQueryParams() {
+        return optionalQueryParams;
     }
 
     public ImmutableList<Struct> getStructs() {
