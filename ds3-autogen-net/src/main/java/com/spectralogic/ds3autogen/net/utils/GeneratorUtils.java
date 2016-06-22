@@ -152,6 +152,7 @@ public final class GeneratorUtils {
      */
     public static boolean hasResponseHandlerAndParser(final Ds3Request ds3Request) {
         return isGetObjectAmazonS3Request(ds3Request)
-                || isHeadBucketRequest(ds3Request);
+                || isHeadBucketRequest(ds3Request)
+                || isHeadObjectRequest(ds3Request);
     }
 }

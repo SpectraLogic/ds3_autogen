@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1348,5 +1348,56 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(hasContent(parserCode));
         assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, HttpStatusCode.OK, HttpStatusCode.Forbidden, HttpStatusCode.NotFound)"));
+    }
+
+    @Test
+    public void headObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+        final String requestName = "HeadObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/headObjectRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("public HeadObjectResponse(long length, string eTag, IDictionary<string, string> metadata)"));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(hasContent(parserCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
 }

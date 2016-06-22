@@ -338,6 +338,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isHeadBucketRequest(ds3Request)) {
             return config.getTemplate("parsers/response/head_bucket_parser.ftl");
         }
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("parsers/response/head_object_parser.ftl");
+        }
         //Perform this check last so that individual special cased requests take precedence
         if (hasSpecifiedPayload(ds3Request, "MasterObjectList")) {
             return config.getTemplate("parsers/response/master_object_list_parser.ftl");
@@ -405,6 +408,9 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (isHeadBucketRequest(ds3Request)) {
             return config.getTemplate("response/head_bucket_response.ftl");
+        }
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("response/head_object_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }

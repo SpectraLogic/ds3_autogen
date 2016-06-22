@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadBucketRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isHeadObjectRequest;
 
 public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
 
@@ -177,8 +178,9 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
             //The amazonS3 GetObject command is special cased within the client generation
             return false;
         }
-        if (isHeadBucketRequest(ds3Request)) {
-            //The HeadBucket command has a response handler and parser that is not specified in the contract
+        if (isHeadBucketRequest(ds3Request) || isHeadObjectRequest(ds3Request)) {
+            //The HeadBucket and HeadObject commands both have response handlers and parsers
+            //that are not specified in the contract
             return hasPayload;
         }
         return ResponsePayloadUtil.hasResponsePayload(ds3Request.getDs3ResponseCodes()) == hasPayload;
