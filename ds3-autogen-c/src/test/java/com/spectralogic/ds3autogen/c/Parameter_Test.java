@@ -47,7 +47,7 @@ public class Parameter_Test {
     public void testSetQueryParamSignatureDs3Bool() {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "ds3_bool", "force", ParameterPointerType.NONE, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
-        assertThat(parmSig, is("void ds3_request_set_force(const ds3_request* request)"));
+        assertThat(parmSig, is("void ds3_request_set_force(const ds3_request* request, ds3_bool value)"));
     }
 
     @Test

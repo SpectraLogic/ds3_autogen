@@ -124,8 +124,12 @@ static void _set_query_param(const ds3_request* _request, const char* key, const
     _set_map_value(request->query_params, key, value);
 }
 
-static void _set_query_param_flag(const ds3_request* _request, const char* key) {
-    _set_query_param(_request, key, NULL);
+static void _set_query_param_flag(const ds3_request* _request, const char* key, ds3_bool value) {
+    if (value == False) {
+        g_hash_table_remove(_request->headers, key);
+    } else {
+        _set_query_param(_request, key, NULL);
+    }
 }
 
 static void _set_query_param_uint64_t(const ds3_request* _request, const char* key, uint64_t value) {
