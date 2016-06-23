@@ -26,7 +26,7 @@ ${javaHelper.getModelVariable(elmt)}
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
+        return java.util.Objects.hash(inCache, latest, length, name, offset, physicalPlacement, version);
     }
 
     @Override
@@ -37,9 +37,7 @@ ${javaHelper.getModelVariable(elmt)}
 
         final ${name} bulkObject = (${name}) obj;
 
-        return (((this.getId() == null) && (bulkObject.getId() == null))
-                || ((this.getId() != null) && (bulkObject.getId() != null) && this.getId().equals(bulkObject.getId())))
-                && this.getInCache().equals(bulkObject.getInCache())
+        return this.getInCache().equals(bulkObject.getInCache())
                 && this.getLatest() == bulkObject.getLatest()
                 && this.getLength() == bulkObject.getLength()
                 && this.getName().equals(bulkObject.getName())
