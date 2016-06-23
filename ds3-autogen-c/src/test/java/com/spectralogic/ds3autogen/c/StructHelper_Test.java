@@ -43,7 +43,7 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class StructHelper_Test {

@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.c.models;
 
+import com.google.common.base.Objects;
+
 public class Parameter {
     private final String parameterType;
     private final ParameterModifier typeModifier; // const, static etc
@@ -61,4 +63,23 @@ public class Parameter {
         }
         return parameterType + parameterPointerType + " " + name;
     }
+
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Parameter)) {
+            return false;
+        }
+        final Parameter parameter = (Parameter) obj;
+        return getName().equals(parameter.getName())
+            && getParameterType().equals(parameter.getParameterType())
+            && getParameterPointerType().equals(parameter.getParameterPointerType())
+            && getTypeModifier().equals(parameter.getTypeModifier());
+    }
+
+    public int hashCode() {
+        return Objects.hashCode(getName(), getParameterType(), getTypeModifier(), getParameterPointerType(), isRequired());
+    }
+
 }

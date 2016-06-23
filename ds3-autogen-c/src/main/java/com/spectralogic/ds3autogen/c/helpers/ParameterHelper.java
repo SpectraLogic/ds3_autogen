@@ -120,10 +120,45 @@ public class ParameterHelper {
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", " + parm.getName() + ");\n";
             default:
                 if (parm.getParameterType().startsWith("ds3_")) {  // enum type
-                    return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", _get_" + parm.getParameterType() + "_str(*" + parm.getName() + "));\n";
+                    return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", _get_" + parm.getParameterType() + "_str(" + parm.getName() + "));\n";
                 }
 
                 throw new InvalidParameterException(parm.getName() + " Unknown type: " + parm.getParameterType());
+        }
+    }
+
+    public static String generateSetQueryParamSignature(final Parameter parm) {
+        /*
+        */
+        switch(parm.getParameterType()) {
+            case "ds3_bool":
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, ds3_bool value)";
+            case "ds3_str":
+            case "char":
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const char" + parm.getParameterPointerType().toString() + " value)";
+            case "float":
+            case "int":
+            case "uint64_t":
+            case "uint32_t":
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
+            default:
+                return "void ds3_request_set_" + parm.getName() + "_" + parm.getParameterType() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
+        }
+    }
+
+    public static String getQueryParameterSetter(final Parameter parm) {
+        switch(parm.getParameterType()) {
+            case "char":
+                return "_set_query_param(request, \"" + parm.getName() + "\", value);\n";
+            case "float":
+            case "int":
+            case "uint32_t":
+            case "uint64_t":
+                return "_set_query_param_" + parm.getParameterType()+ "(request, \"" + parm.getName() + "\", value);\n";
+            case "ds3_bool":
+                return "_set_query_param_flag(request, \"" + parm.getName() + "\", value);\n";
+            default:
+                return "_set_query_param(request, \"" + parm.getName() + "\", (const char*)_get_" + parm.getParameterType() + "_str(value));\n";
         }
     }
 }
