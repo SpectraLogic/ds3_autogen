@@ -627,7 +627,7 @@ public class CCodeGenerator_Test {
 
     @Test
     public void testCompleteApiContractSource() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
-        final String inputSpecFile = "/input/CompleteApiContract.xml";
+        final String inputSpecFile = "/input/CompleteApiContract_r3_0_2-6_23_16.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
@@ -648,7 +648,7 @@ public class CCodeGenerator_Test {
 
     @Test
     public void testGenerateCompleteApiContractHeader() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException, ParseException {
-        final String inputSpecFile = "/input/CompleteApiContract.xml";
+        final String inputSpecFile = "/input/CompleteApiContract_r3_0_2-6_23_16.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
