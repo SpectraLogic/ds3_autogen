@@ -15,9 +15,13 @@
 
 package com.spectralogic.ds3autogen.python.generators.request;
 
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getCreateMultiPartUploadPart;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,10 +30,25 @@ public class StringPayloadGenerator_Test {
     private static final StringPayloadGenerator generator = new StringPayloadGenerator();
 
     @Test
-    public void toRequestPayload_Test() {
-        final RequestPayload result = generator.toRequestPayload(null, null);
-        assertThat(result.getName(), is("request_payload"));
-        assertThat(result.isOptional(), is(false));
-        assertThat(result.getAssignmentCode(), is("self.body = request_payload"));
+    public void getAdditionalContent_Test() {
+        final String expected = "self.body = request_payload\n";
+        final String result = generator.getAdditionalContent(null, null);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toRequiredConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> reqParams = generator
+                .toRequiredConstructorParams(getCreateMultiPartUploadPart());
+        final ImmutableList<String> result = reqParams.stream()
+                .map(ConstructorParam::toPythonCode)
+                .collect(GuavaCollectors.immutableList());
+
+        assertThat(result.size(), is(5));
+        assertThat(result, hasItem("bucket_name"));
+        assertThat(result, hasItem("object_name"));
+        assertThat(result, hasItem("part_number"));
+        assertThat(result, hasItem("request_payload"));
+        assertThat(result, hasItem("upload_id"));
     }
 }

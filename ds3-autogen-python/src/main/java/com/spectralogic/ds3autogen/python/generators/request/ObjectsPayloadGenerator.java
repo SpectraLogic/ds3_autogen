@@ -15,12 +15,18 @@
 
 package com.spectralogic.ds3autogen.python.generators.request;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent;
-import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObjectListPayload;
+import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasRequiredFileObjectListPayload;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNonVoidArgsFromParamList;
 
 /**
  * Creates the python request model for commands with request payloads of objects list and part list.
@@ -35,21 +41,62 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
     private static final String PARTS_TYPE = "PartList";
 
     /**
-     * Creates the request payload model for a list of file objects
+     * Gets the sorted list of required constructor parameters including the request payload
      */
     @Override
-    public RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName) {
-        if (isEjectStorageDomainRequest(ds3Request)) {
-            return toObjectsRequestPayload(requestName, OBJECTS_NAME, FILE_OBJECTS_TYPE, true);
-        }
-        if (hasFileObjectListPayload(ds3Request)) {
-            return toObjectsRequestPayload(requestName, OBJECTS_NAME, FILE_OBJECTS_TYPE, false);
+    public ImmutableList<ConstructorParam> toRequiredConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getNonVoidArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        builder.addAll(getAssignmentArguments(ds3Request));
+        if (hasRequiredFileObjectListPayload(ds3Request)) {
+            builder.add(new Arguments(FILE_OBJECTS_TYPE, OBJECTS_NAME));
         }
         if (isMultiFileDeleteRequest(ds3Request)) {
-            return toObjectsRequestPayload(requestName, OBJECTS_NAME, DELETE_OBJECTS_TYPE, false);
+            builder.add(new Arguments(DELETE_OBJECTS_TYPE, OBJECTS_NAME));
         }
         if (isCompleteMultiPartUploadRequest(ds3Request)) {
-            return toObjectsRequestPayload(requestName, PARTS_NAME, PARTS_TYPE, false);
+            builder.add(new Arguments(PARTS_TYPE, PARTS_NAME));
+        }
+
+        return builder.build().stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), false))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the sorted list of optional constructor parameters including the request payload
+     */
+    @Override
+    public ImmutableList<ConstructorParam> toOptionalConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(toOptionalArgumentsList(ds3Request.getOptionalQueryParams()));
+        if (isEjectStorageDomainRequest(ds3Request)) {
+            builder.add(new Arguments(FILE_OBJECTS_TYPE, OBJECTS_NAME));
+        }
+
+        return builder.build().stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), true))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the python code for assigning the payload type to the body of the request
+     */
+    @Override
+    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+        if (isEjectStorageDomainRequest(ds3Request)) {
+            return toPayloadAssignment(requestName, OBJECTS_NAME, FILE_OBJECTS_TYPE);
+        }
+        if (hasRequiredFileObjectListPayload(ds3Request)) {
+            return toPayloadAssignment(requestName, OBJECTS_NAME, FILE_OBJECTS_TYPE);
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return toPayloadAssignment(requestName, OBJECTS_NAME, DELETE_OBJECTS_TYPE);
+        }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return toPayloadAssignment(requestName, PARTS_NAME, PARTS_TYPE);
         }
         throw new IllegalArgumentException("The Ds3Request does not have an objects request payload: " + ds3Request.getName());
     }
@@ -57,15 +104,13 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
     /**
      * Creates the python code for assigning the specified payload type to the body of the request
      */
-    protected static RequestPayload toObjectsRequestPayload(
+    protected static String toPayloadAssignment(
             final String requestName,
             final String payloadName,
-            final String payloadType,
-            final boolean optional) {
-        final String assignmentCode = "if " + payloadName + " is not None:\n"
+            final String payloadType) {
+        return  "if " + payloadName + " is not None:\n"
                 + pythonIndent(3) + "if not isinstance(" + payloadName + ", " + payloadType + "):\n"
                 + pythonIndent(4) + "raise TypeError('" + requestName + " should have request payload of type: " + payloadType + "')\n"
-                + pythonIndent(3) + "self.body = xmldom.tostring(" + payloadName + ".to_xml())";
-        return new RequestPayload(payloadName, assignmentCode, optional);
+                + pythonIndent(3) + "self.body = xmldom.tostring(" + payloadName + ".to_xml())\n";
     }
 }

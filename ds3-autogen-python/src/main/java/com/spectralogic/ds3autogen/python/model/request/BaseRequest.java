@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.python.model.request;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
 
 public class BaseRequest {
@@ -26,8 +25,16 @@ public class BaseRequest {
     private final String name;
     private final String path;
     private final HttpVerb httpVerb;
-    private final RequestPayload requestPayload;
-    private final ImmutableList<Arguments> requiredArgs;
+
+    /** Additional python code used for special casing requests */
+    private final String additionalContent;
+
+    /** List of parameter names that are assigned within the constructor */
+    private final ImmutableList<String> assignments;
+
+    /** List of sorted constructor parameters */
+    private final ImmutableList<String> constructorParams;
+
     private final ImmutableList<Arguments> optionalArgs;
     private final ImmutableList<QueryParam> queryParams;
 
@@ -35,25 +42,23 @@ public class BaseRequest {
             final String name,
             final String path,
             final HttpVerb httpVerb,
-            final RequestPayload requestPayload,
-            final ImmutableList<Arguments> requiredArgs,
+            final String additionalContent,
+            final ImmutableList<String> assignments,
+            final ImmutableList<String> constructorParams,
             final ImmutableList<Arguments> optionalArgs,
             final ImmutableList<QueryParam> queryParams) {
         this.name = name;
         this.path = path;
         this.httpVerb = httpVerb;
-        this.requestPayload = requestPayload;
-        this.requiredArgs = requiredArgs;
+        this.additionalContent = additionalContent;
+        this.assignments = assignments;
+        this.constructorParams = constructorParams;
         this.optionalArgs = optionalArgs;
         this.queryParams = queryParams;
     }
 
     public String getName() {
         return name;
-    }
-
-    public ImmutableList<Arguments> getRequiredArgs() {
-        return requiredArgs;
     }
 
     public String getHttpVerb() {
@@ -68,11 +73,19 @@ public class BaseRequest {
         return path;
     }
 
-    public RequestPayload getRequestPayload() {
-        return requestPayload;
-    }
-
     public ImmutableList<QueryParam> getQueryParams() {
         return queryParams;
+    }
+
+    public String getAdditionalContent() {
+        return additionalContent;
+    }
+
+    public ImmutableList<String> getAssignments() {
+        return assignments;
+    }
+
+    public ImmutableList<String> getConstructorParams() {
+        return constructorParams;
     }
 }

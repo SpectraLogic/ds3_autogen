@@ -21,7 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Operation;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.python.model.request.queryparam.VoidQueryPara
 import com.spectralogic.ds3autogen.python.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
@@ -39,8 +40,9 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     public BaseRequest generate(final Ds3Request ds3Request) {
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
-        final RequestPayload requestPayload = toRequestPayload(ds3Request, name);
-        final ImmutableList<Arguments> requiredArgs = toRequiredArgumentsList(ds3Request);
+        final String additionalContent = getAdditionalContent(ds3Request, name);
+        final ImmutableList<String> assignments = toAssignments(ds3Request);
+        final ImmutableList<String> constructorParams = toConstructorParams(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
         final ImmutableList<QueryParam> queryParams = toQueryParamList(ds3Request.getOperation(), ds3Request.getRequiredQueryParams());
 
@@ -48,17 +50,72 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 name,
                 path,
                 ds3Request.getHttpVerb(),
-                requestPayload,
-                requiredArgs,
+                additionalContent,
+                assignments,
+                constructorParams,
                 optionalArgs,
                 queryParams);
     }
 
     /**
-     * Non-special-cased requests do not contain request payloads
+     * Gets all constructor parameters for a Ds3Request
      */
     @Override
-    public RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName) {
+    public ImmutableList<String> toConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<ConstructorParam> builder = ImmutableList.builder();
+        builder.addAll(toRequiredConstructorParams(ds3Request));
+        builder.addAll(toOptionalConstructorParams(ds3Request));
+
+        return builder.build().stream()
+                .map(ConstructorParam::toPythonCode)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the sorted list of required constructor parameters for a Ds3Request
+     */
+    @Override
+    public ImmutableList<ConstructorParam> toRequiredConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getNonVoidArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        builder.addAll(getAssignmentArguments(ds3Request));
+
+        return builder.build().stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), false))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the arguments that are assigned within the constructor. This includes arguments
+     * defined in the request header, and NotificationId when appropriate
+     */
+    protected static ImmutableList<Arguments> getAssignmentArguments(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
+        if (ds3Request.includeIdInPath() && isResourceNotification(ds3Request.getResource())) {
+            builder.add(new Arguments("UUID", "NotificationId"));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Gets the sorted list of optional constructor parameters for a Ds3Request
+     */
+    @Override
+    public ImmutableList<ConstructorParam> toOptionalConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
+        return optionalArgs.stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), true))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Non-special-cased requests do not contain any additional code
+     */
+    @Override
+    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
         return null;
     }
 
@@ -100,14 +157,12 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      * Gets the list of required Arguments for the Ds3Request
      */
     @Override
-    public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(getNonVoidArgsFromParamList(ds3Request.getRequiredQueryParams()));
-        builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
-        if (ds3Request.includeIdInPath() && isResourceNotification(ds3Request.getResource())) {
-            builder.add(new Arguments("UUID", "NotificationId"));
-        }
-        return builder.build();
+    public ImmutableList<String> toAssignments(final Ds3Request ds3Request) {
+        final ImmutableList<Arguments> args = getAssignmentArguments(ds3Request);
+
+        return args.stream()
+                .map(param -> camelToUnderscore(param.getName()))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
