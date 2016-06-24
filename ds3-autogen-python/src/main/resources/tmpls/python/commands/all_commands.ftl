@@ -60,7 +60,20 @@ class AbstractResponse(object):
     self.response = response
     self.object_data = None
     self.result = None
+    self.meta_data = None
     self.process_response(response)
+    self.process_meta_data(response)
+
+  def process_meta_data(self, response):
+    headers = response.getheaders()
+    if not headers:
+      return
+    meta_data = {}
+    for header in headers:
+      if header[0].startswith('x-amz-meta-'):
+        values = header[1].split(',')
+        meta_data[header[0][11:]] = values
+    self.meta_data = meta_data
 
   def process_response(self, response):
     # this method must be implemented
