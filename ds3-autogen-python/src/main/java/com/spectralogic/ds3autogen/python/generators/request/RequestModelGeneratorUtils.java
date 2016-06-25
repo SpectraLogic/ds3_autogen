@@ -19,14 +19,14 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 
 public interface RequestModelGeneratorUtils {
 
     /**
-     * Gets the list of required Arguments for the Ds3Request
+     * Gets the list of parameters that are assigned within the request constructor
      */
-    ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request);
+    ImmutableList<String> toAssignments(final Ds3Request ds3Request);
 
     /**
      * Gets the list of optional Arguments for the Ds3Request
@@ -34,7 +34,22 @@ public interface RequestModelGeneratorUtils {
     ImmutableList<Arguments> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams);
 
     /**
-     * Gets the request payload model, or null if one does not exist
+     * Gets the list of constructor parameters
      */
-    RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName);
+    ImmutableList<String> toConstructorParams(final Ds3Request ds3Request);
+
+    /**
+     * Converts all required params in a Ds3Request to constructor params
+     */
+    ImmutableList<ConstructorParam> toRequiredConstructorParams(final Ds3Request ds3Request);
+
+    /**
+     * Converts all optional params to constructor params
+     */
+    ImmutableList<ConstructorParam> toOptionalConstructorParams(final Ds3Request ds3Request);
+
+    /**
+     * Gets any additional python code for special casing, or null if no additional code is required
+     */
+    String getAdditionalContent(final Ds3Request ds3Request, final String requestName);
 }

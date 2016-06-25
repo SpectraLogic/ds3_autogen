@@ -15,9 +15,13 @@
 
 package com.spectralogic.ds3autogen.python.generators.request;
 
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,19 +30,33 @@ public class PutObjectRequestGenerator_Test {
     private static final PutObjectRequestGenerator generator = new PutObjectRequestGenerator();
 
     @Test
-    public void toRequestPayload_Test() {
-        final String expected = "self.object_name = typeCheckString(object_name)\n" +
+    public void toOptionalConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> optParams = generator
+                .toOptionalConstructorParams(getRequestCreateObject());
+        final ImmutableList<String> result = optParams.stream()
+                .map(ConstructorParam::toPythonCode)
+                .collect(GuavaCollectors.immutableList());
+
+        assertThat(result.size(), is(4));
+        assertThat(result, hasItem("job=None"));
+        assertThat(result, hasItem("offset=None"));
+        assertThat(result, hasItem("real_file_name=None"));
+        assertThat(result, hasItem("headers=None"));
+    }
+
+    @Test
+    public void getAdditionalContent_Test() {
+        final String expected = "if headers is not None:\n" +
+                "      self.headers = headers\n" +
+                "    self.object_name = typeCheckString(object_name)\n" +
                 "    effectiveFileName = self.object_name\n" +
                 "    if real_file_name:\n" +
                 "      effectiveFileName = typeCheckString(real_file_name)\n\n" +
                 "    localFile = open(effectiveFileName, \"rb\")\n" +
                 "    localFile.seek(offset, 0)\n" +
                 "    self.body = localFile.read()\n" +
-                "    localFile.close()";
-
-        final RequestPayload result = generator.toRequestPayload(null, null);
-        assertThat(result.getAssignmentCode(), is(expected));
-        assertThat(result.isOptional(), is(true));
-        assertThat(result.getName(), is("real_file_name"));
+                "    localFile.close()\n";
+        final String result = generator.getAdditionalContent(null, null);
+        assertThat(result, is(expected));
     }
 }

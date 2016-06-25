@@ -17,21 +17,21 @@ package com.spectralogic.ds3autogen.python.generators.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.VoidQueryParam;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toQueryParam;
-import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toQueryParamList;
-import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.toRequiredQueryParamList;
+import static com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getCompleteMultipartUploadRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class BaseRequestGenerator_Test {
@@ -73,43 +73,37 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void toRequiredArgumentsList_NullList_Test() {
-        final ImmutableList<Arguments> result = generator
-                .toRequiredArgumentsList(createDs3RequestTestData(false, null, null));
+    public void getAssignmentArguments_NullList_Test() {
+        final ImmutableList<Arguments> result = getAssignmentArguments(createDs3RequestTestData(false, null, null));
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toRequiredArgumentsList_EmptyList_Test() {
-        final ImmutableList<Arguments> result = generator
-                .toRequiredArgumentsList(createDs3RequestTestData(false, ImmutableList.of(), ImmutableList.of()));
+    public void getAssignmentArguments_EmptyList_Test() {
+        final ImmutableList<Arguments> result = getAssignmentArguments(createDs3RequestTestData(false, ImmutableList.of(), ImmutableList.of()));
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toRequiredArgumentsList_ListWithVoidParam_Test() {
-        final ImmutableList<Arguments> result = generator
-                .toRequiredArgumentsList(exampleRequestWithOptionalAndRequiredBooleanQueryParam());
+    public void getAssignmentArguments_ListWithVoidParam_Test() {
+        final ImmutableList<Arguments> result = getAssignmentArguments(exampleRequestWithOptionalAndRequiredBooleanQueryParam());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toRequiredArgumentsList_NotificationRequest_Test() {
-        final ImmutableList<Arguments> result = generator
-                .toRequiredArgumentsList(getRequestDeleteNotification());
+    public void getAssignmentArguments_NotificationRequest_Test() {
+        final ImmutableList<Arguments> result = getAssignmentArguments(getRequestDeleteNotification());
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("NotificationId"));
         assertThat(result.get(0).getType(), is("UUID"));
     }
 
     @Test
-    public void toRequiredArgumentsList_Test() {
-        final ImmutableList<Arguments> result = generator
-                .toRequiredArgumentsList(getCompleteMultipartUploadRequest());
-        assertThat(result.size(), is(3));
-        assertThat(result.get(0).getName(), is("UploadId"));
-        assertThat(result.get(1).getName(), is("BucketName"));
-        assertThat(result.get(2).getName(), is("ObjectName"));
+    public void getAssignmentArguments_Test() {
+        final ImmutableList<Arguments> result = getAssignmentArguments(getCompleteMultipartUploadRequest());
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("BucketName"));
+        assertThat(result.get(1).getName(), is("ObjectName"));
     }
 
     @Test
@@ -193,5 +187,72 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(0), instanceOf(OperationQueryParam.class));
         assertThat(result.get(1), instanceOf(BaseQueryParam.class));
         assertThat(result.get(2), instanceOf(VoidQueryParam.class));
+    }
+
+    @Test
+    public void toAssignments_EmptyRequest_Test() {
+        final ImmutableList<String> result = generator
+                .toAssignments(createDs3RequestTestData("com.test.TestRequestHandler", Classification.amazons3));
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toAssignments_Test() {
+        final ImmutableList<String> result = generator.toAssignments(getCompleteMultipartUploadRequest());
+        assertThat(result.size(), is(2));
+        assertThat(result, hasItem("bucket_name"));
+        assertThat(result, hasItem("object_name"));
+    }
+
+    @Test
+    public void getAdditionalContent_Test() {
+        final String result = generator.getAdditionalContent(null, null);
+        assertThat(result, is(nullValue()));
+    }
+
+    @Test
+    public void toOptionalConstructorParams_EmptyRequest_Test() {
+        final ImmutableList<ConstructorParam> result = generator
+                .toOptionalConstructorParams(createDs3RequestTestData("com.test.TestRequestHandler", Classification.amazons3));
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toOptionalConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> result = generator.toOptionalConstructorParams(getRequestCreateNotification());
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).toPythonCode(), is("format=None"));
+        assertThat(result.get(1).toPythonCode(), is("naming_convention=None"));
+        assertThat(result.get(2).toPythonCode(), is("notification_http_method=None"));
+    }
+
+    @Test
+    public void toRequiredConstructorParams_EmptyRequest_Test() {
+        final ImmutableList<ConstructorParam> result = generator
+                .toRequiredConstructorParams(createDs3RequestTestData("com.test.TestRequestHandler", Classification.amazons3));
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toRequiredConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> result = generator.toRequiredConstructorParams(getReplicatePutJob());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).toPythonCode(), is("bucket_name"));
+    }
+
+    @Test
+    public void toConstructorParams_EmptyRequest_Test() {
+        final ImmutableList<String> result = generator
+                .toConstructorParams(createDs3RequestTestData("com.test.TestRequestHandler", Classification.amazons3));
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toConstructorParams_Test() {
+        final ImmutableList<String> result = generator.toConstructorParams(getReplicatePutJob());
+        assertThat(result.size(), is(3));
+        assertThat(result, hasItem("bucket_name"));
+        assertThat(result, hasItem("conflict_resolution_mode=None"));
+        assertThat(result, hasItem("priority=None"));
     }
 }

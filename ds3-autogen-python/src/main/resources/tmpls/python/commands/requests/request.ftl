@@ -1,16 +1,16 @@
 <#list requests as request>
 class ${request.name}(AbstractRequest):
-  def __init__(${pythonHelper.toRequestInitList(request.requiredArgs, request.optionalArgs, request.requestPayload)}):
+  def __init__(${pythonHelper.toRequestInitList(request.constructorParams)}):
     super(${request.name}, self).__init__()
-    <#list request.requiredArgs as arg>
-    self.${helper.camelToUnderscore(arg.name)} = ${helper.camelToUnderscore(arg.name)}
+    <#list request.assignments as arg>
+    self.${arg} = ${arg}
     </#list>
     <#list request.queryParams as arg>
     self.query_params['${arg.getName()}'] = ${arg.getAssignment()}
     </#list>
 
-    <#if request.requestPayload??>
-    ${request.requestPayload.assignmentCode}
+    <#if request.additionalContent??>
+    ${request.additionalContent}
     </#if>
 
     <#list request.optionalArgs as arg>

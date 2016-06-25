@@ -86,7 +86,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestCreateNotification() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.CreateJobCreatedNotificationRegistrationRequestHandler",
-                null,
+                HttpVerb.POST,
                 Classification.spectrads3,
                 null,
                 null,

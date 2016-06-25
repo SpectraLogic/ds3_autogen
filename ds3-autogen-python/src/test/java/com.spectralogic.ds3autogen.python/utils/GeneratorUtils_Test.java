@@ -157,4 +157,34 @@ public class GeneratorUtils_Test {
         assertThat(hasFileObjectListPayload(getBucketRequest()), is(false));
         assertThat(hasFileObjectListPayload(createBucketRequest()), is(false));
     }
+
+    @Test
+    public void hasRequiredFileObjectListPayload_Test() {
+        assertThat(hasRequiredFileObjectListPayload(getRequestVerifyPhysicalPlacement()), is(true));
+        assertThat(hasRequiredFileObjectListPayload(getRequestBulkGet()), is(true));
+        assertThat(hasRequiredFileObjectListPayload(getRequestBulkPut()), is(true));
+
+        assertThat(hasRequiredFileObjectListPayload(getEjectStorageDomainRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestDeleteNotification()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestCreateNotification()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestGetNotification()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestSpectraS3GetObject()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestGetJob()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getReplicatePutJob()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getGetBlobPersistence()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getAllocateJobChunkRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getJobChunksReadyForClientProcessingRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getBucketsRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getSystemInformationRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(createBucketSpectraS3Request()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(deleteBucketRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestMultiFileDelete()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestCreateObject()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getRequestAmazonS3GetObject()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getCreateMultiPartUploadPart()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getCompleteMultipartUploadRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getHeadBucketRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(getBucketRequest()), is(false));
+        assertThat(hasRequiredFileObjectListPayload(createBucketRequest()), is(false));
+    }
 }

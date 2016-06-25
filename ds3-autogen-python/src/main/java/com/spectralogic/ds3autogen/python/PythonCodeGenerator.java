@@ -50,6 +50,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObjectListPayload;
+import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasRequiredFileObjectListPayload;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;

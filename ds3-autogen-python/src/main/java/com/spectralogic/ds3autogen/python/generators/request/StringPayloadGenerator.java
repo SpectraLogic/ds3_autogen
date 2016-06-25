@@ -15,8 +15,15 @@
 
 package com.spectralogic.ds3autogen.python.generators.request;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
+import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
+
+import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNonVoidArgsFromParamList;
 
 /**
  * Creates the python request model for commands with string request payloads
@@ -24,13 +31,29 @@ import com.spectralogic.ds3autogen.python.model.request.RequestPayload;
 public class StringPayloadGenerator extends BaseRequestGenerator {
 
     private static final String PAYLOAD_NAME = "request_payload";
-    private static final String ASSIGN_PAYLOAD = "self.body = " + PAYLOAD_NAME;
+    private static final String ASSIGN_PAYLOAD = "self.body = " + PAYLOAD_NAME + "\n";
 
     /**
-     * Gets the request payload model that handles string and stream payload types
+     * Gets the sorted list of required constructor parameters including the request payload
      */
     @Override
-    public RequestPayload toRequestPayload(final Ds3Request ds3Request, final String requestName) {
-        return new RequestPayload(PAYLOAD_NAME, ASSIGN_PAYLOAD, false);
+    public ImmutableList<ConstructorParam> toRequiredConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getNonVoidArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        builder.addAll(getAssignmentArguments(ds3Request));
+        builder.add(new Arguments("string", PAYLOAD_NAME));
+
+        return builder.build().stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), false))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the python code that handles processing the request payload and headers
+     */
+    @Override
+    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+        return ASSIGN_PAYLOAD;
     }
 }

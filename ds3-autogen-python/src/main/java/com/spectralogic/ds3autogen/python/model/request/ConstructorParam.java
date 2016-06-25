@@ -15,30 +15,20 @@
 
 package com.spectralogic.ds3autogen.python.model.request;
 
-public class RequestPayload {
+public class ConstructorParam {
 
     private final String name;
-
-    /** Python code for assigning the request payload to request body */
-    private final String assignmentCode;
-
     private final boolean optional;
 
-    public RequestPayload(final String name, final String assignmentCode, final boolean optional) {
+    public ConstructorParam(final String name, final boolean optional) {
         this.name = name;
-        this.assignmentCode = assignmentCode;
         this.optional = optional;
     }
 
-    public String getName() {
+    public String toPythonCode() {
+        if (optional) {
+            return name + "=None";
+        }
         return name;
-    }
-
-    public String getAssignmentCode() {
-        return assignmentCode;
-    }
-
-    public boolean isOptional() {
-        return optional;
     }
 }
