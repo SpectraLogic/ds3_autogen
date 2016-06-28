@@ -20,48 +20,38 @@ import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestAmazonS3GetObject;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class PutObjectRequestGenerator_Test {
+public class GetObjectRequestGenerator_Test {
 
-    private static final PutObjectRequestGenerator generator = new PutObjectRequestGenerator();
+    private static final GetObjectRequestGenerator generator = new GetObjectRequestGenerator();
+
+    @Test
+    public void getAdditionalContent_Test() {
+        final String expected = "self.offset = offset\n" +
+                "    self.stream = stream\n" +
+                "    if real_file_name:\n" +
+                "      self.effective_file_name = typeCheckString(real_file_name)\n" +
+                "    else:\n" +
+                "      self.effective_file_name = typeCheckString(object_name)\n";
+        final String result = generator.getAdditionalContent(null, null);
+        assertThat(result, is(expected));
+    }
 
     @Test
     public void toOptionalConstructorParams_Test() {
         final ImmutableList<ConstructorParam> optParams = generator
-                .toOptionalConstructorParams(getRequestCreateObject());
+                .toOptionalConstructorParams(getRequestAmazonS3GetObject());
         final ImmutableList<String> result = optParams.stream()
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());
-
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(4));
         assertThat(result, hasItem("job=None"));
         assertThat(result, hasItem("offset=None"));
         assertThat(result, hasItem("real_file_name=None"));
-        assertThat(result, hasItem("headers=None"));
         assertThat(result, hasItem("stream=None"));
-    }
-
-    @Test
-    public void getAdditionalContent_Test() {
-        final String expected = "if headers is not None:\n" +
-                "      self.headers = headers\n" +
-                "    self.object_name = typeCheckString(object_name)\n" +
-                "    object_data = None\n" +
-                "    if stream:\n" +
-                "      object_data = stream\n" +
-                "    else:\n" +
-                "      effectiveFileName = self.object_name\n" +
-                "      if real_file_name:\n" +
-                "        effectiveFileName = typeCheckString(real_file_name)\n" +
-                "      object_data = open(effectiveFileName, \"rb\")\n" +
-                "    if offset:\n" +
-                "      object_data.seek(offset, 0)\n" +
-                "    self.body = object_data\n";
-        final String result = generator.getAdditionalContent(null, null);
-        assertThat(result, is(expected));
     }
 }

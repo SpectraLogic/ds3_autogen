@@ -35,7 +35,7 @@ class DeleteObject(object):
     self.key = key
 
   def to_xml(self):
-    xml_key = xmldom.Element('key')
+    xml_key = xmldom.Element('Key')
     xml_key.text = self.key
 
     xml_object = xmldom.Element('Object')

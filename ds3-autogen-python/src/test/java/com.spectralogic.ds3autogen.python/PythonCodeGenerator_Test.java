@@ -21,11 +21,9 @@ import com.spectralogic.ds3autogen.api.models.Classification;
 import com.spectralogic.ds3autogen.api.models.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.ObjectsPayloadGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.PutObjectRequestGenerator;
-import com.spectralogic.ds3autogen.python.generators.request.StringPayloadGenerator;
+import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.model.client.BaseClient;
@@ -47,6 +45,8 @@ public class PythonCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
 
         assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(PutObjectRequestGenerator.class));
+
+        assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
 
         assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StringPayloadGenerator.class));
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringPayloadGenerator.class));
@@ -143,6 +143,8 @@ public class PythonCodeGenerator_Test {
     public void getResponseGenerator_Test() {
         assertThat(getResponseGenerator(createDs3RequestTestData("com.test.EmptyRequest", Classification.spectrads3)),
                 instanceOf(BaseResponseGenerator.class));
+
+        assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
 
         assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadResponseGenerator.class));
     }

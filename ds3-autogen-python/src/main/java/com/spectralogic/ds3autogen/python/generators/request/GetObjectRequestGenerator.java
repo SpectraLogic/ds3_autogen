@@ -26,10 +26,9 @@ import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonInde
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 
 /**
- * Creates the python request model for the Amazon request Put Object which has the optional
- * request payload of real_file_name, and which opens the specified file
+ * Creates the python request model for the Amazon request Get Object
  */
-public class PutObjectRequestGenerator extends BaseRequestGenerator {
+public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
     /** Used to specify the actual file name on the local machine if it differs from the BP name */
     private static final String PAYLOAD_NAME = "real_file_name";
@@ -42,7 +41,6 @@ public class PutObjectRequestGenerator extends BaseRequestGenerator {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(toOptionalArgumentsList(ds3Request.getOptionalQueryParams()));
         builder.add(new Arguments("string", PAYLOAD_NAME));
-        builder.add(new Arguments("", "headers"));
         builder.add(new Arguments("", "stream"));
 
         return builder.build().stream()
@@ -56,19 +54,11 @@ public class PutObjectRequestGenerator extends BaseRequestGenerator {
      */
     @Override
     public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
-        return "if headers is not None:\n" +
-                pythonIndent(3) + "self.headers = headers\n" +
-                pythonIndent(2) + "self.object_name = typeCheckString(object_name)\n" +
-                pythonIndent(2) + "object_data = None\n" +
-                pythonIndent(2) + "if stream:\n" +
-                pythonIndent(3) + "object_data = stream\n" +
+        return "self.offset = offset\n" +
+                pythonIndent(2) + "self.stream = stream\n" +
+                pythonIndent(2) + "if " + PAYLOAD_NAME + ":\n" +
+                pythonIndent(3) + "self.effective_file_name = typeCheckString(" + PAYLOAD_NAME + ")\n" +
                 pythonIndent(2) + "else:\n" +
-                pythonIndent(3) + "effectiveFileName = self.object_name\n" +
-                pythonIndent(3) + "if " + PAYLOAD_NAME +":\n" +
-                pythonIndent(4) + "effectiveFileName = typeCheckString(" + PAYLOAD_NAME + ")\n" +
-                pythonIndent(3) + "object_data = open(effectiveFileName, \"rb\")\n" +
-                pythonIndent(2) + "if offset:\n" +
-                pythonIndent(3) + "object_data.seek(offset, 0)\n" +
-                pythonIndent(2) + "self.body = object_data\n";
+                pythonIndent(3) + "self.effective_file_name = typeCheckString(object_name)\n";
     }
 }
