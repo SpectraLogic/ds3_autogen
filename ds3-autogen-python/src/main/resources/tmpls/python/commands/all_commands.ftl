@@ -58,7 +58,6 @@ class AbstractResponse(object):
   def __init__(self, response, request):
     self.request = request
     self.response = response
-    self.object_data = None
     self.result = None
     self.meta_data = None
     self.process_response(response)
