@@ -6055,7 +6055,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="java.util.TreeSet"/>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" Type="array"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>

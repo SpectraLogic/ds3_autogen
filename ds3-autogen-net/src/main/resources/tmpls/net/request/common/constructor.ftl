@@ -1,5 +1,6 @@
         <#list constructors as constructor>
-        public ${name}(${netHelper.constructor(constructor.constructorArgs)}) {
+        public ${name}(${netHelper.constructor(constructor.constructorArgs)})
+        {
             <#list constructor.constructorArgs as arg>
             this.${arg.getName()?cap_first} = ${netHelper.paramAssignmentRightValue(arg)};
             </#list>
