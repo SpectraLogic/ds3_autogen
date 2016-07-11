@@ -125,6 +125,7 @@ public final class StructHelper {
 
                 if (enumNames.contains(member.getType().getTypeName())) continue;
 
+                LOG.warn("Unknown type[" + member.getType().getTypeName() + "]");
                 return true;
             }
         }
@@ -154,16 +155,18 @@ public final class StructHelper {
                 structsQueue.add(structEntry);
             }
 
-            if (structsQueueSize == allStructs.size()) {
+            if (structsQueueSize == structsQueue.size()) {
                 skippedStructsCount++;
                 if (skippedStructsCount == structsQueueSize) {
                     LOG.warn("Unable to progress on remaining structs, aborting!");
-                    LOG.warn("  Remaining structs[" + allStructs.size() + "]");
+                    LOG.warn("  Remaining structs[" + structsQueue.size() + "]");
                     for (final Struct struct : allStructs) {
                         LOG.warn("    " + struct.toString() + "\n");
                     }
                     break;
                 }
+            } else {
+                skippedStructsCount = 0;
             }
         }
 
