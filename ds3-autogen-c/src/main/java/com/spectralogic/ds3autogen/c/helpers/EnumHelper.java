@@ -45,6 +45,10 @@ public final class EnumHelper {
     }
 
     public static String getDs3Type(final String name) {
+        final String name_underscores = getNameUnderscores(name);
+        if (name_underscores.startsWith("ds3_")) {
+            return name_underscores;
+        }
         return "ds3_" + getNameUnderscores(name);
     }
 

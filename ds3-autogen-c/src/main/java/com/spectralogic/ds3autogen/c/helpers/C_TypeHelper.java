@@ -48,6 +48,7 @@ public final class C_TypeHelper {
 
             case "java.lang.Long":
             case "long":
+            case "uint64_t":
                 return new PrimitiveType("uint64_t", isArray);
 
             case "java.lang.Double":
