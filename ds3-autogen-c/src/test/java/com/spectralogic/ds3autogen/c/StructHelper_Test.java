@@ -35,7 +35,6 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -282,7 +281,7 @@ public class StructHelper_Test {
         assertThat(orderedStructsList.indexOf(testOrderInnerStruct), is(0));
     }
 
-    @Test
+    @Test (expected = ParseException.class)
     public void testOrderingStructsAbortsCorrectly() throws ParseException {
         final Struct testOrderInnerStruct = new Struct("testOrderInnerStruct",
                 ImmutableList.of(
@@ -291,13 +290,6 @@ public class StructHelper_Test {
                 ImmutableList.of(
                         new StructMember(new FreeableType("testOrderInnerStruct", true), "objects_node", "objects_node", null, false, false)));
         final ImmutableList<Struct> structsList = ImmutableList.of(testOrderOutterStruct, testOrderInnerStruct);
-        boolean caughtException = false;
-        try {
-            final ImmutableList<Struct> orderedStructsList = StructHelper.getStructsOrderedList(structsList, ImmutableSet.of());
-        } catch(final ParseException pe) {
-            assertThat(pe.getMessage(), is("Unable to parse API Contract."));
-            caughtException = true;
-        }
-        assertTrue(caughtException);
+        final ImmutableList<Struct> orderedStructsList = StructHelper.getStructsOrderedList(structsList, ImmutableSet.of());
     }
 }

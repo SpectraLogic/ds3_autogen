@@ -163,7 +163,7 @@ public final class StructHelper {
                     for (final Struct struct : allStructs) {
                         LOG.warn("    " + struct.toString() + "\n");
                     }
-                    throw new ParseException("Unable to parse API Contract.", 0);
+                    throw new ParseException("Unable to Order provided structs.", 0);
                 }
             } else {
                 skippedStructsCount = 0;
