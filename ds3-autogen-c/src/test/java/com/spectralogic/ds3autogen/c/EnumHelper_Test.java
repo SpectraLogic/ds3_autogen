@@ -90,4 +90,14 @@ public class EnumHelper_Test {
                 + "    }"                            + "\n";
         assertThat(EnumHelper.generateToString(testEnum), is(expectedOutput));
     }
+
+    @Test
+    public void testNameSpaceType() {
+        assertThat(EnumHelper.getDs3Type("TestType"), is("ds3_test_type"));
+    }
+
+    @Test
+    public void testNameAlreadyBeginningWithDs3DoesNotDouble() {
+        assertThat(EnumHelper.getDs3Type("Ds3TestType"), is("ds3_test_type"));
+    }
 }
