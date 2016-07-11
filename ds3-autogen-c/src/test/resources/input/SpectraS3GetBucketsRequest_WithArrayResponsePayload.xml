@@ -31,80 +31,76 @@
                 <Version>1.8C885A22F5F8EA044A104A020AE563D5</Version>
             </RequestHandler>
         </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.Bucket">
+                <Elements>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DataPolicyId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LastPreferredChunkSizeInBytes" Type="java.lang.Long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="LogicalUsedCapacity" Type="java.lang.Long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="[A-Za-z0-9\.\-\_]{1,63}" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
     </Contract>
 </Data>
-<!--
-<RequestHandler Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler">
-    <Documentation>Get all buckets.</Documentation>
-    <RequestRequirements>Must be REST action LIST</RequestRequirements>
-    <RequestRequirements>Must be REST domain BUCKET</RequestRequirements>
-    <RequestRequirements>Must be a DS3-style request</RequestRequirements>
-    <RequestRequirements>
-        Query Parameters Required: [], Optional: [dataPolicyId, last_page, name, page_length, page_offset, page_start_marker, userId]
-    </RequestRequirements>
-    <SampleResponses>
-        <HttpRequest>
-            GET '_rest_/bucket' with query parameters {name=MD5} and headers {}.
-        </HttpRequest>
-        <HttpResponse>
-            <Error><Code>AccessDenied</Code><HttpErrorCode>403</HttpErrorCode><Message>Authorization is required for this request.</Message><Resource>/_rest_/bucket</Resource><ResourceId>220</ResourceId></Error> with headers {x-amz-request-id=220, Content-Type=text/xml, RequestHandler-Version=1.8C885A22F5F8EA044A104A020AE563D5}.
-        </HttpResponse>
-        <HttpResponseCode>403</HttpResponseCode>
-        <HttpResponseType>
-            com.spectralogic.s3.server.domain.HttpErrorResultApiBean
-        </HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler_Test.testGetBucketsAsAnonymousRequestNotAllowed
-        </Test>
-    </SampleResponses>
-    <SampleResponses>
-        <HttpRequest>
-            GET '_rest_/bucket' with query parameters {name=MD5} and headers {Internal-Request=1}.
-        </HttpRequest>
-        <HttpResponse>
-            <Data></Data> with headers {x-amz-request-id=215, Content-Type=text/xml, RequestHandler-Version=1.8C885A22F5F8EA044A104A020AE563D5}.
-        </HttpResponse>
-        <HttpResponseCode>200</HttpResponseCode>
-        <HttpResponseType>
-            com.spectralogic.s3.common.dao.domain.ds3.Bucket;
-        </HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler_Test.testGetBucketsAsInternalRequestReturnsAllBuckets
-        </Test>
-    </SampleResponses>
-    <SampleResponses>
-        <HttpRequest>
-            GET '_rest_/bucket' with query parameters {} and headers {Impersonate-User=user}.
-        </HttpRequest>
-        <HttpResponse>
-            <Data><Bucket><CreationDate>2016-01-27T00:28:45.000Z</CreationDate><DataPolicyId>d3fd402e-6b8f-4332-bbfb-2ceefa4cb093</DataPolicyId><Id>b8536f7d-80b9-458f-a1e5-9f37be6fe667</Id><LastPreferredChunkSizeInBytes/><LogicalUsedCapacity>0</LogicalUsedCapacity><Name>a</Name><UserId>870f35bf-19e7-41d3-b6d4-368c2a3df831</UserId></Bucket><Bucket><CreationDate>2016-01-27T00:28:45.000Z</CreationDate><DataPolicyId>d3fd402e-6b8f-4332-bbfb-2ceefa4cb093</DataPolicyId><Id>ecdaf07d-b2ca-4658-bd55-6f39cebd8c16</Id><LastPreferredChunkSizeInBytes/><LogicalUsedCapacity>1</LogicalUsedCapacity><Name>b</Name><UserId>870f35bf-19e7-41d3-b6d4-368c2a3df831</UserId></Bucket></Data> with headers {x-amz-request-id=216, Content-Type=text/xml, RequestHandler-Version=1.8C885A22F5F8EA044A104A020AE563D5}.
-        </HttpResponse>
-        <HttpResponseCode>200</HttpResponseCode>
-        <HttpResponseType>
-            com.spectralogic.s3.common.dao.domain.ds3.Bucket;
-        </HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler_Test.testGetBucketsReturnsBucketsWithLogicalCapacities
-        </Test>
-    </SampleResponses>
-    <SampleResponses>
-        <HttpRequest>
-            GET '_rest_/bucket' with query parameters {name=MD5} and headers {Impersonate-User=user}.
-        </HttpRequest>
-        <HttpResponse>
-            <Data></Data> with headers {x-amz-request-id=217, Content-Type=text/xml, RequestHandler-Version=1.8C885A22F5F8EA044A104A020AE563D5}.
-        </HttpResponse>
-        <HttpResponseCode>200</HttpResponseCode>
-        <HttpResponseType>
-            com.spectralogic.s3.common.dao.domain.ds3.Bucket;
-        </HttpResponseType>
-        <Test>
-            com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler_Test.testGetBucketsWithOptionalFilterParamsWorksProvidedThatOptionalFilterParamsAreValid
-        </Test>
-    </SampleResponses>
-    <SampleUrl>
-        http[s]://datapathdnsnameofappliance/_rest_/bucket/[?last_page][&page_length={32-bit integer}][&page_offset={32-bit integer}][&page_start_marker={unique identifier or attribute}][&data_policy_id={unique identifier or attribute}][&name={text}][&user_id={unique identifier or attribute}]
-    </SampleUrl>
-    <Version>1.8C885A22F5F8EA044A104A020AE563D5</Version>
-</RequestHandler>
--->
