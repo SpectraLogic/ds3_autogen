@@ -35,6 +35,7 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -43,6 +44,8 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -263,5 +266,38 @@ public class StructHelper_Test {
                         new StructMember(new FreeableType("ds3_object", true), "objects_node", "objects_node", null, false, false)));
         assertTrue(StructHelper.hasAttributes(testAttributesStruct));
         assertTrue(StructHelper.hasChildNodes(testAttributesStruct));
+    }
+
+    @Test
+    public void testOrderingStructsWorks() throws ParseException {
+        final Struct testOrderInnerStruct = new Struct("testOrderInnerStruct",
+                ImmutableList.of(
+                        new StructMember(new FreeableType("ds3_str", true), "name", "name", null, false, false)));
+        final Struct testOrderOutterStruct = new Struct("testOrderOuterStruct",
+                ImmutableList.of(
+                        new StructMember(new FreeableType("testOrderInnerStruct", true), "objects_node", "objects_node", null, false, false)));
+        final ImmutableList<Struct> structsList = ImmutableList.of(testOrderOutterStruct, testOrderInnerStruct);
+        final ImmutableList<Struct> orderedStructsList = StructHelper.getStructsOrderedList(structsList, ImmutableSet.of());
+
+        assertThat(orderedStructsList.indexOf(testOrderInnerStruct), is(0));
+    }
+
+    @Test
+    public void testOrderingStructsAbortsCorrectly() throws ParseException {
+        final Struct testOrderInnerStruct = new Struct("testOrderInnerStruct",
+                ImmutableList.of(
+                        new StructMember(new FreeableType("ds3_unknown_type", true), "name", "name", null, false, false)));
+        final Struct testOrderOutterStruct = new Struct("testOrderOuterStruct",
+                ImmutableList.of(
+                        new StructMember(new FreeableType("testOrderInnerStruct", true), "objects_node", "objects_node", null, false, false)));
+        final ImmutableList<Struct> structsList = ImmutableList.of(testOrderOutterStruct, testOrderInnerStruct);
+        boolean caughtException = false;
+        try {
+            final ImmutableList<Struct> orderedStructsList = StructHelper.getStructsOrderedList(structsList, ImmutableSet.of());
+        } catch(final ParseException pe) {
+            assertThat(pe.getMessage(), is("Unable to parse API Contract."));
+            caughtException = true;
+        }
+        assertTrue(caughtException);
     }
 }
