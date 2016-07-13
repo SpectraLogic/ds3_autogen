@@ -190,12 +190,10 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
-     * Determines if this request is a Get Object request
-     * @param ds3Request A request
-     * @return True if the request is a Get Object request, else false
+     * Determines if this request is an Amazon Get Object request
      */
     public static boolean isGetObjectRequest(final Ds3Request ds3Request) {
-        return isGetObjectSpectraS3Request(ds3Request) || isGetObjectAmazonS3Request(ds3Request);
+        return isGetObjectAmazonS3Request(ds3Request);
     }
 
     /**
