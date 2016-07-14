@@ -976,7 +976,7 @@ public class JavaCodeGenerator_Test {
     
     @Test
     public void getObjectSpectraS3RequestHandler() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
-        final String requestName = "GetObjectSpectraS3Request";
+        final String requestName = "GetObjectDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
                 fileUtils,
@@ -989,25 +989,24 @@ public class JavaCodeGenerator_Test {
         LOG.info("Generated code:\n" + requestGeneratedCode);
 
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
-        assertTrue(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
-        assertFalse(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
-        assertFalse(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
-        assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
         assertTrue(isReqParamOfType("BucketId", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
-        assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
 
-        assertTrue(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
-        assertTrue(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
-        assertTrue(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
+        assertFalse(hasStaticMethod("buildRangeHeaderText", "String", Scope.PRIVATE, requestGeneratedCode));
+        assertFalse(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
+        assertFalse(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
+
         assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.common.Range", requestGeneratedCode));
-        assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
-        assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
-        assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
 
-        testHasChecksumCode(requestGeneratedCode, requestName);
+        assertFalse(hasImport("com.google.common.base.Joiner", requestGeneratedCode));
+        assertFalse(hasImport("com.google.common.collect.ImmutableCollection", requestGeneratedCode));
+        assertFalse(hasImport("com.google.common.collect.ImmutableList", requestGeneratedCode));
+        assertFalse(hasImport("com.spectralogic.ds3client.models.common.Range", requestGeneratedCode));
+        assertFalse(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
+        assertFalse(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
+        assertFalse(hasImport("java.util.Collection", requestGeneratedCode));
+
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
@@ -1016,15 +1015,8 @@ public class JavaCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketId"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("WritableByteChannel", "Channel"));
+                new Arguments("String", "ObjectName"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
-
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(constructorArgs);
-        builder.add(new Arguments("UUID", "Job"));
-        builder.add(new Arguments("long", "Offset"));
-        assertFalse(hasConstructor(requestName, builder.build(), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();

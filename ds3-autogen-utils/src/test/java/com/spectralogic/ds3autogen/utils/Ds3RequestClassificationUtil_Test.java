@@ -255,8 +255,8 @@ public class Ds3RequestClassificationUtil_Test {
     @Test
     public void isGetObjectRequest_test() {
         assertTrue(isGetObjectRequest(getRequestAmazonS3GetObject()));
-        assertTrue(isGetObjectRequest(getRequestSpectraS3GetObject()));
 
+        assertFalse(isGetObjectRequest(getRequestSpectraS3GetObject()));
         assertFalse(isGetObjectRequest(getReplicatePutJob()));
         assertFalse(isGetObjectRequest(getRequestDeleteNotification()));
         assertFalse(isGetObjectRequest(getRequestCreateNotification()));

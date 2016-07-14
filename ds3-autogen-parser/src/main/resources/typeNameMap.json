@@ -139,6 +139,11 @@
       "ContractName": "CreateVerifyJobRequestHandler",
       "SdkName": "VerifyBulkJobRequestHandler",
       "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "GetObjectRequestHandler",
+      "SdkName": "GetObjectDetailsRequestHandler",
+      "Type": "SPECTRADS3"
     }
   ]
 }

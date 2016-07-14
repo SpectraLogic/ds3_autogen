@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -200,7 +200,7 @@ public class NetCodeGenerator_Test {
 
     @Test
     public void getObjectSpectraS3Request_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
-        final String requestName = "GetObjectSpectraS3Request";
+        final String requestName = "GetObjectDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
@@ -223,8 +223,7 @@ public class NetCodeGenerator_Test {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "ObjectName"),
-                new Arguments("UUID", "BucketId"),
-                new Arguments("Stream", "DestinationStream"));
+                new Arguments("UUID", "BucketId"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
         assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
