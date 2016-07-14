@@ -4,8 +4,9 @@
 <#-- ********************************************************** -->
 <#if (requestEntry.getOptionalQueryParams()??) && (requestEntry.getOptionalQueryParams()?size > 0)>
 
-/* Optional Query Parameters for ${requestEntry.getInitName()} */
+/* Optional Query Parameters for ${requestEntry.getInitName()}
 <#list requestEntry.getOptionalQueryParams() as queryParam>
-// ${parameterHelper.generateSetQueryParamSignature(queryParam)}
+ * ${parameterHelper.generateSetQueryParamSignature(queryParam)}
 </#list>
+ */
 </#if>
