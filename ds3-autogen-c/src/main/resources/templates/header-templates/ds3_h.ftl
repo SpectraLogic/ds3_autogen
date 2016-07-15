@@ -1,5 +1,8 @@
 <#include "../CopyrightHeader.ftl"/>
 
+/** @file ds3.h
+ *  @brief The public definitions for the Spectra S3 C SDK
+ */
 
 #ifndef __DS3_HEADER__
 #define __DS3_HEADER__
