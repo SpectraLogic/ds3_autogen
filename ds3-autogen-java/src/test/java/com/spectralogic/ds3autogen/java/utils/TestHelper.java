@@ -187,7 +187,7 @@ public final class TestHelper {
     private static String commandLine(final String requestName) {
         return requestName.replace("Request", "Response")
                 + " " + Helper.uncapFirst(requestName.replace("Request", ""))
-                + "(" + requestName + " request)";
+                + "(final " + requestName + " request)";
     }
 
     public static boolean hasModelVariable(final String name, final String type, final String code) {

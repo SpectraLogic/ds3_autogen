@@ -29,14 +29,14 @@ public class Ds3ClientImpl implements Ds3Client {
 
     <#list commands as cmd>
     @Override
-    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException {
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request) throws IOException {
         return new ${cmd.getResponseName()}(this.netClient.getResponse(request));
     }
     </#list>
 
     <#list customCommands as cmd>
     @Override
-    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request) throws IOException {
+    public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request) throws IOException {
         ${cmd.getCustomBody()}
     }
     </#list>
