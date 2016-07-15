@@ -20,12 +20,12 @@ public interface Ds3Client extends Closeable {
 
     <#list commands as cmd>
     ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
-    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
+    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request)
             throws IOException;
     </#list>
     <#list customCommands as cmd>
     ${javaHelper.toAnnotation(cmd.getAnnotationInfo())}
-    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(${cmd.getRequestName()} request)
+    ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request)
             throws IOException;
     </#list>
 
