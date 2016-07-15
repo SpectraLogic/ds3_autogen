@@ -144,6 +144,11 @@
       "ContractName": "GetObjectRequestHandler",
       "SdkName": "GetObjectDetailsRequestHandler",
       "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "GetObjectsRequestHandler",
+      "SdkName": "GetObjectsDetailsRequestHandler",
+      "Type": "SPECTRADS3"
     }
   ]
 }
