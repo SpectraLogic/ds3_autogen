@@ -165,11 +165,16 @@ void ds3_metadata_free(ds3_metadata* _metadata) {
 }
 
 void ds3_metadata_entry_free(ds3_metadata_entry* entry) {
+    if (entry == NULL) {
+      return;
+    }
+
     int value_index;
     ds3_str* value;
     if (entry->name != NULL) {
         ds3_str_free(entry->name);
     }
+
     if (entry->values != NULL) {
         for (value_index = 0; value_index < entry->num_values; value_index++) {
             value = entry->values[value_index];
