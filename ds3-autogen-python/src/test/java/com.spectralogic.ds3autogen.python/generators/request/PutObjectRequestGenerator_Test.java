@@ -48,7 +48,9 @@ public class PutObjectRequestGenerator_Test {
     @Test
     public void getAdditionalContent_Test() {
         final String expected = "if headers is not None:\n" +
-                "      self.headers = headers\n" +
+                "      for key, val in headers.iteritems():\n" +
+                "        if val:\n" +
+                "          self.headers[key] = val\n" +
                 "    self.object_name = typeCheckString(object_name)\n" +
                 "    object_data = None\n" +
                 "    if stream:\n" +
