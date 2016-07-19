@@ -57,7 +57,9 @@ public class PutObjectRequestGenerator extends BaseRequestGenerator {
     @Override
     public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
         return "if headers is not None:\n" +
-                pythonIndent(3) + "self.headers = headers\n" +
+                pythonIndent(3) + "for key, val in headers.iteritems():\n" +
+                pythonIndent(4) + "if val:\n" +
+                pythonIndent(5) + "self.headers[key] = val\n" +
                 pythonIndent(2) + "self.object_name = typeCheckString(object_name)\n" +
                 pythonIndent(2) + "object_data = None\n" +
                 pythonIndent(2) + "if stream:\n" +
