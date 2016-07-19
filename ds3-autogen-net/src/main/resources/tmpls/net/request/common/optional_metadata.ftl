@@ -1,4 +1,5 @@
         private IDictionary<string, string> _metadata = new Dictionary<string, string>();
+        private static readonly TraceSwitch SdkNetworkSwitch = new TraceSwitch("sdkNetworkSwitch", "set in config file");
 
         public IDictionary<string, string> Metadata
         {
@@ -14,7 +15,17 @@
             }
             foreach (var keyValuePair in metadata)
             {
-                this.Headers.Add(HttpHeaders.AwsMetadataPrefix + keyValuePair.Key, keyValuePair.Value);
+                if (string.IsNullOrEmpty(keyValuePair.Value))
+                {
+                    if (SdkNetworkSwitch.TraceWarning)
+                    {
+                        Trace.WriteLine("Key has not been added to metadata because value was null or empty: " + keyValuePair.Key);
+                    }
+                }
+                else
+                {
+                    this.Headers.Add(HttpHeaders.AwsMetadataPrefix + keyValuePair.Key, keyValuePair.Value);
+                }
             }
             this._metadata = metadata;
             return this;
