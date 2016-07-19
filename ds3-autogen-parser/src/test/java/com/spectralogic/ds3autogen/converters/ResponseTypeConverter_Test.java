@@ -115,19 +115,19 @@ public class ResponseTypeConverter_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toDs3Type_NullString_Test() {
-        toDs3Type(new EncapsulatingTypeNames(null, null));
+        toDs3Type(new EncapsulatingTypeNames(null, null), null);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void toDs3Type_EmptyString_Test() {
-        toDs3Type(new EncapsulatingTypeNames("", null));
+        toDs3Type(new EncapsulatingTypeNames("", null), null);
     }
 
     @Test
     public void toDs3Type_FullString_Test() {
-        final Ds3Type ds3Type = toDs3Type(new EncapsulatingTypeNames(
-                "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl",
-                null));
+        final Ds3Type ds3Type = toDs3Type(
+                new EncapsulatingTypeNames("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl", null),
+                null);
 
         assertThat(ds3Type.getName(), is("com.spectralogic.s3.common.dao.domain.ds3.BucketAclList"));
         assertTrue(isEmpty(ds3Type.getEnumConstants()));
@@ -153,7 +153,7 @@ public class ResponseTypeConverter_Test {
         final EncapsulatingTypeNames encapsulatingNames = new EncapsulatingTypeNames(
                 "com.spectralogic.test.SdkName",
                 "OriginalName");
-        final Ds3Type ds3Type = toDs3Type(encapsulatingNames);
+        final Ds3Type ds3Type = toDs3Type(encapsulatingNames, null);
 
         assertThat(ds3Type.getName(), is("com.spectralogic.test.SdkNameList"));
         assertTrue(isEmpty(ds3Type.getEnumConstants()));
@@ -443,10 +443,23 @@ public class ResponseTypeConverter_Test {
 
     @Test
     public void getAnnotationName_Test() {
-        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", null)), is("Type1"));
-        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", "")), is("Type1"));
-        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", "ContractType")), is("ContractType"));
-        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType")), is("Tape"));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", null), null), is("Type1"));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", ""), null), is("Type1"));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.Type1", "ContractType"), null), is("ContractType"));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType"), null), is("Tape"));
+    }
+
+    @Test
+    public void getAnnotationName_WithTypeMap_Test() {
+        final String fullTypeName = "com.test.Type1";
+        final String nameToMarshal = "Type1NameToMarshal";
+        final Ds3Type type = new Ds3Type(fullTypeName, nameToMarshal, null, null);
+        final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(type.getName(), type);
+
+        assertThat(getAnnotationName(new EncapsulatingTypeNames(fullTypeName, null), typeMap), is(nameToMarshal));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames(fullTypeName, ""), typeMap), is(nameToMarshal));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames(fullTypeName, "ContractType"), typeMap), is(nameToMarshal));
+        assertThat(getAnnotationName(new EncapsulatingTypeNames("com.test.NamedDetailedTape", "ContractType"), typeMap), is("Tape"));
     }
 
     @Test
