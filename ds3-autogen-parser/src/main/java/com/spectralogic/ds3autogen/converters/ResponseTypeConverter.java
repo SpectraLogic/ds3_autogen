@@ -178,7 +178,7 @@ public final class ResponseTypeConverter {
             builder.putAll(types);
         }
         for (final EncapsulatingTypeNames encapsulatingType : encapsulatingTypes) {
-            final Ds3Type ds3Type = toDs3Type(encapsulatingType);
+            final Ds3Type ds3Type = toDs3Type(encapsulatingType, types);
             builder.put(ds3Type.getName(), ds3Type);
         }
         return builder.build();
@@ -190,7 +190,9 @@ public final class ResponseTypeConverter {
      * The element name is pluralized, and an annotation is added to denote the
      * original name for xml parsing.
      */
-    protected static Ds3Type toDs3Type(final EncapsulatingTypeNames encapsulatingType) {
+    protected static Ds3Type toDs3Type(
+            final EncapsulatingTypeNames encapsulatingType,
+            final ImmutableMap<String, Ds3Type> typeMap) {
         if (isEmpty(encapsulatingType.getSdkName())) {
             throw new IllegalArgumentException("Cannot generate Ds3Type from empty response component type");
         }
@@ -198,7 +200,7 @@ public final class ResponseTypeConverter {
         final ImmutableList<Ds3Annotation> annotations = ImmutableList.of(
                 new Ds3Annotation("com.spectralogic.util.marshal.CustomMarshaledName",
                         ImmutableList.of(
-                                new Ds3AnnotationElement("Value", getAnnotationName(encapsulatingType), "java.lang.String"))));
+                                new Ds3AnnotationElement("Value", getAnnotationName(encapsulatingType, typeMap), "java.lang.String"))));
         return new Ds3Type(
                 encapsulatingType.getSdkName() + NAMESPACE_ARRAY_RESPONSE_TYPES,
                 getNameToMarshalForEncapsulatingType(encapsulatingType),
@@ -237,9 +239,17 @@ public final class ResponseTypeConverter {
      * proper xml parsing of model created by this Encapsulating Type Names
      * object.
      */
-    protected static String getAnnotationName(final EncapsulatingTypeNames encapsulatingType) {
+    protected static String getAnnotationName(
+            final EncapsulatingTypeNames encapsulatingType,
+            final ImmutableMap<String, Ds3Type> typeMap) {
         if (hasNoRootElement(encapsulatingType)) {
             return "Tape";
+        }
+        if (hasContent(typeMap)) {
+            final Ds3Type childType = typeMap.get(encapsulatingType.getSdkName());
+            if (childType != null && hasContent(childType.getNameToMarshal()) && !childType.getNameToMarshal().equals("Data")) {
+                return childType.getNameToMarshal();
+            }
         }
         if (hasContent(encapsulatingType.getOriginalName())) {
             return encapsulatingType.getOriginalName();
