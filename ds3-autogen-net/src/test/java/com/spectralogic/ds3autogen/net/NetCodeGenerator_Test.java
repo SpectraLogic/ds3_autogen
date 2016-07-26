@@ -1050,7 +1050,7 @@ public class NetCodeGenerator_Test {
         assertTrue(hasContent(parserCode));
         assertTrue(parserHasResponseCode(200, parserCode));
         assertFalse(parserHasPayload("String", "Data", parserCode));
-        assertTrue(parserCode.contains("return new GetBlobPersistenceSpectraS3Response(stream.ToString());"));
+        assertTrue(parserCode.contains("return new GetBlobPersistenceSpectraS3Response(sr.ReadToEnd());"));
     }
 
     @Test
