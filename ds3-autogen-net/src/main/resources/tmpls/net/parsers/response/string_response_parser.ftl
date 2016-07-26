@@ -16,7 +16,7 @@ namespace Ds3.ResponseParsers
             {
                 ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)${responseCode});
                 using (var stream = response.GetResponseStream())
-                using (StreamReader sr = new StreamReader(stream))
+                using (var sr = new StreamReader(stream))
                 {
                     return new ${responseName}(sr.ReadToEnd());
                 }
