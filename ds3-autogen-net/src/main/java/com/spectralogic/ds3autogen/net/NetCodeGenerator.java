@@ -345,6 +345,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (hasSpecifiedPayload(ds3Request, "MasterObjectList")) {
             return config.getTemplate("parsers/response/master_object_list_parser.ftl");
         }
+        if (hasSpecifiedPayload(ds3Request, "String")) {
+            return config.getTemplate("parsers/response/string_response_parser.ftl");
+        }
         return config.getTemplate("parsers/response/parser_template.ftl");
     }
 
