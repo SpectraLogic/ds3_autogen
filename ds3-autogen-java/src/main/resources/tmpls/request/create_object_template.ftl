@@ -49,7 +49,7 @@ public class ${name} extends AbstractRequest {
 
     public ${name} withMetaData(final String key, final String value) {
         if (isStringNullOrEmpty(value)) {
-            LOG.warn("Key has not been added to metadata because value was null or empty: " + key);
+            LOG.warn("Key has not been added to metadata because value was null or empty: {}", key);
             return this;
         }
         final String modifiedKey;

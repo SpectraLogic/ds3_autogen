@@ -166,7 +166,7 @@ void ds3_metadata_free(ds3_metadata* _metadata) {
 
 void ds3_metadata_entry_free(ds3_metadata_entry* entry) {
     if (entry == NULL) {
-      return;
+        return;
     }
 
     int value_index;
