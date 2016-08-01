@@ -33,3 +33,8 @@
             }
             return ds3Object.Size.Value.ToString("D");
         }
+
+        internal override long GetContentLength()
+        {
+            return GetContentStream().Length;
+        }

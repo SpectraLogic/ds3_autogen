@@ -14,6 +14,7 @@ namespace Ds3.Calls
     public class ${name} : Ds3Request
     {
         private readonly Stream RequestPayload;
+        private readonly long Length;
 
         <#include "common/required_args.ftl" />
 
@@ -25,11 +26,21 @@ namespace Ds3.Calls
 
         <#include "common/constructor.ftl" />
 
+        public ${name}(string bucketName, string objectName, Stream requestPayload)
+            : this(bucketName, objectName, requestPayload.Length, requestPayload)
+        {
+        }
+
         <#include "common/http_verb_and_path.ftl" />
 
         internal override Stream GetContentStream()
         {
             return RequestPayload;
+        }
+
+        internal override long GetContentLength()
+        {
+            return Length;
         }
     }
 }

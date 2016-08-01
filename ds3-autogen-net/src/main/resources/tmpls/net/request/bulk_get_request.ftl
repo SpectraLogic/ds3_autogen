@@ -57,6 +57,10 @@ namespace Ds3.Calls
             return new XDocument().AddFluent(root).WriteToMemoryStream();
         }
 
+        internal override long GetContentLength()
+        {
+            return GetContentStream().Length;
+        }
 
         private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)
         {
