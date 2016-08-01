@@ -47,6 +47,11 @@ namespace Ds3.Calls
                 .WriteToMemoryStream();
         }
 
+        internal override long GetContentLength()
+        {
+            return GetContentStream().Length;
+        }
+
         <#include "common/http_verb_and_path.ftl" />
     }
 }

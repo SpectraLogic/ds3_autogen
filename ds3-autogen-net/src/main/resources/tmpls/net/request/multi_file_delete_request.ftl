@@ -42,6 +42,11 @@ namespace Ds3.Calls
                 .WriteToMemoryStream();
         }
 
+        internal override long GetContentLength()
+        {
+            return GetContentStream().Length;
+        }
+
         internal override ChecksumType ChecksumValue
         {
             get { return ChecksumType.Compute; }

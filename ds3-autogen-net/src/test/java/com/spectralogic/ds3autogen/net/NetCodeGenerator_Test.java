@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -485,11 +485,14 @@ public class NetCodeGenerator_Test {
         assertTrue(hasOptionalChecksum(requestName, requestCode));
         assertTrue(hasOptionalMetadata(requestName, requestCode));
 
-        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("String", "BucketName"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("Stream", "RequestPayload"));
-        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        final ImmutableList.Builder<Arguments> constructorArgs = ImmutableList.builder();
+        constructorArgs.add(new Arguments("String", "BucketName"));
+        constructorArgs.add(new Arguments("String", "ObjectName"));
+        constructorArgs.add(new Arguments("Stream", "RequestPayload"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs.build(), requestCode));
+
+        constructorArgs.add(new Arguments("long", "Length"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs.build(), requestCode));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");

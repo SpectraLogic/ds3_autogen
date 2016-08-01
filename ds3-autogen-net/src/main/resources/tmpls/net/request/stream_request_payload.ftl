@@ -22,5 +22,10 @@ namespace Ds3.Calls
         {
             return RequestPayload;
         }
+
+        internal override long GetContentLength()
+        {
+            return RequestPayload.Length;
+        }
     }
 }

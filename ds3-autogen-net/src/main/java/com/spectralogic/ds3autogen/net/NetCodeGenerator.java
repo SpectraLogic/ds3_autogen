@@ -450,8 +450,10 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) {
             return new BulkGetRequestGenerator();
         }
-        if (isCreateObjectRequest(ds3Request)
-                || isCreateMultiPartUploadPartRequest(ds3Request)) {
+        if (isCreateObjectRequest(ds3Request)) {
+            return new PutObjectRequestGenerator();
+        }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
         if (isEjectStorageDomainRequest(ds3Request)

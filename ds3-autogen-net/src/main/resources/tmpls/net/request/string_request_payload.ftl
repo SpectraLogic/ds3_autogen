@@ -23,5 +23,10 @@ namespace Ds3.Calls
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(RequestPayload);
             return new MemoryStream(byteArray);
         }
+
+        internal override long GetContentLength()
+        {
+            return GetContentStream().Length;
+        }
     }
 }
