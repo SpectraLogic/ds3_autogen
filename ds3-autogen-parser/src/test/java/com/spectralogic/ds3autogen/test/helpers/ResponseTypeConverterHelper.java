@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen.test.helpers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.createPopulatedDs3ResponseCodeList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;

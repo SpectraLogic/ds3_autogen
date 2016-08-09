@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.utils.Helper;

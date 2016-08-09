@@ -17,8 +17,8 @@ package com.spectralogic.ds3autogen.python.generators.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 
 public interface RequestModelGeneratorUtils {

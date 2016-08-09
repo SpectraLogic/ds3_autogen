@@ -16,7 +16,7 @@
 package com.spectralogic.ds3autogen.net.generators.parsers.type;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.net.generators.parsers.element.NullableElement;
 
 import static com.spectralogic.ds3autogen.net.utils.NetNullableElementUtils.createNullableElement;

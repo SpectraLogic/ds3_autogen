@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;

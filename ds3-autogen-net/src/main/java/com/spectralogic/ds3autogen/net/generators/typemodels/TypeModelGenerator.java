@@ -16,7 +16,7 @@
 package com.spectralogic.ds3autogen.net.generators.typemodels;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.type.BaseType;
 
 @FunctionalInterface

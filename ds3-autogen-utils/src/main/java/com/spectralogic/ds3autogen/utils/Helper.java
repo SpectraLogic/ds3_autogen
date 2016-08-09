@@ -18,6 +18,10 @@ package com.spectralogic.ds3autogen.utils;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.enums.Action;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 import org.apache.commons.lang3.StringUtils;
 

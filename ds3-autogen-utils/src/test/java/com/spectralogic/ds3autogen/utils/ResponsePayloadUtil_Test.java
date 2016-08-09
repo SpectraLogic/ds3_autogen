@@ -16,12 +16,11 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getGetBlobPersistence;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestGetJob;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;

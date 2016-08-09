@@ -17,10 +17,10 @@ package com.spectralogic.ds3autogen.python;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
-import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;

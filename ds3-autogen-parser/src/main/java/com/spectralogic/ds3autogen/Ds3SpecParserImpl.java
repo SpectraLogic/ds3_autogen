@@ -21,10 +21,10 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.models.xml.RawSpec;
+import com.spectralogic.ds3autogen.models.xml.rawspec.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 
 import java.io.IOException;
 import java.io.InputStream;

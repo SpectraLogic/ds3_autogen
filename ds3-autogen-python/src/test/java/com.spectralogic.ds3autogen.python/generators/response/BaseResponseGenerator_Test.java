@@ -17,9 +17,9 @@ package com.spectralogic.ds3autogen.python.generators.response;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.python.model.response.BaseParsePayload;
 import com.spectralogic.ds3autogen.python.model.response.NoPayload;
 import org.junit.Test;

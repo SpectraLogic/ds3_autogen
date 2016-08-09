@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Model;
 
 @FunctionalInterface

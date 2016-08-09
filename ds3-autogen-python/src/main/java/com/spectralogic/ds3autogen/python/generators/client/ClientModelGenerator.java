@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.python.generators.client;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 
 @FunctionalInterface

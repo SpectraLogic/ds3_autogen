@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.api;
 
-import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
+import com.spectralogic.ds3autogen.api.models.namemap.Ds3NameMapper;
 
 import java.io.IOException;
 import java.io.InputStream;

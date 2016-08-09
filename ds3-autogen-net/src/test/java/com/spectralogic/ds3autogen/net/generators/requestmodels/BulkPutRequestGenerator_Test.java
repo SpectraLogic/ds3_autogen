@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import org.junit.Test;
 

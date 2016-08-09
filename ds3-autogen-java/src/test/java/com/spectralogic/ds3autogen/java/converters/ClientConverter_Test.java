@@ -15,8 +15,8 @@
 
 package com.spectralogic.ds3autogen.java.converters;
 
-import com.spectralogic.ds3autogen.api.models.Action;
-import com.spectralogic.ds3autogen.api.models.Resource;
+import com.spectralogic.ds3autogen.api.models.enums.Action;
+import com.spectralogic.ds3autogen.api.models.enums.Resource;
 import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
 import org.junit.Test;
 

@@ -16,10 +16,10 @@
 package com.spectralogic.ds3autogen.c.models;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Action;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.Action;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 
 public class Request {
     private final String name;

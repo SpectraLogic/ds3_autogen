@@ -17,9 +17,8 @@ package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BulkResponseGenerator extends BaseResponseGenerator {

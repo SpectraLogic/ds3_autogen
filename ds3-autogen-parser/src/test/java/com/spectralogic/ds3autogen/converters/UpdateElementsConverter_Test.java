@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.converters.UpdateElementsConverter.*;

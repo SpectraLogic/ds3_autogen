@@ -18,7 +18,7 @@ package com.spectralogic.ds3autogen.net.utils;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
 import freemarker.template.TemplateModelException;
 

@@ -17,8 +17,8 @@ package com.spectralogic.ds3autogen.c.converters;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.C_Type;

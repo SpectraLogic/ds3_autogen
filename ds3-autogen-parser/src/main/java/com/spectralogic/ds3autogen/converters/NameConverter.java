@@ -16,9 +16,9 @@
 package com.spectralogic.ds3autogen.converters;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.utils.Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

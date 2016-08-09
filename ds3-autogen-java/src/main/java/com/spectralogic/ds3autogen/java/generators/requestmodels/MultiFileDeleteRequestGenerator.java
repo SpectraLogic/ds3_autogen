@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;

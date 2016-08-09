@@ -17,6 +17,11 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.enums.Requirement;
+import com.spectralogic.ds3autogen.api.models.enums.Resource;
+import com.spectralogic.ds3autogen.api.models.enums.ResourceType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;

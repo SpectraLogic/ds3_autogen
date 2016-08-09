@@ -17,9 +17,9 @@ package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.*;

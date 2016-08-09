@@ -17,9 +17,9 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3TypeTestData;

@@ -22,7 +22,7 @@ import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;

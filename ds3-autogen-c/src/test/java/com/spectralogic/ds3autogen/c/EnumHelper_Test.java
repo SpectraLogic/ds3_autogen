@@ -29,8 +29,8 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.python.generators.response;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent;
 

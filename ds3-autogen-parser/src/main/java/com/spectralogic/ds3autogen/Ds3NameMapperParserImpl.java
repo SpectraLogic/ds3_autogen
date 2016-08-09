@@ -18,9 +18,9 @@ package com.spectralogic.ds3autogen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.io.ByteStreams;
-import com.spectralogic.ds3autogen.models.xml.TypeNameMap;
+import com.spectralogic.ds3autogen.models.xml.namemap.TypeNameMap;
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
-import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
+import com.spectralogic.ds3autogen.api.models.namemap.Ds3NameMapper;
 
 import java.io.IOException;
 import java.io.InputStream;

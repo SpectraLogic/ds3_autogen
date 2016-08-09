@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.python.model.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.QueryParam;
 
 public class BaseRequest {

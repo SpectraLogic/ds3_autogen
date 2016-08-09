@@ -17,9 +17,9 @@ package com.spectralogic.ds3autogen;
 
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
 import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3NameMapper;
-import com.spectralogic.ds3autogen.api.models.NameMapperType;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.namemap.Ds3NameMapper;
+import com.spectralogic.ds3autogen.api.models.namemap.NameMapperType;
 
 import java.io.IOException;
 import java.io.InputStream;

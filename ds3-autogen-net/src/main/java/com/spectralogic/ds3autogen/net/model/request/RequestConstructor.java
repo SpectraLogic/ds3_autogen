@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.net.model.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 
 /**
  * Contains the data for generating request constructor
