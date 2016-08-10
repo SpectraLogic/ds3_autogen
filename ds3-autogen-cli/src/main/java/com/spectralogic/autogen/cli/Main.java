@@ -19,7 +19,7 @@ import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.CCodeGenerator;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;

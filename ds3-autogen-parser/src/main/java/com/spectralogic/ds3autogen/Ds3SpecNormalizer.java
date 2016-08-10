@@ -18,9 +18,9 @@ package com.spectralogic.ds3autogen;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
 import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.removeDollarSigns;

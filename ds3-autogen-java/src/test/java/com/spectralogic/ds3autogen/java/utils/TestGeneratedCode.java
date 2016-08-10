@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.java.utils;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
-import com.spectralogic.ds3autogen.api.models.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import freemarker.template.TemplateModelException;
 

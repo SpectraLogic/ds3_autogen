@@ -18,7 +18,7 @@ package com.spectralogic.ds3autogen.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

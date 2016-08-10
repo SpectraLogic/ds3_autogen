@@ -15,8 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 @FunctionalInterface

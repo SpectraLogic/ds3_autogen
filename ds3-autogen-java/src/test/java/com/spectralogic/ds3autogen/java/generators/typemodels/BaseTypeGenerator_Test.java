@@ -16,15 +16,14 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.typemodels.BaseTypeGenerator.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3AnnotationMarshaledNameFixture.createCustomMarshaledNameAnnotation;
-import static com.spectralogic.ds3autogen.testutil.Ds3AnnotationMarshaledNameFixture.createNonCustomMarshaledNameAnnotation;
-import static com.spectralogic.ds3autogen.testutil.Ds3AnnotationMarshaledNameFixture.createSimpleNameAnnotation;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;

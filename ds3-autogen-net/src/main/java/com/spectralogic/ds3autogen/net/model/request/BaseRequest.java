@@ -17,8 +17,7 @@ package com.spectralogic.ds3autogen.net.model.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 
 public class BaseRequest {

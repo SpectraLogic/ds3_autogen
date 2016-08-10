@@ -17,8 +17,8 @@ package com.spectralogic.ds3autogen.python.generators.type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.python.model.type.TypeAttribute;
 import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import com.spectralogic.ds3autogen.python.model.type.TypeElement;

@@ -16,8 +16,8 @@
 package com.spectralogic.ds3autogen.net.generators.parsers.response;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.toModelParserName;

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.Response;
 
 public interface ResponseModelGenerator<T extends Response> {

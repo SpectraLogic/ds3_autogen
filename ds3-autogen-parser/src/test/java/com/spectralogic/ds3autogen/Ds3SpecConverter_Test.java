@@ -18,7 +18,8 @@ package com.spectralogic.ds3autogen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.*;
+import com.spectralogic.ds3autogen.api.models.enums.*;
 import org.junit.Test;
 
 import java.io.IOException;

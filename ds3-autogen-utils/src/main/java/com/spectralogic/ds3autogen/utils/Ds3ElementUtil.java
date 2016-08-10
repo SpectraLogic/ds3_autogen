@@ -16,9 +16,9 @@
 package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
-import com.spectralogic.ds3autogen.api.models.Ds3AnnotationElement;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Annotation;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3AnnotationElement;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;

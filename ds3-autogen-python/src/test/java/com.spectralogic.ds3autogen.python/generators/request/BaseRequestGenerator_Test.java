@@ -17,9 +17,9 @@ package com.spectralogic.ds3autogen.python.generators.request;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.Classification;
-import com.spectralogic.ds3autogen.api.models.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;

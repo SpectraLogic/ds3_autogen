@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.net.generators.parsers.typeset;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.net.generators.parsers.type.BaseTypeParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.type.JobListParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.type.TypeParserGenerator;

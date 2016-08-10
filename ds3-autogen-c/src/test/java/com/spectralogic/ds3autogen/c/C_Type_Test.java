@@ -1,7 +1,7 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.models.C_Type;
 import org.junit.Test;

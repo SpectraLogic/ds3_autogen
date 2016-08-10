@@ -16,8 +16,8 @@
 package com.spectralogic.ds3autogen.python.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.HttpVerb;
-import com.spectralogic.ds3autogen.api.models.Operation;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
+import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.python.model.type.TypeContent;
 
 import java.util.regex.Pattern;

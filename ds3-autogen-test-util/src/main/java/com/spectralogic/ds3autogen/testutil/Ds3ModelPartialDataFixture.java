@@ -16,7 +16,11 @@
 package com.spectralogic.ds3autogen.testutil;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.apispec.*;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.enums.Requirement;
+import com.spectralogic.ds3autogen.api.models.enums.Resource;
+import com.spectralogic.ds3autogen.api.models.enums.ResourceType;
 
 /**
  * This class provides utilities for generating partially filled in Ds3 models for use in testing.

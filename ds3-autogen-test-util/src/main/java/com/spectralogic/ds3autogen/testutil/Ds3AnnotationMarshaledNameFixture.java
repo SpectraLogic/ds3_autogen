@@ -16,8 +16,8 @@
 package com.spectralogic.ds3autogen.testutil;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Ds3Annotation;
-import com.spectralogic.ds3autogen.api.models.Ds3AnnotationElement;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Annotation;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3AnnotationElement;
 
 /**
  * Contains fixtures for generating different types of Annotation lists

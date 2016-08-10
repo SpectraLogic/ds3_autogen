@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.generators.responsemodels;
 
-import com.spectralogic.ds3autogen.api.models.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.net.NetHelper;
 import com.spectralogic.ds3autogen.net.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
