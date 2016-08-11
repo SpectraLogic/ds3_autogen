@@ -25,6 +25,16 @@
       "ContractName": "RequestSwap2",
       "SdkName": "RequestSwap1",
       "Type": "SPECTRADS3"
+    },
+    {
+      "ContractName": "AmazonBeforeRequestHandler",
+      "SdkName": "AmazonAfterRequestHandler",
+      "Type": "AMAZONS3"
+    },
+    {
+      "ContractName": "SpectraBeforeRequestHandler",
+      "SdkName": "SpectraAfterRequestHandler",
+      "Type": "SPECTRADS3"
     }
   ]
 }
