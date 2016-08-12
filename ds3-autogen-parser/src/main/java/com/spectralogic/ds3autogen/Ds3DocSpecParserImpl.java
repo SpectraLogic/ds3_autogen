@@ -32,12 +32,11 @@ import static com.spectralogic.ds3autogen.docspec.DocSpecConverter.toDs3DocSpec;
  */
 public class Ds3DocSpecParserImpl implements Ds3DocSpecParser {
 
-    private final ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = initDs3DocSpec();
     private final NameMapper nameMapper;
 
     //TODO add additional constructor with no parameters that uses default name mapper once one is created
     public Ds3DocSpecParserImpl(final NameMapper nameMapper) {
-        this.objectMapper = initDs3DocSpec();
         this.nameMapper = nameMapper;
     }
 

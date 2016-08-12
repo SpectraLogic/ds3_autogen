@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class Ds3DocSpecImpl implements Ds3DocSpec{
 
-    private static final Logger LOG = LoggerFactory.getLogger(Ds3DocSpec.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Ds3DocSpecImpl.class);
 
     /** Map of request name (key) and request descriptor (value) */
     private final ImmutableMap<String, String> requestDocs;

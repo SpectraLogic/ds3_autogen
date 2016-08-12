@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.docspec;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.ParserException;
@@ -26,9 +27,6 @@ import com.spectralogic.ds3autogen.models.xml.docspec.RequestDescriptor;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.spectralogic.ds3autogen.docspec.DocSpecConverter.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -46,7 +44,7 @@ public class DocSpecConverter_Test {
     private static final String SPECTRA_NAME_AFTER = "SpectraAfterSpectraS3Request";
     private static final String SPECTRA_DESCRIPTOR = "This is how you use this spectra request";
 
-    private RequestDescriptor createSpectraRequestDescriptor() {
+    private static RequestDescriptor createSpectraRequestDescriptor() {
         final RequestDescriptor requestDescriptor = new RequestDescriptor();
         requestDescriptor.setName(SPECTRA_NAME_BEFORE);
         requestDescriptor.setClassification(Classification.spectrads3);
@@ -54,7 +52,7 @@ public class DocSpecConverter_Test {
         return  requestDescriptor;
     }
 
-    private RequestDescriptor createAmazonRequestDescriptor() {
+    private static RequestDescriptor createAmazonRequestDescriptor() {
         final RequestDescriptor requestDescriptor = new RequestDescriptor();
         requestDescriptor.setName(AMAZON_NAME_BEFORE);
         requestDescriptor.setClassification(Classification.amazons3);
@@ -62,7 +60,7 @@ public class DocSpecConverter_Test {
         return  requestDescriptor;
     }
 
-    private ParamDescriptor createParamDescriptor(final String postfix) {
+    private static ParamDescriptor createParamDescriptor(final String postfix) {
         final ParamDescriptor pd = new ParamDescriptor();
         pd.setName("Name" + postfix);
         pd.setDescription("Description" + postfix);
@@ -91,7 +89,7 @@ public class DocSpecConverter_Test {
 
     @Test
     public void toRequestDocs_EmptyList_Test() {
-        final ImmutableMap<String, String> result = toRequestDocs(new ArrayList<>(), null);
+        final ImmutableMap<String, String> result = toRequestDocs(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
@@ -99,7 +97,7 @@ public class DocSpecConverter_Test {
     public void toRequestDocs_Test() throws IOException, ParserException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
-        final List<RequestDescriptor> rds = Arrays.asList(
+        final ImmutableList<RequestDescriptor> rds = ImmutableList.of(
                 createAmazonRequestDescriptor(),
                 createSpectraRequestDescriptor());
 
@@ -117,13 +115,13 @@ public class DocSpecConverter_Test {
 
     @Test
     public void toParamDocs_EmptyList_Test() {
-        final ImmutableMap<String, String> result = toParamDocs(new ArrayList<>());
+        final ImmutableMap<String, String> result = toParamDocs(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toParamDocs_Test() {
-        final List<ParamDescriptor> pds = Arrays.asList(
+        final ImmutableList<ParamDescriptor> pds = ImmutableList.of(
                 createParamDescriptor("1"),
                 createParamDescriptor("2"));
 
@@ -139,9 +137,9 @@ public class DocSpecConverter_Test {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
         final RawDocSpec rawDocSpec = new RawDocSpec();
         rawDocSpec.setRequestDescriptors(
-                Arrays.asList(createAmazonRequestDescriptor(), createSpectraRequestDescriptor()));
+                ImmutableList.of(createAmazonRequestDescriptor(), createSpectraRequestDescriptor()));
         rawDocSpec.setParamDescriptors(
-                Arrays.asList(createParamDescriptor("1"), createParamDescriptor("2")));
+                ImmutableList.of(createParamDescriptor("1"), createParamDescriptor("2")));
 
         final Ds3DocSpec result = toDs3DocSpec(rawDocSpec, nameMapper);
         assertThat(result.getRequestDocumentation(AMAZON_NAME_AFTER).get(), is(AMAZON_DESCRIPTOR));
