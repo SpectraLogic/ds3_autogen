@@ -146,7 +146,11 @@ public class DocSpecConverter_Test {
         final Ds3DocSpec result = toDs3DocSpec(rawDocSpec, nameMapper);
         assertThat(result.getRequestDocumentation(AMAZON_NAME_AFTER).get(), is(AMAZON_DESCRIPTOR));
         assertThat(result.getRequestDocumentation(SPECTRA_NAME_AFTER).get(), is(SPECTRA_DESCRIPTOR));
+
         assertThat(result.getParamDocumentation("Name1").get(), is("Description1"));
         assertThat(result.getParamDocumentation("Name2").get(), is("Description2"));
+
+        assertThat(result.getRequestDocumentation("DoesNotExistRequest").isPresent(), is(false));
+        assertThat(result.getParamDocumentation("DoesNotExistParam").isPresent(), is(false));
     }
 }

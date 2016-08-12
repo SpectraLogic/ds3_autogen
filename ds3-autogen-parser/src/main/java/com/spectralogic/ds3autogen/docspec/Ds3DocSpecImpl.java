@@ -47,7 +47,7 @@ public class Ds3DocSpecImpl implements Ds3DocSpec{
      */
     @Override
     public Optional<String> getRequestDocumentation(final String requestName) {
-        final Optional<String> descriptor = Optional.of(requestDocs.get(requestName));
+        final Optional<String> descriptor = Optional.ofNullable(requestDocs.get(requestName));
         if (!descriptor.isPresent()) {
             LOG.warn("Request does not have a descriptor: {}", requestName);
         }
@@ -59,7 +59,7 @@ public class Ds3DocSpecImpl implements Ds3DocSpec{
      */
     @Override
     public Optional<String> getParamDocumentation(final String paramName) {
-        final Optional<String> descriptor = Optional.of(paramDocs.get(paramName));
+        final Optional<String> descriptor = Optional.ofNullable(paramDocs.get(paramName));
         if (!descriptor.isPresent()) {
             LOG.warn("Parameter does not have a descriptor: {}", paramName);
         }
