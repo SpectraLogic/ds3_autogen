@@ -18,8 +18,9 @@ package com.spectralogic.ds3autogen;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.apispec.*;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
 
+import static com.spectralogic.ds3autogen.utils.NormalizeNameUtil.getNameFromPath;
+import static com.spectralogic.ds3autogen.utils.NormalizeNameUtil.toSdkName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
@@ -43,7 +44,7 @@ class Ds3SpecConverter {
 
         for (final Ds3Request request : requests) {
             final Ds3Request convertedRequest = new Ds3Request(
-                    convertName(request.getName(), request.getClassification(), nameMapper),
+                    toSdkName(request.getName(), request.getClassification(), nameMapper),
                     request.getHttpVerb(),
                     request.getClassification(),
                     request.getBucketRequirement(),
@@ -76,7 +77,7 @@ class Ds3SpecConverter {
         for (final Ds3Param param : params) {
             final Ds3Param convertedParam = new Ds3Param(
                     param.getName(),
-                    convertName(param.getType(), nameMapper),
+                    toSdkName(param.getType(), nameMapper),
                     param.isNullable());
             builder.add(convertedParam);
         }
@@ -113,8 +114,8 @@ class Ds3SpecConverter {
         final ImmutableList.Builder<Ds3ResponseType> builder = ImmutableList.builder();
         for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
             builder.add(new Ds3ResponseType(
-                    convertName(responseType.getType(), nameMapper),
-                    convertName(responseType.getComponentType(), nameMapper),
+                    toSdkName(responseType.getType(), nameMapper),
+                    toSdkName(responseType.getComponentType(), nameMapper),
                     getOriginalType(responseType.getComponentType(), nameMapper)));
         }
         return new Ds3ResponseCode(responseCode.getCode(), builder.build());
@@ -128,7 +129,7 @@ class Ds3SpecConverter {
         if (isEmpty(type)) {
             return null;
         }
-        final String converted = convertName(type, nameMapper);
+        final String converted = toSdkName(type, nameMapper);
         if (converted.equals(type)) {
             return null;
         }
@@ -167,11 +168,11 @@ class Ds3SpecConverter {
 
         for (final ImmutableMap.Entry<String, Ds3Type> entry : types.entrySet()) {
             final Ds3Type ds3Type = new Ds3Type(
-                    convertName(entry.getValue().getName(), nameMapper),
+                    toSdkName(entry.getValue().getName(), nameMapper),
                     toNameToMarshal(entry.getValue().getNameToMarshal()),
                     convertAllElements(entry.getValue().getElements(), nameMapper),
                     convertAllEnumConstants(entry.getValue().getEnumConstants(), nameMapper));
-            builder.put(convertName(entry.getKey(), nameMapper), ds3Type);
+            builder.put(toSdkName(entry.getKey(), nameMapper), ds3Type);
         }
 
         return builder.build();
@@ -223,7 +224,7 @@ class Ds3SpecConverter {
             final Ds3Property convertedProperty = new Ds3Property(
                     property.getName(),
                     property.getValue(),
-                    convertName(property.getValueType(), nameMapper));
+                    toSdkName(property.getValueType(), nameMapper));
             builder.add(convertedProperty);
         }
         return builder.build();
@@ -243,8 +244,8 @@ class Ds3SpecConverter {
         for (final Ds3Element element : elements) {
             final Ds3Element convertedElement = new Ds3Element(
                     element.getName(),
-                    convertName(element.getType(), nameMapper),
-                    convertName(element.getComponentType(), nameMapper),
+                    toSdkName(element.getType(), nameMapper),
+                    toSdkName(element.getComponentType(), nameMapper),
                     element.getDs3Annotations(),
                     element.isNullable());
             builder.add(convertedElement);
@@ -252,67 +253,5 @@ class Ds3SpecConverter {
         return builder.build();
     }
 
-    /**
-     * Converts a contract name into an sdk name while maintaining the original path.
-     * This assumes that one is renaming a type vs a request.
-     */
-    protected static String convertName(
-            final String contractName,
-            final NameMapper nameMapper) {
-        return convertName(contractName, null, nameMapper);
-    }
 
-    /**
-     * Converts a contract name into an sdk name while maintaining the original path. If the
-     * contract name contained a '$', then everything proceeding the '$' is maintained, but
-     * the name following the symbol is converted to the sdk name, if a name mapping exists.
-     */
-    protected static String convertName(
-            final String contractName,
-            final Classification classification,
-            final NameMapper nameMapper) {
-        if (isEmpty(contractName)) {
-            return contractName;
-        }
-        final String path = getPathFromName(contractName);
-        final String curName = getNameFromPath(contractName);
-
-        final String[] parts = curName.split("\\$");
-        if (parts.length < 2) {
-            return path + nameMapper.getConvertedName(curName, classification);
-        }
-        return path + parts[0] + "$" + nameMapper.getConvertedName(parts[1], classification);
-    }
-
-    /**
-     * Gets the path associated with a full contract name. If there is
-     * no path, then the original name is returned.
-     */
-    protected static String getPathFromName(final String contractName) {
-        if (isEmpty(contractName)) {
-            return "";
-        }
-        if (contractName.contains(".")) {
-            return contractName.substring(0, contractName.lastIndexOf('.') + 1);
-        }
-        return "";
-    }
-
-    /**
-     * Gets the name at the end of a path. If there is no path, then the
-     * original name is returned. If the provided contract name is a path
-     * (i.e. it ends with a period '.', then an error is thrown.
-     */
-    protected static String getNameFromPath(final String contractName) {
-        if (isEmpty(contractName)) {
-            return "";
-        }
-        if (contractName.endsWith(".")) {
-            throw new IllegalArgumentException("A Type and Request name cannot end with '.': " + contractName);
-        }
-        if (contractName.contains(".")) {
-            return contractName.substring(contractName.lastIndexOf('.') + 1);
-        }
-        return contractName;
-    }
 }
