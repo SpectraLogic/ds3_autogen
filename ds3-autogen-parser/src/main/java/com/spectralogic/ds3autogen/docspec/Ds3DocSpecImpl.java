@@ -46,8 +46,7 @@ public class Ds3DocSpecImpl implements Ds3DocSpec{
      * Retrieves the command descriptor for the specified request
      */
     @Override
-    public Optional<String> getCommandDocumentation(final String requestName) {
-        System.out.println("TEST: " + requestDocs);
+    public Optional<String> getRequestDocumentation(final String requestName) {
         final Optional<String> descriptor = Optional.of(requestDocs.get(requestName));
         if (!descriptor.isPresent()) {
             LOG.warn("Request does not have a descriptor: {}", requestName);

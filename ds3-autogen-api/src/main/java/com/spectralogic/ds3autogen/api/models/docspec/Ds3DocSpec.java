@@ -25,7 +25,7 @@ public interface Ds3DocSpec {
     /**
      * Retrieves the documentation for the specified request
      */
-    Optional<String> getCommandDocumentation(final String requestName);
+    Optional<String> getRequestDocumentation(final String requestName);
 
     /**
      * Retrieves the documentation for the specified parameter

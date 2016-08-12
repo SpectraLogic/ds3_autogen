@@ -44,9 +44,9 @@ public class Ds3DocSpecParserImpl_Test {
         assertThat(result.getParamDocumentation("Param2").get(), is("This is the effect of Param2"));
         assertThat(result.getParamDocumentation("Param3").get(), is("This is the effect of Param3"));
 
-        assertThat(result.getCommandDocumentation("Test1Request").get(), is("This is how you use Request1"));
-        assertThat(result.getCommandDocumentation("Test2Request").get(), is("This is how you use Request2"));
-        assertThat(result.getCommandDocumentation("Test3Request").get(), is("This is how you use Amazon Request3"));
-        assertThat(result.getCommandDocumentation("Test3SpectraS3Request").get(), is("This is how you use SpectraS3 Request3"));
+        assertThat(result.getRequestDocumentation("Test1Request").get(), is("This is how you use Request1"));
+        assertThat(result.getRequestDocumentation("Test2Request").get(), is("This is how you use Request2"));
+        assertThat(result.getRequestDocumentation("Test3Request").get(), is("This is how you use Amazon Request3"));
+        assertThat(result.getRequestDocumentation("Test3SpectraS3Request").get(), is("This is how you use SpectraS3 Request3"));
     }
 }
