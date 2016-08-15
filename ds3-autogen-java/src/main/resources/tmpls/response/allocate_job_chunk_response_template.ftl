@@ -20,7 +20,7 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
-            this.checkStatusCode(200, 307);
+            this.checkStatusCode(200, 307, 503);
 
             switch (this.getStatusCode()) {
             case 200:
@@ -30,6 +30,7 @@ ${javaHelper.createAllResponseResultClassVars(responseCodes)}
                 }
                 break;
             case 307:
+            case 503:
                 this.status = Status.RETRYLATER;
                 this.retryAfterSeconds = parseRetryAfter(response);
                 break;
