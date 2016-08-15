@@ -1404,6 +1404,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
         assertTrue(responseGeneratedCode.contains("public enum Status"));
         assertTrue(responseGeneratedCode.contains("ALLOCATED, RETRYLATER"));
+        assertTrue(responseGeneratedCode.contains("this.checkStatusCode(200, 307, 503);"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
