@@ -325,4 +325,16 @@ public final class Ds3RequestClassificationUtil {
                 && isEmpty(request.getOptionalQueryParams())
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID");
     }
+
+    /**
+     * Determines if a Ds3Request is the SpectraS3 Get Objects Details request
+     */
+    public static boolean isGetObjectsDetailsRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getHttpVerb() == HttpVerb.GET
+                && !request.includeIdInPath()
+                && request.getResource() == Resource.OBJECT
+                && request.getResourceType() == ResourceType.NON_SINGLETON
+                && !paramListContainsParam(request.getRequiredQueryParams(), "FullDetails", "void");
+    }
 }

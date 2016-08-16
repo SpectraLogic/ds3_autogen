@@ -356,6 +356,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectsDetailsRequest(ds3Request)) {
+            return config.getTemplate("response/get_objects_details_response_template.ftl");
+        }
         if (isAllocateJobChunkRequest(ds3Request)) {
             return config.getTemplate("response/allocate_job_chunk_response_template.ftl");
         }
