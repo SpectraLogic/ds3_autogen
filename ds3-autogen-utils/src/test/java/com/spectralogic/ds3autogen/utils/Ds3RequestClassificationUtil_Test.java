@@ -84,6 +84,49 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectsDetailsRequest(getCreateMultiPartUploadPart()));
         assertFalse(isGetObjectsDetailsRequest(getEjectStorageDomainRequest()));
         assertFalse(isGetObjectsDetailsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isGetObjectsDetailsRequest(getUsersSpectraS3Request()));
+    }
+
+    @Test
+    public void isGetUsersSpectraS3Request_Test() {
+        assertTrue(isGetUsersSpectraS3Request(getUsersSpectraS3Request()));
+
+        assertFalse(isGetUsersSpectraS3Request(getObjectsDetailsRequest()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestDeleteNotification()));
+        assertFalse(isGetUsersSpectraS3Request(getReplicatePutJob()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestCreateNotification()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestGetNotification()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestBulkGet()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestMultiFileDelete()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestCreateObject()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestAmazonS3GetObject()));
+        assertFalse(isGetUsersSpectraS3Request(getRequestSpectraS3GetObject()));
+        assertFalse(isGetUsersSpectraS3Request(getGetBlobPersistence()));
+        assertFalse(isGetUsersSpectraS3Request(getCreateMultiPartUploadPart()));
+        assertFalse(isGetUsersSpectraS3Request(getEjectStorageDomainRequest()));
+        assertFalse(isGetUsersSpectraS3Request(getCompleteMultipartUploadRequest()));
+    }
+
+    @Test
+    public void supportsPaginationRequest_Test() {
+        assertTrue(supportsPaginationRequest(getUsersSpectraS3Request()));
+        assertTrue(supportsPaginationRequest(getObjectsDetailsRequest()));
+
+        assertFalse(supportsPaginationRequest(getRequestDeleteNotification()));
+        assertFalse(supportsPaginationRequest(getReplicatePutJob()));
+        assertFalse(supportsPaginationRequest(getRequestCreateNotification()));
+        assertFalse(supportsPaginationRequest(getRequestGetNotification()));
+        assertFalse(supportsPaginationRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(supportsPaginationRequest(getRequestBulkGet()));
+        assertFalse(supportsPaginationRequest(getRequestMultiFileDelete()));
+        assertFalse(supportsPaginationRequest(getRequestCreateObject()));
+        assertFalse(supportsPaginationRequest(getRequestAmazonS3GetObject()));
+        assertFalse(supportsPaginationRequest(getRequestSpectraS3GetObject()));
+        assertFalse(supportsPaginationRequest(getGetBlobPersistence()));
+        assertFalse(supportsPaginationRequest(getCreateMultiPartUploadPart()));
+        assertFalse(supportsPaginationRequest(getEjectStorageDomainRequest()));
+        assertFalse(supportsPaginationRequest(getCompleteMultipartUploadRequest()));
     }
 
     @Test

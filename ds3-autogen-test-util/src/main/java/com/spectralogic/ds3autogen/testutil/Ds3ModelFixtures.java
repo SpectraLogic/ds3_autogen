@@ -735,4 +735,28 @@ public class Ds3ModelFixtures {
                         new Ds3Param("Version", "long", false)), //optional params
                 null); // required params
     }
+
+    public static Ds3Request getUsersSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.GetUsersRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, // bucketRequirement
+                null, // objectRequirement
+                Action.LIST,
+                Resource.USER,
+                ResourceType.NON_SINGLETON,
+                null, //operation
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("AuthId", "java.lang.String", true),
+                        new Ds3Param("DefaultDataPolicyId", "java.util.UUID", false),
+                        new Ds3Param("LastPage", "void", false),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("PageLength", "int", false),
+                        new Ds3Param("PageOffset", "int", false),
+                        new Ds3Param("PageStartMarker", "java.util.UUID", false)), //optional params
+                null); // required params
+    }
 }
