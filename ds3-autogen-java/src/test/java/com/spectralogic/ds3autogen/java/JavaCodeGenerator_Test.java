@@ -38,6 +38,7 @@ import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTes
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -1895,6 +1896,46 @@ public class JavaCodeGenerator_Test {
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
         assertTrue(ds3ClientImplGeneratedCode.isEmpty());
+    }
+
+    @Test
+    public void getObjectsDetailsRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+        final String requestName = "GetObjectsDetailsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedComponentResponseCode testGeneratedCode = new TestGeneratedComponentResponseCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/",
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/models/S3ObjectList.java");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/getObjectsDetailsRequestHandler.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        LOG.info("Generated code:\n" + requestGeneratedCode);
+
+        //Verify that name mapped from GetObjects to GetObjectsDetailsSpectraS3
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        LOG.info("Generated code:\n" + responseGeneratedCode);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        assertTrue(responseGeneratedCode.contains("private Integer pagingTruncated;"));
+        assertTrue(responseGeneratedCode.contains("private Integer pagingTotalResultCount;"));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientGeneratedCode);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"S3ObjectList\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"OBJECT\")"));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        LOG.info("Generated code:\n" + ds3ClientImplGeneratedCode);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
     }
 
     @Test

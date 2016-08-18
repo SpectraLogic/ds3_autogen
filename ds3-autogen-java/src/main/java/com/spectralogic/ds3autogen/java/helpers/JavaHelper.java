@@ -35,6 +35,7 @@ import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequ
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.isErrorCode;
 
 /**
  * Series of static functions that are used within the Java module template files
@@ -532,6 +533,22 @@ public final class JavaHelper {
     }
 
     /**
+     * Creates the Java code associated with processing response codes for
+     * requests that have pagination headers. If the specified response code
+     * is a non-error code, then the header parsing code is added.
+     */
+    public static String processPaginationResponseCodeLines(
+            final Ds3ResponseCode responseCode,
+            final int indent) {
+        if (isErrorCode(responseCode.getCode())) {
+            return processResponseCodeLines(responseCode, indent);
+        }
+        return "this.pagingTruncated = parseIntHeader(\"page-truncated\");\n"
+                + indent(indent) + "this.pagingTotalResultCount = parseIntHeader(\"total-result-count\");\n"
+                + indent(indent) + processResponseCodeLines(responseCode, indent);
+    }
+
+    /**
      * Creates the Java code for getter functions for all response results
      */
     public static String createAllResponseResultGetters(final ImmutableList<Ds3ResponseCode> responseCodes) {
@@ -624,7 +641,8 @@ public final class JavaHelper {
         }
         final StringBuilder builder = new StringBuilder();
         if (hasContent(responseType.getComponentType())) {
-            builder.append(uncapFirst(stripPath(responseType.getComponentType())) + "List");
+            builder.append(uncapFirst(stripPath(responseType.getComponentType())))
+                    .append("List");
         } else {
             builder.append(uncapFirst(stripPath(responseType.getType())));
         }

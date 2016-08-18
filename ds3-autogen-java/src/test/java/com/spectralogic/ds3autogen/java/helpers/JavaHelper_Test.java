@@ -896,4 +896,40 @@ public class JavaHelper_Test {
         final String expected = "@Annotation(\"Value\")";
         assertThat(createAnnotation("Annotation", "Value"), is(expected));
     }
+
+    @Test
+    public void processPaginationResponseCodeLines_Test() {
+        final String expectedResult =
+                "this.pagingTruncated = parseIntHeader(\"page-truncated\");\n" +
+                "this.pagingTotalResultCount = parseIntHeader(\"total-result-count\");\n" +
+                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
+                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
+                "}\n" +
+                "break;";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
+
+        final String result = processPaginationResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void processPaginationResponseCodeLines_ErrorCode_Test() {
+        final String expectedResult =
+                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
+                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
+                "}\n" +
+                "break;";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                300,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
+
+        final String result = processPaginationResponseCodeLines(responseCode, 0);
+        assertThat(result, is(expectedResult));
+    }
 }

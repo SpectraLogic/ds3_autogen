@@ -325,4 +325,35 @@ public final class Ds3RequestClassificationUtil {
                 && isEmpty(request.getOptionalQueryParams())
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID");
     }
+
+    /**
+     * Determines if a Ds3Request is the SpectraS3 Get Objects Details request
+     */
+    public static boolean isGetObjectsDetailsRequest(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getHttpVerb() == HttpVerb.GET
+                && !request.includeIdInPath()
+                && request.getResource() == Resource.OBJECT
+                && request.getResourceType() == ResourceType.NON_SINGLETON
+                && !paramListContainsParam(request.getRequiredQueryParams(), "FullDetails", "void");
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraS3 Get Users request
+     */
+    public static boolean isGetUsersSpectraS3Request(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getHttpVerb() == HttpVerb.GET
+                && !request.includeIdInPath()
+                && request.getResource() == Resource.USER
+                && request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request supports pagination. This is used to determine
+     * which response handlers need to parse pagination headers.
+     */
+    public static boolean supportsPaginationRequest(final Ds3Request request) {
+        return isGetObjectsDetailsRequest(request) || isGetUsersSpectraS3Request(request);
+    }
 }
