@@ -6,6 +6,9 @@ ${requestHelper.generateRequestFunctionSignature(requestEntry)} {
     ds3_error* error;
     ds3_xml_send_buff send_buff;
     GByteArray* xml_blob;
+<#if requestEntry.hasResponsePayload() && requestEntry.getResponseType() == "ds3_str">
+    ds3_str* _response;
+</#if>
 
 ${requestHelper.generateParameterValidationBlock(requestEntry)}
 
@@ -24,9 +27,10 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
     }
 
 <#if requestEntry.hasResponsePayload() && requestEntry.getResponseType() == "ds3_str">
-    response->value = (char*)xml_blob->data;
-    response->size = xml_blob->len;
-    g_byte_array_free(xml_blob, FALSE);
+    _response = ds3_str_init_with_size((char*)xml_blob->data, xml_blob->len);
+    g_byte_array_free(xml_blob, TRUE);
+
+    *response = _response;
     return error;
 <#else>
     return _parse_top_level_${requestEntry.getResponseType()}(client, request, response, xml_blob);
