@@ -1924,7 +1924,6 @@ public class JavaCodeGenerator_Test {
 
         assertTrue(responseGeneratedCode.contains("private Integer pagingTruncated;"));
         assertTrue(responseGeneratedCode.contains("private Integer pagingTotalResultCount;"));
-        assertTrue(hasMethod("parseIntHeader", "Integer", Scope.PRIVATE, responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
