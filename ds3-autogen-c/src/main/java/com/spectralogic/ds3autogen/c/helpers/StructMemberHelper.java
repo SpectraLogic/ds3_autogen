@@ -57,7 +57,7 @@ public final class StructMemberHelper {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
-    /**
+    /*
      * Also applies to any element whose CollectionValueRenderingMode is "BLOCK_FOR_EVERY_ELEMENT"
      */
     public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
@@ -71,6 +71,18 @@ public final class StructMemberHelper {
              + indent(3) + "response->" + structMember.getName() + " = (" + structMember.getType().getTypeName() + "**)" + structMember.getName() +"_array->pdata;\n"
              + indent(3) + "response->num_" + structMember.getName() + " = " + structMember.getName() +"_array->len;\n"
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
+    }
+
+    /*
+     * Only applies to CommonPrefixes in ListBucketResult and ListMultipartUploadsResult
+     */
+    public static String generateStructMemberUnwrappedDs3StrArrayBlock(final StructMember structMember) {
+        return indent(3) + "xmlNodePtr loop_node;\n"
+             + indent(3) + "int num_nodes = 0;\n"
+             + indent(3) + "for (loop_node = child_node->xmlChildrenNode; loop_node != NULL; loop_node = loop_node->next, num_nodes++) {\n"
+             + indent(4) + structMember.getType().getTypeName() + "* " + structMember.getName() + " = xml_get_string(doc, loop_node);\n"
+             + indent(4) + "g_ptr_array_add(" + structMember.getName() + "_array, " + structMember.getName() + ");\n"
+             + indent(3) + "}\n";
     }
 
     public static String generateStructMemberArrayParserBlock(final StructMember structMember) throws ParseException {
@@ -99,11 +111,11 @@ public final class StructMemberHelper {
 
     public static String generateStructMemberEnumAttributeParserBlock(final StructMember structMember) {
         return indent(3) + "xmlChar* text = xmlNodeListGetString(doc, attribute->children, 1);\n"
-                + indent(3) + "if (text == NULL) {\n"
-                + indent(4) + "continue;\n"
-                + indent(3) + "}\n"
-                + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
-                + indent(3) + "xmlFree(text);\n";
+             + indent(3) + "if (text == NULL) {\n"
+             + indent(4) + "continue;\n"
+             + indent(3) + "}\n"
+             + indent(3) + "response->" + structMember.getName() + " = _match_" + structMember.getType().getTypeName() + "(client->log, text);\n"
+             + indent(3) + "xmlFree(text);\n";
     }
 
     public static String generateStructMemberEnumArrayParserBlock(final StructMember structMember) {
@@ -147,6 +159,9 @@ public final class StructMemberHelper {
                     return generateStructMemberEnumParserBlock(structMember);
             }
         } else if (structMember.getType().getTypeName().equals("ds3_str")) { // special case
+            if (structMember.getName().equals("common_prefixes")) {
+                return generateStructMemberUnwrappedDs3StrArrayBlock(structMember);
+            }
             if (structMember.getType().isArray()) {
                 return generateStructMemberDs3StrArrayBlock(structMember);
             }

@@ -62,7 +62,7 @@ public final class StructHelper {
     }
 
     public static String getXmlTag(final StructMember structMember) {
-        if (structMember.hasWrapper()) {
+        if (structMember.hasWrapper() || structMember.getName().equals("common_prefixes")) {
             return structMember.getEncapsulatingTag();
         }
         return Helper.capFirst(structMember.getNameToMarshall());
