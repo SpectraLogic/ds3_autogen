@@ -1,0 +1,44 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="OBJECT" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Folder" Type="java.lang.String"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Latest" Type="boolean"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType"/>
+                        <Param Name="Version" Type="long"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.S3Object" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.F5177563B1D7F1A4A055D706B82C6734</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
