@@ -32,4 +32,9 @@ public interface ResponseModelGeneratorUtils {
      * Gets the python code that parses the response payload
      */
     String toParseResponsePayload(final Ds3Request ds3Request);
+
+    /**
+     * Gets the python code that initializes the response
+     */
+    String toInitResponse();
 }

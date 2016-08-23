@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.PaginationResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
@@ -147,6 +148,10 @@ public class PythonCodeGenerator_Test {
         assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
 
         assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadResponseGenerator.class));
+
+        assertThat(getResponseGenerator(getObjectsDetailsRequest()), instanceOf(PaginationResponseGenerator.class));
+
+        assertThat(getResponseGenerator(getUsersSpectraS3Request()), instanceOf(PaginationResponseGenerator.class));
     }
 
     @Test

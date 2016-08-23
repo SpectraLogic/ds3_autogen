@@ -38,9 +38,10 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     @Override
     public BaseResponse generate(final Ds3Request ds3Request) {
         final String name = toResponseName(ds3Request.getName());
+        final String initResponseCode = toInitResponse();
         final String parseResponseCode = toParseResponsePayload(ds3Request);
         final ImmutableList<Integer> codes = getStatusCodes(ds3Request.getDs3ResponseCodes(), ds3Request.getName());
-        return new BaseResponse(name, parseResponseCode, codes);
+        return new BaseResponse(name, initResponseCode, parseResponseCode, codes);
     }
 
     /**
@@ -67,6 +68,15 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
     public String toParseResponsePayload(final Ds3Request ds3Request) {
         final ParsePayload parsePayload = getParsePayload(ds3Request);
         return parsePayload.toPythonCode();
+    }
+
+    /**
+     * Gets the python code that initializes the response payload. For normal
+     * responses, there is no init function.
+     */
+    @Override
+    public String toInitResponse() {
+        return "";
     }
 
     /**

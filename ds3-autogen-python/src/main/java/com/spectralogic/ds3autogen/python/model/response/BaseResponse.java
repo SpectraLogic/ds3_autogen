@@ -20,14 +20,17 @@ import com.google.common.collect.ImmutableList;
 public class BaseResponse {
 
     private final String name;
+    private final String initResponseCode;
     private final String parseResponseCode;
     private final ImmutableList<Integer> codes;
 
     public BaseResponse(
             final String name,
+            final String initResponseCode,
             final String parseResponseCode,
             final ImmutableList<Integer> codes) {
         this.name = name;
+        this.initResponseCode = initResponseCode;
         this.parseResponseCode = parseResponseCode;
         this.codes = codes;
     }
@@ -42,5 +45,9 @@ public class BaseResponse {
 
     public String getParseResponseCode() {
         return parseResponseCode;
+    }
+
+    public String getInitResponseCode() {
+        return initResponseCode;
     }
 }
