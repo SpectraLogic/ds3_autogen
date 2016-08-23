@@ -326,6 +326,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the response parser template for the specified Ds3Request
      */
     private Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
+        if (supportsPaginationRequest(ds3Request)) {
+            return config.getTemplate("parsers/response/pagination_headers_response_parser.ftl");
+        }
         if (isAllocateJobChunkRequest(ds3Request)) {
             return config.getTemplate("parsers/response/allocate_job_chunk_parser.ftl");
         }
@@ -400,6 +403,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * code for this Ds3Request
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
+        if (supportsPaginationRequest(ds3Request)) {
+            return config.getTemplate("response/pagination_headers_response.ftl");
+        }
         if (isAllocateJobChunkRequest(ds3Request)) {
             return config.getTemplate("response/allocate_job_chunk_response.ftl");
         }
