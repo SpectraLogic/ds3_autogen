@@ -81,4 +81,23 @@ public class StructConverter_Test {
                 ImmutableSet.of());
         assertThat(testStruct.getNameToMarshall(), is("Jobs"));
     }
+
+    @Test
+    public void testConvertNameToMarshallCommonPrefixSpecialCase() throws ParseException {
+        final Ds3Element testElement1 = new Ds3Element("CommonPrefixes", "array", "java.lang.String", false);
+        final ImmutableList<Ds3Element> elementsList = ImmutableList.of(testElement1);
+        final Ds3Type ds3Type = new Ds3Type(
+                "com.spectralogic.s3.server.domain.BucketObjectsApiBean",
+                "ListBucketResult",
+                elementsList,
+                ImmutableList.of());
+        final Struct testStruct = StructConverter.toStruct(
+                ds3Type,
+                ImmutableSet.of(),
+                ImmutableSet.of(),
+                ImmutableSet.of(),
+                ImmutableSet.of());
+        assertThat(testStruct.getNameToMarshall(), is("ListBucketResult"));
+        assertThat(testStruct.getStructMembers().get(0).getNameToMarshall(), is("CommonPrefixes"));
+    }
 }

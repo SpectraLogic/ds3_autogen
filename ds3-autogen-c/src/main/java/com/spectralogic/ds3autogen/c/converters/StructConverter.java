@@ -101,9 +101,7 @@ public final class StructConverter {
      * </Objects>
      */
     private static boolean hasWrapper(final Ds3Element ds3Element) {
-        if (ds3Element.getName().endsWith("Jobs")) {
-            return false;
-        } else if (ds3Element.getName().equals("CommonPrefixes")) {
+        if (ds3Element.getName().endsWith("Jobs") || ds3Element.getName().equals("CommonPrefixes")) {
             return false;
         }
         return Ds3ElementUtil.hasWrapperAnnotations(ds3Element.getDs3Annotations());

@@ -57,7 +57,7 @@ public final class StructMemberHelper {
         return indent(3) + "response->" + Helper.camelToUnderscore(structMember.getName()) + " = " + parserFunction + "\n";
     }
 
-    /*
+    /**
      * Also applies to any element whose CollectionValueRenderingMode is "BLOCK_FOR_EVERY_ELEMENT"
      */
     public static String generateStructMemberDs3StrArrayBlock(final StructMember structMember) {
@@ -73,7 +73,7 @@ public final class StructMemberHelper {
              + indent(3) + "g_ptr_array_free(" + structMember.getName() + "_array, FALSE);\n";
     }
 
-    /*
+    /**
      * Only applies to CommonPrefixes in ListBucketResult and ListMultipartUploadsResult
      */
     public static String generateStructMemberUnwrappedDs3StrArrayBlock(final StructMember structMember) {
