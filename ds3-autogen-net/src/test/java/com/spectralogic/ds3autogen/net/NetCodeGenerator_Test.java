@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1402,5 +1402,63 @@ public class NetCodeGenerator_Test {
         CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+    }
+
+    @Test
+    public void getObjectsDetailsSpectraS3Request_Test() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+        final String requestName = "GetObjectsDetailsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                "S3ObjectList");
+
+        codeGenerator.generateCode(fileUtils, "/input/getObjectsDetailsRequest.xml");
+
+        //Generate Request code
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "BucketId", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Folder", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "LastPage", "bool?", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Latest", "bool?", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageLength", "int?", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageOffset", "int?", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "PageStartMarker", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Type", "S3ObjectType", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Version", "long?", requestCode));
+
+        assertTrue(TestHelper.hasConstructor(requestName, ImmutableList.of(), requestCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        assertTrue(responseCode.contains("public GetObjectsDetailsSpectraS3Response(S3ObjectList responsePayload, int? pagingTruncated, int? pagingTotalResultCount)"));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload("S3ObjectList", "Data", parserCode));
     }
 }
