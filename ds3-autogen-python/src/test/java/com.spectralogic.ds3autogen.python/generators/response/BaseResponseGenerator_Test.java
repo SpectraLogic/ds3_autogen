@@ -129,4 +129,9 @@ public class BaseResponseGenerator_Test {
         assertThat(result, hasItem(200));
         assertThat(result, hasItem(206));
     }
+
+    @Test
+    public void toInitResponse_Test() {
+        assertThat(generator.toInitResponse(), is(""));
+    }
 }

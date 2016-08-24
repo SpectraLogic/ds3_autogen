@@ -25,10 +25,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.*;
-import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.HeadResponseGenerator;
-import com.spectralogic.ds3autogen.python.generators.response.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.python.generators.response.*;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.python.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.python.helpers.PythonHelper;
@@ -245,6 +242,9 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Retrieves the Response Generator associated with the Ds3Request
      */
     protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+        if (supportsPaginationRequest(ds3Request)) {
+            return new PaginationResponseGenerator();
+        }
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectResponseGenerator();
         }

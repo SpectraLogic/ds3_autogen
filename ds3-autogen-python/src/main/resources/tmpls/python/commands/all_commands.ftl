@@ -84,6 +84,14 @@ class AbstractResponse(object):
       ds3_error = XmlSerializer().to_ds3error(self.response.read(), self.response.status, self.response.reason)
       raise RequestFailed(err, ds3_error)
 
+  def parse_int_header(self, key, headers):
+    if not headers:
+      return None
+    for header in headers:
+      if header[0] == key:
+        return int(header[1])
+    return None
+
 <#include "responses/response.ftl" />
 
 <#include "client/client_class.ftl" />

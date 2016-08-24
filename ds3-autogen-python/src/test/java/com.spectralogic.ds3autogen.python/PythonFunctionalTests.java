@@ -46,7 +46,7 @@ import static org.mockito.Mockito.mock;
 public class PythonFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(PythonFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();

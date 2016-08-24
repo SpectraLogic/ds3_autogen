@@ -721,7 +721,10 @@ public class Ds3ModelFixtures {
                 ResourceType.NON_SINGLETON,
                 null, //operation
                 false,
-                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.S3Object"))),
+                        new Ds3ResponseCode(400, ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                        new Ds3ResponseCode(403, ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
                         new Ds3Param("BucketId", "java.util.UUID", false),
                         new Ds3Param("Folder", "java.lang.String", true),
