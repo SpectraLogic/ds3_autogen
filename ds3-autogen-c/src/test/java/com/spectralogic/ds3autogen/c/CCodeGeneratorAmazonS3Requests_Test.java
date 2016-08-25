@@ -62,10 +62,11 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
+        System.out.println(output);
 
         assertTrue(output.contains("ds3_error* ds3_delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
 
-        assertTrue(output.contains("    if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {"));
+        assertTrue(output.contains("    if (request->path->size < 2) {"));
         assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");"));
         assertTrue(output.contains("    }"));
 
