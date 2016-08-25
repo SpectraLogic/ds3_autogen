@@ -44,18 +44,17 @@
     </#if>
 </#list>
 
-<#-- ********************************************* -->
-<#-- Special cased requests                        -->
-<#include "../request-templates/HeadBucketRequest.ftl"/>
-<#include "../request-templates/HeadObjectRequest.ftl"/>
-<#include "../request-templates/GetObjectWithMetadataRequest.ftl"/>
 
 <#-- ********************************************* -->
 <#-- Generate all "RequestFunctions" from Requests -->
 <#list getRequests() as requestEntry>
-    <#if (requestEntry.getClassification().toString() == "amazons3")
-      && (requestEntry.getVerb().toString() == "HEAD")>
-         <#-- SKIP - HARD CODED SPECIAL CASES ABOVE -->
+    <#if requestEntry.getName() == "ds3_head_bucket_request")>
+        <#include "../request-templates/HeadBucketRequest.ftl"/>
+    <#elseif (requestEntry.getName() == "ds3_head_object_request")>
+        <#include "../request-templates/HeadObjectRequest.ftl"/>
+    <#elseif (requestEntry.getName() == "ds3_get_object_request")>
+        <#include "../request-templates/GetObjectRequest.ftl"/>
+        <#include "../request-templates/GetObjectWithMetadataRequest.ftl"/>
     <#elseif (requestEntry.hasRequestPayload() == true)
           && (requestEntry.hasResponsePayload() == true)>
         <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>
