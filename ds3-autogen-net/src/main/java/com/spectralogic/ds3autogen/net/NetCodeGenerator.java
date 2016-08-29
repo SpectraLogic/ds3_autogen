@@ -434,10 +434,10 @@ public class NetCodeGenerator implements CodeGenerator {
     private void generateRequest(
             final Ds3Request ds3Request,
             final ImmutableMap<String, Ds3Type> typeMap,
-            final Ds3DocSpec docSpec) throws IOException, TemplateException { //TODO generate documentation
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
-        final BaseRequest request = modelGenerator.generate(ds3Request, typeMap);
+        final BaseRequest request = modelGenerator.generate(ds3Request, typeMap, docSpec);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".cs")));
 
         LOG.info("Getting OutputStream for file:" + requestPath.toString());

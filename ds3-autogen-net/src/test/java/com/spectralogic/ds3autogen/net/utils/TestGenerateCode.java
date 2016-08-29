@@ -16,7 +16,8 @@
 package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.*;
@@ -91,17 +92,29 @@ public class TestGenerateCode {
 
     /**
      * Generates the .net code associated with an input file. This captures the
-     * Request, Client, and IDsClient code
+     * Request, Client, and IDsClient code. This utilizes the default Ds3DocSpec
      */
     public void generateCode(
             final FileUtils fileUtils,
             final String inputFileName) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+        generateCode(fileUtils, inputFileName, docSpecParser.getDocSpec());
+    }
+
+    /**
+     * Generates the .net code associated with an input file. THis captures the
+     * Request, Client and IDsClient code. This allows for a Ds3DocSpec parser to
+     * be specified
+     */
+    public void generateCode(
+            final FileUtils fileUtils,
+            final String inputFileName,
+            final Ds3DocSpec docSpec) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
-        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."), docSpecParser.getDocSpec());
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), docSpec);
 
         requestCode = new String(requestOutputStream.toByteArray());
         responseCode = new String(responseOutputStream.toByteArray());

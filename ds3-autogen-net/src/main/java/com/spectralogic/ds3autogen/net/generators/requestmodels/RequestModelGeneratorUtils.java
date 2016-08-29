@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
 
@@ -49,5 +50,5 @@ public interface RequestModelGeneratorUtils {
     /**
      * Gets the list of constructors for this request
      */
-    ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request);
+    ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request, final String requestName, final Ds3DocSpec docSpec);
 }

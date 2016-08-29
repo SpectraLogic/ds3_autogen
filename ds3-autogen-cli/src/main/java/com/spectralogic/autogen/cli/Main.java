@@ -15,7 +15,7 @@
 
 package com.spectralogic.autogen.cli;
 
-import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.CodeGenerator;

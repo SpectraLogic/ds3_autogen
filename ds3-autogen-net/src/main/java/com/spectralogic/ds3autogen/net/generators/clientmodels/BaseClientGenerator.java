@@ -78,7 +78,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
                 requestName,
                 commandName,
                 NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
-                NetDocGeneratorUtil.toCommandDocumentation(requestName, docSpec, 2),
+                NetDocGeneratorUtil.toCommandDocs(requestName, docSpec, 2),
                 "return new " + commandName + "ResponseParser(_netLayer.CopyBufferSize).Parse(request, _netLayer.Invoke(request));"
         );
     }
@@ -107,7 +107,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
                 requestName,
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
                 getHttpStatusCode(ds3Request.getDs3ResponseCodes()),
-                NetDocGeneratorUtil.toCommandDocumentation(requestName, docSpec, 2));
+                NetDocGeneratorUtil.toCommandDocs(requestName, docSpec, 2));
     }
 
     /**
@@ -160,7 +160,7 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
                 requestName,
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
                 NormalizingContractNamesUtil.toResponseName(ds3Request.getName()),
-                NetDocGeneratorUtil.toCommandDocumentation(requestName, docSpec, 2));
+                NetDocGeneratorUtil.toCommandDocs(requestName, docSpec, 2));
     }
 
     /**

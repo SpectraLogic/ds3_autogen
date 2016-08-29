@@ -16,13 +16,12 @@
 package com.spectralogic.ds3autogen.net.generators.clientmodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
-import com.spectralogic.ds3autogen.NameMapper;
-import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.SpecializedCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
@@ -35,15 +34,12 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestRequestWithResponseCodes;
 import static com.spectralogic.ds3autogen.testutil.Ds3ResponseCodeFixture.createTestResponseCodes;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseClientGenerator_Test {
 
     private static Ds3DocSpec getTestDocSpec() throws IOException, ParserException {
-        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
-        return docSpecParser.getDocSpec(); //TODO make test specific doc spec
+        return new Ds3DocSpecImpl(ImmutableMap.of(), ImmutableMap.of());
     }
 
     @Test

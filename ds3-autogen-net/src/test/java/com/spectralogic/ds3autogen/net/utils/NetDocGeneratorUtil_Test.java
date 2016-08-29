@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.net.utils;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
@@ -23,7 +24,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.net.utils.NetDocGeneratorUtil.toCommandDocumentation;
+import static com.spectralogic.ds3autogen.net.utils.NetDocGeneratorUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -43,7 +44,7 @@ public class NetDocGeneratorUtil_Test {
 
     @Test
     public void toCommandDocumentation_EmptyDocSpec_Test() {
-        assertThat(toCommandDocumentation("TestOneRequest", getEmptyDocSpec(), 1), is(""));
+        assertThat(toCommandDocs("TestOneRequest", getEmptyDocSpec(), 1), is(""));
     }
 
     @Test
@@ -54,7 +55,85 @@ public class NetDocGeneratorUtil_Test {
                 "    /// <param name=\"request\"></param>\n" +
                 "    /// <returns></returns>\n";
 
-        final String result = toCommandDocumentation("TestOneRequest", getTestDocSpec(), 1);
+        final String result = toCommandDocs("TestOneRequest", getTestDocSpec(), 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toSummary_Test() {
+        final String expected = "/// <summary>\n" +
+                "    /// This is my summary string\n" +
+                "    /// </summary>\n";
+        final String result = toSummaryDocs("This is my summary string", 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toParam_Test() {
+        final String expected = "    /// <param name=\"ParamName\">This is my param</param>\n";
+        final String result = toParamDocs("ParamName", "This is my param", 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toParamListDocs_NullList_Test() {
+        final String result = toParamListDocs(null, getEmptyDocSpec(), 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toParamListDocs_EmptyList_Test() {
+        final String result = toParamListDocs(ImmutableList.of(), getEmptyDocSpec(), 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toParamListDocs_FullList_Test() throws IOException, ParserException {
+        final String expected =
+                "    /// <param name=\"ParamOne\">This is how you use param one</param>\n" +
+                "    /// <param name=\"NoDocParam\"></param>\n";
+
+        final ImmutableList<String> params = ImmutableList.of("ParamOne", "NoDocParam");
+        final String result = toParamListDocs(params, getTestDocSpec(), 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toConstructorDocs_EmptyDocSpec_Test() {
+        final String result = toConstructorDocs("RequestName", ImmutableList.of(), getEmptyDocSpec(), 1);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toConstructorDocs_NullParams_Test() throws IOException, ParserException {
+        final String expected = "/// <summary>\n" +
+                "    /// This is how you use test one request\n" +
+                "    /// </summary>\n";
+
+        final String result = toConstructorDocs("TestOneRequest", null, getTestDocSpec(), 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toConstructorDocs_EmptyParams_Test() throws IOException, ParserException {
+        final String expected = "/// <summary>\n" +
+                "    /// This is how you use test one request\n" +
+                "    /// </summary>\n";
+
+        final String result = toConstructorDocs("TestOneRequest", ImmutableList.of(), getTestDocSpec(), 1);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toConstructorDocs_Test() throws IOException, ParserException {
+        final String expected = "/// <summary>\n" +
+                "    /// This is how you use test one request\n" +
+                "    /// </summary>\n" +
+                "    /// <param name=\"ParamOne\">This is how you use param one</param>\n" +
+                "    /// <param name=\"NoDocParam\"></param>\n";
+
+        final ImmutableList<String> params = ImmutableList.of("ParamOne", "NoDocParam");
+        final String result = toConstructorDocs("TestOneRequest", params, getTestDocSpec(), 1);
         assertThat(result, is(expected));
     }
 }

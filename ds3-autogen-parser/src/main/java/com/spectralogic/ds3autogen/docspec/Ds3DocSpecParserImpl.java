@@ -13,16 +13,15 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen;
+package com.spectralogic.ds3autogen.docspec;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
+import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
-import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.models.xml.docspec.RawDocSpec;
 
 import java.io.IOException;
@@ -65,7 +64,6 @@ public class Ds3DocSpecParserImpl implements Ds3DocSpecParser {
                 nameMapper);
     }
 
-    //TODO test
     /**
      * Creates a Ds3DocSpec with the default input file specified by {@link #DEFAULT_DOC_SPEC_FILE}
      */

@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.docspec;
 
-import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
 import com.spectralogic.ds3autogen.api.ParserException;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3DocSpecParserImpl_Test {
@@ -59,5 +59,13 @@ public class Ds3DocSpecParserImpl_Test {
         assertThat(result.getRequestDocumentation("GetBucketsRequest").isPresent(), is(false));
         assertThat(result.getRequestDocumentation("GetServiceRequest").isPresent(), is(true));
         assertThat(result.getRequestDocumentation("GetServiceRequest").get(), is("This is how you use get service"));
+    }
+
+    @Test
+    public void getDocSpec_Default_Test() throws IOException, ParserException {
+        final Ds3DocSpecParser parser = new Ds3DocSpecParserImpl();
+        final Ds3DocSpec result = parser.getDocSpec();
+
+        assertThat(result, is(notNullValue()));
     }
 }
