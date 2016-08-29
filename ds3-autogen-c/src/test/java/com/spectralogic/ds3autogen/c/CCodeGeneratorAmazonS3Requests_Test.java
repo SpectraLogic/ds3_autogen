@@ -62,7 +62,6 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        System.out.println(output);
 
         assertTrue(output.contains("ds3_error* ds3_delete_bucket_request(const ds3_client* client, const ds3_request* request) {"));
 

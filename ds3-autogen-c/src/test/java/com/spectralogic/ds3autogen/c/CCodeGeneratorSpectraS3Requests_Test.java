@@ -137,7 +137,6 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
-        System.out.println(output);
 
         assertTrue(output.contains("ds3_error* ds3_get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_bucket_list_response** response) {"));
         assertTrue(output.contains("    if (request->path->size < 2) {"));
