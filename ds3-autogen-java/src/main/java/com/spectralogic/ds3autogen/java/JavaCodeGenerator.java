@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
 import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
@@ -96,7 +97,8 @@ public class JavaCodeGenerator implements CodeGenerator {
     public void generate(
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
-            final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+            final Path destDir,
+            final Ds3DocSpec docSpec) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException {
         this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;

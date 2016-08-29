@@ -1945,7 +1945,7 @@ public class JavaCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(JavaCodeGenerator_Test.class.getResourceAsStream("/input/fullXml.xml"));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
 
     }
 }

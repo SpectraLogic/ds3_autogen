@@ -19,6 +19,11 @@
       "RequestName": "com.test.Test3RequestHandler",
       "Classification": "amazons3",
       "Description": "This is how you use Amazon Request3"
+    },
+    {
+      "RequestName": "com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler",
+      "Classification": "amazons3",
+      "Description": "This is how you use get service"
     }
   ],
   "ParamDescriptors": [

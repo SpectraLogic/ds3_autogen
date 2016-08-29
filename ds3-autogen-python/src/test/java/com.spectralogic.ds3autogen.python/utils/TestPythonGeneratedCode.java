@@ -53,7 +53,7 @@ public class TestPythonGeneratedCode {
         final Ds3ApiSpec spec = parser.getSpec(TestPythonGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new PythonCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
 
         ds3Code = new String(ds3OutputStream.toByteArray());
     }

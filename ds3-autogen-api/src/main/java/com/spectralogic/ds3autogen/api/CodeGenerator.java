@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.api;
 
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,5 +24,6 @@ import java.nio.file.Path;
 public interface CodeGenerator {
     void generate(final Ds3ApiSpec spec,
                   final FileUtils fileUtils,
-                  final Path destDir) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException;
+                  final Path destDir,
+                  final Ds3DocSpec docSpec) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException;
 }

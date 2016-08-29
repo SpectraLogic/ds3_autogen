@@ -39,7 +39,7 @@ public class TestGeneratedComponentResponseCode extends TestGeneratedCode {
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());

@@ -16,7 +16,9 @@
 package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
+import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
@@ -97,8 +99,9 @@ public class TestGenerateCode {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new NetCodeGenerator();
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), docSpecParser.getDocSpec());
 
         requestCode = new String(requestOutputStream.toByteArray());
         responseCode = new String(responseOutputStream.toByteArray());

@@ -20,11 +20,17 @@ public class VoidCommand implements BaseCommand {
     private final String requestName;
     private final String commandName;
     private final String httpResponseCode;
+    private final String commandDocumentation;
 
-    public VoidCommand(final String requestName, final String commandName, final String httpResponseCode) {
+    public VoidCommand(
+            final String requestName,
+            final String commandName,
+            final String httpResponseCode,
+            final String commandDocumentation) {
         this.requestName = requestName;
         this.commandName = commandName;
         this.httpResponseCode = httpResponseCode;
+        this.commandDocumentation = commandDocumentation;
     }
 
     @Override
@@ -40,6 +46,11 @@ public class VoidCommand implements BaseCommand {
     @Override
     public String getResponseType() {
         return "void";
+    }
+
+    @Override
+    public String getCommandDocumentation() {
+        return commandDocumentation;
     }
 
     public String getHttpResponseCode() {

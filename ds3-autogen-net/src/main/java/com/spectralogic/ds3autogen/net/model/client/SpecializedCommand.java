@@ -27,8 +27,9 @@ public class SpecializedCommand extends PayloadCommand {
             final String requestName,
             final String commandName,
             final String responseType,
+            final String commandDocumentation,
             final String functionBody) {
-        super(requestName, commandName, responseType);
+        super(requestName, commandName, responseType, commandDocumentation);
         this.functionBody = functionBody;
     }
 

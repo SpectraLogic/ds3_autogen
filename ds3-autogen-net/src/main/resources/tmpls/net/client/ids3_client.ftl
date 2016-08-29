@@ -13,12 +13,15 @@ namespace Ds3
     public interface IDs3Client
     {
         <#list payloadCommands as cmd>
+        ${cmd.getCommandDocumentation()}
         ${cmd.getResponseType()} ${cmd.getCommandName()}(${cmd.getRequestName()} request);
         </#list>
         <#list voidCommands as cmd>
+        ${cmd.getCommandDocumentation()}
         ${cmd.getResponseType()} ${cmd.getCommandName()}(${cmd.getRequestName()} request);
         </#list>
         <#list specializedCommands as cmd>
+        ${cmd.getCommandDocumentation()}
         ${cmd.getResponseType()} ${cmd.getCommandName()}(${cmd.getRequestName()} request);
         </#list>
 

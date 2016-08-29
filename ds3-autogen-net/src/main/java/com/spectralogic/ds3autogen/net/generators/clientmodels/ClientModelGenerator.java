@@ -17,9 +17,10 @@ package com.spectralogic.ds3autogen.net.generators.clientmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 
 @FunctionalInterface
 public interface ClientModelGenerator<T extends BaseClient> {
-    T generate(final ImmutableList<Ds3Request> ds3Requests);
+    T generate(final ImmutableList<Ds3Request> ds3Requests, final Ds3DocSpec docSpec);
 }

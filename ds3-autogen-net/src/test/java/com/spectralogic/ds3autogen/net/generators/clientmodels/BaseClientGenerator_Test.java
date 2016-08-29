@@ -16,12 +16,19 @@
 package com.spectralogic.ds3autogen.net.generators.clientmodels;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
+import com.spectralogic.ds3autogen.NameMapper;
+import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
+import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.net.model.client.PayloadCommand;
 import com.spectralogic.ds3autogen.net.model.client.SpecializedCommand;
 import com.spectralogic.ds3autogen.net.model.client.VoidCommand;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
@@ -33,6 +40,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class BaseClientGenerator_Test {
+
+    private static Ds3DocSpec getTestDocSpec() throws IOException, ParserException {
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+        return docSpecParser.getDocSpec(); //TODO make test specific doc spec
+    }
 
     @Test
     public void getRequestsBasedOnResponsePayload_NullList_Test() {
@@ -66,72 +78,72 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toPayloadCommand_Test() {
+    public void toPayloadCommand_Test() throws IOException, ParserException {
         final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithPayloadRequest", true);
 
-        final PayloadCommand result = toPayloadCommand(request);
+        final PayloadCommand result = toPayloadCommand(request, getTestDocSpec());
         assertThat(result.getCommandName(), is("WithPayload"));
         assertThat(result.getRequestName(), is("WithPayloadRequest"));
         assertThat(result.getResponseType(), is("WithPayloadResponse"));
     }
 
     @Test
-    public void toVoidCommand_Test() {
+    public void toVoidCommand_Test() throws IOException, ParserException {
         final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithoutPayloadRequest", false);
 
-        final VoidCommand result = toVoidCommand(request);
+        final VoidCommand result = toVoidCommand(request, getTestDocSpec());
         assertThat(result.getCommandName(), is("WithoutPayload"));
         assertThat(result.getRequestName(), is("WithoutPayloadRequest"));
         assertThat(result.getResponseType(), is("void"));
     }
 
     @Test
-    public void toPayloadCommands_NullList_Test() {
-        final ImmutableList<PayloadCommand> result = toPayloadCommands(null);
+    public void toPayloadCommands_NullList_Test() throws IOException, ParserException {
+        final ImmutableList<PayloadCommand> result = toPayloadCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toPayloadCommands_EmptyList_Test() {
-        final ImmutableList<PayloadCommand> result = toPayloadCommands(ImmutableList.of());
+    public void toPayloadCommands_EmptyList_Test() throws IOException, ParserException {
+        final ImmutableList<PayloadCommand> result = toPayloadCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toPayloadCommands_FullList_Test() {
+    public void toPayloadCommands_FullList_Test() throws IOException, ParserException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 createTestRequestWithResponseCodes("com.test.OneRequest", false),
                 createTestRequestWithResponseCodes("com.test.TwoRequest", true),
                 createTestRequestWithResponseCodes("com.test.ThreeRequest", false),
                 createTestRequestWithResponseCodes("com.test.FourRequest", true));
 
-        final ImmutableList<PayloadCommand> result = toPayloadCommands(requests);
+        final ImmutableList<PayloadCommand> result = toPayloadCommands(requests, getTestDocSpec());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getRequestName(), is("TwoRequest"));
         assertThat(result.get(1).getRequestName(), is("FourRequest"));
     }
 
     @Test
-    public void toVoidCommands_NullList_Test() {
-        final ImmutableList<VoidCommand> result = toVoidCommands(null);
+    public void toVoidCommands_NullList_Test() throws IOException, ParserException {
+        final ImmutableList<VoidCommand> result = toVoidCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidCommands_EmptyList_Test() {
-        final ImmutableList<VoidCommand> result = toVoidCommands(ImmutableList.of());
+    public void toVoidCommands_EmptyList_Test() throws IOException, ParserException {
+        final ImmutableList<VoidCommand> result = toVoidCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidCommands_FullList_Test() {
+    public void toVoidCommands_FullList_Test() throws IOException, ParserException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 createTestRequestWithResponseCodes("com.test.OneRequest", false),
                 createTestRequestWithResponseCodes("com.test.TwoRequest", true),
                 createTestRequestWithResponseCodes("com.test.ThreeRequest", false),
                 createTestRequestWithResponseCodes("com.test.FourRequest", true));
 
-        final ImmutableList<VoidCommand> result = toVoidCommands(requests);
+        final ImmutableList<VoidCommand> result = toVoidCommands(requests, getTestDocSpec());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getRequestName(), is("OneRequest"));
         assertThat(result.get(1).getRequestName(), is("ThreeRequest"));
@@ -167,8 +179,8 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toGetObjectCommand_Test() {
-        final SpecializedCommand result = toGetObjectCommand(getRequestAmazonS3GetObject());
+    public void toGetObjectCommand_Test() throws IOException, ParserException {
+        final SpecializedCommand result = toGetObjectCommand(getRequestAmazonS3GetObject(), getTestDocSpec());
         assertThat(result.getRequestName(), is("GetObjectRequestHandler"));
         assertThat(result.getResponseType(), is("GetObjectResponseHandler"));
         assertThat(result.getCommandName(), is("GetObjectHandler"));
@@ -176,29 +188,29 @@ public class BaseClientGenerator_Test {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void toGetObjectCommand_Error_Test() {
-        toGetObjectCommand(getRequestSpectraS3GetObject());
+    public void toGetObjectCommand_Error_Test() throws IOException, ParserException {
+        toGetObjectCommand(getRequestSpectraS3GetObject(), getTestDocSpec());
     }
 
     @Test
-    public void toSpecializedCommands_NullList_Test() {
-        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(null);
+    public void toSpecializedCommands_NullList_Test() throws IOException, ParserException {
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toSpecializedCommands_EmptyList_Test() {
-        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(ImmutableList.of());
+    public void toSpecializedCommands_EmptyList_Test() throws IOException, ParserException {
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toSpecializedCommands_FullList_Test() {
+    public void toSpecializedCommands_FullList_Test() throws IOException, ParserException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestAmazonS3GetObject(),
                 getRequestSpectraS3GetObject());
 
-        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(requests);
+        final ImmutableList<SpecializedCommand> result = toSpecializedCommands(requests, getTestDocSpec());
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getRequestName(), is("GetObjectRequestHandler"));
     }

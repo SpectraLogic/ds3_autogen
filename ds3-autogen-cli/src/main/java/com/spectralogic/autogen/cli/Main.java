@@ -15,8 +15,11 @@
 
 package com.spectralogic.autogen.cli;
 
+import com.spectralogic.ds3autogen.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
+import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
+import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
@@ -95,6 +98,9 @@ public class Main {
                 throw new IllegalArgumentException("Unknown generator typeName " + args.getType().toString());
         }
         final FileUtils fileUtils = new FileUtilsImpl();
-        generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()));
+
+        //TODO add option to not generate documentation, i.e. create an empty Ds3DocSpec
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+        generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()), docSpecParser.getDocSpec());
     }
 }

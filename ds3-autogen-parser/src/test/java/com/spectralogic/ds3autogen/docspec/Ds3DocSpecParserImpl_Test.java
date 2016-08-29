@@ -49,4 +49,15 @@ public class Ds3DocSpecParserImpl_Test {
         assertThat(result.getRequestDocumentation("Test3Request").get(), is("This is how you use Amazon Request3"));
         assertThat(result.getRequestDocumentation("Test3SpectraS3Request").get(), is("This is how you use SpectraS3 Request3"));
     }
+
+    @Test
+    public void defaultConstructor_Test() throws IOException, ParserException {
+        final InputStream inputStream = Ds3DocSpecParserImpl_Test.class.getResourceAsStream(TEST_COMMAND_DOCS_FILE);
+        final Ds3DocSpecParser parser = new Ds3DocSpecParserImpl();
+        final Ds3DocSpec result = parser.getDocSpec(inputStream);
+
+        assertThat(result.getRequestDocumentation("GetBucketsRequest").isPresent(), is(false));
+        assertThat(result.getRequestDocumentation("GetServiceRequest").isPresent(), is(true));
+        assertThat(result.getRequestDocumentation("GetServiceRequest").get(), is("This is how you use get service"));
+    }
 }

@@ -63,7 +63,7 @@ public class TestGeneratedModelCode {
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedModelCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
 
         modelGeneratedCode = new String(modelOutputStream.toByteArray());
     }

@@ -20,11 +20,17 @@ public class PayloadCommand implements BaseCommand {
     private final String requestName;
     private final String commandName;
     private final String responseType;
+    private final String commandDocumentation;
 
-    public PayloadCommand(final String requestName, final String commandName, final String responseType) {
+    public PayloadCommand(
+            final String requestName,
+            final String commandName,
+            final String responseType,
+            final String commandDocumentation) {
         this.requestName = requestName;
         this.commandName = commandName;
         this.responseType = responseType;
+        this.commandDocumentation = commandDocumentation;
     }
 
     @Override
@@ -40,5 +46,10 @@ public class PayloadCommand implements BaseCommand {
     @Override
     public String getResponseType() {
         return responseType;
+    }
+
+    @Override
+    public String getCommandDocumentation() {
+        return commandDocumentation;
     }
 }
