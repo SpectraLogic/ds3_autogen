@@ -28,11 +28,13 @@ public class CLI {
         final Option inputSpec = new Option("i", true, "The spec file for the DS3 API");
         final Option help = new Option("h", false, "Print usage");
         final Option generateInternal = new Option("internal", false, "Generate Spectra Internal requests");
+        final Option noDoc = new Option("no-doc", false, "Generate with no documentation");
         options.addOption(language);
         options.addOption(directory);
         options.addOption(inputSpec);
         options.addOption(help);
         options.addOption(generateInternal);
+        options.addOption(noDoc);
     }
 
     public static Arguments getArguments(final String[] args) throws Exception {
@@ -58,8 +60,9 @@ public class CLI {
         final String inputSpec = cmd.getOptionValue("i");
         final boolean help = cmd.hasOption("h");
         final boolean generateInternal = cmd.hasOption("internal");
+        final boolean noDoc = cmd.hasOption("no-doc");
 
-        final Arguments arguments = new Arguments(directory, language, inputSpec, help, generateInternal);
+        final Arguments arguments = new Arguments(directory, language, inputSpec, help, generateInternal, noDoc);
 
         validateArguments(arguments);
 
