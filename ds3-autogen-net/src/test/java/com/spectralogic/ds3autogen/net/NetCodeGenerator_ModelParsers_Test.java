@@ -17,9 +17,6 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
 import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
@@ -46,7 +43,7 @@ public class NetCodeGenerator_ModelParsers_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void bucketObjectApiBean_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void bucketObjectApiBean_Test() throws IOException, TemplateModelException {
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
                 fileUtils,
@@ -76,7 +73,7 @@ public class NetCodeGenerator_ModelParsers_Test {
     }
 
     @Test
-    public void checksumType_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void checksumType_Test() throws IOException, TemplateModelException {
         final String enumName = "ChecksumType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -100,7 +97,7 @@ public class NetCodeGenerator_ModelParsers_Test {
     }
 
     @Test
-    public void getTapesWithFullDetails_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void getTapesWithFullDetails_Test() throws TemplateModelException, IOException {
         final String typeName = "NamedDetailedTapeList";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -121,7 +118,7 @@ public class NetCodeGenerator_ModelParsers_Test {
     }
 
     @Test
-    public void jobChunkApiBean_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void jobChunkApiBean_Test() throws TemplateModelException, IOException {
         final String typeName = "Objects";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(

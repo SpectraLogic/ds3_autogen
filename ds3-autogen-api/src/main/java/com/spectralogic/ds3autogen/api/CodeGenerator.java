@@ -25,5 +25,5 @@ public interface CodeGenerator {
     void generate(final Ds3ApiSpec spec,
                   final FileUtils fileUtils,
                   final Path destDir,
-                  final Ds3DocSpec docSpec) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException;
+                  final Ds3DocSpec docSpec) throws IOException;
 }

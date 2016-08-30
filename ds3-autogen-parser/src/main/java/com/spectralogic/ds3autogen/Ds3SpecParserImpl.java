@@ -19,12 +19,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.models.xml.rawspec.RawSpec;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.models.xml.rawspec.RawSpec;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,20 +41,20 @@ public class Ds3SpecParserImpl implements Ds3SpecParser {
     }
 
     @Override
-    public Ds3ApiSpec getSpec(final InputStream stream) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+    public Ds3ApiSpec getSpec(final InputStream stream) throws IOException {
         return getSpec(stream, false); //Defaults to removing Spectra Internal requests from spec
     }
 
     @Override
     public Ds3ApiSpec getSpec(
             final InputStream stream,
-            final boolean generateInternal) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+            final boolean generateInternal) throws IOException {
         return toSpec(mapper.readValue(stream, RawSpec.class), generateInternal);
     }
 
     private static Ds3ApiSpec toSpec(
             final RawSpec contract,
-            final boolean generateInternal) throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+            final boolean generateInternal) throws IOException {
         final NameMapper nameMapper = new NameMapper();
         final Ds3ApiSpec ds3ApiSpec = new Ds3ApiSpec(
                 Ds3SpecConverter.convertRequests(contract.getContract().getDs3Requests(), nameMapper),

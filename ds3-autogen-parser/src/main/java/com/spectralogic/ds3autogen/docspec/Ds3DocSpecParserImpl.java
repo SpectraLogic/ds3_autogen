@@ -20,7 +20,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.io.ByteStreams;
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.models.xml.docspec.RawDocSpec;
 
@@ -43,7 +42,7 @@ public class Ds3DocSpecParserImpl implements Ds3DocSpecParser {
      * Creates a Ds3DocSpecParserImpl with the default NameMapper
      * see {@link NameMapper#DEFAULT_TYPE_NAME_MAP_FILE}
      */
-    public Ds3DocSpecParserImpl() throws IOException, ParserException {
+    public Ds3DocSpecParserImpl() throws IOException {
         this.nameMapper = new NameMapper();
     }
 

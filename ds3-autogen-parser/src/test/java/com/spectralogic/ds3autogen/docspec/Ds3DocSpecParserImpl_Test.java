@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.docspec;
 
 import com.spectralogic.ds3autogen.NameMapper;
 import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class Ds3DocSpecParserImpl_Test {
     private static final String TEST_COMMAND_DOCS_FILE = "/testCommandDocumentation.json";
 
     @Test
-    public void getDocSpec_Test() throws IOException, ParserException {
+    public void getDocSpec_Test() throws IOException {
         final InputStream inputStream = Ds3DocSpecParserImpl_Test.class.getResourceAsStream(TEST_COMMAND_DOCS_FILE);
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
         final Ds3DocSpecParser parser = new Ds3DocSpecParserImpl(nameMapper);
@@ -51,7 +50,7 @@ public class Ds3DocSpecParserImpl_Test {
     }
 
     @Test
-    public void defaultConstructor_Test() throws IOException, ParserException {
+    public void defaultConstructor_Test() throws IOException {
         final InputStream inputStream = Ds3DocSpecParserImpl_Test.class.getResourceAsStream(TEST_COMMAND_DOCS_FILE);
         final Ds3DocSpecParser parser = new Ds3DocSpecParserImpl();
         final Ds3DocSpec result = parser.getDocSpec(inputStream);
@@ -62,7 +61,7 @@ public class Ds3DocSpecParserImpl_Test {
     }
 
     @Test
-    public void getDocSpec_Default_Test() throws IOException, ParserException {
+    public void getDocSpec_Default_Test() throws IOException {
         final Ds3DocSpecParser parser = new Ds3DocSpecParserImpl();
         final Ds3DocSpec result = parser.getDocSpec();
 

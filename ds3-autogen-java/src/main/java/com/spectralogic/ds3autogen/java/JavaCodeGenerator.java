@@ -19,13 +19,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
@@ -39,10 +37,6 @@ import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.Response;
 import com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 import com.spectralogic.ds3autogen.utils.Helper;
 import freemarker.template.*;
 import org.slf4j.Logger;
@@ -58,10 +52,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isCompleteMultiPartUploadRequest;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isCommonPrefixesType;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isHttpErrorType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 
 /**
  * Generates Java SDK code based on the contents of a Ds3ApiSpec.
@@ -98,7 +89,7 @@ public class JavaCodeGenerator implements CodeGenerator {
             final Ds3ApiSpec spec,
             final FileUtils fileUtils,
             final Path destDir,
-            final Ds3DocSpec docSpec) throws IOException, ResponseTypeNotFoundException, TypeRenamingConflictException {
+            final Ds3DocSpec docSpec) throws IOException {
         this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;

@@ -17,14 +17,11 @@ package com.spectralogic.ds3autogen.net;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
-import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
 import com.spectralogic.ds3autogen.net.utils.TestHelper;
+import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
+import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import freemarker.template.TemplateModelException;
 import org.junit.Rule;
@@ -35,10 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasPayload;
-import static com.spectralogic.ds3autogen.net.utils.TestHelper.parserHasResponseCode;
-import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalChecksum;
-import static com.spectralogic.ds3autogen.net.utils.TestHelper.hasOptionalMetadata;
+import static com.spectralogic.ds3autogen.net.utils.TestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -55,7 +49,7 @@ public class NetCodeGenerator_Test {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void simpleRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+    public void simpleRequest() throws IOException, TemplateModelException {
         final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -79,7 +73,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getBucketRequest_Test() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+    public void getBucketRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -138,7 +132,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getObjectRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void getObjectRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -199,7 +193,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getObjectSpectraS3Request_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void getObjectSpectraS3Request_Test() throws IOException, TemplateModelException {
         final String requestName = "GetObjectDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -262,7 +256,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void CreatePutJobRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void CreatePutJobRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "PutBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -324,7 +318,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getJobsRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void getJobsRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetJobsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -380,7 +374,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void createGetJobRequest_Test() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void createGetJobRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -457,7 +451,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void createObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+    public void createObjectRequest() throws IOException, TemplateModelException {
         final String requestName = "PutObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -517,7 +511,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void createMultiPartUploadPartRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+    public void createMultiPartUploadPartRequest() throws IOException, TemplateModelException {
         final String requestName = "PutMultiPartUploadPartRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -573,7 +567,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void createVerifyJobRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void createVerifyJobRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "VerifyBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -636,7 +630,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void ejectStorageDomainBlobsRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void ejectStorageDomainBlobsRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "EjectStorageDomainBlobsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -691,7 +685,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void ejectStorageDomainRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void ejectStorageDomainRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "EjectStorageDomainSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -755,7 +749,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void getPhysicalPlacementForObjectsRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "GetPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -816,7 +810,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsRequestHandler() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void verifyPhysicalPlacementForObjectsRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -877,7 +871,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void verifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void verifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -939,7 +933,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void DeleteObjectsRequestHandler() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void DeleteObjectsRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1000,7 +994,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void GetBlobPersistenceRequest() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void GetBlobPersistenceRequest() throws IOException, TemplateModelException {
         final String requestName = "GetBlobPersistenceSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1057,7 +1051,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void ReplicatePutJobRequest() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void ReplicatePutJobRequest() throws IOException, TemplateModelException {
         final String requestName = "ReplicatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1119,7 +1113,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getTapesWithFullDetails_Test() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void getTapesWithFullDetails_Test() throws TemplateModelException, IOException {
         final String requestName = "GetTapesWithFullDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1190,7 +1184,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void allocateJobChunkRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void allocateJobChunkRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "AllocateJobChunkSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1243,7 +1237,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getJobChunksReadyForClientProcessingRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void getJobChunksReadyForClientProcessingRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetJobChunksReadyForClientProcessingSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1296,7 +1290,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void headBucketRequest_Test() throws IOException, TypeRenamingConflictException, ParserException, ResponseTypeNotFoundException, TemplateModelException {
+    public void headBucketRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "HeadBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1354,7 +1348,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void headObjectRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, TemplateModelException {
+    public void headObjectRequest() throws IOException, TemplateModelException {
         final String requestName = "HeadObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(
@@ -1405,7 +1399,7 @@ public class NetCodeGenerator_Test {
     }
 
     @Test
-    public void getObjectsDetailsSpectraS3Request_Test() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+    public void getObjectsDetailsSpectraS3Request_Test() throws IOException, TemplateModelException {
         final String requestName = "GetObjectsDetailsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(

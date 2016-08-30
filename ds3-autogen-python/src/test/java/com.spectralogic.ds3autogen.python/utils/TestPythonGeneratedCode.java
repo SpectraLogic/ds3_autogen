@@ -47,8 +47,7 @@ public class TestPythonGeneratedCode {
      * Generates the python code associated with an input file.
      * Captured code: ds3.py
      */
-    public void generateCode(final FileUtils fileUtils, final String inputFileName)
-            throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+    public void generateCode(final FileUtils fileUtils, final String inputFileName) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestPythonGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new PythonCodeGenerator();

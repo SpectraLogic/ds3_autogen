@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.net.generators.clientmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
@@ -38,7 +37,7 @@ import static org.junit.Assert.*;
 
 public class BaseClientGenerator_Test {
 
-    private static Ds3DocSpec getTestDocSpec() throws IOException, ParserException {
+    private static Ds3DocSpec getTestDocSpec() throws IOException {
         return new Ds3DocSpecImpl(ImmutableMap.of(), ImmutableMap.of());
     }
 
@@ -74,7 +73,7 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toPayloadCommand_Test() throws IOException, ParserException {
+    public void toPayloadCommand_Test() throws IOException {
         final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithPayloadRequest", true);
 
         final PayloadCommand result = toPayloadCommand(request, getTestDocSpec());
@@ -84,7 +83,7 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toVoidCommand_Test() throws IOException, ParserException {
+    public void toVoidCommand_Test() throws IOException {
         final Ds3Request request = createTestRequestWithResponseCodes("com.test.WithoutPayloadRequest", false);
 
         final VoidCommand result = toVoidCommand(request, getTestDocSpec());
@@ -94,19 +93,19 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toPayloadCommands_NullList_Test() throws IOException, ParserException {
+    public void toPayloadCommands_NullList_Test() throws IOException {
         final ImmutableList<PayloadCommand> result = toPayloadCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toPayloadCommands_EmptyList_Test() throws IOException, ParserException {
+    public void toPayloadCommands_EmptyList_Test() throws IOException {
         final ImmutableList<PayloadCommand> result = toPayloadCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toPayloadCommands_FullList_Test() throws IOException, ParserException {
+    public void toPayloadCommands_FullList_Test() throws IOException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 createTestRequestWithResponseCodes("com.test.OneRequest", false),
                 createTestRequestWithResponseCodes("com.test.TwoRequest", true),
@@ -120,19 +119,19 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toVoidCommands_NullList_Test() throws IOException, ParserException {
+    public void toVoidCommands_NullList_Test() throws IOException {
         final ImmutableList<VoidCommand> result = toVoidCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidCommands_EmptyList_Test() throws IOException, ParserException {
+    public void toVoidCommands_EmptyList_Test() throws IOException {
         final ImmutableList<VoidCommand> result = toVoidCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toVoidCommands_FullList_Test() throws IOException, ParserException {
+    public void toVoidCommands_FullList_Test() throws IOException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 createTestRequestWithResponseCodes("com.test.OneRequest", false),
                 createTestRequestWithResponseCodes("com.test.TwoRequest", true),
@@ -175,7 +174,7 @@ public class BaseClientGenerator_Test {
     }
 
     @Test
-    public void toGetObjectCommand_Test() throws IOException, ParserException {
+    public void toGetObjectCommand_Test() throws IOException {
         final SpecializedCommand result = toGetObjectCommand(getRequestAmazonS3GetObject(), getTestDocSpec());
         assertThat(result.getRequestName(), is("GetObjectRequestHandler"));
         assertThat(result.getResponseType(), is("GetObjectResponseHandler"));
@@ -184,24 +183,24 @@ public class BaseClientGenerator_Test {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void toGetObjectCommand_Error_Test() throws IOException, ParserException {
+    public void toGetObjectCommand_Error_Test() throws IOException {
         toGetObjectCommand(getRequestSpectraS3GetObject(), getTestDocSpec());
     }
 
     @Test
-    public void toSpecializedCommands_NullList_Test() throws IOException, ParserException {
+    public void toSpecializedCommands_NullList_Test() throws IOException {
         final ImmutableList<SpecializedCommand> result = toSpecializedCommands(null, getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toSpecializedCommands_EmptyList_Test() throws IOException, ParserException {
+    public void toSpecializedCommands_EmptyList_Test() throws IOException {
         final ImmutableList<SpecializedCommand> result = toSpecializedCommands(ImmutableList.of(), getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toSpecializedCommands_FullList_Test() throws IOException, ParserException {
+    public void toSpecializedCommands_FullList_Test() throws IOException {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestAmazonS3GetObject(),
                 getRequestSpectraS3GetObject());

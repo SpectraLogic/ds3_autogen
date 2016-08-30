@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.utils;
 
 
 import com.spectralogic.ds3autogen.NameMapper;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import org.junit.Test;
 
@@ -33,7 +32,7 @@ public class NormalizeNameUtil_Test {
     private static final String TEST_NAME_MAPPER_FILE = "/testTypeNameMap.json";
 
     @Test
-    public void getPathFromName_Test() throws IOException, ParserException {
+    public void getPathFromName_Test() throws IOException {
         assertThat(getPathFromName(null), is(""));
         assertThat(getPathFromName(""), is(""));
         assertThat(getPathFromName("test"), is(""));
@@ -42,7 +41,7 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test
-    public void getNameFromPath_Test() throws IOException, ParserException {
+    public void getNameFromPath_Test() throws IOException {
         assertThat(getNameFromPath(null), is(""));
         assertThat(getNameFromPath(""), is(""));
         assertThat(getNameFromPath("test"), is("test"));
@@ -51,24 +50,24 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void getNameFromPath_Exception_Test() throws IOException, ParserException {
+    public void getNameFromPath_Exception_Test() throws IOException {
         getNameFromPath("test.");
     }
 
     @Test
-    public void toSdkName_NullName_Test() throws IOException, ParserException {
+    public void toSdkName_NullName_Test() throws IOException {
         final String result = toSdkName(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void toSdkName_EmptyName_Test() throws IOException, ParserException {
+    public void toSdkName_EmptyName_Test() throws IOException {
         final String result = toSdkName("", null);
         assertThat(result, is(""));
     }
 
     @Test
-    public void toSdkName_NoPath_Test() throws IOException, ParserException {
+    public void toSdkName_NoPath_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String expectedResult = "TEST_BlobStoreTaskPriority";
@@ -79,7 +78,7 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test
-    public void toSdkName_WithPath_Test() throws IOException, ParserException {
+    public void toSdkName_WithPath_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String expectedResult = "com.spectralogic.s3.common.dao.domain.ds3.TEST_BlobStoreTaskPriority";
@@ -90,7 +89,7 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test
-    public void toSdkName_WithDollarSign_Test() throws IOException, ParserException {
+    public void toSdkName_WithDollarSign_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String expectedResult = "com.spectralogic.s3.common.dao.domain.ds3.Test$TEST_BlobStoreTaskPriority";
@@ -101,7 +100,7 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test
-    public void normalizeRequestName_Amazon_Test() throws IOException, ParserException {
+    public void normalizeRequestName_Amazon_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String expected = "com.test.AmazonAfterRequest";
@@ -112,7 +111,7 @@ public class NormalizeNameUtil_Test {
     }
 
     @Test
-    public void normalizeRequestName_SpectraS3_Test() throws IOException, ParserException {
+    public void normalizeRequestName_SpectraS3_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String expected = "com.test.SpectraAfterSpectraS3Request";

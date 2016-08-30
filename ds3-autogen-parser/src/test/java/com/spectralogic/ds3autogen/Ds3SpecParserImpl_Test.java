@@ -17,9 +17,6 @@ package com.spectralogic.ds3autogen;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
@@ -37,7 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class Ds3SpecParserImpl_Test {
 
     @Test
-    public void SingleRequestHandler() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void SingleRequestHandler() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/singleRequestHandler.xml"));
         assertThat(spec, is(notNullValue()));
@@ -67,7 +64,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void twoRequestHandlers() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void twoRequestHandlers() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlers.xml"));
         assertThat(spec, is(notNullValue()));
@@ -78,7 +75,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void twoRequestHandlersAndOneType() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void twoRequestHandlersAndOneType() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndOneType.xml"));
         assertThat(spec, is(notNullValue()));
@@ -107,7 +104,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void twoRequestHandlersAndTwoTypes() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void twoRequestHandlersAndTwoTypes() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/twoRequestHandlersAndTwoTypes.xml"));
         assertThat(spec, is(notNullValue()));
@@ -120,7 +117,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void blobApiBean() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException {
+    public void blobApiBean() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/blobApiBean.xml"));
         assertThat(spec.getTypes().size(), is(1));
@@ -148,7 +145,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void fullXml() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void fullXml() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/fullXml.xml"));
         assertThat(spec, is(notNullValue()));
@@ -157,7 +154,7 @@ public class Ds3SpecParserImpl_Test {
     }
 
     @Test
-    public void fullXml_3_2() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException {
+    public void fullXml_3_2() throws IOException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/3_2_fullXml.xml"));
         assertThat(spec, is(notNullValue()));

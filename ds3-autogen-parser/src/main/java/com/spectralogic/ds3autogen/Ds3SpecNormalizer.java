@@ -16,8 +16,6 @@
 package com.spectralogic.ds3autogen;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
@@ -45,12 +43,10 @@ public final class Ds3SpecNormalizer {
      * @param spec The spec to be normalized
      * @param generateInternal Whether the spectra internal requests should be generated
      * @return Spec with normalized data
-     * @throws ResponseTypeNotFoundException
-     * @throws TypeRenamingConflictException
      */
     public static Ds3ApiSpec convertSpec(
             final Ds3ApiSpec spec,
-            final boolean generateInternal) throws ResponseTypeNotFoundException, TypeRenamingConflictException {
+            final boolean generateInternal) {
         verifySingleResponsePayloadRequests(spec.getRequests());
         return updateElementsInSpec( //Updates Ds3Elements to account for ExcludeFromMarshaler values
                 renameRequests( //Rename requests from RequestHandler to Request

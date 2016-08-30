@@ -96,7 +96,7 @@ public class TestGenerateCode {
      */
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+            final String inputFileName) throws IOException, TemplateModelException {
         final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
         generateCode(fileUtils, inputFileName, docSpecParser.getDocSpec());
     }
@@ -109,7 +109,7 @@ public class TestGenerateCode {
     public void generateCode(
             final FileUtils fileUtils,
             final String inputFileName,
-            final Ds3DocSpec docSpec) throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException {
+            final Ds3DocSpec docSpec) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGenerateCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new NetCodeGenerator();

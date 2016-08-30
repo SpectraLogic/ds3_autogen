@@ -18,9 +18,6 @@ package com.spectralogic.ds3autogen.net;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.net.utils.TestGenerateCode;
@@ -43,7 +40,7 @@ public class NetCodeGenerator_Docs_Test {
     private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
 
     @Test
-    public void getBucketRequest_Test() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+    public void getBucketRequest_Test() throws IOException, TemplateModelException {
         final String requestName = "GetBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestGenerateCode codeGenerator = new TestGenerateCode(

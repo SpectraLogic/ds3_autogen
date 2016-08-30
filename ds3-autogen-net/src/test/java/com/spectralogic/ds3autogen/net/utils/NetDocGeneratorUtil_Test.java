@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.net.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import org.junit.Test;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertThat;
 
 public class NetDocGeneratorUtil_Test {
 
-    private static Ds3DocSpec getTestDocSpec() throws IOException, ParserException {
+    private static Ds3DocSpec getTestDocSpec() throws IOException {
         return new Ds3DocSpecImpl(
                 ImmutableMap.of(
                         "TestOneRequest", "This is how you use test one request"),
@@ -48,7 +47,7 @@ public class NetDocGeneratorUtil_Test {
     }
 
     @Test
-    public void toCommandDocumentation_Test() throws IOException, ParserException {
+    public void toCommandDocumentation_Test() throws IOException {
         final String expected = "/// <summary>\n" +
                 "    /// This is how you use test one request\n" +
                 "    /// </summary>\n" +
@@ -88,7 +87,7 @@ public class NetDocGeneratorUtil_Test {
     }
 
     @Test
-    public void toParamListDocs_FullList_Test() throws IOException, ParserException {
+    public void toParamListDocs_FullList_Test() throws IOException {
         final String expected =
                 "    /// <param name=\"ParamOne\">This is how you use param one</param>\n" +
                 "    /// <param name=\"NoDocParam\"></param>\n";
@@ -105,7 +104,7 @@ public class NetDocGeneratorUtil_Test {
     }
 
     @Test
-    public void toConstructorDocs_NullParams_Test() throws IOException, ParserException {
+    public void toConstructorDocs_NullParams_Test() throws IOException {
         final String expected = "/// <summary>\n" +
                 "    /// This is how you use test one request\n" +
                 "    /// </summary>\n";
@@ -115,7 +114,7 @@ public class NetDocGeneratorUtil_Test {
     }
 
     @Test
-    public void toConstructorDocs_EmptyParams_Test() throws IOException, ParserException {
+    public void toConstructorDocs_EmptyParams_Test() throws IOException {
         final String expected = "/// <summary>\n" +
                 "    /// This is how you use test one request\n" +
                 "    /// </summary>\n";
@@ -125,7 +124,7 @@ public class NetDocGeneratorUtil_Test {
     }
 
     @Test
-    public void toConstructorDocs_Test() throws IOException, ParserException {
+    public void toConstructorDocs_Test() throws IOException {
         final String expected = "/// <summary>\n" +
                 "    /// This is how you use test one request\n" +
                 "    /// </summary>\n" +

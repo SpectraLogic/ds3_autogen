@@ -21,5 +21,5 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface Ds3NameMapperParser {
-    Ds3NameMapper getMap(final InputStream stream) throws ParserException, IOException;
+    Ds3NameMapper getMap(final InputStream stream) throws IOException;
 }
