@@ -23,7 +23,7 @@ import java.util.Optional;
  * Implementation of an empty Ds3DocSpec. This is used when generating code
  * without documentation (i.e. no-doc option selected in cli).
  */
-public class Ds3DocSpecEmptyImpl implements Ds3DocSpec {
+public final class Ds3DocSpecEmptyImpl implements Ds3DocSpec {
 
     @Override
     public Optional<String> getRequestDocumentation(final String requestName) {

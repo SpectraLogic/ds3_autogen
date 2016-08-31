@@ -28,7 +28,9 @@ public class CLI {
         final Option inputSpec = new Option("i", true, "The spec file for the DS3 API");
         final Option help = new Option("h", false, "Print usage");
         final Option generateInternal = new Option("internal", false, "Generate Spectra Internal requests");
-        final Option noDoc = new Option("no-doc", false, "Generate with no documentation");
+        final Option noDoc = new Option(null, false, "Generate with no documentation");
+        noDoc.setLongOpt("no-doc");
+
         options.addOption(language);
         options.addOption(directory);
         options.addOption(inputSpec);
