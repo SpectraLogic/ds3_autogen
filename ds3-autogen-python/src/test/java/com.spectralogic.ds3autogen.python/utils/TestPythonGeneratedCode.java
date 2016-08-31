@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.python.utils;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
 import freemarker.template.TemplateModelException;
 
@@ -52,7 +53,7 @@ public class TestPythonGeneratedCode {
         final Ds3ApiSpec spec = parser.getSpec(TestPythonGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new PythonCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), new Ds3DocSpecEmptyImpl());
 
         ds3Code = new String(ds3OutputStream.toByteArray());
     }
