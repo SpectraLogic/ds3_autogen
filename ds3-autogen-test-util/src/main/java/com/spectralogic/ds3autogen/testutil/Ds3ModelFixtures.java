@@ -762,4 +762,34 @@ public class Ds3ModelFixtures {
                         new Ds3Param("PageStartMarker", "java.util.UUID", false)), //optional params
                 null); // required params
     }
+
+    public static Ds3Request getObjectsWithFullDetailsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectsWithFullDetailsRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, //bucketRequirement
+                null, // objectRequirement
+                Action.LIST,
+                Resource.OBJECT,
+                ResourceType.NON_SINGLETON,
+                null, // operation
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("BucketId", "java.util.UUID", false),
+                        new Ds3Param("Folder", "java.lang.String", true),
+                        new Ds3Param("IncludePhysicalPlacement", "void", false),
+                        new Ds3Param("LastPage", "void", false),
+                        new Ds3Param("Latest", "boolean", false),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("PageLength", "int", false),
+                        new Ds3Param("PageOffset", "int", false),
+                        new Ds3Param("PageStartMarker", "java.util.UUID", false),
+                        new Ds3Param("Type", "com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType", true),
+                        new Ds3Param("Version", "long", false)), //optional params
+                ImmutableList.of(
+                        new Ds3Param("FullDetails", "void", false)) //required params
+        );
+    }
 }

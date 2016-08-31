@@ -44,6 +44,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isAmazonCreateObjectRequest(getEjectStorageDomainRequest()));
         assertFalse(isAmazonCreateObjectRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isAmazonCreateObjectRequest(getObjectsDetailsRequest()));
+        assertFalse(isAmazonCreateObjectRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -64,6 +65,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isNotificationRequest(getEjectStorageDomainRequest()));
         assertFalse(isNotificationRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isNotificationRequest(getObjectsDetailsRequest()));
+        assertFalse(isNotificationRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -85,6 +87,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectsDetailsRequest(getEjectStorageDomainRequest()));
         assertFalse(isGetObjectsDetailsRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isGetObjectsDetailsRequest(getUsersSpectraS3Request()));
+        assertFalse(isGetObjectsDetailsRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -106,12 +109,14 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetUsersSpectraS3Request(getCreateMultiPartUploadPart()));
         assertFalse(isGetUsersSpectraS3Request(getEjectStorageDomainRequest()));
         assertFalse(isGetUsersSpectraS3Request(getCompleteMultipartUploadRequest()));
+        assertFalse(isGetUsersSpectraS3Request(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
     public void supportsPaginationRequest_Test() {
         assertTrue(supportsPaginationRequest(getUsersSpectraS3Request()));
         assertTrue(supportsPaginationRequest(getObjectsDetailsRequest()));
+        assertTrue(supportsPaginationRequest(getObjectsWithFullDetailsRequest()));
 
         assertFalse(supportsPaginationRequest(getRequestDeleteNotification()));
         assertFalse(supportsPaginationRequest(getReplicatePutJob()));
@@ -147,6 +152,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isDeleteNotificationRequest(getEjectStorageDomainRequest()));
         assertFalse(isDeleteNotificationRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isDeleteNotificationRequest(getObjectsDetailsRequest()));
+        assertFalse(isDeleteNotificationRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -167,6 +173,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateNotificationRequest(getEjectStorageDomainRequest()));
         assertFalse(isCreateNotificationRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isCreateNotificationRequest(getObjectsDetailsRequest()));
+        assertFalse(isCreateNotificationRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -187,6 +194,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetNotificationRequest(getEjectStorageDomainRequest()));
         assertFalse(isGetNotificationRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isGetNotificationRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetNotificationRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -207,6 +215,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isPhysicalPlacementRequest(getEjectStorageDomainRequest()));
         assertFalse(isPhysicalPlacementRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isPhysicalPlacementRequest(getObjectsDetailsRequest()));
+        assertFalse(isPhysicalPlacementRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -228,6 +237,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkRequest(getEjectStorageDomainRequest()));
         assertFalse(isBulkRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isBulkRequest(getObjectsDetailsRequest()));
+        assertFalse(isBulkRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test public void isBulkPutRequest_Test() {
@@ -245,6 +255,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkPutRequest(getRequestSpectraS3GetObject()));
         assertFalse(isBulkPutRequest(getGetBlobPersistence()));
         assertFalse(isBulkPutRequest(getObjectsDetailsRequest()));
+        assertFalse(isBulkPutRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test public void isBulkReplicateRequest_Test() {
@@ -261,10 +272,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkReplicateRequest(getRequestAmazonS3GetObject()));
         assertFalse(isBulkReplicateRequest(getRequestSpectraS3GetObject()));
         assertFalse(isBulkReplicateRequest(getGetBlobPersistence()));
-        assertFalse(isBulkPutRequest(getCreateMultiPartUploadPart()));
-        assertFalse(isBulkPutRequest(getEjectStorageDomainRequest()));
-        assertFalse(isBulkPutRequest(getCompleteMultipartUploadRequest()));
-        assertFalse(isBulkPutRequest(getObjectsDetailsRequest()));
+        assertFalse(isBulkReplicateRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isBulkReplicateRequest(getEjectStorageDomainRequest()));
+        assertFalse(isBulkReplicateRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isBulkReplicateRequest(getObjectsDetailsRequest()));
+        assertFalse(isBulkReplicateRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test public void isBulkGetRequest_Test() {
@@ -285,6 +297,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkGetRequest(getEjectStorageDomainRequest()));
         assertFalse(isBulkGetRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isBulkGetRequest(getObjectsDetailsRequest()));
+        assertFalse(isBulkGetRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -305,6 +318,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMultiFileDeleteRequest(getEjectStorageDomainRequest()));
         assertFalse(isMultiFileDeleteRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isMultiFileDeleteRequest(getObjectsDetailsRequest()));
+        assertFalse(isMultiFileDeleteRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -325,6 +339,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateObjectRequest(getEjectStorageDomainRequest()));
         assertFalse(isCreateObjectRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isCreateObjectRequest(getObjectsDetailsRequest()));
+        assertFalse(isCreateObjectRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -345,6 +360,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectRequest(getEjectStorageDomainRequest()));
         assertFalse(isGetObjectRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isGetObjectRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetObjectRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -364,6 +380,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectSpectraS3Request(getCreateMultiPartUploadPart()));
         assertFalse(isGetObjectSpectraS3Request(getCompleteMultipartUploadRequest()));
         assertFalse(isGetObjectSpectraS3Request(getObjectsDetailsRequest()));
+        assertFalse(isGetObjectSpectraS3Request(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -384,6 +401,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectAmazonS3Request(getEjectStorageDomainRequest()));
         assertFalse(isGetObjectAmazonS3Request(getCompleteMultipartUploadRequest()));
         assertFalse(isGetObjectAmazonS3Request(getObjectsDetailsRequest()));
+        assertFalse(isGetObjectAmazonS3Request(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -402,6 +420,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetJobRequest(getRequestSpectraS3GetObject()));
         assertFalse(isGetJobRequest(getGetBlobPersistence()));
         assertFalse(isGetJobRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetJobRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -420,6 +439,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetBlobPersistenceRequest(getRequestCreateObject()));
         assertFalse(isGetBlobPersistenceRequest(getRequestSpectraS3GetObject()));
         assertFalse(isGetBlobPersistenceRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetBlobPersistenceRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -437,10 +457,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasStringRequestPayload(getRequestMultiFileDelete()));
         assertFalse(hasStringRequestPayload(getRequestCreateObject()));
         assertFalse(hasStringRequestPayload(getRequestSpectraS3GetObject()));
-        assertFalse(isGetJobRequest(getCreateMultiPartUploadPart()));
-        assertFalse(isGetJobRequest(getEjectStorageDomainRequest()));
-        assertFalse(isGetJobRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(hasStringRequestPayload(getCreateMultiPartUploadPart()));
+        assertFalse(hasStringRequestPayload(getEjectStorageDomainRequest()));
+        assertFalse(hasStringRequestPayload(getCompleteMultipartUploadRequest()));
         assertFalse(hasStringRequestPayload(getObjectsDetailsRequest()));
+        assertFalse(hasStringRequestPayload(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -459,6 +480,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isEjectStorageDomainRequest(getRequestSpectraS3GetObject()));
         assertFalse(isEjectStorageDomainRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isEjectStorageDomainRequest(getObjectsDetailsRequest()));
+        assertFalse(isEjectStorageDomainRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -477,6 +499,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasListObjectsRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasListObjectsRequestPayload(getCompleteMultipartUploadRequest()));
         assertFalse(hasListObjectsRequestPayload(getObjectsDetailsRequest()));
+        assertFalse(hasListObjectsRequestPayload(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -509,6 +532,7 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateMultiPartUploadPartRequest(getRequestSpectraS3GetObject()));
         assertFalse(isCreateMultiPartUploadPartRequest(getCompleteMultipartUploadRequest()));
         assertFalse(isCreateMultiPartUploadPartRequest(getObjectsDetailsRequest()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
@@ -527,5 +551,25 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCompleteMultiPartUploadRequest(getRequestCreateObject()));
         assertFalse(isCompleteMultiPartUploadRequest(getRequestSpectraS3GetObject()));
         assertFalse(isCompleteMultiPartUploadRequest(getObjectsDetailsRequest()));
+        assertFalse(isCompleteMultiPartUploadRequest(getObjectsWithFullDetailsRequest()));
+    }
+
+    @Test
+    public void isGetObjectsWithFullDetails_Test() {
+        assertTrue(isGetObjectsWithFullDetails(getObjectsWithFullDetailsRequest()));
+
+        assertFalse(isGetObjectsWithFullDetails(getCompleteMultipartUploadRequest()));
+        assertFalse(isGetObjectsWithFullDetails(getCreateMultiPartUploadPart()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestGetJob()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestAmazonS3GetObject()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestDeleteNotification()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestCreateNotification()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestGetNotification()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestBulkGet()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestMultiFileDelete()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestCreateObject()));
+        assertFalse(isGetObjectsWithFullDetails(getRequestSpectraS3GetObject()));
+        assertFalse(isGetObjectsWithFullDetails(getObjectsDetailsRequest()));
     }
 }
