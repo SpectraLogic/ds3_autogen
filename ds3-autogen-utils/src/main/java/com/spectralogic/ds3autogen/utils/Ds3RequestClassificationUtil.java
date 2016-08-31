@@ -350,10 +350,24 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
+     * Determines if a Ds3Request is a SpectraS3 Get Objects With Full Details
+     */
+    public static boolean isGetObjectsWithFullDetails(final Ds3Request request) {
+        return request.getClassification() == Classification.spectrads3
+                && request.getHttpVerb() == HttpVerb.GET
+                && !request.includeIdInPath()
+                && request.getResource() == Resource.OBJECT
+                && request.getResourceType() == ResourceType.NON_SINGLETON
+                && paramListContainsParam(request.getRequiredQueryParams(), "FullDetails", "void");
+    }
+
+    /**
      * Determines if a Ds3Request supports pagination. This is used to determine
      * which response handlers need to parse pagination headers.
      */
     public static boolean supportsPaginationRequest(final Ds3Request request) {
-        return isGetObjectsDetailsRequest(request) || isGetUsersSpectraS3Request(request);
+        return isGetObjectsDetailsRequest(request)
+                || isGetUsersSpectraS3Request(request)
+                || isGetObjectsWithFullDetails(request);
     }
 }
