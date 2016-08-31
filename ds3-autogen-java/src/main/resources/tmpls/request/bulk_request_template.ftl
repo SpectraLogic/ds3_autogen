@@ -5,7 +5,6 @@ package ${packageName};
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 <#include "../imports.ftl"/>
 
 public class ${name} extends BulkRequest {
@@ -19,7 +18,7 @@ public class ${name} extends BulkRequest {
 
     // Constructor
     <#list constructors as constructor>
-    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) throws XmlProcessingException {
+    public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(bucketName, objects);
         <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};
