@@ -121,11 +121,10 @@ public class BaseClientGenerator implements  ClientModelGenerator<BaseClient>{
             LOG.error("There are no response codes");
             return "";
         }
-        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
-        responseCodes.stream()
+        final ImmutableList<Integer> codes = responseCodes.stream()
                 .filter(responseCode -> ResponsePayloadUtil.isNonErrorCode(responseCode.getCode()))
-                .forEach(responseCode -> builder.add(responseCode.getCode()));
-        final ImmutableList<Integer> codes = builder.build();
+                .map(Ds3ResponseCode::getCode)
+                .collect(GuavaCollectors.immutableList());
         if (isEmpty(codes)) {
             LOG.error("There are no non-error response codes within the list: " + codes.toString());
             return "";
