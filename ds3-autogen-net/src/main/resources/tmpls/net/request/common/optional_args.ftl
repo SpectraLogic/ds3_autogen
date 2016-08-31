@@ -8,6 +8,7 @@
         </#list>
 
         <#list withConstructors as arg>
+        ${arg.documentation}
         public ${name} With${arg.getName()?cap_first}(${arg.getNetType()} ${arg.getName()?uncap_first})
         {
             this._${arg.getName()?uncap_first} = ${netHelper.paramAssignmentRightValue(arg)};
@@ -21,4 +22,5 @@
             }
             return this;
         }
+
         </#list>

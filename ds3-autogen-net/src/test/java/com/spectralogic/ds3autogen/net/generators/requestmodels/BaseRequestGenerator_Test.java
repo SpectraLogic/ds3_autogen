@@ -20,9 +20,12 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
+import com.spectralogic.ds3autogen.net.model.request.WithConstructorVariable;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.net.generators.requestmodels.BaseRequestGenerator.*;
@@ -38,6 +41,10 @@ import static org.junit.Assert.assertTrue;
 public class BaseRequestGenerator_Test {
 
     private static final BaseRequestGenerator generator = new BaseRequestGenerator();
+
+    private static Ds3DocSpec getTestDocSpec() {
+        return new Ds3DocSpecImpl(ImmutableMap.of(), ImmutableMap.of());
+    }
 
     @Test
     public void toRequiredArgumentsList_Test() {
@@ -154,7 +161,7 @@ public class BaseRequestGenerator_Test {
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
 
-        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE);
+        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE, "My Documentation");
         final RequestConstructor result = convertGuidToStringConstructor(constructor);
 
         assertFalse(containsType(result.getConstructorArgs(), "UUID"));
@@ -170,7 +177,7 @@ public class BaseRequestGenerator_Test {
     public void splitGuidConstructor_WithUuid_Test() {
         final ImmutableList<Arguments> args = ImmutableList.of(new Arguments("UUID", "UuidArg"));
 
-        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE);
+        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE, "My Documentation");
 
         final ImmutableList<RequestConstructor> result = splitGuidConstructor(constructor);
         assertThat(result.size(), is(2));
@@ -183,7 +190,7 @@ public class BaseRequestGenerator_Test {
     public void splitGuidConstructor_WithOutUuid_Test() {
         final ImmutableList<Arguments> args = ImmutableList.of(new Arguments("int", "IntArg"));
 
-        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE);
+        final RequestConstructor constructor = new RequestConstructor(args, args, Operation.ALLOCATE, "My Documentation");
 
         final ImmutableList<RequestConstructor> result = splitGuidConstructor(constructor);
         assertThat(result.size(), is(1));
@@ -192,7 +199,7 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void toConstructorList_Test() {
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(getAllocateJobChunkRequest());
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(getAllocateJobChunkRequest(), "MyRequest", getTestDocSpec());
         assertThat(result.size(), is(2));
         assertTrue(containsType(result.get(0).getConstructorArgs(), "UUID"));
         assertFalse(containsType(result.get(1).getConstructorArgs(), "UUID"));
@@ -212,13 +219,13 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void toWithConstructorList_NullList_Test() {
-        final ImmutableList<NetNullableVariable> result = toWithConstructorList(null);
+        final ImmutableList<WithConstructorVariable> result = toWithConstructorList(null, "requestName", getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toWithConstructorList_EmptyList_Test() {
-        final ImmutableList<NetNullableVariable> result = toWithConstructorList(ImmutableList.of());
+        final ImmutableList<WithConstructorVariable> result = toWithConstructorList(ImmutableList.of(), "requestName", getTestDocSpec());
         assertThat(result.size(), is(0));
     }
 
@@ -228,7 +235,7 @@ public class BaseRequestGenerator_Test {
                 new NetNullableVariable("GuidVar", "Guid", true, true),
                 new NetNullableVariable("IntVar", "int", true, true));
 
-        final ImmutableList<NetNullableVariable> result = toWithConstructorList(vars);
+        final ImmutableList<WithConstructorVariable> result = toWithConstructorList(vars, "requestName", getTestDocSpec());
         assertThat(result.size(), is(3));
 
         assertThat(result.get(0).getName(), is("GuidVar"));
@@ -264,5 +271,29 @@ public class BaseRequestGenerator_Test {
         assertThat(result.get(0).getType(), is("string"));
         assertThat(result.get(1).getName(), is("IntVar"));
         assertThat(result.get(1).getType(), is("int"));
+    }
+
+    @Test
+    public void toWithConstructor_Test() {
+        final String expectedDoc = "/// <summary>\n" +
+                "        /// This is how you use Test Request\n" +
+                "        /// </summary>\n" +
+                "        /// <param name=\"TestParam\">This is how you use Test Param</param>\n";
+
+        final String requestName = "TestRequest";
+        final String paramName = "TestParam";
+        final Ds3DocSpec docSpec = new Ds3DocSpecImpl(
+                ImmutableMap.of(
+                        requestName, "This is how you use Test Request"),
+                ImmutableMap.of(
+                        paramName, "This is how you use Test Param"));
+
+        final NetNullableVariable netVar = new NetNullableVariable(paramName, "int", true, true);
+        final WithConstructorVariable result = toWithConstructor(netVar, requestName, docSpec);
+        assertThat(result.getName(), is(netVar.getName()));
+        assertThat(result.getType(), is(netVar.getType()));
+        assertThat(result.getNetType(), is(netVar.getNetType()));
+
+        assertThat(result.getDocumentation(), is(expectedDoc));
     }
 }

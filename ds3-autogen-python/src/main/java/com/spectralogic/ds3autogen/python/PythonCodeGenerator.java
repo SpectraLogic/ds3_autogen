@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.*;
@@ -71,7 +72,7 @@ public class PythonCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) {
+    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir, final Ds3DocSpec docSpec) {
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 

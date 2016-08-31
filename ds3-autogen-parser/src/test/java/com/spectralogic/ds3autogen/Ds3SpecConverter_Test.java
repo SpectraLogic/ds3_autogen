@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.apispec.*;
 import com.spectralogic.ds3autogen.api.models.enums.*;
 import org.junit.Test;
@@ -35,19 +34,19 @@ public class Ds3SpecConverter_Test {
     private static final String TEST_NAME_MAPPER_FILE = "/testTypeNameMap.json";
 
     @Test
-    public void convertAllEnumConstants_NullList_Test() throws IOException, ParserException {
+    public void convertAllEnumConstants_NullList_Test() throws IOException {
         final ImmutableList<Ds3EnumConstant> result = convertAllEnumConstants(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertAllEnumConstants_EmptyList_Test() throws IOException, ParserException {
+    public void convertAllEnumConstants_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3EnumConstant> result = convertAllEnumConstants(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertAllEnumConstants_FullList_Test() throws IOException, ParserException {
+    public void convertAllEnumConstants_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3EnumConstant> input = ImmutableList.of(
@@ -58,19 +57,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertAllProperties_NullList_Test() throws IOException, ParserException {
+    public void convertAllProperties_NullList_Test() throws IOException {
         final ImmutableList<Ds3Property> result = Ds3SpecConverter.convertAllProperties(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertAllProperties_EmptyList_Test() throws IOException, ParserException {
+    public void convertAllProperties_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3Property> result = Ds3SpecConverter.convertAllProperties(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertAllProperties_FullList_Test() throws IOException, ParserException {
+    public void convertAllProperties_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Property> input = ImmutableList.of(
@@ -89,19 +88,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertAllElements_NullList_Test() throws IOException, ParserException {
+    public void convertAllElements_NullList_Test() throws IOException {
         final ImmutableList<Ds3Element> result = convertAllElements(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertAllElements_EmptyList_Test() throws IOException, ParserException {
+    public void convertAllElements_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3Element> result = convertAllElements(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertAllElements_FullList_Test() throws IOException, ParserException {
+    public void convertAllElements_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Element> input = ImmutableList.of(
@@ -118,19 +117,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertTypes_NullMap_Test() throws IOException, ParserException {
+    public void convertTypes_NullMap_Test() throws IOException {
         final ImmutableMap<String, Ds3Type> result = convertTypes(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertTypes_EmptyMap_Test() throws IOException, ParserException {
+    public void convertTypes_EmptyMap_Test() throws IOException {
         final ImmutableMap<String, Ds3Type> result = convertTypes(ImmutableMap.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertTypes_FullMap_Test() throws IOException, ParserException {
+    public void convertTypes_FullMap_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final Ds3Type type = createDs3TypeTestData("com.spectralogic.s3.common.dao.domain.ds3.Bucket");
@@ -144,7 +143,7 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertResponseCode_Test() throws IOException, ParserException {
+    public void convertResponseCode_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3ResponseType> responseTypes = ImmutableList.of(
@@ -159,19 +158,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertAllResponseCodes_NullList_Test() throws IOException, ParserException {
+    public void convertAllResponseCodes_NullList_Test() throws IOException {
         final ImmutableList<Ds3ResponseCode> result = convertAllResponseCodes(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertAllResponseCodes_EmptyList_Test() throws IOException, ParserException {
+    public void convertAllResponseCodes_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3ResponseCode> result = convertAllResponseCodes(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertAllResponseCodes_FullList_Test() throws IOException, ParserException {
+    public void convertAllResponseCodes_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3ResponseCode> input = ImmutableList.of(
@@ -182,19 +181,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertAllParams_NullList_Test() throws IOException, ParserException {
+    public void convertAllParams_NullList_Test() throws IOException {
         final ImmutableList<Ds3Param> result = convertAllParams(null, null);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void convertAllParams_EmptyList_Test() throws IOException, ParserException {
+    public void convertAllParams_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3Param> result = convertAllParams(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertAllParams_FullList_Test() throws IOException, ParserException {
+    public void convertAllParams_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Param> input = ImmutableList.of(
@@ -208,19 +207,19 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void convertRequests_NullList_Test() throws IOException, ParserException {
+    public void convertRequests_NullList_Test() throws IOException {
         final ImmutableList<Ds3Request> result = convertRequests(null, null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertRequests_EmptyList_Test() throws IOException, ParserException {
+    public void convertRequests_EmptyList_Test() throws IOException {
         final ImmutableList<Ds3Request> result = convertRequests(ImmutableList.of(), null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void convertRequests_FullList_Test() throws IOException, ParserException {
+    public void convertRequests_FullList_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Request> input = ImmutableList.of(
@@ -259,7 +258,7 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void swapNames_Requests_Test() throws IOException, ParserException {
+    public void swapNames_Requests_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
@@ -283,7 +282,7 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void swapNames_Types_Test() throws IOException, ParserException {
+    public void swapNames_Types_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final String typeName1 = "com.test.one.Swap1";
@@ -317,7 +316,7 @@ public class Ds3SpecConverter_Test {
     }
 
     @Test
-    public void getOriginalType_Test() throws IOException, ParserException {
+    public void getOriginalType_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         assertThat(getOriginalType(null, nameMapper), is(nullValue()));

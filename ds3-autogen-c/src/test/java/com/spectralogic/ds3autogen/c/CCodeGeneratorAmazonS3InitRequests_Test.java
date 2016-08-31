@@ -19,9 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
@@ -48,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 public class CCodeGeneratorAmazonS3InitRequests_Test {
 
     @Test
-    public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3DeleteBucketRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -71,7 +68,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3GetBucketRequest_WithResponsePayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3GetBucketRequest_WithResponsePayload() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3GetBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -98,7 +95,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3PutBucketRequest_NoPayload() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3PutBucketRequest_NoPayload() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3PutBucketRequest_NoPayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -121,7 +118,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3GetBucketsRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3GetBucketsRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -144,7 +141,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3WithOptionalQueryParams() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3WithOptionalQueryParams() throws IOException, ParseException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
         final Request testRequest = RequestConverter.toRequest(new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.amazons3.CreateObjectRequestHandler",
@@ -181,7 +178,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
     }
 
     @Test
-    public void testGenerateInitAmazonS3WithRequiredQueryParams() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateInitAmazonS3WithRequiredQueryParams() throws IOException, ParseException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
         final Request testRequest = RequestConverter.toRequest(new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.amazons3.InitiateMultiPartUploadRequestHandler",

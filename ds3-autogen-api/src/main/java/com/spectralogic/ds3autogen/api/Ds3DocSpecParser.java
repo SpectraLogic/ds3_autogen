@@ -23,7 +23,11 @@ import java.io.InputStream;
 /**
  * Defines the interface for parsing an input stream into a Ds3DocSpec
  */
-@FunctionalInterface
 public interface Ds3DocSpecParser {
+
+    /** Retrieves a default Ds3DocSpec */
+    Ds3DocSpec getDocSpec() throws IOException;
+
+    /** Creates a Ds3DocSpec from the contents of an input stream */
     Ds3DocSpec getDocSpec(final InputStream stream) throws IOException;
 }

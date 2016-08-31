@@ -20,17 +20,21 @@ public interface BaseCommand {
     /**
      * Gets the request name associated with this command
      */
-    public String getRequestName();
+    String getRequestName();
 
     /**
      * Gets the name of the command being generated within the client
      */
-    public String getCommandName();
+    String getCommandName();
 
     /**
      * Gets the response type of the command, which may be a response type
      * or null
      */
-    public String getResponseType();
+    String getResponseType();
 
+    /**
+     * Gets the documentation for this command
+     */
+    String getCommandDocumentation();
 }

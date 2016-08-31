@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.c.converters.*;
 import com.spectralogic.ds3autogen.c.helpers.*;
 import com.spectralogic.ds3autogen.c.models.Enum;
@@ -62,7 +63,7 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
+    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir, final Ds3DocSpec docSpec) throws IOException {
         this.fileUtils = fileUtils;
 
         try {

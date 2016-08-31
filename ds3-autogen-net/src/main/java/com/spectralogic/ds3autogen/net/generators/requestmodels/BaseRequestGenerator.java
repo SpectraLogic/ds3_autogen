@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -17,18 +17,22 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.net.model.request.RequestConstructor;
+import com.spectralogic.ds3autogen.net.model.request.WithConstructorVariable;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.net.utils.NetDocGeneratorUtil.toConstructorDocs;
 import static com.spectralogic.ds3autogen.net.utils.NetNullableVariableUtils.createNullableVariable;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
@@ -37,14 +41,14 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
 
     @Override
-    public BaseRequest generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap) {
+    public BaseRequest generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap, final Ds3DocSpec docSpec) {
 
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
         final ImmutableList<Arguments> requiredArgs = convertUuidToString(Helper.removeVoidArguments(toRequiredArgumentsList(ds3Request)));
         final ImmutableList<NetNullableVariable> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams(), typeMap);
-        final ImmutableList<NetNullableVariable> withConstructors = toWithConstructorList(optionalArgs);
-        final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request);
+        final ImmutableList<WithConstructorVariable> withConstructors = toWithConstructorList(optionalArgs, name, docSpec);
+        final ImmutableList<RequestConstructor> constructors = toConstructorList(ds3Request, name, docSpec);
 
         return new BaseRequest(
                 name,
@@ -79,19 +83,37 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      * Converts the list of optional arguments into a list of arguments requiring a with constructor. There may
      * be more with-constructors that optional arguments if an optional argument is of type Guid.
      */
-    protected static ImmutableList<NetNullableVariable> toWithConstructorList(
-            final ImmutableList<NetNullableVariable> optionalArgs) {
+    protected static ImmutableList<WithConstructorVariable> toWithConstructorList(
+            final ImmutableList<NetNullableVariable> optionalArgs,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         if (isEmpty(optionalArgs)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<NetNullableVariable> builder = ImmutableList.builder();
+        final ImmutableList.Builder<WithConstructorVariable> builder = ImmutableList.builder();
         for (final NetNullableVariable arg : optionalArgs) {
-            builder.add(arg);
+            builder.add(toWithConstructor(arg, requestName, docSpec));
             if (arg.getType().equals("Guid")) {
-                builder.add(convertGuidToString(arg));
+                builder.add(toWithConstructor(convertGuidToString(arg), requestName, docSpec));
             }
         }
         return builder.build();
+    }
+
+    /**
+     * Converts a Net Nullable Variable into a With Constructor Variable containing
+     * .Net documentation for the with-constructor
+     */
+    protected static WithConstructorVariable toWithConstructor(
+            final NetNullableVariable var,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        final String documentation = toConstructorDocs(
+                requestName,
+                ImmutableList.of(var.getName()),
+                docSpec,
+                2);
+        return new WithConstructorVariable(var, documentation);
     }
 
     /**
@@ -109,14 +131,19 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      * constructor parameters of type Guid
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request, final String requestName, final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = Helper.removeVoidArguments(toConstructorArgsList(ds3Request));
         final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
 
         final RequestConstructor standardConstructor = new RequestConstructor(
                 constructorArgs,
                 queryParams,
-                ds3Request.getOperation());
+                ds3Request.getOperation(),
+                toConstructorDocs(
+                        requestName,
+                        constructorArgs.stream().map(Arguments::getName).collect(GuavaCollectors.immutableList()),
+                        docSpec,
+                        2));
 
         return splitGuidConstructor(standardConstructor);
     }
@@ -141,7 +168,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         return new RequestConstructor(
                 convertUuidToString(constructor.getConstructorArgs()),
                 convertUuidToString(constructor.getQueryParams()),
-                constructor.getOperation());
+                constructor.getOperation(),
+                constructor.getDocumentation());
     }
 
     /**

@@ -190,17 +190,17 @@ public class RemoveDollarSignConverter_Test {
     }
 
     @Test
-    public void containsType_NullMap_Test() throws TypeRenamingConflictException {
+    public void containsType_NullMap_Test() {
         assertFalse(containsType("typeName", new Ds3Type("", null, null, null), null));
     }
 
     @Test
-    public void containsType_EmptyMap_Test() throws TypeRenamingConflictException {
+    public void containsType_EmptyMap_Test() {
         assertFalse(containsType("typeName", new Ds3Type("", null, null, null), ImmutableMap.of()));
     }
 
     @Test
-    public void containsType_FullMap_Test() throws TypeRenamingConflictException {
+    public void containsType_FullMap_Test() {
         final Ds3Type type1 =  new Ds3Type(
                 "com.test.package.Type1",
                 null,
@@ -229,7 +229,7 @@ public class RemoveDollarSignConverter_Test {
     }
 
     @Test (expected = TypeRenamingConflictException.class)
-    public void containsType_Exception_Test() throws TypeRenamingConflictException {
+    public void containsType_Exception_Test() {
         final Ds3Type type =  new Ds3Type(
                 "com.test.package.Type",
                 null,
@@ -248,26 +248,26 @@ public class RemoveDollarSignConverter_Test {
     }
 
     @Test
-    public void removeDollarSignFromTypeMap_NullMap_Test() throws TypeRenamingConflictException {
+    public void removeDollarSignFromTypeMap_NullMap_Test() {
         final ImmutableMap<String, Ds3Type> map = removeDollarSignFromTypeMap(null);
         assertThat(map.size(), is(0));
     }
 
     @Test
-    public void removeDollarSignFromTypeMap_EmptyMap_Test() throws TypeRenamingConflictException {
+    public void removeDollarSignFromTypeMap_EmptyMap_Test() {
         final ImmutableMap<String, Ds3Type> map = removeDollarSignFromTypeMap(ImmutableMap.of());
         assertThat(map.size(), is(0));
     }
 
     @Test
-    public void removeDollarSignFromTypeMap_FullMap_Test() throws TypeRenamingConflictException {
+    public void removeDollarSignFromTypeMap_FullMap_Test() {
         final ImmutableMap<String, Ds3Type> map = createPopulatedMap();
         final ImmutableMap<String, Ds3Type> result = removeDollarSignFromTypeMap(map);
         checkAutoPopulatedMap(result);
     }
 
     @Test (expected = TypeRenamingConflictException.class)
-    public void removeDollarSignFromTypeMap_Exception_Test() throws TypeRenamingConflictException {
+    public void removeDollarSignFromTypeMap_Exception_Test() {
         final Ds3Type type1 =  new Ds3Type(
                 "com.test.package.Type",
                 null,
@@ -408,7 +408,7 @@ public class RemoveDollarSignConverter_Test {
     }
 
     @Test
-    public void removeDollarSigns_Test() throws TypeRenamingConflictException {
+    public void removeDollarSigns_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 createPopulatedRequest("_v1"),
                 createPopulatedRequest("_v2"));

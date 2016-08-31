@@ -19,11 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
@@ -46,7 +43,7 @@ import static org.junit.Assert.assertTrue;
 public class CCodeGeneratorSpectraS3Requests_Test {
 
     @Test
-    public void testGenerateSpectraS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateSpectraS3DeleteBucketRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SpectraS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -74,7 +71,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     }
 
     @Test
-    public void testGenerateSpectraS3GetSystemInformationRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateSpectraS3GetSystemInformationRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SpectraS3GetSystemInfoRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -95,7 +92,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     }
 
     @Test
-    public void testGenerateSpectraS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateSpectraS3GetBucketRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SpectraS3GetBucketRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -123,7 +120,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     }
 
     @Test
-    public void testGenerateSpectraS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateSpectraS3GetBucketsRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SpectraS3GetBucketsRequest_WithArrayResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

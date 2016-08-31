@@ -23,11 +23,14 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.BaseClientGenerator;
 import com.spectralogic.ds3autogen.net.generators.clientmodels.ClientModelGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.response.JobListPayloadParserGenerator;
 import com.spectralogic.ds3autogen.net.generators.parsers.response.ResponseParserModelGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.typeset.BaseTypeParserSetGenerator;
+import com.spectralogic.ds3autogen.net.generators.parsers.typeset.TypeParserSetGenerator;
 import com.spectralogic.ds3autogen.net.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.net.generators.responsemodels.ResponseModelGenerator;
@@ -35,8 +38,6 @@ import com.spectralogic.ds3autogen.net.generators.typemodels.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.NoneEnumGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.ObjectsGenerator;
 import com.spectralogic.ds3autogen.net.generators.typemodels.TypeModelGenerator;
-import com.spectralogic.ds3autogen.net.generators.parsers.typeset.BaseTypeParserSetGenerator;
-import com.spectralogic.ds3autogen.net.generators.parsers.typeset.TypeParserSetGenerator;
 import com.spectralogic.ds3autogen.net.model.client.BaseClient;
 import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import com.spectralogic.ds3autogen.net.model.request.BaseRequest;
@@ -57,13 +58,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.hasResponseHandlerAndParser;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
-import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isObjectsType;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasSpecifiedPayload;
 
 /**
@@ -94,7 +91,11 @@ public class NetCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public void generate(final Ds3ApiSpec spec, final FileUtils fileUtils, final Path destDir) throws IOException {
+    public void generate(
+            final Ds3ApiSpec spec,
+            final FileUtils fileUtils,
+            final Path destDir,
+            final Ds3DocSpec docSpec) throws IOException {
         this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
@@ -105,8 +106,8 @@ public class NetCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(requests, typeMap);
-            generateClient(requests);
+            generateCommands(requests, typeMap, docSpec);
+            generateClient(requests, docSpec);
             generateModelParsers(typeMap);
             generateAllTypes(typeMap);
         } catch (final TemplateException e) {
@@ -199,14 +200,16 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Generates the .net code for the client
      */
-    private void generateClient(final ImmutableList<Ds3Request> requests) throws IOException, TemplateException {
+    private void generateClient(
+            final ImmutableList<Ds3Request> requests,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         if (isEmpty(requests)) {
             LOG.info("Not generating client: no requests.");
             return;
         }
         final Template clientTmpl = config.getTemplate("client/ds3_client.ftl");
         final ClientModelGenerator<?> clientGenerator = new BaseClientGenerator();
-        final BaseClient client = clientGenerator.generate(requests);
+        final BaseClient client = clientGenerator.generate(requests, docSpec);
         final Path clientPath = toClientPath("Ds3Client.cs");
 
         LOG.info("Getting OutputStream for file:" + clientPath.toString());
@@ -239,13 +242,14 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private void generateCommands(
             final ImmutableList<Ds3Request> requests,
-            final ImmutableMap<String, Ds3Type> typeMap) throws TemplateException, IOException {
+            final ImmutableMap<String, Ds3Type> typeMap,
+            final Ds3DocSpec docSpec) throws TemplateException, IOException {
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
         }
         for (final Ds3Request request : requests) {
-            generateRequest(request, typeMap);
+            generateRequest(request, typeMap, docSpec);
             generateResponseAndParser(request);
         }
     }
@@ -359,7 +363,7 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private void generateResponse(final Ds3Request ds3Request, final String responsePayload) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
-        final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
+        final ResponseModelGenerator<?> responseGenerator = getResponseGenerator();
         final BaseResponse response = responseGenerator.generate(ds3Request, responsePayload);
         final Path responsePath = destDir.resolve(BASE_PROJECT_PATH.resolve(
                 Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" +
@@ -394,7 +398,7 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the associated .net response generator for the specified Ds3Request
      */
-    private ResponseModelGenerator getResponseGenerator(final Ds3Request ds3Request) {
+    private ResponseModelGenerator getResponseGenerator() {
         return new BaseResponseGenerator();
     }
 
@@ -429,10 +433,11 @@ public class NetCodeGenerator implements CodeGenerator {
      */
     private void generateRequest(
             final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+            final ImmutableMap<String, Ds3Type> typeMap,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
-        final BaseRequest request = modelGenerator.generate(ds3Request, typeMap);
+        final BaseRequest request = modelGenerator.generate(ds3Request, typeMap, docSpec);
         final Path requestPath = destDir.resolve(BASE_PROJECT_PATH.resolve(Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".cs")));
 
         LOG.info("Getting OutputStream for file:" + requestPath.toString());

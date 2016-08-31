@@ -19,9 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
@@ -119,7 +116,7 @@ public class StructHelper_Test {
     }
 
     @Test
-    public void testGenerateGetSystemInformationParser() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateGetSystemInformationParser() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ResponseTypeGetSystemInfo.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -184,7 +181,7 @@ public class StructHelper_Test {
     }
 
     @Test
-    public void testGenerateParserForTopLevelStruct() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateParserForTopLevelStruct() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ResponseTypeGetSystemInfo.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

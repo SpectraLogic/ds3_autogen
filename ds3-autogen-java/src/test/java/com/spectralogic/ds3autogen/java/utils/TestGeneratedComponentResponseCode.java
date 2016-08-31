@@ -34,12 +34,12 @@ public class TestGeneratedComponentResponseCode extends TestGeneratedCode {
     @Override
     public void generateCode(
             final FileUtils fileUtils,
-            final String inputFileName) throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+            final String inputFileName) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."));
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), null);
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());

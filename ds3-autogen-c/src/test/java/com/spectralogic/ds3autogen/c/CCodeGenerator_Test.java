@@ -20,9 +20,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
@@ -112,7 +109,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testGenerateSimpleTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testGenerateSimpleTypedefStruct() throws IOException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
         final Struct structEntry = new Struct("ds3_bucket_response",
@@ -148,7 +145,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testGenerateComplexTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testGenerateComplexTypedefStruct() throws IOException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
 
@@ -179,7 +176,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testFreeStructPrototype() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testFreeStructPrototype() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SimpleTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -205,7 +202,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSimpleFreeTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testSimpleFreeTypedefStruct() throws IOException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
         final Struct structEntry = new Struct("ds3_bucket_response",
@@ -244,7 +241,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testComplexFreeTypedefStruct() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testComplexFreeTypedefStruct() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -282,7 +279,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testComplexFreeTypedefStructWithEnum() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testComplexFreeTypedefStructWithEnum() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStructWithEnum.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -317,7 +314,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testSimpleTypdefStructResponseParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testSimpleTypdefStructResponseParser() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SimpleTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -382,7 +379,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testComplexResponseStructParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testComplexResponseStructParser() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -443,7 +440,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testComplexResponseStructParserWithEnum() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testComplexResponseStructParserWithEnum() throws Exception {
         final String inputSpecFile = "/input/ComplexTypedefStructWithEnum.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -502,7 +499,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testArrayStructMemberParser() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testArrayStructMemberParser() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -546,7 +543,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testComplexResponseStructParserOrdering() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testComplexResponseStructParserOrdering() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -573,7 +570,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testParserUnique() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testParserUnique() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/ComplexTypedefStruct.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -626,7 +623,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testCompleteApiContractSource() throws IOException, ParserException, TypeRenamingConflictException, ResponseTypeNotFoundException, ParseException, TemplateModelException {
+    public void testCompleteApiContractSource() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/CompleteApiContract_r3_0_2-6_23_16.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -647,7 +644,7 @@ public class CCodeGenerator_Test {
     }
 
     @Test
-    public void testGenerateCompleteApiContractHeader() throws ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, IOException, TemplateModelException, ParseException {
+    public void testGenerateCompleteApiContractHeader() throws IOException, TemplateModelException, ParseException {
         final String inputSpecFile = "/input/CompleteApiContract_r3_0_2-6_23_16.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

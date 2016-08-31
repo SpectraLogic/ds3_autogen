@@ -17,9 +17,6 @@ package com.spectralogic.ds3autogen.python;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.FileUtils;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.python.model.type.TypeAttribute;
@@ -52,7 +49,7 @@ public class PythonFunctionalTests {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
-    public void simpleRequest() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+    public void simpleRequest() throws IOException, TemplateModelException {
         final String requestName = "SimpleTestRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -74,7 +71,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void deleteJobCreatedNotification() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+    public void deleteJobCreatedNotification() throws IOException, TemplateModelException {
         final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -94,7 +91,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void simpleType() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void simpleType() throws TemplateModelException, IOException {
         final String modelDescriptorName = "TestElementsType";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -116,7 +113,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void jobsApiBean() throws IOException, ResponseTypeNotFoundException, ParserException, TypeRenamingConflictException, TemplateModelException {
+    public void jobsApiBean() throws IOException, TemplateModelException {
         final String modelDescriptorName = "JobList";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -134,7 +131,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void listMultiPartUploadApiBean() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void listMultiPartUploadApiBean() throws TemplateModelException, IOException {
         final String modelDescriptorName = "ListMultiPartUploadsResult";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -162,7 +159,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void bucketObjectsApiBean() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void bucketObjectsApiBean() throws TemplateModelException, IOException {
         final String modelDescriptorName = "ListBucketResult";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -189,7 +186,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void namedDetailedTapeList() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void namedDetailedTapeList() throws TemplateModelException, IOException {
         final String modelDescriptorName = "NamedDetailedTapeList";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -207,7 +204,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void headBucketRequest() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void headBucketRequest() throws TemplateModelException, IOException {
         final String requestName = "HeadBucketRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
@@ -240,7 +237,7 @@ public class PythonFunctionalTests {
     }
 
     @Test
-    public void headObjectRequest() throws ResponseTypeNotFoundException, TemplateModelException, ParserException, TypeRenamingConflictException, IOException {
+    public void headObjectRequest() throws TemplateModelException, IOException {
         final String requestName = "HeadObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);

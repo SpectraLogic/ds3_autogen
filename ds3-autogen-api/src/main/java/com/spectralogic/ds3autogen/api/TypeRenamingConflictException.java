@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.api;
 
-public class TypeRenamingConflictException extends Exception {
+public class TypeRenamingConflictException extends RuntimeException {
     public TypeRenamingConflictException(final String typeName) {
         super("Renamed type conflicts with existing type: " + typeName);
     }

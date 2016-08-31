@@ -1,4 +1,5 @@
         <#list constructors as constructor>
+        ${constructor.documentation}
         public ${name}(${netHelper.constructor(constructor.constructorArgs)})
         {
             <#list constructor.constructorArgs as arg>

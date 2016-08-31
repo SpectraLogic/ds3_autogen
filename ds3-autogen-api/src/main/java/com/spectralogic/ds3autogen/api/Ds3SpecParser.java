@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface Ds3SpecParser {
-    Ds3ApiSpec getSpec(final InputStream stream) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException;
+    Ds3ApiSpec getSpec(final InputStream stream) throws IOException;
 
-    Ds3ApiSpec getSpec(final InputStream stream, final boolean generateInternal) throws ParserException, IOException, TypeRenamingConflictException, ResponseTypeNotFoundException;
+    Ds3ApiSpec getSpec(final InputStream stream, final boolean generateInternal) throws IOException;
 }

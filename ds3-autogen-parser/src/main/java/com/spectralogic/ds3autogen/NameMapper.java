@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen;
 
 import com.spectralogic.ds3autogen.api.Ds3NameMapperParser;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.namemap.Ds3NameMapper;
 import com.spectralogic.ds3autogen.api.models.namemap.NameMapperType;
@@ -29,15 +28,15 @@ public class NameMapper {
     private static final String DEFAULT_TYPE_NAME_MAP_FILE = "/typeNameMap.json";
     private final Ds3NameMapper ds3NameMapper;
 
-    public NameMapper() throws IOException, ParserException {
+    public NameMapper() throws IOException {
         ds3NameMapper = initNameMapper(DEFAULT_TYPE_NAME_MAP_FILE);
     }
 
-    public NameMapper(final String typeMapFile) throws IOException, ParserException {
+    public NameMapper(final String typeMapFile) throws IOException {
         ds3NameMapper = initNameMapper(typeMapFile);
     }
 
-    private static Ds3NameMapper initNameMapper(final String typeMapFile) throws IOException, ParserException {
+    private static Ds3NameMapper initNameMapper(final String typeMapFile) throws IOException {
         final InputStream inputStream = Ds3NameMapperParserImpl.class.getResourceAsStream(typeMapFile);
         final Ds3NameMapperParser parser = new Ds3NameMapperParserImpl();
         return parser.getMap(inputStream);

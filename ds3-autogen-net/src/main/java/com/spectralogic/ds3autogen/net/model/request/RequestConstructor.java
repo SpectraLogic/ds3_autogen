@@ -29,14 +29,17 @@ public class RequestConstructor {
     /** List of arguments that are added to the query parameters within the constructor */
     private final ImmutableList<Arguments> queryParams;
     private final Operation operation;
+    private final String documentation;
 
     public RequestConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> queryParams,
-            final Operation operation) {
+            final Operation operation,
+            final String documentation) {
         this.constructorArgs = constructorArgs;
         this.queryParams = queryParams;
         this.operation = operation;
+        this.documentation = documentation;
     }
 
     public ImmutableList<Arguments> getConstructorArgs() {
@@ -49,5 +52,9 @@ public class RequestConstructor {
 
     public Operation getOperation() {
         return operation;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

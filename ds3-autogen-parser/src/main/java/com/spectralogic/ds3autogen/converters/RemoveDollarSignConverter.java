@@ -35,7 +35,7 @@ public final class RemoveDollarSignConverter {
     /**
      * Removes all instances of '$' from type names within the Ds3ApiSpec
      */
-    public static Ds3ApiSpec removeDollarSigns(final Ds3ApiSpec ds3ApiSpec) throws TypeRenamingConflictException {
+    public static Ds3ApiSpec removeDollarSigns(final Ds3ApiSpec ds3ApiSpec) {
         return new Ds3ApiSpec(
                 removeDollarSignFromAllRequests(ds3ApiSpec.getRequests()),
                 removeDollarSignFromTypeMap(ds3ApiSpec.getTypes()));
@@ -159,7 +159,7 @@ public final class RemoveDollarSignConverter {
      * is thrown.
      */
     public static ImmutableMap<String, Ds3Type> removeDollarSignFromTypeMap(
-            final ImmutableMap<String, Ds3Type> map) throws TypeRenamingConflictException {
+            final ImmutableMap<String, Ds3Type> map) {
         if (isEmpty(map)) {
             return ImmutableMap.of();
         }
@@ -182,7 +182,7 @@ public final class RemoveDollarSignConverter {
     protected static boolean containsType(
             final String typeName,
             final Ds3Type type,
-            final ImmutableMap<String, Ds3Type> map) throws TypeRenamingConflictException {
+            final ImmutableMap<String, Ds3Type> map) {
         if (isEmpty(map)) {
             return false;
         }

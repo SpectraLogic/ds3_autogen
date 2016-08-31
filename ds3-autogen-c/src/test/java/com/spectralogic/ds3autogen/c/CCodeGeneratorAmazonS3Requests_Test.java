@@ -19,9 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.ParserException;
-import com.spectralogic.ds3autogen.api.ResponseTypeNotFoundException;
-import com.spectralogic.ds3autogen.api.TypeRenamingConflictException;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
@@ -48,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CCodeGeneratorAmazonS3Requests_Test {
     @Test
-    public void testGenerateAmazonS3DeleteBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateAmazonS3DeleteBucketRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3DeleteBucketRequest.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -75,7 +72,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     }
 
     @Test
-    public void testGenerateAmazonS3GetBucketsRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateAmazonS3GetBucketsRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/AmazonS3GetBucketsRequest_WithResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
@@ -104,7 +101,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     }
 
     @Test
-    public void testGenerateAmazonS3GetBucketRequest() throws IOException, ParserException, ResponseTypeNotFoundException, TypeRenamingConflictException, ParseException, TemplateModelException {
+    public void testGenerateAmazonS3GetBucketRequest() throws IOException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
         final Request requestEntry = RequestConverter.toRequest(Ds3ModelFixtures.getBucketRequest());

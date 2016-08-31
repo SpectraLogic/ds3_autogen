@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.docspec;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.NameMapper;
-import com.spectralogic.ds3autogen.api.ParserException;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.models.xml.docspec.ParamDescriptor;
@@ -68,14 +67,14 @@ public class DocSpecConverter_Test {
     }
 
     @Test
-    public void normalizeRequestName_Spectra_Test() throws IOException, ParserException {
+    public void normalizeRequestName_Spectra_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
         final String result = normalizeRequestName(createSpectraRequestDescriptor(), nameMapper);
         assertThat(result, is(SPECTRA_NAME_AFTER));
     }
 
     @Test
-    public void normalizeRequestName_Amazon_Test() throws IOException, ParserException {
+    public void normalizeRequestName_Amazon_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
         final String result = normalizeRequestName(createAmazonRequestDescriptor(), nameMapper);
         assertThat(result, is(AMAZON_NAME_AFTER));
@@ -94,7 +93,7 @@ public class DocSpecConverter_Test {
     }
 
     @Test
-    public void toRequestDocs_Test() throws IOException, ParserException {
+    public void toRequestDocs_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
 
         final ImmutableList<RequestDescriptor> rds = ImmutableList.of(
@@ -133,7 +132,7 @@ public class DocSpecConverter_Test {
     }
 
     @Test
-    public void toDs3DocSpec_Test() throws IOException, ParserException {
+    public void toDs3DocSpec_Test() throws IOException {
         final NameMapper nameMapper = new NameMapper(TEST_NAME_MAPPER_FILE);
         final RawDocSpec rawDocSpec = new RawDocSpec();
         rawDocSpec.setRequestDescriptors(
