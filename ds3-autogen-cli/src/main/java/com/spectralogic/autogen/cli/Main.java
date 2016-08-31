@@ -15,6 +15,8 @@
 
 package com.spectralogic.autogen.cli;
 
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.NameMapper;
@@ -99,8 +101,15 @@ public class Main {
         }
         final FileUtils fileUtils = new FileUtilsImpl();
 
-        //TODO add option to not generate documentation, i.e. create an empty Ds3DocSpec
-        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
-        generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()), docSpecParser.getDocSpec());
+
+        final Ds3DocSpec docSpec;
+        if (args.isNoDoc()) {
+            docSpec = new Ds3DocSpecEmptyImpl();
+        } else {
+            final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+            docSpec = docSpecParser.getDocSpec();
+        }
+
+        generator.generate(spec, fileUtils, Paths.get(args.getTargetDir()), docSpec);
     }
 }

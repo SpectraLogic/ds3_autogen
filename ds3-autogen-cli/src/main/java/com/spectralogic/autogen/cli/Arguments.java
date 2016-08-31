@@ -7,18 +7,21 @@ public class Arguments {
     private final String inputSpec;
     private final boolean help;
     private final boolean generateInternal;
+    private final boolean noDoc;
 
     public Arguments(
             final String targetDir,
             final GeneratorType type,
             final String inputSpec,
             final boolean help,
-            final boolean generateInternal) {
+            final boolean generateInternal,
+            final boolean noDoc) {
         this.targetDir = targetDir;
         this.type = type;
         this.help = help;
         this.inputSpec = inputSpec;
         this.generateInternal = generateInternal;
+        this.noDoc = noDoc;
     }
 
     public String getTargetDir() {
@@ -39,5 +42,9 @@ public class Arguments {
 
     public boolean generateInternal() {
         return generateInternal;
+    }
+
+    public boolean isNoDoc() {
+        return noDoc;
     }
 }
