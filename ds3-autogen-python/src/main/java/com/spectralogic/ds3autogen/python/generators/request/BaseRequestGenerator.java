@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
@@ -31,13 +32,15 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
+import static com.spectralogic.ds3autogen.python.utils.PythonDocGeneratorUtil.toConstructorDocs;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>, RequestModelGeneratorUtils {
 
     @Override
-    public BaseRequest generate(final Ds3Request ds3Request) {
+    public BaseRequest generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
         final String additionalContent = getAdditionalContent(ds3Request, name);
@@ -45,6 +48,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
         final ImmutableList<String> constructorParams = toConstructorParams(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
         final ImmutableList<QueryParam> queryParams = toQueryParamList(ds3Request.getOperation(), ds3Request.getRequiredQueryParams());
+        final String documentation = toDocumentation(name, constructorParams, docSpec);
 
         return new BaseRequest(
                 name,
@@ -54,7 +58,25 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
                 assignments,
                 constructorParams,
                 optionalArgs,
-                queryParams);
+                queryParams,
+                documentation);
+    }
+
+    /**
+     * Creates python documentation for the request constructor
+     * @param requestName The normalized request name without path
+     */
+    protected static String toDocumentation(
+            final String requestName,
+            final ImmutableList<String> constructorParams,
+            final Ds3DocSpec docSpec) {
+        if (isEmpty(constructorParams)) {
+            return "";
+        }
+        final ImmutableList<String> normalizedParams = constructorParams.stream()
+                .map(i -> i.replace("=None", ""))
+                .collect(GuavaCollectors.immutableList());
+        return toConstructorDocs(requestName, normalizedParams, docSpec, 1);
     }
 
     /**

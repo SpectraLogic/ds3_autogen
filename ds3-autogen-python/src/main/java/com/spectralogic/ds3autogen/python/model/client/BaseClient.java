@@ -19,10 +19,12 @@ public class BaseClient {
 
     private final String commandName;
     private final String responseName;
+    private final String documentation;
 
-    public BaseClient(final String commandName, final String responseName) {
+    public BaseClient(final String commandName, final String responseName, final String documentation) {
         this.commandName = commandName;
         this.responseName = responseName;
+        this.documentation = documentation;
     }
 
     public String getCommandName() {
@@ -31,5 +33,9 @@ public class BaseClient {
 
     public String getResponseName() {
         return responseName;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

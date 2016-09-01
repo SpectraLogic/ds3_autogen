@@ -38,6 +38,8 @@ public class BaseRequest {
     private final ImmutableList<Arguments> optionalArgs;
     private final ImmutableList<QueryParam> queryParams;
 
+    private final String documentation;
+
     public BaseRequest(
             final String name,
             final String path,
@@ -46,7 +48,8 @@ public class BaseRequest {
             final ImmutableList<String> assignments,
             final ImmutableList<String> constructorParams,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<QueryParam> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String documentation) {
         this.name = name;
         this.path = path;
         this.httpVerb = httpVerb;
@@ -55,6 +58,7 @@ public class BaseRequest {
         this.constructorParams = constructorParams;
         this.optionalArgs = optionalArgs;
         this.queryParams = queryParams;
+        this.documentation = documentation;
     }
 
     public String getName() {
@@ -87,5 +91,9 @@ public class BaseRequest {
 
     public ImmutableList<String> getConstructorParams() {
         return constructorParams;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

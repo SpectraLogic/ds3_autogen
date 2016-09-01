@@ -1,5 +1,6 @@
 <#list requests as request>
 class ${request.name}(AbstractRequest):
+  ${request.documentation}
   def __init__(${pythonHelper.toRequestInitList(request.constructorParams)}):
     super(${request.name}, self).__init__()
     <#list request.assignments as arg>

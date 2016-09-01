@@ -82,7 +82,7 @@ public class PythonCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(requests, typeMap);
+            generateCommands(requests, typeMap, docSpec);
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -94,16 +94,17 @@ public class PythonCodeGenerator implements CodeGenerator {
      */
     private void generateCommands(
             final ImmutableList<Ds3Request> ds3Requests,
-            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+            final ImmutableMap<String, Ds3Type> typeMap,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         if (isEmpty(ds3Requests)) {
             LOG.info("There are no requests to generate");
             return;
         }
 
-        final ImmutableList<BaseRequest> baseRequests = toRequestModelList(ds3Requests);
+        final ImmutableList<BaseRequest> baseRequests = toRequestModelList(ds3Requests, docSpec);
         final ImmutableList<BaseResponse> baseResponses = toResponseModelList(ds3Requests);
         final ImmutableList<TypeDescriptor> baseTypes = toTypeDescriptorList(typeMap);
-        final ImmutableList<BaseClient> clientCommands = toClientCommands(ds3Requests);
+        final ImmutableList<BaseClient> clientCommands = toClientCommands(ds3Requests, docSpec);
 
         final CommandSet commandSet = new CommandSet(baseRequests, baseResponses, baseTypes, clientCommands);
 
@@ -121,21 +122,23 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Generates the python models for the client commands
      */
-    protected static ImmutableList<BaseClient> toClientCommands(final ImmutableList<Ds3Request> ds3Requests) {
+    protected static ImmutableList<BaseClient> toClientCommands(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final Ds3DocSpec docSpec) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
         return ds3Requests.stream()
-                .map(PythonCodeGenerator::toClientCommand)
+                .map(request -> toClientCommand(request, docSpec))
                 .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Generates the python model for a client command
      */
-    protected static BaseClient toClientCommand(final Ds3Request ds3Request) {
+    protected static BaseClient toClientCommand(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final ClientModelGenerator<?> clientGenerator = new BaseClientGenerator();
-        return clientGenerator.generate(ds3Request);
+        return clientGenerator.generate(ds3Request, docSpec);
     }
 
     /**
@@ -157,14 +160,14 @@ public class PythonCodeGenerator implements CodeGenerator {
     protected static  TypeDescriptor toTypeDescriptor(
             final Ds3Type ds3Type,
             final ImmutableMap<String, Ds3Type> typeMap) {
-        final TypeModelGenerator<?> typeGenerator = getTypeGenerator(ds3Type);
+        final TypeModelGenerator<?> typeGenerator = getTypeGenerator();
         return typeGenerator.generate(ds3Type, typeMap);
     }
 
     /**
      * Retrieves the Type Descriptor Generator associated with the Ds3Type
      */
-    protected static TypeModelGenerator<?> getTypeGenerator(final Ds3Type ds3Type) {
+    protected static TypeModelGenerator<?> getTypeGenerator() {
         return new BaseTypeGenerator();
     }
 
@@ -178,21 +181,23 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Converts all Ds3Requests into the python request handler models
      */
-    protected static ImmutableList<BaseRequest> toRequestModelList(final ImmutableList<Ds3Request> ds3Requests) {
+    protected static ImmutableList<BaseRequest> toRequestModelList(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final Ds3DocSpec docSpec) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
         return ds3Requests.stream()
-                .map(PythonCodeGenerator::toRequestModel)
+                .map(request -> toRequestModel(request, docSpec))
                 .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Converts a Ds3Request into a python request handler model
      */
-    protected static BaseRequest toRequestModel(final Ds3Request ds3Request) {
+    protected static BaseRequest toRequestModel(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final RequestModelGenerator<?> requestGenerator = getRequestGenerator(ds3Request);
-        return requestGenerator.generate(ds3Request);
+        return requestGenerator.generate(ds3Request, docSpec);
     }
 
     /**

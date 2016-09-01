@@ -16,9 +16,14 @@
 package com.spectralogic.ds3autogen.python.utils;
 
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.NameMapper;
+import com.spectralogic.ds3autogen.api.CodeGenerator;
+import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
+import com.spectralogic.ds3autogen.api.Ds3SpecParser;
+import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
 import freemarker.template.TemplateModelException;
 
@@ -45,15 +50,29 @@ public class TestPythonGeneratedCode {
     }
 
     /**
-     * Generates the python code associated with an input file.
+     * Generates the python code associated with an input file. This utilizes the
+     * default Ds3DocSpec.
      * Captured code: ds3.py
      */
     public void generateCode(final FileUtils fileUtils, final String inputFileName) throws IOException, TemplateModelException {
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+        generateCode(fileUtils, inputFileName, docSpecParser.getDocSpec());
+    }
+
+        /**
+         * Generates the python code associated with an input file. This allows
+         * for a Ds3DocSpec to be specified
+         * Captured code: ds3.py
+         */
+    public void generateCode(
+            final FileUtils fileUtils,
+            final String inputFileName,
+            final Ds3DocSpec docSpec) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestPythonGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new PythonCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."), new Ds3DocSpecEmptyImpl());
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), docSpec);
 
         ds3Code = new String(ds3OutputStream.toByteArray());
     }
