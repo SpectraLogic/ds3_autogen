@@ -17,10 +17,12 @@ package com.spectralogic.ds3autogen.python;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;
@@ -40,6 +42,10 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class PythonCodeGenerator_Test {
+
+    private static Ds3DocSpec getTestDocSpec() {
+        return new Ds3DocSpecEmptyImpl();
+    }
 
     @Test
     public void getRequestGenerator_Test() {
@@ -63,7 +69,7 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toRequestModel_Test() {
-        final BaseRequest result = toRequestModel(getRequestCreateNotification());
+        final BaseRequest result = toRequestModel(getRequestCreateNotification(), getTestDocSpec());
         assertThat(result.getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
         assertThat(result.getPath(), is("'/_rest_/job_created_notification_registration'"));
         assertThat(result.getHttpVerb(), is(HttpVerb.POST.toString()));
@@ -78,13 +84,13 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toRequestModelList_NullList_Test() {
-        final ImmutableList<BaseRequest> result = toRequestModelList(null);
+        final ImmutableList<BaseRequest> result = toRequestModelList(null, new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toRequestModelList_EmptyList_Test() {
-        final ImmutableList<BaseRequest> result = toRequestModelList(ImmutableList.of());
+        final ImmutableList<BaseRequest> result = toRequestModelList(ImmutableList.of(), new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
@@ -93,14 +99,14 @@ public class PythonCodeGenerator_Test {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestCreateNotification());
 
-        final ImmutableList<BaseRequest> result = toRequestModelList(requests);
+        final ImmutableList<BaseRequest> result = toRequestModelList(requests, getTestDocSpec());
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
     }
 
     @Test
     public void getTypeGenerator_Test() {
-        assertThat(getTypeGenerator(createDs3TypeTestData("com.test.EmptyType")), instanceOf(BaseTypeGenerator.class));
+        assertThat(getTypeGenerator(), instanceOf(BaseTypeGenerator.class));
     }
 
     @Test
@@ -188,20 +194,22 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toClientCommand_Test() {
-        final BaseClient result = toClientCommand(createDs3RequestTestData("com.test.GetCompleteMultiPartUploadRequest", Classification.spectrads3));
+        final BaseClient result = toClientCommand(
+                createDs3RequestTestData("com.test.GetCompleteMultiPartUploadRequest", Classification.spectrads3),
+                getTestDocSpec());
         assertThat(result.getCommandName(), is("get_complete_multi_part_upload"));
         assertThat(result.getResponseName(), is("GetCompleteMultiPartUploadResponse"));
     }
 
     @Test
     public void toClientCommands_NullList_Test() {
-        final ImmutableList<BaseClient> result = toClientCommands(null);
+        final ImmutableList<BaseClient> result = toClientCommands(null, new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toClientCommands_EmptyList_Test() {
-        final ImmutableList<BaseClient> result = toClientCommands(ImmutableList.of());
+        final ImmutableList<BaseClient> result = toClientCommands(ImmutableList.of(), new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
@@ -211,7 +219,7 @@ public class PythonCodeGenerator_Test {
                 createDs3RequestTestData("com.test.PutBucketRequest", Classification.amazons3),
                 createDs3RequestTestData("com.test.PutBucketSpectraS3Request", Classification.spectrads3));
 
-        final ImmutableList<BaseClient> result = toClientCommands(requests);
+        final ImmutableList<BaseClient> result = toClientCommands(requests, getTestDocSpec());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getResponseName(), is("PutBucketResponse"));
         assertThat(result.get(0).getCommandName(), is("put_bucket"));

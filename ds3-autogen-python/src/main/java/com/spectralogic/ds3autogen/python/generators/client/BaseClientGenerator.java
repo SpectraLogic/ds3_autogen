@@ -16,20 +16,32 @@
 package com.spectralogic.ds3autogen.python.generators.client;
 
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 
+import static com.spectralogic.ds3autogen.python.utils.PythonDocGeneratorUtil.toCommandDocs;
 import static com.spectralogic.ds3autogen.utils.ClientGeneratorUtil.toCommandName;
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 
 public class BaseClientGenerator implements ClientModelGenerator<BaseClient> {
 
     @Override
-    public BaseClient generate(final Ds3Request ds3Request) {
+    public BaseClient generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final String commandName = toPythonCommandName(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
+        final String documentation = toDocumentation(ds3Request.getName(), docSpec);
 
-        return new BaseClient(commandName, responseName);
+        return new BaseClient(commandName, responseName, documentation);
+    }
+
+    /**
+     * Creates the client documentation for the request
+     * @param requestName The request name with path
+     */
+    protected static String toDocumentation(final String requestName, final Ds3DocSpec docSpec) {
+        return toCommandDocs(removePath(requestName), docSpec, 1);
     }
 
     /**

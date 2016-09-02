@@ -16,10 +16,13 @@
 package com.spectralogic.ds3autogen.python.generators.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.python.model.request.ConstructorParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.BaseQueryParam;
 import com.spectralogic.ds3autogen.python.model.request.queryparam.OperationQueryParam;
@@ -254,5 +257,24 @@ public class BaseRequestGenerator_Test {
         assertThat(result, hasItem("bucket_name"));
         assertThat(result, hasItem("conflict_resolution_mode=None"));
         assertThat(result, hasItem("priority=None"));
+    }
+
+    @Test
+    public void toDocumentation_Test() {
+        final String expected = "'''\n" +
+                "  This is how you use test one request\n" +
+                "  `param_one` This is how you use param one\n" +
+                "  `does_not_exist` \n" +
+                "  '''\n";
+
+        final Ds3DocSpec docSpec = new Ds3DocSpecImpl(
+                ImmutableMap.of(
+                        "TestOneRequest", "This is how you use test one request"),
+                ImmutableMap.of(
+                        "ParamOne", "This is how you use param one"));
+
+        final ImmutableList<String> params = ImmutableList.of("param_one", "does_not_exist");
+        final String result = toDocumentation("TestOneRequest", params, docSpec);
+        assertThat(result, is(expected));
     }
 }

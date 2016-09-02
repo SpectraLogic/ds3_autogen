@@ -16,9 +16,10 @@
 package com.spectralogic.ds3autogen.python.generators.request;
 
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 
 @FunctionalInterface
 public interface RequestModelGenerator<T extends BaseRequest> {
-    T generate(final Ds3Request ds3Request);
+    T generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec);
 }

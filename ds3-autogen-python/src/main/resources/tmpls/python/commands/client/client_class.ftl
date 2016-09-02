@@ -8,6 +8,7 @@ class Client(object):
     return self.net_client
 
 <#list clientCommands as cmd>
+  ${cmd.documentation}
   def ${cmd.commandName}(self, request):
     return ${cmd.responseName}(self.net_client.get_response(request), request)
 
