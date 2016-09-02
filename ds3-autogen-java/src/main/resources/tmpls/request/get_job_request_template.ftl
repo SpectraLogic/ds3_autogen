@@ -5,7 +5,7 @@ package ${packageName};
 import com.spectralogic.ds3client.networking.HttpVerb;
 <#include "../imports.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     <#include "common/variables.ftl"/>

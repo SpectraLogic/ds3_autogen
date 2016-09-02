@@ -6,7 +6,7 @@ package ${packageName};
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ${name} extends AbstractResponse {
+public class ${name} extends ${parentClass} {
 
     private static final Logger LOG = LoggerFactory.getLogger(${name}.class);
     private Status status;

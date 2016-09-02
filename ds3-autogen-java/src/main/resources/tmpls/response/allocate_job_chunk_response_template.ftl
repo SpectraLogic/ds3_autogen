@@ -5,7 +5,7 @@ package ${packageName};
 <#include "common/response_imports.ftl"/>
 import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
-public class ${name} extends AbstractResponse {
+public class ${name} extends ${parentClass} {
 
 ${javaHelper.createAllResponseResultClassVars(responseCodes)}
 

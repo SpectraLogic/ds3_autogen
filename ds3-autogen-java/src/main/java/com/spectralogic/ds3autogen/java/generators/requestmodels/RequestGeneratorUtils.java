@@ -41,6 +41,11 @@ public interface RequestGeneratorUtils {
     String getParentImport(final Ds3Request ds3Request);
 
     /**
+     * Returns the parent class for the request
+     */
+    String getParentClass(final Ds3Request ds3Request);
+
+    /**
      * Gets the list of Arguments needed to create the request constructor
      */
     ImmutableList<Arguments> toConstructorArgumentsList(final Ds3Request ds3Request);

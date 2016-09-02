@@ -4,7 +4,7 @@ package ${packageName};
 
 <#include "common/response_imports.ftl"/>
 
-public class ${name} extends AbstractResponse {
+public class ${name} extends ${parentClass} {
 
 ${javaHelper.createAllResponseResultClassVars(responseCodes)}
 

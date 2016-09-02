@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.createPopulatedResponseCode;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,18 +32,23 @@ public class BulkResponseGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
+        final String expected = "com.spectralogic.ds3client.commands.interfaces.BulkResponse";
+        assertThat(generator.getParentImport(createEmptyDs3Request()), is(expected));
     }
 
     @Test
     public void getAllImports_NullList_Test() {
-        final ImmutableList<String> result = generator.getAllImports(null, "com.spectralogic.ds3client.commands.spectrads3");
+        final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
+                null,
+                "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void getAllImports_EmptyList_Test() {
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 ImmutableList.of(),
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
@@ -55,6 +61,7 @@ public class BulkResponseGenerator_Test {
                 createPopulatedResponseCode("_v1"));
 
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 responseCodes,
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(1));
@@ -68,6 +75,7 @@ public class BulkResponseGenerator_Test {
                 createPopulatedResponseCode("_v1"));
 
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 responseCodes,
                 "com.spectralogic.ds3client.commands");
         assertThat(result.size(), is(1));

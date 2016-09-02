@@ -13,7 +13,7 @@ import java.util.Collection;
 <#include "../imports.ftl"/>
 <#include "common/checksum_import.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     <#include "common/variables.ftl"/>

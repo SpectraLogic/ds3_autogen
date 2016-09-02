@@ -9,7 +9,7 @@ import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 <#include "../imports.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     <#include "common/variables.ftl"/>

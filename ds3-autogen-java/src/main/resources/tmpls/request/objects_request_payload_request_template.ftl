@@ -12,7 +12,7 @@ import java.util.List;
 import com.spectralogic.ds3client.utils.Guard;
 <#include "../imports.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     <#include "common/variables.ftl"/>

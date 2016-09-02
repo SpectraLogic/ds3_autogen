@@ -26,20 +26,25 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 
 public class BaseResponseGenerator implements ResponseModelGenerator<Response>, ResponseGeneratorUtil {
 
     private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractResponse";
+    private final static String ABSTRACT_PAGINATION_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse";
 
     @Override
     public Response generate(final Ds3Request ds3Request, final String packageName) {
         final String responseName = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
+        final String parentClass = getParentClass(ds3Request);
         final ImmutableList<Ds3ResponseCode> responseCodes = toResponseCodes(ds3Request);
-        final ImmutableList<String> imports = getAllImports(responseCodes, packageName);
+        final ImmutableList<String> imports = getAllImports(ds3Request, responseCodes, packageName);
 
         return new Response(
                 packageName,
                 responseName,
+                parentClass,
                 responseCodes,
                 imports);
     }
@@ -58,8 +63,19 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
      * is AbstractResponse
      */
     @Override
-    public String getParentImport() {
+    public String getParentImport(final Ds3Request ds3Request) {
+        if (supportsPaginationRequest(ds3Request)) {
+            return ABSTRACT_PAGINATION_RESPONSE_IMPORT;
+        }
         return ABSTRACT_RESPONSE_IMPORT;
+    }
+
+    /**
+     * Returns the parent class that the response extends
+     */
+    @Override
+    public String getParentClass(final Ds3Request ds3Request) {
+        return removePath(getParentImport(ds3Request));
     }
 
     /**
@@ -68,6 +84,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
      */
     @Override
     public ImmutableList<String> getAllImports(
+            final Ds3Request ds3Request,
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final String packageName) {
         if (isEmpty(responseCodes)) {
@@ -86,7 +103,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
             builder.add("org.apache.commons.io.IOUtils");
         }
 
-        builder.add(getParentImport());
+        builder.add(getParentImport(ds3Request));
         return builder.build().asList();
     }
 

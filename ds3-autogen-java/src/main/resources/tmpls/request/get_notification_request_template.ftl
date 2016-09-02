@@ -4,7 +4,7 @@ package ${packageName};
 
 <#include "../imports.ftl"/>
 
-public class ${name} extends AbstractGetNotificationRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     <#include "common/variables.ftl"/>

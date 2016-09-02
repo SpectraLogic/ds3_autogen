@@ -10,7 +10,7 @@ import com.spectralogic.ds3client.utils.IOUtils;
 import com.spectralogic.ds3client.utils.PerformanceUtils;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 
-public class ${name} extends AbstractResponse {
+public class ${name} extends ${parentClass} {
 
     private Metadata metadata;
     private long objectSize;

@@ -29,11 +29,19 @@ public interface ResponseGeneratorUtil {
     /**
      * Returns the import for the parent class for this response
      */
-    String getParentImport();
+    String getParentImport(final Ds3Request ds3Request);
+
+    /**
+     * Returns the parent class that the response extends
+     */
+    String getParentClass(final Ds3Request ds3Request);
 
     /**
      * Gets all the imports associated with response types that the response will
      * need in order to properly generate the Java request code
      */
-    ImmutableList<String> getAllImports(final ImmutableList<Ds3ResponseCode> responseCodes, final String packageName);
+    ImmutableList<String> getAllImports(
+            final Ds3Request ds3Request,
+            final ImmutableList<Ds3ResponseCode> responseCodes,
+            final String packageName);
 }

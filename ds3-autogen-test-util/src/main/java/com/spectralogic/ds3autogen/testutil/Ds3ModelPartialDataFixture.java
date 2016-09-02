@@ -30,6 +30,13 @@ public final class Ds3ModelPartialDataFixture {
     private Ds3ModelPartialDataFixture() { }
 
     /**
+     * Creates an empty Ds3Request with a dummy name and amazon classification
+     */
+    public static Ds3Request createEmptyDs3Request() {
+        return createDs3RequestTestData("com.test.EmptyRequest", Classification.amazons3);
+    }
+
+    /**
      * Creates a Ds3Request that is empty except for the includedInPath, optional and required query params
      */
     public static Ds3Request createDs3RequestTestData(

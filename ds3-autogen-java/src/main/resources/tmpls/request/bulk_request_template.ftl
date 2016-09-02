@@ -7,7 +7,7 @@ import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 <#include "../imports.ftl"/>
 
-public class ${name} extends BulkRequest {
+public class ${name} extends ${parentClass} {
 
     <#if helper.containsArgument(optionalArguments, "MaxUploadSize") == true>
     private static final String MAX_UPLOAD_SIZE_IN_BYTES = "100000000000";

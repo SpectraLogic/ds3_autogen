@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.api.models.enums.Operation;
 public class Request {
     private final String packageName;
     private final String name;
+    private final String parentClass;
     private final HttpVerb verb;
     private final String path;
     private final Operation operation;
@@ -43,6 +44,7 @@ public class Request {
 
     public Request(final String packageName,
                    final String name,
+                   final String parentClass,
                    final HttpVerb verb,
                    final String path,
                    final Operation operation,
@@ -53,6 +55,7 @@ public class Request {
                    final ImmutableList<String> imports) {
         this.packageName = packageName;
         this.name = name;
+        this.parentClass = parentClass;
         this.verb = verb;
         this.path = path;
         this.operation = operation;
@@ -99,5 +102,9 @@ public class Request {
 
     public ImmutableList<RequestConstructor> getConstructors() {
         return constructors;
+    }
+
+    public String getParentClass() {
+        return parentClass;
     }
 }
