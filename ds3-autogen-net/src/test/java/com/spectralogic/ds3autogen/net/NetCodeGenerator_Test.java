@@ -1167,12 +1167,8 @@ public class NetCodeGenerator_Test {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
 
-        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
         final String responsePayloadType = "NamedDetailedTapeList";
-        assertTrue(TestHelper.hasConstructor(
-                responseName,
-                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
-                responseCode));
+        assertTrue(responseCode.contains("public GetTapesWithFullDetailsSpectraS3Response(NamedDetailedTapeList responsePayload, int? pagingTruncated, int? pagingTotalResultCount)"));
         assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
 
         //Generate Parser
