@@ -30,6 +30,11 @@ extern "C" {
 
 #define DS3_READFUNC_ABORT CURL_READFUNC_ABORT
 
+typedef struct {
+    int page_truncated;
+    int total_result_count;
+}ds3_paging;
+
 typedef struct _ds3_request ds3_request;
 
 typedef struct {

@@ -21,10 +21,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.C_TypeHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
-import com.spectralogic.ds3autogen.c.models.C_Type;
-import com.spectralogic.ds3autogen.c.models.PrimitiveType;
-import com.spectralogic.ds3autogen.c.models.Struct;
-import com.spectralogic.ds3autogen.c.models.StructMember;
+import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil;
 
@@ -69,7 +66,12 @@ public final class StructConverter {
                         "num_" + StructHelper.getNameUnderscores(currentElement.getName()))
                 );
             }
+            if (elementType.getTypeName().equals("ds3_spectra_user_response")
+             || elementType.getTypeName().equals("ds3_s3_object_response")) {
+                builder.add(new StructMember(new FreeableType("ds3_paging", false), "paging"));
+            }
         }
+
         return builder.build();
     }
 
