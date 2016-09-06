@@ -49,7 +49,8 @@ public class SourceConverter_Test {
                         false,
                         false,
                         null,
-                        "ds3_pool"));
+                        "ds3_pool",
+                        false));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 
         assertThat(filteredEnums.size(), is(1));
@@ -76,7 +77,8 @@ public class SourceConverter_Test {
                         false,
                         false,
                         null,
-                        "ds3_pool"));
+                        "ds3_pool",
+                        false));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 
         assertThat(filteredEnums.size(), is(1));
@@ -105,7 +107,8 @@ public class SourceConverter_Test {
                         false,
                         false,
                         null,
-                        "ds3_widget"));
+                        "ds3_widget",
+                        false));
         final ImmutableSet<Enum> filteredEnums = SourceConverter.filterQueryParamEnums(allEnums, allRequests);
 
         assertThat(filteredEnums.size(), is(2));

@@ -80,7 +80,52 @@ public class StructHelper_Test {
         final Struct testStruct = new Struct("testStruct", testStructMembers);
         assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
     }
+    @Test
+    public void testPagingTypeDoesNotRequireNewParser() {
+        final Set<String> existingStructs = new HashSet<>();
+        final ImmutableSet.Builder<String> enumNames = ImmutableSet.builder();
 
+        final StructMember testStruct1 = new StructMember(new PrimitiveType("ds3_paging", false), "pagingMember");
+        final ImmutableList<StructMember> testStructMembers = ImmutableList.of(testStruct1);
+        final Struct testStruct = new Struct("testStruct", testStructMembers);
+        assertFalse(StructHelper.requiresNewCustomParser(testStruct, existingStructs, enumNames.build()));
+    }
+    @Test
+    public void testDs3S3ObjectResponseAddsPagingMember() throws ParseException {
+        final ImmutableList<Ds3Element> elementsList = ImmutableList.of(
+                new Ds3Element("objects", "S3Object", null, false)
+        );
+        final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
+        final Struct testStruct = StructConverter.toStruct(ds3Type, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+        assertThat(testStruct.getStructMembers().size(), is(2));
+        boolean foundPaging = false;
+        for (final StructMember sm : testStruct.getStructMembers()) {
+            if (sm.getName().equals("paging")
+             && sm.getType().getTypeName().equals("ds3_paging")
+             && !sm.getType().isPrimitive()) {
+                foundPaging = true;
+            }
+        }
+        assertTrue(foundPaging);
+    }
+    @Test
+    public void testSpectraUserResponseAddsPagingMember() throws ParseException {
+        final ImmutableList<Ds3Element> elementsList = ImmutableList.of(
+                new Ds3Element("spectra_users", "SpectraUser", null, false)
+        );
+        final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
+        final Struct testStruct = StructConverter.toStruct(ds3Type, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+        assertThat(testStruct.getStructMembers().size(), is(2));
+        boolean foundPaging = false;
+        for (final StructMember sm : testStruct.getStructMembers()) {
+            if (sm.getName().equals("paging")
+                    && sm.getType().getTypeName().equals("ds3_paging")
+                    && !sm.getType().isPrimitive()) {
+                foundPaging = true;
+            }
+        }
+        assertTrue(foundPaging);
+    }
     @Test
     public void testGenerateStructMembers() throws ParseException {
         final Ds3Element testElement1 = new Ds3Element("boolElement", "boolean", null, false);

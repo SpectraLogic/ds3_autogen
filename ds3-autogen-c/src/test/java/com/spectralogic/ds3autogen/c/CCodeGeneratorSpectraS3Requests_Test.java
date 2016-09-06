@@ -162,7 +162,8 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 true,
                 false,
                 null,
-                responseType
+                responseType,
+                false
         );
         testMap.put("requestEntry", requestEntry);
 
