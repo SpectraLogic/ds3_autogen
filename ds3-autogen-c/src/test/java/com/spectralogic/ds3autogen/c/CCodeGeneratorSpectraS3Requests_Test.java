@@ -160,33 +160,6 @@ public class CCodeGeneratorSpectraS3Requests_Test {
           + "}"                                                                                                                                          + "\n";
         assertEquals(expectedOutput, output);
     }
-    /*
-    @Test
-    public void testGenerateSpectraS3GetBucketsRequest() throws IOException, ParseException, TemplateModelException {
-        final String inputSpecFile = "/input/SpectraS3GetBucketsRequest_WithArrayResponsePayload.xml";
-        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
-        final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
-
-        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
-                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
-        final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
-
-        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
-        final String output = new String(bstream.toByteArray());
-        System.out.println(output);
-
-        assertTrue(output.contains("ds3_error* ds3_get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_bucket_list_response** response) {"));
-        assertTrue(output.contains("    if (request->path->size < 2) {"));
-        assertTrue(output.contains("        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"));
-        assertTrue(output.contains("    }"));
-
-        assertTrue(output.contains("    return _parse_top_level_ds3_bucket_list_response(client, request, response, xml_blob);"));
-        assertTrue(output.contains("}"));
-    }
-    */
 
     @Test
     public void testGenerateSpectraS3GetBucketRequestPrototype() throws IOException, TemplateModelException {
