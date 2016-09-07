@@ -7,7 +7,7 @@ import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
 import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 
-public class ${name} extends AbstractResponse {
+public class ${name} extends ${parentClass} {
 
 ${javaHelper.createAllResponseResultClassVars(responseCodes)}
 

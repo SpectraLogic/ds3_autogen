@@ -21,16 +21,19 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 public class Response {
     private final String packageName;
     private final String name;
+    private final String parentClass;
     private final ImmutableList<Ds3ResponseCode> responseCodes;
     private final ImmutableList<String> imports;
 
     public Response(
             final String packageName,
             final String name,
+            final String parentClass,
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final ImmutableList<String> imports) {
         this.packageName = packageName;
         this.name = name;
+        this.parentClass = parentClass;
         this.responseCodes = responseCodes;
         this.imports = imports;
     }
@@ -49,5 +52,9 @@ public class Response {
 
     public ImmutableList<String> getImports() {
         return imports;
+    }
+
+    public String getParentClass() {
+        return parentClass;
     }
 }

@@ -366,8 +366,9 @@ public final class Ds3RequestClassificationUtil {
      * which response handlers need to parse pagination headers.
      */
     public static boolean supportsPaginationRequest(final Ds3Request request) {
-        return isGetObjectsDetailsRequest(request)
-                || isGetUsersSpectraS3Request(request)
-                || isGetObjectsWithFullDetails(request);
+        return paramListContainsParam(request.getOptionalQueryParams(), "LastPage", "void")
+                && paramListContainsParam(request.getOptionalQueryParams(), "PageLength", "int")
+                && paramListContainsParam(request.getOptionalQueryParams(), "PageOffset", "int")
+                && paramListContainsParam(request.getOptionalQueryParams(), "PageStartMarker", "java.util.UUID");
     }
 }

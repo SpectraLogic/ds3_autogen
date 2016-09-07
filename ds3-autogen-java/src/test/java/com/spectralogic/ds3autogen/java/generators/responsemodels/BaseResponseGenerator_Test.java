@@ -24,7 +24,9 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getObjectsDetailsRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -66,6 +68,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void getAllImports_NullList_Test() {
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 null,
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
@@ -74,6 +77,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void getAllImports_EmptyList_Test() {
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 ImmutableList.of(),
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(0));
@@ -87,6 +91,7 @@ public class BaseResponseGenerator_Test {
                 createPopulatedErrorResponseCode("_v3"));
 
         final ImmutableList<String> result = generator.getAllImports(
+                createEmptyDs3Request(),
                 responseCodes,
                 "com.spectralogic.ds3client.commands.spectrads3");
         assertThat(result.size(), is(5));
@@ -99,7 +104,14 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(), is("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
+        final String expected = "com.spectralogic.ds3client.commands.interfaces.AbstractResponse";
+        assertThat(generator.getParentImport(createEmptyDs3Request()), is(expected));
+    }
+
+    @Test
+    public void getParentClass_Test() {
+        assertThat(generator.getParentClass(createEmptyDs3Request()), is("AbstractResponse"));
+        assertThat(generator.getParentClass(getObjectsDetailsRequest()), is("AbstractPaginationResponse"));
     }
 
     @Test

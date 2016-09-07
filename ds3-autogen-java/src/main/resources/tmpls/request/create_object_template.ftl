@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 <#include "../imports.ftl"/>
 <#include "common/checksum_import.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     final static private Logger LOG = LoggerFactory.getLogger(PutObjectRequest.class);
 

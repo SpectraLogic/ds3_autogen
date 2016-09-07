@@ -30,6 +30,7 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.getAllArgumentTypes;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -315,7 +316,14 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void getParentImport_Test() {
-        assertThat(generator.getParentImport(null), is("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
+        assertThat(generator.getParentImport(createEmptyDs3Request()), is("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
+        assertThat(generator.getParentImport(getObjectsDetailsRequest()), is("com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest"));
+    }
+
+    @Test
+    public void getParentClass_Test() {
+        assertThat(generator.getParentClass(createEmptyDs3Request()), is("AbstractRequest"));
+        assertThat(generator.getParentClass(getObjectsDetailsRequest()), is("AbstractPaginationRequest"));
     }
 
     @Test

@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
@@ -29,27 +29,31 @@ import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.Helper;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
 
 public class BaseRequestGenerator implements RequestModelGenerator<Request>, RequestGeneratorUtils {
 
     private final static String ABSTRACT_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractRequest";
+    private final static String ABSTRACT_PAGINATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest";
 
     @Override
     public Request generate(final Ds3Request ds3Request, final String packageName) {
         final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
-        final String requestName = NormalizingContractNamesUtil.removePath(updatedRequest.getName());
+        final String requestName = removePath(updatedRequest.getName());
         final String requestPath = getRequestPath(updatedRequest);
+        final String parentClass = getParentClass(ds3Request);
 
         final ImmutableList<Arguments> optionalArguments =
                 splitAllUuidOptionalArguments(toOptionalArgumentsList(updatedRequest.getOptionalQueryParams()));
@@ -65,6 +69,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         return new Request(
                 packageName,
                 requestName,
+                parentClass,
                 updatedRequest.getHttpVerb(),
                 requestPath,
                 updatedRequest.getOperation(),
@@ -265,8 +270,20 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      */
     @Override
     public String getParentImport(final Ds3Request ds3Request) {
+        if (supportsPaginationRequest(ds3Request)) {
+            return ABSTRACT_PAGINATION_REQUEST_IMPORT;
+        }
         return ABSTRACT_REQUEST_IMPORT;
     }
+
+    /**
+     * Returns the parent class that the java request will extend
+     */
+    @Override
+    public String getParentClass(final Ds3Request ds3Request) {
+        return removePath(getParentImport(ds3Request));
+    }
+
 
     /**
      * Gets the required imports that are needed to ensure that all generated models
@@ -376,14 +393,12 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             return ImmutableList.of();
         }
 
-        final ImmutableList.Builder<Arguments> argsBuilder = ImmutableList.builder();
-        for (final Ds3Param ds3Param : ds3Params) {
-            if (!ds3Param.getName().equals("Operation")) {
-                final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
-                argsBuilder.add(new Arguments(paramType, ds3Param.getName()));
-            }
-        }
-        return argsBuilder.build();
+        return ds3Params.stream()
+                .filter(param -> !param.getName().equals("Operation"))
+                .map(param -> new Arguments(
+                        param.getType().substring(param.getType().lastIndexOf(".") + 1),
+                        param.getName()))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**

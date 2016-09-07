@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -30,7 +31,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
      * is BulkResponse
      */
     @Override
-    public String getParentImport() {
+    public String getParentImport(final Ds3Request ds3Request) {
         return BULK_RESPONSE_IMPORT;
     }
 
@@ -40,6 +41,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
      */
     @Override
     public ImmutableList<String> getAllImports(
+            final Ds3Request ds3Request,
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final String packageName) {
         if (isEmpty(responseCodes)) {
@@ -47,7 +49,7 @@ public class BulkResponseGenerator extends BaseResponseGenerator {
         }
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        builder.add(getParentImport());
+        builder.add(getParentImport(ds3Request));
 
         return builder.build().asList();
     }

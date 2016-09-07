@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 <#include "../imports.ftl"/>
 
-public class ${name} extends AbstractRequest {
+public class ${name} extends ${parentClass} {
 
     // Variables
     private final List<String> objects;
