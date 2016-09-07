@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
+import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -120,6 +121,47 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     }
 
     @Test
+    public void testGenerateSpectraS3GetBucketsRequest() throws TemplateModelException, IOException {
+        final Map<String,Object> testMap = new HashMap<>();
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsSpectraS3Request());
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "request-templates/RequestWithResponsePayload.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput =
+            "ds3_error* ds3_get_buckets(const ds3_client* client, const ds3_request* request, ds3_bucket_list_response** response) {" + "\n"
+          + "    ds3_error* error;"                                                                                                                      + "\n"
+          + "    GByteArray* xml_blob;"                                                                                                                  + "\n"
+          + "    ds3_string_multimap* return_headers = NULL;"                                                                                            + "\n"
+          + "\n"
+          + "    if (request->path->size < 2) {"                                                                                                         + "\n"
+          + "        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The resource type parameter is required.\");"                                     + "\n"
+          + "    }"                                                                                                                                      + "\n"
+          + "\n"
+          + "    xml_blob = g_byte_array_new();"                                                                                                         + "\n"
+          + "    error = _internal_request_dispatcher(client, request, xml_blob, ds3_load_buffer, NULL, NULL, &return_headers);"                         + "\n"
+          + "    if (error != NULL) {"                                                                                                                   + "\n"
+          + "        ds3_string_multimap_free(return_headers);"                                                                                          + "\n"
+          + "        g_byte_array_free(xml_blob, TRUE);"                                                                                                 + "\n"
+          + "        return error;"                                                                                                                      + "\n"
+          + "    }"                                                                                                                                      + "\n"
+          + "\n"
+          + "    error = _parse_top_level_ds3_bucket_list_response(client, request, response, xml_blob);"                                                + "\n"
+          + "\n"
+          + "    (*response)->paging = _parse_paging_headers(return_headers);"                                                                           + "\n"
+          + "    ds3_string_multimap_free(return_headers);"                                                                                              + "\n"
+          + "\n"
+          + "    return error;"                                                                                                                          + "\n"
+          + "}"                                                                                                                                          + "\n";
+        assertEquals(expectedOutput, output);
+    }
+    /*
+    @Test
     public void testGenerateSpectraS3GetBucketsRequest() throws IOException, ParseException, TemplateModelException {
         final String inputSpecFile = "/input/SpectraS3GetBucketsRequest_WithArrayResponsePayload.xml";
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
@@ -134,6 +176,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
+        System.out.println(output);
 
         assertTrue(output.contains("ds3_error* ds3_get_buckets_spectra_s3_request(const ds3_client* client, const ds3_request* request, ds3_bucket_list_response** response) {"));
         assertTrue(output.contains("    if (request->path->size < 2) {"));
@@ -143,6 +186,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         assertTrue(output.contains("    return _parse_top_level_ds3_bucket_list_response(client, request, response, xml_blob);"));
         assertTrue(output.contains("}"));
     }
+    */
 
     @Test
     public void testGenerateSpectraS3GetBucketRequestPrototype() throws IOException, TemplateModelException {
