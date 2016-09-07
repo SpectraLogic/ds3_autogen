@@ -32,10 +32,7 @@ public final class ConvertType {
      * Determines if a given name is a model name
      */
     public static boolean isModelName(final String ds3TypeName) {
-        if (isEmpty(ds3TypeName)) {
-            return false;
-        }
-        return ds3TypeName.startsWith(CONTRACT_PACKAGE_PATH);
+        return !isEmpty(ds3TypeName) && ds3TypeName.startsWith(CONTRACT_PACKAGE_PATH);
     }
 
     /**

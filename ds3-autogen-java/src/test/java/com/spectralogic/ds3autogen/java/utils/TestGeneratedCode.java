@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.utils;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.*;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import freemarker.template.TemplateModelException;
@@ -52,11 +53,18 @@ public class TestGeneratedCode {
     public void generateCode(
             final FileUtils fileUtils,
             final String inputFileName) throws IOException, TemplateModelException {
+        generateCode(fileUtils, inputFileName, new Ds3DocSpecEmptyImpl());
+    }
+
+    public void generateCode(
+            final FileUtils fileUtils,
+            final String inputFileName,
+            final Ds3DocSpec docSpec) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(TestGeneratedCode.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new JavaCodeGenerator();
 
-        codeGenerator.generate(spec, fileUtils, Paths.get("."), new Ds3DocSpecEmptyImpl());
+        codeGenerator.generate(spec, fileUtils, Paths.get("."), docSpec);
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
