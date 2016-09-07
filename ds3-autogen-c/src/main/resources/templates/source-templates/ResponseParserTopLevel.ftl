@@ -1,6 +1,6 @@
 <#-- ******************************************************** -->
 <#-- Generate all "TypedefStructResponseParsers" from Structs -->
-<#--   Input: Source object                                   -->
+<#--   Input: Struct object                                   -->
 <#-- ******************************************************** -->
 static ds3_error* _parse_top_level_${structEntry.getName()}(const ds3_client* client, const ds3_request* request, ${structEntry.getName()}** _response, GByteArray* xml_blob) {
     xmlDocPtr doc;

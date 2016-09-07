@@ -121,6 +121,8 @@ public final class StructHelper {
             if (!member.getType().isPrimitive()) {
                 if (member.getType().getTypeName().equals("ds3_str")) continue; // ds3_str is not an auto-generated API typeName.
 
+                if (member.getType().getTypeName().equals("ds3_paging")) continue; // ds3_paging is not an auto-generated API typeName.
+
                 if (existingTypes.contains(member.getType().getTypeName())) continue;
 
                 if (enumNames.contains(member.getType().getTypeName())) continue;
@@ -181,6 +183,7 @@ public final class StructHelper {
             final StructMember currentStructMember = structMembers.get(structMemberIndex);
             if (currentStructMember.isAttribute()) continue; // only parsing child nodes for a specific node
             if (currentStructMember.getName().startsWith("num_")) continue; // skip - these are used for array iteration and are not a part of the response
+            if (currentStructMember.getName().equals("paging")) continue; // skip - parsed from pagination headers
 
             outputBuilder.append(indent(2));
 

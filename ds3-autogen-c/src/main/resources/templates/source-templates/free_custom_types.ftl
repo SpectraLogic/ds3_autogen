@@ -34,6 +34,10 @@ void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
     g_free(response);
 }
 
+void ds3_paging_free(ds3_paging* paging) {
+    g_free(paging);
+}
+
 void ds3_request_free(ds3_request* _request) {
     struct _ds3_request* request;
     if (_request == NULL) {
