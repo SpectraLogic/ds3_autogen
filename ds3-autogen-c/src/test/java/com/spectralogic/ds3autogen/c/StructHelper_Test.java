@@ -100,9 +100,7 @@ public class StructHelper_Test {
         assertThat(testStruct.getStructMembers().size(), is(2));
         boolean foundPaging = false;
         for (final StructMember sm : testStruct.getStructMembers()) {
-            if (sm.getName().equals("paging")
-             && sm.getType().getTypeName().equals("ds3_paging")
-             && !sm.getType().isPrimitive()) {
+            if (sm.getName().equals("paging") && sm.getType().getTypeName().equals("ds3_paging") && !sm.getType().isPrimitive()) {
                 foundPaging = true;
             }
         }
@@ -118,9 +116,7 @@ public class StructHelper_Test {
         assertThat(testStruct.getStructMembers().size(), is(2));
         boolean foundPaging = false;
         for (final StructMember sm : testStruct.getStructMembers()) {
-            if (sm.getName().equals("paging")
-                    && sm.getType().getTypeName().equals("ds3_paging")
-                    && !sm.getType().isPrimitive()) {
+            if (sm.getName().equals("paging") && sm.getType().getTypeName().equals("ds3_paging") && !sm.getType().isPrimitive()) {
                 foundPaging = true;
             }
         }
