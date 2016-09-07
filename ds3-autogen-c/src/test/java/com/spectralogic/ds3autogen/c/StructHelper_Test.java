@@ -98,13 +98,10 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
         final Struct testStruct = StructConverter.toStruct(ds3Type, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
         assertThat(testStruct.getStructMembers().size(), is(2));
-        boolean foundPaging = false;
-        for (final StructMember sm : testStruct.getStructMembers()) {
-            if (sm.getName().equals("paging") && sm.getType().getTypeName().equals("ds3_paging") && !sm.getType().isPrimitive()) {
-                foundPaging = true;
-            }
-        }
-        assertTrue(foundPaging);
+        assertTrue(testStruct.getStructMembers().stream()
+                .filter(sm -> sm.getName().equals("paging"))
+                .filter(sm -> sm.getType().getTypeName().equals("ds3_paging"))
+                .anyMatch(sm -> !sm.getType().isPrimitive()));
     }
     @Test
     public void testSpectraUserResponseAddsPagingMember() throws ParseException {
@@ -114,13 +111,10 @@ public class StructHelper_Test {
         final Ds3Type ds3Type = new Ds3Type("testDs3Type", elementsList);
         final Struct testStruct = StructConverter.toStruct(ds3Type, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
         assertThat(testStruct.getStructMembers().size(), is(2));
-        boolean foundPaging = false;
-        for (final StructMember sm : testStruct.getStructMembers()) {
-            if (sm.getName().equals("paging") && sm.getType().getTypeName().equals("ds3_paging") && !sm.getType().isPrimitive()) {
-                foundPaging = true;
-            }
-        }
-        assertTrue(foundPaging);
+        assertTrue(testStruct.getStructMembers().stream()
+                .filter(sm -> sm.getName().equals("paging"))
+                .filter(sm -> sm.getType().getTypeName().equals("ds3_paging"))
+                .anyMatch(sm -> !sm.getType().isPrimitive()));
     }
     @Test
     public void testGenerateStructMembers() throws ParseException {
