@@ -32,13 +32,17 @@ public class RequestConstructor {
     private boolean isDeprecated = false;
     private ImmutableList<String> additionalLines = ImmutableList.of();
 
+    private final String documentation;
+
     public RequestConstructor(
             final ImmutableList<Arguments> parameters,
             final ImmutableList<Arguments> assignments,
-            final ImmutableList<QueryParam> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String documentation) {
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.documentation = documentation;
     }
 
     public RequestConstructor(
@@ -46,12 +50,14 @@ public class RequestConstructor {
             final ImmutableList<String> additionalLines,
             final ImmutableList<Arguments> parameters,
             final ImmutableList<Arguments> assignments,
-            final ImmutableList<QueryParam> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String documentation) {
         this.isDeprecated = isDeprecated;
         this.additionalLines = additionalLines;
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.documentation = documentation;
     }
 
     public ImmutableList<Arguments> getParameters() {
@@ -72,5 +78,9 @@ public class RequestConstructor {
 
     public ImmutableList<String> getAdditionalLines() {
         return additionalLines;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

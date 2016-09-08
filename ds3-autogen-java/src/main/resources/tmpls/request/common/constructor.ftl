@@ -1,4 +1,5 @@
     <#list constructors as constructor>
+    ${constructor.documentation}
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};

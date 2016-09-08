@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
@@ -27,6 +28,7 @@ import com.spectralogic.ds3autogen.java.models.withconstructor.MaxUploadSizeWith
 import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class BulkRequestGenerator extends BaseRequestGenerator {
@@ -102,12 +104,20 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * Gets the list of constructor models from a Ds3Request
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArguments = toConstructorArgumentsList(ds3Request);
+        final ImmutableList<String> argNames = constructorArguments.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         final RequestConstructor constructor = new RequestConstructor(
                 constructorArguments,
                 toConstructorAssignmentList(constructorArguments),
-                toQueryParamsList(ds3Request));
+                toQueryParamsList(ds3Request),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);
     }
@@ -133,16 +143,20 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      * With-Constructor is created for the parameter MaxUploadSize.
      */
     @Override
-    public String toWithConstructor(final Arguments param, final String requestName) {
+    public String toWithConstructor(
+            final Arguments param,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        final String documentation = toConstructorDocs(requestName, ImmutableList.of(param.getName()), docSpec, 1);
         if (isBulkRequestArg(param.getName())) {
-            return new BulkWithConstructor(param, requestName).toJavaCode();
+            return formatDocumentation(documentation) + new BulkWithConstructor(param, requestName).toJavaCode();
         }
         if (param.getName().equals("MaxUploadSize")) {
-            return new MaxUploadSizeWithConstructor(param, requestName).toJavaCode();
+            return formatDocumentation(documentation) + new MaxUploadSizeWithConstructor(param, requestName).toJavaCode();
         }
         if (param.getType().equals("void")) {
-            return new VoidWithConstructor(param, requestName).toJavaCode();
+            return formatDocumentation(documentation) + new VoidWithConstructor(param, requestName).toJavaCode();
         }
-        return new BaseWithConstructor(param, requestName).toJavaCode();
+        return formatDocumentation(documentation) + new BaseWithConstructor(param, requestName).toJavaCode();
     }
 }

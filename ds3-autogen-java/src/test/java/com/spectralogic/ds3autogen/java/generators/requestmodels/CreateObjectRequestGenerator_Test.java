@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -67,7 +68,7 @@ public class CreateObjectRequestGenerator_Test {
     public void toConstructorList_Test() {
         final Ds3Request request = getRequestCreateObject();
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(3));
 
         //Deprecated Constructor
@@ -160,7 +161,9 @@ public class CreateObjectRequestGenerator_Test {
         final RequestConstructor result = getInputStreamConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new QueryParam("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -187,7 +190,9 @@ public class CreateObjectRequestGenerator_Test {
         final RequestConstructor result = getChannelConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new QueryParam("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(1));
@@ -215,7 +220,9 @@ public class CreateObjectRequestGenerator_Test {
     @Test
     public void createDeprecatedConstructor_Test() {
         final RequestConstructor result = createDeprecatedConstructor(
-                ImmutableList.of(new Arguments("Type", "Arg1")));
+                ImmutableList.of(new Arguments("Type", "Arg1")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(true));
         assertThat(result.getAdditionalLines().size(), is(1));

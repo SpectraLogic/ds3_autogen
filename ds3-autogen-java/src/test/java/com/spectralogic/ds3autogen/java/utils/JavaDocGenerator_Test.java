@@ -101,7 +101,7 @@ public class JavaDocGenerator_Test {
     public void toConstructorDocs_NullParams_Test() throws IOException {
         final String expected = "/**\n" +
                 "     * This is how you use test one request\n" +
-                "     */";
+                "     */\n";
 
         final String result = toConstructorDocs("TestOneRequest", null, getTestDocSpec(), 1);
         assertThat(result, is(expected));
@@ -111,7 +111,7 @@ public class JavaDocGenerator_Test {
     public void toConstructorDocs_EmptyParams_Test() throws IOException {
         final String expected = "/**\n" +
                 "     * This is how you use test one request\n" +
-                "     */";
+                "     */\n";
 
         final String result = toConstructorDocs("TestOneRequest", ImmutableList.of(), getTestDocSpec(), 1);
         assertThat(result, is(expected));
@@ -123,7 +123,7 @@ public class JavaDocGenerator_Test {
                 "     * This is how you use test one request\n" +
                 "     * @param ParamOne This is how you use param one\n" +
                 "     * @param NoDocParam \n" +
-                "     */";
+                "     */\n";
 
         final ImmutableList<String> params = ImmutableList.of("ParamOne", "NoDocParam");
         final String result = toConstructorDocs("TestOneRequest", params, getTestDocSpec(), 1);

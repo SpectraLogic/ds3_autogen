@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.*;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
@@ -381,7 +382,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Ds3Param> params = createTestDs3ParamList();
         final Ds3Request request = createDs3RequestTestData(true, null, params);
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(1));
 
         final RequestConstructor constructor = result.get(0);
@@ -472,7 +473,7 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args));
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final RequestConstructor result = convertUuidConstructorToStringConstructor(constructor);
         assertThat(getAllArgumentTypes(result.getParameters()), not(hasItem("UUID")));
@@ -485,7 +486,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("String", "StringArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args));
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
         assertThat(result.size(), is(1));
@@ -497,7 +498,7 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args));
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
         assertThat(result.size(), is(2));
@@ -516,7 +517,7 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args));
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitAllUuidConstructors(ImmutableList.of(constructor));
         assertThat(result.size(), is(2));
@@ -625,7 +626,7 @@ public class BaseRequestGenerator_Test {
                         "    }\n";
 
         final Arguments idArg = new Arguments("UUID", "MyId");
-        final String result = generator.toWithConstructor(idArg, "MyRequest");
+        final String result = generator.toWithConstructor(idArg, "MyRequest", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expected));
     }
 
@@ -638,7 +639,7 @@ public class BaseRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments booleanArgument = new Arguments("boolean", "ArgName");
-        final String booleanResult = generator.toWithConstructor(booleanArgument, "RequestName");
+        final String booleanResult = generator.toWithConstructor(booleanArgument, "RequestName", new Ds3DocSpecEmptyImpl());
         assertThat(booleanResult, is(expectedResultBoolean));
     }
 
@@ -651,7 +652,7 @@ public class BaseRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments argument = new Arguments("ArgType", "ArgName");
-        final String result = generator.toWithConstructor(argument, "RequestName");
+        final String result = generator.toWithConstructor(argument, "RequestName", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expectedResult));
     }
 
@@ -701,7 +702,7 @@ public class BaseRequestGenerator_Test {
                 new Arguments("TypeOne", "ArgOne"),
                 new Arguments("void", "VoidArg"));
 
-        final ImmutableList<String> result = generator.toWithConstructorList(optionalParams, "TestRequest");
+        final ImmutableList<String> result = generator.toWithConstructorList(optionalParams, "TestRequest", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(2));
         assertThat(result.get(0), is(expected));
         assertThat(result.get(1), is(voidExpected));

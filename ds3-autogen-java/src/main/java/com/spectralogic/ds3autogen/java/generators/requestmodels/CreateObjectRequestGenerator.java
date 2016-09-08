@@ -18,11 +18,14 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
 
@@ -58,23 +61,32 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * Channel, and a constructor that has an InputStream parameter
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toArgumentsList(ds3Request.getOptionalQueryParams());
         final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
 
         final RequestConstructor depreciatedConstructor = createDeprecatedConstructor(
-                constructorArgs);
+                constructorArgs,
+                requestName,
+                docSpec);
 
         final RequestConstructor channelConstructor = getChannelConstructor(
                 constructorArgs,
                 optionalArgs,
-                queryParams);
+                queryParams,
+                requestName,
+                docSpec);
 
         final RequestConstructor inputStreamConstructor = getInputStreamConstructor(
                 constructorArgs,
                 optionalArgs,
-                queryParams);
+                queryParams,
+                requestName,
+                docSpec);
 
         return ImmutableList.of(
                 depreciatedConstructor,
@@ -89,11 +101,13 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     protected static RequestConstructor getInputStreamConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<QueryParam> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);
-        return CommonRequestGeneratorUtils.createInputStreamConstructor(builder.build(), queryParams);
+        return CommonRequestGeneratorUtils.createInputStreamConstructor(builder.build(), queryParams, requestName, docSpec);
     }
 
     /**
@@ -103,11 +117,13 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     protected static RequestConstructor getChannelConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<QueryParam> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);
-        return CommonRequestGeneratorUtils.createChannelConstructor(builder.build(), queryParams);
+        return CommonRequestGeneratorUtils.createChannelConstructor(builder.build(), queryParams, requestName, docSpec);
     }
 
     /**
@@ -115,7 +131,9 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * uses the Channel parameter
      */
     protected static RequestConstructor createDeprecatedConstructor(
-            final ImmutableList<Arguments> constructorArgs) {
+            final ImmutableList<Arguments> constructorArgs,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.add(new Arguments("SeekableByteChannel", "Channel"));
@@ -124,11 +142,16 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
                 "this.stream = new SeekableByteChannelInputStream(channel);");
 
         final ImmutableList<Arguments> updatedArgs = builder.build();
+        final ImmutableList<String> argNames = updatedArgs.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         return new RequestConstructor(
                 true,
                 additionalLines,
                 updatedArgs,
                 updatedArgs,
-                ImmutableList.of());
+                ImmutableList.of(),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 }

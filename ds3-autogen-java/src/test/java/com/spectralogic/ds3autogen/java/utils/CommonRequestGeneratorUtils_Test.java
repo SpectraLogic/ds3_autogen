@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class CommonRequestGeneratorUtils_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("Type1", "Arg1"));
 
-        final RequestConstructor result = createInputStreamConstructor(args, argsToQueryParams(args));
+        final RequestConstructor result = createInputStreamConstructor(args, argsToQueryParams(args), "", new Ds3DocSpecEmptyImpl());
         assertThat(result.getParameters().size(), is(2));
         assertThat(result.getParameters().get(0).getName(), is("Arg1"));
         assertThat(result.getParameters().get(1).getName(), is("Stream"));
@@ -52,7 +53,7 @@ public class CommonRequestGeneratorUtils_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("Type1", "Arg1"));
 
-        final RequestConstructor result = createChannelConstructor(args, argsToQueryParams(args));
+        final RequestConstructor result = createChannelConstructor(args, argsToQueryParams(args), "", new Ds3DocSpecEmptyImpl());
         assertThat(result.getParameters().size(), is(2));
         assertThat(result.getParameters().get(0).getName(), is("Arg1"));
         assertThat(result.getParameters().get(1).getName(), is("Channel"));

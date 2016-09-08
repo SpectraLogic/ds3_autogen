@@ -65,11 +65,11 @@ public class JavaFunctionalDocs_Test {
         final String requestCode = codeGenerator.getRequestGeneratedCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
-        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Delimiter"), docSpec, 2)));
-        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Marker"), docSpec, 2)));
-        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("MaxKeys"), docSpec, 2)));
-        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Prefix"), docSpec, 2)));
-        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("BucketName"), docSpec, 2)));
+        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Delimiter"), docSpec, 1)));
+        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Marker"), docSpec, 1)));
+        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("MaxKeys"), docSpec, 1)));
+        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("Prefix"), docSpec, 1)));
+        assertTrue(requestCode.contains(toConstructorDocs(requestName, ImmutableList.of("BucketName"), docSpec, 1)));
 
         //Generate Client code
         final String ds3ClientCode = codeGenerator.getDs3ClientGeneratedCode();

@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class GetObjectRequestGenerator_Test {
     public void toConstructorList_Test() {
         final Ds3Request request = getRequestAmazonS3GetObject();
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(2));
 
         //Deprecated Constructor
@@ -105,7 +106,9 @@ public class GetObjectRequestGenerator_Test {
     public void createDeprecatedConstructor_Test() {
         final RequestConstructor result = createDeprecatedConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
-                ImmutableList.of(new QueryParam("Type", "Arg2")));
+                ImmutableList.of(new QueryParam("Type", "Arg2")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(true));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -128,7 +131,9 @@ public class GetObjectRequestGenerator_Test {
         final RequestConstructor result = createRegularConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new QueryParam("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));

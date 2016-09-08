@@ -78,7 +78,7 @@ public final class JavaDocGenerator {
         return "/**\n"
                 + indent(indent) + " * " + requestDoc.get() + "\n"
                 + toParamListDocs(params, docSpec, indent)
-                + indent(indent) + " */";
+                + indent(indent) + " */\n";
     }
 
     /**

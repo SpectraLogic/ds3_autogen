@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
@@ -88,7 +89,7 @@ public class NotificationRequestGenerator_Test {
     public void toConstructorList_Test() {
         final Ds3Request request = getRequestDeleteNotification();
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(1));
 
         final RequestConstructor constructor = result.get(0);

@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class MultiFileDeleteRequestGenerator_Test {
     public void toConstructorList_Test() {
         final Ds3Request request = getRequestMultiFileDelete();
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(2));
 
         //Create Objects
@@ -84,7 +85,9 @@ public class MultiFileDeleteRequestGenerator_Test {
     public void createObjectsConstructor_Test() {
         final RequestConstructor result = createObjectsConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
-                ImmutableList.of(new QueryParam("Type", "Arg2")));
+                ImmutableList.of(new QueryParam("Type", "Arg2")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -108,7 +111,9 @@ public class MultiFileDeleteRequestGenerator_Test {
     public void createIterableConstructor_Test() {
         final RequestConstructor result = createIterableConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
-                ImmutableList.of(new QueryParam("Type", "Arg2")));
+                ImmutableList.of(new QueryParam("Type", "Arg2")),
+                "",
+                new Ds3DocSpecEmptyImpl());
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(1));

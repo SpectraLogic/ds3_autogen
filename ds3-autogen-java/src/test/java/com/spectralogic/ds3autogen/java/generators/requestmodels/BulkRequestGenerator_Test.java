@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
@@ -82,7 +83,7 @@ public class BulkRequestGenerator_Test {
         final ImmutableList<Ds3Param> params = createTestDs3ParamList();
         final Ds3Request request = createDs3RequestTestData(true, null, params);
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(1));
 
         final RequestConstructor constructor = result.get(0);
@@ -146,7 +147,7 @@ public class BulkRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("Priority", "Priority");
-        final String result = generator.toWithConstructor(arg, "CreatePutJobRequestHandler");
+        final String result = generator.toWithConstructor(arg, "CreatePutJobRequestHandler", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expectedResult));
     }
 
@@ -162,7 +163,7 @@ public class BulkRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("long", "MaxUploadSize");
-        final String result = generator.toWithConstructor(arg, "CreatePutJobRequestHandler");
+        final String result = generator.toWithConstructor(arg, "CreatePutJobRequestHandler", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expectedResult));
     }
 
@@ -179,7 +180,7 @@ public class BulkRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("void", "FullDetails");
-        final String result = generator.toWithConstructor(arg, "GetJobsRequestHandler");
+        final String result = generator.toWithConstructor(arg, "GetJobsRequestHandler", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expectedResult));
     }
 
@@ -192,7 +193,7 @@ public class BulkRequestGenerator_Test {
                         "        return this;\n" +
                         "    }\n";
         final Arguments arg = new Arguments("String", "Delimiter");
-        final String result = generator.toWithConstructor(arg, "GetBucketRequestHandler");
+        final String result = generator.toWithConstructor(arg, "GetBucketRequestHandler", new Ds3DocSpecEmptyImpl());
         assertThat(result, is(expectedResult));
     }
 }
