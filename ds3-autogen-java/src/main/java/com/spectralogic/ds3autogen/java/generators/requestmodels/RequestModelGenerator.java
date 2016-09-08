@@ -16,9 +16,10 @@
 package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.models.Request;
 
 @FunctionalInterface
 public interface RequestModelGenerator<T extends Request> {
-    T generate(final Ds3Request ds3Request, final String packageName);
+    T generate(final Ds3Request ds3Request, final String packageName, final Ds3DocSpec docSpec);
 }

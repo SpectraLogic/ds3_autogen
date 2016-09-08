@@ -22,7 +22,11 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.models.*;
-import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BulkWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.MaxUploadSizeWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
+import com.spectralogic.ds3autogen.java.utils.WithConstructorUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +55,23 @@ public final class JavaHelper {
         return javaHelper;
     }
 
+
+    //TODO refactor so this is not needed here
+    /**
+     * Encapsulation of function in WithConstructorUtil
+     */
+    public static String putQueryParamLine(final String name, final String type) {
+        return WithConstructorUtil.putQueryParamLine(name, type);
+    }
+
+    //TODO refactor so this is not needed here
+    /**
+     * Encapsulation of function in WithConstructorUtil
+     */
+    public static String putQueryParamLine(final Arguments arg) {
+        return WithConstructorUtil.putQueryParamLine(arg);
+    }
+
     /**
      * Creates the Java code associated with private class variables for bulk requests. If
      * the parameter is required, it will be made private and final. If the parameter is
@@ -71,165 +92,12 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates the Java code associated with a With-Constructor used to set optional parameters.
-     */
-    public static String createWithConstructor(final Arguments arg, final String requestName) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        if (arg.getType().equals("void")) {
-            stringBuilder.append(voidWithConstructor(arg, requestName));
-        } else {
-            stringBuilder.append(withConstructor(arg, requestName));
-        }
-
-        stringBuilder.append(indent(2)).append("return this;\n").append(indent(1)).append("}\n");
-        return stringBuilder.toString();
-    }
-
-    /**
      * Creates the Java code for a class variable getter function.
      */
     public static String createGetter(final String argName, final String argType) {
         return "public " + argType + " get" + capFirst(argName) + "() {\n"
                 + indent(2) + "return this." + uncapFirst(argName) + ";\n"
                 + indent(1) + "}\n";
-    }
-
-    /**
-     * Creates the Java code for With-Constructors for optional arguments within
-     * bulk request handlers. If said argument is defined within the base BulkRequest
-     * handler, then the With-Constructor is generated with "@Override".  A special
-     * With-Constructor is created for the parameter MaxUploadSize.
-     */
-    public static String createWithConstructorBulk(final Arguments arg, final String requestName) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        if (isBulkRequestArg(arg.getName())) {
-            stringBuilder.append(indent(1)).append("@Override\n").append(withConstructorFirstLine(arg, requestName)).append(indent(2)).append("super.with").append(capFirst(arg.getName())).append("(").append(uncapFirst(arg.getName())).append(");\n");
-        } else if (arg.getName().equals("MaxUploadSize")) {
-            stringBuilder.append(maxUploadSizeWithConstructor(arg, requestName));
-        } else if (arg.getType().equals("void")) {
-            stringBuilder.append(voidWithConstructor(arg, requestName));
-        } else {
-            stringBuilder.append(withConstructor(arg, requestName));
-        }
-
-        stringBuilder.append(indent(2)).append("return this;\n").append(indent(1)).append("}\n");
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Creates the Java code for a simple With-Constructor that sets the class variable to
-     * the user provided variable, and adds said variable to the query param list.
-     */
-    protected static String withConstructor(final Arguments arg, final String requestName) {
-        return withConstructorFirstLine(arg, requestName)
-                + indent(2) + argAssignmentLine(arg)
-                + indent(2) + updateQueryParamLine(arg.getName(), uncapFirst(arg.getName()));
-    }
-
-    /**
-     * Creates the Java code for the With-Constructor for the special cased MaxUploadSize
-     * parameter. This constructor ensures that the user defined MaxUploadSize is within
-     * proper min and max bounds before adding it to the query param list.
-     */
-    private static String maxUploadSizeWithConstructor(final Arguments arg, final String requestName) {
-        return withConstructorFirstLine(arg, requestName)
-                + indent(2) + "if (" + uncapFirst(arg.getName()) + " > MIN_UPLOAD_SIZE_IN_BYTES) {\n"
-                + indent(3) + putQueryParamLine(arg) + "\n"
-                + indent(2) + "} else {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), "MAX_UPLOAD_SIZE_IN_BYTES") + "\n"
-                + indent(2) + "}\n";
-    }
-
-    /**
-     * Creates the Java code for With-Constructors that take boolean arguments. If the
-     * user passes in true, the constructor adds the argument to the query params list.
-     * However, if the user passes in false, the constructor removes the param from list
-     */
-    private static String voidWithConstructor(final Arguments arg, final String requestName) {
-        return withConstructorFirstLine(arg, requestName)
-                + indent(2) + "this." + uncapFirst(arg.getName()) + " = " + uncapFirst(arg.getName()) + ";\n"
-                + indent(2) + "if (this." + uncapFirst(arg.getName()) + ") {\n"
-                + indent(3) + putQueryParamLine(arg.getName(), "null") + "\n"
-                + indent(2) + "} else {\n"
-                + indent(3) + removeQueryParamLine(arg.getName())
-                + indent(2) + "}\n";
-    }
-
-    /***
-     * Creates the Java code for the first line of a with constructor.
-     * Example: public MyRequestName withMyOptionalParameter(final MyArgType myArg) {
-     */
-    private static String withConstructorFirstLine(final Arguments arg, final String requestName) {
-        return indent(1) + "public " + requestName + " with" + capFirst(arg.getName()) + "(final " + getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
-    }
-
-    /**
-     * Creates the Java code for assigning a class variable to a function
-     * parameter of the same name.
-     * Example: this.myVariable = myVariable;
-     */
-    private static String argAssignmentLine(final Arguments arg) {
-        return "this." + uncapFirst(arg.getName()) + " = " + paramAssignmentRHS(arg) + ";\n";
-    }
-
-    /**
-     * Creates the Java code for removing a query param from the query params list.
-     * Example: this.getQueryParams().remove(\"myArg\");
-     */
-    private static String removeQueryParamLine(final String name) {
-        return "this.getQueryParams().remove(\"" + Helper.camelToUnderscore(name) + "\");\n";
-    }
-
-    /**
-     * Creates the Java code for putting a query param to the query params list.
-     * Example: this.getQueryParams().put("myArg", MyArgType.toString());
-     */
-    public static String putQueryParamLine(final Arguments arg) {
-        return putQueryParamLine(arg.getName(), queryParamArgToString(arg));
-    }
-
-    /**
-     * Creates the Java code for putting a query param to the query params list.
-     * Example: this.getQueryParams().put("myArg", MyArgType.toString());
-     */
-    protected static String putQueryParamLine(final String name, final String type) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("this.getQueryParams().put(\"");
-        if (name.equalsIgnoreCase("BucketName")) {
-            builder.append("bucket_id");
-        } else {
-            builder.append(Helper.camelToUnderscore(name));
-        }
-        builder.append("\", ")
-                .append(type)
-                .append(");");
-        return builder.toString();
-    }
-
-    /**
-     * Creates the Java code for converting an Argument within a query param line.
-     * If the argument is Delimiter, then it is not escaped. If the argument is
-     * of type String, then it is escaped. All other arguments return a string
-     * containing the Java code for converting said argument to a String.
-     */
-    protected static String queryParamArgToString(final Arguments arg) {
-        if (arg.getName().equalsIgnoreCase("Delimiter")
-                || arg.getName().equalsIgnoreCase("BucketId")
-                || arg.getName().equalsIgnoreCase("BucketName")) {
-            return uncapFirst(arg.getName());
-        }
-        if (arg.getType().endsWith("String")) {
-            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ").replace(\"+\", \"%2B\")";
-        }
-        return argToString(arg);
-    }
-
-    /**
-     * Creates the Java code for updating the query param list.
-     * Example: this.updateQueryParam("myArg", MyArgType.toString());
-     */
-    private static String updateQueryParamLine(final String name, final String type) {
-        return "this.updateQueryParam(\"" + Helper.camelToUnderscore(name) + "\", " + type + ");\n";
     }
 
     /**

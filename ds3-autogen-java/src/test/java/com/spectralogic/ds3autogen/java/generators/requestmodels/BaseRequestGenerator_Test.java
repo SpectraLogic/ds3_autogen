@@ -605,4 +605,44 @@ public class BaseRequestGenerator_Test {
         assertThat(resourceArgToString(new Arguments("String", "Arg")), is("arg"));
         assertThat(resourceArgToString(new Arguments("Integer", "Arg")), is("String.valueOf(arg)"));
     }
+
+    @Test
+    public void toWithConstructor_UUID_Test() {
+        final String expected =
+                "    public MyRequest withMyId(final UUID myId) {\n" +
+                        "        this.myId = myId.toString();\n" +
+                        "        this.updateQueryParam(\"my_id\", myId);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+
+        final Arguments idArg = new Arguments("UUID", "MyId");
+        final String result = generator.toWithConstructor(idArg, "MyRequest");
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toWithConstructor_Boolean_Test() {
+        final String expectedResultBoolean =
+                "    public RequestName withArgName(final boolean argName) {\n" +
+                        "        this.argName = argName;\n" +
+                        "        this.updateQueryParam(\"arg_name\", argName);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+        final Arguments booleanArgument = new Arguments("boolean", "ArgName");
+        final String booleanResult = generator.toWithConstructor(booleanArgument, "RequestName");
+        assertThat(booleanResult, is(expectedResultBoolean));
+    }
+
+    @Test
+    public void toWithConstructor_Test() {
+        final String expectedResult =
+                "    public RequestName withArgName(final ArgType argName) {\n" +
+                        "        this.argName = argName;\n" +
+                        "        this.updateQueryParam(\"arg_name\", argName);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+        final Arguments argument = new Arguments("ArgType", "ArgName");
+        final String result = generator.toWithConstructor(argument, "RequestName");
+        assertThat(result, is(expectedResult));
+    }
 }

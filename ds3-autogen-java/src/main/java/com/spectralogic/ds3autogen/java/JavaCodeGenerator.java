@@ -427,9 +427,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @param ds3Request A Ds3Request
      * @return A Request model
      */
-    private Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) { //TODO generate doc
+    private Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
-        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request), docSpec);
     }
 
     /**

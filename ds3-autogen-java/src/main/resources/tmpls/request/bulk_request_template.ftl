@@ -27,8 +27,8 @@ public class ${name} extends ${parentClass} {
     }
     </#list>
 
-    <#list optionalArguments as arg>
-${javaHelper.createWithConstructorBulk(arg, name)}
+    <#list withConstructors as constructor>
+    ${constructor}
     </#list>
 
     <#include "common/getters.ftl"/>

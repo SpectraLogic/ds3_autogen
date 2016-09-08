@@ -64,4 +64,14 @@ public interface RequestGeneratorUtils {
      * Gets the list of Arguments that the constructor must add to the query param list
      */
     ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request);
+
+    /**
+     * Gets the list of with-constructors for all optional parameters
+     */
+    ImmutableList<String> toWithConstructorList(final ImmutableList<Arguments> optionalParams, final String requestName);
+
+    /**
+     * Gets the with-constructor for the specified optional parameter
+     */
+    String toWithConstructor(final Arguments param, final String requestName);
 }

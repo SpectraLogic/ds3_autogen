@@ -21,6 +21,10 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BulkWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.MaxUploadSizeWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -125,5 +129,25 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
             }
         }
         return builder.build();
+    }
+
+    /**
+     * Creates the Java code for With-Constructors for optional arguments within
+     * bulk request handlers. If said argument is defined within the base BulkRequest
+     * handler, then the With-Constructor is generated with "@Override".  A special
+     * With-Constructor is created for the parameter MaxUploadSize.
+     */
+    @Override
+    public String toWithConstructor(final Arguments param, final String requestName) {
+        if (isBulkRequestArg(param.getName())) {
+            return new BulkWithConstructor(param, requestName).toJavaCode();
+        }
+        if (param.getName().equals("MaxUploadSize")) {
+            return new MaxUploadSizeWithConstructor(param, requestName).toJavaCode();
+        }
+        if (param.getType().equals("void")) {
+            return new VoidWithConstructor(param, requestName).toJavaCode();
+        }
+        return new BaseWithConstructor(param, requestName).toJavaCode();
     }
 }

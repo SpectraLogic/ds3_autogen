@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.Requirement;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
@@ -28,6 +29,8 @@ import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.Request;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
@@ -49,7 +52,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     private final static String ABSTRACT_PAGINATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest";
 
     @Override
-    public Request generate(final Ds3Request ds3Request, final String packageName) {
+    public Request generate(final Ds3Request ds3Request, final String packageName, final Ds3DocSpec docSpec) {
         final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
         final String requestName = removePath(updatedRequest.getName());
         final String requestPath = getRequestPath(updatedRequest);
@@ -66,6 +69,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
 
         final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
 
+        final ImmutableList<String> withConstructors = toWithConstructorList(optionalArguments, requestName);
+
         return new Request(
                 packageName,
                 requestName,
@@ -77,7 +82,30 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 optionalArguments,
                 constructors,
                 classVariableArguments,
-                imports);
+                imports,
+                withConstructors);
+    }
+
+    //TODO test
+    /**
+     * Gets the list of with-constructors for all optional parameters
+     */
+    @Override
+    public ImmutableList<String> toWithConstructorList(final ImmutableList<Arguments> optionalParams, final String requestName) {
+        return optionalParams.stream()
+                .map(param -> toWithConstructor(param, requestName))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Creates the Java code associated with a With-Constructor used to set optional parameters.
+     */
+    @Override
+    public String toWithConstructor(final Arguments param, final String requestName) {
+        if (param.getType().equals("void")) {
+            return new VoidWithConstructor(param, requestName).toJavaCode();
+        }
+        return new BaseWithConstructor(param, requestName).toJavaCode();
     }
 
     /**
