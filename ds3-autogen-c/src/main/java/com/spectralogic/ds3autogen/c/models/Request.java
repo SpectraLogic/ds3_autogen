@@ -38,6 +38,7 @@ public class Request {
     private final boolean hasRequestPayload;
     private final String responseType;
     private final boolean hasResponsePayload;
+    private final boolean supportsPagination;
 
     public Request(
             final String name,
@@ -52,7 +53,8 @@ public class Request {
             final boolean isResourceRequired,
             final boolean isResourceIdRequired,
             final Parameter requestPayload,
-            final String responseType) {
+            final String responseType,
+            final boolean supportsPagination) {
         this.name = "ds3_" + name;
         this.initName = "ds3_init_" + name;
         this.classification = classification;
@@ -69,6 +71,7 @@ public class Request {
         this.hasRequestPayload = requestPayload != null;
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
+        this.supportsPagination = supportsPagination;
     }
 
     public String getName() {
@@ -135,6 +138,10 @@ public class Request {
         return hasResponsePayload;
     }
 
+    public boolean supportsPagination() {
+        return supportsPagination;
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -162,6 +169,7 @@ public class Request {
         builder.append("  hasRequestPayload[").append(hasRequestPayload()).append("]\n");
         builder.append("  ResponseType[").append(getResponseType()).append("]\n");
         builder.append("  hasResponsePayload[").append(hasResponsePayload()).append("]\n");
+        builder.append("  supportsPagination[").append(supportsPagination()).append("]\n");
         return builder.toString();
     }
 }

@@ -30,6 +30,7 @@ import com.spectralogic.ds3autogen.c.models.ParameterModifier;
 import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,8 @@ public final class RequestConverter {
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
                 hasRequestPayload.get(requestName),
-                responseType);
+                responseType,
+                Ds3RequestClassificationUtil.supportsPaginationRequest(ds3Request));
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {

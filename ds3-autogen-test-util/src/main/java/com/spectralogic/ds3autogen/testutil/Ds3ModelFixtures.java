@@ -597,7 +597,31 @@ public class Ds3ModelFixtures {
                         new Ds3Param("Prefix", "java.lang.String", true)), // optionalQueryParams
                 ImmutableList.of()); // requiredQueryParams
     }
-
+    public static Ds3Request getBucketsSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, // bucketRequirement
+                null, // objectRequirement
+                Action.LIST, // action
+                Resource.BUCKET, // resource
+                ResourceType.NON_SINGLETON, // resourceType
+                null, // operation
+                false,// includeIdInPath
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("BucketList", "com.spectralogic.s3.common.dao.domain.ds3.Bucket", null)))), // ds3ResponseCodes - using NameToMarshal
+                ImmutableList.of(
+                        new Ds3Param("DataPolicyId", "java.util.UUID", true),
+                        new Ds3Param("LastPage", "void", true),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("PageLength", "int", false),
+                        new Ds3Param("PageOffset", "int", false),
+                        new Ds3Param("PageStartMarker", "java.util.UUID", true),
+                        new Ds3Param("UserId", "java.util.UUID", true)), // optionalQueryParams
+                ImmutableList.of()); // requiredQueryParams
+    }
     public static Ds3Request getBucketsRequest() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.GetBucketsRequestHandler",
