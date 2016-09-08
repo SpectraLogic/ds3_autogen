@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstruct
 import com.spectralogic.ds3autogen.java.models.withconstructor.BulkWithConstructor;
 import com.spectralogic.ds3autogen.java.models.withconstructor.MaxUploadSizeWithConstructor;
 import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
@@ -77,16 +78,14 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
     public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
 
-        for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {
-            if (!isBulkRequestArg(arg.getName())) {
-                builder.add(new Variable(arg.getName(), arg.getType(), true));
-            }
-        }
-        for (final Arguments arg : toOptionalArgumentsList(ds3Request.getOptionalQueryParams())) {
-            if (!isBulkRequestArg(arg.getName()) && !arg.getName().equals("MaxUploadSize")) {
-                builder.add(new Variable(arg.getName(), arg.getType(), false));
-            }
-        }
+        toConstructorArgumentsList(ds3Request).stream()
+                .filter(arg -> !isBulkRequestArg(arg.getName()))
+                .forEach(arg -> builder.add(new Variable(arg.getName(), arg.getType(), true)));
+
+        toOptionalArgumentsList(ds3Request.getOptionalQueryParams()).stream()
+                .filter(arg -> !isBulkRequestArg(arg.getName()) && !arg.getName().equals("MaxUploadSize"))
+                .forEach(arg -> builder.add(new Variable(arg.getName(), arg.getType(), false)));
+
         return builder.build();
     }
 
@@ -119,16 +118,12 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
      */
     protected static ImmutableList<Arguments> toConstructorAssignmentList(
             final ImmutableList<Arguments> constructorArguments) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         if (isEmpty(constructorArguments)) {
-            return builder.build();
+            return ImmutableList.of();
         }
-        for (final Arguments arg : constructorArguments) {
-            if (!bulkBaseClassArgs.contains(arg.getName())) {
-                builder.add(arg);
-            }
-        }
-        return builder.build();
+        return constructorArguments.stream()
+                .filter(arg -> !bulkBaseClassArgs.contains(arg.getName()))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**

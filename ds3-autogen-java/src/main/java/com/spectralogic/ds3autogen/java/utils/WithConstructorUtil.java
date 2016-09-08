@@ -28,7 +28,6 @@ import static com.spectralogic.ds3autogen.utils.Helper.*;
  */
 public final class WithConstructorUtil {
 
-    //TODO test
     /***
      * Creates the Java code for the first line of a with constructor.
      * Example: public MyRequestName withMyOptionalParameter(final MyArgType myArg) {
@@ -38,7 +37,6 @@ public final class WithConstructorUtil {
                 "(final " + getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
     }
 
-    //TODO test
     /**
      * Creates the Java code for assigning a class variable to a function
      * parameter of the same name.
@@ -48,7 +46,6 @@ public final class WithConstructorUtil {
         return "this." + uncapFirst(arg.getName()) + " = " + paramAssignmentRHS(arg) + ";\n";
     }
 
-    //TODO test
     /**
      * Creates the Java code for updating the query param list.
      * Example: this.updateQueryParam("myArg", MyArgType.toString());
@@ -57,7 +54,6 @@ public final class WithConstructorUtil {
         return "this.updateQueryParam(\"" + camelToUnderscore(name) + "\", " + type + ");\n";
     }
 
-    //TODO test
     /**
      * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
@@ -66,7 +62,6 @@ public final class WithConstructorUtil {
         return putQueryParamLine(arg.getName(), queryParamArgToString(arg));
     }
 
-    //TODO remove if all instances can be replaced with above
     /**
      * Creates the Java code for putting a query param to the query params list.
      * Example: this.getQueryParams().put("myArg", MyArgType.toString());
@@ -103,7 +98,6 @@ public final class WithConstructorUtil {
         return argToString(arg);
     }
 
-    //TODO test
     /**
      * Creates the Java code for removing a query param from the query params list.
      * Example: this.getQueryParams().remove(\"myArg\");

@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
@@ -70,7 +71,7 @@ public class GetObjectRequestGenerator_Test {
         assertThat(constructorAssignments1.get(1).getName(), is("ObjectName"));
         assertThat(constructorAssignments1.get(2).getName(), is("Channel"));
 
-        final ImmutableList<Arguments> queryParams1 = constructor1.getQueryParams();
+        final ImmutableList<QueryParam> queryParams1 = constructor1.getQueryParams();
         assertThat(queryParams1.size(), is(0));
 
         //Regular Constructor
@@ -94,7 +95,7 @@ public class GetObjectRequestGenerator_Test {
         assertThat(constructorAssignments2.get(3).getName(), is("Job"));
         assertThat(constructorAssignments2.get(4).getName(), is("Offset"));
 
-        final ImmutableList<Arguments> queryParams2 = constructor2.getQueryParams();
+        final ImmutableList<QueryParam> queryParams2 = constructor2.getQueryParams();
         assertThat(queryParams2.size(), is(2));
         assertThat(queryParams2.get(0).getName(), is("Job"));
         assertThat(queryParams2.get(1).getName(), is("Offset"));
@@ -104,7 +105,7 @@ public class GetObjectRequestGenerator_Test {
     public void createDeprecatedConstructor_Test() {
         final RequestConstructor result = createDeprecatedConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
-                ImmutableList.of(new Arguments("Type", "Arg2")));
+                ImmutableList.of(new QueryParam("Type", "Arg2")));
 
         assertThat(result.isDeprecated(), is(true));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -117,7 +118,7 @@ public class GetObjectRequestGenerator_Test {
         assertThat(assignments.size(), is(1));
         assertThat(assignments.get(0).getName(), is("Arg1"));
 
-        final ImmutableList<Arguments> queryParams = result.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(1));
         assertThat(queryParams.get(0).getName(), is("Arg2"));
     }
@@ -127,7 +128,7 @@ public class GetObjectRequestGenerator_Test {
         final RequestConstructor result = createRegularConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new Arguments("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")));
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -142,7 +143,7 @@ public class GetObjectRequestGenerator_Test {
         assertThat(assignments.get(0).getName(), is("Arg1"));
         assertThat(assignments.get(1).getName(), is("Arg2"));
 
-        final ImmutableList<Arguments> queryParams = result.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(2));
         assertThat(queryParams.get(0).getName(), is("Arg3"));
         assertThat(queryParams.get(1).getName(), is("Arg2"));

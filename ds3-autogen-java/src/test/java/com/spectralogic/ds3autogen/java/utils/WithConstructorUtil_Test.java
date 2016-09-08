@@ -73,4 +73,61 @@ public class WithConstructorUtil_Test {
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
     }
+
+    @Test
+    public void removeQueryParamLine_Test() {
+        final String expected = "this.getQueryParams().remove(\"param_name\");\n";
+
+        final String result = removeQueryParamLine("ParamName");
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void putQueryParamLine_StringBucketName_Test() {
+        final String expected = "this.getQueryParams().put(\"bucket_id\", ArgType);";
+        final String result = putQueryParamLine("BucketName", "ArgType");
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void putQueryParamLine_String_Test() {
+        final String expected = "this.getQueryParams().put(\"arg_name\", ArgType);";
+        final String result = putQueryParamLine("ArgName", "ArgType");
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void putQueryParamLine_StringArguments_Test() {
+        final String expected = "this.getQueryParams().put(\"arg_name\", UrlEscapers.urlFragmentEscaper().escape(argName).replace(\"+\", \"%2B\"));";
+        final String result = putQueryParamLine(new Arguments("String", "ArgName"));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void putQueryParamLine_IntArguments_Test() {
+        final String expected = "this.getQueryParams().put(\"arg_name\", Integer.toString(argName));";
+        final String result = putQueryParamLine(new Arguments("int", "ArgName"));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void updateQueryParamLine_Test() {
+        final String expected = "this.updateQueryParam(\"arg_name\", ArgType);\n";
+        final String result = updateQueryParamLine("ArgName", "ArgType");
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void argAssignmentLine_Arguments_Test() {
+        final String expected = "this.argName = argName;\n";
+        final String result = argAssignmentLine(new Arguments("ArgType", "ArgName"));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void withConstructorFirstLine_Test() {
+        final String expected = "    public TestRequest withArgName(final ArgType argName) {\n";
+        final String result = withConstructorFirstLine(new Arguments("ArgType", "ArgName"), "TestRequest");
+        assertThat(result, is(expected));
+    }
 }

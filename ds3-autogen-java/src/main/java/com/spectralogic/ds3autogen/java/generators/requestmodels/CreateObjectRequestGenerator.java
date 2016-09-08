@@ -18,9 +18,11 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
 
@@ -46,8 +48,8 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
      * the constructors, which is composed of optional query params
      */
     @Override
-    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        return toArgumentsList(ds3Request.getOptionalQueryParams());
+    public ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request) {
+        return argsToQueryParams(toArgumentsList(ds3Request.getOptionalQueryParams()));
     }
 
     /**
@@ -59,7 +61,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toArgumentsList(ds3Request.getOptionalQueryParams());
-        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+        final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
 
         final RequestConstructor depreciatedConstructor = createDeprecatedConstructor(
                 constructorArgs);
@@ -87,7 +89,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     protected static RequestConstructor getInputStreamConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);
@@ -101,7 +103,7 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
     protected static RequestConstructor getChannelConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.addAll(optionalArgs);

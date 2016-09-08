@@ -17,11 +17,11 @@ package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.createChannelConstructor;
-import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.createInputStreamConstructor;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,7 +32,7 @@ public class CommonRequestGeneratorUtils_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("Type1", "Arg1"));
 
-        final RequestConstructor result = createInputStreamConstructor(args, args);
+        final RequestConstructor result = createInputStreamConstructor(args, argsToQueryParams(args));
         assertThat(result.getParameters().size(), is(2));
         assertThat(result.getParameters().get(0).getName(), is("Arg1"));
         assertThat(result.getParameters().get(1).getName(), is("Stream"));
@@ -52,7 +52,7 @@ public class CommonRequestGeneratorUtils_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("Type1", "Arg1"));
 
-        final RequestConstructor result = createChannelConstructor(args, args);
+        final RequestConstructor result = createChannelConstructor(args, argsToQueryParams(args));
         assertThat(result.getParameters().size(), is(2));
         assertThat(result.getParameters().get(0).getName(), is("Arg1"));
         assertThat(result.getParameters().get(1).getName(), is("Channel"));
@@ -66,5 +66,31 @@ public class CommonRequestGeneratorUtils_Test {
 
         assertThat(result.getAdditionalLines().size(), is(1));
         assertThat(result.getAdditionalLines().get(0), is("this.stream = new SeekableByteChannelInputStream(channel);"));
+    }
+
+    @Test
+    public void argsToQueryParams_NullList_Test() {
+        final ImmutableList<QueryParam> result = argsToQueryParams(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void argsToQueryParams_EmptyList_Test() {
+        final ImmutableList<QueryParam> result = argsToQueryParams(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void argsToQueryParams_FullList_Test() {
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("TypeOne", "NameOne"),
+                new Arguments("TypeTwo", "NameTwo"));
+
+        final ImmutableList<QueryParam> result = argsToQueryParams(args);
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0).getName(), is("NameOne"));
+        assertThat(result.get(0).getType(), is("TypeOne"));
+        assertThat(result.get(1).getName(), is("NameTwo"));
+        assertThat(result.get(1).getType(), is("TypeTwo"));
     }
 }

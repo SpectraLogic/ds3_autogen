@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -25,10 +25,7 @@ import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.Requirement;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.java.models.Constants;
-import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.java.models.RequestConstructor;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
 import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
 import com.spectralogic.ds3autogen.utils.Helper;
@@ -36,6 +33,7 @@ import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -86,7 +84,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 withConstructors);
     }
 
-    //TODO test
     /**
      * Gets the list of with-constructors for all optional parameters
      */
@@ -210,7 +207,29 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 constructor.getAdditionalLines(),
                 modifyType(constructor.getParameters(), curType, newType),
                 modifyType(constructor.getAssignments(), curType, newType),
-                modifyType(constructor.getQueryParams(), curType, newType));
+                modifyQueryParamType(constructor.getQueryParams(), curType, newType));
+    }
+
+    /**
+     * Changes the type of all arguments with the specified type, and converts
+     * the arguments into query params
+     */
+    public static ImmutableList<QueryParam> modifyQueryParamType(
+            final ImmutableList<QueryParam> params,
+            final String curType,
+            final String newType) {
+        if (isEmpty(params)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<QueryParam> builder = ImmutableList.builder();
+        for (final QueryParam param : params) {
+            if (param.getType().equals(curType)) {
+                builder.add(new QueryParam(newType, param.getName()));
+            } else {
+                builder.add(param);
+            }
+        }
+        return builder.build();
     }
 
     /**
@@ -218,8 +237,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * the constructors
      */
     @Override
-    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        return toRequiredArgumentsList(ds3Request);
+    public ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request) {
+        return argsToQueryParams(toRequiredArgumentsList(ds3Request));
     }
 
     /**

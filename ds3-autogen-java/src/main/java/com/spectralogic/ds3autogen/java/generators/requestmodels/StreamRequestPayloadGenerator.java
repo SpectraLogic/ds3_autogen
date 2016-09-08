@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
@@ -58,7 +59,7 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
     @Override
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
-        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+        final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
 
         final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
         builder.add(createChannelConstructor(constructorArgs, queryParams));

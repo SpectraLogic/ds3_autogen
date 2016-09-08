@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
@@ -100,7 +101,7 @@ public class BulkRequestGenerator_Test {
         assertThat(constructorAssignments.get(0).getName(), is("MaxUploadSize"));
         assertThat(constructorAssignments.get(1).getName(), is("Name"));
 
-        final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = constructor.getQueryParams();
         assertThat(queryParams.size(), is(4));
         assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));

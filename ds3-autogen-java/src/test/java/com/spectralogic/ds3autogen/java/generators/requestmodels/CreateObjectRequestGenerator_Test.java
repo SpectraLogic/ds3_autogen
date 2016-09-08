@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
@@ -54,7 +55,7 @@ public class CreateObjectRequestGenerator_Test {
         final ImmutableList<Ds3Param> params = createTestDs3ParamList();
         final Ds3Request request = createDs3RequestTestData(true, params, null);
 
-        final ImmutableList<Arguments> result = generator.toQueryParamsList(request);
+        final ImmutableList<QueryParam> result = generator.toQueryParamsList(request);
         assertThat(result.size(), is(4));
         assertThat(result.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(result.get(1).getName(), is("MaxUploadSize"));
@@ -91,7 +92,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(constructorAssignments1.get(2).getName(), is("Size"));
         assertThat(constructorAssignments1.get(3).getName(), is("Channel"));
 
-        final ImmutableList<Arguments> queryParams1 = constructor1.getQueryParams();
+        final ImmutableList<QueryParam> queryParams1 = constructor1.getQueryParams();
         assertThat(queryParams1.size(), is(0));
 
         //Channel Constructor
@@ -120,7 +121,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(constructorAssignments2.get(4).getName(), is("Offset"));
         assertThat(constructorAssignments2.get(5).getName(), is("Channel"));
 
-        final ImmutableList<Arguments> queryParams2 = constructor2.getQueryParams();
+        final ImmutableList<QueryParam> queryParams2 = constructor2.getQueryParams();
         assertThat(queryParams2.size(), is(2));
         assertThat(queryParams2.get(0).getName(), is("Job"));
         assertThat(queryParams2.get(1).getName(), is("Offset"));
@@ -148,7 +149,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(constructorAssignments3.get(4).getName(), is("Offset"));
         assertThat(constructorAssignments3.get(5).getName(), is("Stream"));
 
-        final ImmutableList<Arguments> queryParams3 = constructor3.getQueryParams();
+        final ImmutableList<QueryParam> queryParams3 = constructor3.getQueryParams();
         assertThat(queryParams3.size(), is(2));
         assertThat(queryParams3.get(0).getName(), is("Job"));
         assertThat(queryParams3.get(1).getName(), is("Offset"));
@@ -159,7 +160,7 @@ public class CreateObjectRequestGenerator_Test {
         final RequestConstructor result = getInputStreamConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new Arguments("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")));
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
@@ -176,7 +177,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(assignments.get(1).getName(), is("Arg2"));
         assertThat(assignments.get(2).getName(), is("Stream"));
 
-        final ImmutableList<Arguments> queryParams = result.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(1));
         assertThat(queryParams.get(0).getName(), is("Arg3"));
     }
@@ -186,7 +187,7 @@ public class CreateObjectRequestGenerator_Test {
         final RequestConstructor result = getChannelConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
-                ImmutableList.of(new Arguments("Type", "Arg3")));
+                ImmutableList.of(new QueryParam("Type", "Arg3")));
 
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(1));
@@ -206,7 +207,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(assignments.get(1).getName(), is("Arg2"));
         assertThat(assignments.get(2).getName(), is("Channel"));
 
-        final ImmutableList<Arguments> queryParams = result.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(1));
         assertThat(queryParams.get(0).getName(), is("Arg3"));
     }
@@ -232,7 +233,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(assignments.get(0).getName(), is("Arg1"));
         assertThat(assignments.get(1).getName(), is("Channel"));
 
-        final ImmutableList<Arguments> queryParams = result.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(0));
     }
 }

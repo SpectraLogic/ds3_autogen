@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 
@@ -63,7 +64,7 @@ public interface RequestGeneratorUtils {
     /**
      * Gets the list of Arguments that the constructor must add to the query param list
      */
-    ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request);
+    ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request);
 
     /**
      * Gets the list of with-constructors for all optional parameters

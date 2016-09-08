@@ -22,11 +22,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.models.*;
-import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
-import com.spectralogic.ds3autogen.java.models.withconstructor.BulkWithConstructor;
-import com.spectralogic.ds3autogen.java.models.withconstructor.MaxUploadSizeWithConstructor;
-import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
-import com.spectralogic.ds3autogen.java.utils.WithConstructorUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,23 +49,6 @@ public final class JavaHelper {
 
     public static JavaHelper getInstance() {
         return javaHelper;
-    }
-
-
-    //TODO refactor so this is not needed here
-    /**
-     * Encapsulation of function in WithConstructorUtil
-     */
-    public static String putQueryParamLine(final String name, final String type) {
-        return WithConstructorUtil.putQueryParamLine(name, type);
-    }
-
-    //TODO refactor so this is not needed here
-    /**
-     * Encapsulation of function in WithConstructorUtil
-     */
-    public static String putQueryParamLine(final Arguments arg) {
-        return WithConstructorUtil.putQueryParamLine(arg);
     }
 
     /**
@@ -521,24 +500,6 @@ public final class JavaHelper {
     }
 
     /**
-     * Removes response codes that are associated with errors from the list.
-     * Error response codes are associated with values greater or equal to 400.
-     */
-    public static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (responseCode.getCode() < 400) {
-                builder.add(responseCode);
-            }
-        }
-        return builder.build();
-    }
-
-    /**
      * Removes a specified variable from a list of variables
      */
     public static ImmutableList<Variable> removeVariable(
@@ -547,15 +508,9 @@ public final class JavaHelper {
         if (isEmpty(vars)) {
             return ImmutableList.of();
         }
-
-        final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
-
-        for (final Variable var : vars) {
-            if (!var.getName().equals(varName)) {
-                builder.add(var);
-            }
-        }
-        return builder.build();
+        return vars.stream()
+                .filter(var -> !var.getName().equals(varName))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**

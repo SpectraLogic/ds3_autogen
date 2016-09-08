@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class CreateNotificationRequestGenerator_Test {
     public void toQueryParamsList_Test() {
         final Ds3Request request = createSimpleTestDs3Request();
 
-        final ImmutableList<Arguments> result = generator.toQueryParamsList(request);
+        final ImmutableList<QueryParam> result = generator.toQueryParamsList(request);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("Priority"));
     }
@@ -123,7 +124,7 @@ public class CreateNotificationRequestGenerator_Test {
         assertThat(constructorAssignments.get(1).getName(), is("Name"));
         assertThat(constructorAssignments.get(2).getName(), is("Priority"));
 
-        final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = constructor.getQueryParams();
         assertThat(queryParams.size(), is(4));
         assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));

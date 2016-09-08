@@ -36,7 +36,6 @@ public class BulkWithConstructor implements WithConstructor {
         this.requestName = requestName;
     }
 
-    //TODO
     @Override
     public String toJavaCode() {
         return indent(1) + "@Override\n" +

@@ -36,7 +36,6 @@ public class MaxUploadSizeWithConstructor implements WithConstructor {
         this.requestName = requestName;
     }
 
-    //TODO test
     @Override
     public String toJavaCode() {
         return withConstructorFirstLine(param, requestName) +

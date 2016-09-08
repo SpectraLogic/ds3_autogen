@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
@@ -31,7 +32,7 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
     @Override
     public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
-        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+        final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
         final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
 
         builder.add(createObjectsConstructor(constructorArgs, queryParams));
@@ -45,7 +46,7 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
      */
     protected static RequestConstructor createObjectsConstructor(
             final ImmutableList<Arguments> constructorArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.add(new Arguments("List<String>", "Objects"));
@@ -62,15 +63,13 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
      */
     protected static RequestConstructor createIterableConstructor(
             final ImmutableList<Arguments> constructorArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
 
         if (hasContent(constructorArgs)) {
-            for (final Arguments arg : constructorArgs) {
-                if (!arg.getName().equalsIgnoreCase("Delete")) {
-                    builder.add(arg);
-                }
-            }
+            constructorArgs.stream()
+                    .filter(arg -> !arg.getName().equalsIgnoreCase("Delete"))
+                    .forEach(builder::add);
         }
 
         builder.add(new Arguments("Iterable<Contents>", "Objs"));

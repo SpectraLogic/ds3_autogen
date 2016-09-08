@@ -18,9 +18,11 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
@@ -116,9 +118,7 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      * the constructors
      */
     @Override
-    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(toRequiredArgumentsList(ds3Request));
-        return builder.build();
+    public ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request) {
+        return argsToQueryParams(toRequiredArgumentsList(ds3Request));
     }
 }
