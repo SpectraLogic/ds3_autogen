@@ -40,6 +40,7 @@ public class StructConverter_Test {
                 ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
+                ImmutableSet.of(),
                 ImmutableSet.of());
         assertThat(testStruct.getNameToMarshall(), is("Data"));
     }
@@ -56,6 +57,7 @@ public class StructConverter_Test {
                 ImmutableList.of());
         final Struct testStruct = StructConverter.toStruct(
                 ds3Type,
+                ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
@@ -78,6 +80,7 @@ public class StructConverter_Test {
                 ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
+                ImmutableSet.of(),
                 ImmutableSet.of());
         assertThat(testStruct.getNameToMarshall(), is("Jobs"));
     }
@@ -93,6 +96,7 @@ public class StructConverter_Test {
                 ImmutableList.of());
         final Struct testStruct = StructConverter.toStruct(
                 ds3Type,
+                ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
                 ImmutableSet.of(),
