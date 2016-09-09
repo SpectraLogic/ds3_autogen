@@ -20,10 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.apispec.*;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
@@ -32,6 +29,7 @@ import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -682,6 +680,16 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet);
         assertEquals(embeddedTypes.size(), 3);
         assertTrue(embeddedTypes.contains("ds3_string_response"));
+    }
+
+    @Test
+    public void testPaginatedTypesSet() {
+        final Ds3ApiSpec getBucketsSpec = new Ds3ApiSpec(
+                ImmutableList.of(Ds3ModelFixtures.getBucketsSpectraS3Request()),
+                ImmutableMap.of());
+        final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(getBucketsSpec);
+        assertEquals(paginatedTypes.size(), 1);
+        assertTrue(paginatedTypes.contains("ds3_bucket_list_response"));
     }
 }
 
