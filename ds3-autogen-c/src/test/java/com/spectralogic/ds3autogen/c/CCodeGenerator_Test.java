@@ -20,7 +20,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
-import com.spectralogic.ds3autogen.api.models.apispec.*;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
@@ -692,6 +695,15 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(getBucketsSpec);
         assertEquals(paginatedTypes.size(), 1);
         assertTrue(paginatedTypes.contains("ds3_bucket_list_response"));
+    }
+
+    @Test
+    public void testNonPaginatedTypesSet() {
+        final Ds3ApiSpec getBucketsSpec = new Ds3ApiSpec(
+                ImmutableList.of(Ds3ModelFixtures.getBucketRequest()),
+                ImmutableMap.of());
+        final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(getBucketsSpec);
+        assertEquals(paginatedTypes.size(), 0);
     }
 }
 
