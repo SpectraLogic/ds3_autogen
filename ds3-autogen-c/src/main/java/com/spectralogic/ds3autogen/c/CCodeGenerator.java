@@ -28,6 +28,7 @@ import com.spectralogic.ds3autogen.c.helpers.*;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
+import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
@@ -75,8 +76,9 @@ public class CCodeGenerator implements CodeGenerator {
 
             final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
             final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+            final ImmutableSet<String> paginatedTypes = getPaginatedTypes(spec);
 
-            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, paginatedTypes);
 
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -131,14 +133,15 @@ public class CCodeGenerator implements CodeGenerator {
                                                       final ImmutableSet<String> enumNames,
                                                       final ImmutableSet<String> responseTypes,
                                                       final ImmutableSet<String> arrayMemberTypes,
-                                                      final ImmutableSet<String> embeddedTypes) throws ParseException {
+                                                      final ImmutableSet<String> embeddedTypes,
+                                                      final ImmutableSet<String> paginatedTypes) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
             for (final Ds3Type ds3TypeEntry : spec.getTypes().values()) {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
                 final Struct structEntry = StructConverter.toStruct(
-                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, embeddedTypes);
+                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, paginatedTypes);
                 allStructsBuilder.add(structEntry);
             }
         }
@@ -167,6 +170,16 @@ public class CCodeGenerator implements CodeGenerator {
                 .flatMap(type -> type.getElements().stream())
                 .filter(element -> !element.getType().equalsIgnoreCase("array"))
                 .map(element -> StructHelper.getResponseTypeName(element.getType()))
+                .collect(GuavaCollectors.immutableSet());
+    }
+
+    /**
+     * Requests with optional paging require an extra "ds3_paging" member
+     */
+    public static ImmutableSet<String> getPaginatedTypes(final Ds3ApiSpec spec) {
+        return spec.getRequests().stream()
+                .filter( req -> Ds3RequestClassificationUtil.supportsPaginationRequest(req))
+                .map( req -> RequestConverter.getResponseType(req.getDs3ResponseCodes()))
                 .collect(GuavaCollectors.immutableSet());
     }
 

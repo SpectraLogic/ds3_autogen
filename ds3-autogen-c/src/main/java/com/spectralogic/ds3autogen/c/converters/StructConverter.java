@@ -34,9 +34,10 @@ public final class StructConverter {
                                   final ImmutableSet<String> enumNames,
                                   final ImmutableSet<String> responseTypes,
                                   final ImmutableSet<String> arrayMemberTypes,
-                                  final ImmutableSet<String> embeddedTypes) throws ParseException {
-        final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames);
+                                  final ImmutableSet<String> embeddedTypes,
+                                  final ImmutableSet<String> paginatedTypes) throws ParseException {
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
+        final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames, paginatedTypes.contains(responseTypeName));
         return new Struct(
                 responseTypeName,
                 convertNameToMarshall(ds3Type),
@@ -48,7 +49,8 @@ public final class StructConverter {
     }
 
     private static ImmutableList<StructMember> convertDs3Elements(final ImmutableList<Ds3Element> elementsList,
-                                                                  final ImmutableSet<String> enumNames) throws ParseException {
+                                                                  final ImmutableSet<String> enumNames,
+                                                                  final boolean isPaginated) throws ParseException {
         final ImmutableList.Builder<StructMember> builder = ImmutableList.builder();
         for (final Ds3Element currentElement : elementsList) {
             final C_Type elementType = C_TypeHelper.convertDs3ElementType(currentElement, enumNames);
@@ -66,8 +68,7 @@ public final class StructConverter {
                         "num_" + StructHelper.getNameUnderscores(currentElement.getName()))
                 );
             }
-            if (elementType.getTypeName().equals("ds3_spectra_user_response")
-             || elementType.getTypeName().equals("ds3_s3_object_response")) {
+            if (isPaginated) {
                 builder.add(new StructMember(new FreeableType("ds3_paging", false), "paging"));
             }
         }
