@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.charset.Charset;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
@@ -54,7 +55,7 @@ public class ${name} extends ${parentClass} {
         delete.setDeleteObjectList(deleteObjects);
 
         final String xmlOutput = XmlOutput.toXml(delete);
-        final byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
 
         return new ByteArrayInputStream(stringBytes);
