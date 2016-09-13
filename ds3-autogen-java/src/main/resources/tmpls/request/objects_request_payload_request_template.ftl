@@ -6,10 +6,12 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.utils.Guard;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import com.spectralogic.ds3client.utils.Guard;
+import java.nio.charset.Charset;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
@@ -33,7 +35,7 @@ public class ${name} extends ${parentClass} {
 
         ${javaHelper.toXmlLine("xmlOutput", "objects", operation)}
 
-        final byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

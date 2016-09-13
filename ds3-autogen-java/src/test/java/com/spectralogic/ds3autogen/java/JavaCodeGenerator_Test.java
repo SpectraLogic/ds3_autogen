@@ -106,6 +106,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasImport("com.google.common.net.UrlEscapers", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
@@ -562,6 +563,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertFalse(requestGeneratedCode.contains("RestOperationType"));
@@ -630,6 +632,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertFalse(requestGeneratedCode.contains("RestOperationType"));
@@ -702,6 +705,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
         assertFalse(requestGeneratedCode.contains("RestOperationType"));
@@ -769,6 +773,7 @@ public class JavaCodeGenerator_Test {
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("java.util.ArrayList", requestGeneratedCode));
         assertTrue(hasImport("java.util.List", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));
