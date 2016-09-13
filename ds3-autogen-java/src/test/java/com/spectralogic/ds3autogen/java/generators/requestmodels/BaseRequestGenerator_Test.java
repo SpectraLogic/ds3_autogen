@@ -17,17 +17,21 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.*;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
@@ -40,6 +44,12 @@ import static org.junit.Assert.*;
 public class BaseRequestGenerator_Test {
 
     private final static BaseRequestGenerator generator = new BaseRequestGenerator();
+
+    private static ImmutableList<String> getQueryParamTypes(final ImmutableList<QueryParam> params) {
+        return params.stream()
+                .map(QueryParam::getType)
+                .collect(GuavaCollectors.immutableList());
+    }
 
     @Test
     public void isSpectraDs3_Test() {
@@ -359,7 +369,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Ds3Param> params = createTestDs3ParamList();
         final Ds3Request request = createDs3RequestTestData(true, null, params);
 
-        final ImmutableList<Arguments> result = generator.toQueryParamsList(request);
+        final ImmutableList<QueryParam> result = generator.toQueryParamsList(request);
         assertThat(result.size(), is(4));
         assertThat(result.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(result.get(1).getName(), is("MaxUploadSize"));
@@ -372,7 +382,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Ds3Param> params = createTestDs3ParamList();
         final Ds3Request request = createDs3RequestTestData(true, null, params);
 
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request);
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(1));
 
         final RequestConstructor constructor = result.get(0);
@@ -391,7 +401,7 @@ public class BaseRequestGenerator_Test {
         assertThat(constructorAssignments.get(1).getName(), is("Name"));
         assertThat(constructorAssignments.get(2).getName(), is("Priority"));
 
-        final ImmutableList<Arguments> queryParams = constructor.getQueryParams();
+        final ImmutableList<QueryParam> queryParams = constructor.getQueryParams();
         assertThat(queryParams.size(), is(4));
         assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
         assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
@@ -463,11 +473,11 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final RequestConstructor result = convertUuidConstructorToStringConstructor(constructor);
         assertThat(getAllArgumentTypes(result.getParameters()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.getQueryParams()), not(hasItem("UUID")));
+        assertThat(getQueryParamTypes(result.getQueryParams()), not(hasItem("UUID")));
         assertThat(getAllArgumentTypes(result.getAssignments()), not(hasItem("UUID")));
     }
 
@@ -476,7 +486,7 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("String", "StringArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
         assertThat(result.size(), is(1));
@@ -488,16 +498,16 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
         assertThat(result.size(), is(2));
         assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
-        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getQueryParamTypes(result.get(0).getQueryParams()), hasItem("UUID"));
         assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
 
         assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getQueryParamTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
         assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
     }
 
@@ -507,16 +517,16 @@ public class BaseRequestGenerator_Test {
                 new Arguments("String", "StringArg"),
                 new Arguments("UUID", "UuidArg"),
                 new Arguments("int", "IntArg"));
-        final RequestConstructor constructor = new RequestConstructor(args, args, args);
+        final RequestConstructor constructor = new RequestConstructor(args, args, argsToQueryParams(args), "");
 
         final ImmutableList<RequestConstructor> result = splitAllUuidConstructors(ImmutableList.of(constructor));
         assertThat(result.size(), is(2));
         assertThat(getAllArgumentTypes(result.get(0).getParameters()), hasItem("UUID"));
-        assertThat(getAllArgumentTypes(result.get(0).getQueryParams()), hasItem("UUID"));
+        assertThat(getQueryParamTypes(result.get(0).getQueryParams()), hasItem("UUID"));
         assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
 
         assertThat(getAllArgumentTypes(result.get(1).getParameters()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
+        assertThat(getQueryParamTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
         assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
     }
 
@@ -604,5 +614,97 @@ public class BaseRequestGenerator_Test {
         assertThat(resourceArgToString(new Arguments("UUID", "Arg")), is("arg"));
         assertThat(resourceArgToString(new Arguments("String", "Arg")), is("arg"));
         assertThat(resourceArgToString(new Arguments("Integer", "Arg")), is("String.valueOf(arg)"));
+    }
+
+    @Test
+    public void toWithConstructor_UUID_Test() {
+        final String expected =
+                "    public MyRequest withMyId(final UUID myId) {\n" +
+                        "        this.myId = myId.toString();\n" +
+                        "        this.updateQueryParam(\"my_id\", myId);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+
+        final Arguments idArg = new Arguments("UUID", "MyId");
+        final String result = generator.toWithConstructor(idArg, "MyRequest", new Ds3DocSpecEmptyImpl());
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toWithConstructor_Boolean_Test() {
+        final String expectedResultBoolean =
+                "    public RequestName withArgName(final boolean argName) {\n" +
+                        "        this.argName = argName;\n" +
+                        "        this.updateQueryParam(\"arg_name\", argName);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+        final Arguments booleanArgument = new Arguments("boolean", "ArgName");
+        final String booleanResult = generator.toWithConstructor(booleanArgument, "RequestName", new Ds3DocSpecEmptyImpl());
+        assertThat(booleanResult, is(expectedResultBoolean));
+    }
+
+    @Test
+    public void toWithConstructor_Test() {
+        final String expectedResult =
+                "    public RequestName withArgName(final ArgType argName) {\n" +
+                        "        this.argName = argName;\n" +
+                        "        this.updateQueryParam(\"arg_name\", argName);\n" +
+                        "        return this;\n" +
+                        "    }\n";
+        final Arguments argument = new Arguments("ArgType", "ArgName");
+        final String result = generator.toWithConstructor(argument, "RequestName", new Ds3DocSpecEmptyImpl());
+        assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void modifyQueryParamType_NullList_Test() {
+        final ImmutableList<QueryParam> result = modifyQueryParamType(null, "CurType", "NewType");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void modifyQueryParamType_EmptyList_Test() {
+        final ImmutableList<QueryParam> result = modifyQueryParamType(ImmutableList.of(), "CurType", "NewType");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void modifyQueryParamType_FullList_Test() {
+        final ImmutableList<QueryParam> params = ImmutableList.of(new QueryParam("CurType", "Name"));
+
+        final ImmutableList<QueryParam> result = modifyQueryParamType(params, "CurType", "NewType");
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("Name"));
+        assertThat(result.get(0).getType(), is("NewType"));
+    }
+
+    @Test
+    public void toWithConstructorList_Test() {
+        final String expected =
+                "    public TestRequest withArgOne(final TypeOne argOne) {\n" +
+                "        this.argOne = argOne;\n" +
+                "        this.updateQueryParam(\"arg_one\", argOne);\n" +
+                "        return this;\n" +
+                "    }\n";
+
+        final String voidExpected =
+                "    public TestRequest withVoidArg(final boolean voidArg) {\n" +
+                "        this.voidArg = voidArg;\n" +
+                "        if (this.voidArg) {\n" +
+                "            this.getQueryParams().put(\"void_arg\", null);\n" +
+                "        } else {\n" +
+                "            this.getQueryParams().remove(\"void_arg\");\n" +
+                "        }\n" +
+                "        return this;\n" +
+                "    }\n";
+
+        final ImmutableList<Arguments> optionalParams = ImmutableList.of(
+                new Arguments("TypeOne", "ArgOne"),
+                new Arguments("void", "VoidArg"));
+
+        final ImmutableList<String> result = generator.toWithConstructorList(optionalParams, "TestRequest", new Ds3DocSpecEmptyImpl());
+        assertThat(result.size(), is(2));
+        assertThat(result.get(0), is(expected));
+        assertThat(result.get(1), is(voidExpected));
     }
 }

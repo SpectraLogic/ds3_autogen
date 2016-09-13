@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -39,66 +39,6 @@ import static org.junit.Assert.*;
 public class JavaHelper_Test {
 
     @Test
-    public void createWithConstructor_UUID_Test() {
-        final String expected =
-                "    public MyRequest withMyId(final UUID myId) {\n" +
-                "        this.myId = myId.toString();\n" +
-                "        this.updateQueryParam(\"my_id\", myId);\n" +
-                "        return this;\n" +
-                "    }\n";
-
-        final Arguments idArg = new Arguments("UUID", "MyId");
-        final String result = createWithConstructor(idArg, "MyRequest");
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void createWithConstructorBulk_PriorityParam_Test() {
-        final String expectedResult =
-                        "    @Override\n" +
-                        "    public CreatePutJobRequestHandler withPriority(final Priority priority) {\n" +
-                        "        super.withPriority(priority);\n" +
-                        "        return this;\n" +
-                        "    }\n";
-        final Arguments arg = new Arguments("Priority", "Priority");
-        final String result = createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createWithConstructorBulk_MaxUploadSizeParam_Test() {
-        final String expectedResult =
-                "    public CreatePutJobRequestHandler withMaxUploadSize(final long maxUploadSize) {\n" +
-                "        if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
-                "            this.getQueryParams().put(\"max_upload_size\", Long.toString(maxUploadSize));\n" +
-                "        } else {\n" +
-                "            this.getQueryParams().put(\"max_upload_size\", MAX_UPLOAD_SIZE_IN_BYTES);\n" +
-                "        }\n" +
-                "        return this;\n" +
-                "    }\n";
-        final Arguments arg = new Arguments("long", "MaxUploadSize");
-        final String result = createWithConstructorBulk(arg, "CreatePutJobRequestHandler");
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createWithConstructorBulk_VoidParam_Test() {
-        final String expectedResult =
-                "    public GetJobsRequestHandler withFullDetails(final boolean fullDetails) {\n" +
-                "        this.fullDetails = fullDetails;\n" +
-                "        if (this.fullDetails) {\n" +
-                "            this.getQueryParams().put(\"full_details\", null);\n" +
-                "        } else {\n" +
-                "            this.getQueryParams().remove(\"full_details\");\n" +
-                "        }\n" +
-                "        return this;\n" +
-                "    }\n";
-        final Arguments arg = new Arguments("void", "FullDetails");
-        final String result = createWithConstructorBulk(arg, "GetJobsRequestHandler");
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
     public void argTypeList_NullList_Test() {
         final String result = argTypeList(null);
         assertThat(result, is(""));
@@ -118,19 +58,6 @@ public class JavaHelper_Test {
                 new Arguments("Type1", "arg1"),
                 new Arguments("Type3", "arg3"));
         final String result = argTypeList(arguments);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createWithConstructorBulk_Test() {
-        final String expectedResult =
-                "    public GetBucketRequestHandler withDelimiter(final String delimiter) {\n" +
-                "        this.delimiter = delimiter;\n" +
-                "        this.updateQueryParam(\"delimiter\", delimiter);\n" +
-                "        return this;\n" +
-                "    }\n";
-        final Arguments arg = new Arguments("String", "Delimiter");
-        final String result = createWithConstructorBulk(arg, "GetBucketRequestHandler");
         assertThat(result, is(expectedResult));
     }
 
@@ -382,37 +309,6 @@ public class JavaHelper_Test {
 
         final ImmutableList<Element> emptyResult = sortModelConstructorArgs(null);
         assertTrue(emptyResult.isEmpty());
-    }
-
-    @Test
-    public void createWithConstructor_Test() {
-        final String expectedResult =
-                "    public RequestName withArgName(final ArgType argName) {\n" +
-                "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName);\n" +
-                "        return this;\n" +
-                "    }\n";
-        final Arguments argument = new Arguments("ArgType", "ArgName");
-        final String result = createWithConstructor(argument, "RequestName");
-        assertThat(result, is(expectedResult));
-
-        final String expectedResultBoolean =
-                "    public RequestName withArgName(final boolean argName) {\n" +
-                "        this.argName = argName;\n" +
-                "        this.updateQueryParam(\"arg_name\", argName);\n" +
-                "        return this;\n" +
-                "    }\n";
-        final Arguments booleanArgument = new Arguments("boolean", "ArgName");
-        final String booleanResult = createWithConstructor(booleanArgument, "RequestName");
-        assertThat(booleanResult, is(expectedResultBoolean));
-    }
-
-    @Test
-    public void putQueryParamLine_Test() {
-        final String expectedResult = "this.getQueryParams().put(\"arg_name\", argName.toString());";
-        final Arguments argument = new Arguments("ArgType", "ArgName");
-        final String result = putQueryParamLine(argument);
-        assertThat(result, is(expectedResult));
     }
 
     @Test
@@ -803,56 +699,6 @@ public class JavaHelper_Test {
         final ImmutableList<Variable> result = removeVariable(variables, "Name");
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("Name2"));
-    }
-
-    @Test
-     public void putQueryParamLine_ArgInput_Test() {
-        final Arguments delimiter = new Arguments("java.lang.String", "Delimiter");
-        assertThat(putQueryParamLine(delimiter),
-                is("this.getQueryParams().put(\"delimiter\", delimiter);"));
-
-        final Arguments bucketId = new Arguments("java.lang.String", "BucketId");
-        assertThat(putQueryParamLine(bucketId),
-                is("this.getQueryParams().put(\"bucket_id\", bucketId);"));
-
-        final Arguments bucketName = new Arguments("java.lang.String", "BucketName");
-        assertThat(putQueryParamLine(bucketName),
-                is("this.getQueryParams().put(\"bucket_id\", bucketName);"));
-
-        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(putQueryParamLine(stringTest),
-                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\"));"));
-
-        final Arguments intTest = new Arguments("int", "IntTest");
-        assertThat(putQueryParamLine(intTest),
-                is("this.getQueryParams().put(\"int_test\", Integer.toString(intTest));"));
-    }
-
-    @Test
-    public void putQueryParamLine_StringInput_Test() {
-        assertThat(putQueryParamLine("BucketId", "bucketId"),
-                is("this.getQueryParams().put(\"bucket_id\", bucketId);"));
-
-        assertThat(putQueryParamLine("BucketName", "bucketName"),
-                is("this.getQueryParams().put(\"bucket_id\", bucketName);"));
-    }
-
-    @Test
-    public void queryParamArgToString_Test() {
-        final Arguments delimiter = new Arguments("java.lang.String", "Delimiter");
-        assertThat(queryParamArgToString(delimiter), is("delimiter"));
-
-        final Arguments bucketId = new Arguments("java.lang.String", "BucketId");
-        assertThat(queryParamArgToString(bucketId), is("bucketId"));
-
-        final Arguments bucketName = new Arguments("java.lang.String", "BucketName");
-        assertThat(queryParamArgToString(bucketName), is("bucketName"));
-
-        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\")"));
-
-        final Arguments intTest = new Arguments("int", "IntTest");
-        assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
     }
 
     @Test

@@ -95,7 +95,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         this.destDir = destDir;
 
         try {
-            generateCommands();
+            generateCommands(docSpec);
         } catch (final TemplateException e) {
             e.printStackTrace();
         }
@@ -106,10 +106,10 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateCommands() throws IOException, TemplateException {
-        generateAllRequests();
+    private void generateCommands(final Ds3DocSpec docSpec) throws IOException, TemplateException {
+        generateAllRequests(docSpec);
         generateAllModels();
-        generateClient();
+        generateClient(docSpec);
     }
 
     /**
@@ -241,14 +241,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateAllRequests() throws IOException, TemplateException {
+    private void generateAllRequests(final Ds3DocSpec docSpec) throws IOException, TemplateException {
         final ImmutableList<Ds3Request> requests = spec.getRequests();
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
         }
         for (final Ds3Request request : requests) {
-            generateRequest(request);
+            generateRequest(request, docSpec);
             generateResponse(request);
         }
     }
@@ -259,14 +259,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateClient() throws IOException, TemplateException {
+    private void generateClient(final Ds3DocSpec docSpec) throws IOException, TemplateException {
         final ImmutableList<Ds3Request> requests = spec.getRequests();
         if (isEmpty(requests)) {
             LOG.info("Not generating client: no requests.");
             return;
         }
         final Template clientTmpl = config.getTemplate("client/ds3client_template.ftl");
-        final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH);
+        final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH, docSpec);
         final Path clientPath = toClientPath("Ds3Client.java");
 
         LOG.info("Getting outputstream for file:" + clientPath.toString());
@@ -397,10 +397,10 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
 
-        final Request request = toRequest(ds3Request);
+        final Request request = toRequest(ds3Request, docSpec);
         final Path requestPath = getPathFromPackage(ds3Request, request.getName());
 
         LOG.info("Getting outputstream for file:" + requestPath.toString());
@@ -427,9 +427,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @param ds3Request A Ds3Request
      * @return A Request model
      */
-    private Request toRequest(final Ds3Request ds3Request) {
+    private Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
-        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
+        return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request), docSpec);
     }
 
     /**

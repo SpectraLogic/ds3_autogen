@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -20,25 +20,28 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.Requirement;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.java.models.Constants;
-import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.java.models.RequestConstructor;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
+import com.spectralogic.ds3autogen.java.models.withconstructor.BaseWithConstructor;
+import com.spectralogic.ds3autogen.java.models.withconstructor.VoidWithConstructor;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath;
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
@@ -49,7 +52,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     private final static String ABSTRACT_PAGINATION_REQUEST_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest";
 
     @Override
-    public Request generate(final Ds3Request ds3Request, final String packageName) {
+    public Request generate(final Ds3Request ds3Request, final String packageName, final Ds3DocSpec docSpec) {
         final Ds3Request updatedRequest = updateDs3RequestParamTypes(ds3Request);
         final String requestName = removePath(updatedRequest.getName());
         final String requestPath = getRequestPath(updatedRequest);
@@ -59,12 +62,14 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 splitAllUuidOptionalArguments(toOptionalArgumentsList(updatedRequest.getOptionalQueryParams()));
 
         final ImmutableList<RequestConstructor> constructors =
-                splitAllUuidConstructors(toConstructorList(updatedRequest));
+                splitAllUuidConstructors(toConstructorList(updatedRequest, requestName, docSpec));
 
         final ImmutableList<Variable> classVariableArguments =
                 convertAllUuidClassVariables(toClassVariableArguments(updatedRequest));
 
         final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
+
+        final ImmutableList<String> withConstructors = toWithConstructorList(optionalArguments, requestName, docSpec);
 
         return new Request(
                 packageName,
@@ -77,7 +82,44 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 optionalArguments,
                 constructors,
                 classVariableArguments,
-                imports);
+                imports,
+                withConstructors);
+    }
+
+    /**
+     * Gets the list of with-constructors for all optional parameters
+     */
+    @Override
+    public ImmutableList<String> toWithConstructorList(
+            final ImmutableList<Arguments> optionalParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        return optionalParams.stream()
+                .map(param -> toWithConstructor(param, requestName, docSpec))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Creates the Java code associated with a With-Constructor used to set optional parameters,
+     * including javadoc
+     */
+    @Override
+    public String toWithConstructor(
+            final Arguments param,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        final String documentation = toConstructorDocs(requestName, ImmutableList.of(param.getName()), docSpec, 1);
+        if (param.getType().equals("void")) {
+            return formatDocumentation(documentation) + new VoidWithConstructor(param, requestName).toJavaCode();
+        }
+        return formatDocumentation(documentation) + new BaseWithConstructor(param, requestName).toJavaCode();
+    }
+
+    protected static String formatDocumentation(final String documentation) {
+        if (isEmpty(documentation)) {
+            return "";
+        }
+        return indent(1) + documentation;
     }
 
     /**
@@ -128,12 +170,20 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * constructor list will be of size one.
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
+        final ImmutableList<String> argNames = constructorArgs.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         final RequestConstructor constructor = new RequestConstructor(
                 constructorArgs,
                 constructorArgs,
-                toQueryParamsList(ds3Request));
+                toQueryParamsList(ds3Request),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);
     }
@@ -182,7 +232,30 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 constructor.getAdditionalLines(),
                 modifyType(constructor.getParameters(), curType, newType),
                 modifyType(constructor.getAssignments(), curType, newType),
-                modifyType(constructor.getQueryParams(), curType, newType));
+                modifyQueryParamType(constructor.getQueryParams(), curType, newType),
+                constructor.getDocumentation());
+    }
+
+    /**
+     * Changes the type of all arguments with the specified type, and converts
+     * the arguments into query params
+     */
+    public static ImmutableList<QueryParam> modifyQueryParamType(
+            final ImmutableList<QueryParam> params,
+            final String curType,
+            final String newType) {
+        if (isEmpty(params)) {
+            return ImmutableList.of();
+        }
+        final ImmutableList.Builder<QueryParam> builder = ImmutableList.builder();
+        for (final QueryParam param : params) {
+            if (param.getType().equals(curType)) {
+                builder.add(new QueryParam(newType, param.getName()));
+            } else {
+                builder.add(param);
+            }
+        }
+        return builder.build();
     }
 
     /**
@@ -190,8 +263,8 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * the constructors
      */
     @Override
-    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        return toRequiredArgumentsList(ds3Request);
+    public ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request) {
+        return argsToQueryParams(toRequiredArgumentsList(ds3Request));
     }
 
     /**

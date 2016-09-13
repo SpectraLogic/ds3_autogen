@@ -1,3 +1,4 @@
-<#list optionalArguments as arg>
-${javaHelper.createWithConstructor(arg, name)}
+<#list withConstructors as constructor>
+${constructor}
+
 </#list>

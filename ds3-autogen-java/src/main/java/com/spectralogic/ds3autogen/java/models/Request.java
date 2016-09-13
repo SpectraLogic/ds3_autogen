@@ -42,6 +42,8 @@ public class Request {
     /** List of class imports required for compilation */
     private final ImmutableList<String> imports;
 
+    private final ImmutableList<String> withConstructors;
+
     public Request(final String packageName,
                    final String name,
                    final String parentClass,
@@ -52,7 +54,8 @@ public class Request {
                    final ImmutableList<Arguments> optionalArguments,
                    final ImmutableList<RequestConstructor> constructors,
                    final ImmutableList<Variable> classVariables,
-                   final ImmutableList<String> imports) {
+                   final ImmutableList<String> imports,
+                   final ImmutableList<String> withConstructors) {
         this.packageName = packageName;
         this.name = name;
         this.parentClass = parentClass;
@@ -64,6 +67,7 @@ public class Request {
         this.constructors = constructors;
         this.classVariables = classVariables;
         this.imports = imports;
+        this.withConstructors = withConstructors;
     }
 
     public String getPackageName() {
@@ -106,5 +110,9 @@ public class Request {
 
     public String getParentClass() {
         return parentClass;
+    }
+
+    public ImmutableList<String> getWithConstructors() {
+        return withConstructors;
     }
 }

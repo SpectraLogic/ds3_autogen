@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -27,18 +27,22 @@ public class RequestConstructor {
     private final ImmutableList<Arguments> assignments;
 
     /** Parameters that are added to query params within constructor */
-    private final ImmutableList<Arguments> queryParams;
+    private final ImmutableList<QueryParam> queryParams;
 
     private boolean isDeprecated = false;
     private ImmutableList<String> additionalLines = ImmutableList.of();
 
+    private final String documentation;
+
     public RequestConstructor(
             final ImmutableList<Arguments> parameters,
             final ImmutableList<Arguments> assignments,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String documentation) {
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.documentation = documentation;
     }
 
     public RequestConstructor(
@@ -46,12 +50,14 @@ public class RequestConstructor {
             final ImmutableList<String> additionalLines,
             final ImmutableList<Arguments> parameters,
             final ImmutableList<Arguments> assignments,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String documentation) {
         this.isDeprecated = isDeprecated;
         this.additionalLines = additionalLines;
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.documentation = documentation;
     }
 
     public ImmutableList<Arguments> getParameters() {
@@ -62,7 +68,7 @@ public class RequestConstructor {
         return assignments;
     }
 
-    public ImmutableList<Arguments> getQueryParams() {
+    public ImmutableList<QueryParam> getQueryParams() {
         return queryParams;
     }
 
@@ -72,5 +78,9 @@ public class RequestConstructor {
 
     public ImmutableList<String> getAdditionalLines() {
         return additionalLines;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

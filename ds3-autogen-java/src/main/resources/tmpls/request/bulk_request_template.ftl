@@ -18,6 +18,7 @@ public class ${name} extends ${parentClass} {
 
     // Constructor
     <#list constructors as constructor>
+    ${constructor.documentation}
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(bucketName, objects);
         <#list constructor.getAssignments() as arg>
@@ -27,9 +28,7 @@ public class ${name} extends ${parentClass} {
     }
     </#list>
 
-    <#list optionalArguments as arg>
-${javaHelper.createWithConstructorBulk(arg, name)}
-    </#list>
+    <#include "common/with_constructors.ftl"/>
 
     <#include "common/getters.ftl"/>
 

@@ -17,10 +17,15 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
 
@@ -46,10 +51,13 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
      * amazon request, then the old depreciated constructor is also created.
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
-        final ImmutableList<Arguments> queryParams = toQueryParamsList(ds3Request);
+        final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
 
         final ImmutableList.Builder<RequestConstructor> constructorBuilder = ImmutableList.builder();
 
@@ -57,14 +65,18 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
             constructorBuilder.add(
                     createDeprecatedConstructor(
                             constructorArgs,
-                            queryParams));
+                            queryParams,
+                            requestName,
+                            docSpec));
         }
 
         constructorBuilder.add(
                 createRegularConstructor(
                         constructorArgs,
                         optionalArgs,
-                        queryParams));
+                        queryParams,
+                        requestName,
+                        docSpec));
 
         return constructorBuilder.build();
     }
@@ -74,13 +86,21 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
      */
     protected static RequestConstructor createDeprecatedConstructor(
             final ImmutableList<Arguments> constructorArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+
+        final ImmutableList<String> argNames = constructorArgs.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         return new RequestConstructor(
                 true,
                 ImmutableList.of(),
                 constructorArgs,
                 constructorArgs,
-                queryParams);
+                queryParams,
+                toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
     /**
@@ -89,19 +109,27 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
     protected static RequestConstructor createRegularConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> constructorArgBuilder = ImmutableList.builder();
         constructorArgBuilder.addAll(constructorArgs);
         constructorArgBuilder.addAll(optionalArgs);
 
-        final ImmutableList.Builder<Arguments> queryParamsBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<QueryParam> queryParamsBuilder = ImmutableList.builder();
         queryParamsBuilder.addAll(queryParams);
-        queryParamsBuilder.addAll(optionalArgs);
+        queryParamsBuilder.addAll(argsToQueryParams(optionalArgs));
 
         final ImmutableList<Arguments> updatedConstructorArgs = constructorArgBuilder.build();
+
+        final ImmutableList<String> argNames = updatedConstructorArgs.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         return new RequestConstructor(
                 updatedConstructorArgs,
                 updatedConstructorArgs,
-                queryParamsBuilder.build());
+                queryParamsBuilder.build(),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 }

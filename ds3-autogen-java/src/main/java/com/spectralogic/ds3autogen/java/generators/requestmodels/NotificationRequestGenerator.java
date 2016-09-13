@@ -19,8 +19,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isDeleteNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetNotificationRequest;
 
@@ -67,17 +70,25 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
      * constructor will have the parameter NotificationId
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
 
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
         builder.add(new Arguments("UUID", "NotificationId"));
 
+        final ImmutableList<String> argNames = builder.build().stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         final RequestConstructor constructor = new RequestConstructor(
                 builder.build(),
                 constructorArgs,
-                toQueryParamsList(ds3Request));
+                toQueryParamsList(ds3Request),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);
     }
