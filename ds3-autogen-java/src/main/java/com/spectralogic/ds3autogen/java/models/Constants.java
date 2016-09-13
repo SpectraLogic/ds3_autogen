@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
-public class Constants {
+public final class Constants {
     public static final String ROOT_PACKAGE_PATH = "com.spectralogic.ds3client";
     public final static String MODELS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".models.";
     public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";

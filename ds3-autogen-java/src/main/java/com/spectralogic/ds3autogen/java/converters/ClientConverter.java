@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
@@ -23,7 +24,9 @@ import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
 import com.spectralogic.ds3autogen.java.models.CustomCommand;
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toCommandDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
@@ -39,12 +42,15 @@ public class ClientConverter {
 
     private final String packageName;
     private final ImmutableList<Ds3Request> ds3Requests;
+    private final Ds3DocSpec docSpec;
 
     private ClientConverter(
             final ImmutableList<Ds3Request> ds3Requests,
-            final String packageName) {
+            final String packageName,
+            final Ds3DocSpec docSpec) {
         this.ds3Requests = ds3Requests;
         this.packageName = packageName;
+        this.docSpec = docSpec;
     }
 
     /**
@@ -54,8 +60,8 @@ public class ClientConverter {
     private Client convert() {
         return new Client(
                 packageName,
-                toCommandList(ds3Requests),
-                toCustomCommandList(ds3Requests));
+                toCommandList(ds3Requests, docSpec),
+                toCustomCommandList(ds3Requests, docSpec));
     }
 
     /**
@@ -66,8 +72,9 @@ public class ClientConverter {
      */
     public static Client toClient(
             final ImmutableList<Ds3Request> ds3Requests,
-            final String packageName) {
-        final ClientConverter converter = new ClientConverter(ds3Requests, packageName);
+            final String packageName,
+            final Ds3DocSpec docSpec) {
+        final ClientConverter converter = new ClientConverter(ds3Requests, packageName, docSpec);
 
         return converter.convert();
     }
@@ -77,26 +84,24 @@ public class ClientConverter {
      * that the request list contains custom commands.
      */
     protected static ImmutableList<CustomCommand> toCustomCommandList(
-            final ImmutableList<Ds3Request> ds3Requests) {
+            final ImmutableList<Ds3Request> ds3Requests,
+            final Ds3DocSpec docSpec) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<CustomCommand> builder = ImmutableList.builder();
-        for (final Ds3Request ds3Request : ds3Requests) {
-            if (isCustomCommand(ds3Request)) {
-                builder.add(toCustomCommand(ds3Request));
-            }
-        }
-        return builder.build();
+        return ds3Requests.stream()
+                .filter(ClientConverter::isCustomCommand)
+                .map(request -> toCustomCommand(request, docSpec))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Creates a custom command from a Ds3Request. If the request does not
      * describe a custom command, then an error is thrown.
      */
-    protected static CustomCommand toCustomCommand(final Ds3Request ds3Request) {
+    protected static CustomCommand toCustomCommand(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         if (isGetObjectAmazonS3Request(ds3Request)) {
-            return toGetObjectAmazonS3CustomCommand(ds3Request);
+            return toGetObjectAmazonS3CustomCommand(ds3Request, docSpec);
         }
         throw new IllegalArgumentException("Ds3Request is not a special cased command: " + ds3Request.getName());
     }
@@ -105,7 +110,9 @@ public class ClientConverter {
      * Creates the AmazonS3 Get Object Custom command from the Ds3Request.
      * This assumes that the provided Ds3Request is the Get Object.
      */
-    protected static CustomCommand toGetObjectAmazonS3CustomCommand(final Ds3Request ds3Request) {
+    protected static CustomCommand toGetObjectAmazonS3CustomCommand(
+            final Ds3Request ds3Request,
+            final Ds3DocSpec docSpec) {
         final String customBody = "return new GetObjectResponse(\n" +
                 indent(3) + "this.netClient.getResponse(request),\n" +
                 indent(3) + "request.getChannel(),\n" +
@@ -113,10 +120,12 @@ public class ClientConverter {
                 indent(3) + "request.getObjectName()\n" +
                 indent(2) + ");";
 
+        final String requestName = removePath(ds3Request.getName());
         return new CustomCommand(
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                removePath(ds3Request.getName()),
+                requestName,
                 toResponseName(ds3Request.getName()),
+                toCommandDocs(requestName, docSpec, 1),
                 toAnnotationInfo(ds3Request),
                 customBody);
     }
@@ -135,21 +144,31 @@ public class ClientConverter {
      * @param ds3Requests List of Ds3Requests
      * @return A list of Commands
      */
-    protected static ImmutableList<Command> toCommandList(final ImmutableList<Ds3Request> ds3Requests) {
+    protected static ImmutableList<Command> toCommandList(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final Ds3DocSpec docSpec) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
-        final ImmutableList.Builder<Command> builder = ImmutableList.builder();
-        for (final Ds3Request ds3Request : ds3Requests) {
-            if (!isCustomCommand(ds3Request)) {
-                builder.add(new Command(
-                        ClientGeneratorUtil.toCommandName(ds3Request.getName()),
-                        removePath(ds3Request.getName()),
-                        toResponseName(ds3Request.getName()),
-                        toAnnotationInfo(ds3Request)));
-            }
-        }
-        return builder.build();
+        return ds3Requests.stream()
+                .filter(ds3Request -> !isCustomCommand(ds3Request))
+                .map(ds3Request -> toCommand(ds3Request, docSpec))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Creates a Command model from a Ds3Request
+     */
+    protected static Command toCommand(
+            final Ds3Request ds3Request,
+            final Ds3DocSpec docSpec) {
+        final String requestName = removePath(ds3Request.getName());
+        return new Command(
+                ClientGeneratorUtil.toCommandName(ds3Request.getName()),
+                requestName,
+                toResponseName(ds3Request.getName()),
+                toCommandDocs(requestName, docSpec, 1),
+                toAnnotationInfo(ds3Request));
     }
 
     /**

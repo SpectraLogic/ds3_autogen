@@ -19,16 +19,19 @@ public class Command {
     private final String name;
     private final String requestName;
     private final String responseName;
+    private final String documentation;
     private final AnnotationInfo annotationInfo;
 
     public Command(
             final String name,
             final String requestName,
             final String responseName,
+            final String documentation,
             final AnnotationInfo annotationInfo) {
         this.name = name;
         this.requestName = requestName;
         this.responseName = responseName;
+        this.documentation = documentation;
         this.annotationInfo = annotationInfo;
     }
 
@@ -46,5 +49,9 @@ public class Command {
 
     public AnnotationInfo getAnnotationInfo() {
         return annotationInfo;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 }

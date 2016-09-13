@@ -10,6 +10,7 @@ public class ${name} extends ${parentClass} {
 <#include "common/variables.ftl"/>
 
     <#list constructors as constructor>
+    ${constructor.documentation}
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(notificationEndPoint);
 

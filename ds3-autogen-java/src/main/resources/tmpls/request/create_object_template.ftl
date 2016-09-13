@@ -26,6 +26,7 @@ public class ${name} extends ${parentClass} {
 
     // Constructor
     <#list constructors as constructor>
+    ${constructor.documentation}
     <#if constructor.isDeprecated() == true>
     /** @deprecated use {@link #${name}(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated

@@ -18,9 +18,14 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
@@ -45,15 +50,9 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      */
     @Override
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-
-        for (final Arguments arg : toArgumentsList(ds3Request.getRequiredQueryParams())) {
-            if (!arg.getName().equals("NotificationEndPoint")) {
-                builder.add(arg);
-            }
-        }
-
-        return builder.build();
+        return toArgumentsList(ds3Request.getRequiredQueryParams()).stream()
+                .filter(arg -> !arg.getName().equals("NotificationEndPoint"))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
@@ -65,16 +64,14 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
     public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
 
-        for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {
-            if (!arg.getName().equals("NotificationEndPoint")) {
-                builder.add(new Variable(arg.getName(), arg.getType(), true));
-            }
-        }
-        for (final Arguments arg : toOptionalArgumentsList(ds3Request.getOptionalQueryParams())) {
-            if (!arg.getName().equals("NotificationEndPoint")) {
-                builder.add(new Variable(arg.getName(), arg.getType(), false));
-            }
-        }
+        toConstructorArgumentsList(ds3Request).stream()
+                .filter(arg -> !arg.getName().equals("NotificationEndPoint"))
+                .forEach(arg -> builder.add(new Variable(arg.getName(), arg.getType(), true)));
+
+        toOptionalArgumentsList(ds3Request.getOptionalQueryParams()).stream()
+                .filter(arg -> !arg.getName().equals("NotificationEndPoint"))
+                .forEach(arg -> builder.add(new Variable(arg.getName(), arg.getType(), false)));
+
         return builder.build();
     }
 
@@ -82,12 +79,21 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      * Gets the list of constructor models from a Ds3Request
      */
     @Override
-    public ImmutableList<RequestConstructor> toConstructorList(final Ds3Request ds3Request) {
+    public ImmutableList<RequestConstructor> toConstructorList(
+            final Ds3Request ds3Request,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArguments = toConstructorArgumentsList(ds3Request);
+
+        final ImmutableList<String> argNames = constructorArguments.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         final RequestConstructor constructor = new RequestConstructor(
                 constructorArguments,
                 toConstructorAssignmentList(constructorArguments),
-                toQueryParamsList(ds3Request));
+                toQueryParamsList(ds3Request),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);
     }
@@ -99,16 +105,12 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      */
     protected static ImmutableList<Arguments> toConstructorAssignmentList(
             final ImmutableList<Arguments> constructorArguments) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         if (isEmpty(constructorArguments)) {
-            return builder.build();
+            return ImmutableList.of();
         }
-        for (final Arguments arg : constructorArguments) {
-            if (!arg.getName().equalsIgnoreCase("NotificationEndPoint")) {
-                builder.add(arg);
-            }
-        }
-        return builder.build();
+        return constructorArguments.stream()
+                .filter(arg -> !arg.getName().equalsIgnoreCase("NotificationEndPoint"))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
@@ -116,9 +118,7 @@ public class CreateNotificationRequestGenerator extends BaseRequestGenerator {
      * the constructors
      */
     @Override
-    public ImmutableList<Arguments> toQueryParamsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(toRequiredArgumentsList(ds3Request));
-        return builder.build();
+    public ImmutableList<QueryParam> toQueryParamsList(final Ds3Request ds3Request) {
+        return argsToQueryParams(toRequiredArgumentsList(ds3Request));
     }
 }

@@ -22,6 +22,7 @@ public class ${name} extends ${parentClass} {
 
     // Constructor
     <#list constructors as constructor>
+    ${constructor.documentation}
     <#if constructor.isDeprecated() == true>
     /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
     @Deprecated

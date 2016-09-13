@@ -1,4 +1,5 @@
     <#list constructors as constructor>
+    ${constructor.documentation}
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(notificationId);
 

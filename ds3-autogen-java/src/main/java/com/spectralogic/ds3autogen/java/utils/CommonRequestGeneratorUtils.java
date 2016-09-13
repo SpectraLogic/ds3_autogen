@@ -17,9 +17,14 @@ package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 /**
  * Contains static util methods used by some of the Java Request Generators, but not
@@ -34,7 +39,9 @@ public class CommonRequestGeneratorUtils {
      */
     public static RequestConstructor createInputStreamConstructor(
             final ImmutableList<Arguments> parameters,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         if (hasContent(parameters)) {
             builder.addAll(parameters);
@@ -42,10 +49,15 @@ public class CommonRequestGeneratorUtils {
         builder.add(new Arguments("InputStream", "Stream"));
 
         final ImmutableList<Arguments> updatedParameters = builder.build();
+        final ImmutableList<String> argNames = updatedParameters.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         return new RequestConstructor(
                 updatedParameters,
                 updatedParameters,
-                queryParams);
+                queryParams,
+                toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
     /**
@@ -54,7 +66,9 @@ public class CommonRequestGeneratorUtils {
      */
     public static RequestConstructor createChannelConstructor(
             final ImmutableList<Arguments> parameters,
-            final ImmutableList<Arguments> queryParams) {
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(parameters);
         builder.add(new Arguments("SeekableByteChannel", "Channel"));
@@ -63,11 +77,29 @@ public class CommonRequestGeneratorUtils {
                 "this.stream = new SeekableByteChannelInputStream(channel);");
 
         final ImmutableList<Arguments> updatedParameters = builder.build();
+
+        final ImmutableList<String> argNames = updatedParameters.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
         return new RequestConstructor(
                 false,
                 additionalLines,
                 updatedParameters,
                 updatedParameters,
-                queryParams);
+                queryParams,
+                toConstructorDocs(requestName, argNames, docSpec, 1));
+    }
+
+    /**
+     * Converts a list of arguments into a list of query params
+     */
+    public static ImmutableList<QueryParam> argsToQueryParams(final ImmutableList<Arguments> args) {
+        if (isEmpty(args)) {
+            return ImmutableList.of();
+        }
+        return args.stream()
+                .map(QueryParam::new)
+                .collect(GuavaCollectors.immutableList());
     }
 }

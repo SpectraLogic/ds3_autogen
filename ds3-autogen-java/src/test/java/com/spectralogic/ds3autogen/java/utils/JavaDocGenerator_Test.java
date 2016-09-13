@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.net.utils;
+package com.spectralogic.ds3autogen.java.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -24,11 +24,11 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.net.utils.NetDocGeneratorUtil.*;
+import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class NetDocGeneratorUtil_Test {
+public class JavaDocGenerator_Test {
 
     private static Ds3DocSpec getTestDocSpec() {
         return new Ds3DocSpecImpl(
@@ -38,36 +38,33 @@ public class NetDocGeneratorUtil_Test {
                         "ParamOne", "This is how you use param one"));
     }
 
+
     @Test
-    public void toCommandDocumentation_EmptyDocSpec_Test() {
+    public void toCommandDocs_EmptyDocSpec_Test() {
         assertThat(toCommandDocs("TestOneRequest", new Ds3DocSpecEmptyImpl(), 1), is(""));
     }
 
     @Test
-    public void toCommandDocumentation_Test() throws IOException {
-        final String expected = "/// <summary>\n" +
-                "    /// This is how you use test one request\n" +
-                "    /// </summary>\n" +
-                "    /// <param name=\"request\"></param>\n" +
-                "    /// <returns></returns>\n";
+    public void toCommandDocs_Test() throws IOException {
+        final String expected = "/**\n" +
+                "     * This is how you use test one request\n" +
+                "     */";
 
         final String result = toCommandDocs("TestOneRequest", getTestDocSpec(), 1);
         assertThat(result, is(expected));
     }
 
     @Test
-    public void toSummary_Test() {
-        final String expected = "/// <summary>\n" +
-                "    /// This is my summary string\n" +
-                "    /// </summary>\n";
-        final String result = toSummaryDocs("This is my summary string", 1);
+    public void toParam_EmptyDocSpec_Test() {
+        final String expected = "     * @param ParamOne \n";
+        final String result = toParamDocs("ParamOne", new Ds3DocSpecEmptyImpl(), 1);
         assertThat(result, is(expected));
     }
 
     @Test
     public void toParam_Test() {
-        final String expected = "    /// <param name=\"ParamName\">This is my param</param>\n";
-        final String result = toParamDocs("ParamName", "This is my param", 1);
+        final String expected = "     * @param ParamOne This is how you use param one\n";
+        final String result = toParamDocs("ParamOne", getTestDocSpec(), 1);
         assertThat(result, is(expected));
     }
 
@@ -86,8 +83,8 @@ public class NetDocGeneratorUtil_Test {
     @Test
     public void toParamListDocs_FullList_Test() throws IOException {
         final String expected =
-                "    /// <param name=\"ParamOne\">This is how you use param one</param>\n" +
-                "    /// <param name=\"NoDocParam\"></param>\n";
+                "     * @param ParamOne This is how you use param one\n" +
+                "     * @param NoDocParam \n";
 
         final ImmutableList<String> params = ImmutableList.of("ParamOne", "NoDocParam");
         final String result = toParamListDocs(params, getTestDocSpec(), 1);
@@ -102,9 +99,9 @@ public class NetDocGeneratorUtil_Test {
 
     @Test
     public void toConstructorDocs_NullParams_Test() throws IOException {
-        final String expected = "/// <summary>\n" +
-                "    /// This is how you use test one request\n" +
-                "    /// </summary>\n";
+        final String expected = "/**\n" +
+                "     * This is how you use test one request\n" +
+                "     */\n";
 
         final String result = toConstructorDocs("TestOneRequest", null, getTestDocSpec(), 1);
         assertThat(result, is(expected));
@@ -112,9 +109,9 @@ public class NetDocGeneratorUtil_Test {
 
     @Test
     public void toConstructorDocs_EmptyParams_Test() throws IOException {
-        final String expected = "/// <summary>\n" +
-                "    /// This is how you use test one request\n" +
-                "    /// </summary>\n";
+        final String expected = "/**\n" +
+                "     * This is how you use test one request\n" +
+                "     */\n";
 
         final String result = toConstructorDocs("TestOneRequest", ImmutableList.of(), getTestDocSpec(), 1);
         assertThat(result, is(expected));
@@ -122,11 +119,11 @@ public class NetDocGeneratorUtil_Test {
 
     @Test
     public void toConstructorDocs_Test() throws IOException {
-        final String expected = "/// <summary>\n" +
-                "    /// This is how you use test one request\n" +
-                "    /// </summary>\n" +
-                "    /// <param name=\"ParamOne\">This is how you use param one</param>\n" +
-                "    /// <param name=\"NoDocParam\"></param>\n";
+        final String expected = "/**\n" +
+                "     * This is how you use test one request\n" +
+                "     * @param ParamOne This is how you use param one\n" +
+                "     * @param NoDocParam \n" +
+                "     */\n";
 
         final ImmutableList<String> params = ImmutableList.of("ParamOne", "NoDocParam");
         final String result = toConstructorDocs("TestOneRequest", params, getTestDocSpec(), 1);

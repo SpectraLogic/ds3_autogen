@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class StreamRequestPayloadGenerator_Test {
 
     @Test
     public void toConstructorList_Test() {
-        final ImmutableList<RequestConstructor> result = generator.toConstructorList(getCreateMultiPartUploadPart());
+        final ImmutableList<RequestConstructor> result = generator.toConstructorList(getCreateMultiPartUploadPart(), "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getParameters().size(), is(6));
         assertThat(result.get(0).getParameters().get(0).getName(), is("BucketName"));
