@@ -79,10 +79,9 @@ public class ResponseAndParserUtil_Test {
                 createPopulatedErrorResponseCode("_v3"));
 
         final ImmutableSet<String> result = getImportListFromResponseCodes(responseCodes);
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(2));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
-        assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test

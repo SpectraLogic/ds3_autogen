@@ -22,7 +22,6 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedErrorResponseCode;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedResponseCode;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getObjectsDetailsRequest;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -61,12 +60,11 @@ public class BaseResponseGenerator_Test {
                 createEmptyDs3Request(),
                 responseCodes,
                 "com.spectralogic.ds3client.commands.spectrads3");
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(4));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
-        assertTrue(result.contains("java.io.InputStream"));
     }
 
     @Test
