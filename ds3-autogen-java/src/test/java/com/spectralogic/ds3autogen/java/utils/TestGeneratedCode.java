@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -33,10 +33,12 @@ public class TestGeneratedCode {
 
     protected final ByteArrayOutputStream requestOutputStream;
     protected final ByteArrayOutputStream responseOutputStream;
+    protected final ByteArrayOutputStream responseParserOutputStream;
     protected final ByteArrayOutputStream ds3ClientOutputStream;
     protected final ByteArrayOutputStream ds3ClientImplOutputStream;
     protected String requestGeneratedCode;
     protected String responseGeneratedCode;
+    protected String responseParserGeneratedCode;
     protected String ds3ClientGeneratedCode;
     protected String ds3ClientImplGeneratedCode;
 
@@ -46,6 +48,7 @@ public class TestGeneratedCode {
             final String path) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.REQUEST));
         this.responseOutputStream = setupOutputStream(fileUtils, getPathName(requestName, path, PathType.RESPONSE));
+        this.responseParserOutputStream = setupOutputStream(fileUtils, getPathName(requestName, PARSER_PATH, PathType.RESPONSE_PARSER));
         this.ds3ClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.java");
         this.ds3ClientImplOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3ClientImpl.java");
     }
@@ -68,6 +71,7 @@ public class TestGeneratedCode {
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
+        responseParserGeneratedCode = new String(responseParserOutputStream.toByteArray());
         ds3ClientGeneratedCode = new String(ds3ClientOutputStream.toByteArray());
         ds3ClientImplGeneratedCode = new String(ds3ClientImplOutputStream.toByteArray());
     }
@@ -78,6 +82,10 @@ public class TestGeneratedCode {
 
     public String getResponseGeneratedCode() {
         return responseGeneratedCode;
+    }
+
+    public String getResponseParserGeneratedCode() {
+        return responseParserGeneratedCode;
     }
 
     public String getDs3ClientGeneratedCode() {

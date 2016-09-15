@@ -20,6 +20,7 @@ public final class Constants {
     public final static String MODELS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".models.";
     public static final String COMMANDS_PACKAGE_PATH = ROOT_PACKAGE_PATH + ".commands";
     public final static String CONTRACT_PACKAGE_PATH = "com.spectralogic";
+    public final static String RESPONSE_PARSER_PACKAGE_PATH = COMMANDS_PACKAGE_PATH + ".parsers";
 
     public static final String SPECTRA_DS3_PACKAGE = ".spectrads3";
     public static final String SPECTRA_INTERNAL_PACKAGE = ".internal";

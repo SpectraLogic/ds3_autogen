@@ -20,7 +20,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator.getParserName;
 import static com.spectralogic.ds3autogen.net.generators.parsers.response.BaseResponseParserGenerator.getResponseCode;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -34,12 +33,6 @@ public class BaseResponseParserGenerator_Test {
         assertThat(generator.toNameToMarshal(null, "TypeName"), is("Data"));
         assertThat(generator.toNameToMarshal("", "TypeName"), is("Data"));
         assertThat(generator.toNameToMarshal("ResponsePayload", "TypeName"), is("ResponsePayload"));
-    }
-
-    @Test
-    public void getParserName_Test() {
-        assertThat(getParserName("TestingRequest"), is("TestingResponseParser"));
-        assertThat(getParserName("com.test.TestingRequest"), is("TestingResponseParser"));
     }
 
     @Test

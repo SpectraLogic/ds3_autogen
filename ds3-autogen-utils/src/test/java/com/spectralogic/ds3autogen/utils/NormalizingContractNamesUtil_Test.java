@@ -17,8 +17,7 @@ package com.spectralogic.ds3autogen.utils;
 
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
-import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -38,5 +37,13 @@ public class NormalizingContractNamesUtil_Test {
         assertThat(toResponseName(""), is(""));
         assertThat(toResponseName("SimpleRequest"), is("SimpleResponse"));
         assertThat(toResponseName("com.spectralogic.test.PathRequest"), is("PathResponse"));
+    }
+
+    @Test
+    public void toResponseParserName_Test() {
+        assertThat(toResponseParserName(null), is(""));
+        assertThat(toResponseParserName(""), is(""));
+        assertThat(toResponseParserName("TestingRequest"), is("TestingResponseParser"));
+        assertThat(toResponseParserName("com.test.TestingRequest"), is("TestingResponseParser"));
     }
 }
