@@ -144,7 +144,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Model model = toModel(ds3Type, getModelPackage());
         final Path modelPath = toModelFilePath(model.getName());
 
-        LOG.info("Getting outputstream for file:" + modelPath.toString());
+        LOG.info("Getting outputstream for file: {}", modelPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(modelPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -265,7 +265,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final ResponseParser responseParser = toResponseParser(ds3Request);
         final Path responsePath = toResponseParserPath(responseParser.getName());
 
-        LOG.info("Getting outputstream for file:" + responsePath.toString());
+        LOG.info("Getting outputstream for file: {}", responsePath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(responsePath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -325,7 +325,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH, docSpec);
         final Path clientPath = toClientPath("Ds3Client.java");
 
-        LOG.info("Getting outputstream for file:" + clientPath.toString());
+        LOG.info("Getting outputstream for file: {}", clientPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -335,7 +335,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.ftl");
         final Path clientImplPath = toClientPath("Ds3ClientImpl.java");
 
-        LOG.info("Getting outputstream for file:" + clientPath.toString());
+        LOG.info("Getting outputstream for file: {}", clientPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(clientImplPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -364,7 +364,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Response response = toResponse(ds3Request);
         final Path responsePath = getPathFromPackage(ds3Request, response.getName());
 
-        LOG.info("Getting outputstream for file:" + responsePath.toString());
+        LOG.info("Getting outputstream for file: {}", responsePath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(responsePath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -439,7 +439,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Request request = toRequest(ds3Request, docSpec);
         final Path requestPath = getPathFromPackage(ds3Request, request.getName());
 
-        LOG.info("Getting outputstream for file:" + requestPath.toString());
+        LOG.info("Getting outputstream for file: {}", requestPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(requestPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
