@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1900,7 +1901,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.GetServiceResponse", responseParserCode));
-        //TODO test
+
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListAllMyBucketsResult");
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test

@@ -13,13 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models.withconstructor;
+package com.spectralogic.ds3autogen.java.models.parseresponse;
 
 /**
- * Interface for request handler with-constructor model that can
- * generate the java code from the model data.
+ * Interface for converting a response code into the java code
+ * required to parse the response. Used in response parser generation.
  */
 @FunctionalInterface
-public interface WithConstructor {
+public interface ParseResponse {
     String toJavaCode();
 }

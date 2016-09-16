@@ -17,15 +17,20 @@ package com.spectralogic.ds3autogen.java.generators.responseparser;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.java.models.ResponseCode;
+import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
+import com.spectralogic.ds3autogen.java.models.parseresponse.EmptyParseResponse;
+import com.spectralogic.ds3autogen.java.models.parseresponse.StringParseResponse;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator.requiredImportList;
+import static com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator.*;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedErrorResponseCode;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedResponseCode;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static com.spectralogic.ds3autogen.java.utils.ResponseParserGeneratorTestUtil.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -44,20 +49,30 @@ public class BaseResponseParserGenerator_Test {
 
     @Test
     public void toResponseCodes_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(206, null),
-                new Ds3ResponseCode(307, null),
-                new Ds3ResponseCode(400, null),
-                new Ds3ResponseCode(503, null));
+        final String expectedProcessingCode = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                "                    final DefaultType result = XmlOutput.fromXml(inputStream, DefaultType.class);\n" +
+                "                    return new TestResponse(result);\n" +
+                "                }\n";
 
-        final Ds3Request request = createDs3RequestTestData(true, responseCodes, null, null);
-        final ImmutableList<Ds3ResponseCode> result = generator.toResponseCodes(request);
+        final ImmutableList<Ds3ResponseType> defaultResponseType = ImmutableList.of(
+                new Ds3ResponseType("DefaultType", null));
+
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, defaultResponseType),
+                new Ds3ResponseCode(206, defaultResponseType),
+                new Ds3ResponseCode(307, defaultResponseType),
+                new Ds3ResponseCode(400, defaultResponseType),
+                new Ds3ResponseCode(503, defaultResponseType));
+
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "TestResponse");
 
         assertThat(result.size(), is(3));
         assertThat(result.get(0).getCode(), is(200));
+        assertThat(result.get(0).getProcessingCode(), is(expectedProcessingCode));
         assertThat(result.get(1).getCode(), is(206));
+        assertThat(result.get(1).getProcessingCode(), is(expectedProcessingCode));
         assertThat(result.get(2).getCode(), is(307));
+        assertThat(result.get(2).getProcessingCode(), is(expectedProcessingCode));
     }
 
     @Test
@@ -123,5 +138,111 @@ public class BaseResponseParserGenerator_Test {
     public void getParentClassImport_Test() {
         final String result = generator.getParentClassImport();
         assertThat(result, is("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toParseResponse_NullTypesList_Test() {
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, null);
+        toParseResponse(responseCode, "TestResponse");
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toParseResponse_EmptyTypesList_Test() {
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, ImmutableList.of());
+        toParseResponse(responseCode, "TestResponse");
+    }
+
+    @Test
+    public void toParseResponse_Test() {
+        final String responseName = "TestResponse";
+
+        assertThat(toParseResponse(getNullResponseCode(), responseName),
+                instanceOf(EmptyParseResponse.class));
+
+        assertThat(toParseResponse(getStringResponseCode(), responseName),
+                instanceOf(StringParseResponse.class));
+
+        assertThat(toParseResponse(getBaseResponseCode(), responseName),
+                instanceOf(BaseParseResponse.class));
+    }
+
+    @Test
+    public void toResponseCode_NullResponse_Test() {
+        final String expected = "//There is no payload, return an empty response handler\n" +
+                "                return new TestResponse();\n";
+        final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse");
+        assertThat(result.getCode(), is(200));
+        assertThat(result.getProcessingCode(), is(expected));
+    }
+
+    @Test
+    public void toResponseCode_StringResponse_Test() {
+        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
+                "                    return new TestResponse(result);\n" +
+                "                }\n";
+        final ResponseCode result = toResponseCode(getStringResponseCode(), "TestResponse");
+        assertThat(result.getCode(), is(201));
+        assertThat(result.getProcessingCode(), is(expected));
+    }
+
+    @Test
+    public void toResponseCode_BaseResponse_Test() {
+        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                "                    final Type result = XmlOutput.fromXml(inputStream, Type.class);\n" +
+                "                    return new TestResponse(result);\n" +
+                "                }\n";
+        final ResponseCode result = toResponseCode(getBaseResponseCode(), "TestResponse");
+        assertThat(result.getCode(), is(202));
+        assertThat(result.getProcessingCode(), is(expected));
+    }
+
+    @Test
+    public void toResponseCodeList_NullList_Test() {
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(null, "TestResponse");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toResponseCodeList_EmptyList_Test() {
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(ImmutableList.of(), "TestResponse");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toResponseCodeList_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                getNullResponseCode(),
+                getStringResponseCode(),
+                getBaseResponseCode());
+
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "TestResponse");
+        assertThat(result.size(), is(3));
+        assertThat(result.get(0).getCode(), is(200));
+        assertThat(result.get(1).getCode(), is(201));
+        assertThat(result.get(2).getCode(), is(202));
+    }
+
+    @Test
+    public void toStatusCodeList_NullList_Test() {
+        final String result = toStatusCodeList(null);
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toStatusCodeList_EmptyList_Test() {
+        final String result = toStatusCodeList(ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toStatusCodeList_FullList_Test() {
+        final ImmutableList<ResponseCode> responseCodes = ImmutableList.of(
+                new ResponseCode(201, ""),
+                new ResponseCode(202, ""),
+                new ResponseCode(203, "")
+        );
+        final String result = toStatusCodeList(responseCodes);
+        assertThat(result, is("201, 202, 203"));
     }
 }

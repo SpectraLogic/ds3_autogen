@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.java.models;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class ResponseParser {
@@ -23,19 +24,28 @@ public class ResponseParser {
     private final String responseName;
     private final String packageName;
     private final String parentClass;
+
+    /** contains a comma-separated list of all expected status codes */
+    private final String expectedStatusCodes;
+
     private final ImmutableSet<String> imports;
+    private final ImmutableList<ResponseCode> responseCodes;
 
     public ResponseParser(
             final String name,
             final String responseName,
             final String packageName,
             final String parentClass,
-            final ImmutableSet<String> imports) {
+            final String expectedStatusCodes,
+            final ImmutableSet<String> imports,
+            final ImmutableList<ResponseCode> responseCodes) {
         this.name = name;
         this.responseName = responseName;
         this.packageName = packageName;
         this.parentClass = parentClass;
+        this.expectedStatusCodes = expectedStatusCodes;
         this.imports = imports;
+        this.responseCodes = responseCodes;
     }
 
     public String getName() {
@@ -56,5 +66,13 @@ public class ResponseParser {
 
     public String getResponseName() {
         return responseName;
+    }
+
+    public ImmutableList<ResponseCode> getResponseCodes() {
+        return responseCodes;
+    }
+
+    public String getExpectedStatusCodes() {
+        return expectedStatusCodes;
     }
 }
