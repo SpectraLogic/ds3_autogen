@@ -19,12 +19,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
-import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.java.models.Response;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getImportListFromResponseCodes;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.removeErrorResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
@@ -93,7 +92,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        builder.addAll(getAllImportsFromResponseCodes(responseCodes));
+        builder.addAll(getImportListFromResponseCodes(responseCodes));
         //If a response type has an associated import, then the XmlOutput import is also needed
         if (builder.build().size() > 0) {
             builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
@@ -105,65 +104,5 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
         builder.add(getParentImport(ds3Request));
         return builder.build().asList();
-    }
-
-    /**
-     * Gets the imports associated with the payloads of a response code list
-     */
-    protected static ImmutableSet<String> getAllImportsFromResponseCodes(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableSet.of();
-        }
-
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            final String curImport = getImportFromResponseCode(responseCode);
-            if (hasContent(curImport)) {
-                builder.add(curImport);
-                builder.add("java.io.InputStream");
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Gets the import associated with this response code if one exists, else it returns an
-     * empty string. This assumes that there is only one response type associated with a
-     * given response code.
-     */
-    protected static String getImportFromResponseCode(final Ds3ResponseCode responseCode) {
-        if (isEmpty(responseCode.getDs3ResponseTypes())) {
-            return "";
-        }
-        for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-            if (hasContent(responseType.getComponentType())) {
-                throw new IllegalArgumentException("Response type should not have a component type: " + responseType.getComponentType());
-            }
-            if (hasContent(responseType.getType())
-                    && responseType.getType().contains(".")
-                    && responseCode.getCode() < 400) {
-                return ConvertType.toModelName(responseType.getType());
-            }
-        }
-        return "";
-    }
-
-    /**
-     * Removes response codes that are associated with errors from the list.
-     * Error response codes are associated with values greater or equal to 400.
-     */
-    protected static ImmutableList<Ds3ResponseCode> removeErrorResponseCodes(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Ds3ResponseCode> builder = ImmutableList.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            if (responseCode.getCode() < 400) {
-                builder.add(responseCode);
-            }
-        }
-        return builder.build();
     }
 }

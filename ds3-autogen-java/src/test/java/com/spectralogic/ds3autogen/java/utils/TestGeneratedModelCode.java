@@ -38,6 +38,7 @@ public class TestGeneratedModelCode {
 
     private final ByteArrayOutputStream requestOutputStream;
     private final ByteArrayOutputStream responseOutputStream;
+    private final ByteArrayOutputStream responseParserOutputStream;
     private final ByteArrayOutputStream ds3ClientOutputStream;
     private final ByteArrayOutputStream ds3ClientImplOutputStream;
 
@@ -49,6 +50,7 @@ public class TestGeneratedModelCode {
 
         this.requestOutputStream = setupOutputStream(fileUtils, TestGeneratedCodeHelper.getPathName(placeHolderName, placeHolderPath, PathType.REQUEST));
         this.responseOutputStream = setupOutputStream(fileUtils, TestGeneratedCodeHelper.getPathName(placeHolderName, placeHolderPath, PathType.RESPONSE));
+        this.responseParserOutputStream = setupOutputStream(fileUtils, TestGeneratedCodeHelper.getPathName(placeHolderName, PARSER_PATH, PathType.RESPONSE_PARSER));
         this.ds3ClientOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3Client.java");
         this.ds3ClientImplOutputStream = setupOutputStream(fileUtils, CLIENT_PATH + "Ds3ClientImpl.java");
     }

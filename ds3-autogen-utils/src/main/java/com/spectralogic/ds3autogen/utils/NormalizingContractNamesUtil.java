@@ -44,4 +44,12 @@ public final class NormalizingContractNamesUtil {
         final String[] classParts = str.split("\\.");
         return classParts[classParts.length - 1];
     }
+
+    /**
+     * Converts a Ds3Request's name into a Response Parser name by removing the
+     * path and converting "Request" into "ResponseParser"
+     */
+    public static String toResponseParserName(final String requestName) {
+        return removePath(requestName).replace("Request", "ResponseParser");
+    }
 }

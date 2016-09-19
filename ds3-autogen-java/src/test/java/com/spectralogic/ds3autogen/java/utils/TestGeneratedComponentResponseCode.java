@@ -59,6 +59,7 @@ public class TestGeneratedComponentResponseCode extends TestGeneratedCode {
 
         requestGeneratedCode = new String(requestOutputStream.toByteArray());
         responseGeneratedCode = new String(responseOutputStream.toByteArray());
+        responseParserGeneratedCode = new String(responseParserOutputStream.toByteArray());
 
         encapsulatingTypeGeneratedCode = new String(encapsulatingTypeOutputStream.toByteArray());
 
