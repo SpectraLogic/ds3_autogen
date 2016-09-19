@@ -37,9 +37,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class JavaFunctionalModelsTest {
+public class JavaFunctionalModels_Test {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalModelsTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalModels_Test.class);
     private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
     @Rule
