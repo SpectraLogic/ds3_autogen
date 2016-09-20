@@ -45,6 +45,7 @@ public class BaseResponseParserGenerator_Test {
         assertTrue(imports.contains("com.spectralogic.ds3client.networking.WebResponse"));
         assertTrue(imports.contains("com.spectralogic.ds3client.commands.TestResponse"));
         assertTrue(imports.contains("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser"));
+        assertTrue(imports.contains("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils"));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 null);
 
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(6));
         hasRequiredInputs(result);
     }
 
@@ -93,7 +94,7 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 ImmutableList.of());
 
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(6));
         hasRequiredInputs(result);
     }
 
@@ -109,7 +110,7 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 responseCodes);
 
-        assertThat(result.size(), is(10));
+        assertThat(result.size(), is(11));
         hasRequiredInputs(result);
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
