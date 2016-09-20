@@ -126,8 +126,6 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
         if (responseModelName.equalsIgnoreCase("null")) {
             return new EmptyParseResponse(responseName);
         }
-        System.out.println("TEST: " + responseModelName);
-        System.out.printf("TEST: " + responseModelName.equalsIgnoreCase("string"));
         if (responseModelName.equalsIgnoreCase("string")) {
             return new StringParseResponse(responseName);
         }
@@ -156,6 +154,7 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
             builder.add("org.apache.commons.io.IOUtils");
         }
 
+        builder.add("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils");
         builder.addAll(requiredImportList());
         builder.add(getParentClassImport());
         builder.add(getCommandPackage(ds3Request) + "." + responseName);
