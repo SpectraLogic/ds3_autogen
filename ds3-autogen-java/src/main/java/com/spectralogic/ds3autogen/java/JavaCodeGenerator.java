@@ -51,6 +51,7 @@ import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 
 /**
@@ -289,6 +290,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     protected Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
         //TODO special case as necessary
+        if (isBulkRequest(ds3Request)) {
+            return config.getTemplate("responseparser/bulk_response_parser.ftl");
+        }
         return config.getTemplate("responseparser/response_parser_template.ftl");
     }
 

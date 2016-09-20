@@ -20,9 +20,12 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertTrue;
 
 public final class TestHelper {
 
@@ -274,5 +277,23 @@ public final class TestHelper {
 
     public static boolean constructorHasVarAssignment(final String paramName, final String code) {
         return code.contains("this." + paramName + " = " + paramName + ";");
+    }
+
+    public static void checkBulkResponseParserCode(final String responseName, final String code) {
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", code));
+        assertTrue(hasImport("java.io.IOException", code));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", code));
+
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobWithChunksContainerApiBean");
+        final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.headers()) == 0) {\n" +
+                "                    return new " + responseName + "(null);\n" +
+                "                }\n" +
+                "                " + expectedParsing.toJavaCode();
+
+        assertTrue(code.contains(expectedParsingCode));
     }
 }
