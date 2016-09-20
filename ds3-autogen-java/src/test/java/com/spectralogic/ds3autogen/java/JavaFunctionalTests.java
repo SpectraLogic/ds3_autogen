@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
+import com.spectralogic.ds3autogen.java.models.parseresponse.EmptyParseResponse;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
@@ -224,7 +225,11 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
-        //TODO test
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListBucketResult");
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
@@ -875,6 +880,58 @@ public class JavaFunctionalTests {
     }
 
     @Test
+    public void deleteObject_Test() throws IOException, TemplateModelException {
+        final String requestName = "DeleteObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/deleteObject.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("Replicate", "boolean", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("RollBack", "boolean", requestName, requestGeneratedCode, false));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+
+        //Test the response parser
+        final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
+        CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.DeleteObjectResponse", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{204};"));
+    }
+
+    @Test
     public void createObjectRequestHandler() throws IOException, TemplateModelException {
         final String requestName = "PutObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
@@ -963,7 +1020,18 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.PutObjectResponse", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
@@ -1901,10 +1969,62 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.GetServiceResponse", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListAllMyBucketsResult");
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
+    }
+
+    @Test
+    public void deleteBucket_Test() throws IOException, TemplateModelException {
+        final String requestName = "DeleteBucketSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/deleteBucket.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("Replicate", "boolean", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("Force", "boolean", requestName, requestGeneratedCode, false));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+
+        //Test the response parser
+        final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
+        CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.DeleteBucketSpectraS3Response", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{204};"));
     }
 
     @Test
