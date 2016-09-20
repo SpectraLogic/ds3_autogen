@@ -13,13 +13,26 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models.withconstructor;
+package com.spectralogic.ds3autogen.java.models.parseresponse;
+
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 /**
- * Interface for request handler with-constructor model that can
- * generate the java code from the model data.
+ * Generates the java code for when there is no payload
  */
-@FunctionalInterface
-public interface WithConstructor {
-    String toJavaCode();
+public class EmptyParseResponse implements ParseResponse {
+
+    private final static int INDENT = 4;
+
+    private final String responseName;
+
+    public EmptyParseResponse(final String responseName) {
+        this.responseName = responseName;
+    }
+
+    @Override
+    public String toJavaCode() {
+        return "//There is no payload, return an empty response handler\n"
+                + indent(INDENT) + "return new " + responseName + "();\n";
+    }
 }

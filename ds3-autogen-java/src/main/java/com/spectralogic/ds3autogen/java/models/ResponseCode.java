@@ -13,13 +13,25 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.java.models.withconstructor;
+package com.spectralogic.ds3autogen.java.models;
 
-/**
- * Interface for request handler with-constructor model that can
- * generate the java code from the model data.
- */
-@FunctionalInterface
-public interface WithConstructor {
-    String toJavaCode();
+public class ResponseCode {
+
+    private final int code;
+
+    /** Contains the java code for processing the response with the specified code */
+    private final String processingCode;
+
+    public ResponseCode(final int code, final String processingCode) {
+        this.code = code;
+        this.processingCode = processingCode;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getProcessingCode() {
+        return processingCode;
+    }
 }

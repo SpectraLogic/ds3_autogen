@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.java.models.ResponseCode;
 
 /**
  * Interface for utility functions used in response parser generators
@@ -43,7 +44,9 @@ public interface ResponseParserGeneratorUtil {
                                       final ImmutableList<Ds3ResponseCode> responseCodes);
 
     /**
-     * Gets the response codes required to generate this response
+     * Converts a list of non-error Ds3ResponseCodes into a list of ResponseCode models
+     * that are used to generate the response parsing code
      */
-    ImmutableList<Ds3ResponseCode> toResponseCodes(final Ds3Request request);
+    ImmutableList<ResponseCode> toResponseCodeList(final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
+                                                   final String responseName);
 }

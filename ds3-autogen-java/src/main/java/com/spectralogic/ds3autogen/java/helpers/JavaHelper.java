@@ -349,6 +349,7 @@ public final class JavaHelper {
         return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
     }
 
+    //TODO delete once decoupled from response templates
     /**
      * Creates the Java code associated with processing a given response code
      * @param responseCode A Ds3ResponseCode
@@ -379,6 +380,7 @@ public final class JavaHelper {
         return builder.toString();
     }
 
+    //TODO delete once moved to special cased response parser generator
     /**
      * Creates the Java code associated with processing response codes for
      * requests that have pagination headers. If the specified response code
@@ -474,6 +476,7 @@ public final class JavaHelper {
         return builder.build();
     }
 
+    //TODO move into base response generator when refactor of response handlers to simple POJOs occurs
     /**
      * Creates the parameter name associated with a response type. Component types contain
      * name spacing of "List", and all type names end with "Result"
