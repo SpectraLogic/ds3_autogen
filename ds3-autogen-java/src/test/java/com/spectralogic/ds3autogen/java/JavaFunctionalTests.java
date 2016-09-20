@@ -361,7 +361,19 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobWithChunksContainerApiBean");
+
+        assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
@@ -431,7 +443,9 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        checkBulkResponseParserCode(responseName, responseParserCode);
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
@@ -502,7 +516,9 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        checkBulkResponseParserCode(responseName, responseParserCode);
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
