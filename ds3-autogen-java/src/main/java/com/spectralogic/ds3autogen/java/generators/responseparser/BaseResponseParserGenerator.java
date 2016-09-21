@@ -118,10 +118,7 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
             throw new IllegalArgumentException("Response code does not contain any response types: " + ds3ResponseCode.getCode());
         }
         final Ds3ResponseType ds3ResponseType = ds3ResponseCode.getDs3ResponseTypes().get(0);
-        final String responseModelName = stripPath(
-                convertType( //TODO potentially move convertType out of java helper
-                        ds3ResponseType.getType(),
-                        ds3ResponseType.getComponentType()));
+        final String responseModelName = getResponseModelName(ds3ResponseType);
 
         if (responseModelName.equalsIgnoreCase("null")) {
             return new EmptyParseResponse(responseName);
@@ -130,6 +127,16 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
             return new StringParseResponse(responseName);
         }
         return new BaseParseResponse(responseName, responseModelName);
+    }
+
+    /**
+     * Retrieves the response model name within a Ds3ResponseType
+     */
+    protected static String getResponseModelName(final Ds3ResponseType ds3ResponseType) {
+        return stripPath(
+                convertType( //TODO potentially move convertType out of java helper
+                        ds3ResponseType.getType(),
+                        ds3ResponseType.getComponentType()));
     }
 
     /**
