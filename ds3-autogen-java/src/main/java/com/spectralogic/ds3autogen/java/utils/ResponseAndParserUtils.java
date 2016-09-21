@@ -87,4 +87,16 @@ public final class ResponseAndParserUtils {
                 .filter(rc -> rc.getCode() < 400)
                 .collect(GuavaCollectors.immutableList());
     }
+
+    /**
+     * Gets the list of response codes from within a list of Ds3ResponseCodes
+     */
+    public static ImmutableList<Integer> getResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
+        if (isEmpty(responseCodes)) {
+            return ImmutableList.of();
+        }
+        return responseCodes.stream()
+                .map(Ds3ResponseCode::getCode)
+                .collect(GuavaCollectors.immutableList());
+    }
 }

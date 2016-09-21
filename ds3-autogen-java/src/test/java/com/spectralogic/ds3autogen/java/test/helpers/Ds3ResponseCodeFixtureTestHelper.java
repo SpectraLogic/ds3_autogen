@@ -53,4 +53,13 @@ public final class Ds3ResponseCodeFixtureTestHelper {
                 ImmutableList.of(
                         new Ds3ResponseType("com.spectralogic.Test.Type" + variation, null)));
     }
+
+    public static ImmutableList<Ds3ResponseCode> getTestResponseCodes() {
+        return ImmutableList.of(
+                new Ds3ResponseCode(200, null),
+                new Ds3ResponseCode(206, null),
+                new Ds3ResponseCode(307, null),
+                new Ds3ResponseCode(400, null),
+                new Ds3ResponseCode(404, null));
+    }
 }

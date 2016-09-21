@@ -1744,7 +1744,20 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands." + responseName, responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(Status.EXISTS);"));
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(Status.NOTAUTHORIZED);"));
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(Status.DOESNTEXIST);"));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 403, 404};"));
     }
 
     @Test
