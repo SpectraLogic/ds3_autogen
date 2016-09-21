@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseCodes;
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.removeErrorResponseCodes;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isAllocateJobChunkRequest;
@@ -90,19 +91,5 @@ public class CodesResponseGenerator extends BaseResponseGenerator {
             }
         }
         return true;
-    }
-
-    /**
-     * Gets a list of response codes from within a list of Ds3ResponseCodes
-     */
-    protected static ImmutableList<Integer> getResponseCodes(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableList.of();
-        }
-        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            builder.add(responseCode.getCode());
-        }
-        return builder.build();
     }
 }

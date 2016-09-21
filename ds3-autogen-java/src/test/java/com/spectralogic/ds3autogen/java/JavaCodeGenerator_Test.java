@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.java.generators.responseparser.HeadBucketParserGenerator;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseParserGenerator;
@@ -30,6 +31,7 @@ public class JavaCodeGenerator_Test {
     @Test
     public void getResponseParserGenerator_Test() {
         assertThat(getResponseParserGenerator(createBucketRequest()), instanceOf(BaseResponseParserGenerator.class));
+        assertThat(getResponseParserGenerator(getHeadBucketRequest()), instanceOf(HeadBucketParserGenerator.class));
     }
 
     @Test

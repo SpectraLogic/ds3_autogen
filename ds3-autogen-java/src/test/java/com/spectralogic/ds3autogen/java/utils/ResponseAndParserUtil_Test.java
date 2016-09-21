@@ -112,4 +112,29 @@ public class ResponseAndParserUtil_Test {
         assertThat(result.get(1).getCode(), is(206));
         assertThat(result.get(2).getCode(), is(307));
     }
+
+    @Test
+    public void getResponseCodes_NullList_Test() {
+        final ImmutableList<Integer> result = getResponseCodes(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getResponseCodes_EmptyList_Test() {
+        final ImmutableList<Integer> result = getResponseCodes(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void getResponseCodes_FullList_Test() {
+        final ImmutableList<Ds3ResponseCode> responseCodes = getTestResponseCodes();
+
+        final ImmutableList<Integer> result = getResponseCodes(responseCodes);
+        assertThat(result.size(), is(5));
+        assertTrue(result.contains(200));
+        assertTrue(result.contains(206));
+        assertTrue(result.contains(307));
+        assertTrue(result.contains(400));
+        assertTrue(result.contains(404));
+    }
 }

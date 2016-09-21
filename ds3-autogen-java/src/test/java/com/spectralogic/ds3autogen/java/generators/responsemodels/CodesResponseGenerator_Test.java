@@ -21,8 +21,8 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.enums.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator.getResponseCodes;
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator.hasExpectedResponseCodes;
+import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.getTestResponseCodes;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestMultiFileDelete;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
@@ -32,40 +32,6 @@ import static org.junit.Assert.assertTrue;
 public class CodesResponseGenerator_Test {
 
     private final static CodesResponseGenerator generator = new CodesResponseGenerator();
-
-    private static ImmutableList<Ds3ResponseCode> getTestResponseCodes() {
-        return ImmutableList.of(
-                new Ds3ResponseCode(200, null),
-                new Ds3ResponseCode(206, null),
-                new Ds3ResponseCode(307, null),
-                new Ds3ResponseCode(400, null),
-                new Ds3ResponseCode(404, null));
-    }
-
-    @Test
-    public void getResponseCodes_NullList_Test() {
-        final ImmutableList<Integer> result = getResponseCodes(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getResponseCodes_EmptyList_Test() {
-        final ImmutableList<Integer> result = getResponseCodes(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getResponseCodes_FullList_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = getTestResponseCodes();
-
-        final ImmutableList<Integer> result = getResponseCodes(responseCodes);
-        assertThat(result.size(), is(5));
-        assertTrue(result.contains(200));
-        assertTrue(result.contains(206));
-        assertTrue(result.contains(307));
-        assertTrue(result.contains(400));
-        assertTrue(result.contains(404));
-    }
 
     @Test
     public void hasExpectedResponseCodes_NullList_Test() {

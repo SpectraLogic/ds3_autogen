@@ -30,6 +30,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGe
 import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
+import com.spectralogic.ds3autogen.java.generators.responseparser.HeadBucketParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.ResponseParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
@@ -309,6 +310,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      */
     protected static ResponseParserGenerator<?> getResponseParserGenerator(final Ds3Request ds3Request) {
         //TODO special case as necessary
+        if (isHeadBucketRequest(ds3Request)) {
+            return new HeadBucketParserGenerator();
+        }
         return new BaseResponseParserGenerator();
     }
 
