@@ -16,58 +16,51 @@
 package com.spectralogic.ds3autogen.java.generators.responseparser;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator.toParsePayloadCode;
-import static com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator.toRetryLaterCode;
+import static com.spectralogic.ds3autogen.java.generators.responseparser.GetJobChunksReadyParserGenerator.toParsePayloadCode;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getJobChunksReadyForClientProcessingRequest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AllocateJobChunkParserGenerator_Test {
+public class GetJobChunksReadyParserGenerator_Test {
 
-    private final static AllocateJobChunkParserGenerator generator = new AllocateJobChunkParserGenerator();
-
-    @Test
-    public void toRetryLaterCode_Test() {
-        final String expected = "return new MyResponse(null, parseRetryAfter(response), Status.RETRYLATER);";
-        assertThat(toRetryLaterCode("MyResponse"), is(expected));
-    }
+    final GetJobChunksReadyParserGenerator generator = new GetJobChunksReadyParserGenerator();
 
     @Test
     public void toParsePayloadCode_Test() {
         final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
-                "                    final JobChunkApiBean result = XmlOutput.fromXml(inputStream, JobChunkApiBean.class);\n" +
-                "                    return new MyResponse(result, 0, Status.ALLOCATED);\n" +
+                "                    final JobWithChunksApiBean result = XmlOutput.fromXml(inputStream, JobWithChunksApiBean.class);\n" +
+                "                    if (isNullOrEmpty(result.getObjects())) {\n" +
+                "                        return new TestResponse(result, parseRetryAfter(response), Status.RETRYLATER);\n" +
+                "                    }\n" +
+                "                    return new TestResponse(result, 0, Status.AVAILABLE);\n" +
                 "                }\n";
 
         final Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(
                 200,
-                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.JobChunkApiBean", null)));
+                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.JobWithChunksApiBean", null)));
 
-        final String result = toParsePayloadCode(ds3ResponseCode, "MyResponse");
+        final String result = toParsePayloadCode(ds3ResponseCode, "TestResponse");
         assertThat(result, is(expected));
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void toResponseCodeList_Error_Test() {
-        generator.toResponseCodeList(ImmutableList.of(), "TestResponse");
+    public void toResponseCodeList_Exception_Test() {
+        generator.toResponseCodeList(null, "TestResponse");
     }
 
     @Test
     public void toResponseCodeList_Test() {
-        final ImmutableList responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(
-                        200,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.JobChunkApiBean", null))));
+        final Ds3Request ds3Request = getJobChunksReadyForClientProcessingRequest();
+        final ImmutableList<ResponseCode> result = generator
+                .toResponseCodeList(ds3Request.getDs3ResponseCodes(), "TestResponse");
 
-        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "TestResponse");
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(1));
         assertThat(result.get(0).getCode(), is(200));
-        assertThat(result.get(1).getCode(), is(307));
-        assertThat(result.get(2).getCode(), is(503));
     }
 }

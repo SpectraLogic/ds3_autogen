@@ -24,9 +24,9 @@ import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getR
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 /**
- * Response parser generator for Allocate Job Chunk SpectraS3 command
+ * Response parser generator for Get Job Chunks Ready for Client Processing SpectraS3 command
  */
-public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator {
+public class GetJobChunksReadyParserGenerator extends BaseResponseParserGenerator {
 
     protected static final ImmutableList<Integer> EXPECTED_RESPONSE_CODES = ImmutableList.of(200);
 
@@ -43,16 +43,10 @@ public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator
             throw new IllegalArgumentException("Does not contain expected response codes: " + EXPECTED_RESPONSE_CODES.toString());
         }
 
-        final ResponseCode code200 = new ResponseCode(
-                200,
-                toParsePayloadCode(getDs3ResponseCode(ds3ResponseCodes, 200), responseName));
+        final Ds3ResponseCode ds3ResponseCode = getDs3ResponseCode(ds3ResponseCodes, 200);
+        final ResponseCode code200 = new ResponseCode(200, toParsePayloadCode(ds3ResponseCode, responseName));
 
-        // The switch case for 307 should fall through to the 503 handling
-        final ResponseCode code307 = new ResponseCode(307, "");
-
-        final ResponseCode code503 = new ResponseCode(503, toRetryLaterCode(responseName));
-
-        return ImmutableList.of(code200, code307, code503);
+        return ImmutableList.of(code200);
     }
 
     /**
@@ -63,16 +57,13 @@ public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator
             final String responseName) {
         final String responseModelName = getResponseModelName(ds3ResponseCode.getDs3ResponseTypes().get(0));
 
-        return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n"
-                + indent(5) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n"
-                + indent(5) + "return new " + responseName + "(result, 0, Status.ALLOCATED);\n"
-                + indent(4) + "}\n";
-    }
+        return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                indent(5) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n" +
+                indent(5) + "if (isNullOrEmpty(result.getObjects())) {\n" +
+                indent(6) + "return new " + responseName + "(result, parseRetryAfter(response), Status.RETRYLATER);\n" +
+                indent(5) + "}\n" +
 
-    /**
-     * Creates the java code for retry-later response
-     */
-    protected static String toRetryLaterCode(final String responseName) {
-        return "return new " + responseName + "(null, parseRetryAfter(response), Status.RETRYLATER);";
+                indent(5) + "return new " + responseName + "(result, 0, Status.AVAILABLE);\n" +
+                indent(4) + "}\n";
     }
 }
