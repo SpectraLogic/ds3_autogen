@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.CodeGenerator;
+import com.spectralogic.ds3autogen.api.Ds3SpecParser;
+import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
@@ -1139,7 +1141,28 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+
+        assertTrue(hasImport("com.google.common.util.concurrent.ListeningExecutorService", responseParserCode));
+        assertTrue(hasImport("com.google.common.util.concurrent.MoreExecutors", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.GetObjectResponse", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.MetadataImpl", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.ResponseFutureCallable", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Ds3ResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Headers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.NettyBlockingByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("org.slf4j.Logger", responseParserCode));
+        assertTrue(hasImport("org.slf4j.LoggerFactory", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseParserCode));
+        assertTrue(hasImport("java.util.concurrent.Executors", responseParserCode));
+        assertTrue(hasImport("java.util.concurrent.FutureTask", responseParserCode));
+
+        assertTrue(responseParserCode.contains("public class GetObjectResponseParser implements Ds3ResponseParser<GetObjectResponse> {"));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 206};"));
     }
     
     @Test
