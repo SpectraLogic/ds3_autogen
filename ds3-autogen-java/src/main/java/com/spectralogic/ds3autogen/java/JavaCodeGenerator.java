@@ -32,6 +32,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelG
 import com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.HeadBucketParserGenerator;
+import com.spectralogic.ds3autogen.java.generators.responseparser.HeadObjectParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.ResponseParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
@@ -298,6 +299,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isAllocateJobChunkRequest(ds3Request)) {
             return config.getTemplate("responseparser/allocate_job_chunk_response_parser.ftl");
         }
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("responseparser/head_object_response_parser.ftl");
+        }
         return config.getTemplate("responseparser/response_parser_template.ftl");
     }
 
@@ -319,6 +323,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isAllocateJobChunkRequest(ds3Request)) {
             return new AllocateJobChunkParserGenerator();
+        }
+        if (isHeadObjectRequest(ds3Request)) {
+            return new HeadObjectParserGenerator();
         }
         return new BaseResponseParserGenerator();
     }
