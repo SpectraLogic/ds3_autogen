@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.java.models.ResponseCode;
 import java.util.NoSuchElementException;
 
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseCodes;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseModelName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 

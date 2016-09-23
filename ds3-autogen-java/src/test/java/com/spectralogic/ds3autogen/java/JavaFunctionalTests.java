@@ -137,11 +137,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.models.CompleteMultipartUploadResult", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("completeMultipartUploadResult", "CompleteMultipartUploadResult", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -196,11 +196,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.models.ListBucketResult", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("listBucketResult", "ListBucketResult", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -270,11 +270,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.models.Bucket", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("bucketResult", "Bucket", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -340,11 +340,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -421,12 +421,13 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "BulkResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -494,12 +495,13 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "BulkResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -572,11 +574,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacement", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("physicalPlacementResult", "PhysicalPlacement", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -652,11 +654,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.BulkObjectList", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("bulkObjectListResult", "BulkObjectList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -725,11 +727,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacement", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("physicalPlacementResult", "PhysicalPlacement", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -802,11 +804,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.BulkObjectList", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("bulkObjectListResult", "BulkObjectList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -874,11 +876,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.DeleteResult", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("deleteResult", "DeleteResult", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1020,9 +1022,7 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1113,19 +1113,9 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.Error", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
-        assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.IOUtils", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.PerformanceUtils", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException", responseGeneratedCode));
 
-        assertTrue(responseGeneratedCode.contains("final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false)"));
-        assertFalse(responseGeneratedCode.contains("final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);"));
+        //TODO special case response handler
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1192,12 +1182,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.S3Object", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("s3ObjectResult", "S3Object", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1250,15 +1239,8 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
 
-        assertFalse(doesConstructorContainParam("Test", "boolean", requestName, requestGeneratedCode));
-        assertFalse(isReqVariable("Test", "boolean", requestGeneratedCode));
-        assertFalse(hasGetter("Test", "boolean", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1324,11 +1306,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistration", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobCompletedNotificationRegistrationResult", "JobCompletedNotificationRegistration", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1388,13 +1370,13 @@ public class JavaFunctionalTests {
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
 
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistrationList", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobCompletedNotificationRegistrationListResult", "JobCompletedNotificationRegistrationList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1463,11 +1445,10 @@ public class JavaFunctionalTests {
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("masterObjectListResult", "MasterObjectList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1528,11 +1509,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.InitiateMultipartUploadResult", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("initiateMultipartUploadResult", "InitiateMultipartUploadResult", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1587,16 +1568,15 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Objects", responseGeneratedCode));
 
-        assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("public enum Status"));
-        assertTrue(responseGeneratedCode.contains("ALLOCATED, RETRYLATER"));
-        assertTrue(responseGeneratedCode.contains("this.checkStatusCode(200, 307, 503);"));
+        assertTrue(isReqParamOfType("objectsResult", "Objects", responseName, responseGeneratedCode, false));
+
+        //TODO special case to include enum
+        //assertTrue(responseGeneratedCode.contains("public enum Status"));
+        //assertTrue(responseGeneratedCode.contains("ALLOCATED, RETRYLATER"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1672,16 +1652,15 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;"));
 
-        assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("public enum Status"));
-        assertTrue(responseGeneratedCode.contains("AVAILABLE, RETRYLATER"));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
+
+        //TODO special case enum
+        //assertTrue(responseGeneratedCode.contains("public enum Status"));
+        //assertTrue(responseGeneratedCode.contains("AVAILABLE, RETRYLATER"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1738,16 +1717,12 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
-        assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
 
-        assertTrue(hasMethod("setStatus", "void", Scope.PRIVATE, responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("public enum Status"));
-        assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN"));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        //TODO special case enum
+        //assertTrue(responseGeneratedCode.contains("public enum Status"));
+        //assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1816,16 +1791,12 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertFalse(hasImport("java.io.InputStream", responseGeneratedCode));
-        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("org.slf4j.Logger", responseGeneratedCode));
-        assertTrue(hasImport("org.slf4j.LoggerFactory", responseGeneratedCode));
 
-        assertTrue(hasMethod("setStatus", "void", Scope.PRIVATE, responseGeneratedCode));
-        assertTrue(responseGeneratedCode.contains("public enum Status"));
-        assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, UNKNOWN"));
+        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+
+        //TODO special case enum
+        //assertTrue(responseGeneratedCode.contains("public enum Status"));
+        //assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, UNKNOWN"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1848,7 +1819,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.MetadataImpl", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.MetadataImpl", responseParserCode));
 
         assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, Status.EXISTS);"));
         assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, Status.DOESNTEXIST);"));
@@ -1897,11 +1868,11 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("masterObjectListResult", "MasterObjectList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1960,12 +1931,9 @@ public class JavaFunctionalTests {
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("org.apache.commons.io.IOUtils", responseGeneratedCode));
-        assertTrue(hasImport("java.nio.charset.StandardCharsets", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("stringResult", "String", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2004,6 +1972,7 @@ public class JavaFunctionalTests {
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(isReqParamOfType("listAllMyBucketsResult", "ListAllMyBucketsResult", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2108,7 +2077,9 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("bucketListResult", "BucketList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2192,8 +2163,7 @@ public class JavaFunctionalTests {
         final String responseName = requestName.replace("Request", "Response");
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseGeneratedCode));
-        assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2267,10 +2237,11 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
 
-        assertFalse(responseGeneratedCode.contains("private Integer pagingTruncated;"));
-        assertFalse(responseGeneratedCode.contains("private Integer pagingTotalResultCount;"));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("s3ObjectListResult", "S3ObjectList", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

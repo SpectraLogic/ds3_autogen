@@ -26,8 +26,6 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
@@ -409,14 +407,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the associated response generator for the specified Ds3Request
      */
     protected static ResponseModelGenerator<?> getResponseTemplateModelGenerator(final Ds3Request ds3Request) {
-        if (isAllocateJobChunkRequest(ds3Request)
-                || isHeadObjectRequest(ds3Request)
-                || isHeadBucketRequest(ds3Request)) {
-            return new CodesResponseGenerator();
-        }
-        if (isBulkRequest(ds3Request)) {
-            return new BulkResponseGenerator();
-        }
         return new BaseResponseGenerator();
     }
 
@@ -428,24 +418,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isAllocateJobChunkRequest(ds3Request)) {
-            return config.getTemplate("response/allocate_job_chunk_response_template.ftl");
-        }
-        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
-            return config.getTemplate("response/get_job_chunks_ready_response_template.ftl");
-        }
-        if (isHeadBucketRequest(ds3Request)) {
-            return config.getTemplate("response/head_bucket_response_template.ftl");
-        }
-        if (isHeadObjectRequest(ds3Request)) {
-            return config.getTemplate("response/head_object_response_template.ftl");
-        }
-        if (isBulkRequest(ds3Request)) {
-            return config.getTemplate("response/bulk_response_template.ftl");
-        }
-        if (isGetObjectAmazonS3Request(ds3Request)) {
-            return config.getTemplate("response/get_object_response_template.ftl");
-        }
         return config.getTemplate("response/response_template.ftl");
     }
 

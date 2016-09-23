@@ -2,31 +2,23 @@
 
 package ${packageName};
 
-<#include "common/response_imports.ftl"/>
+<#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
 
-${javaHelper.createAllResponseResultClassVars(responseCodes)}
+    <#list params as param>
+    private final ${param.type} ${param.name?uncap_first};
+    </#list>
 
-<#include "common/response_constructor.ftl"/>
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(${helper.getResponseCodes(responseCodes)});
-
-            switch (this.getStatusCode()) {
-            <#list responseCodes as responseCode>
-            case ${responseCode.getCode()}:
-                ${javaHelper.processResponseCodeLines(responseCode, 4)}
-            </#list>
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public ${name}(${constructorParams}) {
+        <#list params as param>
+        this.${param.name?uncap_first} = this.${param.name?uncap_first};
+        </#list>
     }
 
-${javaHelper.createAllResponseResultGetters(responseCodes)}
+    <#list params as param>
+    public ${param.type} get${param.name?cap_first}() {
+        return this.${param.name?uncap_first};
+    }
+    </#list>
 }

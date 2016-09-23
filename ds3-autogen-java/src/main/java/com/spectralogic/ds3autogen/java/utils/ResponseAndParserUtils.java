@@ -23,8 +23,10 @@ import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.convertType;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 
 /**
  * Contains util functions used in response and response parser generators
@@ -98,5 +100,15 @@ public final class ResponseAndParserUtils {
         return responseCodes.stream()
                 .map(Ds3ResponseCode::getCode)
                 .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Retrieves the response model name within a Ds3ResponseType
+     */
+    public static String getResponseModelName(final Ds3ResponseType ds3ResponseType) {
+        return stripPath(
+                convertType( //TODO potentially move convertType out of java helper
+                        ds3ResponseType.getType(),
+                        ds3ResponseType.getComponentType()));
     }
 }

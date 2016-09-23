@@ -16,26 +16,34 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
 public class Response {
     private final String packageName;
     private final String name;
     private final String parentClass;
-    private final ImmutableList<Ds3ResponseCode> responseCodes;
-    private final ImmutableList<String> imports;
+
+    /** comma separated list of constructor parameters */
+    private final String constructorParams;
+
+    private final ImmutableSet<String> imports;
+    private final ImmutableList<Arguments> params;
 
     public Response(
             final String packageName,
             final String name,
             final String parentClass,
-            final ImmutableList<Ds3ResponseCode> responseCodes,
-            final ImmutableList<String> imports) {
+            final String constructorParams,
+            final ImmutableSet<String> imports,
+            final ImmutableList<Arguments> params) {
         this.packageName = packageName;
         this.name = name;
+        this.constructorParams = constructorParams;
         this.parentClass = parentClass;
-        this.responseCodes = responseCodes;
         this.imports = imports;
+        this.params = params;
     }
 
     public String getPackageName() {
@@ -46,15 +54,19 @@ public class Response {
         return name;
     }
 
-    public ImmutableList<Ds3ResponseCode> getResponseCodes() {
-        return responseCodes;
-    }
-
-    public ImmutableList<String> getImports() {
+    public ImmutableSet<String> getImports() {
         return imports;
     }
 
     public String getParentClass() {
         return parentClass;
+    }
+
+    public String getConstructorParams() {
+        return constructorParams;
+    }
+
+    public ImmutableList<Arguments> getParams() {
+        return params;
     }
 }

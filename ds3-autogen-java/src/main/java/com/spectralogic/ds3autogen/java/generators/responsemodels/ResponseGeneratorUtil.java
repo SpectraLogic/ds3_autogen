@@ -16,15 +16,12 @@
 package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 
 public interface ResponseGeneratorUtil {
-
-    /**
-     * Gets the response codes required to generate this response
-     */
-    ImmutableList<Ds3ResponseCode> toResponseCodes(final Ds3Request request);
 
     /**
      * Returns the import for the parent class for this response
@@ -40,8 +37,10 @@ public interface ResponseGeneratorUtil {
      * Gets all the imports associated with response types that the response will
      * need in order to properly generate the Java request code
      */
-    ImmutableList<String> getAllImports(
-            final Ds3Request ds3Request,
-            final ImmutableList<Ds3ResponseCode> responseCodes,
-            final String packageName);
+    ImmutableSet<String> getAllImports(final Ds3Request ds3Request);
+
+    /**
+     * Retrieves the list of parameters needed to create the response POJO
+     */
+    ImmutableList<Arguments> toParamList(final ImmutableList<Ds3ResponseCode> ds3ResponseCodes);
 }
