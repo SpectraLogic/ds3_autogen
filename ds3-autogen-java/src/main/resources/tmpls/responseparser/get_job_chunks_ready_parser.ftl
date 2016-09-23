@@ -2,7 +2,10 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 <#include "../imports.ftl"/>
+
+import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 
 public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};

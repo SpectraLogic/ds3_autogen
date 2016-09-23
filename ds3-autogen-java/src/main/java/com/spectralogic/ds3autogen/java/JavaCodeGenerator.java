@@ -50,7 +50,6 @@ import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 
 /**
@@ -300,6 +299,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("responseparser/get_object_parser.ftl");
         }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("responseparser/get_job_chunks_ready_parser.ftl");
+        }
         return config.getTemplate("responseparser/response_parser_template.ftl");
     }
 
@@ -326,6 +328,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectParserGenerator();
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return new GetJobChunksReadyParserGenerator();
         }
         return new BaseResponseParserGenerator();
     }
