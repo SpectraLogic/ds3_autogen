@@ -130,4 +130,5 @@ public final class EnumHelper {
 
         return outputBuilder.toString();
     }
+
 }

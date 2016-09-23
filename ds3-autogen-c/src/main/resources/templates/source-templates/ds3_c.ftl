@@ -24,7 +24,9 @@
 <#-- ******************************************* -->
 <#-- Generate all "EnumMatchers" from Enums      -->
 <#list getEnums() as enumEntry>
-    <#include "TypedefEnumMatcher.ftl">
+    <#if enumEntry.requiresMatcher()>
+        <#include "TypedefEnumMatcher.ftl">
+    </#if>
 </#list>
 
 //************ STRUCT PARSERS **************
