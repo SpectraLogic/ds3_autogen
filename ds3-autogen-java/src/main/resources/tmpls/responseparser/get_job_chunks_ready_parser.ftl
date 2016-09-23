@@ -2,7 +2,10 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 <#include "../imports.ftl"/>
+
+import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 
 public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};
@@ -24,11 +27,5 @@ public class ${name} extends ${parentClass}<${responseName}> {
         throw ResponseParserUtils.createFailedRequest(response, blockingByteChannel, expectedStatusCodes);
     }
 
-    private static int parseRetryAfter(final WebResponse webResponse) {
-        final String retryAfter = webResponse.getHeaders().get("Retry-After").get(0);
-        if (retryAfter == null) {
-            throw new RetryAfterExpectedException();
-        }
-        return Integer.parseInt(retryAfter);
-    }
+<#include "common/parse_retry_after.ftl"/>
 }

@@ -17,7 +17,9 @@ package com.spectralogic.ds3autogen.java;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
-import com.spectralogic.ds3autogen.api.*;
+import com.spectralogic.ds3autogen.api.CodeGenerator;
+import com.spectralogic.ds3autogen.api.Ds3SpecParser;
+import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
@@ -49,7 +51,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1129,7 +1131,28 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+
+        assertTrue(hasImport("com.google.common.util.concurrent.ListeningExecutorService", responseParserCode));
+        assertTrue(hasImport("com.google.common.util.concurrent.MoreExecutors", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.GetObjectResponse", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.MetadataImpl", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.ResponseFutureCallable", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Ds3ResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Headers", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.NettyBlockingByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("org.slf4j.Logger", responseParserCode));
+        assertTrue(hasImport("org.slf4j.LoggerFactory", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseParserCode));
+        assertTrue(hasImport("java.util.concurrent.Executors", responseParserCode));
+        assertTrue(hasImport("java.util.concurrent.FutureTask", responseParserCode));
+
+        assertTrue(responseParserCode.contains("public class GetObjectResponseParser implements Ds3ResponseParser<GetObjectResponse> {"));
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 206};"));
     }
     
     @Test
@@ -1654,9 +1677,9 @@ public class JavaFunctionalTests {
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
 
-        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("masterObjectListResult", "MasterObjectList", responseName, responseGeneratedCode, false));
 
         //TODO special case enum
         //assertTrue(responseGeneratedCode.contains("public enum Status"));
@@ -1666,7 +1689,7 @@ public class JavaFunctionalTests {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
         testDs3Client(requestName, ds3ClientGeneratedCode);
-        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"MasterObjectList\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_CHUNK\")"));
 
@@ -1677,7 +1700,27 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
+        assertTrue(hasImport("java.io.InputStream", responseParserCode));
+        assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty"));
+
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), Status.RETRYLATER);"));
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, 0, Status.AVAILABLE);"));
+
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test

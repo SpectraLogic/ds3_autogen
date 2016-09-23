@@ -24,6 +24,8 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.convertType;
+import java.util.NoSuchElementException;
+
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
@@ -110,5 +112,21 @@ public final class ResponseAndParserUtils {
                 convertType( //TODO potentially move convertType out of java helper
                         ds3ResponseType.getType(),
                         ds3ResponseType.getComponentType()));
+    }
+
+    /**
+     * * Retrieves the fist instance of Ds3ResponseCode with the specified code
+     * @throws NoSuchElementException
+     */
+    public static Ds3ResponseCode getDs3ResponseCode(
+            final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
+            final int code) {
+        if (isEmpty(ds3ResponseCodes)) {
+            throw new NoSuchElementException("Ds3ResponseCode list is empty");
+        }
+        return ds3ResponseCodes.stream()
+                .filter(i -> i.getCode() == code)
+                .findFirst()
+                .get();
     }
 }

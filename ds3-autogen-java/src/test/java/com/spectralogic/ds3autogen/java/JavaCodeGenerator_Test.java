@@ -16,9 +16,7 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
-import com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.HeadBucketParserGenerator;
+import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseParserGenerator;
@@ -33,7 +31,10 @@ public class JavaCodeGenerator_Test {
     public void getResponseParserGenerator_Test() {
         assertThat(getResponseParserGenerator(createBucketRequest()), instanceOf(BaseResponseParserGenerator.class));
         assertThat(getResponseParserGenerator(getHeadBucketRequest()), instanceOf(HeadBucketParserGenerator.class));
+        assertThat(getResponseParserGenerator(getHeadObjectRequest()), instanceOf(HeadObjectParserGenerator.class));
         assertThat(getResponseParserGenerator(getAllocateJobChunkRequest()), instanceOf(AllocateJobChunkParserGenerator.class));
+        assertThat(getResponseParserGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectParserGenerator.class));
+        assertThat(getResponseParserGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(GetJobChunksReadyParserGenerator.class));
     }
 
     @Test

@@ -27,11 +27,7 @@ import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.AllocateJobChunkParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.BaseResponseParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.HeadBucketParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.HeadObjectParserGenerator;
-import com.spectralogic.ds3autogen.java.generators.responseparser.ResponseParserGenerator;
+import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.*;
@@ -52,7 +48,6 @@ import static com.spectralogic.ds3autogen.java.models.Constants.*;
 import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isBulkRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
 
 /**
@@ -290,15 +285,20 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the response parser template used to generate the specified request
      */
     protected Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
-        //TODO special case as necessary
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("responseparser/bulk_response_parser.ftl");
         }
         if (isAllocateJobChunkRequest(ds3Request)) {
-            return config.getTemplate("responseparser/allocate_job_chunk_response_parser.ftl");
+            return config.getTemplate("responseparser/allocate_job_chunk_parser.ftl");
         }
         if (isHeadObjectRequest(ds3Request)) {
-            return config.getTemplate("responseparser/head_object_response_parser.ftl");
+            return config.getTemplate("responseparser/head_object_parser.ftl");
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("responseparser/get_object_parser.ftl");
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("responseparser/get_job_chunks_ready_parser.ftl");
         }
         return config.getTemplate("responseparser/response_parser_template.ftl");
     }
@@ -315,7 +315,6 @@ public class JavaCodeGenerator implements CodeGenerator {
      * Retrieves the response parser generator used to generate the specified request
      */
     protected static ResponseParserGenerator<?> getResponseParserGenerator(final Ds3Request ds3Request) {
-        //TODO special case as necessary
         if (isHeadBucketRequest(ds3Request)) {
             return new HeadBucketParserGenerator();
         }
@@ -324,6 +323,12 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isHeadObjectRequest(ds3Request)) {
             return new HeadObjectParserGenerator();
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectParserGenerator();
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return new GetJobChunksReadyParserGenerator();
         }
         return new BaseResponseParserGenerator();
     }

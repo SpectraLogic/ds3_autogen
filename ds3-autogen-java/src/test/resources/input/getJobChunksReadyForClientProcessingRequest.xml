@@ -4,6 +4,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobChunksReadyForClientProcessingRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="JOB_CHUNK" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="JobChunk" Type="java.util.UUID"/>
                         <Param Name="PreferredNumberOfChunks" Type="int"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -14,7 +15,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksContainerApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
@@ -42,7 +43,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>12.BE29ACEA0666B903CA979010FE21AC37</Version>
+                <Version>12.E85F3447509D8658DC4747BDBC1124AE</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

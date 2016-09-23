@@ -21,6 +21,8 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -148,5 +150,26 @@ public class ResponseAndParserUtil_Test {
     public void getResponseModelName_ComponentType_Test() {
         final Ds3ResponseType responseType = new Ds3ResponseType("array", "com.test.ComponentType");
         assertThat(getResponseModelName(responseType), is("List<ComponentType>"));
+    }
+
+    @Test (expected = NoSuchElementException.class)
+    public void getDs3ResponseCode_NullList_Test() {
+        getDs3ResponseCode(null, 200);
+    }
+
+    @Test (expected = NoSuchElementException.class)
+    public void getDs3ResponseCode_EmptyList_Test() {
+        getDs3ResponseCode(ImmutableList.of(), 200);
+    }
+
+    @Test (expected = NoSuchElementException.class)
+    public void getDs3ResponseCode_NotInList_Test() {
+        getDs3ResponseCode(getTestResponseCodes(), 100);
+    }
+
+    @Test
+    public void getDs3ResponseCode_Test() {
+        final Ds3ResponseCode result = getDs3ResponseCode(getTestResponseCodes(), 200);
+        assertThat(result.getCode(), is(200));
     }
 }
