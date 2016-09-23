@@ -1676,7 +1676,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.IOException", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
         assertTrue(responseGeneratedCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;"));
 
         assertTrue(hasStaticMethod("parseRetryAfter", "int", Scope.PRIVATE, responseGeneratedCode));
@@ -1687,7 +1687,7 @@ public class JavaFunctionalTests {
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
         testDs3Client(requestName, ds3ClientGeneratedCode);
-        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"MasterObjectList\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Action(\"LIST\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"JOB_CHUNK\")"));
 
@@ -1698,7 +1698,27 @@ public class JavaFunctionalTests {
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
         CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
-        //TODO test
+
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
+        assertTrue(hasImport("java.io.IOException", responseParserCode));
+        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
+        assertTrue(hasImport("java.io.InputStream", responseParserCode));
+        assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty"));
+
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), Status.RETRYLATER);"));
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, 0, Status.AVAILABLE);"));
+
+        assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
 
     @Test
