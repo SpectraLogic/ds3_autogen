@@ -25,9 +25,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class EnumHelper_Test {
     @Test
@@ -95,7 +93,7 @@ public class EnumHelper_Test {
         final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
         final Ds3Type testDs3Type = new Ds3Type("TypePrefix", null, null, enumConstants);
-        final Enum testEnum= EnumConverter.toEnum(testDs3Type);
+        final Enum testEnum = EnumConverter.toEnum(testDs3Type);
 
         assertTrue(testEnum.requiresMatcher());
     }
@@ -106,7 +104,7 @@ public class EnumHelper_Test {
         final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
         final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
         final Ds3Type testDs3Type = new Ds3Type("com.spectralogic.util.db.lang.SqlOperation", null, null, enumConstants);
-        final Enum testEnum= EnumConverter.toEnum(testDs3Type);
+        final Enum testEnum = EnumConverter.toEnum(testDs3Type);
 
         assertFalse(testEnum.requiresMatcher());
     }
