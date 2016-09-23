@@ -33,6 +33,7 @@ public class JavaCodeGenerator_Test {
         assertThat(getResponseParserGenerator(getHeadBucketRequest()), instanceOf(HeadBucketParserGenerator.class));
         assertThat(getResponseParserGenerator(getHeadObjectRequest()), instanceOf(HeadObjectParserGenerator.class));
         assertThat(getResponseParserGenerator(getAllocateJobChunkRequest()), instanceOf(AllocateJobChunkParserGenerator.class));
+        assertThat(getResponseParserGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectParserGenerator.class));
         assertThat(getResponseParserGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(GetJobChunksReadyParserGenerator.class));
     }
 
