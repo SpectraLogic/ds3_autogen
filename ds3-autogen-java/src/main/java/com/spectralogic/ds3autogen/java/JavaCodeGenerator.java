@@ -416,8 +416,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isHeadBucketRequest(ds3Request)) {
             return new HeadBucketResponseGenerator();
         }
-        if (isAllocateJobChunkRequest(ds3Request)) {
-            return new AllocateChunkResponseGenerator();
+        if (isAllocateJobChunkRequest(ds3Request)
+                || isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return new RetryAfterResponseGenerator();
         }
         return new BaseResponseGenerator();
     }
@@ -438,6 +439,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isAllocateJobChunkRequest(ds3Request)) {
             return config.getTemplate("response/allocate_chunk_response.ftl");
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("response/chunks_ready_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }

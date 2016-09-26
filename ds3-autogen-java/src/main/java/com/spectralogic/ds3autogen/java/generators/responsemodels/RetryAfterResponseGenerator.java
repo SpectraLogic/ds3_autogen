@@ -26,10 +26,14 @@ import java.util.Optional;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 
 /**
- * Response handler generator for SpectraS3 Allocate Job Chunk command
+ * Response handler generator for SpectraS3 Allocate Job Chunk and
+ * SpectraS3 Get Job Chunks Ready For Client Processing commands
  */
-public class AllocateChunkResponseGenerator extends BaseResponseGenerator {
+public class RetryAfterResponseGenerator extends BaseResponseGenerator {
 
+    /**
+     * Retrieves the arguments: response payload, retry after seconds, and status
+     */
     @Override
     public ImmutableList<Arguments> toParamList(final ImmutableList<Ds3ResponseCode> ds3ResponseCodes) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();

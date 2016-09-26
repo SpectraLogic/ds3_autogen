@@ -24,9 +24,9 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getAllocateJ
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class AllocateChunkResponseGenerator_Test {
+public class RetryAfterResponseGenerator_Test {
 
-    private static final AllocateChunkResponseGenerator generator = new AllocateChunkResponseGenerator();
+    private static final RetryAfterResponseGenerator generator = new RetryAfterResponseGenerator();
 
     @Test
     public void toParamList_NullList_Test() {
