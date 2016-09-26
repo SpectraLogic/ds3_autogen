@@ -23,10 +23,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.models.Constants;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 import com.spectralogic.ds3autogen.java.models.ResponseParser;
-import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
-import com.spectralogic.ds3autogen.java.models.parseresponse.EmptyParseResponse;
-import com.spectralogic.ds3autogen.java.models.parseresponse.ParseResponse;
-import com.spectralogic.ds3autogen.java.models.parseresponse.StringParseResponse;
+import com.spectralogic.ds3autogen.java.models.parseresponse.*;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.util.stream.Collectors;
@@ -35,6 +32,7 @@ import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPa
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.*;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 
 public class BaseResponseParserGenerator implements ResponseParserGenerator<ResponseParser>, ResponseParserGeneratorUtil {
 
@@ -86,8 +84,10 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
     public ImmutableList<ResponseCode> toResponseCodeList(
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
             final String responseName) {
-        return removeErrorResponseCodes(ds3ResponseCodes).stream()
-                .map(rc -> toResponseCode(rc, responseName))
+        final ImmutableList<Ds3ResponseCode> filteredResponseCodes = removeErrorResponseCodes(ds3ResponseCodes);
+        final boolean hasResponsePayload = hasResponsePayload(filteredResponseCodes);
+        return filteredResponseCodes.stream()
+                .map(rc -> toResponseCode(rc, responseName, hasResponsePayload))
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -95,8 +95,11 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
      * Converts a Ds3 Response Code into the Response Code model
      * @param responseName Name of the response handler
      */
-    protected static ResponseCode toResponseCode(final Ds3ResponseCode ds3ResponseCode, final String responseName) {
-        final ParseResponse parseResponse = toParseResponse(ds3ResponseCode, responseName);
+    protected static ResponseCode toResponseCode(
+            final Ds3ResponseCode ds3ResponseCode,
+            final String responseName,
+            final boolean hasResponsePayload) {
+        final ParseResponse parseResponse = toParseResponse(ds3ResponseCode, responseName, hasResponsePayload);
 
         return new ResponseCode(
                 ds3ResponseCode.getCode(),
@@ -110,15 +113,19 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
      */
     protected static ParseResponse toParseResponse(
             final Ds3ResponseCode ds3ResponseCode,
-            final String responseName) {
+            final String responseName,
+            final boolean hasResponsePayload) {
         if (isEmpty(ds3ResponseCode.getDs3ResponseTypes())) {
             throw new IllegalArgumentException("Response code does not contain any response types: " + ds3ResponseCode.getCode());
         }
         final Ds3ResponseType ds3ResponseType = ds3ResponseCode.getDs3ResponseTypes().get(0);
         final String responseModelName = getResponseModelName(ds3ResponseType);
 
-        if (responseModelName.equalsIgnoreCase("null")) {
+        if (responseModelName.equalsIgnoreCase("null") && !hasResponsePayload) {
             return new EmptyParseResponse(responseName);
+        }
+        if (responseModelName.equalsIgnoreCase("null") && hasResponsePayload) {
+            return new NullParseResponse(responseName);
         }
         if (responseModelName.equalsIgnoreCase("string")) {
             return new StringParseResponse(responseName);

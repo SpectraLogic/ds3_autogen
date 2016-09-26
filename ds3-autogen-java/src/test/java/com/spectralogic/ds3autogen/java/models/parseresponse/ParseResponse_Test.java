@@ -31,6 +31,14 @@ public class ParseResponse_Test {
     }
 
     @Test
+    public void nullParserResponse_Test() {
+        final String expected = "//There is no payload associated with this code, return a null response\n" +
+                "                return new TestResponse(null);\n";
+        final NullParseResponse result = new NullParseResponse("TestResponse");
+        assertThat(result.toJavaCode(), is(expected));
+    }
+
+    @Test
     public void stringParseResponse_Test() {
         final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
