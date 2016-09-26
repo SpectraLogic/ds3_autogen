@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -2032,11 +2032,14 @@ public class JavaFunctionalTests {
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
 
-        assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
 
-        //TODO special case enum
-        //assertTrue(responseGeneratedCode.contains("public enum Status"));
-        //assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, UNKNOWN"));
+        assertTrue(isReqParamOfType("metadata", "Metadata", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("objectSize", "long", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
+
+        assertTrue(responseGeneratedCode.contains("public enum Status { EXISTS, DOESNTEXIST, UNKNOWN }"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

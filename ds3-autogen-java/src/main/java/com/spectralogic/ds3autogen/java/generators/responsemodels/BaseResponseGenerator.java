@@ -132,7 +132,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
     @Override
     public ImmutableSet<String> getAllImports(final Ds3Request ds3Request) {
         if (isEmpty(ds3Request.getDs3ResponseCodes())) {
-            return ImmutableSet.of();
+            return ImmutableSet.of(getParentImport(ds3Request));
         }
         final ImmutableList<Ds3ResponseCode> responseCodes = ds3Request.getDs3ResponseCodes().stream()
                 .filter(i -> i.getCode() < 300)
