@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadBucketResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadObjectResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class JavaCodeGenerator_Test {
     public void getResponseTemplateModelGenerator_Test() {
         assertThat(getResponseTemplateModelGenerator(createBucketRequest()), instanceOf(BaseResponseGenerator.class));
         assertThat(getResponseTemplateModelGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
+        assertThat(getResponseTemplateModelGenerator(getHeadBucketRequest()), instanceOf(HeadBucketResponseGenerator.class));
     }
 
     @Test
