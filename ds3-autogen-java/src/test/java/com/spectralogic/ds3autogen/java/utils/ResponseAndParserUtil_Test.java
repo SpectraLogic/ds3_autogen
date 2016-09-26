@@ -140,6 +140,18 @@ public class ResponseAndParserUtil_Test {
         assertTrue(result.contains(404));
     }
 
+    @Test
+    public void getResponseModelName_SimpleType_Test() {
+        final Ds3ResponseType responseType = new Ds3ResponseType("com.test.MyType", null);
+        assertThat(getResponseModelName(responseType), is("MyType"));
+    }
+
+    @Test
+    public void getResponseModelName_ComponentType_Test() {
+        final Ds3ResponseType responseType = new Ds3ResponseType("array", "com.test.ComponentType");
+        assertThat(getResponseModelName(responseType), is("List<ComponentType>"));
+    }
+
     @Test (expected = NoSuchElementException.class)
     public void getDs3ResponseCode_NullList_Test() {
         getDs3ResponseCode(null, 200);

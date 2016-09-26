@@ -23,10 +23,12 @@ import com.spectralogic.ds3autogen.java.converters.ConvertType;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.convertType;
 import java.util.NoSuchElementException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 
 /**
  * Contains util functions used in response and response parser generators
@@ -103,7 +105,17 @@ public final class ResponseAndParserUtils {
     }
 
     /**
-     * Retrieves the fist instance of Ds3ResponseCode with the specified code
+     * Retrieves the response model name within a Ds3ResponseType
+     */
+    public static String getResponseModelName(final Ds3ResponseType ds3ResponseType) {
+        return stripPath(
+                convertType( //TODO potentially move convertType out of java helper
+                        ds3ResponseType.getType(),
+                        ds3ResponseType.getComponentType()));
+    }
+
+    /**
+     * * Retrieves the fist instance of Ds3ResponseCode with the specified code
      * @throws NoSuchElementException
      */
     public static Ds3ResponseCode getDs3ResponseCode(

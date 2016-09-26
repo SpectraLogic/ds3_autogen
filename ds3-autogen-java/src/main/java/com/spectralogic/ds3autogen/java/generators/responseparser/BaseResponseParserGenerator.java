@@ -31,12 +31,9 @@ import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.convertType;
 import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
-import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getImportListFromResponseCodes;
-import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.removeErrorResponseCodes;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.*;
 
 public class BaseResponseParserGenerator implements ResponseParserGenerator<ResponseParser>, ResponseParserGeneratorUtil {
@@ -127,16 +124,6 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
             return new StringParseResponse(responseName);
         }
         return new BaseParseResponse(responseName, responseModelName);
-    }
-
-    /**
-     * Retrieves the response model name within a Ds3ResponseType
-     */
-    protected static String getResponseModelName(final Ds3ResponseType ds3ResponseType) {
-        return stripPath(
-                convertType( //TODO potentially move convertType out of java helper
-                        ds3ResponseType.getType(),
-                        ds3ResponseType.getComponentType()));
     }
 
     /**

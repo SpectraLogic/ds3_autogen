@@ -19,8 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 
-import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getDs3ResponseCode;
-import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseCodes;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.*;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 /**

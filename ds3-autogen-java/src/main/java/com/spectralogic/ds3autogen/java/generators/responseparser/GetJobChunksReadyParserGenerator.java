@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.java.models.ResponseCode;
 
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getDs3ResponseCode;
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseCodes;
+import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseModelName;
 import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 /**

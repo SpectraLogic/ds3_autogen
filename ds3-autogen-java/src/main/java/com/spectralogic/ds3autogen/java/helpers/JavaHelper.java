@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
@@ -27,11 +26,11 @@ import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.isBulkRequestArg;
+import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.createDs3ResponseTypeParamName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
@@ -395,111 +394,6 @@ public final class JavaHelper {
         return "this.pagingTruncated = parseIntHeader(\"page-truncated\");\n"
                 + indent(indent) + "this.pagingTotalResultCount = parseIntHeader(\"total-result-count\");\n"
                 + indent(indent) + processResponseCodeLines(responseCode, indent);
-    }
-
-    /**
-     * Creates the Java code for getter functions for all response results
-     */
-    public static String createAllResponseResultGetters(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return "";
-        }
-        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
-            builder.add(createResponseResultGetter(entry.getKey(), entry.getValue()));
-        }
-        return builder.build()
-                .stream()
-                .map(i -> i)
-                .collect(Collectors.joining("\n"));
-    }
-
-    /**
-     * Creates the Java code for the getter function for a response result
-     * @param paramName The name of the response result param
-     * @param responseType The response type
-     */
-    protected static String createResponseResultGetter(
-            final String paramName,
-            final Ds3ResponseType responseType) {
-        if (isEmpty(paramName) || isEmpty(responseType.getType())) {
-            return "";
-        }
-        final String returnType = convertType(responseType.getType(), responseType.getComponentType());
-        return indent(1) + "public " +  returnType + " get" + capFirst(paramName) + "() {\n" +
-                indent(2) + "return this." + paramName + ";\n" +
-                indent(1) + "}\n";
-    }
-
-    /**
-     * Creates the Java code for the class parameters associated with the response payloads
-     * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into
-     *                      class parameters
-     */
-    public static String createAllResponseResultClassVars(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return "";
-        }
-        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
-            builder.add("private " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
-                            + " " + entry.getKey() + ";");
-        }
-        return builder.build()
-                .stream()
-                .map(i -> indent(1) + i)
-                .collect(Collectors.joining("\n"));
-    }
-
-    /**
-     * Creates a map containing all unique Ds3Response types found within a list of
-     * response codes. The map key consists of the response type parameter names,
-     * and values are the Ds3ResponseType associated with that parameter name.
-     */
-    protected static ImmutableMap<String, Ds3ResponseType> createUniqueDs3ResponseTypesMap(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableMap.of();
-        }
-        final ImmutableMap.Builder<String, Ds3ResponseType> builder = ImmutableMap.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                final String responseParamName = createDs3ResponseTypeParamName(responseType);
-                if (hasContent(responseParamName)
-                        && !builder.build().containsKey(responseParamName)) {
-                    builder.put(responseParamName, responseType);
-                }
-            }
-        }
-        return builder.build();
-    }
-
-    //TODO move into base response generator when refactor of response handlers to simple POJOs occurs
-    /**
-     * Creates the parameter name associated with a response type. Component types contain
-     * name spacing of "List", and all type names end with "Result"
-     * Example:
-     *   Type is null:  null -> ""
-     *   No Component Type:  MyType -> myTypeResult
-     *   With Component Type:  MyComponentType -> myComponentTypeListResult
-     */
-    protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
-        if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
-            return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-        if (hasContent(responseType.getComponentType())) {
-            builder.append(uncapFirst(stripPath(responseType.getComponentType())))
-                    .append("List");
-        } else {
-            builder.append(uncapFirst(stripPath(responseType.getType())));
-        }
-        if (!builder.toString().toLowerCase().endsWith("result")) {
-            builder.append("Result");
-        }
-        return builder.toString();
     }
 
     /**
