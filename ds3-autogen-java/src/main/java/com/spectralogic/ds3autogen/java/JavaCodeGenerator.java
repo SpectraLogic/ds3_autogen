@@ -25,10 +25,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadBucketResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadObjectResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.*;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
@@ -419,6 +416,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isHeadBucketRequest(ds3Request)) {
             return new HeadBucketResponseGenerator();
         }
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return new AllocateChunkResponseGenerator();
+        }
         return new BaseResponseGenerator();
     }
 
@@ -435,6 +435,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isHeadBucketRequest(ds3Request)) {
             return config.getTemplate("response/head_bucket_response.ftl");
+        }
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return config.getTemplate("response/allocate_chunk_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }
