@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.java.models.parseresponse.EmptyParseResponse;
+import com.spectralogic.ds3autogen.java.models.parseresponse.NullParseResponse;
 import com.spectralogic.ds3autogen.java.models.parseresponse.StringParseResponse;
 import org.junit.Test;
 
@@ -144,34 +145,46 @@ public class BaseResponseParserGenerator_Test {
     @Test (expected = IllegalArgumentException.class)
     public void toParseResponse_NullTypesList_Test() {
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, null);
-        toParseResponse(responseCode, "TestResponse");
+        toParseResponse(responseCode, "TestResponse", false);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void toParseResponse_EmptyTypesList_Test() {
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, ImmutableList.of());
-        toParseResponse(responseCode, "TestResponse");
+        toParseResponse(responseCode, "TestResponse", false);
     }
 
     @Test
     public void toParseResponse_Test() {
         final String responseName = "TestResponse";
 
-        assertThat(toParseResponse(getNullResponseCode(), responseName),
+        assertThat(toParseResponse(getNullResponseCode(), responseName, false),
                 instanceOf(EmptyParseResponse.class));
 
-        assertThat(toParseResponse(getStringResponseCode(), responseName),
+        assertThat(toParseResponse(getNullResponseCode(), responseName, true),
+                instanceOf(NullParseResponse.class));
+
+        assertThat(toParseResponse(getStringResponseCode(), responseName, true),
                 instanceOf(StringParseResponse.class));
 
-        assertThat(toParseResponse(getBaseResponseCode(), responseName),
+        assertThat(toParseResponse(getBaseResponseCode(), responseName, true),
                 instanceOf(BaseParseResponse.class));
     }
 
     @Test
-    public void toResponseCode_NullResponse_Test() {
+    public void toResponseCode_EmptyResponse_Test() {
         final String expected = "//There is no payload, return an empty response handler\n" +
                 "                return new TestResponse();\n";
-        final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse");
+        final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse", false);
+        assertThat(result.getCode(), is(200));
+        assertThat(result.getProcessingCode(), is(expected));
+    }
+
+    @Test
+    public void toResponseCode_NullResponse_Test() {
+        final String expected = "//There is no payload associated with this code, return a null response\n" +
+                "                return new TestResponse(null);\n";
+        final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse", true);
         assertThat(result.getCode(), is(200));
         assertThat(result.getProcessingCode(), is(expected));
     }
@@ -182,7 +195,7 @@ public class BaseResponseParserGenerator_Test {
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
-        final ResponseCode result = toResponseCode(getStringResponseCode(), "TestResponse");
+        final ResponseCode result = toResponseCode(getStringResponseCode(), "TestResponse", true);
         assertThat(result.getCode(), is(201));
         assertThat(result.getProcessingCode(), is(expected));
     }
@@ -193,7 +206,7 @@ public class BaseResponseParserGenerator_Test {
                 "                    final Type result = XmlOutput.fromXml(inputStream, Type.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
-        final ResponseCode result = toResponseCode(getBaseResponseCode(), "TestResponse");
+        final ResponseCode result = toResponseCode(getBaseResponseCode(), "TestResponse", true);
         assertThat(result.getCode(), is(202));
         assertThat(result.getProcessingCode(), is(expected));
     }
