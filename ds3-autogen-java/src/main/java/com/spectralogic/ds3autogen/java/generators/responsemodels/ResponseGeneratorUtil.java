@@ -43,4 +43,9 @@ public interface ResponseGeneratorUtil {
      * Retrieves the list of parameters needed to create the response POJO
      */
     ImmutableList<Arguments> toParamList(final ImmutableList<Ds3ResponseCode> ds3ResponseCodes);
+
+    /**
+     * Converts a list of Arguments into a comma-separated list of parameters for the constructor
+     */
+    String toConstructorParams(final ImmutableList<Arguments> params);
 }

@@ -423,6 +423,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return new BulkResponseGenerator();
         }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectResponseGenerator();
+        }
         return new BaseResponseGenerator();
     }
 
@@ -448,6 +451,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response.ftl");
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("response/get_object_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }

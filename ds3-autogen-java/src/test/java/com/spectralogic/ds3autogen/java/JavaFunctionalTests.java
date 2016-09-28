@@ -1226,8 +1226,14 @@ public class JavaFunctionalTests {
         assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", responseGeneratedCode));
 
-        //TODO special case response handler
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.ChecksumType", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
+
+        assertTrue(isReqParamOfType("checksum", "String", responseName, responseGeneratedCode, true));
+        assertTrue(isReqParamOfType("checksumType", "ChecksumType.Type", responseName, responseGeneratedCode, true));
+        assertTrue(isReqParamOfType("metadata", "Metadata", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("objectSize", "long", responseName, responseGeneratedCode, false));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

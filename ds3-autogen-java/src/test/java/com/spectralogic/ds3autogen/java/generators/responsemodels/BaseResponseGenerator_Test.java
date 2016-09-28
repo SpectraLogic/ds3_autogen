@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.createDs3ResponseTypeParamName;
-import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.toConstructorParams;
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.toParam;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedErrorResponseCode;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedResponseCode;
@@ -33,9 +32,7 @@ import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.cr
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseResponseGenerator_Test {
 
@@ -173,13 +170,13 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toConstructorParams_NullList_Test() {
-        final String result = toConstructorParams(null);
+        final String result = generator.toConstructorParams(null);
         assertThat(result, is(""));
     }
 
     @Test
     public void toConstructorParams_EmptyList_Test() {
-        final String result = toConstructorParams(ImmutableList.of());
+        final String result = generator.toConstructorParams(ImmutableList.of());
         assertThat(result, is(""));
     }
 
@@ -192,7 +189,7 @@ public class BaseResponseGenerator_Test {
                 new Arguments("TypeTwo", "ArgTwo"),
                 new Arguments("TypeThree", "ArgThree"));
 
-        final String result = toConstructorParams(args);
+        final String result = generator.toConstructorParams(args);
         assertThat(result, is(expected));
     }
 }

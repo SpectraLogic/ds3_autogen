@@ -66,7 +66,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
     /**
      * Converts a list of Arguments into a comma-separated list of parameters
      */
-    protected static String toConstructorParams(final ImmutableList<Arguments> params) {
+    @Override
+    public String toConstructorParams(final ImmutableList<Arguments> params) {
         if (isEmpty(params)) {
             return "";
         }
