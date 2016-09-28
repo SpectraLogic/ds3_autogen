@@ -30,7 +30,7 @@ public class Ds3ClientImpl implements Ds3Client {
     <#list commands as cmd>
     @Override
     public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request) throws IOException {
-        return new ${cmd.getResponseName()}(this.netClient.getResponse(request));
+        return handleExceptions(this.netClient.getResponse(request, new ${cmd.getResponseName()}Parser()));
     }
     </#list>
 
@@ -51,5 +51,16 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public void close() throws IOException {
         this.netClient.close();
+    }
+
+    private static <T extends Ds3Response> T handleExceptions(final FutureTask<T> response) throws IOException {
+        try {
+            return response.get();
+        } catch (final ExecutionException | InterruptedException  e) {
+            if (e.getCause() instanceof IOException) {
+                throw (IOException) e.getCause();
+            }
+            throw new RuntimeException(e.getCause());
+        }
     }
 }
