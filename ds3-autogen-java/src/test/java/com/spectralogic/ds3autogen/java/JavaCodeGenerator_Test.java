@@ -16,16 +16,25 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadObjectResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseParserGenerator;
+import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseTemplateModelGenerator;
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getTemplateModelGenerator;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
 public class JavaCodeGenerator_Test {
+
+    @Test
+    public void getResponseTemplateModelGenerator_Test() {
+        assertThat(getResponseTemplateModelGenerator(createBucketRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseTemplateModelGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
+    }
 
     @Test
     public void getResponseParserGenerator_Test() {
