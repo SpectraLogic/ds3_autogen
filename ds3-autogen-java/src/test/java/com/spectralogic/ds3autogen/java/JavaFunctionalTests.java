@@ -1793,10 +1793,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.Objects", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("objectsResult", "Objects", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("retryAfterSeconds", "int", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
 
-        //TODO special case to include enum
-        //assertTrue(responseGeneratedCode.contains("public enum Status"));
-        //assertTrue(responseGeneratedCode.contains("ALLOCATED, RETRYLATER"));
+        assertTrue(responseGeneratedCode.contains("public enum Status { ALLOCATED, RETRYLATER }"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1877,10 +1877,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("masterObjectListResult", "MasterObjectList", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("retryAfterSeconds", "int", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
 
-        //TODO special case enum
-        //assertTrue(responseGeneratedCode.contains("public enum Status"));
-        //assertTrue(responseGeneratedCode.contains("AVAILABLE, RETRYLATER"));
+        assertTrue(responseGeneratedCode.contains("public enum Status { AVAILABLE, RETRYLATER }"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

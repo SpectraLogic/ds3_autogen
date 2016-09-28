@@ -491,7 +491,14 @@ public class Ds3ModelFixtures {
                 ResourceType.NON_SINGLETON,
                 Operation.ALLOCATE,
                 true,
-                null,
+                ImmutableList.of(
+                        new Ds3ResponseCode(200,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.JobChunkApiBean", null))),
+                        new Ds3ResponseCode(400,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
+                        new Ds3ResponseCode(404,
+                                ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))
+                ),
                 null,
                 ImmutableList.of(
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
