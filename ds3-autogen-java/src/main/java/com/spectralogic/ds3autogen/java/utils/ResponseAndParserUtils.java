@@ -20,10 +20,10 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.java.converters.ConvertType;
+import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
-import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.convertType;
 import java.util.NoSuchElementException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
@@ -109,7 +109,7 @@ public final class ResponseAndParserUtils {
      */
     public static String getResponseModelName(final Ds3ResponseType ds3ResponseType) {
         return stripPath(
-                convertType( //TODO potentially move convertType out of java helper
+                convertType(
                         ds3ResponseType.getType(),
                         ds3ResponseType.getComponentType()));
     }
@@ -128,5 +128,32 @@ public final class ResponseAndParserUtils {
                 .filter(i -> i.getCode() == code)
                 .findFirst()
                 .get();
+    }
+
+    /**
+     * Creates the Java type from elements, converting component types into a List.
+     */
+    public static String convertType(final Element element) throws IllegalArgumentException {
+        return convertType(element.getType(), element.getComponentType());
+    }
+
+    /**
+     * Creates the Java type from elements, converting component types into a List,
+     * and ChecksumType into ChecksumType.Type
+     */
+    public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
+        if (isEmpty(componentType)) {
+            final String typeNoPath = stripPath(type);
+            switch (typeNoPath.toLowerCase()) {
+                case "checksumtype":
+                    return "ChecksumType.Type";
+                default:
+                    return typeNoPath;
+            }
+        }
+        if (type.equalsIgnoreCase("array")) {
+            return "List<" + stripPath(componentType) + ">";
+        }
+        throw new IllegalArgumentException("Unknown element type: " + type);
     }
 }

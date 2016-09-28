@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.java.models.Element;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -171,5 +172,28 @@ public class ResponseAndParserUtil_Test {
     public void getDs3ResponseCode_Test() {
         final Ds3ResponseCode result = getDs3ResponseCode(getTestResponseCodes(), 200);
         assertThat(result.getCode(), is(200));
+    }
+
+    @Test
+    public void convertType_String_Test() {
+        assertThat(convertType("long", null), is("long"));
+        assertThat(convertType("long", ""), is("long"));
+        assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
+        assertThat(convertType("com.spectralogic.util.security.ChecksumType", null), is("ChecksumType.Type"));
+    }
+
+    @Test
+    public void convertType_Element_Test() {
+        final Element element = new Element("Length", "long", "");
+        assertThat(convertType(element), is("long"));
+
+        final Element compositeElement = new Element("Tapes", "array", "com.spectralogic.s3.common.dao.domain.tape.Tape");
+        assertThat(convertType(compositeElement), is("List<Tape>"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void convertType_Exception_Test() {
+        final Element compositeElement = new Element("Tapes", "map", "com.spectralogic.s3.common.dao.domain.tape.Tape");
+        convertType(compositeElement);
     }
 }

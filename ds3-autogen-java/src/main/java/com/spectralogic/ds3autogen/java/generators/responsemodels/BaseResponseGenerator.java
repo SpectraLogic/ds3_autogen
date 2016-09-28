@@ -148,7 +148,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         return builder.build();
     }
 
-    //TODO make protected once decoupled from JavaHelper.processResponseCodeLines
     /**
      * Creates the parameter name associated with a response type. Component types contain
      * name spacing of "List", and all type names end with "Result"
@@ -157,7 +156,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
      *   No Component Type:  MyType -> myTypeResult
      *   With Component Type:  MyComponentType -> myComponentTypeListResult
      */
-    public static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
+    protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
         if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
             return "";
         }
