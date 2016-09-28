@@ -455,19 +455,20 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "BulkResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
 
-        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
+        final ImmutableList<Arguments> responseConstructorArg = ImmutableList.of(
+                new Arguments("MasterObjectList", "masterObjectListResult"));
+        assertTrue(hasConstructor(responseName, responseConstructorArg, responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
         testDs3Client(requestName, ds3ClientGeneratedCode);
-        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"MasterObjectList\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 
@@ -529,19 +530,21 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "BulkResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.models.JobWithChunksContainerApiBean", responseGeneratedCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
 
-        assertTrue(isReqParamOfType("jobWithChunksContainerApiBeanResult", "JobWithChunksContainerApiBean", responseName, responseGeneratedCode, false));
+        final ImmutableList<Arguments> responseConstructorArg = ImmutableList.of(
+                new Arguments("MasterObjectList", "masterObjectListResult"));
+        assertTrue(hasConstructor(responseName, responseConstructorArg, responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
         CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
         testDs3Client(requestName, ds3ClientGeneratedCode);
-        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"JobWithChunksContainerApiBean\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@ResponsePayloadModel(\"MasterObjectList\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Action(\"MODIFY\")"));
         assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"BUCKET\")"));
 

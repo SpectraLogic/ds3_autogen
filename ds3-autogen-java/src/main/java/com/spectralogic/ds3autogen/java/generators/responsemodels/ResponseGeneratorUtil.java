@@ -26,12 +26,12 @@ public interface ResponseGeneratorUtil {
     /**
      * Returns the import for the parent class for this response
      */
-    String getParentImport(final Ds3Request ds3Request);
+    String getParentImport();
 
     /**
      * Returns the parent class that the response extends
      */
-    String getParentClass(final Ds3Request ds3Request);
+    String getParentClass();
 
     /**
      * Gets all the imports associated with response types that the response will

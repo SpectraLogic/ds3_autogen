@@ -4,6 +4,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="Aggregating" Type="boolean"/>
                         <Param Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
                         <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
@@ -16,7 +17,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksContainerApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
@@ -37,8 +38,14 @@
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>500</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
-                <Version>12.F5D855B92D35D52FD4C2EDADAA0FD689</Version>
+                <Version>12.16C01F7FD7B2B3EABC9D36FDAFF5E278</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
