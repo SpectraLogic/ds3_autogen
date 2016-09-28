@@ -152,12 +152,7 @@ public class ClientConverter_Test {
                 "     * This is how you use get object\n" +
                 "     */";
 
-        final String expectedBody = "return new GetObjectResponse(\n" +
-                "            this.netClient.getResponse(request),\n" +
-                "            request.getChannel(),\n" +
-                "            this.netClient.getConnectionDetails().getBufferSize(),\n" +
-                "            request.getObjectName()\n" +
-                "        );";
+        final String expectedBody = "return handleExceptions(netClient.getResponse(request, new GetObjectResponseHandlerParser(request.getChannel())));";
 
         final CustomCommand result = toGetObjectAmazonS3CustomCommand(getRequestAmazonS3GetObject(), getTestDocSpec());
         assertThat(result.getName(), is("GetObjectHandler"));
