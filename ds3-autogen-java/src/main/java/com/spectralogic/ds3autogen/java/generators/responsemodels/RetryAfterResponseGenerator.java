@@ -42,7 +42,7 @@ public class RetryAfterResponseGenerator extends BaseResponseGenerator {
 
         if (hasContent(ds3ResponseCodes)) {
             final ImmutableList<Arguments> responseCodeArgs = ds3ResponseCodes.stream()
-                    .filter(i -> i.getCode() < 300) //Filter error codes
+                    .filter(i -> i.getCode() < ERROR_CODE_THRESHOLD) //Filter error codes
                     .map(BaseResponseGenerator::toParam)
                     .filter(Optional::isPresent) //Filters out empty optional arguments
                     .map(Optional::get) //Get the Arguments object out of the optional

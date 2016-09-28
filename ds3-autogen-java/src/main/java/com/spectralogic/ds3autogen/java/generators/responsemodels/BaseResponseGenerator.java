@@ -41,6 +41,9 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
     private final static String ABSTRACT_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.AbstractResponse";
 
+    /** The threshold number for error codes where all codes equal to or greater are error codes */
+    protected final static int ERROR_CODE_THRESHOLD = 300;
+
     @Override
     public Response generate(final Ds3Request ds3Request, final String packageName) {
         final String responseName = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
@@ -81,7 +84,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
             return ImmutableList.of();
         }
         return ds3ResponseCodes.stream()
-                .filter(i -> i.getCode() < 300) //Filter error codes
+                .filter(i -> i.getCode() < ERROR_CODE_THRESHOLD) //Filter error codes
                 .map(BaseResponseGenerator::toParam)
                 .filter(Optional::isPresent) //Filters out empty optional arguments
                 .map(Optional::get) //Get the Arguments object out of the optional
@@ -135,7 +138,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
             return ImmutableSet.of(getParentImport(ds3Request));
         }
         final ImmutableList<Ds3ResponseCode> responseCodes = ds3Request.getDs3ResponseCodes().stream()
-                .filter(i -> i.getCode() < 300)
+                .filter(i -> i.getCode() < ERROR_CODE_THRESHOLD)
                 .collect(GuavaCollectors.immutableList());
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
