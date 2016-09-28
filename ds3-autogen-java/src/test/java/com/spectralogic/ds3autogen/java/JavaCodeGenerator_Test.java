@@ -16,16 +16,13 @@
 package com.spectralogic.ds3autogen.java;
 
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.RetryAfterResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadBucketResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadObjectResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.*;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseParserGenerator;
-import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseTemplateModelGenerator;
-import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getTemplateModelGenerator;
+import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseGenerator;
+import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getRequestGenerator;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -33,11 +30,14 @@ import static org.junit.Assert.assertThat;
 public class JavaCodeGenerator_Test {
 
     @Test
-    public void getResponseTemplateModelGenerator_Test() {
-        assertThat(getResponseTemplateModelGenerator(createBucketRequest()), instanceOf(BaseResponseGenerator.class));
-        assertThat(getResponseTemplateModelGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
-        assertThat(getResponseTemplateModelGenerator(getHeadBucketRequest()), instanceOf(HeadBucketResponseGenerator.class));
-        assertThat(getResponseTemplateModelGenerator(getAllocateJobChunkRequest()), instanceOf(RetryAfterResponseGenerator.class));
+    public void getResponseGenerator_Test() {
+        assertThat(getResponseGenerator(createBucketRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
+        assertThat(getResponseGenerator(getHeadBucketRequest()), instanceOf(HeadBucketResponseGenerator.class));
+        assertThat(getResponseGenerator(getAllocateJobChunkRequest()), instanceOf(RetryAfterResponseGenerator.class));
+        assertThat(getResponseGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(RetryAfterResponseGenerator.class));
+        assertThat(getResponseGenerator(getRequestBulkGet()), instanceOf(BulkResponseGenerator.class));
+        assertThat(getResponseGenerator(getRequestBulkPut()), instanceOf(BulkResponseGenerator.class));
     }
 
     @Test
@@ -51,20 +51,20 @@ public class JavaCodeGenerator_Test {
     }
 
     @Test
-    public void getTemplateModelGenerator_Test() {
-        assertThat(getTemplateModelGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestBulkPut()), instanceOf(BulkRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestBulkGet()), instanceOf(BulkRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getEjectStorageDomainRequest()), instanceOf(ObjectsRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestCreateObject()), instanceOf(CreateObjectRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestCreateNotification()), instanceOf(CreateNotificationRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestGetNotification()), instanceOf(NotificationRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestDeleteNotification()), instanceOf(NotificationRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestMultiFileDelete()), instanceOf(MultiFileDeleteRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getCreateMultiPartUploadPart()), instanceOf(StreamRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getCompleteMultipartUploadRequest()), instanceOf(CompleteMultipartUploadRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
+    public void getRequestGenerator_Test() {
+        assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(BulkRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(BulkRequestGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(ObjectsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(CreateObjectRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(CreateNotificationRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestGetNotification()), instanceOf(NotificationRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestDeleteNotification()), instanceOf(NotificationRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(MultiFileDeleteRequestGenerator.class));
+        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StreamRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(CompleteMultipartUploadRequestGenerator.class));
+        assertThat(getRequestGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
     }
 }

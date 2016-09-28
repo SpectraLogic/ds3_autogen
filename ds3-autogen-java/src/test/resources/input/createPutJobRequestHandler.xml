@@ -4,8 +4,11 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_PUT" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="Aggregating" Type="boolean"/>
+                        <Param Name="Force" Type="void"/>
                         <Param Name="IgnoreNamingConflicts" Type="void"/>
                         <Param Name="MaxUploadSize" Type="long"/>
+                        <Param Name="MinimizeSpanningAcrossMedia" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
@@ -17,7 +20,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksContainerApiBean"/>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
@@ -33,7 +36,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>12.6994530E2B4F2E6BD1E68AC5405518C8</Version>
+                <Version>13.D2E87353A1F72FE15767983C5C20B969</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

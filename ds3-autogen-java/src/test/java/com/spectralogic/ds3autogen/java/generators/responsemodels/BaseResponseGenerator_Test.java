@@ -74,12 +74,12 @@ public class BaseResponseGenerator_Test {
     @Test
     public void getParentImport_Test() {
         final String expected = "com.spectralogic.ds3client.commands.interfaces.AbstractResponse";
-        assertThat(generator.getParentImport(createEmptyDs3Request()), is(expected));
+        assertThat(generator.getParentImport(), is(expected));
     }
 
     @Test
     public void getParentClass_Test() {
-        assertThat(generator.getParentClass(createEmptyDs3Request()), is("AbstractResponse"));
+        assertThat(generator.getParentClass(), is("AbstractResponse"));
     }
 
     @Test

@@ -47,7 +47,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
     @Override
     public Response generate(final Ds3Request ds3Request, final String packageName) {
         final String responseName = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
-        final String parentClass = getParentClass(ds3Request);
+        final String parentClass = getParentClass();
 
         final ImmutableList<Arguments> params = toParamList(ds3Request.getDs3ResponseCodes());
         final ImmutableSet<String> imports = getAllImports(ds3Request);
@@ -116,7 +116,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
      * is AbstractResponse
      */
     @Override
-    public String getParentImport(final Ds3Request ds3Request) {
+    public String getParentImport() {
         return ABSTRACT_RESPONSE_IMPORT;
     }
 
@@ -124,8 +124,8 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
      * Returns the parent class that the response extends
      */
     @Override
-    public String getParentClass(final Ds3Request ds3Request) {
-        return removePath(getParentImport(ds3Request));
+    public String getParentClass() {
+        return removePath(getParentImport());
     }
 
     /**
@@ -135,7 +135,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
     @Override
     public ImmutableSet<String> getAllImports(final Ds3Request ds3Request) {
         if (isEmpty(ds3Request.getDs3ResponseCodes())) {
-            return ImmutableSet.of(getParentImport(ds3Request));
+            return ImmutableSet.of(getParentImport());
         }
         final ImmutableList<Ds3ResponseCode> responseCodes = ds3Request.getDs3ResponseCodes().stream()
                 .filter(i -> i.getCode() < ERROR_CODE_THRESHOLD)
@@ -143,7 +143,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         builder.addAll(getImportListFromResponseCodes(responseCodes));
-        builder.add(getParentImport(ds3Request));
+        builder.add(getParentImport());
         return builder.build();
     }
 

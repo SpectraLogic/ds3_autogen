@@ -402,14 +402,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Response
      */
     private static Response toResponse(final Ds3Request ds3Request) {
-        final ResponseModelGenerator<?> modelGenerator = getResponseTemplateModelGenerator(ds3Request);
+        final ResponseModelGenerator<?> modelGenerator = getResponseGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
     }
 
     /**
      * Retrieves the associated response generator for the specified Ds3Request
      */
-    protected static ResponseModelGenerator<?> getResponseTemplateModelGenerator(final Ds3Request ds3Request) {
+    protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
         if (isHeadObjectRequest(ds3Request)) {
             return new HeadObjectResponseGenerator();
         }
@@ -419,6 +419,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isAllocateJobChunkRequest(ds3Request)
                 || isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
             return new RetryAfterResponseGenerator();
+        }
+        if (isBulkRequest(ds3Request)) {
+            return new BulkResponseGenerator();
         }
         return new BaseResponseGenerator();
     }
@@ -442,6 +445,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         }
         if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
             return config.getTemplate("response/chunks_ready_response.ftl");
+        }
+        if (isBulkRequest(ds3Request)) {
+            return config.getTemplate("response/bulk_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }
@@ -483,14 +489,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Request model
      */
     private Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
-        final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        final RequestModelGenerator<?> modelGenerator = getRequestGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request), docSpec);
     }
 
     /**
      * Retrieves the associated request generator for the specified Ds3Request
      */
-    protected static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
