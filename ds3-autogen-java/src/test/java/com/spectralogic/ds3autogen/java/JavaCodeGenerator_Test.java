@@ -38,6 +38,7 @@ public class JavaCodeGenerator_Test {
         assertThat(getResponseGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(RetryAfterResponseGenerator.class));
         assertThat(getResponseGenerator(getRequestBulkGet()), instanceOf(BulkResponseGenerator.class));
         assertThat(getResponseGenerator(getRequestBulkPut()), instanceOf(BulkResponseGenerator.class));
+        assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
     }
 
     @Test
