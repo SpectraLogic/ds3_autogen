@@ -1960,9 +1960,9 @@ public class JavaFunctionalTests {
 
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractResponse", responseGeneratedCode));
 
-        //TODO special case enum
-        //assertTrue(responseGeneratedCode.contains("public enum Status"));
-        //assertTrue(responseGeneratedCode.contains("EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN"));
+        assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
+
+        assertTrue(responseGeneratedCode.contains("public enum Status { EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN }"));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

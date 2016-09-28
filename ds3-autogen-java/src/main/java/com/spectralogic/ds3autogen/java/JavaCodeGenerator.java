@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadBucketResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.HeadObjectResponseGenerator;
 import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
@@ -415,6 +416,9 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isHeadObjectRequest(ds3Request)) {
             return new HeadObjectResponseGenerator();
         }
+        if (isHeadBucketRequest(ds3Request)) {
+            return new HeadBucketResponseGenerator();
+        }
         return new BaseResponseGenerator();
     }
 
@@ -428,6 +432,9 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
         if (isHeadObjectRequest(ds3Request)) {
             return config.getTemplate("response/head_object_response.ftl");
+        }
+        if (isHeadBucketRequest(ds3Request)) {
+            return config.getTemplate("response/head_bucket_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
     }

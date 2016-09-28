@@ -5,5 +5,7 @@ package ${packageName};
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
+
+    public enum Status { EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN }
 <#include "common/constructor_and_params.ftl"/>
 }
