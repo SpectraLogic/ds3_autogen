@@ -37,7 +37,8 @@ public class GetJobChunksReadyParserGenerator extends BaseResponseParserGenerato
     @Override
     public ImmutableList<ResponseCode> toResponseCodeList(
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
-            final String responseName) {
+            final String responseName,
+            final boolean hasPaginationHeaders) {
         //Verify that the expected status codes are present
         final ImmutableList<Integer> codes = getResponseCodes(ds3ResponseCodes);
         if (!codes.containsAll(EXPECTED_RESPONSE_CODES)) {

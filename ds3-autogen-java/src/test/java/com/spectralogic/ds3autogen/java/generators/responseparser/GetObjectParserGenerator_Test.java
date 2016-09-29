@@ -66,7 +66,7 @@ public class GetObjectParserGenerator_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toResponseCodeList_Exception_Test() {
-        generator.toResponseCodeList(ImmutableList.of(), "TestResponse");
+        generator.toResponseCodeList(ImmutableList.of(), "TestResponse", false);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class GetObjectParserGenerator_Test {
                 new Ds3ResponseCode(200, null),
                 new Ds3ResponseCode(206, null));
 
-        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(ds3ResponseCodes, "TestResponse");
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(ds3ResponseCodes, "TestResponse", false);
         assertThat(result.size(), is(2));
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(1).getCode(), is(206));

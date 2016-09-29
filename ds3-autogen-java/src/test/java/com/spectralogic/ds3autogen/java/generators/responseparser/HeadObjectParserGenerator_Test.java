@@ -37,14 +37,15 @@ public class HeadObjectParserGenerator_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toResponseCodeList_Error_Test() {
-        generator.toResponseCodeList(getRequestDeleteNotification().getDs3ResponseCodes(), "TestResponse");
+        generator.toResponseCodeList(getRequestDeleteNotification().getDs3ResponseCodes(), "TestResponse", false);
     }
 
     @Test
     public void toResponseCodeList_Test() {
         final ImmutableList<ResponseCode> result = generator.toResponseCodeList(
                 getHeadBucketRequest().getDs3ResponseCodes(),
-                "TestResponse");
+                "TestResponse",
+                false);
 
         assertThat(result.size(), is(2));
 

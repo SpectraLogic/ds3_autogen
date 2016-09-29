@@ -28,6 +28,7 @@ public class ResponseParser {
     /** contains a comma-separated list of all expected status codes */
     private final String expectedStatusCodes;
 
+    private final boolean hasPaginationHeaders;
     private final ImmutableSet<String> imports;
     private final ImmutableList<ResponseCode> responseCodes;
 
@@ -37,6 +38,7 @@ public class ResponseParser {
             final String packageName,
             final String parentClass,
             final String expectedStatusCodes,
+            final boolean hasPaginationHeaders,
             final ImmutableSet<String> imports,
             final ImmutableList<ResponseCode> responseCodes) {
         this.name = name;
@@ -44,6 +46,7 @@ public class ResponseParser {
         this.packageName = packageName;
         this.parentClass = parentClass;
         this.expectedStatusCodes = expectedStatusCodes;
+        this.hasPaginationHeaders = hasPaginationHeaders;
         this.imports = imports;
         this.responseCodes = responseCodes;
     }
@@ -74,5 +77,9 @@ public class ResponseParser {
 
     public String getExpectedStatusCodes() {
         return expectedStatusCodes;
+    }
+
+    public boolean isHasPaginationHeaders() {
+        return hasPaginationHeaders;
     }
 }

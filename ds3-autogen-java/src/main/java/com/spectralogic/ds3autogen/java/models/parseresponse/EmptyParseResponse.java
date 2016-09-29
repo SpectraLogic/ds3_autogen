@@ -25,14 +25,23 @@ public class EmptyParseResponse implements ParseResponse {
     private final static int INDENT = 4;
 
     private final String responseName;
+    private final boolean hasPaginationHeaders;
 
-    public EmptyParseResponse(final String responseName) {
+    public EmptyParseResponse(final String responseName, final boolean hasPaginationHeaders) {
         this.responseName = responseName;
+        this.hasPaginationHeaders = hasPaginationHeaders;
     }
 
     @Override
     public String toJavaCode() {
         return "//There is no payload, return an empty response handler\n"
-                + indent(INDENT) + "return new " + responseName + "();\n";
+                + indent(INDENT) + "return new " + responseName + "(" + getConstructorParams(hasPaginationHeaders) + ");\n";
+    }
+
+    private static String getConstructorParams(final boolean hasPaginationHeaders) {
+        if (hasPaginationHeaders) {
+            return "pagingTotalResultCount, pagingTruncated";
+        }
+        return "";
     }
 }

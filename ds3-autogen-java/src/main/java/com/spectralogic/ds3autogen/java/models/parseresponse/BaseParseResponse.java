@@ -26,17 +26,29 @@ public class BaseParseResponse implements ParseResponse {
 
     private final String responseName;
     private final String responseModelName;
+    private final boolean hasPaginationHeaders;
 
-    public BaseParseResponse(final String responseName, final String responseModelName) {
+    public BaseParseResponse(
+            final String responseName,
+            final String responseModelName,
+            final boolean hasPaginationHeaders) {
         this.responseName = responseName;
         this.responseModelName = responseModelName;
+        this.hasPaginationHeaders = hasPaginationHeaders;
     }
 
     @Override
     public String toJavaCode() {
         return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n"
                 + indent(INDENT + 1) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n"
-                + indent(INDENT + 1) + "return new " + responseName + "(result);\n"
+                + indent(INDENT + 1) + "return new " + responseName + "(" + getConstructorParams(hasPaginationHeaders) + ");\n"
                 + indent(INDENT) + "}\n";
+    }
+
+    private static String getConstructorParams(final boolean hasPaginationHeaders) {
+        if (hasPaginationHeaders) {
+            return "result, pagingTotalResultCount, pagingTruncated";
+        }
+        return "result";
     }
 }

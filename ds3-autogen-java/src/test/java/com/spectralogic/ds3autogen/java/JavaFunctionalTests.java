@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -172,7 +172,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "CompleteMultipartUploadResult");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "CompleteMultipartUploadResult", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -246,7 +246,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListBucketResult");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListBucketResult", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -324,7 +324,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "Bucket");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "Bucket", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -404,7 +404,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobWithChunksContainerApiBean");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobWithChunksContainerApiBean", false);
 
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
@@ -645,7 +645,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -740,7 +740,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -828,7 +828,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -920,7 +920,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1004,7 +1004,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "DeleteResult");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "DeleteResult", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1056,7 +1056,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.DeleteObjectResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{204};"));
     }
@@ -1157,7 +1157,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.PutObjectResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1357,7 +1357,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3Object");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3Object", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1422,7 +1422,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{204};"));
     }
@@ -1507,7 +1507,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistration");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistration", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{201};"));
     }
@@ -1588,7 +1588,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistrationList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistrationList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1675,10 +1675,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
 
-        final NullParseResponse nullExpectedParsing = new NullParseResponse(responseName);
+        final NullParseResponse nullExpectedParsing = new NullParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(nullExpectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 204};"));
     }
@@ -1755,7 +1755,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "InitiateMultipartUploadResult");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "InitiateMultipartUploadResult", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
@@ -2159,7 +2159,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
@@ -2234,7 +2234,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("org.apache.commons.io.IOUtils", responseParserCode));
         assertTrue(hasImport("java.nio.charset.StandardCharsets", responseParserCode));
 
-        final StringParseResponse expectedParsing = new StringParseResponse(responseName);
+        final StringParseResponse expectedParsing = new StringParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
@@ -2289,7 +2289,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.GetServiceResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListAllMyBucketsResult");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListAllMyBucketsResult", false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -2340,7 +2340,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.DeleteBucketSpectraS3Response", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{204};"));
     }
@@ -2399,7 +2399,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BucketList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BucketList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -2491,7 +2491,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
+        final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName, false);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -2587,7 +2587,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3ObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3ObjectList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }

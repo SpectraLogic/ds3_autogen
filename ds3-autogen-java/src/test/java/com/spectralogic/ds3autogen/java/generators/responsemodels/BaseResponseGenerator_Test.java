@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.java.generators.responsemodels;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import org.junit.Test;
@@ -28,10 +29,11 @@ import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseRes
 import static com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator.toParam;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedErrorResponseCode;
 import static com.spectralogic.ds3autogen.java.test.helpers.Ds3ResponseCodeFixtureTestHelper.createPopulatedResponseCode;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getGetBlobPersistence;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getObjectsDetailsRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class BaseResponseGenerator_Test {
@@ -191,5 +193,23 @@ public class BaseResponseGenerator_Test {
 
         final String result = generator.toConstructorParams(args);
         assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toParamListWithPagination_WithPagination_Test() {
+        final Ds3Request request = getObjectsDetailsRequest(); // Request that supports pagination
+        final ImmutableList<Arguments> result = generator.toParamListWithPagination(request);
+        assertThat(result.size(), is(3));
+        assertThat(result.get(1).getName(), is("pagingTotalResultCount"));
+        assertThat(result.get(2).getName(), is("pagingTruncated"));
+    }
+
+    @Test
+    public void toParamListWithPagination_WithNoPagination_Test() {
+        final Ds3Request request = getGetBlobPersistence(); // Request that does not supports pagination
+        final ImmutableList<Arguments> result = generator.toParamListWithPagination(request);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is(not("pagingTotalResultCount")));
+        assertThat(result.get(0).getName(), is(not("pagingTruncated")));
     }
 }

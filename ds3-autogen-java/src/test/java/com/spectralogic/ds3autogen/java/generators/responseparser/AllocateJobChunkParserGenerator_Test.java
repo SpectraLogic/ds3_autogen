@@ -53,7 +53,7 @@ public class AllocateJobChunkParserGenerator_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toResponseCodeList_Error_Test() {
-        generator.toResponseCodeList(ImmutableList.of(), "TestResponse");
+        generator.toResponseCodeList(ImmutableList.of(), "TestResponse", false);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class AllocateJobChunkParserGenerator_Test {
                         ImmutableList.of(
                                 new Ds3ResponseType("com.spectralogic.s3.server.domain.JobChunkApiBean", null))));
 
-        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "TestResponse");
+        final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "TestResponse", false);
         assertThat(result.size(), is(3));
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(1).getCode(), is(307));

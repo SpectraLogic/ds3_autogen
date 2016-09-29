@@ -48,5 +48,6 @@ public interface ResponseParserGeneratorUtil {
      * that are used to generate the response parsing code
      */
     ImmutableList<ResponseCode> toResponseCodeList(final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
-                                                   final String responseName);
+                                                   final String responseName,
+                                                   final boolean hasPaginationHeaders);
 }

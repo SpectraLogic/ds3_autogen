@@ -40,7 +40,8 @@ public class GetObjectParserGenerator extends BaseResponseParserGenerator {
     @Override
     public ImmutableList<ResponseCode> toResponseCodeList(
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
-            final String responseName) {
+            final String responseName,
+            final boolean hasPaginationHeaders) {
         final ImmutableList<Integer> codes = getResponseCodes(ds3ResponseCodes);
         if (!codes.containsAll(EXPECTED_RESPONSE_CODES)) {
             throw new IllegalArgumentException("Does not contain expected response codes: " + EXPECTED_RESPONSE_CODES.toString());
