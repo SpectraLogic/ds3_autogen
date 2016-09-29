@@ -51,14 +51,14 @@ public class GetJobChunksReadyParserGenerator_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toResponseCodeList_Exception_Test() {
-        generator.toResponseCodeList(null, "TestResponse");
+        generator.toResponseCodeList(null, "TestResponse", false);
     }
 
     @Test
     public void toResponseCodeList_Test() {
         final Ds3Request ds3Request = getJobChunksReadyForClientProcessingRequest();
         final ImmutableList<ResponseCode> result = generator
-                .toResponseCodeList(ds3Request.getDs3ResponseCodes(), "TestResponse");
+                .toResponseCodeList(ds3Request.getDs3ResponseCodes(), "TestResponse", false);
 
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getCode(), is(200));

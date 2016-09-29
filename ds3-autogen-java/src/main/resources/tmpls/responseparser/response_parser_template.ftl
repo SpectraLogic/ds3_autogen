@@ -10,6 +10,10 @@ public class ${name} extends ${parentClass}<${responseName}> {
     @Override
     public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
         final int statusCode = response.getStatusCode();
+        <#if hasPaginationHeaders == true>
+        final Integer pagingTruncated = parseIntHeader("page-truncated");
+        final Integer pagingTotalResultCount = parseIntHeader("total-result-count");
+        </#if>
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             <#list responseCodes as responseCode>

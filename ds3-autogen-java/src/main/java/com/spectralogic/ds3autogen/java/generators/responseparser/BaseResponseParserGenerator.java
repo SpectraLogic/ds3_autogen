@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.*;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.*;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 
@@ -43,10 +44,12 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
         final String parserName = toResponseParserName(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
         final String parentClass = getParentClass();
+        final boolean hasPaginationHeaders = supportsPaginationRequest(ds3Request);
 
         final ImmutableList<ResponseCode> responseCodes = toResponseCodeList(
                 ds3Request.getDs3ResponseCodes(),
-                responseName);
+                responseName,
+                hasPaginationHeaders);
 
         final String expectedStatusCodes = toStatusCodeList(responseCodes);
 
@@ -61,6 +64,7 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
                 packageName,
                 parentClass,
                 expectedStatusCodes,
+                hasPaginationHeaders,
                 imports,
                 responseCodes);
     }
@@ -83,11 +87,12 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
     @Override
     public ImmutableList<ResponseCode> toResponseCodeList(
             final ImmutableList<Ds3ResponseCode> ds3ResponseCodes,
-            final String responseName) {
+            final String responseName,
+            final boolean hasPaginationHeaders) {
         final ImmutableList<Ds3ResponseCode> filteredResponseCodes = removeErrorResponseCodes(ds3ResponseCodes);
         final boolean hasResponsePayload = hasResponsePayload(filteredResponseCodes);
         return filteredResponseCodes.stream()
-                .map(rc -> toResponseCode(rc, responseName, hasResponsePayload))
+                .map(rc -> toResponseCode(rc, responseName, hasResponsePayload, hasPaginationHeaders))
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -98,8 +103,13 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
     protected static ResponseCode toResponseCode(
             final Ds3ResponseCode ds3ResponseCode,
             final String responseName,
-            final boolean hasResponsePayload) {
-        final ParseResponse parseResponse = toParseResponse(ds3ResponseCode, responseName, hasResponsePayload);
+            final boolean hasResponsePayload,
+            final boolean hasPaginationHeaders) {
+        final ParseResponse parseResponse = toParseResponse(
+                ds3ResponseCode,
+                responseName,
+                hasResponsePayload,
+                hasPaginationHeaders);
 
         return new ResponseCode(
                 ds3ResponseCode.getCode(),
@@ -114,7 +124,8 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
     protected static ParseResponse toParseResponse(
             final Ds3ResponseCode ds3ResponseCode,
             final String responseName,
-            final boolean hasResponsePayload) {
+            final boolean hasResponsePayload,
+            final boolean hasPaginationHeaders) {
         if (isEmpty(ds3ResponseCode.getDs3ResponseTypes())) {
             throw new IllegalArgumentException("Response code does not contain any response types: " + ds3ResponseCode.getCode());
         }
@@ -122,15 +133,15 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
         final String responseModelName = getResponseModelName(ds3ResponseType);
 
         if (responseModelName.equalsIgnoreCase("null") && !hasResponsePayload) {
-            return new EmptyParseResponse(responseName);
+            return new EmptyParseResponse(responseName, hasPaginationHeaders);
         }
         if (responseModelName.equalsIgnoreCase("null") && hasResponsePayload) {
-            return new NullParseResponse(responseName);
+            return new NullParseResponse(responseName, hasPaginationHeaders);
         }
         if (responseModelName.equalsIgnoreCase("string")) {
-            return new StringParseResponse(responseName);
+            return new StringParseResponse(responseName, hasPaginationHeaders);
         }
-        return new BaseParseResponse(responseName, responseModelName);
+        return new BaseParseResponse(responseName, responseModelName, hasPaginationHeaders);
     }
 
     /**

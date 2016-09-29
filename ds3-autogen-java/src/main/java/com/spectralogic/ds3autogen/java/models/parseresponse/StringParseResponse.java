@@ -25,16 +25,29 @@ public class StringParseResponse implements ParseResponse {
     private final static int INDENT = 4;
 
     private final String responseName;
+    private final boolean hasPaginationHeaders;
 
     public StringParseResponse(final String responseName) {
+        this(responseName, false);
+    }
+
+    public StringParseResponse(final String responseName, final boolean hasPaginationHeaders) {
         this.responseName = responseName;
+        this.hasPaginationHeaders = hasPaginationHeaders;
     }
 
     @Override
     public String toJavaCode() {
         return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n"
                 + indent(INDENT + 1) + "final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n"
-                + indent(INDENT + 1) + "return new " + responseName + "(result);\n"
+                + indent(INDENT + 1) + "return new " + responseName + "(" + getConstructorParams(hasPaginationHeaders) + ");\n"
                 + indent(INDENT) + "}\n";
+    }
+
+    private static String getConstructorParams(final boolean hasPaginationHeaders) {
+        if (hasPaginationHeaders) {
+            return "result, pagingTotalResultCount, pagingTruncated";
+        }
+        return "result";
     }
 }

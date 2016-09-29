@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1588,7 +1588,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistrationList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistrationList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -2399,7 +2399,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BucketList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BucketList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -2587,7 +2587,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3ObjectList");
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3ObjectList", true);
         assertTrue(responseParserCode.contains(expectedParsing.toJavaCode()));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }

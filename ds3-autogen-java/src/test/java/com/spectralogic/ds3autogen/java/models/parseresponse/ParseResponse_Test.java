@@ -31,10 +31,26 @@ public class ParseResponse_Test {
     }
 
     @Test
+    public void emptyParserResponse_WithPagination_Test() {
+        final String expected = "//There is no payload, return an empty response handler\n" +
+                "                return new TestResponse(pagingTotalResultCount, pagingTruncated);\n";
+        final EmptyParseResponse result = new EmptyParseResponse("TestResponse", true);
+        assertThat(result.toJavaCode(), is(expected));
+    }
+
+    @Test
     public void nullParserResponse_Test() {
         final String expected = "//There is no payload associated with this code, return a null response\n" +
                 "                return new TestResponse(null);\n";
         final NullParseResponse result = new NullParseResponse("TestResponse");
+        assertThat(result.toJavaCode(), is(expected));
+    }
+
+    @Test
+    public void nullParserResponse_WithPagination_Test() {
+        final String expected = "//There is no payload associated with this code, return a null response\n" +
+                "                return new TestResponse(null, pagingTotalResultCount, pagingTruncated);\n";
+        final NullParseResponse result = new NullParseResponse("TestResponse", true);
         assertThat(result.toJavaCode(), is(expected));
     }
 
@@ -49,12 +65,32 @@ public class ParseResponse_Test {
     }
 
     @Test
+    public void stringParseResponse_WithPagination_Test() {
+        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
+                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
+                "                }\n";
+        final StringParseResponse result = new StringParseResponse("TestResponse", true);
+        assertThat(result.toJavaCode(), is(expected));
+    }
+
+    @Test
     public void baseParseResponse_Test() {
         final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
         final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType");
+        assertThat(result.toJavaCode(), is(expected));
+    }
+
+    @Test
+    public void baseParseResponse_WithPagination_Test() {
+        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+                "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
+                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
+                "                }\n";
+        final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType", true);
         assertThat(result.toJavaCode(), is(expected));
     }
 }
