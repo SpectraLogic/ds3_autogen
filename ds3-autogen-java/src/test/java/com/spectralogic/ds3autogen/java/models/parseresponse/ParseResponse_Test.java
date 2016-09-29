@@ -26,7 +26,7 @@ public class ParseResponse_Test {
     public void emptyParserResponse_Test() {
         final String expected = "//There is no payload, return an empty response handler\n" +
                 "                return new TestResponse();\n";
-        final EmptyParseResponse result = new EmptyParseResponse("TestResponse", false);
+        final EmptyParseResponse result = new EmptyParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
     }
 
@@ -42,7 +42,7 @@ public class ParseResponse_Test {
     public void nullParserResponse_Test() {
         final String expected = "//There is no payload associated with this code, return a null response\n" +
                 "                return new TestResponse(null);\n";
-        final NullParseResponse result = new NullParseResponse("TestResponse", false);
+        final NullParseResponse result = new NullParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
     }
 
@@ -60,7 +60,7 @@ public class ParseResponse_Test {
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
-        final StringParseResponse result = new StringParseResponse("TestResponse", false);
+        final StringParseResponse result = new StringParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
     }
 
@@ -80,7 +80,7 @@ public class ParseResponse_Test {
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
-        final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType", false);
+        final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType");
         assertThat(result.toJavaCode(), is(expected));
     }
 

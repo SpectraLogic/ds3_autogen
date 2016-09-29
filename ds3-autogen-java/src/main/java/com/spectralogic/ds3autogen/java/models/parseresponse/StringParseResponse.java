@@ -27,6 +27,10 @@ public class StringParseResponse implements ParseResponse {
     private final String responseName;
     private final boolean hasPaginationHeaders;
 
+    public StringParseResponse(final String responseName) {
+        this(responseName, false);
+    }
+
     public StringParseResponse(final String responseName, final boolean hasPaginationHeaders) {
         this.responseName = responseName;
         this.hasPaginationHeaders = hasPaginationHeaders;

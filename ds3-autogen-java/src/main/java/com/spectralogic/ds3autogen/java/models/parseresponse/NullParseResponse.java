@@ -28,6 +28,10 @@ public class NullParseResponse implements ParseResponse {
     private final String responseName;
     private final boolean hasPaginationHeaders;
 
+    public NullParseResponse(final String responseName) {
+        this(responseName, false);
+    }
+
     public NullParseResponse(final String responseName, final boolean hasPaginationHeaders) {
         this.responseName = responseName;
         this.hasPaginationHeaders = hasPaginationHeaders;

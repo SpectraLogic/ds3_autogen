@@ -28,6 +28,10 @@ public class BaseParseResponse implements ParseResponse {
     private final String responseModelName;
     private final boolean hasPaginationHeaders;
 
+    public BaseParseResponse(final String responseName, final String responseModelName) {
+        this(responseName, responseModelName, false);
+    }
+
     public BaseParseResponse(
             final String responseName,
             final String responseModelName,

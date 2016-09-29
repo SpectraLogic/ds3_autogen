@@ -27,6 +27,10 @@ public class EmptyParseResponse implements ParseResponse {
     private final String responseName;
     private final boolean hasPaginationHeaders;
 
+    public EmptyParseResponse(final String responseName) {
+        this(responseName, false);
+    }
+
     public EmptyParseResponse(final String responseName, final boolean hasPaginationHeaders) {
         this.responseName = responseName;
         this.hasPaginationHeaders = hasPaginationHeaders;
