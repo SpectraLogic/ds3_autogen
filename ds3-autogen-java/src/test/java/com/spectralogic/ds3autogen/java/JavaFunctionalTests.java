@@ -1838,9 +1838,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
 
-        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(result, 0, Status.ALLOCATED);"));
-        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(null, parseRetryAfter(response), Status.RETRYLATER);"));
+        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(result, 0, AllocateJobChunkSpectraS3Response.Status.ALLOCATED);"));
+        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(null, parseRetryAfter(response), AllocateJobChunkSpectraS3Response.Status.RETRYLATER);"));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 307, 503};"));
     }
 

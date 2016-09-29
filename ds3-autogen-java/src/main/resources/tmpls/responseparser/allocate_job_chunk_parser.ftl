@@ -2,6 +2,7 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass}<${responseName}> {
