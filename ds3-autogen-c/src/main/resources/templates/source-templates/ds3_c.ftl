@@ -31,11 +31,13 @@
 
 //************ STRUCT PARSERS **************
 <#list getStructs() as structEntry>
-    <#if structEntry.isArrayMember()>
+    <#if structEntry.isEmbedded()>
         <#include "ResponseParser.ftl">
+    <#elseif structEntry.isArrayMember()>
+        <#include "ResponseParser.ftl">
+    </#if>
+    <#if structEntry.isUnwrappedArrayMember()>
         <#include "StructArrayParser.ftl">
-    <#elseif structEntry.isEmbedded()>
-        <#include "ResponseParser.ftl">
     </#if>
 </#list>
 

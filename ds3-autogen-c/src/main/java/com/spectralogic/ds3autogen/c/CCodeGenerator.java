@@ -73,12 +73,13 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
 
             final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec, enumNames);
+            final ImmutableSet<String> unwrappedArrayMemberTypes = getUnwrappedArrayMemberTypes(spec, enumNames);
 
             final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
             final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
             final ImmutableSet<String> paginatedTypes = getPaginatedTypes(spec);
 
-            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, paginatedTypes);
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, unwrappedArrayMemberTypes, embeddedTypes, paginatedTypes);
 
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -140,6 +141,7 @@ public class CCodeGenerator implements CodeGenerator {
                                                       final ImmutableSet<String> enumNames,
                                                       final ImmutableSet<String> responseTypes,
                                                       final ImmutableSet<String> arrayMemberTypes,
+                                                      final ImmutableSet<String> unwrappedArrayMemberTypes,
                                                       final ImmutableSet<String> embeddedTypes,
                                                       final ImmutableSet<String> paginatedTypes) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
@@ -148,7 +150,7 @@ public class CCodeGenerator implements CodeGenerator {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
                 final Struct structEntry = StructConverter.toStruct(
-                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, paginatedTypes);
+                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, unwrappedArrayMemberTypes, embeddedTypes, paginatedTypes);
                 allStructsBuilder.add(structEntry);
             }
         }
@@ -169,6 +171,22 @@ public class CCodeGenerator implements CodeGenerator {
     }
 
     /**
+     * Find all types that are used as an array member, for generation of a parser for a list of a type
+     */
+    public static ImmutableSet<String> getUnwrappedArrayMemberTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
+        return spec.getTypes().values().stream()
+                .flatMap(type -> type.getElements().stream())
+                .filter(element -> element.getType().equalsIgnoreCase("array"))
+                .filter(element -> !element.getComponentType().contains("UUID"))
+                .filter(element ->element.getDs3Annotations().stream()
+                        .flatMap(anno -> anno.getDs3AnnotationElements().stream())
+                        .anyMatch(annoElem -> annoElem.getValue().equals("SINGLE_BLOCK_FOR_ALL_ELEMENTS")))
+                .filter(element -> !enumTypes.contains(EnumHelper.getDs3Type(element.getComponentType())))
+                .map(element -> StructHelper.getResponseTypeName(element.getComponentType()))
+                .collect(GuavaCollectors.immutableSet());
+    }
+
+    /**
      * Find all types that are embedded members.  Many 'top-level' types are not embedded and therefore those parsers
      * are useless.
      */
@@ -185,7 +203,7 @@ public class CCodeGenerator implements CodeGenerator {
      */
     public static ImmutableSet<String> getPaginatedTypes(final Ds3ApiSpec spec) {
         return spec.getRequests().stream()
-                .filter( req -> Ds3RequestClassificationUtil.supportsPaginationRequest(req))
+                .filter(Ds3RequestClassificationUtil::supportsPaginationRequest)
                 .map( req -> RequestConverter.getResponseType(req.getDs3ResponseCodes()))
                 .collect(GuavaCollectors.immutableSet());
     }

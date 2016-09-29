@@ -81,9 +81,9 @@ public class Ds3Element {
             return false;
         }
         final Ds3Element element = (Ds3Element) obj;
-        return this.getName().equals(element.getName())
-                && this.getType().equals(element.getType())
-                && this.getComponentType().equals(element.getComponentType());
+        return Objects.equals(this.getName(), element.getName())
+                && Objects.equals(this.getType(), element.getType())
+                && Objects.equals(this.getComponentType(), element.getComponentType());
     }
 
     public boolean isNullable() {
