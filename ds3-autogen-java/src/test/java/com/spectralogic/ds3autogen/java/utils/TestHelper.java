@@ -289,7 +289,7 @@ public final class TestHelper {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", code));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
-        final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.headers()) == 0) {\n" +
+        final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {\n" +
                 "                    return new " + responseName + "(null);\n" +
                 "                }\n" +
                 "                " + expectedParsing.toJavaCode();

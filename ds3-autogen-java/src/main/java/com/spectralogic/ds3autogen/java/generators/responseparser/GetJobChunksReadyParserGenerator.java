@@ -61,10 +61,10 @@ public class GetJobChunksReadyParserGenerator extends BaseResponseParserGenerato
         return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
                 indent(5) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n" +
                 indent(5) + "if (isNullOrEmpty(result.getObjects())) {\n" +
-                indent(6) + "return new " + responseName + "(result, parseRetryAfter(response), Status.RETRYLATER);\n" +
+                indent(6) + "return new " + responseName + "(result, parseRetryAfter(response), " + responseName +".Status.RETRYLATER);\n" +
                 indent(5) + "}\n" +
 
-                indent(5) + "return new " + responseName + "(result, 0, Status.AVAILABLE);\n" +
+                indent(5) + "return new " + responseName + "(result, 0, " + responseName +".Status.AVAILABLE);\n" +
                 indent(4) + "}\n";
     }
 }

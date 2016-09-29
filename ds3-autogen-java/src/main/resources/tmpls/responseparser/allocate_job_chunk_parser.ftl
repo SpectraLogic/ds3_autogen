@@ -2,6 +2,7 @@
 
 package ${packageName};
 
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass}<${responseName}> {
@@ -9,7 +10,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
 
     @Override
     public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
-        final int statusCode = response.statusCode();
+        final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             <#list responseCodes as responseCode>

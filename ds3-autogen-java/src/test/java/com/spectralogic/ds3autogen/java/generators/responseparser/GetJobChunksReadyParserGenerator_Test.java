@@ -36,9 +36,9 @@ public class GetJobChunksReadyParserGenerator_Test {
         final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
                 "                    final JobWithChunksApiBean result = XmlOutput.fromXml(inputStream, JobWithChunksApiBean.class);\n" +
                 "                    if (isNullOrEmpty(result.getObjects())) {\n" +
-                "                        return new TestResponse(result, parseRetryAfter(response), Status.RETRYLATER);\n" +
+                "                        return new TestResponse(result, parseRetryAfter(response), TestResponse.Status.RETRYLATER);\n" +
                 "                    }\n" +
-                "                    return new TestResponse(result, 0, Status.AVAILABLE);\n" +
+                "                    return new TestResponse(result, 0, TestResponse.Status.AVAILABLE);\n" +
                 "                }\n";
 
         final Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(

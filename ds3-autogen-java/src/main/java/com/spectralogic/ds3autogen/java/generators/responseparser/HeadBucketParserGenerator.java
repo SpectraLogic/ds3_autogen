@@ -52,6 +52,6 @@ public class HeadBucketParserGenerator extends BaseResponseParserGenerator {
      * Gets the java code for returning the response handler with the specified status
      */
     protected static String toReturnCode(final String responseName, final String status) {
-        return "return new " + responseName + "(Status." + status + ");\n";
+        return "return new " + responseName + "(" + responseName + ".Status." + status + ");\n";
     }
 }

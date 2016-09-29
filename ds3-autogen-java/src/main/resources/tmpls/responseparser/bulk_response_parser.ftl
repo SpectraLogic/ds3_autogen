@@ -9,12 +9,12 @@ public class ${name} extends ${parentClass}<${responseName}> {
 
     @Override
     public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
-        final int statusCode = response.statusCode();
+        final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             <#list responseCodes as responseCode>
             case ${responseCode.code}:
-                if (ResponseParserUtils.getSizeFromHeaders(response.headers()) == 0) {
+                if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {
                     return new ${responseName}(null);
                 }
                 ${responseCode.processingCode}

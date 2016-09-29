@@ -32,7 +32,7 @@ public class AllocateJobChunkParserGenerator_Test {
 
     @Test
     public void toRetryLaterCode_Test() {
-        final String expected = "return new MyResponse(null, parseRetryAfter(response), Status.RETRYLATER);";
+        final String expected = "return new MyResponse(null, parseRetryAfter(response), MyResponse.Status.RETRYLATER);";
         assertThat(toRetryLaterCode("MyResponse"), is(expected));
     }
 
@@ -40,7 +40,7 @@ public class AllocateJobChunkParserGenerator_Test {
     public void toParsePayloadCode_Test() {
         final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
                 "                    final JobChunkApiBean result = XmlOutput.fromXml(inputStream, JobChunkApiBean.class);\n" +
-                "                    return new MyResponse(result, 0, Status.ALLOCATED);\n" +
+                "                    return new MyResponse(result, 0, MyResponse.Status.ALLOCATED);\n" +
                 "                }\n";
 
         final Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(
