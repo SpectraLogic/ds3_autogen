@@ -31,7 +31,7 @@ public class HeadBucketParserGenerator_Test {
 
     @Test
     public void toReturnCode_Test() {
-        final String expected = "return new MyResponse(Status.MyStatus);\n";
+        final String expected = "return new MyResponse(MyResponse.Status.MyStatus);\n";
         assertThat(toReturnCode("MyResponse", "MyStatus"), is(expected));
     }
 
@@ -50,14 +50,14 @@ public class HeadBucketParserGenerator_Test {
 
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(0).getProcessingCode(),
-                is("return new TestResponse(Status.EXISTS);\n"));
+                is("return new TestResponse(TestResponse.Status.EXISTS);\n"));
 
         assertThat(result.get(1).getCode(), is(403));
         assertThat(result.get(1).getProcessingCode(),
-                is("return new TestResponse(Status.NOTAUTHORIZED);\n"));
+                is("return new TestResponse(TestResponse.Status.NOTAUTHORIZED);\n"));
 
         assertThat(result.get(2).getCode(), is(404));
         assertThat(result.get(2).getProcessingCode(),
-                is("return new TestResponse(Status.DOESNTEXIST);\n"));
+                is("return new TestResponse(TestResponse.Status.DOESNTEXIST);\n"));
     }
 }

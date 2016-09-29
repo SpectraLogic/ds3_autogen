@@ -4,6 +4,7 @@ package ${packageName};
 
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.parsers.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.JobNode;
