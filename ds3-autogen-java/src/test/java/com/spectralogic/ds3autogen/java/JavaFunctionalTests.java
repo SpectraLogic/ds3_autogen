@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1552,13 +1552,15 @@ public class JavaFunctionalTests {
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
 
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistrationList", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("jobCompletedNotificationRegistrationListResult", "JobCompletedNotificationRegistrationList", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("pagingTotalResultCount", "Integer", responseName, responseGeneratedCode, true));
+        assertTrue(isReqParamOfType("pagingTruncated", "Integer", responseName, responseGeneratedCode, true));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2367,9 +2369,11 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("bucketListResult", "BucketList", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("pagingTotalResultCount", "Integer", responseName, responseGeneratedCode, true));
+        assertTrue(isReqParamOfType("pagingTruncated", "Integer", responseName, responseGeneratedCode, true));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -2553,11 +2557,13 @@ public class JavaFunctionalTests {
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
         CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
         final String responseName = requestName.replace("Request", "Response");
-        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+        assertTrue(extendsClass(responseName, "AbstractPaginationResponse", responseGeneratedCode));
 
-        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("s3ObjectListResult", "S3ObjectList", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("pagingTotalResultCount", "Integer", responseName, responseGeneratedCode, true));
+        assertTrue(isReqParamOfType("pagingTruncated", "Integer", responseName, responseGeneratedCode, true));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();

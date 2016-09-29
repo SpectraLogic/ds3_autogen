@@ -39,6 +39,7 @@ public class JavaCodeGenerator_Test {
         assertThat(getResponseGenerator(getRequestBulkGet()), instanceOf(BulkResponseGenerator.class));
         assertThat(getResponseGenerator(getRequestBulkPut()), instanceOf(BulkResponseGenerator.class));
         assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
+        assertThat(getResponseGenerator(getBucketsSpectraS3Request()), instanceOf(PaginationResponseGenerator.class));
     }
 
     @Test
