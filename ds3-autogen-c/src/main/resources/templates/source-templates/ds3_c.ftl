@@ -33,10 +33,8 @@
 <#list getStructs() as structEntry>
     <#if structEntry.isEmbedded()>
         <#include "ResponseParser.ftl">
-    <#elseif structEntry.isArrayMember()>
-        <#include "ResponseParser.ftl">
     </#if>
-    <#if structEntry.isUnwrappedArrayMember()>
+    <#if structEntry.isArrayMember()>
         <#include "StructArrayParser.ftl">
     </#if>
 </#list>

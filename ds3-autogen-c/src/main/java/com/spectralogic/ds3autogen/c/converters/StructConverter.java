@@ -33,9 +33,8 @@ public final class StructConverter {
     public static Struct toStruct(final Ds3Type ds3Type,
                                   final ImmutableSet<String> enumNames,
                                   final ImmutableSet<String> responseTypes,
-                                  final ImmutableSet<String> arrayMemberTypes,
-                                  final ImmutableSet<String> unwrappedArrayMemberTypes,
                                   final ImmutableSet<String> embeddedTypes,
+                                  final ImmutableSet<String> arrayMemberTypes,
                                   final ImmutableSet<String> paginatedTypes) throws ParseException {
         final String responseTypeName = StructHelper.getResponseTypeName(ds3Type.getName());
         final ImmutableList<StructMember> structMembersList = convertDs3Elements(ds3Type.getElements(), enumNames, paginatedTypes.contains(responseTypeName));
@@ -45,7 +44,6 @@ public final class StructConverter {
                 structMembersList,
                 responseTypes.contains(responseTypeName),
                 arrayMemberTypes.contains(responseTypeName),
-                unwrappedArrayMemberTypes.contains(responseTypeName),
                 hasComplexArrayMembers(structMembersList),
                 embeddedTypes.contains(responseTypeName));
     }

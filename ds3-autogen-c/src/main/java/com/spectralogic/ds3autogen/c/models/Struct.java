@@ -25,7 +25,6 @@ public class Struct {
     private final ImmutableList<StructMember> members;
     private final boolean isTopLevel;
     private final boolean isArrayMember;
-    private final boolean isUnwrappedArrayMember;
     private final boolean hasArrayMembers;
     private final boolean isEmbedded;
 
@@ -37,7 +36,6 @@ public class Struct {
         this.members = members;
         this.isTopLevel = false;
         this.isArrayMember = false;
-        this.isUnwrappedArrayMember = false;
         this.hasArrayMembers = false;
         this.isEmbedded = false;
     }
@@ -48,7 +46,6 @@ public class Struct {
             final ImmutableList<StructMember> members,
             final boolean isTopLevel,
             final boolean isArrayMember,
-            final boolean isUnwrappedArrayMember,
             final boolean hasArrayMembers,
             final boolean isEmbedded) {
         this.name = name;
@@ -56,7 +53,6 @@ public class Struct {
         this.members = members;
         this.isTopLevel = isTopLevel;
         this.isArrayMember = isArrayMember;
-        this.isUnwrappedArrayMember = isUnwrappedArrayMember;
         this.hasArrayMembers = hasArrayMembers;
         this.isEmbedded = isEmbedded;
     }
@@ -81,10 +77,6 @@ public class Struct {
         return isArrayMember;
     }
 
-    public boolean isUnwrappedArrayMember() {
-        return isUnwrappedArrayMember;
-    }
-
     public boolean hasArrayMembers() {
         return hasArrayMembers;
     }
@@ -96,7 +88,7 @@ public class Struct {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + (isUnwrappedArrayMember() ? " UnwrappedArrayMember" : "")+ "\n");
+        builder.append("Struct[" + getName() + "]" + (isTopLevel() ? " TopLevel" : "") + (isArrayMember() ? " ArrayMember" : "") + "\n");
         for (final StructMember structMember: getStructMembers()) {
             builder.append("  " + structMember.toString()
                     + (!isEmpty(structMember.getNameToMarshall()) ? " " + structMember.getNameToMarshall() :"")

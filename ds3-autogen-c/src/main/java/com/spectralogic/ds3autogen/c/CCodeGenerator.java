@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
@@ -42,6 +43,9 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.Collection;
+import java.util.stream.Stream;
+
 
 public class CCodeGenerator implements CodeGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CCodeGenerator.class);
@@ -73,13 +77,12 @@ public class CCodeGenerator implements CodeGenerator {
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
 
             final ImmutableSet<String> arrayMemberTypes = getArrayMemberTypes(spec, enumNames);
-            final ImmutableSet<String> unwrappedArrayMemberTypes = getUnwrappedArrayMemberTypes(spec, enumNames);
 
-            final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec);
+            final ImmutableSet<String> embeddedTypes = getEmbeddedTypes(spec, enumNames);
             final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
             final ImmutableSet<String> paginatedTypes = getPaginatedTypes(spec);
 
-            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, unwrappedArrayMemberTypes, embeddedTypes, paginatedTypes);
+            final ImmutableList<Struct> allStructs = getAllStructs(spec, enumNames, responseTypes, embeddedTypes, arrayMemberTypes, paginatedTypes);
 
 
             generateHeader(allEnums, allStructs, allRequests);
@@ -140,9 +143,8 @@ public class CCodeGenerator implements CodeGenerator {
     public static ImmutableList<Struct> getAllStructs(final Ds3ApiSpec spec,
                                                       final ImmutableSet<String> enumNames,
                                                       final ImmutableSet<String> responseTypes,
-                                                      final ImmutableSet<String> arrayMemberTypes,
-                                                      final ImmutableSet<String> unwrappedArrayMemberTypes,
                                                       final ImmutableSet<String> embeddedTypes,
+                                                      final ImmutableSet<String> arrayMemberTypes,
                                                       final ImmutableSet<String> paginatedTypes) throws ParseException {
         final ImmutableList.Builder<Struct> allStructsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getTypes())) {
@@ -150,7 +152,7 @@ public class CCodeGenerator implements CodeGenerator {
                 if (ConverterUtil.hasContent(ds3TypeEntry.getEnumConstants())) continue;
 
                 final Struct structEntry = StructConverter.toStruct(
-                        ds3TypeEntry, enumNames, responseTypes, arrayMemberTypes, unwrappedArrayMemberTypes, embeddedTypes, paginatedTypes);
+                        ds3TypeEntry, enumNames, responseTypes, embeddedTypes, arrayMemberTypes, paginatedTypes);
                 allStructsBuilder.add(structEntry);
             }
         }
@@ -161,19 +163,6 @@ public class CCodeGenerator implements CodeGenerator {
      * Find all types that are used as an array member, for generation of a parser for a list of a type
      */
     public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
-            return spec.getTypes().values().stream()
-                    .flatMap(entry -> entry.getElements().stream())
-                    .filter(element -> element.getType().equalsIgnoreCase("array"))
-                    .filter(element -> !element.getComponentType().contains("UUID"))
-                    .filter(element -> !enumTypes.contains(EnumHelper.getDs3Type(element.getComponentType())))
-                    .map(element -> StructHelper.getResponseTypeName(element.getComponentType()))
-                    .collect(GuavaCollectors.immutableSet());
-    }
-
-    /**
-     * Find all types that are used as an array member, for generation of a parser for a list of a type
-     */
-    public static ImmutableSet<String> getUnwrappedArrayMemberTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
         return spec.getTypes().values().stream()
                 .flatMap(type -> type.getElements().stream())
                 .filter(element -> element.getType().equalsIgnoreCase("array"))
@@ -190,11 +179,35 @@ public class CCodeGenerator implements CodeGenerator {
      * Find all types that are embedded members.  Many 'top-level' types are not embedded and therefore those parsers
      * are useless.
      */
-    public static ImmutableSet<String> getEmbeddedTypes(final Ds3ApiSpec spec) {
-        return spec.getTypes().values().stream()
+    public static ImmutableSet<String> getEmbeddedTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
+        final ImmutableSet<String> embeddedTypes = spec.getTypes().values().stream()
                 .flatMap(type -> type.getElements().stream())
                 .filter(element -> !element.getType().equalsIgnoreCase("array"))
-                .map(element -> StructHelper.getResponseTypeName(element.getType()))
+                .map(Ds3Element::getType)
+                .collect(GuavaCollectors.immutableSet());
+        final ImmutableSet<String> embeddedComponentTypes = spec.getTypes().values().stream()
+                .flatMap(type -> type.getElements().stream())
+                .filter(element -> element.getType().equalsIgnoreCase("array"))
+                .map(Ds3Element::getComponentType)
+                .collect(GuavaCollectors.immutableSet());
+        return Stream.of(embeddedTypes, embeddedComponentTypes)
+                .flatMap(Collection::stream)
+                .filter(type -> !enumTypes.contains(type))
+                .filter(type -> !type.contains("boolean"))
+                .filter(type -> !type.contains("Boolean"))
+                .filter(type -> !type.contains("int"))
+                .filter(type -> !type.contains("Integer"))
+                .filter(type -> !type.contains("long"))
+                .filter(type -> !type.contains("Long"))
+                .filter(type -> !type.contains("double"))
+                .filter(type -> !type.contains("Double"))
+                .filter(type -> !type.contains("String"))
+                .filter(type -> !type.contains("UUID"))
+                .filter(type -> !type.contains("Date"))
+                .filter(type -> !type.contains("SqlOperation"))
+                .filter(type -> !type.contains("java.lang.Object"))
+                .map(StructHelper::getResponseTypeName)
+                .sorted()
                 .collect(GuavaCollectors.immutableSet());
     }
 
