@@ -25,7 +25,7 @@ public class ParseResponse_Test {
     @Test
     public void emptyParserResponse_Test() {
         final String expected = "//There is no payload, return an empty response handler\n" +
-                "                return new TestResponse();\n";
+                "                return new TestResponse(this.getChecksum(), this.getChecksumType());\n";
         final EmptyParseResponse result = new EmptyParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
     }
@@ -33,7 +33,7 @@ public class ParseResponse_Test {
     @Test
     public void emptyParserResponse_WithPagination_Test() {
         final String expected = "//There is no payload, return an empty response handler\n" +
-                "                return new TestResponse(pagingTotalResultCount, pagingTruncated);\n";
+                "                return new TestResponse(pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());\n";
         final EmptyParseResponse result = new EmptyParseResponse("TestResponse", true);
         assertThat(result.toJavaCode(), is(expected));
     }
@@ -41,7 +41,7 @@ public class ParseResponse_Test {
     @Test
     public void nullParserResponse_Test() {
         final String expected = "//There is no payload associated with this code, return a null response\n" +
-                "                return new TestResponse(null);\n";
+                "                return new TestResponse(null, this.getChecksum(), this.getChecksumType());\n";
         final NullParseResponse result = new NullParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
     }
@@ -49,7 +49,7 @@ public class ParseResponse_Test {
     @Test
     public void nullParserResponse_WithPagination_Test() {
         final String expected = "//There is no payload associated with this code, return a null response\n" +
-                "                return new TestResponse(null, pagingTotalResultCount, pagingTruncated);\n";
+                "                return new TestResponse(null, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());\n";
         final NullParseResponse result = new NullParseResponse("TestResponse", true);
         assertThat(result.toJavaCode(), is(expected));
     }
@@ -58,7 +58,7 @@ public class ParseResponse_Test {
     public void stringParseResponse_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
-                "                    return new TestResponse(result);\n" +
+                "                    return new TestResponse(result, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final StringParseResponse result = new StringParseResponse("TestResponse");
         assertThat(result.toJavaCode(), is(expected));
@@ -68,7 +68,7 @@ public class ParseResponse_Test {
     public void stringParseResponse_WithPagination_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
-                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
+                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final StringParseResponse result = new StringParseResponse("TestResponse", true);
         assertThat(result.toJavaCode(), is(expected));
@@ -78,7 +78,7 @@ public class ParseResponse_Test {
     public void baseParseResponse_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
-                "                    return new TestResponse(result);\n" +
+                "                    return new TestResponse(result, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType");
         assertThat(result.toJavaCode(), is(expected));
@@ -88,7 +88,7 @@ public class ParseResponse_Test {
     public void baseParseResponse_WithPagination_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
-                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
+                "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final BaseParseResponse result = new BaseParseResponse("TestResponse", "TestType", true);
         assertThat(result.toJavaCode(), is(expected));

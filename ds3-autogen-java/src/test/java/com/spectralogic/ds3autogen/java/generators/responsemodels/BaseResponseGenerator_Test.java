@@ -62,10 +62,11 @@ public class BaseResponseGenerator_Test {
 
         final ImmutableSet<String> result = generator.getAllImports(
                 createDs3RequestTestData(false, responseCodes, null, null));
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(4));
         assertThat(result, hasItem("com.spectralogic.ds3client.models.Type_v1"));
         assertThat(result, hasItem("com.spectralogic.ds3client.models.Type_v2"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.models.ChecksumType"));
     }
 
     @Test

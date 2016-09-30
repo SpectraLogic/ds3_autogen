@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -454,8 +454,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
 
         final ImmutableList<Arguments> responseConstructorArg = ImmutableList.of(
-                new Arguments("MasterObjectList", "masterObjectListResult"));
-        assertTrue(hasConstructor(responseName, responseConstructorArg, responseGeneratedCode));
+                new Arguments("MasterObjectList", "masterObjectListResult"),
+                new Arguments("String", "checksum"),
+                new Arguments("ChecksumType.Type", "checksumType"));
+        assertTrue(hasUnsortedConstructor(responseName, responseConstructorArg, responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -530,8 +532,10 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkResponse", responseGeneratedCode));
 
         final ImmutableList<Arguments> responseConstructorArg = ImmutableList.of(
-                new Arguments("MasterObjectList", "masterObjectListResult"));
-        assertTrue(hasConstructor(responseName, responseConstructorArg, responseGeneratedCode));
+                new Arguments("MasterObjectList", "masterObjectListResult"),
+                new Arguments("String", "checksum"),
+                new Arguments("ChecksumType.Type", "checksumType"));
+        assertTrue(hasUnsortedConstructor(responseName, responseConstructorArg, responseGeneratedCode));
 
         //Test the Ds3Client
         final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
@@ -1808,8 +1812,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
 
-        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(result, 0, AllocateJobChunkSpectraS3Response.Status.ALLOCATED);"));
-        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(null, parseRetryAfter(response), AllocateJobChunkSpectraS3Response.Status.RETRYLATER);"));
+        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(result, 0, AllocateJobChunkSpectraS3Response.Status.ALLOCATED, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new AllocateJobChunkSpectraS3Response(null, parseRetryAfter(response), AllocateJobChunkSpectraS3Response.Status.RETRYLATER, this.getChecksum(), this.getChecksumType());"));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 307, 503};"));
     }
 
@@ -1892,8 +1896,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty"));
 
-        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER);"));
-        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);"));
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, this.getChecksum(), this.getChecksumType());"));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200};"));
     }
@@ -1963,9 +1967,9 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
-        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.EXISTS);"));
-        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.NOTAUTHORIZED);"));
-        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);"));
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.NOTAUTHORIZED, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new HeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());"));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 403, 404};"));
     }
 
@@ -2042,8 +2046,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseParserCode));
         assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;"));
 
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, HeadObjectResponse.Status.EXISTS);"));
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST);"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());"));
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 404};"));
     }
 

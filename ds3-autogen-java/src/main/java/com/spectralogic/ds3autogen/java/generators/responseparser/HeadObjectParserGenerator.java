@@ -53,6 +53,6 @@ public class HeadObjectParserGenerator extends BaseResponseParserGenerator {
      * metadata, and object size
      */
     protected static String toReturnCode(final String responseName, final String status) {
-        return "return new " + responseName + "(metadata, objectSize, " + responseName + ".Status." + status + ");\n";
+        return "return new " + responseName + "(metadata, objectSize, " + responseName + ".Status." + status + ", this.getChecksum(), this.getChecksumType());\n";
     }
 }

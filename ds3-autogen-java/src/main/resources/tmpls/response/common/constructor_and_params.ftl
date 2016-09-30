@@ -3,6 +3,7 @@
     </#list>
 
     public ${name}(${constructorParams}) {
+        super(checksum, checksumType);
         <#list params as param>
         this.${param.name?uncap_first} = ${param.name?uncap_first};
         </#list>

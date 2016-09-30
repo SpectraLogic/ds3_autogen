@@ -31,7 +31,7 @@ public class HeadObjectParserGenerator_Test {
 
     @Test
     public void toReturnCode_Test() {
-        final String expected = "return new MyResponse(metadata, objectSize, MyResponse.Status.MyStatus);\n";
+        final String expected = "return new MyResponse(metadata, objectSize, MyResponse.Status.MyStatus, this.getChecksum(), this.getChecksumType());\n";
         assertThat(toReturnCode("MyResponse", "MyStatus"), is(expected));
     }
 
@@ -51,10 +51,10 @@ public class HeadObjectParserGenerator_Test {
 
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(0).getProcessingCode(),
-                is("return new TestResponse(metadata, objectSize, TestResponse.Status.EXISTS);\n"));
+                is("return new TestResponse(metadata, objectSize, TestResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n"));
 
         assertThat(result.get(1).getCode(), is(404));
         assertThat(result.get(1).getProcessingCode(),
-                is("return new TestResponse(metadata, objectSize, TestResponse.Status.DOESNTEXIST);\n"));
+                is("return new TestResponse(metadata, objectSize, TestResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n"));
     }
 }

@@ -24,7 +24,10 @@ import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.getType;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 import static org.junit.Assert.assertTrue;
 
 public final class TestHelper {
@@ -145,11 +148,28 @@ public final class TestHelper {
         return !code.contains("this.getQueryParams().put(\"operation\", ");
     }
 
+    /**
+     * Checks if the code contains a constructor with the specified sorted arguments
+     */
     public static boolean hasConstructor(
             final String requestName,
             final ImmutableList<Arguments> arguments,
             final String code) {
         final String expected = "public " + requestName + "(" + JavaHelper.constructorArgs(arguments) + ")";
+        return code.contains(expected);
+    }
+
+    /**
+     * Checks if the code contains a constructor with the specified arguments
+     */
+    public static boolean hasUnsortedConstructor(
+            final String requestName,
+            final ImmutableList<Arguments> arguments,
+            final String code) {
+        final String params = arguments.stream()
+                .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
+        final String expected = "public " + requestName + "(" + params + ")";
         return code.contains(expected);
     }
 
@@ -289,7 +309,7 @@ public final class TestHelper {
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
         final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {\n" +
-                "                    return new " + responseName + "(null);\n" +
+                "                    return new " + responseName + "(null, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n" +
                 "                " + expectedParsing.toJavaCode();
 

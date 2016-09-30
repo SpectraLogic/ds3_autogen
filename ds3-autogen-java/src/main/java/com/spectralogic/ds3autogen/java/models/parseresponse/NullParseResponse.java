@@ -45,8 +45,8 @@ public class NullParseResponse implements ParseResponse {
 
     private static String getConstructorParams(final boolean hasPaginationHeaders) {
         if (hasPaginationHeaders) {
-            return "null, pagingTotalResultCount, pagingTruncated";
+            return "null, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType()";
         }
-        return "null";
+        return "null, this.getChecksum(), this.getChecksumType()";
     }
 }

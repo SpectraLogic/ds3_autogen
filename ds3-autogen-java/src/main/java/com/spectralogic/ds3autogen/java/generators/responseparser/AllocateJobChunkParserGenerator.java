@@ -65,7 +65,7 @@ public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator
 
         return "try (final InputStream inputStream = response.getResponseStream()) {\n"
                 + indent(5) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n"
-                + indent(5) + "return new " + responseName + "(result, 0, " + responseName + ".Status.ALLOCATED);\n"
+                + indent(5) + "return new " + responseName + "(result, 0, " + responseName + ".Status.ALLOCATED, this.getChecksum(), this.getChecksumType());\n"
                 + indent(4) + "}\n";
     }
 
@@ -73,6 +73,6 @@ public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator
      * Creates the java code for retry-later response
      */
     protected static String toRetryLaterCode(final String responseName) {
-        return "return new " + responseName + "(null, parseRetryAfter(response), " + responseName + ".Status.RETRYLATER);";
+        return "return new " + responseName + "(null, parseRetryAfter(response), " + responseName + ".Status.RETRYLATER, this.getChecksum(), this.getChecksumType());";
     }
 }

@@ -52,7 +52,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         final ImmutableList<Arguments> params = toParamList(ds3Request.getDs3ResponseCodes());
         final ImmutableSet<String> imports = getAllImports(ds3Request);
 
-        final String constructorParams = toConstructorParams(params);
+        final String constructorParams = toConstructorParamsWithChecksum(params);
 
         return new Response(
                 packageName,
@@ -61,6 +61,17 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
                 constructorParams,
                 imports,
                 params);
+    }
+
+    /**
+     * Gets the constructor params in a comma-separated list and includes
+     * the checksum parameters at the end of the list
+     */
+    public String toConstructorParamsWithChecksum(final ImmutableList<Arguments> params) {
+        if (hasContent(params)) {
+            return toConstructorParams(params) + ", final String checksum, final ChecksumType.Type checksumType";
+        }
+        return "final String checksum, final ChecksumType.Type checksumType";
     }
 
     /**
@@ -144,6 +155,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
 
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         builder.addAll(getImportListFromResponseCodes(responseCodes));
+        builder.add("com.spectralogic.ds3client.models.ChecksumType");
         builder.add(getParentImport());
         return builder.build();
     }

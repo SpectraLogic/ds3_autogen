@@ -15,7 +15,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
             <#list responseCodes as responseCode>
             case ${responseCode.code}:
                 if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {
-                    return new ${responseName}(null);
+                    return new ${responseName}(null, this.getChecksum(), this.getChecksumType());
                 }
                 ${responseCode.processingCode}
             </#list>

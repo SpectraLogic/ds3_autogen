@@ -51,6 +51,7 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
     public ImmutableSet<String> getAllImports(final Ds3Request ds3Request) {
         return ImmutableSet.of(
                 getParentImport(),
-                "com.spectralogic.ds3client.networking.Metadata");
+                "com.spectralogic.ds3client.networking.Metadata",
+                "com.spectralogic.ds3client.models.ChecksumType");
     }
 }
