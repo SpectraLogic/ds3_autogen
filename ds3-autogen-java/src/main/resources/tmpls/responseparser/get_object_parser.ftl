@@ -4,82 +4,46 @@ package ${packageName};
 
 <#include "../imports.ftl"/>
 
-public class ${name} implements ${parentClass}<${responseName}> {
-
-    /**
-     * This executor is used for error parsing
-     */
-    private final static ListeningExecutorService EXECUTOR_SERVICE = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-    private final static Logger LOG = LoggerFactory.getLogger(${name}.class);
-
+public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};
 
-    private final WritableByteChannel byteChannel;
+    private final WritableByteChannel destinationChannel;
+    private final int bufferSize;
+    private final String objName;
 
-    private final FutureTask<${responseName}> responseFuture;
-    private final ResponseFutureCallable<${responseName}> responseFutureCallable;
-
-    private NettyBlockingByteChannel errorChannel = null;
-    private ${responseName} ${responseName?uncap_first} = null;
-
-    public ${name}(final WritableByteChannel byteChannel) {
-        this.byteChannel = byteChannel;
-        this.responseFutureCallable = new ResponseFutureCallable<>();
-        this.responseFuture = new FutureTask<>(responseFutureCallable);
+    public ${name}(final WritableByteChannel destinationChannel,
+                                   final int bufferSize,
+                                   final String objName) {
+        this.destinationChannel = destinationChannel;
+        this.bufferSize = bufferSize;
+        this.objName = objName;
     }
 
     @Override
-    public FutureTask<${responseName}> responseFuture() {
-        return responseFuture;
-    }
-
-    @Override
-    public WritableByteChannel getChannel() {
-        if (errorChannel != null) {
-            return errorChannel;
+    public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
+        final int statusCode = response.getStatusCode();
+        if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
+            final Metadata metadata = new MetadataImpl(this.getResponse().getHeaders());
+            final  long objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
+            download(objectSize, this.getResponse());
+            return new GetObjectResponse(this.getChecksum(), this.getChecksumType(), metadata, objectSize);
         }
-        return byteChannel;
+
+        throw ResponseParserUtils.createFailedRequest(response, blockingByteChannel, expectedStatusCodes);
     }
 
-    @Override
-    public void startResponse(final WebResponse response) {
-        if (ResponseParserUtils.validateStatusCode(response.statusCode(), expectedStatusCodes)) {
-            final Headers headers = response.headers();
-            ${responseName?uncap_first} = new ${responseName}(
-                    ResponseParserUtils.getFirstHeaderValue(headers, "Content-Type"),
-                    ResponseParserUtils.determineChecksumType(headers),
-                    new MetadataImpl(headers),
-                    ResponseParserUtils.getSizeFromHeaders(headers)
-            );
-        } else {
-            errorChannel = new NettyBlockingByteChannel();
-            EXECUTOR_SERVICE.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        responseFutureCallable.setError(ResponseParserUtils.createFailedRequest(response, errorChannel, expectedStatusCodes));
-                    } catch (final IOException e) {
-                        LOG.error("Failed to create FailedResponseException", e);
-                        responseFutureCallable.setError(e);
-                    } finally {
-                        responseFuture.run();
-                    }
-                }
-            });
+    protected void download(final long objectSize, final WebResponse response) throws IOException {
+        try (final InputStream responseStream = response.getResponseStream()) {
+            final long startTime = PerformanceUtils.getCurrentTime();
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false);
+            destinationChannel.close();
+            final long endTime = PerformanceUtils.getCurrentTime();
+
+            if (objectSize != -1 && totalBytes != objectSize) {
+                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
+            }
+
+            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
         }
-    }
-
-    @Override
-    public void endResponse() {
-        if (errorChannel == null) {
-            responseFutureCallable.setResponse(${responseName?uncap_first});
-            responseFuture.run();
-        }
-    }
-
-    @Override
-    public void error(final Exception e) {
-        responseFutureCallable.setError(e);
-        responseFuture.run();
     }
 }

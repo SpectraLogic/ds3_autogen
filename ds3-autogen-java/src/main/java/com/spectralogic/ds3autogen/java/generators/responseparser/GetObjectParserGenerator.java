@@ -30,7 +30,6 @@ import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getR
  */
 public class GetObjectParserGenerator extends BaseResponseParserGenerator {
 
-    protected static final String DS3_RESPONSE_PARSER_IMPORT = "com.spectralogic.ds3client.networking.Ds3ResponseParser";
     protected static final ImmutableList<Integer> EXPECTED_RESPONSE_CODES = ImmutableList.of(200, 206);
 
     /**
@@ -54,14 +53,6 @@ public class GetObjectParserGenerator extends BaseResponseParserGenerator {
     }
 
     /**
-     * Retrieves the import for the Ds3 response parser interface
-     */
-    @Override
-    public String getParentClassImport() {
-        return DS3_RESPONSE_PARSER_IMPORT;
-    }
-
-    /**
      * Retrieves the java imports needed to generate the response parser
      */
     @Override
@@ -71,20 +62,17 @@ public class GetObjectParserGenerator extends BaseResponseParserGenerator {
             final ImmutableList<Ds3ResponseCode> responseCodes) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        builder.add("com.google.common.util.concurrent.ListeningExecutorService");
-        builder.add("com.google.common.util.concurrent.MoreExecutors");
         builder.add("com.spectralogic.ds3client.commands.interfaces.MetadataImpl");
-        builder.add("com.spectralogic.ds3client.commands.parsers.interfaces.ResponseFutureCallable");
         builder.add("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils");
-        builder.add("com.spectralogic.ds3client.networking.Headers");
-        builder.add("com.spectralogic.ds3client.networking.NettyBlockingByteChannel");
+        builder.add("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException");
+        builder.add("com.spectralogic.ds3client.networking.Metadata");
         builder.add("com.spectralogic.ds3client.networking.WebResponse");
-        builder.add("org.slf4j.Logger");
-        builder.add("org.slf4j.LoggerFactory");
+        builder.add("com.spectralogic.ds3client.utils.IOUtils");
+        builder.add("com.spectralogic.ds3client.utils.PerformanceUtils");
         builder.add("java.io.IOException");
+        builder.add("java.io.InputStream");
+        builder.add("java.nio.channels.ReadableByteChannel");
         builder.add("java.nio.channels.WritableByteChannel");
-        builder.add("java.util.concurrent.Executors");
-        builder.add("java.util.concurrent.FutureTask");
 
         builder.add(getParentClassImport());
         builder.add(getCommandPackage(ds3Request) + "." + responseName);
