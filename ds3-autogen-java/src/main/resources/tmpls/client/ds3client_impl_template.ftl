@@ -31,7 +31,7 @@ public class Ds3ClientImpl implements Ds3Client {
     <#list commands as cmd>
     @Override
     public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request) throws IOException {
-        return handleExceptions(this.netClient.getResponse(request, new ${cmd.getResponseName()}Parser()));
+        return new ${cmd.getResponseName()}Parser().startResponse(this.netClient.getResponse(request));
     }
     </#list>
 
