@@ -33,7 +33,7 @@ public class GetJobChunksReadyParserGenerator_Test {
 
     @Test
     public void toParsePayloadCode_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final JobWithChunksApiBean result = XmlOutput.fromXml(inputStream, JobWithChunksApiBean.class);\n" +
                 "                    if (isNullOrEmpty(result.getObjects())) {\n" +
                 "                        return new TestResponse(result, parseRetryAfter(response), TestResponse.Status.RETRYLATER);\n" +

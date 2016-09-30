@@ -71,7 +71,6 @@ public class GetObjectParserGenerator extends BaseResponseParserGenerator {
         builder.add("com.spectralogic.ds3client.utils.PerformanceUtils");
         builder.add("java.io.IOException");
         builder.add("java.io.InputStream");
-        builder.add("java.nio.channels.ReadableByteChannel");
         builder.add("java.nio.channels.WritableByteChannel");
 
         builder.add(getParentClassImport());

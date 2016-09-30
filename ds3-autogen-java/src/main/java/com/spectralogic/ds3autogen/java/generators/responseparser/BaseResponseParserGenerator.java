@@ -158,7 +158,6 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
         //If a response type has an associated import, then the XmlOutput import is also needed
         if (builder.build().size() > 0) {
             builder.add("com.spectralogic.ds3client.serializer.XmlOutput");
-            builder.add("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream");
             builder.add("java.io.InputStream");
         }
         if (builder.build().contains("java.lang.String") || builder.build().contains("String")) {
@@ -183,7 +182,6 @@ public class BaseResponseParserGenerator implements ResponseParserGenerator<Resp
     protected static ImmutableSet<String> requiredImportList() {
         return ImmutableSet.of(
                 "java.io.IOException",
-                "java.nio.channels.ReadableByteChannel",
                 "com.spectralogic.ds3client.networking.WebResponse");
     }
 

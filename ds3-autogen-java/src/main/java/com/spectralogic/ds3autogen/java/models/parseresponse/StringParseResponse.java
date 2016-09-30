@@ -38,7 +38,7 @@ public class StringParseResponse implements ParseResponse {
 
     @Override
     public String toJavaCode() {
-        return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n"
+        return "try (final InputStream inputStream = response.getResponseStream()) {\n"
                 + indent(INDENT + 1) + "final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n"
                 + indent(INDENT + 1) + "return new " + responseName + "(" + getConstructorParams(hasPaginationHeaders) + ");\n"
                 + indent(INDENT) + "}\n";

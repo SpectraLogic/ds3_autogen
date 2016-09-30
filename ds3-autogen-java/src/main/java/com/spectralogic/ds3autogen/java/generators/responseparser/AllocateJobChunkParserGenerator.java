@@ -63,7 +63,7 @@ public class AllocateJobChunkParserGenerator extends BaseResponseParserGenerator
             final String responseName) {
         final String responseModelName = getResponseModelName(ds3ResponseCode.getDs3ResponseTypes().get(0));
 
-        return "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n"
+        return "try (final InputStream inputStream = response.getResponseStream()) {\n"
                 + indent(5) + "final " + responseModelName + " result = XmlOutput.fromXml(inputStream, " + responseModelName + ".class);\n"
                 + indent(5) + "return new " + responseName + "(result, 0, " + responseName + ".Status.ALLOCATED);\n"
                 + indent(4) + "}\n";
