@@ -48,11 +48,4 @@ public interface ResponseGeneratorUtil {
      * Converts a list of Arguments into a comma-separated list of parameters for the constructor
      */
     String toConstructorParams(final ImmutableList<Arguments> params);
-
-    /**
-     * Retrieves the list of parameters need to create the response POJO. If the response
-     * has pagination headers, then the pagination parameters are appended to the end of
-     * the list.
-     */
-    ImmutableList<Arguments> toParamListWithPagination(final Ds3Request ds3Request);
 }

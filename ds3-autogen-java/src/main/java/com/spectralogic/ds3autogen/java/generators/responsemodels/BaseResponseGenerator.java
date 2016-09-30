@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -33,7 +33,6 @@ import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getI
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseModelName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
 import static com.spectralogic.ds3autogen.utils.Helper.stripPath;
 import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
@@ -50,7 +49,7 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         final String responseName = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
         final String parentClass = getParentClass();
 
-        final ImmutableList<Arguments> params = toParamListWithPagination(ds3Request);
+        final ImmutableList<Arguments> params = toParamList(ds3Request.getDs3ResponseCodes());
         final ImmutableSet<String> imports = getAllImports(ds3Request);
 
         final String constructorParams = toConstructorParams(params);
@@ -75,24 +74,6 @@ public class BaseResponseGenerator implements ResponseModelGenerator<Response>, 
         return params.stream()
                 .map(i -> "final " + i.getType() + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
-    }
-
-    /**
-     * Retrieves the list of parameters need to create the response POJO. If the response
-     * has pagination headers, then the pagination parameters are appended to the end of
-     * the list.
-     */
-    @Override
-    public ImmutableList<Arguments> toParamListWithPagination(final Ds3Request ds3Request) {
-        if (!supportsPaginationRequest(ds3Request)) {
-            return toParamList(ds3Request.getDs3ResponseCodes());
-        }
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(toParamList(ds3Request.getDs3ResponseCodes()));
-        builder.add(new Arguments("Integer", "pagingTotalResultCount"));
-        builder.add(new Arguments("Integer", "pagingTruncated"));
-
-        return builder.build();
     }
 
     /**
