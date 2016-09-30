@@ -53,15 +53,4 @@ public class Ds3ClientImpl implements Ds3Client {
     public void close() throws IOException {
         this.netClient.close();
     }
-
-    private static <T extends Ds3Response> T handleExceptions(final FutureTask<T> response) throws IOException {
-        try {
-            return response.get();
-        } catch (final ExecutionException | InterruptedException  e) {
-            if (e.getCause() instanceof IOException) {
-                throw (IOException) e.getCause();
-            }
-            throw new RuntimeException(e.getCause());
-        }
-    }
 }
