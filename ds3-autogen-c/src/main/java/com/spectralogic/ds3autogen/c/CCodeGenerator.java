@@ -190,22 +190,27 @@ public class CCodeGenerator implements CodeGenerator {
                 .filter(element -> element.getType().equalsIgnoreCase("array"))
                 .map(Ds3Element::getComponentType)
                 .collect(GuavaCollectors.immutableSet());
+
+        final ImmutableSet<String> basicTypes = ImmutableSet.of(
+                "boolean",
+                "java.lang.Boolean",
+                "int",
+                "java.lang.Integer",
+                "long",
+                "java.lang.Long",
+                "double",
+                "java.lang.Double",
+                "java.lang.String",
+                "java.util.UUID",
+                "java.util.Date",
+                "java.lang.object",
+                "com.spectralogic.util.db.lang.SqlOperation"
+        );
+
         return Stream.of(embeddedTypes, embeddedComponentTypes)
                 .flatMap(Collection::stream)
-                .filter(type -> !enumTypes.contains(type))
-                .filter(type -> !type.contains("boolean"))
-                .filter(type -> !type.contains("Boolean"))
-                .filter(type -> !type.contains("int"))
-                .filter(type -> !type.contains("Integer"))
-                .filter(type -> !type.contains("long"))
-                .filter(type -> !type.contains("Long"))
-                .filter(type -> !type.contains("double"))
-                .filter(type -> !type.contains("Double"))
-                .filter(type -> !type.contains("String"))
-                .filter(type -> !type.contains("UUID"))
-                .filter(type -> !type.contains("Date"))
-                .filter(type -> !type.contains("SqlOperation"))
-                .filter(type -> !type.contains("java.lang.Object"))
+                .filter(type -> !enumTypes.contains(StructHelper.getResponseTypeName(type)))
+                .filter(type -> !basicTypes.contains(type))
                 .map(StructHelper::getResponseTypeName)
                 .sorted()
                 .collect(GuavaCollectors.immutableSet());
