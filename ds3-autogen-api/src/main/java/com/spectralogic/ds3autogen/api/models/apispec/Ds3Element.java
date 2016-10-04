@@ -81,12 +81,14 @@ public class Ds3Element {
             return false;
         }
         final Ds3Element element = (Ds3Element) obj;
-        return Objects.equals(this.getName(), element.getName())
-                && Objects.equals(this.getType(), element.getType())
-                && Objects.equals(this.getComponentType(), element.getComponentType());
+
+        return this.getName().equals(element.getName())
+                && this.getType() != null
+                && this.getType().equals(element.getType())
+                && this.getComponentType() != null
+                && this.getComponentType().equals(element.getComponentType());
     }
 
     public boolean isNullable() {
         return nullable;
-    }
-}
+    }}

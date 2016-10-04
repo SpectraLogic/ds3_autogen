@@ -162,50 +162,6 @@ public class CCodeGenerator implements CodeGenerator {
     /**
      * Find all types that are used as an array member, for generation of a parser for a list of a type.  Only applies
      * to types that are wrapped in a common element.
-     * Example:
-     *      <Ds3Targets>
-                <Ds3Target>
-                    <AccessControlReplication>NONE</AccessControlReplication>
-                    <AdminAuthId>aid</AdminAuthId>
-                    <AdminSecretKey>ask</AdminSecretKey>
-                    <DataPathEndPoint>dp</DataPathEndPoint>
-                    <DataPathHttps>true</DataPathHttps>
-                    <DataPathPort />
-                    <DataPathProxy />
-                    <DataPathVerifyCertificate>true</DataPathVerifyCertificate>
-                    <DefaultReadPreference>LAST_RESORT</DefaultReadPreference>
-                    <Id>02a0faf9-c5c7-4b47-b4e0-29c4d2906f90</Id>
-                    <Name>ds3t2</Name>
-                    <PermitGoingOutOfSync>false</PermitGoingOutOfSync>
-                    <Quiesced>NO</Quiesced>
-                    <ReplicatedUserDefaultDataPolicy />
-                    <State>ONLINE</State>
-                </Ds3Target>
-                <Ds3Target>
-                    <AccessControlReplication>NONE</AccessControlReplication>
-                    <AdminAuthId>aid</AdminAuthId>
-                    <AdminSecretKey>ask</AdminSecretKey>
-                    <DataPathEndPoint>dp</DataPathEndPoint>
-                    <DataPathHttps>true</DataPathHttps>
-                    <DataPathPort />
-                    <DataPathProxy />
-                    <DataPathVerifyCertificate>true</DataPathVerifyCertificate>
-                    <DefaultReadPreference>LAST_RESORT</DefaultReadPreference>
-                    <Id>1da26e0c-40e2-4ee7-b68b-b60d07f70b51</Id>
-                    <Name>ds3t3</Name>
-                    <PermitGoingOutOfSync>false</PermitGoingOutOfSync>
-                    <Quiesced>NO</Quiesced>
-                    <ReplicatedUserDefaultDataPolicy />
-                    <State>ONLINE</State>
-                </Ds3Target>
-            </Ds3Targets>
-
-     Types that are not wrapped in a common element are parsed differently and do no require a separate function:
-         <Delete>
-             <Object><Key>object/</Key></Object>
-             <Object><Key>object/1</Key></Object>
-             <Object><Key>object/2</Key></Object>
-         </Delete>
      */
     public static ImmutableSet<String> getArrayMemberTypes(final Ds3ApiSpec spec, final ImmutableSet<String> enumTypes) {
         return spec.getTypes().values().stream()
