@@ -41,6 +41,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -454,7 +456,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_blob_response"), ImmutableSet.of());
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of("ds3_blob_response"), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -513,7 +515,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -585,7 +587,7 @@ public class CCodeGenerator_Test {
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(
-                spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_user_response"), ImmutableSet.of());
+                spec, enumNames, responseTypes, ImmutableSet.of("ds3_user_response"), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
         final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
 
@@ -635,8 +637,8 @@ public class CCodeGenerator_Test {
 
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, ImmutableSet.of());
@@ -656,8 +658,8 @@ public class CCodeGenerator_Test {
 
         final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, ImmutableSet.of());
@@ -682,9 +684,9 @@ public class CCodeGenerator_Test {
                 ImmutableMap.of(
                         type1.getName(), type1,
                         type2.getName(), type2));
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet);
-        assertEquals(embeddedTypes.size(), 3);
-        assertTrue(embeddedTypes.contains("ds3_string_response"));
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet, ImmutableSet.of());
+        assertEquals(embeddedTypes.size(), 2);
+        assertTrue(embeddedTypes.contains("ds3_size_response"));
     }
 
     @Test
@@ -704,6 +706,35 @@ public class CCodeGenerator_Test {
                 ImmutableMap.of());
         final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(getBucketsSpec);
         assertEquals(paginatedTypes.size(), 0);
+    }
+
+    @Test
+    public void testEnumTypesContainsTargetReadPreferenceType() throws IOException, ParseException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/3_2_2_contract.xml"));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        assertTrue(enumNames.contains("ds3_target_read_preference_type"));
+    }
+
+    @Test
+    public void testStuctsContainsJobCrationFailedNotificationPayload() throws IOException, ParseException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/3_2_2_contract.xml"));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(spec);
+
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, embeddedTypes, arrayMemberTypes, paginatedTypes);
+        assertTrue(allStructs.stream().map(Struct::getName).anyMatch(name -> name.equals("ds3_job_creation_failed_notification_payload_response")));
     }
 }
 
