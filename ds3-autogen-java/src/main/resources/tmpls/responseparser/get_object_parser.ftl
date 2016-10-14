@@ -4,6 +4,8 @@ package ${packageName};
 
 <#include "../imports.ftl"/>
 
+import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;
+
 public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};
 
