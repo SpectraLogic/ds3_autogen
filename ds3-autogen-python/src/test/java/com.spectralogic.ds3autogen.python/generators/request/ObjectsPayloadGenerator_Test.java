@@ -36,7 +36,7 @@ public class ObjectsPayloadGenerator_Test {
                 "      if not isinstance(object_list, FileObjectList):\n" +
                 "        raise TypeError('com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler should have request payload of type: FileObjectList')\n" +
                 "      self.body = xmldom.tostring(object_list.to_xml())\n";
-        final Ds3Request request = getEjectStorageDomainRequest();
+        final Ds3Request request = getEjectStorageDomainBlobsRequest();
         final String result = generator.getAdditionalContent(request, request.getName());
         assertThat(result, is(expected));
     }
@@ -104,7 +104,7 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void toOptionalConstructorParams_Test() {
         final ImmutableList<ConstructorParam> optParams = generator
-                .toOptionalConstructorParams(getEjectStorageDomainRequest());
+                .toOptionalConstructorParams(getEjectStorageDomainBlobsRequest());
         final ImmutableList<String> result = optParams.stream()
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());
@@ -114,7 +114,7 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void toRequiredConstructorParams_NoAdditions_Test() {
         final ImmutableList<ConstructorParam> reqParams = generator
-                .toRequiredConstructorParams(getEjectStorageDomainRequest());
+                .toRequiredConstructorParams(getEjectStorageDomainBlobsRequest());
         final ImmutableList<String> result = reqParams.stream()
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());

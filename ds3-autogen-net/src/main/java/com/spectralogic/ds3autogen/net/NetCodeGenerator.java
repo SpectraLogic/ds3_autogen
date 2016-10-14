@@ -467,7 +467,7 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
-        if (isEjectStorageDomainRequest(ds3Request)
+        if (isEjectStorageDomainBlobsRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isMultiFileDeleteRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
@@ -498,7 +498,7 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return config.getTemplate("request/stream_request_payload.ftl");
         }
-        if (isEjectStorageDomainRequest(ds3Request)) {
+        if (isEjectStorageDomainBlobsRequest(ds3Request)) {
             return config.getTemplate("request/eject_storage_domain.ftl");
         }
         if (isPhysicalPlacementRequest(ds3Request)) {
