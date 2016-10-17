@@ -499,7 +499,7 @@ public class NetCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/stream_request_payload.ftl");
         }
         if (isEjectStorageDomainBlobsRequest(ds3Request)) {
-            return config.getTemplate("request/eject_storage_domain.ftl");
+            return config.getTemplate("request/eject_storage_domain_blobs.ftl");
         }
         if (isPhysicalPlacementRequest(ds3Request)) {
             return config.getTemplate("request/objects_request_payload.ftl");
