@@ -1118,6 +1118,7 @@
                         <Param Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
                         <Param Name="DefaultVerifyDataAfterImport" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="DefaultVerifyDataPriorToImport" Type="boolean"/>
+                        <Param Name="PartiallyVerifyLastPercentOfTapes" Type="java.lang.Integer"/>
                         <Param Name="UnavailableMediaPolicy" Type="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy"/>
                         <Param Name="UnavailablePoolMaxJobRetryInMins" Type="int"/>
                         <Param Name="UnavailableTapePartitionMaxJobRetryInMins" Type="int"/>
@@ -1144,7 +1145,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.8DF0AD9B00A3B64A26EC49C280846150</Version>
+                <Version>1.C554C793C965F9B60414FF9092DD6907</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.CreateDataPersistenceRuleRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -5706,6 +5707,7 @@
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="PartiallyVerifiedEndOfTape" Type="java.util.Date"/>
                         <Param Name="PartitionId" Type="java.util.UUID"/>
                         <Param Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
                         <Param Name="SerialNumber" Type="java.lang.String"/>
@@ -5724,7 +5726,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.EBFAE6C7A1D4F5503F1D0D89D02C2B94</Version>
+                <Version>1.0C34B5D4E6117A61E79501CF863E7C5F</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -7343,6 +7345,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="PartiallyVerifyLastPercentOfTapes" Type="java.lang.Integer">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="UnavailableMediaPolicy" Type="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
@@ -7936,6 +7945,15 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Replicating" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
                             </Annotation>
                         </Annotations>
                     </Element>
@@ -8613,7 +8631,7 @@
                             <Property Name="Severity" Value="CRITICAL" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
-                    <EnumConstant Name="SUSPECTED_DATA_LOSS_REQUIRES_USER_CONFIRMATION">
+                    <EnumConstant Name="CRITICAL_DATA_VERIFICATION_ERROR_REQUIRES_USER_CONFIRMATION">
                         <Properties>
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
@@ -10583,6 +10601,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="PartiallyVerifiedEndOfTape" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="PartitionId" Type="java.util.UUID">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
@@ -11436,6 +11461,16 @@
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="BAD">
+                        <Properties>
+                            <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
+                            <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="CANNOT_FORMAT_DUE_TO_WRITE_PROTECTION">
                         <Properties>
                             <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
                             <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
