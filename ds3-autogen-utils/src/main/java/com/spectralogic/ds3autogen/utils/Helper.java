@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -25,12 +25,9 @@ import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public final class Helper {
@@ -293,6 +290,20 @@ public final class Helper {
         return NormalizingContractNamesUtil.removePath(str);
     }
 
+    public static boolean hasContent(final String str) {
+        //Wrapping function so that it is accessible from within models
+        return ConverterUtil.hasContent(str);
+    }
+
+    public static boolean hasContent(final Collection<?> collection) {
+        //Wrapping function so that it is accessible from within models
+        return ConverterUtil.hasContent(collection);
+    }
+
+    public static boolean hasContent(final Map<?,?> map) {
+        //Wrapping function so that it is accessible from within models
+        return ConverterUtil.hasContent(map);
+    }
 
     public static boolean isPrimitiveType(final String type) {
         switch (type) {

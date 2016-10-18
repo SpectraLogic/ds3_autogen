@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -23,13 +23,16 @@ import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 
 public class ParameterConverter {
 
-    public static Parameter toParameter(final Ds3Param ds3Param, final boolean isRequired) {
+    public static Parameter toParameter(final Ds3Param ds3Param,
+                                        final boolean isRequired,
+                                        final String documentation) {
         return new Parameter(
                 ParameterModifier.CONST,
                 getParameterType(ds3Param),
                 StructHelper.getNameUnderscores(ds3Param.getName()),
                 getPointerType(ds3Param),
-                isRequired);
+                isRequired,
+                documentation);
     }
 
     public static String getParameterType(final Ds3Param ds3Param) {
