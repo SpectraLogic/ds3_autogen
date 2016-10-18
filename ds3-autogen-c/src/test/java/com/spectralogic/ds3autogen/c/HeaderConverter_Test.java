@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,10 +16,12 @@
 package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.c.converters.HeaderConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import org.junit.Test;
 
@@ -30,10 +32,11 @@ import static org.junit.Assert.assertEquals;
 public class HeaderConverter_Test {
     @Test
     public void testToHeader() throws ParseException {
+        final Ds3DocSpec testDocSpec = new Ds3DocSpecEmptyImpl();
         final ImmutableList<Request> allRequests = ImmutableList.of(
-                RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest()),
-                RequestConverter.toRequest(Ds3ModelFixtures.deleteBucketRequest()),
-                RequestConverter.toRequest(Ds3ModelFixtures.getBucketsRequest()));
+                RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest(), testDocSpec),
+                RequestConverter.toRequest(Ds3ModelFixtures.deleteBucketRequest(), testDocSpec),
+                RequestConverter.toRequest(Ds3ModelFixtures.getBucketsRequest(), testDocSpec));
 
         final ImmutableList<Enum> allEnums = ImmutableList.of(
                 new Enum("TestEnum", ImmutableList.of(

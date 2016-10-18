@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -39,6 +39,7 @@ public class Request {
     private final String responseType;
     private final boolean hasResponsePayload;
     private final boolean supportsPagination;
+    private final String documentation;
 
     public Request(
             final String name,
@@ -54,7 +55,8 @@ public class Request {
             final boolean isResourceIdRequired,
             final Parameter requestPayload,
             final String responseType,
-            final boolean supportsPagination) {
+            final boolean supportsPagination,
+            final String documentation) {
         this.name = "ds3_" + name;
         this.initName = "ds3_init_" + name;
         this.classification = classification;
@@ -72,6 +74,7 @@ public class Request {
         this.responseType = responseType;
         this.hasResponsePayload = !responseType.isEmpty();
         this.supportsPagination = supportsPagination;
+        this.documentation = documentation;
     }
 
     public String getName() {
@@ -142,6 +145,10 @@ public class Request {
         return supportsPagination;
     }
 
+    public String getDocumentation() {
+        return documentation;
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
@@ -170,6 +177,7 @@ public class Request {
         builder.append("  ResponseType[").append(getResponseType()).append("]\n");
         builder.append("  hasResponsePayload[").append(hasResponsePayload()).append("]\n");
         builder.append("  supportsPagination[").append(supportsPagination()).append("]\n");
+        builder.append("  documentation[").append(getDocumentation()).append("]\n");
         return builder.toString();
     }
 }

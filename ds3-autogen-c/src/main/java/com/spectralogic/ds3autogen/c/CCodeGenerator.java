@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -72,7 +72,7 @@ public class CCodeGenerator implements CodeGenerator {
         this.fileUtils = fileUtils;
 
         try {
-            final ImmutableList<Request> allRequests = getAllRequests(spec);
+            final ImmutableList<Request> allRequests = getAllRequests(spec, docSpec);
             final ImmutableList<Enum> allEnums = getAllEnums(spec);
             final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
 
@@ -227,15 +227,16 @@ public class CCodeGenerator implements CodeGenerator {
                 .collect(GuavaCollectors.immutableSet());
     }
 
-    public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec) throws ParseException {
+    public static ImmutableList<Request> getAllRequests(final Ds3ApiSpec spec, final Ds3DocSpec docSpec) throws ParseException {
         final ImmutableList.Builder<Request> allRequestsBuilder = ImmutableList.builder();
         if (ConverterUtil.hasContent(spec.getRequests())) {
             for (final Ds3Request ds3Request: spec.getRequests()) {
-                allRequestsBuilder.add(RequestConverter.toRequest(ds3Request));
+                allRequestsBuilder.add(RequestConverter.toRequest(ds3Request, docSpec));
             }
         }
         return allRequestsBuilder.build();
     }
+
 
     public void processTemplate(final Object obj, final String templateName, final OutputStream outputStream) throws IOException {
         final Template template = config.getTemplate(templateName);

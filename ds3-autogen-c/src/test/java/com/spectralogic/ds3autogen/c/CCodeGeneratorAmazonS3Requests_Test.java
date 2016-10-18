@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
 import com.spectralogic.ds3autogen.c.models.Struct;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -53,7 +54,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -78,14 +79,14 @@ public class CCodeGeneratorAmazonS3Requests_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -104,7 +105,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     public void testGenerateAmazonS3GetBucketRequest() throws IOException, ParseException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
-        final Request requestEntry = RequestConverter.toRequest(Ds3ModelFixtures.getBucketRequest());
+        final Request requestEntry = RequestConverter.toRequest(Ds3ModelFixtures.getBucketRequest(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", requestEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -128,7 +129,7 @@ public class CCodeGeneratorAmazonS3Requests_Test {
     public void testGenerateAmazonS3GetBucketRequestPrototype() throws IOException, TemplateModelException {
         final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
         final Map<String,Object> testMap = new HashMap<>();
-        final Request requestEntry = RequestConverter.toRequest(Ds3ModelFixtures.getBucketRequest());
+        final Request requestEntry = RequestConverter.toRequest(Ds3ModelFixtures.getBucketRequest(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", requestEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

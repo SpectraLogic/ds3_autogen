@@ -1,0 +1,43 @@
+{
+  "RequestDescriptors": [
+    {
+      "RequestName": "com.test.Test1RequestHandler",
+      "Classification": "amazons3",
+      "Description": "This is how you use Request1"
+    },
+    {
+      "RequestName": "com.test.Test2RequestHandler",
+      "Classification": "spectrainternal",
+      "Description": "This is how you use Request2"
+    },
+    {
+      "RequestName": "com.test.Test3RequestHandler",
+      "Classification": "spectrads3",
+      "Description": "This is how you use SpectraS3 Request3"
+    },
+    {
+      "RequestName": "com.test.Test3RequestHandler",
+      "Classification": "amazons3",
+      "Description": "This is how you use Amazon Request3"
+    },
+    {
+      "RequestName": "com.spectralogic.s3.server.handler.reqhandler.amazons3.GetBucketsRequestHandler",
+      "Classification": "amazons3",
+      "Description": "This is how you use get service"
+    }
+  ],
+  "ParamDescriptors": [
+    {
+      "ParamName": "Param1",
+      "Description": "This is the effect of Param1"
+    },
+    {
+      "ParamName": "Param2",
+      "Description": "This is the effect of Param2"
+    },
+    {
+      "ParamName": "Param3",
+      "Description": "This is the effect of Param3"
+    }
+  ]
+}
