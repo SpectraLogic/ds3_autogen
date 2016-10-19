@@ -86,6 +86,12 @@ public class RequestConverter_Test {
     }
 
     @Test
+    public void testRequestPayloadMapDoesNotContainEjectStorageDomain() {
+        final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
+        assertEquals(requestPayloadMap.get("eject_storage_domain_spectra_s3_request"), null);
+    }
+
+    @Test
     public void testConvertDs3RequestWithoutRequestPayload() {
         final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest(), new Ds3DocSpecEmptyImpl());
         assertFalse(testRequest.hasRequestPayload());
@@ -120,5 +126,11 @@ public class RequestConverter_Test {
         final Parameter testParameter = ParameterConverter.toParameter(testDs3Param, true, RequestConverter.toParamDocs(paramName, docSpec));
 
         assertEquals(testParameter.getDocumentation(), "This is how you use bucket name");
+    }
+
+    @Test
+    public void testEjectStorageDomainHasNoPayload() {
+        final Request ejectStorageDomainRequest = RequestConverter.toRequest(Ds3ModelFixtures.getEjectStorageDomainRequest(), new Ds3DocSpecEmptyImpl());
+        assertFalse(ejectStorageDomainRequest.hasRequestPayload());
     }
 }
