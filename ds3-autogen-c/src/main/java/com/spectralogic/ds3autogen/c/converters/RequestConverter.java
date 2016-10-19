@@ -236,8 +236,6 @@ public final class RequestConverter {
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("eject_storage_domain_blobs_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("eject_storage_domain_spectra_s3_request",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("get_physical_placement_for_objects_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("get_physical_placement_for_objects_with_full_details_spectra_s3_request",
