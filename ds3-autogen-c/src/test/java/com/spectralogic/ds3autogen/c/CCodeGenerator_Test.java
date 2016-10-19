@@ -782,24 +782,24 @@ public class CCodeGenerator_Test {
 
         final String expectedOutput =
                 "/**"                                                                                             + "\n"
-              + "This is how you use get_buckets request"                                                         + "\n"
-              + "\n"
-              + "Optional Request Modifiers for ds3_init_get_buckets"                                             + "\n"
-              + "\n"
-              + "This is how you use data_policy_id"                                                              + "\n"
-              + "  void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"            + "\n"
-              + "This is how you use last_page"                                                                   + "\n"
-              + "  void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                    + "\n"
-              + "This is how you use name"                                                                        + "\n"
-              + "  void ds3_request_set_name(const ds3_request* request, const char* value)"                      + "\n"
-              + "This is how you use page_length"                                                                 + "\n"
-              + "  void ds3_request_set_page_length(const ds3_request* request, const int value)"                 + "\n"
-              + "This is how you use page_offset"                                                                 + "\n"
-              + "  void ds3_request_set_page_offset(const ds3_request* request, const int value)"                 + "\n"
-              + "This is how you use page_start_marker"                                                           + "\n"
-              + "  void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"         + "\n"
-              + "This is how you use user_id"                                                                     + "\n"
-              + "  void ds3_request_set_user_id(const ds3_request* request, const char* value)"                   + "\n"
+              + " * This is how you use get_buckets request"                                                         + "\n"
+              + " *\n"
+              + " * Optional Request Modifiers for ds3_init_get_buckets"                                             + "\n"
+              + " *\n"
+              + " * This is how you use data_policy_id"                                                              + "\n"
+              + " *   void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"            + "\n"
+              + " * This is how you use last_page"                                                                   + "\n"
+              + " *   void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                    + "\n"
+              + " * This is how you use name"                                                                        + "\n"
+              + " *   void ds3_request_set_name(const ds3_request* request, const char* value)"                      + "\n"
+              + " * This is how you use page_length"                                                                 + "\n"
+              + " *   void ds3_request_set_page_length(const ds3_request* request, const int value)"                 + "\n"
+              + " * This is how you use page_offset"                                                                 + "\n"
+              + " *   void ds3_request_set_page_offset(const ds3_request* request, const int value)"                 + "\n"
+              + " * This is how you use page_start_marker"                                                           + "\n"
+              + " *   void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"         + "\n"
+              + " * This is how you use user_id"                                                                     + "\n"
+              + " *   void ds3_request_set_user_id(const ds3_request* request, const char* value)"                   + "\n"
               + " */"                                                                                             + "\n";
         assertEquals(expectedOutput, output);
     }
@@ -818,17 +818,17 @@ public class CCodeGenerator_Test {
         final String output = new String(bstream.toByteArray());
 
         final String expectedOutput =
-                "/**"                                                                                             + "\n"
-              + "Optional Request Modifiers for ds3_init_get_buckets"                                             + "\n"
-              + "\n"
-              + "  void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"            + "\n"
-              + "  void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                    + "\n"
-              + "  void ds3_request_set_name(const ds3_request* request, const char* value)"                      + "\n"
-              + "  void ds3_request_set_page_length(const ds3_request* request, const int value)"                 + "\n"
-              + "  void ds3_request_set_page_offset(const ds3_request* request, const int value)"                 + "\n"
-              + "  void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"         + "\n"
-              + "  void ds3_request_set_user_id(const ds3_request* request, const char* value)"                   + "\n"
-              + " */"                                                                                             + "\n";
+                "/**"                                                                                            + "\n"
+              + " * Optional Request Modifiers for ds3_init_get_buckets"                                         + "\n"
+              + " *\n"
+              + " *   void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"          + "\n"
+              + " *   void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                  + "\n"
+              + " *   void ds3_request_set_name(const ds3_request* request, const char* value)"                    + "\n"
+              + " *   void ds3_request_set_page_length(const ds3_request* request, const int value)"               + "\n"
+              + " *   void ds3_request_set_page_offset(const ds3_request* request, const int value)"               + "\n"
+              + " *   void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"       + "\n"
+              + " *   void ds3_request_set_user_id(const ds3_request* request, const char* value)"                 + "\n"
+              + " */"                                                                                            + "\n";
         assertEquals(expectedOutput, output);
     }
 
