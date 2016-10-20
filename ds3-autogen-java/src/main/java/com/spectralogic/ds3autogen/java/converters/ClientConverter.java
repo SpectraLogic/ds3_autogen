@@ -117,7 +117,7 @@ public class ClientConverter {
                 "                request.getChannel(),\n" +
                 "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
                 "                request.getObjectName())\n" +
-                "                .startResponse(this.netClient.getResponse(request));";
+                "                .response(this.netClient.getResponse(request));";
 
         final String requestName = removePath(ds3Request.getName());
         return new CustomCommand(

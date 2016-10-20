@@ -156,7 +156,7 @@ public class ClientConverter_Test {
                 "                request.getChannel(),\n" +
                 "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
                 "                request.getObjectName())\n" +
-                "                .startResponse(this.netClient.getResponse(request));";
+                "                .response(this.netClient.getResponse(request));";
 
         final CustomCommand result = toGetObjectAmazonS3CustomCommand(getRequestAmazonS3GetObject(), getTestDocSpec());
         assertThat(result.getName(), is("GetObjectHandler"));

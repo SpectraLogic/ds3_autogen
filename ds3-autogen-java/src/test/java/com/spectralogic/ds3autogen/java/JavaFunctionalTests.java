@@ -1232,7 +1232,7 @@ public class JavaFunctionalTests {
                 "                request.getChannel(),\n" +
                 "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
                 "                request.getObjectName())\n" +
-                "                .startResponse(this.netClient.getResponse(request));"));
+                "                .response(this.netClient.getResponse(request));"));
 
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
