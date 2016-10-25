@@ -39,29 +39,20 @@ public class GetObjectParserGenerator_Test {
                 request,
                 request.getDs3ResponseCodes());
 
-        assertThat(result.size(), is(16));
-        assertThat(result, hasItem("com.google.common.util.concurrent.ListeningExecutorService"));
-        assertThat(result, hasItem("com.google.common.util.concurrent.MoreExecutors"));
+        assertThat(result.size(), is(13));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.GetObjectResponse"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.MetadataImpl"));
-        assertThat(result, hasItem("com.spectralogic.ds3client.commands.parsers.interfaces.ResponseFutureCallable"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils"));
-        assertThat(result, hasItem("com.spectralogic.ds3client.networking.Ds3ResponseParser"));
-        assertThat(result, hasItem("com.spectralogic.ds3client.networking.Headers"));
-        assertThat(result, hasItem("com.spectralogic.ds3client.networking.NettyBlockingByteChannel"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.networking.Metadata"));
         assertThat(result, hasItem("com.spectralogic.ds3client.networking.WebResponse"));
-        assertThat(result, hasItem("org.slf4j.Logger"));
-        assertThat(result, hasItem("org.slf4j.LoggerFactory"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.utils.IOUtils"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.utils.PerformanceUtils"));
         assertThat(result, hasItem("java.io.IOException"));
+        assertThat(result, hasItem("java.io.InputStream"));
+        assertThat(result, hasItem("java.nio.channels.ReadableByteChannel"));
         assertThat(result, hasItem("java.nio.channels.WritableByteChannel"));
-        assertThat(result, hasItem("java.util.concurrent.Executors"));
-        assertThat(result, hasItem("java.util.concurrent.FutureTask"));
-    }
-
-    @Test
-    public void getParentClassImport_Test() {
-        assertThat(generator.getParentClassImport(),
-                is("com.spectralogic.ds3client.networking.Ds3ResponseParser"));
     }
 
     @Test (expected = IllegalArgumentException.class)
