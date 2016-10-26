@@ -113,8 +113,11 @@ public class ClientConverter {
             final Ds3Request ds3Request,
             final Ds3DocSpec docSpec) {
         final String responseName = toResponseName(ds3Request.getName());
-        final String customBody = "return handleExceptions(netClient.getResponse(request, new " +
-                responseName + "Parser(request.getChannel())));";
+        final String customBody = "return new " + responseName + "Parser(\n" +
+                "                request.getChannel(),\n" +
+                "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
+                "                request.getObjectName())\n" +
+                "                .startResponse(this.netClient.getResponse(request));";
 
         final String requestName = removePath(ds3Request.getName());
         return new CustomCommand(

@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1243,8 +1243,11 @@ public class JavaFunctionalTests {
         final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
         CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
         testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
-        assertTrue(ds3ClientImplGeneratedCode.contains(
-                "return handleExceptions(netClient.getResponse(request, new GetObjectResponseParser(request.getChannel())));"));
+        assertTrue(ds3ClientImplGeneratedCode.contains("return new GetObjectResponseParser(\n" +
+                "                request.getChannel(),\n" +
+                "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
+                "                request.getObjectName())\n" +
+                "                .startResponse(this.netClient.getResponse(request));"));
 
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
