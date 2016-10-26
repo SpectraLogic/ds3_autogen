@@ -39,7 +39,7 @@ public class GetObjectParserGenerator_Test {
                 request,
                 request.getDs3ResponseCodes());
 
-        assertThat(result.size(), is(13));
+        assertThat(result.size(), is(12));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.GetObjectResponse"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.MetadataImpl"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser"));
@@ -51,7 +51,6 @@ public class GetObjectParserGenerator_Test {
         assertThat(result, hasItem("com.spectralogic.ds3client.utils.PerformanceUtils"));
         assertThat(result, hasItem("java.io.IOException"));
         assertThat(result, hasItem("java.io.InputStream"));
-        assertThat(result, hasItem("java.nio.channels.ReadableByteChannel"));
         assertThat(result, hasItem("java.nio.channels.WritableByteChannel"));
     }
 

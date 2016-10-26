@@ -56,7 +56,7 @@ public class ParseResponse_Test {
 
     @Test
     public void stringParseResponse_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
@@ -66,7 +66,7 @@ public class ParseResponse_Test {
 
     @Test
     public void stringParseResponse_WithPagination_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
                 "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
                 "                }\n";
@@ -76,7 +76,7 @@ public class ParseResponse_Test {
 
     @Test
     public void baseParseResponse_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
@@ -86,7 +86,7 @@ public class ParseResponse_Test {
 
     @Test
     public void baseParseResponse_WithPagination_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final TestType result = XmlOutput.fromXml(inputStream, TestType.class);\n" +
                 "                    return new TestResponse(result, pagingTotalResultCount, pagingTruncated);\n" +
                 "                }\n";

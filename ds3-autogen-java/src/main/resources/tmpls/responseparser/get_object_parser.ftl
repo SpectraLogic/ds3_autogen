@@ -20,7 +20,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
     }
 
     @Override
-    public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
+    public ${responseName} parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             final Metadata metadata = new MetadataImpl(this.getResponse().getHeaders());
@@ -29,7 +29,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
             return new GetObjectResponse(this.getChecksum(), this.getChecksumType(), metadata, objectSize);
         }
 
-        throw ResponseParserUtils.createFailedRequest(response, blockingByteChannel, expectedStatusCodes);
+        throw ResponseParserUtils.createFailedRequest(response, expectedStatusCodes);
     }
 
     protected void download(final long objectSize, final WebResponse response) throws IOException {

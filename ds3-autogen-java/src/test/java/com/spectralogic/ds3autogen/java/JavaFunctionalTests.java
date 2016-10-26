@@ -166,10 +166,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.CompleteMultipartUploadResult", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "CompleteMultipartUploadResult");
@@ -240,10 +238,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.ListBucketResult", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "ListBucketResult");
@@ -318,10 +314,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.Bucket", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "Bucket");
@@ -400,7 +394,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -639,10 +632,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacement", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement");
@@ -734,10 +725,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.BulkObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList");
@@ -822,10 +811,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.PhysicalPlacement", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "PhysicalPlacement");
@@ -914,10 +901,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.BulkObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BulkObjectList");
@@ -998,10 +983,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.DeleteResult", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "DeleteResult");
@@ -1052,7 +1035,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.DeleteObjectResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -1153,7 +1135,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.PutObjectResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -1266,7 +1247,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.utils.PerformanceUtils", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", responseParserCode));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 206};"));
@@ -1350,10 +1330,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.S3Object", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3Object");
@@ -1418,7 +1396,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
@@ -1500,10 +1477,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistration", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistration");
@@ -1583,10 +1558,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobCompletedNotificationRegistrationList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "JobCompletedNotificationRegistrationList", true);
@@ -1670,10 +1643,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
@@ -1750,10 +1721,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.InitiateMultipartUploadResult", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "InitiateMultipartUploadResult");
@@ -1831,13 +1800,11 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.models.Objects", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
 
@@ -1916,14 +1883,12 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         assertTrue(hasImport("com.spectralogic.ds3client.exceptions.RetryAfterExpectedException", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
         assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty"));
 
@@ -1995,7 +1960,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -2072,7 +2036,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands." + responseName, responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.MetadataImpl", responseParserCode));
@@ -2154,10 +2117,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.MasterObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
@@ -2227,10 +2188,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
         assertTrue(hasImport("org.apache.commons.io.IOUtils", responseParserCode));
         assertTrue(hasImport("java.nio.charset.StandardCharsets", responseParserCode));
@@ -2283,10 +2242,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.ListAllMyBucketsResult", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.GetServiceResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -2337,7 +2294,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3.DeleteBucketSpectraS3Response", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
@@ -2396,10 +2352,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.BucketList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "BucketList", true);
@@ -2491,7 +2445,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final EmptyParseResponse expectedParsing = new EmptyParseResponse(responseName);
@@ -2586,10 +2539,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.S3ObjectList", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", responseParserCode));
-        assertTrue(hasImport("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream", responseParserCode));
         assertTrue(hasImport("java.io.IOException", responseParserCode));
         assertTrue(hasImport("java.io.InputStream", responseParserCode));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", responseParserCode));
 
         final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "S3ObjectList", true);

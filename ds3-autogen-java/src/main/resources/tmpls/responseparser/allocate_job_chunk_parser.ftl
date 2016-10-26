@@ -9,7 +9,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};
 
     @Override
-    public ${responseName} parseXmlResponse(final WebResponse response, final ReadableByteChannel blockingByteChannel) throws IOException {
+    public ${responseName} parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
@@ -22,7 +22,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
             }
         }
 
-        throw ResponseParserUtils.createFailedRequest(response, blockingByteChannel, expectedStatusCodes);
+        throw ResponseParserUtils.createFailedRequest(response, expectedStatusCodes);
     }
 
 <#include "common/parse_retry_after.ftl"/>

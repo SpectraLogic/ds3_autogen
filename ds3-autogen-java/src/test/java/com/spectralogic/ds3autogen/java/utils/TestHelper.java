@@ -284,7 +284,6 @@ public final class TestHelper {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", code));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", code));
         assertTrue(hasImport("java.io.IOException", code));
-        assertTrue(hasImport("java.nio.channels.ReadableByteChannel", code));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, code));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", code));
 

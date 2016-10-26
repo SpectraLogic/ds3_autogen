@@ -42,7 +42,6 @@ public class BaseResponseParserGenerator_Test {
 
     private static void hasRequiredInputs(final ImmutableSet<String> imports) {
         assertTrue(imports.contains("java.io.IOException"));
-        assertTrue(imports.contains("java.nio.channels.ReadableByteChannel"));
         assertTrue(imports.contains("com.spectralogic.ds3client.networking.WebResponse"));
         assertTrue(imports.contains("com.spectralogic.ds3client.commands.TestResponse"));
         assertTrue(imports.contains("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser"));
@@ -51,7 +50,7 @@ public class BaseResponseParserGenerator_Test {
 
     @Test
     public void toResponseCodes_Test() {
-        final String expectedProcessingCode = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expectedProcessingCode = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final DefaultType result = XmlOutput.fromXml(inputStream, DefaultType.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
@@ -84,7 +83,7 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 null);
 
-        assertThat(result.size(), is(6));
+        assertThat(result.size(), is(5));
         hasRequiredInputs(result);
     }
 
@@ -95,7 +94,7 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 ImmutableList.of());
 
-        assertThat(result.size(), is(6));
+        assertThat(result.size(), is(5));
         hasRequiredInputs(result);
     }
 
@@ -111,12 +110,11 @@ public class BaseResponseParserGenerator_Test {
                 createEmptyDs3Request(),
                 responseCodes);
 
-        assertThat(result.size(), is(11));
+        assertThat(result.size(), is(9));
         hasRequiredInputs(result);
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v1"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.Type_v2"));
         assertTrue(result.contains("com.spectralogic.ds3client.serializer.XmlOutput"));
-        assertTrue(result.contains("com.spectralogic.ds3client.utils.ReadableByteChannelInputStream"));
         assertTrue(result.contains("java.io.InputStream"));
     }
 
@@ -124,9 +122,8 @@ public class BaseResponseParserGenerator_Test {
     public void requiredImportList_Test() {
         final ImmutableSet<String> result = requiredImportList();
 
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(2));
         assertTrue(result.contains("java.io.IOException"));
-        assertTrue(result.contains("java.nio.channels.ReadableByteChannel"));
         assertTrue(result.contains("com.spectralogic.ds3client.networking.WebResponse"));
     }
 
@@ -191,7 +188,7 @@ public class BaseResponseParserGenerator_Test {
 
     @Test
     public void toResponseCode_StringResponse_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";
@@ -202,7 +199,7 @@ public class BaseResponseParserGenerator_Test {
 
     @Test
     public void toResponseCode_BaseResponse_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final Type result = XmlOutput.fromXml(inputStream, Type.class);\n" +
                 "                    return new TestResponse(result);\n" +
                 "                }\n";

@@ -38,7 +38,7 @@ public class AllocateJobChunkParserGenerator_Test {
 
     @Test
     public void toParsePayloadCode_Test() {
-        final String expected = "try (final InputStream inputStream = new ReadableByteChannelInputStream(blockingByteChannel)) {\n" +
+        final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final JobChunkApiBean result = XmlOutput.fromXml(inputStream, JobChunkApiBean.class);\n" +
                 "                    return new MyResponse(result, 0, MyResponse.Status.ALLOCATED);\n" +
                 "                }\n";
@@ -58,7 +58,7 @@ public class AllocateJobChunkParserGenerator_Test {
 
     @Test
     public void toResponseCodeList_Test() {
-        final ImmutableList responseCodes = ImmutableList.of(
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
                 new Ds3ResponseCode(
                         200,
                         ImmutableList.of(
