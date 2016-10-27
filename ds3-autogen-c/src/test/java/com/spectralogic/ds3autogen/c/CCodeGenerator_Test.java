@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -19,12 +19,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
+import com.spectralogic.ds3autogen.NameMapper;
+import com.spectralogic.ds3autogen.api.Ds3DocSpecParser;
 import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.c.converters.EnumConverter;
+import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.converters.StructConverter;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
@@ -32,6 +36,9 @@ import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
 import com.spectralogic.ds3autogen.c.models.*;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecParserImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -44,6 +51,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -192,7 +200,7 @@ public class CCodeGenerator_Test {
                         ImmutableSet.of(),
                         ImmutableSet.of(),
                         ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec),
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()),
                 ImmutableSet.of());
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -250,14 +258,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -288,14 +296,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -323,14 +331,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -388,14 +396,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -449,14 +457,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_blob_response"), ImmutableSet.of());
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of("ds3_blob_response"), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -508,14 +516,14 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
-        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of(), ImmutableSet.of());
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -552,7 +560,7 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
@@ -560,7 +568,7 @@ public class CCodeGenerator_Test {
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(
                 spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_bucket_details_response", "ds3_list_all_my_buckets_result_response"), ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -579,15 +587,15 @@ public class CCodeGenerator_Test {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(
-                spec, enumNames, responseTypes, arrayMemberTypes, ImmutableSet.of("ds3_user_response"), ImmutableSet.of());
+                spec, enumNames, responseTypes, ImmutableSet.of("ds3_user_response"), arrayMemberTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -633,15 +641,15 @@ public class CCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, ImmutableSet.of());
         final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
-        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, CCodeGenerator.getAllRequests(spec));
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
 
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
     }
@@ -654,10 +662,10 @@ public class CCodeGenerator_Test {
         final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
 
-        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
         final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec);
         final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
         final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
         final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
         final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, arrayMemberTypes, embeddedTypes, ImmutableSet.of());
@@ -682,9 +690,9 @@ public class CCodeGenerator_Test {
                 ImmutableMap.of(
                         type1.getName(), type1,
                         type2.getName(), type2));
-        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet);
-        assertEquals(embeddedTypes.size(), 3);
-        assertTrue(embeddedTypes.contains("ds3_string_response"));
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(embeddedTypesSet, ImmutableSet.of());
+        assertEquals(embeddedTypes.size(), 2);
+        assertTrue(embeddedTypes.contains("ds3_size_response"));
     }
 
     @Test
@@ -704,6 +712,140 @@ public class CCodeGenerator_Test {
                 ImmutableMap.of());
         final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(getBucketsSpec);
         assertEquals(paginatedTypes.size(), 0);
+    }
+
+    @Test
+    public void testEnumTypesContainsTargetReadPreferenceType() throws IOException, ParseException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/3_2_2_contract.xml"));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        assertTrue(enumNames.contains("ds3_target_read_preference_type"));
+    }
+
+    @Test
+    public void testStuctsContainsJobCreationFailedNotificationPayload() throws IOException, ParseException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/3_2_2_contract.xml"));
+
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+
+        final ImmutableSet<String> embeddedTypes = CCodeGenerator.getEmbeddedTypes(spec, enumNames);
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableSet<String> paginatedTypes = CCodeGenerator.getPaginatedTypes(spec);
+
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, embeddedTypes, arrayMemberTypes, paginatedTypes);
+        assertTrue(allStructs.stream().map(Struct::getName).anyMatch(name -> name.equals("ds3_job_creation_failed_notification_payload_response")));
+    }
+
+    @Test
+    public void testRequestDocumentation() throws IOException {
+        final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
+        final Ds3DocSpec docSpec = docSpecParser.getDocSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/testCommandDocumentation.json"));
+        final Optional<String> testRequestHandlerDescription = docSpec.getRequestDocumentation("Test1Request");
+        assertTrue(testRequestHandlerDescription.isPresent());
+        assertEquals(testRequestHandlerDescription.get(), "This is how you use Request1");
+    }
+
+    private static Ds3DocSpec getTestGetBucketsDocSpec() {
+        final ImmutableMap<String, String> paramsMap = ImmutableMap.<String, String>builder()
+                .put("DataPolicyId",    "This is how you use data_policy_id")
+                .put("LastPage",        "This is how you use last_page")
+                .put("Name",            "This is how you use name")
+                .put("PageLength",      "This is how you use page_length")
+                .put("PageOffset",      "This is how you use page_offset")
+                .put("PageStartMarker", "This is how you use page_start_marker")
+                .put("UserId",          "This is how you use user_id")
+                .build();
+        return new Ds3DocSpecImpl(
+                ImmutableMap.of("GetBucketsRequestHandler", "This is how you use get_buckets request"),
+                paramsMap);
+    }
+
+    @Test
+    public void testRequestDocumentationCommentBlock() throws IOException, TemplateModelException {
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsSpectraS3Request(), getTestGetBucketsDocSpec());
+        final Map<String,Object> testMap = new HashMap<>();
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "header-templates/RequestCommentDocumentation.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput =
+                "/**"                                                                                             + "\n"
+              + " * This is how you use get_buckets request"                                                         + "\n"
+              + " *\n"
+              + " * Optional Request Modifiers for ds3_init_get_buckets"                                             + "\n"
+              + " *\n"
+              + " * This is how you use data_policy_id"                                                              + "\n"
+              + " *   void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"            + "\n"
+              + " * This is how you use last_page"                                                                   + "\n"
+              + " *   void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                    + "\n"
+              + " * This is how you use name"                                                                        + "\n"
+              + " *   void ds3_request_set_name(const ds3_request* request, const char* value)"                      + "\n"
+              + " * This is how you use page_length"                                                                 + "\n"
+              + " *   void ds3_request_set_page_length(const ds3_request* request, const int value)"                 + "\n"
+              + " * This is how you use page_offset"                                                                 + "\n"
+              + " *   void ds3_request_set_page_offset(const ds3_request* request, const int value)"                 + "\n"
+              + " * This is how you use page_start_marker"                                                           + "\n"
+              + " *   void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"         + "\n"
+              + " * This is how you use user_id"                                                                     + "\n"
+              + " *   void ds3_request_set_user_id(const ds3_request* request, const char* value)"                   + "\n"
+              + " */"                                                                                             + "\n";
+        assertEquals(expectedOutput, output);
+    }
+
+    @Test
+    public void testRequestDocumentationCommentBlockWithEmptyDocSpec() throws IOException, TemplateModelException {
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsSpectraS3Request(), new Ds3DocSpecEmptyImpl());
+        final Map<String,Object> testMap = new HashMap<>();
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "header-templates/RequestCommentDocumentation.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput =
+                "/**"                                                                                            + "\n"
+              + " * Optional Request Modifiers for ds3_init_get_buckets"                                         + "\n"
+              + " *\n"
+              + " *   void ds3_request_set_data_policy_id(const ds3_request* request, const char* value)"          + "\n"
+              + " *   void ds3_request_set_last_page(const ds3_request* request, ds3_bool value)"                  + "\n"
+              + " *   void ds3_request_set_name(const ds3_request* request, const char* value)"                    + "\n"
+              + " *   void ds3_request_set_page_length(const ds3_request* request, const int value)"               + "\n"
+              + " *   void ds3_request_set_page_offset(const ds3_request* request, const int value)"               + "\n"
+              + " *   void ds3_request_set_page_start_marker(const ds3_request* request, const char* value)"       + "\n"
+              + " *   void ds3_request_set_user_id(const ds3_request* request, const char* value)"                 + "\n"
+              + " */"                                                                                            + "\n";
+        assertEquals(expectedOutput, output);
+    }
+
+    @Test
+    public void testRequestDocumentationCommentBlockWithEmptyDocSpecNoOptionalParams() throws IOException, TemplateModelException {
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getSystemInformationRequest(), new Ds3DocSpecEmptyImpl());
+        final Map<String,Object> testMap = new HashMap<>();
+        testMap.put("requestEntry", testRequest);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        codeGenerator.processTemplate(testMap, "header-templates/RequestCommentDocumentation.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        assertEquals("", output);
     }
 }
 

@@ -19,13 +19,13 @@
                         from obj in this.Objects
                         select new XElement("Object")
                             .SetAttributeValueFluent("Name", obj.Name)
-                            .SetAttributeValueFluent("Size", toDs3ObjectSize(obj))
+                            .SetAttributeValueFluent("Size", ToDs3ObjectSize(obj))
                     )
                 )
                 .WriteToMemoryStream();
         }
 
-        internal string toDs3ObjectSize(Ds3Object ds3Object)
+        internal string ToDs3ObjectSize(Ds3Object ds3Object)
         {
             if (ds3Object.Size == null)
             {

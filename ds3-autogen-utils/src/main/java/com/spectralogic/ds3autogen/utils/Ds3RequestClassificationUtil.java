@@ -77,19 +77,20 @@ public final class Ds3RequestClassificationUtil {
      * Determines if this request has a List of Ds3Object request payload
      */
     public static boolean hasListObjectsRequestPayload(final Ds3Request ds3Request) {
-        return isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainRequest(ds3Request);
+        return isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request);
     }
 
     /**
      * Determines if this request is an Eject Storage Domain (Blobs) request.
      */
-    public static boolean isEjectStorageDomainRequest(final Ds3Request ds3Request) {
+    public static boolean isEjectStorageDomainBlobsRequest(final Ds3Request ds3Request) {
         return ds3Request.getAction() == Action.BULK_MODIFY
                 && ds3Request.getHttpVerb() == HttpVerb.PUT
                 && ds3Request.getOperation() == Operation.EJECT
                 && ds3Request.getResource() == Resource.TAPE
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
-                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "StorageDomainId", "java.util.UUID");
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "StorageDomainId", "java.util.UUID")
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Blobs", "void");
     }
 
     /**

@@ -1,19 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
- *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *   this file except in compliance with the License. A copy of the License is located at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   or in the "license" file accompanying this file.
- *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *   specific language governing permissions and limitations under the License.
- * ****************************************************************************
- *//*
- * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -38,8 +25,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class EnumHelper_Test {
     @Test
@@ -99,5 +85,27 @@ public class EnumHelper_Test {
     @Test
     public void testNameAlreadyBeginningWithDs3DoesNotDouble() {
         assertThat(EnumHelper.getDs3Type("Ds3TestType"), is("ds3_test_type"));
+    }
+
+    @Test
+    public void testRequiresMatcher() {
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("Alpha", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("TypePrefix", null, null, enumConstants);
+        final Enum testEnum = EnumConverter.toEnum(testDs3Type);
+
+        assertTrue(testEnum.requiresMatcher());
+    }
+
+    @Test
+    public void testDoesNotRequireMatcher() {
+        final Ds3EnumConstant alpha = new Ds3EnumConstant("Alpha", null);
+        final Ds3EnumConstant bravo = new Ds3EnumConstant("Bravo", null);
+        final ImmutableList<Ds3EnumConstant> enumConstants = ImmutableList.of(alpha, bravo);
+        final Ds3Type testDs3Type = new Ds3Type("com.spectralogic.util.db.lang.SqlOperation", null, null, enumConstants);
+        final Enum testEnum = EnumConverter.toEnum(testDs3Type);
+
+        assertFalse(testEnum.requiresMatcher());
     }
 }

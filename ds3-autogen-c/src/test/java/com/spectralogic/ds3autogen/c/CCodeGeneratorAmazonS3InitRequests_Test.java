@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -76,7 +77,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final Request requestEntry = source.getRequests().get(0);
         final Map<String,Object> testMap = new HashMap<>();
@@ -103,7 +104,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -126,7 +127,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
@@ -158,7 +159,8 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID", true),
                         new Ds3Param("Offset", "long", false)),
-                ImmutableList.of()));
+                ImmutableList.of()),
+                new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -195,7 +197,8 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID", true),
                         new Ds3Param("Offset", "long", false)),
-                ImmutableList.of()));
+                        ImmutableList.of()),
+                new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

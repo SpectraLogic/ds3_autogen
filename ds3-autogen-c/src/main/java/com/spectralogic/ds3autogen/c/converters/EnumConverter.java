@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.c.helpers.EnumHelper;
 import com.spectralogic.ds3autogen.c.models.Enum;
+import com.spectralogic.ds3autogen.utils.Helper;
 
 public final class EnumConverter {
     private EnumConverter() {}
@@ -27,6 +28,21 @@ public final class EnumConverter {
         final ImmutableList<String> valuesList = EnumHelper.convertDs3EnumConstants(ds3Type);
         return new Enum(
                 EnumHelper.getDs3Type(ds3Type.getName()),
-                valuesList);
+                valuesList,
+                requiresMatcher(ds3Type));
+    }
+
+    public static boolean requiresMatcher(final Ds3Type ds3Type) {
+        switch(Helper.unqualifiedName(ds3Type.getName())) {
+            case "Severity":
+            case "Application":
+            case "RestActionType":
+            case "RestDomainType":
+            case "RestOperationType":
+            case "RestResourceType":
+            case "SqlOperation":
+                return false;
+        }
+        return true;
     }
 }

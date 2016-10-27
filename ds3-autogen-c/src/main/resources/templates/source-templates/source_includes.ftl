@@ -14,6 +14,7 @@
 #include "ds3_string_multimap_impl.h"
 #include "ds3_net.h"
 #include "ds3_utils.h"
+#include "ds3_connection.h"
 
 #ifdef _WIN32
 #include <io.h>

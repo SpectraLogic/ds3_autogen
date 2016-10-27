@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.c.converters.SourceConverter;
 import com.spectralogic.ds3autogen.c.helpers.StructHelper;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.c.models.Source;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -52,7 +53,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -80,7 +81,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -101,7 +102,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
 
         final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
-                CCodeGenerator.getAllRequests(spec));
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
         codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
 
@@ -123,7 +124,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
     @Test
     public void testGenerateSpectraS3GetBucketsRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsSpectraS3Request());
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsSpectraS3Request(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -173,15 +174,15 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 "\"/_rest_/\", bucket_name, NULL",
                 null,
                 null,
-                RequestConverter.getParamList(responseType),
+                RequestConverter.getParamList(responseType, new Ds3DocSpecEmptyImpl()),
                 ImmutableList.of(),
                 ImmutableList.of(),
                 true,
                 false,
                 null,
                 responseType,
-                false
-        );
+                false,
+                null);
         testMap.put("requestEntry", requestEntry);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

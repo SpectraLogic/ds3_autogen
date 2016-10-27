@@ -454,6 +454,33 @@ public class Ds3ModelFixtures {
     }
 
     /**
+     * Creates the SpectraDs3 Eject Storage Domain Blobs request handler as
+     * described in the contract, excluding the response codes.
+     */
+    public static Ds3Request getEjectStorageDomainBlobsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.TAPE,
+                ResourceType.NON_SINGLETON,
+                Operation.EJECT,
+                false,
+                null, //Request has response codes in Contract, but they are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("EjectLabel", "java.lang.String", true),
+                        new Ds3Param("EjectLocation", "java.lang.String", true)),
+                ImmutableList.of(
+                        new Ds3Param("Blobs", "void", false),
+                        new Ds3Param("BucketId", "java.util.UUID", false),
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)));
+    }
+
+    /**
      * Creates the AmazonS3 Complete Multi Part Upload Request Handler as described
      * in the contract, excluding the response codes
      */

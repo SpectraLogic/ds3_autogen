@@ -133,8 +133,9 @@ public class GeneratorUtils_Test {
         assertThat(hasFileObjectListPayload(getRequestVerifyPhysicalPlacement()), is(true));
         assertThat(hasFileObjectListPayload(getRequestBulkGet()), is(true));
         assertThat(hasFileObjectListPayload(getRequestBulkPut()), is(true));
-        assertThat(hasFileObjectListPayload(getEjectStorageDomainRequest()), is(true));
+        assertThat(hasFileObjectListPayload(getEjectStorageDomainBlobsRequest()), is(true));
 
+        assertThat(hasFileObjectListPayload(getEjectStorageDomainRequest()), is(false));
         assertThat(hasFileObjectListPayload(getRequestDeleteNotification()), is(false));
         assertThat(hasFileObjectListPayload(getRequestCreateNotification()), is(false));
         assertThat(hasFileObjectListPayload(getRequestGetNotification()), is(false));

@@ -63,7 +63,7 @@ public final class EnumHelper {
     }
 
     public static ImmutableSet<String> getEnumNamesSet(final ImmutableList<Enum> allEnums) {
-        return allEnums.stream().map(Enum::getName).collect(GuavaCollectors.immutableSet());
+        return allEnums.stream().map(Enum::getName).sorted().collect(GuavaCollectors.immutableSet());
     }
 
     public static ImmutableList<String> convertDs3EnumConstants(final Ds3Type ds3Type) {
@@ -130,4 +130,5 @@ public final class EnumHelper {
 
         return outputBuilder.toString();
     }
+
 }

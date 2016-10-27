@@ -71,7 +71,7 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
     public ImmutableList<ConstructorParam> toOptionalConstructorParams(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(toOptionalArgumentsList(ds3Request.getOptionalQueryParams()));
-        if (isEjectStorageDomainRequest(ds3Request)) {
+        if (isEjectStorageDomainBlobsRequest(ds3Request)) {
             builder.add(new Arguments(FILE_OBJECTS_TYPE, OBJECTS_NAME));
         }
 
@@ -86,7 +86,7 @@ public class ObjectsPayloadGenerator extends BaseRequestGenerator {
      */
     @Override
     public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
-        if (isEjectStorageDomainRequest(ds3Request)) {
+        if (isEjectStorageDomainBlobsRequest(ds3Request)) {
             return toPayloadAssignment(requestName, OBJECTS_NAME, FILE_OBJECTS_TYPE);
         }
         if (hasRequiredFileObjectListPayload(ds3Request)) {

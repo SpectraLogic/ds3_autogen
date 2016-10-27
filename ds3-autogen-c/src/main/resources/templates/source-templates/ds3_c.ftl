@@ -24,16 +24,18 @@
 <#-- ******************************************* -->
 <#-- Generate all "EnumMatchers" from Enums      -->
 <#list getEnums() as enumEntry>
-    <#include "TypedefEnumMatcher.ftl">
+    <#if enumEntry.requiresMatcher()>
+        <#include "TypedefEnumMatcher.ftl">
+    </#if>
 </#list>
 
 //************ STRUCT PARSERS **************
 <#list getStructs() as structEntry>
+    <#if structEntry.isEmbedded()>
+        <#include "ResponseParser.ftl">
+    </#if>
     <#if structEntry.isArrayMember()>
-        <#include "ResponseParser.ftl">
         <#include "StructArrayParser.ftl">
-    <#elseif structEntry.isEmbedded()>
-        <#include "ResponseParser.ftl">
     </#if>
 </#list>
 

@@ -465,29 +465,31 @@ public class Ds3RequestClassificationUtil_Test {
     }
 
     @Test
-    public void isEjectStorageDomainRequest_Test() {
-        assertTrue(isEjectStorageDomainRequest(getEjectStorageDomainRequest()));
+    public void isEjectStorageDomainBlobsRequest_Test() {
+        assertTrue(isEjectStorageDomainBlobsRequest(getEjectStorageDomainBlobsRequest()));
 
-        assertFalse(isEjectStorageDomainRequest(getRequestGetJob()));
-        assertFalse(isEjectStorageDomainRequest(getRequestAmazonS3GetObject()));
-        assertFalse(isEjectStorageDomainRequest(getRequestDeleteNotification()));
-        assertFalse(isEjectStorageDomainRequest(getRequestCreateNotification()));
-        assertFalse(isEjectStorageDomainRequest(getRequestGetNotification()));
-        assertFalse(isEjectStorageDomainRequest(getRequestVerifyPhysicalPlacement()));
-        assertFalse(isEjectStorageDomainRequest(getRequestBulkGet()));
-        assertFalse(isEjectStorageDomainRequest(getRequestMultiFileDelete()));
-        assertFalse(isEjectStorageDomainRequest(getRequestCreateObject()));
-        assertFalse(isEjectStorageDomainRequest(getRequestSpectraS3GetObject()));
-        assertFalse(isEjectStorageDomainRequest(getCompleteMultipartUploadRequest()));
-        assertFalse(isEjectStorageDomainRequest(getObjectsDetailsRequest()));
-        assertFalse(isEjectStorageDomainRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getEjectStorageDomainRequest()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestGetJob()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestDeleteNotification()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestCreateNotification()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestGetNotification()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestBulkGet()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestMultiFileDelete()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestCreateObject()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getObjectsDetailsRequest()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getObjectsWithFullDetailsRequest()));
     }
 
     @Test
     public void hasListObjectsRequestPayload_Test() {
-        assertTrue(hasListObjectsRequestPayload(getEjectStorageDomainRequest()));
+        assertTrue(hasListObjectsRequestPayload(getEjectStorageDomainBlobsRequest()));
         assertTrue(hasListObjectsRequestPayload(getRequestVerifyPhysicalPlacement()));
 
+        assertFalse(hasListObjectsRequestPayload(getEjectStorageDomainRequest()));
         assertFalse(hasListObjectsRequestPayload(getRequestGetJob()));
         assertFalse(hasListObjectsRequestPayload(getRequestAmazonS3GetObject()));
         assertFalse(hasListObjectsRequestPayload(getRequestDeleteNotification()));

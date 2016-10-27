@@ -8,6 +8,7 @@
 #include "ds3_utils.h"
 #include "ds3_string_multimap.h"
 #include "ds3_string_multimap_impl.h"
+#include "ds3_connection.h"
 
 static void _init_curl(void) {
     static ds3_bool initialized = False;
@@ -74,10 +75,10 @@ char* escape_url_extended(const char* url, const char** delimiters, uint32_t num
     return escaped_ptr;
 }
 
-// Like escape_url but don't encode "/" or "+".
+// Like escape_url but don't encode "/".
 char* escape_url_object_name(const char* url) {
-    const char *delimiters[2]={"/","+"};
-    return escape_url_extended(url, delimiters, 2);
+    const char *delimiters[1]={"/"};
+    return escape_url_extended(url, delimiters, 1);
 }
 
 // Like escape_url but don't encode "=".
@@ -382,7 +383,7 @@ ds3_error* net_process_request(const ds3_client* client,
     }
 
     while (retry_count < client->num_redirects) {
-        handle = curl_easy_init();
+        handle = (CURL*)ds3_connection_acquire(client->connection_pool);
 
         if (handle) {
             char* amz_headers;
@@ -498,7 +499,7 @@ ds3_error* net_process_request(const ds3_client* client,
             g_free(signature);
             g_free(auth_header);
             curl_slist_free_all(headers);
-            curl_easy_cleanup(handle);
+            ds3_connection_release(client->connection_pool, handle);
 
             //process the response
             if (res != CURLE_OK) {
@@ -569,3 +570,4 @@ ds3_error* net_process_request(const ds3_client* client,
 void net_cleanup(void) {
     curl_global_cleanup();
 }
+
