@@ -14,11 +14,24 @@ namespace Ds3.Calls
     {
         <#include "common/required_args.ftl" />
 
-        public JobChunkClientProcessingOrderGuarantee? ChunkClientProcessingOrderGuarantee { get; private set; }
-
-        public ${name} WithChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)
+        private JobChunkClientProcessingOrderGuarantee? _chunkClientProcessingOrderGuarantee;
+        public JobChunkClientProcessingOrderGuarantee? ChunkClientProcessingOrderGuarantee
         {
-            this.ChunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
+            get { return _chunkClientProcessingOrderGuarantee; }
+            set { WithChunkClientProcessingOrderGuarantee(value); }
+        }
+
+        public ${name} WithChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee? chunkClientProcessingOrderGuarantee)
+        {
+            this._chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
+            if (chunkClientProcessingOrderGuarantee != null)
+            {
+                this.QueryParams.Add("chunkClientProcessingOrderGuarantee", BuildChunkOrderingEnumString(chunkClientProcessingOrderGuarantee.Value));
+            }
+            else
+            {
+                this.QueryParams.Remove("chunkClientProcessingOrderGuarantee");
+            }
             return this;
         }
 
@@ -47,13 +60,6 @@ namespace Ds3.Calls
                         .SetAttributeValueFluent("Offset", partial.Range.Start.ToString())
                         .SetAttributeValueFluent("Length", partial.Range.Length.ToString())
                 );
-            if (this.ChunkClientProcessingOrderGuarantee.HasValue)
-            {
-                root.SetAttributeValue(
-                    "ChunkClientProcessingOrderGuarantee",
-                    BuildChunkOrderingEnumString(this.ChunkClientProcessingOrderGuarantee.Value)
-                );
-            }
             return new XDocument().AddFluent(root).WriteToMemoryStream();
         }
 
