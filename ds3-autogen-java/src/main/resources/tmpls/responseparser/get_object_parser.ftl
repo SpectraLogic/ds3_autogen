@@ -26,7 +26,7 @@ public class ${name} extends ${parentClass}<${responseName}> {
             final Metadata metadata = new MetadataImpl(this.getResponse().getHeaders());
             final  long objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
             download(objectSize, this.getResponse());
-            return new GetObjectResponse(this.getChecksum(), this.getChecksumType(), metadata, objectSize);
+            return new GetObjectResponse(metadata, objectSize, this.getChecksum(), this.getChecksumType());
         }
 
         throw ResponseParserUtils.createFailedRequest(response, expectedStatusCodes);

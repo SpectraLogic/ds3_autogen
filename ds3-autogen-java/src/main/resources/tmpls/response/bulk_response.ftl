@@ -6,6 +6,6 @@ package ${packageName};
 
 public class ${name} extends ${parentClass} {
     public ${name}(${constructorParams}) {
-        super(masterObjectListResult);
+        super(masterObjectListResult, checksum, checksumType);
     }
 }

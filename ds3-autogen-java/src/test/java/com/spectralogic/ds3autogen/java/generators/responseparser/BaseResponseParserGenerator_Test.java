@@ -52,7 +52,7 @@ public class BaseResponseParserGenerator_Test {
     public void toResponseCodes_Test() {
         final String expectedProcessingCode = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final DefaultType result = XmlOutput.fromXml(inputStream, DefaultType.class);\n" +
-                "                    return new TestResponse(result);\n" +
+                "                    return new TestResponse(result, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
 
         final ImmutableList<Ds3ResponseType> defaultResponseType = ImmutableList.of(
@@ -171,7 +171,7 @@ public class BaseResponseParserGenerator_Test {
     @Test
     public void toResponseCode_EmptyResponse_Test() {
         final String expected = "//There is no payload, return an empty response handler\n" +
-                "                return new TestResponse();\n";
+                "                return new TestResponse(this.getChecksum(), this.getChecksumType());\n";
         final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse", false, false);
         assertThat(result.getCode(), is(200));
         assertThat(result.getProcessingCode(), is(expected));
@@ -180,7 +180,7 @@ public class BaseResponseParserGenerator_Test {
     @Test
     public void toResponseCode_NullResponse_Test() {
         final String expected = "//There is no payload associated with this code, return a null response\n" +
-                "                return new TestResponse(null);\n";
+                "                return new TestResponse(null, this.getChecksum(), this.getChecksumType());\n";
         final ResponseCode result = toResponseCode(getNullResponseCode(), "TestResponse", true, false);
         assertThat(result.getCode(), is(200));
         assertThat(result.getProcessingCode(), is(expected));
@@ -190,7 +190,7 @@ public class BaseResponseParserGenerator_Test {
     public void toResponseCode_StringResponse_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);\n" +
-                "                    return new TestResponse(result);\n" +
+                "                    return new TestResponse(result, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final ResponseCode result = toResponseCode(getStringResponseCode(), "TestResponse", true, false);
         assertThat(result.getCode(), is(201));
@@ -201,7 +201,7 @@ public class BaseResponseParserGenerator_Test {
     public void toResponseCode_BaseResponse_Test() {
         final String expected = "try (final InputStream inputStream = response.getResponseStream()) {\n" +
                 "                    final Type result = XmlOutput.fromXml(inputStream, Type.class);\n" +
-                "                    return new TestResponse(result);\n" +
+                "                    return new TestResponse(result, this.getChecksum(), this.getChecksumType());\n" +
                 "                }\n";
         final ResponseCode result = toResponseCode(getBaseResponseCode(), "TestResponse", true, false);
         assertThat(result.getCode(), is(202));

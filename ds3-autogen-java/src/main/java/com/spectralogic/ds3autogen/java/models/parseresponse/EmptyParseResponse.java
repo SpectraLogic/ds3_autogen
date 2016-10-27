@@ -44,8 +44,8 @@ public class EmptyParseResponse implements ParseResponse {
 
     private static String getConstructorParams(final boolean hasPaginationHeaders) {
         if (hasPaginationHeaders) {
-            return "pagingTotalResultCount, pagingTruncated";
+            return "pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType()";
         }
-        return "";
+        return "this.getChecksum(), this.getChecksumType()";
     }
 }

@@ -456,9 +456,6 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("response/bulk_response.ftl");
         }
-        if (isGetObjectAmazonS3Request(ds3Request)) {
-            return config.getTemplate("response/get_object_response.ftl");
-        }
         //This should be the last test so that it does not overwrite any special cased templates
         if (supportsPaginationRequest(ds3Request)) {
             return config.getTemplate("response/pagination_response.ftl");

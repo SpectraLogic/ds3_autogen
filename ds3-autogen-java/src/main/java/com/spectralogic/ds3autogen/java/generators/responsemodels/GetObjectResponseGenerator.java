@@ -43,24 +43,6 @@ public class GetObjectResponseGenerator extends BaseResponseGenerator {
     }
 
     /**
-     * Converts a list of Arguments into a comma-separated list of parameters
-     */
-    @Override
-    public String toConstructorParams(final ImmutableList<Arguments> params) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        if (hasContent(params)) {
-            builder.addAll(params);
-        }
-        builder.add(new Arguments("String", "Checksum"));
-        builder.add(new Arguments("ChecksumType.Type", "ChecksumType"));
-
-        return builder.build().stream()
-                .sorted(new CustomArgumentComparator())
-                .map(i -> "final " + i.getType() + " " + uncapFirst(i.getName()))
-                .collect(Collectors.joining(", "));
-    }
-
-    /**
      * Gets the imports for: parent class, checksum type, and metadata
      */
     @Override

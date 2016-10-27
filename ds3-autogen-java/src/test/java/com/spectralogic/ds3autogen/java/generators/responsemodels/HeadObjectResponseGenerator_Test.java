@@ -31,9 +31,10 @@ public class HeadObjectResponseGenerator_Test {
     @Test
     public void getAllImports_Test() {
         final ImmutableSet<String> result = generator.getAllImports(null);
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertThat(result, hasItem("com.spectralogic.ds3client.networking.Metadata"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
+        assertThat(result, hasItem("com.spectralogic.ds3client.models.ChecksumType"));
     }
 
     @Test

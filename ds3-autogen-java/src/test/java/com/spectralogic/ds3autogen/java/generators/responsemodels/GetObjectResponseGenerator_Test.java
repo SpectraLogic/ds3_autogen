@@ -39,24 +39,46 @@ public class GetObjectResponseGenerator_Test {
 
     @Test
     public void toConstructorParams_NullList_Test() {
-        final String expected = "final String checksum, final ChecksumType.Type checksumType";
+        final String expected = "";
         assertThat(generator.toConstructorParams(null), is(expected));
     }
 
     @Test
     public void toConstructorParams_EmptyList_Test() {
-        final String expected = "final String checksum, final ChecksumType.Type checksumType";
+        final String expected = "";
         assertThat(generator.toConstructorParams(ImmutableList.of()), is(expected));
     }
 
     @Test
     public void toConstructorParams_FullList_Test() {
-        final String expected = "final String checksum, final ChecksumType.Type checksumType, final Metadata metadata, final long objectSize";
+        final String expected = "final Metadata metadata, final long objectSize";
         final ImmutableList<Arguments> args = ImmutableList.of(
                 new Arguments("Metadata", "Metadata"),
                 new Arguments("long", "ObjectSize"));
 
         assertThat(generator.toConstructorParams(args), is(expected));
+    }
+
+    @Test
+    public void toConstructorParamsWithChecksum_NullList_Test() {
+        final String expected = "final String checksum, final ChecksumType.Type checksumType";
+        assertThat(generator.toConstructorParamsWithChecksum(null), is(expected));
+    }
+
+    @Test
+    public void toConstructorParamsWithChecksum_EmptyList_Test() {
+        final String expected = "final String checksum, final ChecksumType.Type checksumType";
+        assertThat(generator.toConstructorParamsWithChecksum(ImmutableList.of()), is(expected));
+    }
+
+    @Test
+    public void toConstructorParamsWithChecksum_FullList_Test() {
+        final String expected = "final Metadata metadata, final long objectSize, final String checksum, final ChecksumType.Type checksumType";
+        final ImmutableList<Arguments> args = ImmutableList.of(
+                new Arguments("Metadata", "Metadata"),
+                new Arguments("long", "ObjectSize"));
+
+        assertThat(generator.toConstructorParamsWithChecksum(args), is(expected));
     }
 
     @Test
