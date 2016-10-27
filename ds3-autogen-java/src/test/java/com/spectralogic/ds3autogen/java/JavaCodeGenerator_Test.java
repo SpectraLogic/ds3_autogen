@@ -57,7 +57,7 @@ public class JavaCodeGenerator_Test {
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(BulkRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(BulkRequestGenerator.class));
-        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(ObjectsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(CreateObjectRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(CreateNotificationRequestGenerator.class));
