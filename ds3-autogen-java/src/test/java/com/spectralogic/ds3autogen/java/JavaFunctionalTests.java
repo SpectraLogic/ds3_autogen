@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1232,7 +1232,7 @@ public class JavaFunctionalTests {
                 "                request.getChannel(),\n" +
                 "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
                 "                request.getObjectName())\n" +
-                "                .startResponse(this.netClient.getResponse(request));"));
+                "                .response(this.netClient.getResponse(request));"));
 
         //Test the response parser
         final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
