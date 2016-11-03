@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1176,6 +1176,8 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.common.Range", requestGeneratedCode));
         assertTrue(hasImport("org.apache.http.entity.ContentType", requestGeneratedCode));
+        assertTrue(hasImport("java.io.OutputStream", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.channels.Channels", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.WritableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.util.Collection", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
@@ -1200,6 +1202,15 @@ public class JavaFunctionalTests {
         builder.add(new Arguments("long", "Offset"));
         assertTrue(hasConstructor(requestName, builder.build(), requestGeneratedCode));
         assertTrue(hasConstructor(requestName, modifyType(builder.build(), "UUID", "String"), requestGeneratedCode));
+
+        final ImmutableList<Arguments> streamConstructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("OutputStream", "Stream"),
+                new Arguments("UUID", "Job"),
+                new Arguments("long", "Offset"));
+        assertTrue(hasConstructor(requestName, streamConstructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructor(requestName, modifyType(streamConstructorArgs, "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"job\", job.toString())"));
         assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"offset\", Long.toString(offset))"));

@@ -24,7 +24,8 @@ import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.GetObjectRequestGenerator.createDeprecatedConstructor;
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.GetObjectRequestGenerator.createRegularConstructor;
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.GetObjectRequestGenerator.createChannelConstructor;
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.GetObjectRequestGenerator.createOutputStreamConstructor;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestAmazonS3GetObject;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,13 +40,12 @@ public class GetObjectRequestGenerator_Test {
         final Ds3Request request = createSimpleTestDs3Request();
 
         final ImmutableList<Arguments> result = generator.toConstructorArgumentsList(request);
-        assertThat(result.size(), is(6));
+        assertThat(result.size(), is(5));
         assertThat(result.get(0).getName(), is("BucketName"));
         assertThat(result.get(1).getName(), is("ObjectName"));
         assertThat(result.get(2).getName(), is("JobId"));
-        assertThat(result.get(3).getName(), is("Channel"));
-        assertThat(result.get(4).getName(), is("Priority"));
-        assertThat(result.get(5).getName(), is("NotificationEndPoint"));
+        assertThat(result.get(3).getName(), is("Priority"));
+        assertThat(result.get(4).getName(), is("NotificationEndPoint"));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class GetObjectRequestGenerator_Test {
         final Ds3Request request = getRequestAmazonS3GetObject();
 
         final ImmutableList<RequestConstructor> result = generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl());
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
 
         //Deprecated Constructor
         final RequestConstructor constructor1 = result.get(0);
@@ -75,7 +75,7 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<QueryParam> queryParams1 = constructor1.getQueryParams();
         assertThat(queryParams1.size(), is(0));
 
-        //Regular Constructor
+        //Channel Constructor
         final RequestConstructor constructor2 = result.get(1);
         assertThat(constructor2.isDeprecated(), is(false));
         assertThat(constructor2.getAdditionalLines().size(), is(0));
@@ -84,22 +84,49 @@ public class GetObjectRequestGenerator_Test {
         assertThat(constructorParams2.size(), is(5));
         assertThat(constructorParams2.get(0).getName(), is("BucketName"));
         assertThat(constructorParams2.get(1).getName(), is("ObjectName"));
-        assertThat(constructorParams2.get(2).getName(), is("Channel"));
-        assertThat(constructorParams2.get(3).getName(), is("Job"));
-        assertThat(constructorParams2.get(4).getName(), is("Offset"));
+        assertThat(constructorParams2.get(2).getName(), is("Job"));
+        assertThat(constructorParams2.get(3).getName(), is("Offset"));
+        assertThat(constructorParams2.get(4).getName(), is("Channel"));
 
         final ImmutableList<Arguments> constructorAssignments2 = constructor2.getAssignments();
         assertThat(constructorAssignments2.size(), is(5));
         assertThat(constructorAssignments2.get(0).getName(), is("BucketName"));
         assertThat(constructorAssignments2.get(1).getName(), is("ObjectName"));
-        assertThat(constructorAssignments2.get(2).getName(), is("Channel"));
-        assertThat(constructorAssignments2.get(3).getName(), is("Job"));
-        assertThat(constructorAssignments2.get(4).getName(), is("Offset"));
+        assertThat(constructorAssignments2.get(2).getName(), is("Job"));
+        assertThat(constructorAssignments2.get(3).getName(), is("Offset"));
+        assertThat(constructorAssignments2.get(4).getName(), is("Channel"));
 
         final ImmutableList<QueryParam> queryParams2 = constructor2.getQueryParams();
         assertThat(queryParams2.size(), is(2));
         assertThat(queryParams2.get(0).getName(), is("Job"));
         assertThat(queryParams2.get(1).getName(), is("Offset"));
+
+        //
+        //Channel Constructor
+        final RequestConstructor constructor3 = result.get(2);
+        assertThat(constructor3.isDeprecated(), is(false));
+        assertThat(constructor3.getAdditionalLines().size(), is(1));
+        assertThat(constructor3.getAdditionalLines().get(0), is("this.channel = Channels.newChannel(stream);"));
+
+        final ImmutableList<Arguments> constructorParams3 = constructor3.getParameters();
+        assertThat(constructorParams3.size(), is(5));
+        assertThat(constructorParams3.get(0).getName(), is("BucketName"));
+        assertThat(constructorParams3.get(1).getName(), is("ObjectName"));
+        assertThat(constructorParams3.get(2).getName(), is("Job"));
+        assertThat(constructorParams3.get(3).getName(), is("Offset"));
+        assertThat(constructorParams3.get(4).getName(), is("Stream"));
+
+        final ImmutableList<Arguments> constructorAssignments3 = constructor3.getAssignments();
+        assertThat(constructorAssignments3.size(), is(4));
+        assertThat(constructorAssignments3.get(0).getName(), is("BucketName"));
+        assertThat(constructorAssignments3.get(1).getName(), is("ObjectName"));
+        assertThat(constructorAssignments3.get(2).getName(), is("Job"));
+        assertThat(constructorAssignments3.get(3).getName(), is("Offset"));
+
+        final ImmutableList<QueryParam> queryParams3 = constructor3.getQueryParams();
+        assertThat(queryParams3.size(), is(2));
+        assertThat(queryParams3.get(0).getName(), is("Job"));
+        assertThat(queryParams3.get(1).getName(), is("Offset"));
     }
 
     @Test
@@ -114,12 +141,14 @@ public class GetObjectRequestGenerator_Test {
         assertThat(result.getAdditionalLines().size(), is(0));
 
         final ImmutableList<Arguments> params = result.getParameters();
-        assertThat(params.size(), is(1));
+        assertThat(params.size(), is(2));
         assertThat(params.get(0).getName(), is("Arg1"));
+        assertThat(params.get(1).getName(), is("Channel"));
 
         final ImmutableList<Arguments> assignments = result.getAssignments();
-        assertThat(assignments.size(), is(1));
+        assertThat(assignments.size(), is(2));
         assertThat(assignments.get(0).getName(), is("Arg1"));
+        assertThat(assignments.get(1).getName(), is("Channel"));
 
         final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(1));
@@ -128,7 +157,7 @@ public class GetObjectRequestGenerator_Test {
 
     @Test
     public void createRegularConstructor_Test() {
-        final RequestConstructor result = createRegularConstructor(
+        final RequestConstructor result = createChannelConstructor(
                 ImmutableList.of(new Arguments("Type", "Arg1")),
                 ImmutableList.of(new Arguments("Type", "Arg2")),
                 ImmutableList.of(new QueryParam("Type", "Arg3")),
@@ -139,14 +168,46 @@ public class GetObjectRequestGenerator_Test {
         assertThat(result.getAdditionalLines().size(), is(0));
 
         final ImmutableList<Arguments> params = result.getParameters();
-        assertThat(params.size(), is(2));
+        assertThat(params.size(), is(3));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Arg2"));
+        assertThat(params.get(2).getName(), is("Channel"));
 
         final ImmutableList<Arguments> assignments = result.getAssignments();
-        assertThat(assignments.size(), is(2));
+        assertThat(assignments.size(), is(3));
         assertThat(assignments.get(0).getName(), is("Arg1"));
         assertThat(assignments.get(1).getName(), is("Arg2"));
+        assertThat(assignments.get(2).getName(), is("Channel"));
+
+        final ImmutableList<QueryParam> queryParams = result.getQueryParams();
+        assertThat(queryParams.size(), is(2));
+        assertThat(queryParams.get(0).getName(), is("Arg3"));
+        assertThat(queryParams.get(1).getName(), is("Arg2"));
+    }
+
+    @Test
+    public void createOutputStreamConstructor_Test() {
+        final RequestConstructor result = createOutputStreamConstructor(
+                ImmutableList.of(new Arguments("Type", "Arg1")),
+                ImmutableList.of(new Arguments("Type", "Arg2")),
+                ImmutableList.of(new QueryParam("Type", "Arg3")),
+                "",
+                new Ds3DocSpecEmptyImpl());
+
+        assertThat(result.isDeprecated(), is(false));
+        assertThat(result.getAdditionalLines().size(), is(1));
+        assertThat(result.getAdditionalLines().get(0), is("this.channel = Channels.newChannel(stream);"));
+
+        final ImmutableList<Arguments> constructorParams = result.getParameters();
+        assertThat(constructorParams.size(), is(3));
+        assertThat(constructorParams.get(0).getName(), is("Arg1"));
+        assertThat(constructorParams.get(1).getName(), is("Arg2"));
+        assertThat(constructorParams.get(2).getName(), is("Stream"));
+
+        final ImmutableList<Arguments> constructorAssignments = result.getAssignments();
+        assertThat(constructorAssignments.size(), is(2));
+        assertThat(constructorAssignments.get(0).getName(), is("Arg1"));
+        assertThat(constructorAssignments.get(1).getName(), is("Arg2"));
 
         final ImmutableList<QueryParam> queryParams = result.getQueryParams();
         assertThat(queryParams.size(), is(2));
