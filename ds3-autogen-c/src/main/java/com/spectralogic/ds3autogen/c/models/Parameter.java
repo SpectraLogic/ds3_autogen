@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -23,17 +23,28 @@ public class Parameter {
     private final String name;
     private final ParameterPointerType parameterPointerType; // *, **, &
     private final boolean isRequired;
+    private final String documentation;
+
+    public Parameter(final ParameterModifier typeModifier,
+                     final String parameterType,
+                     final String name,
+                     final ParameterPointerType parameterPointerType,
+                     final boolean isRequired,
+                     final String documentation) {
+        this.parameterType = parameterType;
+        this.typeModifier = typeModifier;
+        this.name = name;
+        this.parameterPointerType = parameterPointerType;
+        this.isRequired = isRequired;
+        this.documentation = documentation;
+    }
 
     public Parameter(final ParameterModifier typeModifier,
                      final String parameterType,
                      final String name,
                      final ParameterPointerType parameterPointerType,
                      final boolean isRequired) {
-        this.parameterType = parameterType;
-        this.typeModifier = typeModifier;
-        this.name = name;
-        this.parameterPointerType = parameterPointerType;
-        this.isRequired = isRequired;
+        this(typeModifier, parameterType, name, parameterPointerType, isRequired, null);
     }
 
     public String getParameterType() {
@@ -54,6 +65,10 @@ public class Parameter {
 
     public boolean isRequired() {
         return isRequired;
+    }
+
+    public String getDocumentation() {
+        return documentation;
     }
 
     @Override

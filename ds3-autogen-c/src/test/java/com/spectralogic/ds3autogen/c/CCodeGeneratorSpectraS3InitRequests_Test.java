@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.c;
 
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import com.spectralogic.ds3autogen.utils.TestFileUtilsImpl;
 import freemarker.template.TemplateModelException;
@@ -34,7 +35,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3DeleteBucketRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.deleteBucketRequest());
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.deleteBucketRequest(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -54,7 +55,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3PutBucketRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketSpectraS3Request()); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketSpectraS3Request(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -77,7 +78,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     @Test
     public void testGenerateInitSpectraS3GetSystemInfoRequest() throws TemplateModelException, IOException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getSystemInformationRequest()); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getSystemInformationRequest(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -98,7 +99,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3GetBucketsRequest_WithOptionalQueryParams()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsRequest()); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getBucketsRequest(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -119,7 +120,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3RequiredBoolQueryParamOmittedFromFunctionSig()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.exampleRequestWithOptionalAndRequiredBooleanQueryParam());
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.exampleRequestWithOptionalAndRequiredBooleanQueryParam(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
@@ -142,7 +143,7 @@ public class CCodeGeneratorSpectraS3InitRequests_Test {
     public void testGenerateInitSpectraS3CreatePutJobRequest_WithRequiredOperationQueryParam_AndPriorityEnumOptionalQueryParam()
             throws IOException, TemplateModelException {
         final Map<String,Object> testMap = new HashMap<>();
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkPut()); // requiredQueryParams
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.getRequestBulkPut(), new Ds3DocSpecEmptyImpl());
         testMap.put("requestEntry", testRequest);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();

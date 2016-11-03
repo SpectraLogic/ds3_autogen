@@ -20,20 +20,34 @@ import com.google.common.collect.ImmutableList;
 public class Enum {
     private final String name;
     private final ImmutableList<String> values;
+    private final boolean requiresMatcher;
 
     public Enum(
             final String name,
             final ImmutableList<String> values) {
         this.name = name;
         this.values = values;
+        this.requiresMatcher = true;
     }
 
+    public Enum(
+            final String name,
+            final ImmutableList<String> values,
+            final boolean requiresMatcher) {
+        this.name = name;
+        this.values = values;
+        this.requiresMatcher = requiresMatcher;
+    }
     public String getName() {
         return this.name;
     }
 
     public ImmutableList<String> getValues() {
         return values;
+    }
+
+    public boolean requiresMatcher() {
+        return requiresMatcher;
     }
 
     @Override

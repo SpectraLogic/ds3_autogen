@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.Requirement;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
@@ -31,11 +32,13 @@ import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.utils.ConverterUtil;
 import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.InvalidParameterException;
+import java.util.Optional;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -44,7 +47,8 @@ public final class RequestConverter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestConverter.class);
     private static final ImmutableMap<String, Parameter> hasRequestPayload = buildRequestPayloadMap();
 
-    public static Request toRequest(final Ds3Request ds3Request) {
+
+    public static Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final String requestName = RequestHelper.getNameRootUnderscores(ds3Request.getName());
         LOG.debug("Request Name: " + requestName);
         final String responseType = getResponseType(ds3Request.getDs3ResponseCodes());
@@ -55,14 +59,15 @@ public final class RequestConverter {
                 getRequestPath(ds3Request),
                 ds3Request.getOperation(),
                 ds3Request.getAction(),
-                getParamList(responseType),
-                getRequiredQueryParams(ds3Request),
-                getOptionalQueryParams(ds3Request),
+                getParamList(responseType, docSpec),
+                getRequiredQueryParams(ds3Request, docSpec),
+                getOptionalQueryParams(ds3Request, docSpec),
                 isResourceRequired(ds3Request),
                 isResourceIdRequired(ds3Request),
                 hasRequestPayload.get(requestName),
                 responseType,
-                Ds3RequestClassificationUtil.supportsPaginationRequest(ds3Request));
+                Ds3RequestClassificationUtil.supportsPaginationRequest(ds3Request),
+                toRequestDocs(Helper.unqualifiedName(ds3Request.getName()), docSpec));
     }
 
     private static String getRequestPath(final Ds3Request ds3Request) {
@@ -112,7 +117,7 @@ public final class RequestConverter {
 
         return builder.toString();
     }
-    private static ImmutableList<Parameter> getRequiredQueryParams(final Ds3Request ds3Request) {
+    private static ImmutableList<Parameter> getRequiredQueryParams(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Parameter> requiredArgsBuilder = ImmutableList.builder();
 
         if (hasContent(ds3Request.getRequiredQueryParams())) {
@@ -125,7 +130,7 @@ public final class RequestConverter {
                     LOG.debug("\tRequired QueryParam: " + ds3Param.getName() + "=" + ds3Request.getOperation().name());
                     requiredArgsBuilder.add(new Parameter(ParameterModifier.CONST, "operation", ds3Request.getOperation().name(), ParameterPointerType.NONE, true));
                 } else {
-                    final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true);
+                    final Parameter requiredParam = ParameterConverter.toParameter(ds3Param, true, toParamDocs(Helper.unqualifiedName(ds3Param.getName()), docSpec));
                     LOG.debug("\tRequired QueryParam: " + requiredParam.toString());
                     requiredArgsBuilder.add(requiredParam);
                 }
@@ -149,14 +154,14 @@ public final class RequestConverter {
         return requiredArgsBuilder.build();
     }
 
-    private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request) {
+    private static ImmutableList<Parameter> getOptionalQueryParams(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Parameter> optionalArgsBuilder = ImmutableList.builder();
         if (isEmpty(ds3Request.getOptionalQueryParams())) {
             return optionalArgsBuilder.build();
         }
 
         for (final Ds3Param ds3Param : ds3Request.getOptionalQueryParams()) {
-            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, false);
+            final Parameter optionalQueryParam = ParameterConverter.toParameter(ds3Param, false, toParamDocs(Helper.unqualifiedName(ds3Param.getName()), docSpec));
             LOG.debug("\tOptional QueryParam: " + optionalQueryParam.toString());
             optionalArgsBuilder.add(optionalQueryParam);
         }
@@ -209,17 +214,13 @@ public final class RequestConverter {
         return "";
     }
 
-    public static ImmutableList<Parameter> getParamList(final String responseType) {
+    public static ImmutableList<Parameter> getParamList(final String responseType, final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
         builder.add(new Parameter(ParameterModifier.CONST, "ds3_client", "client", ParameterPointerType.SINGLE_POINTER, true));
         builder.add(new Parameter(ParameterModifier.CONST, "ds3_request", "request", ParameterPointerType.SINGLE_POINTER, true));
 
         if (!responseType.isEmpty()) {
-            if (responseType.equalsIgnoreCase("ds3_str")) {
-                builder.add(new Parameter(ParameterModifier.NONE, "ds3_str", "response", ParameterPointerType.DOUBLE_POINTER, true));
-            } else {
-                builder.add(new Parameter(ParameterModifier.NONE, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true));
-            }
+            builder.add(new Parameter(ParameterModifier.NONE, responseType, "response", ParameterPointerType.DOUBLE_POINTER, true, toParamDocs(Helper.underscoreToCamel(responseType), docSpec)));
         }
 
         return builder.build();
@@ -234,8 +235,6 @@ public final class RequestConverter {
         requestPayloadMap.put("verify_bulk_job_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("eject_storage_domain_blobs_spectra_s3_request",
-                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
-        requestPayloadMap.put("eject_storage_domain_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("get_physical_placement_for_objects_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
@@ -258,5 +257,33 @@ public final class RequestConverter {
         requestPayloadMap.put("replicate_put_job_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "char", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
         return requestPayloadMap.build();
+    }
+
+    /**
+     * Retrieves the documentation for the specified Request.
+     * @param requestName The normalized SDK request name with no path
+     */
+    private static String toRequestDocs(
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        final Optional<String> documentation = docSpec.getRequestDocumentation(requestName);
+        return documentation.orElseGet(() -> {
+            LOG.debug("Cannot generate java documentation for request because there is no documentation descriptor: {}", requestName);
+            return "";
+        });
+    }
+
+    /**
+     * Retrieves the documentation for the specified Parameter.
+     * @param paramName The normalized SDK parameter name with no path
+     */
+    public static String toParamDocs(
+            final String paramName,
+            final Ds3DocSpec docSpec) {
+        final Optional<String> documentation = docSpec.getParamDocumentation(paramName);
+        return documentation.orElseGet(() -> {
+            LOG.debug("Cannot generate documentation for param because there is no documentation descriptor: {}", paramName);
+            return "";
+        });
     }
 }

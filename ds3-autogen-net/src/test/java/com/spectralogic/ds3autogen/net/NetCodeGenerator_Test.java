@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 public class NetCodeGenerator_Test {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -704,15 +704,13 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
+        assertFalse(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "BucketId", "Guid", requestCode));
 
-        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("Guid", "StorageDomainId"),
-                new Arguments("IEnumerable<Ds3Object>", "Objects"));
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("Guid", "StorageDomainId"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
         assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 

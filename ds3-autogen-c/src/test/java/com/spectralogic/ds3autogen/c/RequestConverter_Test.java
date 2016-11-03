@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -17,14 +17,21 @@ package com.spectralogic.ds3autogen.c;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.c.converters.ParameterConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
 import com.spectralogic.ds3autogen.c.models.Request;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
 import com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -53,15 +60,15 @@ public class RequestConverter_Test {
     }
 
     @Test
-    public void testGetRequestParameterListNoResponseType() {
-        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("");
+    public void testGetRequestParameterListNoResponseType() throws IOException {
+        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("", new Ds3DocSpecEmptyImpl());
         assertEquals(paramList.size(), 2);
         assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request");
     }
 
     @Test
-    public void testGetRequestParameterListWithResponseType() {
-        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response");
+    public void testGetRequestParameterListWithResponseType() throws IOException {
+        final ImmutableList<Parameter> paramList = RequestConverter.getParamList("ds3_get_service_response", new Ds3DocSpecEmptyImpl());
         assertEquals(paramList.size(), 3);
         assertEquals(RequestHelper.paramListToString(paramList), "const ds3_client* client, const ds3_request* request, ds3_get_service_response** response");
     }
@@ -79,9 +86,51 @@ public class RequestConverter_Test {
     }
 
     @Test
+    public void testRequestPayloadMapDoesNotContainEjectStorageDomain() {
+        final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
+        assertEquals(requestPayloadMap.get("eject_storage_domain_spectra_s3_request"), null);
+    }
+
+    @Test
     public void testConvertDs3RequestWithoutRequestPayload() {
-        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest());
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest(), new Ds3DocSpecEmptyImpl());
         assertFalse(testRequest.hasRequestPayload());
         assertEquals(testRequest.getRequestPayload(), null);
+    }
+
+    private static Ds3DocSpec getTestDocSpec() {
+        return new Ds3DocSpecImpl(
+                ImmutableMap.of(
+                        "TestRequest", "This is how you use test request",
+                        "CreateBucketRequestHandler", "This is how you use create bucket",
+                        "GetObjectRequestHandler", "This is how you use get object"),
+                ImmutableMap.of(
+                        "BucketName", "This is how you use bucket name",
+                        "ParamOne", "This is how you use delimiter",
+                        "ParamTwo", "This is how you use marker"));
+    }
+
+    @Test
+    public void testConvertDs3RequestWithDocumentation() {
+        final Ds3DocSpec docSpec = getTestDocSpec();
+        final Request testRequest = RequestConverter.toRequest(Ds3ModelFixtures.createBucketRequest(), docSpec);
+
+        assertEquals(testRequest.getDocumentation(), "This is how you use create bucket");
+    }
+
+    @Test
+    public void testConvertDs3ParameterWithDocumentation() {
+        final Ds3DocSpec docSpec = getTestDocSpec();
+        final String paramName = "BucketName";
+        final Ds3Param testDs3Param = new Ds3Param(paramName, "Ds3Bucket", false);
+        final Parameter testParameter = ParameterConverter.toParameter(testDs3Param, true, RequestConverter.toParamDocs(paramName, docSpec));
+
+        assertEquals(testParameter.getDocumentation(), "This is how you use bucket name");
+    }
+
+    @Test
+    public void testEjectStorageDomainHasNoPayload() {
+        final Request ejectStorageDomainRequest = RequestConverter.toRequest(Ds3ModelFixtures.getEjectStorageDomainRequest(), new Ds3DocSpecEmptyImpl());
+        assertFalse(ejectStorageDomainRequest.hasRequestPayload());
     }
 }

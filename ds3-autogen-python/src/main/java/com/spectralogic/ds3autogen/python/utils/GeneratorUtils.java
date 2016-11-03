@@ -111,7 +111,7 @@ public final class GeneratorUtils {
      * Determines if the Ds3Request has a request payload of type FileObjectList
      */
     public static boolean hasFileObjectListPayload(final Ds3Request ds3Request) {
-        return hasRequiredFileObjectListPayload(ds3Request) || isEjectStorageDomainRequest(ds3Request);
+        return hasRequiredFileObjectListPayload(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request);
     }
 
     /**

@@ -50,6 +50,7 @@ public class PythonCodeGenerator_Test {
     @Test
     public void getRequestGenerator_Test() {
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(BaseRequestGenerator.class));
 
         assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(PutObjectRequestGenerator.class));
 
@@ -62,7 +63,7 @@ public class PythonCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(ObjectsPayloadGenerator.class));
     }
