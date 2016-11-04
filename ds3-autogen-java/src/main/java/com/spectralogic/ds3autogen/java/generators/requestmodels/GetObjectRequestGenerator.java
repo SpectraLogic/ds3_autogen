@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.java.models.Variable;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
@@ -32,17 +33,21 @@ import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequired
 public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
     /**
-     * Gets the list of Arguments needed to create the request constructor. This
-     * includes all non-void required parameters, arguments described within
-     * the request header, and the Channel argument
+     * Gets all the class variables to properly generate the variables and their
+     * getter functions. This consists of all constructor arguments and optional
+     * arguments being converted into variables, including the Channel variable.
      */
     @Override
-    public ImmutableList<Arguments> toConstructorArgumentsList(
-            final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
-        builder.add(new Arguments("WritableByteChannel", "Channel"));
-        builder.addAll(removeVoidArguments(toArgumentsList(ds3Request.getRequiredQueryParams())));
+    public ImmutableList<Variable> toClassVariableArguments(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Variable> builder = ImmutableList.builder();
+        builder.add(new Variable("Channel", "WritableByteChannel", true));
+
+        for (final Arguments arg : toConstructorArgumentsList(ds3Request)) {
+            builder.add(new Variable(arg.getName(), arg.getType(), true));
+        }
+        for (final Arguments arg : toOptionalArgumentsList(ds3Request.getOptionalQueryParams())) {
+            builder.add(new Variable(arg.getName(), arg.getType(), false));
+        }
         return builder.build();
     }
 
@@ -71,7 +76,15 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         }
 
         constructorBuilder.add(
-                createRegularConstructor(
+                createChannelConstructor(
+                        constructorArgs,
+                        optionalArgs,
+                        queryParams,
+                        requestName,
+                        docSpec));
+
+        constructorBuilder.add(
+                createOutputStreamConstructor(
                         constructorArgs,
                         optionalArgs,
                         queryParams,
@@ -89,24 +102,28 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
             final ImmutableList<QueryParam> queryParams,
             final String requestName,
             final Ds3DocSpec docSpec) {
+        final ImmutableList.Builder<Arguments> constructorArgBuilder = ImmutableList.builder();
+        constructorArgBuilder.addAll(constructorArgs);
+        constructorArgBuilder.add(new Arguments("WritableByteChannel", "Channel"));
 
-        final ImmutableList<String> argNames = constructorArgs.stream()
+        final ImmutableList<Arguments> updatedConstructorArgs = constructorArgBuilder.build();
+        final ImmutableList<String> argNames = updatedConstructorArgs.stream()
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
         return new RequestConstructor(
                 true,
                 ImmutableList.of(),
-                constructorArgs,
-                constructorArgs,
+                updatedConstructorArgs,
+                updatedConstructorArgs,
                 queryParams,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
     /**
-     * Creates the regular constructor for the get object request
+     * Creates the constructor for the get object request that uses WritableByteChannel
      */
-    protected static RequestConstructor createRegularConstructor(
+    protected static RequestConstructor createChannelConstructor(
             final ImmutableList<Arguments> constructorArgs,
             final ImmutableList<Arguments> optionalArgs,
             final ImmutableList<QueryParam> queryParams,
@@ -115,6 +132,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         final ImmutableList.Builder<Arguments> constructorArgBuilder = ImmutableList.builder();
         constructorArgBuilder.addAll(constructorArgs);
         constructorArgBuilder.addAll(optionalArgs);
+        constructorArgBuilder.add(new Arguments("WritableByteChannel", "Channel"));
 
         final ImmutableList.Builder<QueryParam> queryParamsBuilder = ImmutableList.builder();
         queryParamsBuilder.addAll(queryParams);
@@ -129,6 +147,45 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         return new RequestConstructor(
                 updatedConstructorArgs,
                 updatedConstructorArgs,
+                queryParamsBuilder.build(),
+                toConstructorDocs(requestName, argNames, docSpec, 1));
+    }
+
+    /**
+     * Creates the constructor for the get object request that uses OutputStream
+     */
+    protected static RequestConstructor createOutputStreamConstructor(
+            final ImmutableList<Arguments> constructorArgs,
+            final ImmutableList<Arguments> optionalArgs,
+            final ImmutableList<QueryParam> queryParams,
+            final String requestName,
+            final Ds3DocSpec docSpec) {
+        final ImmutableList.Builder<Arguments> constructorArgBuilder = ImmutableList.builder();
+        constructorArgBuilder.addAll(constructorArgs);
+        constructorArgBuilder.addAll(optionalArgs);
+        constructorArgBuilder.add(new Arguments("OutputStream", "Stream"));
+
+        final ImmutableList.Builder<QueryParam> queryParamsBuilder = ImmutableList.builder();
+        queryParamsBuilder.addAll(queryParams);
+        queryParamsBuilder.addAll(argsToQueryParams(optionalArgs));
+
+        final ImmutableList.Builder<Arguments> assignmentsBuilder = ImmutableList.builder();
+        assignmentsBuilder.addAll(constructorArgs);
+        assignmentsBuilder.addAll(optionalArgs);
+
+        final ImmutableList<Arguments> updatedConstructorArgs = constructorArgBuilder.build();
+
+        final ImmutableList<String> argNames = updatedConstructorArgs.stream()
+                .map(Arguments::getName)
+                .collect(GuavaCollectors.immutableList());
+
+        final ImmutableList<String> additionalLines = ImmutableList.of("this.channel = Channels.newChannel(stream);");
+
+        return new RequestConstructor(
+                false,
+                additionalLines,
+                updatedConstructorArgs,
+                assignmentsBuilder.build(),
                 queryParamsBuilder.build(),
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
