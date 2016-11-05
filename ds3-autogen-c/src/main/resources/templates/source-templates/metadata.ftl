@@ -93,7 +93,7 @@ ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* _metadata, const 
         return NULL;
     }
     copy = g_new0(ds3_metadata_entry, 1);
-    metadata_copy = g_new0(ds3_str*, orig->num_values);
+    metadata_copy = g_new0(ds3_str*, (gsize)orig->num_values);
 
     for (i = 0; i < orig->num_values; i++) {
         metadata_copy[i] = ds3_str_dup(orig->values[i]);

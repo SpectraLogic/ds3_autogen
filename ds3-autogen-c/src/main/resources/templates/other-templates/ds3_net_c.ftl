@@ -56,7 +56,7 @@ char* escape_url(const char* url) {
     return escaped_url;
 }
 
-// Like escape_url but don't encode "/".
+// Like escape_url but don't encode the given delimiters.
 char* escape_url_extended(const char* url, const char** delimiters, uint32_t num_delimiters) {
     gchar** split = g_strsplit(url, delimiters[num_delimiters-1], 0);
     gchar** ptr;
@@ -244,7 +244,7 @@ static char* _canonicalize_amz_headers(GHashTable* headers) {
     GPtrArray *signing_strings = g_ptr_array_new_with_free_func(g_free);  // stores char*
     GString* header_signing_value;
     char* signing_value;
-    int i;
+    unsigned int i;
 
     while(key != NULL) {
         if(g_str_has_prefix((char*)key->data, "x-amz")){
@@ -515,19 +515,6 @@ ds3_error* net_process_request(const ds3_client* client,
 
             ds3_log_message(client->log, DS3_DEBUG, "Request completed with status code of: %d", response_data.status_code);
 
-            if (response_data.status_code == 307) {
-                ds3_log_message(client->log, DS3_INFO, "Request encountered a 307 redirect");
-                ds3_str_free(response_data.status_message);
-
-                if (response_data.body != NULL) {
-                    g_byte_array_free(response_data.body, TRUE);
-                }
-                ds3_string_multimap_free(response_headers);
-                retry_count++;
-                ds3_log_message(client->log, DS3_DEBUG, "Retry Attempt: %d | Max Retries: %d", retry_count, client->num_redirects);
-                continue;
-            }
-
             if (response_data.status_code < 200 || response_data.status_code >= 300) {
                 ds3_error* error = ds3_create_error(DS3_ERROR_BAD_STATUS_CODE, "Got an unexpected status code.");
                 error->error = g_new0(ds3_error_response, 1);
@@ -543,6 +530,21 @@ ds3_error* net_process_request(const ds3_client* client,
                 ds3_string_multimap_free(response_headers);
                 ds3_str_free(response_data.status_message);
                 g_free(url);
+
+                if (response_data.status_code == 307) {
+                    ds3_log_message(client->log, DS3_INFO, "Request encountered a 307 redirect");
+
+                    retry_count++;
+                    ds3_log_message(client->log, DS3_DEBUG, "Retry Attempt: %d | Max Retries: %d", retry_count, client->num_redirects);
+
+                    if (retry_count == client->num_redirects) {
+                        ds3_str_free(error->message);
+                        error->message = ds3_str_init("Encountered too many redirects while attempting to fulfill the request");
+                        error->code = DS3_ERROR_TOO_MANY_REDIRECTS;
+                    } else {
+                        continue;
+                    }
+                }
                 return error;
             }
             g_byte_array_free(response_data.body, TRUE);
@@ -561,9 +563,6 @@ ds3_error* net_process_request(const ds3_client* client,
     }
     g_free(url);
 
-    if (retry_count == client->num_redirects) {
-      return ds3_create_error(DS3_ERROR_TOO_MANY_REDIRECTS, "Encountered too many redirects while attempting to fulfill the request");
-    }
     return NULL;
 }
 
