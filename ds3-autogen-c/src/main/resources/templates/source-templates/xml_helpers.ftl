@@ -71,7 +71,7 @@ static ds3_bool xml_get_bool(const ds3_log* log, xmlDocPtr doc, const xmlNodePtr
     return result;
 }
 
-static uint64_t xml_get_bool_from_attribute(const ds3_log* log, xmlDocPtr doc, struct _xmlAttr* attribute) {
+static ds3_bool xml_get_bool_from_attribute(const ds3_log* log, xmlDocPtr doc, struct _xmlAttr* attribute) {
     return xml_get_bool(log, doc, (xmlNodePtr) attribute);
 }
 
