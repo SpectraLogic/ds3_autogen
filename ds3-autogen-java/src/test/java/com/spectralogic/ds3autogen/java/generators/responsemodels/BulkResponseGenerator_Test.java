@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,70 +15,18 @@
 
 package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
-import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.test.helpers.BaseResponseGeneratorTestHelper.createPopulatedResponseCode;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class BulkResponseGenerator_Test {
 
-    private final static BulkResponseGenerator generator = new BulkResponseGenerator();
+    private static final BulkResponseGenerator generator = new BulkResponseGenerator();
 
     @Test
     public void getParentImport_Test() {
-        final String expected = "com.spectralogic.ds3client.commands.interfaces.BulkResponse";
-        assertThat(generator.getParentImport(createEmptyDs3Request()), is(expected));
-    }
-
-    @Test
-    public void getAllImports_NullList_Test() {
-        final ImmutableList<String> result = generator.getAllImports(
-                createEmptyDs3Request(),
-                null,
-                "com.spectralogic.ds3client.commands.spectrads3");
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getAllImports_EmptyList_Test() {
-        final ImmutableList<String> result = generator.getAllImports(
-                createEmptyDs3Request(),
-                ImmutableList.of(),
-                "com.spectralogic.ds3client.commands.spectrads3");
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void getAllImports_SpectraS3_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                createPopulatedResponseCode(""),
-                createPopulatedResponseCode("_v1"));
-
-        final ImmutableList<String> result = generator.getAllImports(
-                createEmptyDs3Request(),
-                responseCodes,
-                "com.spectralogic.ds3client.commands.spectrads3");
-        assertThat(result.size(), is(1));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
-    }
-
-    @Test
-    public void getAllImports_NonSpectraS3_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                createPopulatedResponseCode(""),
-                createPopulatedResponseCode("_v1"));
-
-        final ImmutableList<String> result = generator.getAllImports(
-                createEmptyDs3Request(),
-                responseCodes,
-                "com.spectralogic.ds3client.commands");
-        assertThat(result.size(), is(1));
-        assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
+        assertThat(generator.getParentImport(),
+                is("com.spectralogic.ds3client.commands.interfaces.BulkResponse"));
     }
 }

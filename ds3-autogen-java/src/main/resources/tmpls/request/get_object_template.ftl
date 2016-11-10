@@ -8,10 +8,13 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.common.Range;
 import org.apache.http.entity.ContentType;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 <#include "../imports.ftl"/>
 <#include "common/checksum_import.ftl"/>
+
 
 public class ${name} extends ${parentClass} {
 

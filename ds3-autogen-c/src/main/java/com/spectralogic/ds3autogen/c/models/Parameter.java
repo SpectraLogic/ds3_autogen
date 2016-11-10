@@ -44,7 +44,7 @@ public class Parameter {
                      final String name,
                      final ParameterPointerType parameterPointerType,
                      final boolean isRequired) {
-        this( typeModifier, parameterType, name, parameterPointerType, isRequired, null);
+        this(typeModifier, parameterType, name, parameterPointerType, isRequired, null);
     }
 
     public String getParameterType() {

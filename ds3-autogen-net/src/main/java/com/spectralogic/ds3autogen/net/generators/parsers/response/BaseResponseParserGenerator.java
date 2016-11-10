@@ -23,6 +23,7 @@ import com.spectralogic.ds3autogen.net.model.parser.BaseParser;
 import static com.spectralogic.ds3autogen.net.utils.GeneratorUtils.toModelParserName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseParserName;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getPayloadResponseCode;
 
@@ -30,7 +31,7 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
 
     @Override
     public BaseParser generate(final Ds3Request ds3Request, final String responsePayloadType, final String nameToMarshal) {
-        final String parserName = getParserName(ds3Request.getName());
+        final String parserName = toResponseParserName(ds3Request.getName());
         final String requestName = removePath(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
         final String netNameToMarshal = toNameToMarshal(nameToMarshal, responsePayloadType);
@@ -55,13 +56,6 @@ public class BaseResponseParserGenerator implements ResponseParserModelGenerator
             return "Data";
         }
         return nameToMarshal;
-    }
-
-    /**
-     * Creates the name of the response parser
-     */
-    protected static String getParserName(final String requestName) {
-        return removePath(requestName.replace("Request", "ResponseParser"));
     }
 
     /**

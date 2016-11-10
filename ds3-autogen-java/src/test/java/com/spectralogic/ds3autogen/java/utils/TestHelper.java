@@ -20,9 +20,15 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
 import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.utils.Helper;
 
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.getType;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+import static org.junit.Assert.assertTrue;
 
 public final class TestHelper {
 
@@ -142,11 +148,28 @@ public final class TestHelper {
         return !code.contains("this.getQueryParams().put(\"operation\", ");
     }
 
+    /**
+     * Checks if the code contains a constructor with the specified sorted arguments
+     */
     public static boolean hasConstructor(
             final String requestName,
             final ImmutableList<Arguments> arguments,
             final String code) {
         final String expected = "public " + requestName + "(" + JavaHelper.constructorArgs(arguments) + ")";
+        return code.contains(expected);
+    }
+
+    /**
+     * Checks if the code contains a constructor with the specified arguments
+     */
+    public static boolean hasUnsortedConstructor(
+            final String requestName,
+            final ImmutableList<Arguments> arguments,
+            final String code) {
+        final String params = arguments.stream()
+                .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
+        final String expected = "public " + requestName + "(" + params + ")";
         return code.contains(expected);
     }
 
@@ -274,5 +297,22 @@ public final class TestHelper {
 
     public static boolean constructorHasVarAssignment(final String paramName, final String code) {
         return code.contains("this." + paramName + " = " + paramName + ";");
+    }
+
+    public static void checkBulkResponseParserCode(final String responseName, final String code) {
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.WebResponse", code));
+        assertTrue(hasImport("java.io.IOException", code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, code));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", code));
+
+        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
+        final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {\n" +
+                "                    return new " + responseName + "(null, this.getChecksum(), this.getChecksumType());\n" +
+                "                }\n" +
+                "                " + expectedParsing.toJavaCode();
+
+        assertTrue(code.contains(expectedParsingCode));
     }
 }

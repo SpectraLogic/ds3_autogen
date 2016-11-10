@@ -16,10 +16,7 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
 import com.spectralogic.ds3autogen.java.models.Element;
@@ -27,62 +24,12 @@ import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Variable;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
-import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.toAnnotation;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class JavaHelper_Test {
-
-    @Test
-    public void argTypeList_NullList_Test() {
-        final String result = argTypeList(null);
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void argTypeList_EmptyList_Test() {
-        final String result = argTypeList(ImmutableList.of());
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void argTypeList_FullList_Test() {
-        final String expectedResult = "Type1, Type2, Type3";
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type2", "arg2"),
-                new Arguments("Type1", "arg1"),
-                new Arguments("Type3", "arg3"));
-        final String result = argTypeList(arguments);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void argsToList_NullList_Test() {
-        final String result = argsToList(null);
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void argsToList_EmptyList_Test() {
-        final String result = argsToList(ImmutableList.of());
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void argsToList_FullList_Test() {
-        final String expectedResult = "arg1, arg2, arg3";
-        final List<Arguments> arguments = Arrays.asList(
-                new Arguments("type1", "Arg1"),
-                new Arguments("type1", "Arg2"),
-                new Arguments("type1", "Arg3"));
-        final String result = argsToList(arguments);
-        assertThat(result, is(expectedResult));
-    }
 
     @Test
     public void getType_Argument_Test() {
@@ -152,29 +99,6 @@ public class JavaHelper_Test {
                 + "    }\n";
 
         final String result = createGetter("BucketName", "String");
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void modifiedArgNameList_NullList_Test() {
-        final String result = modifiedArgNameList(null, "Arg1", "Integer.toString(arg1)");
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void modifiedArgNameList_EmptyList_Test() {
-        final String result = modifiedArgNameList(ImmutableList.of(), "Arg1", "Integer.toString(arg1)");
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void modifiedArgNameList_FullList_Test() {
-        final String expectedResult = "Integer.toString(arg1), arg2, arg3";
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type2", "Arg2"),
-                new Arguments("Type3", "Arg3"));
-        final String result = modifiedArgNameList(arguments, "Arg1", "Integer.toString(arg1)");
         assertThat(result, is(expectedResult));
     }
 
@@ -336,29 +260,6 @@ public class JavaHelper_Test {
     }
 
     @Test
-    public void convertType_String_Test() {
-        assertThat(convertType("long", null), is("long"));
-        assertThat(convertType("long", ""), is("long"));
-        assertThat(convertType("array", "com.spectralogic.s3.common.dao.domain.tape.Tape"), is("List<Tape>"));
-        assertThat(convertType("com.spectralogic.util.security.ChecksumType", null), is("ChecksumType.Type"));
-    }
-
-    @Test
-    public void convertType_Element_Test() {
-        final Element element = new Element("Length", "long", "");
-        assertThat(convertType(element), is("long"));
-
-        final Element compositeElement = new Element("Tapes", "array", "com.spectralogic.s3.common.dao.domain.tape.Tape");
-        assertThat(convertType(compositeElement), is("List<Tape>"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void convertType_Exception_Test() {
-        final Element compositeElement = new Element("Tapes", "map", "com.spectralogic.s3.common.dao.domain.tape.Tape");
-        convertType(compositeElement);
-    }
-
-    @Test
     public void getEnumValues_NullList_Test() {
         final String result = getEnumValues(null, 1);
         assertThat(result, is(""));
@@ -389,287 +290,6 @@ public class JavaHelper_Test {
 
         assertThat(getEnumValues(ImmutableList.of(), 1), is(""));
         assertThat(getEnumValues(null, 1), is(""));
-    }
-
-    @Test
-    public void addEnum_NullList_Test() {
-        final ImmutableList<EnumConstant> result = addEnum(null, "ONE");
-        assertThat(result.size(), is(1));
-        assertThat(result.get(0).getName(), is("ONE"));
-    }
-
-    @Test
-    public void addEnum_EmptyList_Test() {
-        final ImmutableList<EnumConstant> result = addEnum(ImmutableList.of(), "ONE");
-        assertThat(result.size(), is(1));
-        assertThat(result.get(0).getName(), is("ONE"));
-    }
-
-    @Test
-    public void addEnum_FullList_Test() {
-        final ImmutableList<EnumConstant> enumConstants = ImmutableList.of(
-                new EnumConstant("ONE"),
-                new EnumConstant("TWO"),
-                new EnumConstant("THREE"));
-        final ImmutableList<EnumConstant> result = addEnum(enumConstants, "FOUR");
-        assertThat(result.size(), is(4));
-        assertThat(result.get(3).getName(), is("FOUR"));
-    }
-
-    @Test
-    public void isSpectraDs3OrNotification_Test() {
-        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3"));
-        assertFalse(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands"));
-
-        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.spectrads3.notifications"));
-        assertTrue(isSpectraDs3OrNotification("com.spectralogic.ds3client.commands.notifications"));
-    }
-
-    @Test
-    public void createBulkVariable_Test() {
-        final String baseClassExpected = "";
-        final Arguments baseClassArg = new Arguments("BlobStoreTaskPriority", "Priority");
-        assertThat(createBulkVariable(baseClassArg, true), is(baseClassExpected));
-
-        final String optionalExpected = "private ArgType argName;";
-        final Arguments arg = new Arguments("ArgType", "ArgName");
-        assertThat(createBulkVariable(arg, false), is(optionalExpected));
-
-        final String requiredExpected = "private final ArgType argName;";
-        assertThat(createBulkVariable(arg, true), is(requiredExpected));
-    }
-
-    @Test
-    public void processResponseCodeLines_NullType_Test() {
-        final String expectedResult =
-                "//Do nothing, payload is null\n" +
-                "break;";
-
-        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
-                200,
-                ImmutableList.of(
-                        new Ds3ResponseType("null", null)));
-
-        final String result = processResponseCodeLines(responseCode, 0);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void processResponseCodeLines_StringType_Test() {
-        final String expectedResult =
-                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
-                "    this.stringResult = IOUtils.toString(content, StandardCharsets.UTF_8);\n" +
-                "}\n" +
-                "break;";
-
-        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
-                200,
-                ImmutableList.of(
-                        new Ds3ResponseType("java.lang.String", null)));
-
-        final String result = processResponseCodeLines(responseCode, 0);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void processResponseCodeLines_Test() {
-        final String expectedResult =
-                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
-                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
-                "}\n" +
-                "break;";
-
-        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
-                200,
-                ImmutableList.of(
-                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
-
-        final String result = processResponseCodeLines(responseCode, 0);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createAllResponseResultClassVars_NullList_Test() {
-        final String result = createAllResponseResultClassVars(null);
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void createAllResponseResultClassVars_EmptyList_Test() {
-        final String result = createAllResponseResultClassVars(ImmutableList.of());
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void createAllResponseResultClassVars_FullList_Test() {
-        final String expectedResult =
-                "    private BucketObjectsApiBean bucketObjectsApiBeanResult;\n" +
-                "    private HttpErrorResultApiBean httpErrorResultApiBeanResult;";
-
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(
-                        200,
-                        ImmutableList.of(
-                                new Ds3ResponseType("null", null))),
-                new Ds3ResponseCode(
-                        206,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
-                new Ds3ResponseCode(
-                        208,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
-                new Ds3ResponseCode(
-                        307,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
-                new Ds3ResponseCode(
-                        400,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))));
-
-        final String result = createAllResponseResultClassVars(responseCodes);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createUniqueDs3ResponseTypesMap_NullList_Test() {
-        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void createUniqueDs3ResponseTypesMap_EmptyList_Test() {
-        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void createUniqueDs3ResponseTypesMap_FullList_Test() {
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(
-                        200,
-                        ImmutableList.of(
-                                new Ds3ResponseType("null", null))),
-                new Ds3ResponseCode(
-                        206,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
-                new Ds3ResponseCode(
-                        208,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.BucketObjectsApiBean", null))),
-                new Ds3ResponseCode(
-                        307,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))),
-                new Ds3ResponseCode(
-                        400,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null))));
-
-        final ImmutableMap<String, Ds3ResponseType> result = createUniqueDs3ResponseTypesMap(responseCodes);
-        assertThat(result.size(), is(2));
-        assertTrue(result.containsKey("httpErrorResultApiBeanResult"));
-        assertTrue(result.containsKey("bucketObjectsApiBeanResult"));
-    }
-
-    @Test
-    public void createDs3ResponseTypeParamName_Test() {
-        assertThat(
-                createDs3ResponseTypeParamName(new Ds3ResponseType("null", null)),
-                is(""));
-
-        assertThat(
-                createDs3ResponseTypeParamName(new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.BucketAcl", null)),
-                is("bucketAclResult"));
-
-        assertThat(
-                createDs3ResponseTypeParamName(new Ds3ResponseType("array", "SimpleComponentType")),
-                is("simpleComponentTypeListResult"));
-
-        assertThat(
-                createDs3ResponseTypeParamName(new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.BucketAcl")),
-                is("bucketAclListResult"));
-
-        assertThat(
-                createDs3ResponseTypeParamName(new Ds3ResponseType("SimpleTypeResult", null)),
-                is("simpleTypeResult"));
-    }
-
-    @Test
-    public void createResponseResultGetter_NullParam_Test() {
-        final Ds3ResponseType responseType = new Ds3ResponseType("Arg", "Type");
-        final String result = createResponseResultGetter(null, responseType);
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void createResponseResultGetter_EmptyParam_Test() {
-        final Ds3ResponseType responseType = new Ds3ResponseType("Arg", "Type");
-        final String result = createResponseResultGetter("", responseType);
-        assertThat(result, is(""));
-    }
-
-    @Test
-    public void createResponseResultGetter_SimpleParam_Test() {
-        final String expectedResult =
-                "    public SystemFailure getSystemFailureResult() {\n" +
-                "        return this.systemFailureResult;\n" +
-                "    }\n";
-        final Ds3ResponseType responseType = new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure", null);
-        final String result = createResponseResultGetter("systemFailureResult", responseType);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createResponseResultGetter_ComponentParam_Test() {
-        final String expectedResult =
-                "    public List<SystemFailure> getSystemFailureListResult() {\n" +
-                "        return this.systemFailureListResult;\n" +
-                "    }\n";
-        final Ds3ResponseType responseType = new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.SystemFailure");
-        final String result = createResponseResultGetter("systemFailureListResult", responseType);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void createAllResponseResultGetters_NullList_Test() {
-        final String result = createAllResponseResultGetters(null);
-        assertTrue(isEmpty(result));
-    }
-
-    @Test
-    public void createAllResponseResultGetters_EmptyList_Test() {
-        final String result = createAllResponseResultGetters(ImmutableList.of());
-        assertTrue(isEmpty(result));
-    }
-
-    @Test
-    public void createAllResponseResultGetters_FullList_Test() {
-        final String getterSimpleType =
-                "    public SystemFailure getSystemFailureResult() {\n" +
-                "        return this.systemFailureResult;\n" +
-                "    }\n";
-
-        final String getterCompositeType =
-                "    public List<SystemFailure> getSystemFailureListResult() {\n" +
-                "        return this.systemFailureListResult;\n" +
-                "    }\n";
-
-        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(
-                        100,
-                        ImmutableList.of(
-                                new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.ds3.SystemFailure", null))),
-                new Ds3ResponseCode(
-                        100,
-                        ImmutableList.of(
-                                new Ds3ResponseType("array", "com.spectralogic.s3.common.dao.domain.ds3.SystemFailure"))));
-
-        final String result = createAllResponseResultGetters(responseCodes);
-        assertTrue(result.contains(getterSimpleType));
-        assertTrue(result.contains(getterCompositeType));
     }
 
     @Test
@@ -741,41 +361,5 @@ public class JavaHelper_Test {
     public void createAnnotation_Test() {
         final String expected = "@Annotation(\"Value\")";
         assertThat(createAnnotation("Annotation", "Value"), is(expected));
-    }
-
-    @Test
-    public void processPaginationResponseCodeLines_Test() {
-        final String expectedResult =
-                "this.pagingTruncated = parseIntHeader(\"page-truncated\");\n" +
-                "this.pagingTotalResultCount = parseIntHeader(\"total-result-count\");\n" +
-                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
-                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
-                "}\n" +
-                "break;";
-
-        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
-                200,
-                ImmutableList.of(
-                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
-
-        final String result = processPaginationResponseCodeLines(responseCode, 0);
-        assertThat(result, is(expectedResult));
-    }
-
-    @Test
-    public void processPaginationResponseCodeLines_ErrorCode_Test() {
-        final String expectedResult =
-                "try (final InputStream content = getResponse().getResponseStream()) {\n" +
-                "    this.completeMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, CompleteMultipartUploadResultApiBean.class);\n" +
-                "}\n" +
-                "break;";
-
-        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
-                300,
-                ImmutableList.of(
-                        new Ds3ResponseType("com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean", null)));
-
-        final String result = processPaginationResponseCodeLines(responseCode, 0);
-        assertThat(result, is(expectedResult));
     }
 }

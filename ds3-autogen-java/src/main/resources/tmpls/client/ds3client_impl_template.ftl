@@ -4,6 +4,7 @@ package ${packageName};
 
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.parsers.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.JobNode;
@@ -30,7 +31,7 @@ public class Ds3ClientImpl implements Ds3Client {
     <#list commands as cmd>
     @Override
     public ${cmd.getResponseName()} ${cmd.getName()?uncap_first}(final ${cmd.getRequestName()} request) throws IOException {
-        return new ${cmd.getResponseName()}(this.netClient.getResponse(request));
+        return new ${cmd.getResponseName()}Parser().response(this.netClient.getResponse(request));
     }
     </#list>
 

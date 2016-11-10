@@ -16,26 +16,23 @@
 package com.spectralogic.ds3autogen.java.helpers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
-import com.spectralogic.ds3autogen.java.models.*;
+import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
+import com.spectralogic.ds3autogen.java.models.Element;
+import com.spectralogic.ds3autogen.java.models.EnumConstant;
+import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.isSpectraDs3;
-import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequestGenerator.isBulkRequestArg;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Helper.*;
-import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.isErrorCode;
 
 /**
  * Series of static functions that are used within the Java module template files
@@ -49,25 +46,6 @@ public final class JavaHelper {
 
     public static JavaHelper getInstance() {
         return javaHelper;
-    }
-
-    /**
-     * Creates the Java code associated with private class variables for bulk requests. If
-     * the parameter is required, it will be made private and final. If the parameter is
-     * optional, it will only be made private (not final). If the parameter is inherited from
-     * the bulk class, then a class variable isn't needed, and an empty string is returned.
-     */
-    public static String createBulkVariable(final Arguments arg, final boolean isRequired) {
-        if (isBulkRequestArg(arg.getName())) {
-            return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-        builder.append("private ");
-        if (isRequired) {
-            builder.append("final ");
-        }
-        builder.append(getType(arg)).append(" ").append(uncapFirst(arg.getName())).append(";");
-        return builder.toString();
     }
 
     /**
@@ -123,37 +101,6 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates a comma separated list of sorted argument types.  This is used in
-     * the generation of javadocs for creating links from depreciated constructors
-     * to supported constructors.
-     * @param arguments List of Arguments
-     * @return Comma separated list of sorted argument types
-     */
-    public static String argTypeList(final ImmutableList<Arguments> arguments) {
-        if (isEmpty(arguments)) {
-            return "";
-        }
-        return sortConstructorArgs(arguments)
-                .stream()
-                .map(Arguments::getType).collect(Collectors.joining(", "));
-    }
-
-    /**
-     * Creates a comma separated list of argument names.
-     * @param arguments List of Arguments
-     * @return Comma separated list of argument names.
-     */
-    public static String argsToList(final List<Arguments> arguments) {
-        if (isEmpty(arguments)) {
-            return "";
-        }
-        return arguments
-                .stream()
-                .map(i -> uncapFirst(i.getName()))
-                .collect(Collectors.joining(", "));
-    }
-
-    /**
      * Gets the type of a variable, converting the type from Contract type to Java type.
      * @param var A variable
      * @return The Java type of the Variable
@@ -200,30 +147,6 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates a comma separated list of argument names, while changing one argument name to a specified value
-     */
-    public static String modifiedArgNameList(
-            final ImmutableList<Arguments> arguments,
-            final String modifyArgName,
-            final String toArgName) {
-        if (isEmpty(arguments)) {
-            return "";
-        }
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Arguments arg : sortConstructorArgs(arguments)) {
-            if (arg.getName().equals(modifyArgName)) {
-                builder.add(toArgName);
-            } else {
-                builder.add(uncapFirst(arg.getName()));
-            }
-        }
-        return builder.build()
-                .stream()
-                .map(i -> i)
-                .collect(Collectors.joining(", "));
-    }
-
-    /**
      * Creates the template lines for variables within Java generated models
      */
     public static String getModelVariable(final Element element) {
@@ -245,39 +168,12 @@ public final class JavaHelper {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");
             }
         }
-        builder.append(indent(1)).append("private ").append(convertType(element)).append(" ").append(uncapFirst(element.getName()));
+        builder.append(indent(1)).append("private ").append(ResponseAndParserUtils.convertType(element)).append(" ").append(uncapFirst(element.getName()));
         if (hasContent(element.getComponentType())) {
             builder.append(" = new ArrayList<>()");
         }
         builder.append(";");
         return builder.toString();
-    }
-
-    /**
-     * Creates the Java type from elements, converting component types into a List.
-     */
-    public static String convertType(final Element element) throws IllegalArgumentException {
-        return convertType(element.getType(), element.getComponentType());
-    }
-
-    /**
-     * Creates the Java type from elements, converting component types into a List,
-     * and ChecksumType into ChecksumType.Type
-     */
-    public static String convertType(final String type, final String componentType) throws IllegalArgumentException {
-        if (isEmpty(componentType)) {
-            final String typeNoPath = stripPath(type);
-            switch (typeNoPath.toLowerCase()) {
-                case "checksumtype":
-                    return "ChecksumType.Type";
-                default:
-                    return typeNoPath;
-            }
-        }
-        if (type.equalsIgnoreCase("array")) {
-            return "List<" + stripPath(componentType) + ">";
-        }
-        throw new IllegalArgumentException("Unknown element type: " + type);
     }
 
     /**
@@ -289,7 +185,7 @@ public final class JavaHelper {
         }
         return sortModelConstructorArgs(elements)
                 .stream()
-                .map(i -> "final " + convertType(i) + " " + uncapFirst(i.getName()))
+                .map(i -> "final " + ResponseAndParserUtils.convertType(i) + " " + uncapFirst(i.getName()))
                 .collect(Collectors.joining(", "));
     }
 
@@ -322,181 +218,6 @@ public final class JavaHelper {
                 .stream()
                 .map(i -> indent(indent) + i.getName())
                 .collect(Collectors.joining(",\n"));
-    }
-
-    /**
-     * Adds an EnumConstant to a list of EnumConstants. Used to include additional enum values, such as NONE.
-     * @param enumConstants List of EnumConstants
-     * @param newEnumValue New enum value
-     */
-    public static ImmutableList<EnumConstant> addEnum(
-            final ImmutableList<EnumConstant> enumConstants,
-            final String newEnumValue) {
-        final ImmutableList.Builder<EnumConstant> builder = ImmutableList.builder();
-        if (hasContent(enumConstants)) {
-            builder.addAll(enumConstants);
-        }
-        builder.add(new EnumConstant(newEnumValue));
-        return builder.build();
-    }
-
-    /**
-     * Determines if this package is SpectraDs3 and/or a Notification. This is used to determine if
-     * request/response handlers need to include an import to parent class.
-     * @return True if package is either SpectraDs3 and/or a Notification, else false
-     */
-    public static boolean isSpectraDs3OrNotification(final String packageName) {
-        return isSpectraDs3(packageName) || packageName.contains(Constants.NOTIFICATION_PACKAGE);
-    }
-
-    /**
-     * Creates the Java code associated with processing a given response code
-     * @param responseCode A Ds3ResponseCode
-     * @param indent The level of indentation needed to properly align the generated code
-     */
-    public static String processResponseCodeLines(final Ds3ResponseCode responseCode, final int indent) {
-        final Ds3ResponseType ds3ResponseType = responseCode.getDs3ResponseTypes().get(0);
-        final String responseType = stripPath(
-                convertType(ds3ResponseType.getType(), ds3ResponseType.getComponentType()));
-        if (responseType.equalsIgnoreCase("null")) {
-            return "//Do nothing, payload is null\n"
-                    + indent(indent) + "break;";
-        }
-        final StringBuilder builder = new StringBuilder();
-        builder.append("try (final InputStream content = getResponse().getResponseStream()) {\n")
-                .append(indent(indent + 1))
-                .append("this.")
-                .append(createDs3ResponseTypeParamName(ds3ResponseType));
-        if (responseType.equalsIgnoreCase("String")) {
-            builder.append(" = IOUtils.toString(content, StandardCharsets.UTF_8);\n");
-        } else {
-            builder.append(" = XmlOutput.fromXml(content, ")
-                    .append(responseType)
-                    .append(".class);\n");
-        }
-        builder.append(indent(indent)).append("}\n")
-                .append(indent(indent)).append("break;");
-        return builder.toString();
-    }
-
-    /**
-     * Creates the Java code associated with processing response codes for
-     * requests that have pagination headers. If the specified response code
-     * is a non-error code, then the header parsing code is added.
-     */
-    public static String processPaginationResponseCodeLines(
-            final Ds3ResponseCode responseCode,
-            final int indent) {
-        if (isErrorCode(responseCode.getCode())) {
-            return processResponseCodeLines(responseCode, indent);
-        }
-        return "this.pagingTruncated = parseIntHeader(\"page-truncated\");\n"
-                + indent(indent) + "this.pagingTotalResultCount = parseIntHeader(\"total-result-count\");\n"
-                + indent(indent) + processResponseCodeLines(responseCode, indent);
-    }
-
-    /**
-     * Creates the Java code for getter functions for all response results
-     */
-    public static String createAllResponseResultGetters(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return "";
-        }
-        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
-            builder.add(createResponseResultGetter(entry.getKey(), entry.getValue()));
-        }
-        return builder.build()
-                .stream()
-                .map(i -> i)
-                .collect(Collectors.joining("\n"));
-    }
-
-    /**
-     * Creates the Java code for the getter function for a response result
-     * @param paramName The name of the response result param
-     * @param responseType The response type
-     */
-    protected static String createResponseResultGetter(
-            final String paramName,
-            final Ds3ResponseType responseType) {
-        if (isEmpty(paramName) || isEmpty(responseType.getType())) {
-            return "";
-        }
-        final String returnType = convertType(responseType.getType(), responseType.getComponentType());
-        return indent(1) + "public " +  returnType + " get" + capFirst(paramName) + "() {\n" +
-                indent(2) + "return this." + paramName + ";\n" +
-                indent(1) + "}\n";
-    }
-
-    /**
-     * Creates the Java code for the class parameters associated with the response payloads
-     * @param responseCodes List of Ds3ResponseCodes whose response types will be turned into
-     *                      class parameters
-     */
-    public static String createAllResponseResultClassVars(final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return "";
-        }
-        final ImmutableMap<String, Ds3ResponseType> map = createUniqueDs3ResponseTypesMap(responseCodes);
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final Map.Entry<String, Ds3ResponseType> entry : map.entrySet()) {
-            builder.add("private " + convertType(entry.getValue().getType(), entry.getValue().getComponentType())
-                            + " " + entry.getKey() + ";");
-        }
-        return builder.build()
-                .stream()
-                .map(i -> indent(1) + i)
-                .collect(Collectors.joining("\n"));
-    }
-
-    /**
-     * Creates a map containing all unique Ds3Response types found within a list of
-     * response codes. The map key consists of the response type parameter names,
-     * and values are the Ds3ResponseType associated with that parameter name.
-     */
-    protected static ImmutableMap<String, Ds3ResponseType> createUniqueDs3ResponseTypesMap(
-            final ImmutableList<Ds3ResponseCode> responseCodes) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableMap.of();
-        }
-        final ImmutableMap.Builder<String, Ds3ResponseType> builder = ImmutableMap.builder();
-        for (final Ds3ResponseCode responseCode : responseCodes) {
-            for (final Ds3ResponseType responseType : responseCode.getDs3ResponseTypes()) {
-                final String responseParamName = createDs3ResponseTypeParamName(responseType);
-                if (hasContent(responseParamName)
-                        && !builder.build().containsKey(responseParamName)) {
-                    builder.put(responseParamName, responseType);
-                }
-            }
-        }
-        return builder.build();
-    }
-
-    /**
-     * Creates the parameter name associated with a response type. Component types contain
-     * name spacing of "List", and all type names end with "Result"
-     * Example:
-     *   Type is null:  null -> ""
-     *   No Component Type:  MyType -> myTypeResult
-     *   With Component Type:  MyComponentType -> myComponentTypeListResult
-     */
-    protected static String createDs3ResponseTypeParamName(final Ds3ResponseType responseType) {
-        if (stripPath(responseType.getType()).equalsIgnoreCase("null")) {
-            return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-        if (hasContent(responseType.getComponentType())) {
-            builder.append(uncapFirst(stripPath(responseType.getComponentType())))
-                    .append("List");
-        } else {
-            builder.append(uncapFirst(stripPath(responseType.getType())));
-        }
-        if (!builder.toString().toLowerCase().endsWith("result")) {
-            builder.append("Result");
-        }
-        return builder.toString();
     }
 
     /**
@@ -568,5 +289,13 @@ public final class JavaHelper {
      */
     public static boolean stringHasContent(final String string) {
         return hasContent(string);
+    }
+
+    /**
+     * Creates the Java type from elements, converting component types into a List.
+     * This is a wrapper for a utility function so that it is accessible from within the templates.
+     */
+    public static String convertType(final Element element) throws IllegalArgumentException {
+        return ResponseAndParserUtils.convertType(element);
     }
 }

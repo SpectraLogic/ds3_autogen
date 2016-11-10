@@ -23,19 +23,13 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.java.converters.ClientConverter;
 import com.spectralogic.ds3autogen.java.generators.requestmodels.*;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.BaseResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.BulkResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.CodesResponseGenerator;
-import com.spectralogic.ds3autogen.java.generators.responsemodels.ResponseModelGenerator;
+import com.spectralogic.ds3autogen.java.generators.responsemodels.*;
+import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import com.spectralogic.ds3autogen.java.generators.typemodels.*;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
-import com.spectralogic.ds3autogen.java.models.Client;
-import com.spectralogic.ds3autogen.java.models.Model;
-import com.spectralogic.ds3autogen.java.models.Request;
-import com.spectralogic.ds3autogen.java.models.Response;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil;
 import com.spectralogic.ds3autogen.utils.Helper;
 import freemarker.template.*;
@@ -50,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.java.models.Constants.*;
+import static com.spectralogic.ds3autogen.java.utils.JavaModuleUtil.getCommandPackage;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.*;
@@ -72,7 +67,6 @@ public class JavaCodeGenerator implements CodeGenerator {
 
     private final Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 
-    private Ds3ApiSpec spec;
     private FileUtils fileUtils;
     private Path destDir;
 
@@ -90,12 +84,16 @@ public class JavaCodeGenerator implements CodeGenerator {
             final FileUtils fileUtils,
             final Path destDir,
             final Ds3DocSpec docSpec) throws IOException {
-        this.spec = spec;
         this.fileUtils = fileUtils;
         this.destDir = destDir;
 
         try {
-            generateCommands(docSpec);
+            final ImmutableList<Ds3Request> requests = spec.getRequests();
+            final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(
+                    spec.getTypes(),
+                    spec.getRequests());
+
+            generateCommands(requests, types, docSpec);
         } catch (final TemplateException e) {
             e.printStackTrace();
         }
@@ -106,10 +104,13 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateCommands(final Ds3DocSpec docSpec) throws IOException, TemplateException {
-        generateAllRequests(docSpec);
-        generateAllModels();
-        generateClient(docSpec);
+    private void generateCommands(
+            final ImmutableList<Ds3Request> requests,
+            final ImmutableMap<String, Ds3Type> types,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
+        generateAllRequests(requests, docSpec);
+        generateAllModels(types);
+        generateClient(requests, docSpec);
     }
 
     /**
@@ -118,11 +119,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateAllModels() throws IOException, TemplateException {
-        final ImmutableMap<String, Ds3Type> types = removeUnusedTypes(
-                spec.getTypes(),
-                spec.getRequests());
-
+    private void generateAllModels(final ImmutableMap<String, Ds3Type> types) throws IOException, TemplateException {
         if (isEmpty(types)) {
             LOG.info("There were no models to generate");
             return;
@@ -143,7 +140,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Model model = toModel(ds3Type, getModelPackage());
         final Path modelPath = toModelFilePath(model.getName());
 
-        LOG.info("Getting outputstream for file:" + modelPath.toString());
+        LOG.info("Getting outputstream for file: {}", modelPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(modelPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -236,13 +233,14 @@ public class JavaCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates all of the Request and Response handlers described within the Ds3ApiSpec
-     * excluding SpectraInternal requests.
+     * Generates the Request Handler, Response Handler, and Response Parser
+     * for all specified requests
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateAllRequests(final Ds3DocSpec docSpec) throws IOException, TemplateException {
-        final ImmutableList<Ds3Request> requests = spec.getRequests();
+    private void generateAllRequests(
+            final ImmutableList<Ds3Request> requests,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         if (isEmpty(requests)) {
             LOG.info("There were no requests to generate");
             return;
@@ -250,7 +248,88 @@ public class JavaCodeGenerator implements CodeGenerator {
         for (final Ds3Request request : requests) {
             generateRequest(request, docSpec);
             generateResponse(request);
+            generateResponseParser(request);
         }
+    }
+
+    /**
+     * Generates the Response Parser code for the specified Ds3Request
+     */
+    private void generateResponseParser(final Ds3Request ds3Request) throws IOException, TemplateException {
+        final Template tmpl = getResponseParserTemplate(ds3Request);
+
+        final ResponseParser responseParser = toResponseParser(ds3Request);
+        final Path responsePath = toResponseParserPath(responseParser.getName());
+
+        LOG.info("Getting outputstream for file: {}", responsePath.toString());
+
+        try (final OutputStream outStream = fileUtils.getOutputFile(responsePath);
+             final Writer writer = new OutputStreamWriter(outStream)) {
+            tmpl.process(responseParser, writer);
+        }
+    }
+
+    /**
+     * Converts a file name into the path containing said file within the client path
+     * @param fileName The name of a file
+     * @return The client path to the given file
+     */
+    protected Path toResponseParserPath(final String fileName) {
+        return destDir.resolve(
+                baseProjectPath.resolve(
+                        Paths.get(RESPONSE_PARSER_PACKAGE_PATH.replace(".", "/") + "/" + fileName + ".java")));
+    }
+
+    /**
+     * Retrieves the response parser template used to generate the specified request
+     */
+    protected Template getResponseParserTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isBulkRequest(ds3Request)) {
+            return config.getTemplate("responseparser/bulk_response_parser.ftl");
+        }
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return config.getTemplate("responseparser/allocate_job_chunk_parser.ftl");
+        }
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("responseparser/head_object_parser.ftl");
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("responseparser/get_object_parser.ftl");
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("responseparser/get_job_chunks_ready_parser.ftl");
+        }
+        return config.getTemplate("responseparser/response_parser_template.ftl");
+    }
+
+    /**
+     * Converts a Ds3Request into a Response Parser model
+     */
+    protected static ResponseParser toResponseParser(final Ds3Request ds3Request) {
+        final ResponseParserGenerator<?> generator = getResponseParserGenerator(ds3Request);
+        return generator.generate(ds3Request, RESPONSE_PARSER_PACKAGE_PATH);
+    }
+
+    /**
+     * Retrieves the response parser generator used to generate the specified request
+     */
+    protected static ResponseParserGenerator<?> getResponseParserGenerator(final Ds3Request ds3Request) {
+        if (isHeadBucketRequest(ds3Request)) {
+            return new HeadBucketParserGenerator();
+        }
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return new AllocateJobChunkParserGenerator();
+        }
+        if (isHeadObjectRequest(ds3Request)) {
+            return new HeadObjectParserGenerator();
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectParserGenerator();
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return new GetJobChunksReadyParserGenerator();
+        }
+        return new BaseResponseParserGenerator();
     }
 
     /**
@@ -259,8 +338,9 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      * @throws TemplateException
      */
-    private void generateClient(final Ds3DocSpec docSpec) throws IOException, TemplateException {
-        final ImmutableList<Ds3Request> requests = spec.getRequests();
+    private void generateClient(
+            final ImmutableList<Ds3Request> requests,
+            final Ds3DocSpec docSpec) throws IOException, TemplateException {
         if (isEmpty(requests)) {
             LOG.info("Not generating client: no requests.");
             return;
@@ -269,7 +349,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Client client = ClientConverter.toClient(requests, ROOT_PACKAGE_PATH, docSpec);
         final Path clientPath = toClientPath("Ds3Client.java");
 
-        LOG.info("Getting outputstream for file:" + clientPath.toString());
+        LOG.info("Getting outputstream for file: {}", clientPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(clientPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -279,7 +359,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Template clientImplTmpl = config.getTemplate("client/ds3client_impl_template.ftl");
         final Path clientImplPath = toClientPath("Ds3ClientImpl.java");
 
-        LOG.info("Getting outputstream for file:" + clientPath.toString());
+        LOG.info("Getting outputstream for file: {}", clientPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(clientImplPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -308,7 +388,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Response response = toResponse(ds3Request);
         final Path responsePath = getPathFromPackage(ds3Request, response.getName());
 
-        LOG.info("Getting outputstream for file:" + responsePath.toString());
+        LOG.info("Getting outputstream for file: {}", responsePath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(responsePath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -321,22 +401,34 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @param ds3Request A Ds3Request
      * @return A Response
      */
-    private Response toResponse(final Ds3Request ds3Request) {
-        final ResponseModelGenerator<?> modelGenerator = getResponseTemplateModelGenerator(ds3Request);
+    private static Response toResponse(final Ds3Request ds3Request) {
+        final ResponseModelGenerator<?> modelGenerator = getResponseGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request));
     }
-    
+
     /**
      * Retrieves the associated response generator for the specified Ds3Request
      */
-    private ResponseModelGenerator<?> getResponseTemplateModelGenerator(final Ds3Request ds3Request) {
+    protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+        if (isHeadObjectRequest(ds3Request)) {
+            return new HeadObjectResponseGenerator();
+        }
+        if (isHeadBucketRequest(ds3Request)) {
+            return new HeadBucketResponseGenerator();
+        }
         if (isAllocateJobChunkRequest(ds3Request)
-                || isHeadObjectRequest(ds3Request)
-                || isHeadBucketRequest(ds3Request)) {
-            return new CodesResponseGenerator();
+                || isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return new RetryAfterResponseGenerator();
         }
         if (isBulkRequest(ds3Request)) {
             return new BulkResponseGenerator();
+        }
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectResponseGenerator();
+        }
+        //This should be the last test so that it does not overwrite any special cased generators
+        if (supportsPaginationRequest(ds3Request)) {
+            return new PaginationResponseGenerator();
         }
         return new BaseResponseGenerator();
     }
@@ -349,46 +441,26 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isAllocateJobChunkRequest(ds3Request)) {
-            return config.getTemplate("response/allocate_job_chunk_response_template.ftl");
-        }
-        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
-            return config.getTemplate("response/get_job_chunks_ready_response_template.ftl");
+        if (isHeadObjectRequest(ds3Request)) {
+            return config.getTemplate("response/head_object_response.ftl");
         }
         if (isHeadBucketRequest(ds3Request)) {
-            return config.getTemplate("response/head_bucket_response_template.ftl");
+            return config.getTemplate("response/head_bucket_response.ftl");
         }
-        if (isHeadObjectRequest(ds3Request)) {
-            return config.getTemplate("response/head_object_response_template.ftl");
+        if (isAllocateJobChunkRequest(ds3Request)) {
+            return config.getTemplate("response/allocate_chunk_response.ftl");
+        }
+        if (isGetJobChunksReadyForClientProcessingRequest(ds3Request)) {
+            return config.getTemplate("response/chunks_ready_response.ftl");
         }
         if (isBulkRequest(ds3Request)) {
-            return config.getTemplate("response/bulk_response_template.ftl");
+            return config.getTemplate("response/bulk_response.ftl");
         }
-        if (isGetObjectAmazonS3Request(ds3Request)) {
-            return config.getTemplate("response/get_object_response_template.ftl");
+        //This should be the last test so that it does not overwrite any special cased templates
+        if (supportsPaginationRequest(ds3Request)) {
+            return config.getTemplate("response/pagination_response.ftl");
         }
         return config.getTemplate("response/response_template.ftl");
-    }
-
-    /**
-     * Gets the command package suitable for the given Ds3Request. SpectraDs3 commands
-     * have a separate package, as do notifications.
-     * @param ds3Request A Ds3Request
-     * @return The command package that is suitable for the given Ds3Request
-     */
-    private static String getCommandPackage(final Ds3Request ds3Request) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(COMMANDS_PACKAGE_PATH);
-        if (ds3Request.getClassification() == Classification.spectrads3) {
-            builder.append(SPECTRA_DS3_PACKAGE);
-        }
-        if (ds3Request.getClassification() == Classification.spectrainternal) {
-            builder.append(SPECTRA_INTERNAL_PACKAGE);
-        }
-        if (isNotificationRequest(ds3Request)) {
-            builder.append(NOTIFICATION_PACKAGE);
-        }
-        return builder.toString();
     }
 
     /**
@@ -403,7 +475,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         final Request request = toRequest(ds3Request, docSpec);
         final Path requestPath = getPathFromPackage(ds3Request, request.getName());
 
-        LOG.info("Getting outputstream for file:" + requestPath.toString());
+        LOG.info("Getting outputstream for file: {}", requestPath.toString());
 
         try (final OutputStream outStream = fileUtils.getOutputFile(requestPath);
              final Writer writer = new OutputStreamWriter(outStream)) {
@@ -428,14 +500,14 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @return A Request model
      */
     private Request toRequest(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
-        final RequestModelGenerator<?> modelGenerator = getTemplateModelGenerator(ds3Request);
+        final RequestModelGenerator<?> modelGenerator = getRequestGenerator(ds3Request);
         return modelGenerator.generate(ds3Request, getCommandPackage(ds3Request), docSpec);
     }
 
     /**
      * Retrieves the associated request generator for the specified Ds3Request
      */
-    private static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }

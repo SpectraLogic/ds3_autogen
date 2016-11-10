@@ -16,9 +16,9 @@
 package com.spectralogic.ds3autogen.java.converters;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
 import com.spectralogic.ds3autogen.java.models.Client;
 import com.spectralogic.ds3autogen.java.models.Command;
@@ -29,7 +29,6 @@ import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toCommandDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request;
-import static com.spectralogic.ds3autogen.utils.Helper.indent;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.getResponsePayload;
@@ -113,18 +112,18 @@ public class ClientConverter {
     protected static CustomCommand toGetObjectAmazonS3CustomCommand(
             final Ds3Request ds3Request,
             final Ds3DocSpec docSpec) {
-        final String customBody = "return new GetObjectResponse(\n" +
-                indent(3) + "this.netClient.getResponse(request),\n" +
-                indent(3) + "request.getChannel(),\n" +
-                indent(3) + "this.netClient.getConnectionDetails().getBufferSize(),\n" +
-                indent(3) + "request.getObjectName()\n" +
-                indent(2) + ");";
+        final String responseName = toResponseName(ds3Request.getName());
+        final String customBody = "return new " + responseName + "Parser(\n" +
+                "                request.getChannel(),\n" +
+                "                this.netClient.getConnectionDetails().getBufferSize(),\n" +
+                "                request.getObjectName())\n" +
+                "                .response(this.netClient.getResponse(request));";
 
         final String requestName = removePath(ds3Request.getName());
         return new CustomCommand(
                 ClientGeneratorUtil.toCommandName(ds3Request.getName()),
                 requestName,
-                toResponseName(ds3Request.getName()),
+                responseName,
                 toCommandDocs(requestName, docSpec, 1),
                 toAnnotationInfo(ds3Request),
                 customBody);

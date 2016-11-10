@@ -267,11 +267,10 @@ public final class RequestConverter {
             final String requestName,
             final Ds3DocSpec docSpec) {
         final Optional<String> documentation = docSpec.getRequestDocumentation(requestName);
-        if (!documentation.isPresent()) {
+        return documentation.orElseGet(() -> {
             LOG.debug("Cannot generate java documentation for request because there is no documentation descriptor: {}", requestName);
             return "";
-        }
-        return documentation.get();
+        });
     }
 
     /**
@@ -282,10 +281,9 @@ public final class RequestConverter {
             final String paramName,
             final Ds3DocSpec docSpec) {
         final Optional<String> documentation = docSpec.getParamDocumentation(paramName);
-        if (!documentation.isPresent()) {
+        return documentation.orElseGet(() -> {
             LOG.debug("Cannot generate documentation for param because there is no documentation descriptor: {}", paramName);
             return "";
-        }
-        return documentation.get();
+        });
     }
 }

@@ -21,6 +21,8 @@ import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedComponentResponseCode;
 import com.spectralogic.ds3autogen.java.utils.TestGeneratedModelCode;
 import com.spectralogic.ds3autogen.java.utils.TestHelper;
+import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
+import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import freemarker.template.TemplateModelException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,9 +37,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-public class JavaCodeGenerator_Models_Test {
+public class JavaFunctionalModels_Test {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JavaCodeGenerator_Models_Test.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalModels_Test.class);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -54,7 +57,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/BucketAclType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -92,7 +95,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/PhysicalPlacementApiBeanType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -125,7 +128,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/requestType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -150,7 +153,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/checksumType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -179,7 +182,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/BlobStoreTaskPriorityType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -205,7 +208,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/s3objectType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -242,7 +245,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/bulkObjectType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -278,7 +281,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/httpErrorResultApiBean.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -310,7 +313,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/jobsApiBean.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
 
         assertTrue(hasCopyright(modelGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.models", modelGeneratedCode));
@@ -336,7 +339,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedCode.generateCode(fileUtils, "/input/namedDetailedTapeList.xml");
 
         final String modelCode = testGeneratedCode.getEncapsulatingTypeGeneratedCode();
-        LOG.info("Generated code:\n" + modelCode);
+        CODE_LOGGER.logFile(modelCode, FileTypeToLog.MODEL);
 
         assertFalse(modelCode.contains("@JacksonXmlRootElement(namespace = "));
         assertFalse(modelCode.contains("@JsonProperty(\"NamedDetailedTape\")"));
@@ -367,7 +370,7 @@ public class JavaCodeGenerator_Models_Test {
         testGeneratedModelCode.generateCode(fileUtils, "/input/unusedType.xml");
 
         final String modelGeneratedCode = testGeneratedModelCode.getModelGeneratedCode();
-        LOG.info("Generated code:\n" + modelGeneratedCode);
+        CODE_LOGGER.logFile(modelGeneratedCode, FileTypeToLog.MODEL);
         assertTrue(modelGeneratedCode.isEmpty());
     }
 }

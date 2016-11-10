@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,42 +15,18 @@
 
 package com.spectralogic.ds3autogen.java.generators.responsemodels;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-
+/**
+ * Response handler generator for SpectraS3 bulk commands
+ */
 public class BulkResponseGenerator extends BaseResponseGenerator {
 
     private final static String BULK_RESPONSE_IMPORT = "com.spectralogic.ds3client.commands.interfaces.BulkResponse";
 
     /**
-     * Returns the import for the parent class for bulk responses, which
-     * is BulkResponse
+     * Returns the import for the parent class: Bulk Response
      */
     @Override
-    public String getParentImport(final Ds3Request ds3Request) {
+    public String getParentImport() {
         return BULK_RESPONSE_IMPORT;
-    }
-
-    /**
-     * Gets the import for the bulk parent class if the command is a
-     * Spectra S3 command.
-     */
-    @Override
-    public ImmutableList<String> getAllImports(
-            final Ds3Request ds3Request,
-            final ImmutableList<Ds3ResponseCode> responseCodes,
-            final String packageName) {
-        if (isEmpty(responseCodes)) {
-            return ImmutableList.of();
-        }
-
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        builder.add(getParentImport(ds3Request));
-
-        return builder.build().asList();
     }
 }
