@@ -12,6 +12,9 @@ import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
+
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
 
@@ -41,6 +44,18 @@ public class Ds3ClientImpl implements Ds3Client {
         ${cmd.getCustomBody()}
     }
     </#list>
+
+    @Override
+    public GetObjectResponse getObject(
+            final GetObjectRequest request,
+            final Function<GetObjectCustomParserParameters, GetObjectResponse> parsingFunction) throws IOException {
+        return new GetObjectCustomParser(
+                request.getChannel(),
+                this.netClient.getConnectionDetails().getBufferSize(),
+                request.getObjectName(),
+                parsingFunction)
+                .response(this.netClient.getResponse(request));
+    }
 
     @Override
     public Ds3Client newForNode(final JobNode node) {
