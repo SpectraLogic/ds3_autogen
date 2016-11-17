@@ -173,12 +173,6 @@
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
-                        <Code>404</Code>
-                        <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                    <ResponseCode>
                         <Code>409</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
@@ -8613,6 +8607,12 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="0" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
                         </Annotations>
                     </Element>
                     <Element Name="ErrorMessage" Type="java.lang.String">
@@ -8748,6 +8748,12 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="0" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
                             </Annotation>
                         </Annotations>
                     </Element>
