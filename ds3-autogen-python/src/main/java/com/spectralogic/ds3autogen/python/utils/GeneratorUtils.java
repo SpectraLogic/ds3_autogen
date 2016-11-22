@@ -82,13 +82,13 @@ public final class GeneratorUtils {
 
         builder.append("'/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
-                && ds3Request.includeIdInPath()
+                && ds3Request.getIncludeInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
             builder.append("/'").append(" + notification_id");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append("/'").append(" + bucket_name");
-        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
             builder.append("/'").append(" + ").append(camelToUnderscore(resourceArg.getName()));
         } else {

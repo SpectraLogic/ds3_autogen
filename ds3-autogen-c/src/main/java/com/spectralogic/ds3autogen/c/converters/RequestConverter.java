@@ -174,7 +174,7 @@ public final class RequestConverter {
             return ds3Request.getBucketRequirement() == Requirement.REQUIRED;
         }
 
-        return RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath());
+        return RequestConverterUtil.isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath());
     }
 
     private static boolean isResourceIdRequired(final Ds3Request ds3Request) {

@@ -262,7 +262,7 @@ public class ConverterUtil_Test {
                         false,
                         ImmutableList.of(
                                 createDs3ParamTestData("java.util.UUID"),
-                                new Ds3Param(null, parentType, false)),
+                                new Ds3Param("Name", parentType, false)),
                         null));
 
         final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(

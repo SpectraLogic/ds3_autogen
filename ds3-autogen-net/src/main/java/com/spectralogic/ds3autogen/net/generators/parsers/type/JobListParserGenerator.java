@@ -62,7 +62,7 @@ public class JobListParserGenerator extends BaseTypeParserGenerator {
                 toNullableElementName(ds3Element.getName(), false),
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
-                ds3Element.isNullable(),
+                ds3Element.getNullable(),
                 getXmlTagName(ds3Element),
                 null,
                 isAttribute(ds3Element.getDs3Annotations()));

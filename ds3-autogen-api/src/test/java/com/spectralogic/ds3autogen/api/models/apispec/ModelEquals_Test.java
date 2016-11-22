@@ -56,61 +56,6 @@ public class ModelEquals_Test {
     }
 
     @Test
-    public void listEquals_Ds3Type_IntList_Test() {
-        assertTrue(Ds3Type.listEquals(null, null));
-
-        final ImmutableList<Integer> intList = ImmutableList.of(1, 2, 3);
-        assertTrue(Ds3Type.listEquals(intList, intList));
-        assertFalse(Ds3Type.listEquals(null, intList));
-        assertFalse(Ds3Type.listEquals(intList, null));
-
-        final ImmutableList<Integer> intListJumbled = ImmutableList.of(3, 1, 2);
-        assertTrue(Ds3Type.listEquals(intList, intListJumbled));
-        assertTrue(Ds3Type.listEquals(intListJumbled, intList));
-
-        final ImmutableList<Integer> intListDiff = ImmutableList.of(2, 3, 4);
-        assertFalse(Ds3Type.listEquals(intList, intListDiff));
-        assertFalse(Ds3Type.listEquals(intListDiff, intList));
-
-        final ImmutableList<Integer> intListDiffSize = ImmutableList.of(1, 2, 3, 4);
-        assertFalse(Ds3Type.listEquals(intList, intListDiffSize));
-        assertFalse(Ds3Type.listEquals(intListDiffSize, intList));
-    }
-
-    @Test
-    public void listEquals_Ds3Type_EnumConstantList_Test() {
-        final ImmutableList<Ds3EnumConstant> enumList = ImmutableList.of(
-                new Ds3EnumConstant("Name1", null),
-                new Ds3EnumConstant("Name2", null),
-                new Ds3EnumConstant("Name3", null));
-        assertTrue(Ds3Type.listEquals(enumList, enumList));
-        assertFalse(Ds3Type.listEquals(null, enumList));
-        assertFalse(Ds3Type.listEquals(enumList, null));
-
-        final ImmutableList<Ds3EnumConstant> enumListJumbled = ImmutableList.of(
-                new Ds3EnumConstant("Name2", null),
-                new Ds3EnumConstant("Name3", null),
-                new Ds3EnumConstant("Name1", null));
-        assertTrue(Ds3Type.listEquals(enumList, enumListJumbled));
-        assertTrue(Ds3Type.listEquals(enumListJumbled, enumList));
-
-        final ImmutableList<Ds3EnumConstant> enumListDiff = ImmutableList.of(
-                new Ds3EnumConstant("Name2", null),
-                new Ds3EnumConstant("Name3", null),
-                new Ds3EnumConstant("Name4", null));
-        assertFalse(Ds3Type.listEquals(enumList, enumListDiff));
-        assertFalse(Ds3Type.listEquals(enumListDiff, enumList));
-
-        final ImmutableList<Ds3EnumConstant> enumListDiffSize = ImmutableList.of(
-                new Ds3EnumConstant("Name1", null),
-                new Ds3EnumConstant("Name2", null),
-                new Ds3EnumConstant("Name3", null),
-                new Ds3EnumConstant("Name4", null));
-        assertFalse(Ds3Type.listEquals(enumList, enumListDiffSize));
-        assertFalse(Ds3Type.listEquals(enumListDiffSize, enumList));
-    }
-
-    @Test
     public void equals_Ds3Type_Test() {
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
                 new Ds3Element("Name1", "Type1", "ComponentType1", false),
@@ -132,8 +77,8 @@ public class ModelEquals_Test {
                         new Ds3Element("Name2", "Type2", "ComponentType2", false),
                         new Ds3Element("Name1", "Type1", "ComponentType1", false)),
                 enumConstants);
-        assertTrue(type.equals(typeJumbled));
-        assertTrue(typeJumbled.equals(type));
+        assertFalse(type.equals(typeJumbled));
+        assertFalse(typeJumbled.equals(type));
 
         final Ds3Type typeDiffName = new Ds3Type("NameDiff", null, elements, enumConstants);
         assertFalse(type.equals(typeDiffName));

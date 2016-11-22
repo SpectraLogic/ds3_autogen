@@ -115,7 +115,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     protected static ImmutableList<Arguments> getAssignmentArguments(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(getRequiredArgsFromRequestHeader(ds3Request));
-        if (ds3Request.includeIdInPath() && isResourceNotification(ds3Request.getResource())) {
+        if (ds3Request.getIncludeInPath() && isResourceNotification(ds3Request.getResource())) {
             builder.add(new Arguments("UUID", "NotificationId"));
         }
         return builder.build();

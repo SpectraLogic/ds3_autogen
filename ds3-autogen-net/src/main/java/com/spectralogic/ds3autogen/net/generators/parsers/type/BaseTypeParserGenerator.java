@@ -89,7 +89,7 @@ public class BaseTypeParserGenerator implements TypeParserGenerator<TypeParser>,
                 toNullableElementName(ds3Element.getName(), isObjectsType),
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
-                ds3Element.isNullable(),
+                ds3Element.getNullable(),
                 getXmlTagName(ds3Element),
                 getEncapsulatingTagAnnotations(ds3Element.getDs3Annotations()),
                 isAttribute(ds3Element.getDs3Annotations()));

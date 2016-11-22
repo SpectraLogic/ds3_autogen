@@ -129,19 +129,19 @@ public class Ds3SpecParserImpl_Test {
         final ImmutableList<Ds3Element> elements = blobApiBean.getElements();
         assertThat(elements.size(), is(7));
         assertThat(elements.get(0).getName(), is("InCache"));
-        assertThat(elements.get(0).isNullable(), is(true));
+        assertThat(elements.get(0).getNullable(), is(true));
         assertThat(elements.get(1).getName(), is("Latest"));
-        assertThat(elements.get(1).isNullable(), is(false));
+        assertThat(elements.get(1).getNullable(), is(false));
         assertThat(elements.get(2).getName(), is("Length"));
-        assertThat(elements.get(2).isNullable(), is(false));
+        assertThat(elements.get(2).getNullable(), is(false));
         assertThat(elements.get(3).getName(), is("Name"));
-        assertThat(elements.get(3).isNullable(), is(true));
+        assertThat(elements.get(3).getNullable(), is(true));
         assertThat(elements.get(4).getName(), is("Offset"));
-        assertThat(elements.get(4).isNullable(), is(false));
+        assertThat(elements.get(4).getNullable(), is(false));
         assertThat(elements.get(5).getName(), is("PhysicalPlacement"));
-        assertThat(elements.get(5).isNullable(), is(true));
+        assertThat(elements.get(5).getNullable(), is(true));
         assertThat(elements.get(6).getName(), is("Version"));
-        assertThat(elements.get(6).isNullable(), is(false));
+        assertThat(elements.get(6).getNullable(), is(false));
     }
 
     @Test

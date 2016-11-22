@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,23 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.api.models.apispec;
+package com.spectralogic.ds3autogen.api.models.apispec
 
-import com.google.common.collect.ImmutableList;
-
-public class Ds3ResponseCode {
-
-    private final int code;
-    private final ImmutableList<Ds3ResponseType> ds3ResponseTypes;
-
-    public Ds3ResponseCode(final int code, final ImmutableList<Ds3ResponseType> ds3ResponseTypes) {
-        this.code = code;
-        this.ds3ResponseTypes = ds3ResponseTypes;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public ImmutableList<Ds3ResponseType> getDs3ResponseTypes() { return ds3ResponseTypes; }
-}
+data class Ds3Property(
+        var name: String,
+        var value: String,
+        var valueType: String)
