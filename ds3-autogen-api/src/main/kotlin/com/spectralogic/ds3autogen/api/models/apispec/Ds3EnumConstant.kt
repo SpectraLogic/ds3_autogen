@@ -18,5 +18,5 @@ package com.spectralogic.ds3autogen.api.models.apispec
 import com.google.common.collect.ImmutableList
 
 data class Ds3EnumConstant(
-        var name: String,
-        var ds3Properties: ImmutableList<Ds3Property>?)
+        val name: String,
+        val ds3Properties: ImmutableList<Ds3Property>?)

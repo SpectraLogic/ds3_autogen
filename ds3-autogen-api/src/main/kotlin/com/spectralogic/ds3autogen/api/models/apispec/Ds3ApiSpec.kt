@@ -19,5 +19,5 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 
 data class Ds3ApiSpec(
-        var requests: ImmutableList<Ds3Request>?,
-        var types: ImmutableMap<String, Ds3Type>?)
+        val requests: ImmutableList<Ds3Request>?,
+        val types: ImmutableMap<String, Ds3Type>?)

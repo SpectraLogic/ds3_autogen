@@ -16,6 +16,6 @@
 package com.spectralogic.ds3autogen.api.models.apispec
 
 data class Ds3Param(
-        var name: String,
-        var type: String,
-        var nullable: Boolean)
+        val name: String,
+        val type: String,
+        val nullable: Boolean)

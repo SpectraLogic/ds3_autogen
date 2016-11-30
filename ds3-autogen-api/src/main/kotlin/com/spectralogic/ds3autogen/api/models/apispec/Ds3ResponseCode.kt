@@ -18,5 +18,5 @@ package com.spectralogic.ds3autogen.api.models.apispec
 import com.google.common.collect.ImmutableList
 
 data class Ds3ResponseCode(
-        var code: Int,
-        var ds3ResponseTypes: ImmutableList<Ds3ResponseType>?)
+        val code: Int,
+        val ds3ResponseTypes: ImmutableList<Ds3ResponseType>?)

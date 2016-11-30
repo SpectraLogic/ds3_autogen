@@ -18,11 +18,11 @@ package com.spectralogic.ds3autogen.api.models.apispec
 import com.google.common.collect.ImmutableList
 
 data class Ds3Element(
-        var name: String,
-        var type: String?,
-        var componentType: String?,
-        var ds3Annotations: ImmutableList<Ds3Annotation>?,
-        var nullable: Boolean) {
+        val name: String,
+        val type: String?,
+        val componentType: String?,
+        val ds3Annotations: ImmutableList<Ds3Annotation>?,
+        val nullable: Boolean) {
     constructor(name: String, type: String?, componentType: String?, nullable: Boolean)
             : this(name, type, componentType, null, nullable)
 }

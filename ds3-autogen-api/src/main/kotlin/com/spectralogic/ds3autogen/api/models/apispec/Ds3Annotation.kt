@@ -19,6 +19,6 @@ import com.google.common.collect.ImmutableList
 
 
 data class Ds3Annotation(
-        var name: String,
-        var ds3AnnotationElements: ImmutableList<Ds3AnnotationElement>?)
+        val name: String,
+        val ds3AnnotationElements: ImmutableList<Ds3AnnotationElement>?)
 

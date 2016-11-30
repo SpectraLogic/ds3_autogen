@@ -16,6 +16,6 @@
 package com.spectralogic.ds3autogen.api.models.apispec
 
 data class Ds3AnnotationElement(
-        var name: String,
-        var value: String,
-        var valueType: String)
+        val name: String,
+        val value: String,
+        val valueType: String)

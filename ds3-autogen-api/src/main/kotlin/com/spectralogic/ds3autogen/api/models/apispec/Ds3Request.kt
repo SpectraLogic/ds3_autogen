@@ -19,16 +19,16 @@ import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.enums.*
 
 data class Ds3Request(
-        var name: String,
-        var httpVerb: HttpVerb?,
-        var classification: Classification,
-        var bucketRequirement: Requirement?,
-        var objectRequirement: Requirement?,
-        var action: Action?,
-        var resource: Resource?,
-        var resourceType: ResourceType?,
-        var operation: Operation?,
-        var includeInPath: Boolean,
-        var ds3ResponseCodes: ImmutableList<Ds3ResponseCode>?,
-        var optionalQueryParams: ImmutableList<Ds3Param>?,
-        var requiredQueryParams: ImmutableList<Ds3Param>?)
+        val name: String,
+        val httpVerb: HttpVerb?,
+        val classification: Classification,
+        val bucketRequirement: Requirement?,
+        val objectRequirement: Requirement?,
+        val action: Action?,
+        val resource: Resource?,
+        val resourceType: ResourceType?,
+        val operation: Operation?,
+        val includeInPath: Boolean,
+        val ds3ResponseCodes: ImmutableList<Ds3ResponseCode>?,
+        val optionalQueryParams: ImmutableList<Ds3Param>?,
+        val requiredQueryParams: ImmutableList<Ds3Param>?)

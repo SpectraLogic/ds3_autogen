@@ -16,8 +16,8 @@
 package com.spectralogic.ds3autogen.api.models.apispec
 
 data class Ds3ResponseType(
-        var type: String,
-        var componentType: String?,
-        var originalTypeName: String?) {
+        val type: String,
+        val componentType: String?,
+        val originalTypeName: String?) {
     constructor(type: String, componentType: String?) : this(type, componentType, null)
 }
