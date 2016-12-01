@@ -69,7 +69,7 @@ public final class RequestConverterUtil {
                 && ds3Request.getObjectRequirement().equals(Requirement.REQUIRED)) {
             builder.add(new Arguments("String", "ObjectName"));
         }
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             builder.add(getArgFromResource(ds3Request.getResource()));
         }
         return builder.build();

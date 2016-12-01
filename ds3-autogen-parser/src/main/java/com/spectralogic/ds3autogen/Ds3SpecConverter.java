@@ -53,7 +53,7 @@ class Ds3SpecConverter {
                     request.getResource(),
                     request.getResourceType(),
                     request.getOperation(),
-                    request.includeIdInPath(),
+                    request.getIncludeInPath(),
                     convertAllResponseCodes(request.getDs3ResponseCodes(), nameMapper),
                     convertAllParams(request.getOptionalQueryParams(), nameMapper),
                     convertAllParams(request.getRequiredQueryParams(), nameMapper));
@@ -78,7 +78,7 @@ class Ds3SpecConverter {
             final Ds3Param convertedParam = new Ds3Param(
                     param.getName(),
                     toSdkName(param.getType(), nameMapper),
-                    param.isNullable());
+                    param.getNullable());
             builder.add(convertedParam);
         }
         return builder.build();
@@ -247,7 +247,7 @@ class Ds3SpecConverter {
                     toSdkName(element.getType(), nameMapper),
                     toSdkName(element.getComponentType(), nameMapper),
                     element.getDs3Annotations(),
-                    element.isNullable());
+                    element.getNullable());
             builder.add(convertedElement);
         }
         return builder.build();

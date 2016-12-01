@@ -104,13 +104,13 @@ public final class GeneratorUtils {
 
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
-                && ds3Request.includeIdInPath()
+                && ds3Request.getIncludeInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
             builder.append("/\"").append(" + NotificationId.ToString()");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append("/\"").append(" + BucketName");
-        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
             builder.append("/\"").append(" + ").append(capFirst(NetHelper.argToString(resourceArg)));
         } else {
@@ -128,7 +128,7 @@ public final class GeneratorUtils {
         final ImmutableList.Builder<Arguments> requiredArgs = ImmutableList.builder();
         requiredArgs.addAll(RequestConverterUtil.getRequiredArgsFromRequestHeader(ds3Request));
         requiredArgs.addAll(getArgsFromParamList(ds3Request.getRequiredQueryParams()));
-        if (ds3Request.includeIdInPath() && isResourceNotification(ds3Request.getResource())) {
+        if (ds3Request.getIncludeInPath() && isResourceNotification(ds3Request.getResource())) {
             requiredArgs.add(new Arguments("Guid", "NotificationId"));
         }
         return requiredArgs.build();

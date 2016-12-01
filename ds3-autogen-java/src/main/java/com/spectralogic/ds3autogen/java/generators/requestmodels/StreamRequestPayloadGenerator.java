@@ -86,7 +86,7 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
                 builder.add("java.util.UUID");
             }

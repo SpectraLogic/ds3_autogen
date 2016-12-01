@@ -95,7 +95,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<BaseType>, TypeMode
                 elementName,
                 ds3Element.getType(),
                 ds3Element.getComponentType(),
-                ds3Element.isNullable(),
+                ds3Element.getNullable(),
                 typeMap);
     }
 

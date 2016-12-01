@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.test.helpers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.apispec.*;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -148,7 +149,14 @@ public final class RemoveDollarSignConverterHelper {
     public static Ds3Request createPopulatedRequest(final String variation) {
         return new Ds3Request(
                 "com.test.package.Base$RequestType" + variation,
-                null, null, null, null, null, null, null, null,
+                null,
+                Classification.spectrads3,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 false,
                 createPopulatedResponseCodes(),
                 createPopulatedParams(variation),

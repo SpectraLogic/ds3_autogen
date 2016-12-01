@@ -137,7 +137,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 ds3Request.getResource(),
                 ds3Request.getResourceType(),
                 ds3Request.getOperation(),
-                ds3Request.includeIdInPath(),
+                ds3Request.getIncludeInPath(),
                 ds3Request.getDs3ResponseCodes(),
                 updateDs3ParamListTypes(
                         ds3Request.getOptionalQueryParams()),
@@ -327,7 +327,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
 
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
                 builder.add("java.util.UUID");
             }
@@ -524,13 +524,13 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
 
         builder.append("\"/_rest_/").append(ds3Request.getResource().toString().toLowerCase());
         if (isNotificationRequest(ds3Request)
-                && ds3Request.includeIdInPath()
+                && ds3Request.getIncludeInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
             builder.append("/\"").append(" + this.getNotificationId().toString()");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append("/\"").append(" + this.bucketName");
-        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.includeIdInPath())) {
+        } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
             builder.append("/\"").append(" + ").append(resourceArgToString(resourceArg));
         } else {

@@ -70,7 +70,7 @@ public final class RemoveDollarSignConverter {
                 request.getResource(),
                 request.getResourceType(),
                 request.getOperation(),
-                request.includeIdInPath(),
+                request.getIncludeInPath(),
                 removeDollarSignFromAllResponseCodes(request.getDs3ResponseCodes()),
                 removeDollarSignFromAllParams(request.getOptionalQueryParams()),
                 removeDollarSignFromAllParams(request.getRequiredQueryParams()));
@@ -149,7 +149,7 @@ public final class RemoveDollarSignConverter {
         return new Ds3Param(
                 param.getName(),
                 removeDollarSignFromName(param.getType()),
-                param.isNullable());
+                param.getNullable());
     }
 
     /**
@@ -231,7 +231,7 @@ public final class RemoveDollarSignConverter {
                 removeDollarSignFromName(element.getType()),
                 removeDollarSignFromName(element.getComponentType()),
                 removeDollarSignFromAllAnnotations(element.getDs3Annotations()),
-                element.isNullable());
+                element.getNullable());
     }
 
     /**

@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
 
 /**
  * Contains static utilities for testing the BaseClientGenerator
@@ -64,7 +65,7 @@ public class Ds3ResponseCodeFixture {
     public static Ds3Request createTestRequestWithResponseCodes(final String requestName, final boolean hasPayload) {
         return new Ds3Request(
                 requestName,
-                null, null, null, null, null, null, null, null, false,
+                null, Classification.amazons3, null, null, null, null, null, null, false,
                 createTestResponseCodes(hasPayload),
                 null, null);
     }

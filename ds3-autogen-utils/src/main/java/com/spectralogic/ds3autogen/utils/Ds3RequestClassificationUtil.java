@@ -138,7 +138,7 @@ public final class Ds3RequestClassificationUtil {
     public static boolean isGetBlobPersistenceRequest(final Ds3Request ds3Request) {
         return ds3Request.getAction() == Action.LIST
                 && ds3Request.getHttpVerb() == HttpVerb.GET
-                && !ds3Request.includeIdInPath()
+                && !ds3Request.getIncludeInPath()
                 && ds3Request.getResource() == Resource.BLOB_PERSISTENCE
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
     }
@@ -296,7 +296,7 @@ public final class Ds3RequestClassificationUtil {
         return request.getClassification() == Classification.spectrads3
                 && request.getAction() == Action.SHOW
                 && request.getHttpVerb() == HttpVerb.GET
-                && request.includeIdInPath()
+                && request.getIncludeInPath()
                 && request.getResource() == Resource.JOB
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
     }
@@ -309,7 +309,7 @@ public final class Ds3RequestClassificationUtil {
                 && request.getBucketRequirement() == Requirement.REQUIRED
                 && request.getObjectRequirement() == Requirement.REQUIRED
                 && request.getHttpVerb() == HttpVerb.PUT
-                && !request.includeIdInPath()
+                && !request.getIncludeInPath()
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID")
                 && paramListContainsParam(request.getRequiredQueryParams(), "PartNumber", "int");
     }
@@ -321,7 +321,7 @@ public final class Ds3RequestClassificationUtil {
         return request.getClassification() == Classification.amazons3
                 && request.getBucketRequirement() == Requirement.REQUIRED
                 && request.getHttpVerb() == HttpVerb.POST
-                && !request.includeIdInPath()
+                && !request.getIncludeInPath()
                 && request.getObjectRequirement() == Requirement.REQUIRED
                 && isEmpty(request.getOptionalQueryParams())
                 && paramListContainsParam(request.getRequiredQueryParams(), "UploadId", "java.util.UUID");
@@ -333,7 +333,7 @@ public final class Ds3RequestClassificationUtil {
     public static boolean isGetObjectsDetailsRequest(final Ds3Request request) {
         return request.getClassification() == Classification.spectrads3
                 && request.getHttpVerb() == HttpVerb.GET
-                && !request.includeIdInPath()
+                && !request.getIncludeInPath()
                 && request.getResource() == Resource.OBJECT
                 && request.getResourceType() == ResourceType.NON_SINGLETON
                 && !paramListContainsParam(request.getRequiredQueryParams(), "FullDetails", "void");
@@ -345,7 +345,7 @@ public final class Ds3RequestClassificationUtil {
     public static boolean isGetUsersSpectraS3Request(final Ds3Request request) {
         return request.getClassification() == Classification.spectrads3
                 && request.getHttpVerb() == HttpVerb.GET
-                && !request.includeIdInPath()
+                && !request.getIncludeInPath()
                 && request.getResource() == Resource.USER
                 && request.getResourceType() == ResourceType.NON_SINGLETON;
     }
@@ -356,7 +356,7 @@ public final class Ds3RequestClassificationUtil {
     public static boolean isGetObjectsWithFullDetails(final Ds3Request request) {
         return request.getClassification() == Classification.spectrads3
                 && request.getHttpVerb() == HttpVerb.GET
-                && !request.includeIdInPath()
+                && !request.getIncludeInPath()
                 && request.getResource() == Resource.OBJECT
                 && request.getResourceType() == ResourceType.NON_SINGLETON
                 && paramListContainsParam(request.getRequiredQueryParams(), "FullDetails", "void");

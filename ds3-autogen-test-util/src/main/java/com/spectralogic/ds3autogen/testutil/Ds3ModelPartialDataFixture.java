@@ -55,7 +55,7 @@ public final class Ds3ModelPartialDataFixture {
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final ImmutableList<Ds3Param> optionalParams,
             final ImmutableList<Ds3Param> requiredParams) {
-        return new Ds3Request(null, null, null, null, null, null, null, null, null,
+        return new Ds3Request("test", null, Classification.amazons3, null, null, null, null, null, null,
                 includeIdInPath,
                 responseCodes,
                 optionalParams,
@@ -114,14 +114,14 @@ public final class Ds3ModelPartialDataFixture {
      * Creates an empty Ds3Type
      */
     public static Ds3Type createEmptyDs3Type() {
-        return new Ds3Type(null, null, null, null);
+        return new Ds3Type("test", null, null, null);
     }
 
     /**
      * Creates an empty Ds3Element
      */
     public static Ds3Element createEmptyDs3Element() {
-        return new Ds3Element(null, null, null, false);
+        return new Ds3Element("Name", null, null, false);
     }
 
     /**
@@ -137,7 +137,7 @@ public final class Ds3ModelPartialDataFixture {
      * Creates an empty Ds3EnumConstant
      */
     public static Ds3EnumConstant createEmptyDs3EnumConstant() {
-        return new Ds3EnumConstant(null, null);
+        return new Ds3EnumConstant("Name", null);
     }
 
     /**
@@ -168,7 +168,7 @@ public final class Ds3ModelPartialDataFixture {
      */
     public static Ds3Element createDs3ElementTestData(
             final String elementType) {
-        return createDs3ElementTestData(null, elementType);
+        return createDs3ElementTestData("Name", elementType);
     }
 
     /**
@@ -201,6 +201,6 @@ public final class Ds3ModelPartialDataFixture {
      * Creates a Ds3Param that only has a type
      */
     public static Ds3Param createDs3ParamTestData(final String paramType) {
-        return new Ds3Param(null, paramType, false);
+        return new Ds3Param("Name", paramType, false);
     }
 }

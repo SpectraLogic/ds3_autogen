@@ -72,9 +72,9 @@ public class UpdateElementsConverter_Test {
     private static void verifyElements(final ImmutableList<Ds3Element> elements) {
         assertThat(elements.size(), is(2));
         assertThat(elements.get(0).getName(), is("CustomName"));
-        assertThat(elements.get(0).isNullable(), is(false));
+        assertThat(elements.get(0).getNullable(), is(false));
         assertThat(elements.get(1).getName(), is("ExcludeNull"));
-        assertThat(elements.get(1).isNullable(), is(true));
+        assertThat(elements.get(1).getNullable(), is(true));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class UpdateElementsConverter_Test {
                 "Name", "Type", null, ImmutableList.of(createCustomMarshaledName()), false);
         final Ds3Element result = updateElement(element);
         assertThat(result, is(notNullValue()));
-        assertThat(result.isNullable(), is(false));
+        assertThat(result.getNullable(), is(false));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class UpdateElementsConverter_Test {
                 "Name", "Type", null, ImmutableList.of(createExcludeWhenNull()), false);
         final Ds3Element result = updateElement(element);
         assertThat(result, is(notNullValue()));
-        assertThat(result.isNullable(), is(true));
+        assertThat(result.getNullable(), is(true));
     }
 
     @Test

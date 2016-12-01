@@ -21,7 +21,7 @@ public final class Ds3RequestUtils {
      */
     public static boolean hasBucketNameInPath(final Ds3Request ds3Request) {
         return ds3Request.getBucketRequirement() == Requirement.REQUIRED
-                || (ds3Request.getResource() == Resource.BUCKET && ds3Request.includeIdInPath());
+                || (ds3Request.getResource() == Resource.BUCKET && ds3Request.getIncludeInPath());
     }
 
     /**

@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.enums.Requirement;
 import com.spectralogic.ds3autogen.api.models.enums.Resource;
 import com.spectralogic.ds3autogen.api.models.enums.ResourceType;
@@ -77,7 +78,7 @@ public class RequestConverterUtil_Test {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
-                null,
+                Classification.amazons3,
                 null,
                 null,
                 null,
@@ -98,7 +99,7 @@ public class RequestConverterUtil_Test {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
-                null,
+                Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,
                 null,
@@ -123,7 +124,7 @@ public class RequestConverterUtil_Test {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
-                null,
+                Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,
                 null,
@@ -148,7 +149,7 @@ public class RequestConverterUtil_Test {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
                 null,
-                null,
+                Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,
                 null,
