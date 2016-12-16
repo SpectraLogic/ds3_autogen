@@ -32,11 +32,7 @@ public class GetObjectRequestGenerator_Test {
     @Test
     public void getAdditionalContent_Test() {
         final String expected = "self.offset = offset\n" +
-                "    self.stream = stream\n" +
-                "    if real_file_name:\n" +
-                "      self.effective_file_name = typeCheckString(real_file_name)\n" +
-                "    else:\n" +
-                "      self.effective_file_name = typeCheckString(object_name)\n";
+                "    self.stream = stream\n";
         final String result = generator.getAdditionalContent(null, null);
         assertThat(result, is(expected));
     }
@@ -48,10 +44,21 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<String> result = optParams.stream()
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(2));
         assertThat(result, hasItem("job=None"));
         assertThat(result, hasItem("offset=None"));
-        assertThat(result, hasItem("real_file_name=None"));
-        assertThat(result, hasItem("stream=None"));
+    }
+
+    @Test
+    public void toRequiredConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> reqParams = generator
+                .toRequiredConstructorParams(getRequestAmazonS3GetObject());
+        final ImmutableList<String> result = reqParams.stream()
+                .map(ConstructorParam::toPythonCode)
+                .collect(GuavaCollectors.immutableList());
+        assertThat(result.size(), is(3));
+        assertThat(result, hasItem("bucket_name"));
+        assertThat(result, hasItem("object_name"));
+        assertThat(result, hasItem("stream"));
     }
 }
