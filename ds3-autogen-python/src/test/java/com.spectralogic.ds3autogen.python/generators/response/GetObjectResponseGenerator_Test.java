@@ -27,12 +27,14 @@ public class GetObjectResponseGenerator_Test {
     @Test
     public void toParseResponsePayload_Test() {
         final String expected = "stream = self.request.stream\n" +
-                "    bytes_read = response.read()\n" +
-                "    while bytes_read:\n" +
-                "      stream.write(bytes_read)\n" +
+                "    try:\n" +
                 "      bytes_read = response.read()\n" +
-                "    stream.write(response.read())\n" +
-                "    stream.close()\n";
+                "      while bytes_read:\n" +
+                "        stream.write(bytes_read)\n" +
+                "        bytes_read = response.read()\n" +
+                "    finally:\n" +
+                "      stream.close()\n" +
+                "      response.close()\n";
         final String result = generator.toParseResponsePayload(null);
         assertThat(result, is(expected));
     }
