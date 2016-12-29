@@ -37,12 +37,25 @@ public class PutObjectRequestGenerator_Test {
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());
 
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(3));
         assertThat(result, hasItem("job=None"));
         assertThat(result, hasItem("offset=None"));
-        assertThat(result, hasItem("real_file_name=None"));
         assertThat(result, hasItem("headers=None"));
-        assertThat(result, hasItem("stream=None"));
+    }
+
+    @Test
+    public void toRequiredConstructorParams_Test() {
+        final ImmutableList<ConstructorParam> reqParams = generator
+                .toRequiredConstructorParams(getRequestCreateObject());
+        final ImmutableList<String> result = reqParams.stream()
+                .map(ConstructorParam::toPythonCode)
+                .collect(GuavaCollectors.immutableList());
+
+        assertThat(result.size(), is(4));
+        assertThat(result, hasItem("bucket_name"));
+        assertThat(result, hasItem("object_name"));
+        assertThat(result, hasItem("length"));
+        assertThat(result, hasItem("stream"));
     }
 
     @Test
@@ -51,17 +64,9 @@ public class PutObjectRequestGenerator_Test {
                 "      for key, val in headers.iteritems():\n" +
                 "        if val:\n" +
                 "          self.headers[key] = val\n" +
+                "    self.headers['Content-Length'] = length\n" +
                 "    self.object_name = typeCheckString(object_name)\n" +
-                "    object_data = None\n" +
-                "    if stream:\n" +
-                "      object_data = stream\n" +
-                "    else:\n" +
-                "      effectiveFileName = self.object_name\n" +
-                "      if real_file_name:\n" +
-                "        effectiveFileName = typeCheckString(real_file_name)\n" +
-                "      object_data = open(effectiveFileName, \"rb\")\n" +
-                "    if offset:\n" +
-                "      object_data.seek(offset, 0)\n" +
+                "    object_data = StreamWithLength(stream, length)\n" +
                 "    self.body = object_data\n";
         final String result = generator.getAdditionalContent(null, null);
         assertThat(result, is(expected));
