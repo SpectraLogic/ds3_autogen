@@ -26,15 +26,15 @@ public class GetObjectResponseGenerator_Test {
 
     @Test
     public void toParseResponsePayload_Test() {
-        final String expected = "localFile = None\n" +
-                "    if self.request.stream:\n" +
-                "      localFile = self.request.stream\n" +
-                "    else:\n" +
-                "      localFile = open(self.request.effective_file_name, \"wb\")\n" +
-                "    if self.request.offset:\n" +
-                "      localFile.seek(self.request.offset, 0)\n" +
-                "    localFile.write(response.read())\n" +
-                "    localFile.close()\n";
+        final String expected = "stream = self.request.stream\n" +
+                "    try:\n" +
+                "      bytes_read = response.read()\n" +
+                "      while bytes_read:\n" +
+                "        stream.write(bytes_read)\n" +
+                "        bytes_read = response.read()\n" +
+                "    finally:\n" +
+                "      stream.close()\n" +
+                "      response.close()\n";
         final String result = generator.toParseResponsePayload(null);
         assertThat(result, is(expected));
     }

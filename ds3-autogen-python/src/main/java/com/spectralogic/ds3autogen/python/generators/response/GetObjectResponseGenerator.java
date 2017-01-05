@@ -29,14 +29,14 @@ public class GetObjectResponseGenerator extends BaseResponseGenerator {
      */
     @Override
     public String toParseResponsePayload(final Ds3Request ds3Request) {
-        return "localFile = None\n" +
-                pythonIndent(2) + "if self.request.stream:\n" +
-                pythonIndent(3) + "localFile = self.request.stream\n" +
-                pythonIndent(2) + "else:\n" +
-                pythonIndent(3) + "localFile = open(self.request.effective_file_name, \"wb\")\n" +
-                pythonIndent(2) + "if self.request.offset:\n" +
-                pythonIndent(3) + "localFile.seek(self.request.offset, 0)\n" +
-                pythonIndent(2) + "localFile.write(response.read())\n" +
-                pythonIndent(2) + "localFile.close()\n";
+        return "stream = self.request.stream\n" +
+                pythonIndent(2) + "try:\n" +
+                pythonIndent(3) + "bytes_read = response.read()\n" +
+                pythonIndent(3) + "while bytes_read:\n" +
+                pythonIndent(4) + "stream.write(bytes_read)\n" +
+                pythonIndent(4) + "bytes_read = response.read()\n" +
+                pythonIndent(2) + "finally:\n" +
+                pythonIndent(3) + "stream.close()\n" +
+                pythonIndent(3) + "response.close()\n";
     }
 }

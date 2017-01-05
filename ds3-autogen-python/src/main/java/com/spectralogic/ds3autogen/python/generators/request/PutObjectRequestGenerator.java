@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import static com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent;
 import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
+import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNonVoidArgsFromParamList;
 
 /**
  * Creates the python request model for the Amazon request Put Object which has the optional
@@ -31,23 +32,35 @@ import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
  */
 public class PutObjectRequestGenerator extends BaseRequestGenerator {
 
-    /** Used to specify the actual file name on the local machine if it differs from the BP name */
-    private static final String PAYLOAD_NAME = "real_file_name";
-
     /**
-     * Gets the sorted list of optional constructor params, including the request payload
+     * Gets the sorted list of optional constructor params with headers
      */
     @Override
     public ImmutableList<ConstructorParam> toOptionalConstructorParams(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(toOptionalArgumentsList(ds3Request.getOptionalQueryParams()));
-        builder.add(new Arguments("string", PAYLOAD_NAME));
         builder.add(new Arguments("", "headers"));
-        builder.add(new Arguments("", "stream"));
 
         return builder.build().stream()
                 .sorted(new CustomArgumentComparator())
                 .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), true))
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Gets the sorted list of required constructor params, including stream and length
+     */
+    @Override
+    public ImmutableList<ConstructorParam> toRequiredConstructorParams(final Ds3Request ds3Request) {
+        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        builder.addAll(getNonVoidArgsFromParamList(ds3Request.getRequiredQueryParams()));
+        builder.addAll(getAssignmentArguments(ds3Request));
+        builder.add(new Arguments("", "stream"));
+        builder.add(new Arguments("", "length"));
+
+        return builder.build().stream()
+                .sorted(new CustomArgumentComparator())
+                .map(arg -> new ConstructorParam(camelToUnderscore(arg.getName()), false))
                 .collect(GuavaCollectors.immutableList());
     }
 
@@ -60,17 +73,9 @@ public class PutObjectRequestGenerator extends BaseRequestGenerator {
                 pythonIndent(3) + "for key, val in headers.iteritems():\n" +
                 pythonIndent(4) + "if val:\n" +
                 pythonIndent(5) + "self.headers[key] = val\n" +
+                pythonIndent(2) + "self.headers['Content-Length'] = length\n" +
                 pythonIndent(2) + "self.object_name = typeCheckString(object_name)\n" +
-                pythonIndent(2) + "object_data = None\n" +
-                pythonIndent(2) + "if stream:\n" +
-                pythonIndent(3) + "object_data = stream\n" +
-                pythonIndent(2) + "else:\n" +
-                pythonIndent(3) + "effectiveFileName = self.object_name\n" +
-                pythonIndent(3) + "if " + PAYLOAD_NAME +":\n" +
-                pythonIndent(4) + "effectiveFileName = typeCheckString(" + PAYLOAD_NAME + ")\n" +
-                pythonIndent(3) + "object_data = open(effectiveFileName, \"rb\")\n" +
-                pythonIndent(2) + "if offset:\n" +
-                pythonIndent(3) + "object_data.seek(offset, 0)\n" +
+                pythonIndent(2) + "object_data = StreamWithLength(stream, length)\n" +
                 pythonIndent(2) + "self.body = object_data\n";
     }
 }
