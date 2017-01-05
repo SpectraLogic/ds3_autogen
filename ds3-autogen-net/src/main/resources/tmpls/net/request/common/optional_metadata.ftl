@@ -9,7 +9,7 @@
 
         public ${name} WithMetadata(IDictionary<string, string> metadata)
         {
-            foreach (var key in this.Headers.Keys.Where(key => key.StartsWith(HttpHeaders.AwsMetadataPrefix)).ToList())
+            foreach (var key in this.Headers.Keys().Where(key => key.StartsWith(HttpHeaders.AwsMetadataPrefix)).ToList())
             {
                 this.Headers.Remove(key);
             }
