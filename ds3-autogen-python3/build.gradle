@@ -1,0 +1,6 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    compile project(':ds3-autogen-python')
+    testCompile project(':ds3-autogen-parser')
+}

@@ -12,4 +12,5 @@ dependencies {
     compile project(':ds3-autogen-java')
     compile project(':ds3-autogen-net')
     compile project(':ds3-autogen-python')
+    compile project(':ds3-autogen-python3')
 }

@@ -33,6 +33,7 @@ import com.spectralogic.ds3autogen.python.model.client.BaseClient;
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest;
 import com.spectralogic.ds3autogen.python.model.response.BaseResponse;
 import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
+import freemarker.template.TemplateModelException;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.PythonCodeGenerator.*;
@@ -43,34 +44,45 @@ import static org.junit.Assert.assertThat;
 
 public class PythonCodeGenerator_Test {
 
+    private static final PythonCodeGenerator generator = initTestGenerator();
+
+    private static PythonCodeGenerator initTestGenerator() {
+        try {
+            return new PythonCodeGenerator();
+        } catch (final TemplateModelException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static Ds3DocSpec getTestDocSpec() {
         return new Ds3DocSpecEmptyImpl();
     }
 
     @Test
     public void getRequestGenerator_Test() {
-        assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(BaseRequestGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
+        assertThat(generator.getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(BaseRequestGenerator.class));
 
-        assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(PutObjectRequestGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestCreateObject()), instanceOf(PutObjectRequestGenerator.class));
 
-        assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
 
-        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StringPayloadGenerator.class));
-        assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringPayloadGenerator.class));
-        assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StringPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getGetBlobPersistence()), instanceOf(StringPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getReplicatePutJob()), instanceOf(StringPayloadGenerator.class));
 
-        assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(ObjectsPayloadGenerator.class));
     }
 
     @Test
     public void toRequestModel_Test() {
-        final BaseRequest result = toRequestModel(getRequestCreateNotification(), getTestDocSpec());
+        final BaseRequest result = generator.toRequestModel(getRequestCreateNotification(), getTestDocSpec());
         assertThat(result.getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
         assertThat(result.getPath(), is("'/_rest_/job_created_notification_registration'"));
         assertThat(result.getHttpVerb(), is(HttpVerb.POST.toString()));
@@ -85,13 +97,13 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toRequestModelList_NullList_Test() {
-        final ImmutableList<BaseRequest> result = toRequestModelList(null, new Ds3DocSpecEmptyImpl());
+        final ImmutableList<BaseRequest> result = generator.toRequestModelList(null, new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toRequestModelList_EmptyList_Test() {
-        final ImmutableList<BaseRequest> result = toRequestModelList(ImmutableList.of(), new Ds3DocSpecEmptyImpl());
+        final ImmutableList<BaseRequest> result = generator.toRequestModelList(ImmutableList.of(), new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(0));
     }
 
@@ -100,7 +112,7 @@ public class PythonCodeGenerator_Test {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
                 getRequestCreateNotification());
 
-        final ImmutableList<BaseRequest> result = toRequestModelList(requests, getTestDocSpec());
+        final ImmutableList<BaseRequest> result = generator.toRequestModelList(requests, getTestDocSpec());
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("CreateJobCreatedNotificationRegistrationRequestHandler"));
     }

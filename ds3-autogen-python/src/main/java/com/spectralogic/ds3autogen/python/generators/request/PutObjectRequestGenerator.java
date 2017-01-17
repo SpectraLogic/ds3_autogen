@@ -27,8 +27,7 @@ import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getNonVoidArgsFromParamList;
 
 /**
- * Creates the python request model for the Amazon request Put Object which has the optional
- * request payload of real_file_name, and which opens the specified file
+ * Creates the python request model for the Amazon request Put Object
  */
 public class PutObjectRequestGenerator extends BaseRequestGenerator {
 

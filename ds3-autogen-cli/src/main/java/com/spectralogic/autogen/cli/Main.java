@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.c.CCodeGenerator;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
+import com.spectralogic.ds3autogen.python3.Python3CodeGenerator;
 import com.spectralogic.ds3autogen.utils.FileUtilsImpl;
 
 import java.nio.file.Files;
@@ -95,6 +96,9 @@ public class Main {
                 break;
             case PYTHON:
                 generator = new PythonCodeGenerator();
+                break;
+            case PYTHON3:
+                generator = new Python3CodeGenerator();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown generator typeName " + args.getType().toString());

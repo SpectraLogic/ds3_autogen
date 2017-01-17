@@ -1,30 +1,29 @@
-<#include "../common/copyright.ftl" />
+<#include "../../python/common/copyright.ftl" />
 
 import xml.etree.ElementTree as xmldom
 import os
 
 from abc import ABCMeta
 import posixpath
-from ds3network import *
+from .ds3network import *
 
-<#include "create_client.ftl">
+<#include "../../python/commands/create_client.ftl">
 
 # Models
 
-<#include "static_classes.ftl" />
+<#include "../../python/commands/static_classes.ftl" />
 
 # Type Descriptors
 
-<#include "types/type_descriptor.ftl" />
+<#include "../../python/commands/types/type_descriptor.ftl" />
 
-<#include "types/static_type_descriptors.ftl" />
+<#include "../../python/commands/types/static_type_descriptors.ftl" />
 
-<#include "types/parser_function.ftl" />
+<#include "../../python/commands/types/parser_function.ftl" />
 
 # Request Handlers
 
-class AbstractRequest(object):
-  __metaclass__ = ABCMeta
+class AbstractRequest(object, metaclass=ABCMeta):
   def __init__(self):
     self.path = '/'
     self.http_verb = HttpVerb.GET
@@ -32,12 +31,11 @@ class AbstractRequest(object):
     self.headers = {}
     self.body = None
 
-<#include "requests/request.ftl" />
+<#include "../../python/commands/requests/request.ftl" />
 
 # Response Handlers
 
-class AbstractResponse(object):
-  __metaclass__ = ABCMeta
+class AbstractResponse(object, metaclass=ABCMeta):
   def __init__(self, response, request):
     self.request = request
     self.response = response
@@ -71,10 +69,10 @@ class AbstractResponse(object):
     if not headers:
       return None
     for header in headers:
-      if header[0] == key:
+      if header[0].lower() == key.lower():
         return int(header[1])
     return None
 
-<#include "responses/response.ftl" />
+<#include "../../python/commands/responses/response.ftl" />
 
-<#include "client/client_class.ftl" />
+<#include "../../python/commands/client/client_class.ftl" />
