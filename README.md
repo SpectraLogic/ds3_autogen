@@ -48,6 +48,6 @@ The command line has 3 required arguments and 3 optional arguments.
 
 ## Tests
 
-To run the Autogen tests for a given language module, use the following command with <language> substituted for the
+To run the Autogen tests for a given language module, use the following command with `language` substituted for the
 desired language module (c, java, net, python, or python3):
-  * ./gradlew clean ds3-autogen-<language>:test
+  * `./gradlew clean ds3-autogen-language:test`
