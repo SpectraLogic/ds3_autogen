@@ -1,1 +1,3 @@
 include 'ds3-autogen-parser', 'ds3-autogen-api', 'ds3-autogen-c', 'ds3-autogen-java', 'ds3-autogen-net', 'ds3-autogen-python', 'ds3-autogen-cli', 'ds3-autogen-utils', 'ds3-autogen-test-util'
+include 'ds3-autogen-python3'
+

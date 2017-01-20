@@ -2,8 +2,6 @@ apply plugin: 'kotlin'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-utils')
-    compile project(':ds3-autogen-test-util')
+    compile project(':ds3-autogen-python')
     testCompile project(':ds3-autogen-parser')
 }

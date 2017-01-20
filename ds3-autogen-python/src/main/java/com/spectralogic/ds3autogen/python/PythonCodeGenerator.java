@@ -53,7 +53,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
-public class PythonCodeGenerator implements CodeGenerator {
+public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(PythonCodeGenerator.class);
     private static final Path BASE_PROJECT_PATH = Paths.get("ds3");
@@ -92,7 +92,8 @@ public class PythonCodeGenerator implements CodeGenerator {
      * Generates the ds3.py python code which includes: request handlers, response handlers,
      * response payload descriptors, and the client
      */
-    private void generateCommands(
+    @Override
+    public void generateCommands(
             final ImmutableList<Ds3Request> ds3Requests,
             final ImmutableMap<String, Ds3Type> typeMap,
             final Ds3DocSpec docSpec) throws IOException, TemplateException {
@@ -108,7 +109,7 @@ public class PythonCodeGenerator implements CodeGenerator {
 
         final CommandSet commandSet = new CommandSet(baseRequests, baseResponses, baseTypes, clientCommands);
 
-        final Template tmpl = config.getTemplate("python/commands/all_commands.ftl");
+        final Template tmpl = getCommandTemplate(config);
         final Path path = toBaseProjectPath("ds3.py");
 
         LOG.info("Getting OutputStream for file: " + path.toString());
@@ -117,6 +118,14 @@ public class PythonCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outStream)) {
             tmpl.process(commandSet, writer);
         }
+    }
+
+    /**
+     * Retrieves the base command template used to generate ds3.py
+     */
+    @Override
+    public Template getCommandTemplate(final Configuration config) throws IOException {
+        return config.getTemplate("python/commands/all_commands.ftl");
     }
 
     /**
@@ -181,7 +190,8 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Converts all Ds3Requests into the python request handler models
      */
-    protected static ImmutableList<BaseRequest> toRequestModelList(
+    @Override
+    public ImmutableList<BaseRequest> toRequestModelList(
             final ImmutableList<Ds3Request> ds3Requests,
             final Ds3DocSpec docSpec) {
         if (isEmpty(ds3Requests)) {
@@ -195,7 +205,8 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Converts a Ds3Request into a python request handler model
      */
-    protected static BaseRequest toRequestModel(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
+    @Override
+    public BaseRequest toRequestModel(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final RequestModelGenerator<?> requestGenerator = getRequestGenerator(ds3Request);
         return requestGenerator.generate(ds3Request, docSpec);
     }
@@ -203,12 +214,13 @@ public class PythonCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the Request Generator associated with the Ds3Request
      */
-    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+    @Override
+    public BaseRequestGenerator getRequestGenerator(final Ds3Request ds3Request) {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectRequestGenerator();
         }
         if (isAmazonCreateObjectRequest(ds3Request)) {
-            return new PutObjectRequestGenerator();
+            return getPutObjectRequestGenerator();
         }
         if (hasFileObjectListPayload(ds3Request)
                 || isMultiFileDeleteRequest(ds3Request)
@@ -221,6 +233,14 @@ public class PythonCodeGenerator implements CodeGenerator {
             return new StringPayloadGenerator();
         }
         return new BaseRequestGenerator();
+    }
+
+    /**
+     * Retrieves the generator for amazon3 PutObject command
+     */
+    @Override
+    public BaseRequestGenerator getPutObjectRequestGenerator() {
+        return new PutObjectRequestGenerator();
     }
 
     /**

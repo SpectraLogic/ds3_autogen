@@ -68,6 +68,9 @@ public class PythonFunctionalTests {
 
         //Test Client
         hasClient(ImmutableList.of(requestName), ds3Code);
+
+        //Test static functions present
+        assertTrue(ds3Code.contains("def createClientFromEnv():"));
     }
 
     @Test
