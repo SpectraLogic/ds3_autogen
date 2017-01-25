@@ -30,6 +30,7 @@ extern "C" {
 
 #define DS3_READFUNC_ABORT CURL_READFUNC_ABORT
 
+
 typedef struct {
     int page_truncated;
     int total_result_count;
