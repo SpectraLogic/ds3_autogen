@@ -58,10 +58,9 @@ static ds3_error* _get_request_xml_nodes(
     return NULL;
 }
 
-#define LENGTH_BUFF_SIZE 21
 
 static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
-    char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
+    char size_buff[UNSIGNED_LONG_LONG_BASE_10_STR_LEN];
     xmlDocPtr doc;
     ds3_bulk_object_response* obj;
     xmlNodePtr objects_node, object_node;
@@ -77,7 +76,7 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
 
     for (obj_index = 0; obj_index < obj_list->num_objects; obj_index++) {
         obj = obj_list->objects[obj_index];
-        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%llu", (unsigned long long int) obj->length);
+        g_snprintf(size_buff, sizeof(char) * UNSIGNED_LONG_LONG_BASE_10_STR_LEN, "%" PRIu64, obj->length);
 
         object_node = xmlNewNode(NULL, (xmlChar*) "Object");
         xmlAddChild(objects_node, object_node);
@@ -94,7 +93,7 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
 }
 
 static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_response* mpu_list) {
-    char size_buff[LENGTH_BUFF_SIZE]; //The max size of an uint64_t should be 20 characters
+    char size_buff[UNSIGNED_LONG_LONG_BASE_10_STR_LEN];
     xmlDocPtr doc;
     ds3_multipart_upload_part_response* part;
     xmlNodePtr parts_node, part_node;
@@ -110,7 +109,7 @@ static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_
         part_node = xmlNewNode(NULL, (xmlChar*) "Part");
         xmlAddChild(parts_node, part_node);
 
-        g_snprintf(size_buff, sizeof(char) * LENGTH_BUFF_SIZE, "%d", part->part_number);
+        g_snprintf(size_buff, sizeof(char) * UNSIGNED_LONG_LONG_BASE_10_STR_LEN, "%d", part->part_number);
         xmlNewTextChild(part_node, NULL, (xmlChar*) "PartNumber", (xmlChar*) size_buff);
 
         xmlNewTextChild(part_node, NULL, (xmlChar*) "ETag", (xmlChar*) part->etag->value);

@@ -1,7 +1,4 @@
 
-static const char UNSIGNED_LONG_BASE_10[] = "4294967296";
-static const unsigned int UNSIGNED_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_BASE_10);
-
 typedef struct {
     char* buff;
     size_t size;
@@ -139,9 +136,9 @@ static void _set_query_param_flag(const ds3_request* _request, const char* key, 
 }
 
 static void _set_query_param_uint64_t(const ds3_request* _request, const char* key, uint64_t value) {
-    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    char string_buffer[UNSIGNED_LONG_LONG_BASE_10_STR_LEN];
     memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%lu", value);
+    snprintf(string_buffer, sizeof(string_buffer), "%" PRIu64, value);
     _set_query_param(_request, key, string_buffer);
 }
 
