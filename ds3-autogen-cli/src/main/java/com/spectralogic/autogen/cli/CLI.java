@@ -15,6 +15,7 @@
 
 package com.spectralogic.autogen.cli;
 
+import com.spectralogic.ds3autogen.utils.Guards;
 import org.apache.commons.cli.*;
 
 public class CLI {

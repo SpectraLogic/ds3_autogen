@@ -1,4 +1,4 @@
-package com.spectralogic.autogen.cli;
+package com.spectralogic.ds3autogen.utils;
 
 public class Guards {
     public static <T, E> T returnIfNull(final E e, final Convert<T, E> converter) throws Exception {
