@@ -429,7 +429,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkRequest", requestGeneratedCode));
-        assertTrue(hasImport("java.util.List", requestGeneratedCode));
+        assertFalse(hasImport("java.util.List", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
 
         assertFalse(requestGeneratedCode.contains("XmlProcessingException"));
@@ -441,7 +441,7 @@ public class JavaFunctionalTests {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("Iterable<Ds3Object>", "Objects"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response
@@ -506,7 +506,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkRequest", requestGeneratedCode));
-        assertTrue(hasImport("java.util.List", requestGeneratedCode));
+        assertFalse(hasImport("java.util.List", requestGeneratedCode));
 
         assertFalse(hasImport("com.spectralogic.ds3client.serializer.XmlProcessingException", requestGeneratedCode));
         assertFalse(requestGeneratedCode.contains("XmlProcessingException"));
@@ -518,7 +518,7 @@ public class JavaFunctionalTests {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Objects"));
+                new Arguments("Iterable<Ds3Object>", "Objects"));
         assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
 
         //Test the generated response

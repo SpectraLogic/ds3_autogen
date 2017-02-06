@@ -64,7 +64,7 @@ public class BulkRequestGenerator extends BaseRequestGenerator {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(super.toConstructorArgumentsList(ds3Request));
 
-        final Arguments objects = new Arguments("List<Ds3Object>", "Objects");
+        final Arguments objects = new Arguments("Iterable<Ds3Object>", "Objects");
         builder.add(objects);
 
         return builder.build();

@@ -70,7 +70,7 @@ public class BulkRequestGenerator_Test {
         assertThat(result.get(3).getName(), is("Priority"));
         assertThat(result.get(4).getName(), is("NotificationEndPoint"));
         assertThat(result.get(5).getName(), is("Objects"));
-        assertThat(result.get(5).getType(), is("List<Ds3Object>"));
+        assertThat(result.get(5).getType(), is("Iterable<Ds3Object>"));
     }
 
     @Test
