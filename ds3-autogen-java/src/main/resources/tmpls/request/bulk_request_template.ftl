@@ -2,7 +2,6 @@
 
 package ${packageName};
 
-import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 <#include "../imports.ftl"/>
