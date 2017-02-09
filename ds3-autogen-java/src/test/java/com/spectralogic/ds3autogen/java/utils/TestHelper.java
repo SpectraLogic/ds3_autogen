@@ -177,7 +177,7 @@ public final class TestHelper {
         final String copyright =
                 "/*\n" +
                 " * ******************************************************************************\n" +
-                " *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.\n" +
+                " *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.\n" +
                 " *   Licensed under the Apache License, Version 2.0 (the \"License\"). You may not use\n" +
                 " *   this file except in compliance with the License. A copy of the License is located at\n" +
                 " *\n" +
