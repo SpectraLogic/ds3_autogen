@@ -13,20 +13,18 @@
  * ****************************************************************************
  */
 
-apply plugin: 'application'
+package com.spectralogic.ds3autogen.go.generators.response;
 
-mainClassName = 'com.spectralogic.autogen.cli.Main'
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.go.models.response.Response;
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 
-dependencies {
-    runtime 'ch.qos.logback:logback-core:1.0.13'
-    runtime 'ch.qos.logback:logback-classic:1.0.13'
-    compile 'commons-cli:commons-cli:1.3'
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-parser')
-    compile project(':ds3-autogen-c')
-    compile project(':ds3-autogen-java')
-    compile project(':ds3-autogen-net')
-    compile project(':ds3-autogen-python')
-    compile project(':ds3-autogen-python3')
-    compile project(':ds3-autogen-go')
+public class BaseResponseGenerator implements ResponseModelGenerator<Response>, ResponseModelGeneratorUtil {
+
+    @Override
+    public Response generate(final Ds3Request ds3Request) {
+        final String name = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
+
+        return new Response(name);
+    }
 }

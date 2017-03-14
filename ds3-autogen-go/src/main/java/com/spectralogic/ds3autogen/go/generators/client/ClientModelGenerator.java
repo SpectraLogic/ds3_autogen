@@ -13,20 +13,13 @@
  * ****************************************************************************
  */
 
-apply plugin: 'application'
+package com.spectralogic.ds3autogen.go.generators.client;
 
-mainClassName = 'com.spectralogic.autogen.cli.Main'
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.go.models.client.Client;
 
-dependencies {
-    runtime 'ch.qos.logback:logback-core:1.0.13'
-    runtime 'ch.qos.logback:logback-classic:1.0.13'
-    compile 'commons-cli:commons-cli:1.3'
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-parser')
-    compile project(':ds3-autogen-c')
-    compile project(':ds3-autogen-java')
-    compile project(':ds3-autogen-net')
-    compile project(':ds3-autogen-python')
-    compile project(':ds3-autogen-python3')
-    compile project(':ds3-autogen-go')
+@FunctionalInterface
+public interface ClientModelGenerator<T extends Client> {
+    T generate(final ImmutableList<Ds3Request> ds3Requests);
 }

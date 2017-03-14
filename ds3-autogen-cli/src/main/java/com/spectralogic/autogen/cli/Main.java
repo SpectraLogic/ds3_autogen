@@ -26,6 +26,7 @@ import com.spectralogic.ds3autogen.api.Ds3SpecParser;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.c.CCodeGenerator;
+import com.spectralogic.ds3autogen.go.GoCodeGenerator;
 import com.spectralogic.ds3autogen.java.JavaCodeGenerator;
 import com.spectralogic.ds3autogen.net.NetCodeGenerator;
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator;
@@ -99,6 +100,9 @@ public class Main {
                 break;
             case PYTHON3:
                 generator = new Python3CodeGenerator();
+                break;
+            case GO:
+                generator = new GoCodeGenerator();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown generator typeName " + args.getType().toString());

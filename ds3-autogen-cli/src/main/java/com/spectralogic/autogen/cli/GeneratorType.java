@@ -16,5 +16,5 @@
 package com.spectralogic.autogen.cli;
 
 public enum GeneratorType {
-    C, JAVA, NET, PYTHON, PYTHON3
+    C, JAVA, NET, PYTHON, PYTHON3, GO
 }
