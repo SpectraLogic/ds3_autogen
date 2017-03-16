@@ -111,7 +111,7 @@ public class NetCodeGenerator implements CodeGenerator {
             generateModelParsers(typeMap);
             generateAllTypes(typeMap);
         } catch (final TemplateException e) {
-            e.printStackTrace();
+            LOG.error("Unable to generate Net SDK code", e);
         }
     }
 

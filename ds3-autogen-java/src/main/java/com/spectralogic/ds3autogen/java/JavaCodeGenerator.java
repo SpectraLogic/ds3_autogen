@@ -95,7 +95,7 @@ public class JavaCodeGenerator implements CodeGenerator {
 
             generateCommands(requests, types, docSpec);
         } catch (final TemplateException e) {
-            e.printStackTrace();
+            LOG.error("Unable to generate Java SDK code", e);
         }
     }
 

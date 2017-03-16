@@ -83,7 +83,7 @@ public class GoCodeGenerator implements CodeGenerator {
             generateClient(ds3Requests);
             generateAllTypes(typeMap);
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOG.error("Unable to generate Go SDK code", e);
         }
     }
 
