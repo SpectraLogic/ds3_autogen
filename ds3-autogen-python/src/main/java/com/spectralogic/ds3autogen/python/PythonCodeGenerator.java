@@ -84,7 +84,7 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
 
             generateCommands(requests, typeMap, docSpec);
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOG.error("Unable to generate Python SDK code", e);
         }
     }
 
