@@ -13,8 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.models.request
 
-public interface RequestModelGeneratorUtil {
-    //TODO implement as needed
+/**
+ * Interface for a variable and its assignment.
+ */
+interface VariableInterface {
+    val name: String
+    val assignment: String
 }
+
+/**
+ * A variable where the name and assignment value are the same.
+ */
+class SimpleVariable(override val name: String) : VariableInterface {
+    override val assignment: String get() { return name }
+}
+
+/**
+ * A query param where the name and assignment values are different.
+ */
+class Variable(override val name: String, override val assignment: String) : VariableInterface

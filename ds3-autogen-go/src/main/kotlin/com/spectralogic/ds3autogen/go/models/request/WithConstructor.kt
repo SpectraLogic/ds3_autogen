@@ -13,18 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.models.request
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.go.models.request.Request;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
-
-public class BaseRequestGenerator implements RequestModelGenerator<Request>, RequestModelGeneratorUtil {
-
-    @Override
-    public Request generate(final Ds3Request ds3Request) {
-        final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
-
-        return new Request(name);
-    }
-}
+/**
+ * Represents a with-constructor used to set optional parameters in a
+ * request handler.
+ */
+data class WithConstructor(val name: String, // name of the optional parameter
+                           val type: String, // type of the optional parameter
+                           val key: String)  // the key used to set the optional query parameter

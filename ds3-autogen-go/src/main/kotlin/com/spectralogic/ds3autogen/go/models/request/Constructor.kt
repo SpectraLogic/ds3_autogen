@@ -17,12 +17,9 @@ package com.spectralogic.ds3autogen.go.models.request
 
 import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.Arguments
-import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 
-data class Request(
-        val name: String,
-        val constructor: Constructor,
-        val httpVerb: HttpVerb,
-        val path: String,
-        val structParams: ImmutableList<Arguments>, // Parameters that make up the request handler struct
-        val withConstructors: ImmutableList<WithConstructor>)
+data class Constructor(
+        val constructorParams: String,
+        val queryParams: ImmutableList<VariableInterface>,
+        val structParams: ImmutableList<VariableInterface>
+)

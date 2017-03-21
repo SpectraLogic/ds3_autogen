@@ -2,10 +2,12 @@
     <Contract>
         <RequestHandlers>
             <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.SimpleWithPayloadRequestHandler">
-                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
-                    <OptionalQueryParams/>
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" Operation="START_BULK_GET" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams>
+                        <Param Name="OptionalPlaceHolder" Type="java.lang.Integer"/>
+                    </OptionalQueryParams>
                     <RequiredQueryParams>
-                        <Param Name="Placeholder" Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
+                        <Param Name="PlaceHolder" Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
