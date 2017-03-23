@@ -26,11 +26,11 @@ interface VariableInterface {
 /**
  * A variable where the name and assignment value are the same.
  */
-class SimpleVariable(override val name: String) : VariableInterface {
+data class SimpleVariable(override val name: String) : VariableInterface {
     override val assignment: String get() { return name }
 }
 
 /**
  * A query param where the name and assignment values are different.
  */
-class Variable(override val name: String, override val assignment: String) : VariableInterface
+data class Variable(override val name: String, override val assignment: String) : VariableInterface

@@ -32,7 +32,19 @@ func New${name}(${constructor.constructorParams}) *${name} {
 <#list withConstructors as const>
 func (${name?uncap_first} *${name}) With${const.name?cap_first}(${const.name?uncap_first} ${const.type}) *${name} {
     ${name?uncap_first}.${const.name?uncap_first} = ${const.name?uncap_first}
-    ${name?uncap_first}.queryParams.Set("${const.key}", ${const.name?uncap_first})
+    ${name?uncap_first}.queryParams.Set("${const.key}", ${const.assignment})
+    return ${name?uncap_first}
+}
+</#list>
+
+<#list nullableWithConstructors as const>
+func (${name?uncap_first} *${name}) With${const.name?cap_first}(${const.name?uncap_first} ${const.type}) *${name} {
+    ${name?uncap_first}.${const.name?uncap_first} = ${const.name?uncap_first}
+    if ${const.name?uncap_first} != nil {
+        ${name?uncap_first}.queryParams.Set("${const.key}", ${const.assignment})
+    } else {
+        ${name?uncap_first}.queryParams.Set("${const.key}", "")
+    }
     return ${name?uncap_first}
 }
 </#list>

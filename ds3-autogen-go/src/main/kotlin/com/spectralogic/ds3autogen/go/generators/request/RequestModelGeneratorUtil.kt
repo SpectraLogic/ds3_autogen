@@ -60,7 +60,14 @@ interface RequestModelGeneratorUtil {
     fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments>
 
     /**
-     * Creates the list of request handler with-constructors that each set an optional request parameter
+     * Creates the list of request handler with-constructors that have non-nullable parameters.
+     * Each constructor sets an optional request parameter
      */
     fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor>
+
+    /**
+     * Creates the list of request handler with-constructors that have nullable parameters.
+     * Each constructor sets an optional request parameter
+     */
+    fun toNullableWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor>
 }

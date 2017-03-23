@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 import com.spectralogic.ds3autogen.api.models.enums.Requirement
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
+import com.spectralogic.ds3autogen.go.models.request.WithConstructor
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
@@ -44,7 +45,6 @@ import java.util.stream.Collectors
  */
 
 
-//TODO test
 /**
  * Removes parameters with type void
  */
@@ -61,7 +61,6 @@ fun removeVoidDs3Params(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Ds3P
  * Converts a list of required Ds3Params into a list of Arguments. Returns an empty list
  * if requiredParams is null or empty.
  */
-//TODO test
 fun toGoArgumentsList(requiredParams: ImmutableList<Ds3Param>?): ImmutableList<Arguments> {
     if (ConverterUtil.isEmpty(requiredParams)) {
         return ImmutableList.of()
@@ -74,7 +73,6 @@ fun toGoArgumentsList(requiredParams: ImmutableList<Ds3Param>?): ImmutableList<A
 /**
  * Converts a Ds3Param into an Argument containing the corresponding Go type and parameter name
  */
-//TODO test
 fun toGoArgument(ds3Param: Ds3Param): Arguments {
     return Arguments(toGoType(ds3Param.type, ds3Param.nullable), Helper.uncapFirst(ds3Param.name))
 }
@@ -83,7 +81,6 @@ fun toGoArgument(ds3Param: Ds3Param): Arguments {
  * Transforms a list of Arguments into a comma-separated list of function input parameters.
  * The parameters are sorted according to Argument name: BucketName, ObjectName, alphabetical.
  */
-//TODO test
 fun toFunctionInput(arguments: ImmutableList<Arguments>): String {
     return arguments.stream()
             .sorted(CustomArgumentComparator())
@@ -95,7 +92,6 @@ fun toFunctionInput(arguments: ImmutableList<Arguments>): String {
  * Converts a nullable HttpVerb into a non-nullable HttpVerb and throws an error
  * if the input is null.
  */
-//TODO test
 fun getHttpVerb(httpVerb: HttpVerb?): HttpVerb {
     if (httpVerb == null) {
         throw IllegalArgumentException("Cannot have a null HttpVerb")
@@ -104,23 +100,52 @@ fun getHttpVerb(httpVerb: HttpVerb?): HttpVerb {
 }
 
 /**
- * Converts a list of Ds3Param into a list of Variables which represent query parameter assignments.
+ * Converts a list of Ds3Param into a list of Variables which represent query
+ * parameter assignments.
  */
-//TODO test
-fun toQueryParamVars(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Variable> {
+fun toQueryParamVarList(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Variable> {
     if (isEmpty(ds3Params)) {
         return ImmutableList.of()
     }
     return ds3Params!!.stream()
-            .map { param -> Variable(camelToUnderscore(param.name), uncapFirst(param.name)) }
+            .map(::toQueryParamVar)
             .collect(GuavaCollectors.immutableList())
+}
+
+/**
+ * Creates the variable that represents the key-value pair that will be added to the
+ * query parameters in the request handler. The parameter value must be converted to
+ * a string.
+ */
+fun toQueryParamVar(ds3Param: Ds3Param): Variable {
+    val goType = toGoType(ds3Param.type, ds3Param.nullable)
+    val key = camelToUnderscore(ds3Param.name)
+    return Variable(key, goVarToString(uncapFirst(ds3Param.name), goType))
+}
+
+/**
+ * Creates the Go code for transforming a variable to string based on its Go type
+ */
+fun goVarToString(name: String, goType: String): String {
+    when (goType) {
+        "" -> return "\"\"" // Denotes void parameter in contract
+        "int" -> return "strconv.Itoa($name)"
+        "bool" -> return "strconv.FormatBool($name)"
+        "int64" -> return "strconv.FormatInt($name, 10)"
+        "float64" -> return "strconv.FormatFloat($name, 'f', -1, 64)"
+        "string" -> return name
+        "*int" -> return "strconv.Itoa(*$name)"
+        "*bool" -> return "strconv.FormatBool(*$name)"
+        "*int64" -> return "strconv.FormatInt(*$name, 10)"
+        "*float64" -> return "strconv.FormatFloat(*$name, 'f', -1, 64)"
+        else -> return name + ".String()"
+    }
 }
 
 /**
  * Converts a list of Ds3Params into a list of SimpleVariables. This is used to create
  * assignments within the request constructor to the request struct.
  */
-//TODO test and move
 fun toSimpleVariables(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<SimpleVariable> {
     if (isEmpty(ds3Params)) {
         return ImmutableList.of()
@@ -133,7 +158,6 @@ fun toSimpleVariables(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Simple
 /**
  * Creates the Go request path code for a Ds3 request
  */
-//TODO test
 fun toRequestPath(ds3Request: Ds3Request): String {
     if (ds3Request.classification == Classification.amazons3) {
         return getAmazonS3RequestPath(ds3Request)
@@ -148,18 +172,19 @@ fun toRequestPath(ds3Request: Ds3Request): String {
 /**
  * Creates the Go request path code for an AmazonS3 request
  */
-//TODO test
 fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
+    val requestRef = uncapFirst(removePath(ds3Request.name))
     val builder = StringBuilder()
+
     if (ds3Request.classification != Classification.amazons3) {
         return builder.toString()
     }
     builder.append("\"/\"")
     if (ds3Request.bucketRequirement == Requirement.REQUIRED) {
-        builder.append(" + bucketName")
+        builder.append(" + ").append(requestRef).append(".bucketName")
     }
     if (ds3Request.objectRequirement == Requirement.REQUIRED) {
-        builder.append(" + \"/\" + objectName")
+        builder.append(" + \"/\" + ").append(requestRef).append(".objectName")
     }
     return builder.toString()
 }
@@ -167,9 +192,10 @@ fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
 /**
  * Creates the Go request path code for a SpectraS3 request
  */
-//TODO test
 fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
     val builder = StringBuilder()
+    val requestRef = uncapFirst(removePath(ds3Request.name))
+
     if (ds3Request.classification != Classification.spectrads3) {
         return builder.toString()
     }
@@ -181,16 +207,33 @@ fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
     if (isNotificationRequest(ds3Request)
             && ds3Request.includeInPath
             && (getNotificationType(ds3Request) == NotificationType.DELETE || getNotificationType(ds3Request) == NotificationType.GET)) {
-        builder.append("/\"").append(" + notificationId")
+        builder.append("/\"").append(" + ").append(requestRef).append(".notificationId")
     } else if (hasBucketNameInPath(ds3Request)) {
-        builder.append("/\"").append(" + bucketName")
+        builder.append("/\"").append(" + ").append(requestRef).append(".bucketName")
     } else if (isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
         val resourceArg = getArgFromResource(ds3Request.resource)
-        val requestName = removePath(ds3Request.name)
-        builder.append("/\"").append(" + ").append(uncapFirst(requestName))
+        builder.append("/\"").append(" + ").append(uncapFirst(requestRef))
                 .append(".").append(uncapFirst(resourceArg.name))
     } else {
         builder.append("\"")
     }
     return builder.toString()
+}
+
+/**
+ * Converts a list of Ds3Params into a list of with-constructors, and filters for parameters
+ * whose nullability matches nullableParams
+ */
+fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?, nullableParams: Boolean): ImmutableList<WithConstructor> {
+    if (isEmpty(optionalParams)) {
+        return ImmutableList.of()
+    }
+    return optionalParams!!.stream()
+            .filter { param -> param.nullable == nullableParams }
+            .map { param -> WithConstructor(
+                    param.name,
+                    toGoType(param.type, param.nullable),
+                    camelToUnderscore(param.name),
+                    goVarToString(uncapFirst(param.name), toGoType(param.type, param.nullable))) }
+            .collect(GuavaCollectors.immutableList())
 }

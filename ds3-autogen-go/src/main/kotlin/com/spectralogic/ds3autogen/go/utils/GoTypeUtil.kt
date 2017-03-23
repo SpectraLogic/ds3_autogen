@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.go.utils
 
+import com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 
 /**
@@ -26,21 +27,18 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
  * Retrieves the Go type associated with the specific contract type. If the
  * type is nullable, then the Go type is a pointer to the specified type.
  */
-//TODO test
 fun toGoType(contractType: String, nullable: Boolean): String {
     val goType: String = toGoType(contractType)
-    if (nullable) {
+    if (nullable && hasContent(goType)) {
         return "*" + goType
-    } else {
-        return goType
     }
+    return goType
 }
 
 /**
  * Retrieves the Go type associated with the specified contract type. Nullability
  * is not taken into account
  */
-//TODO test
 fun toGoType(contractType: String): String {
     val type: String = NormalizingContractNamesUtil.removePath(contractType)
     when (type.toLowerCase()) {
@@ -49,7 +47,7 @@ fun toGoType(contractType: String): String {
         "string", "uuid" -> return "string"
         "double" -> return "float64"
         "long" -> return "int64"
-        "void" -> return "" //TODO ???
+        "void" -> return ""
         else -> return type
     }
 }

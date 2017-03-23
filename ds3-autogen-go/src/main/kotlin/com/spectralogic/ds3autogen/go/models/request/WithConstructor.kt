@@ -21,4 +21,6 @@ package com.spectralogic.ds3autogen.go.models.request
  */
 data class WithConstructor(val name: String, // name of the optional parameter
                            val type: String, // type of the optional parameter
-                           val key: String)  // the key used to set the optional query parameter
+                           val key: String, // the key used to set the optional query parameter
+                           val assignment: String) { //The value to assign to the query parameter entry
+}

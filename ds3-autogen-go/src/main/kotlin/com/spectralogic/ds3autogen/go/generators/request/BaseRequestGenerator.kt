@@ -23,9 +23,6 @@ import com.spectralogic.ds3autogen.api.models.enums.Operation
 import com.spectralogic.ds3autogen.api.models.enums.Requirement
 import com.spectralogic.ds3autogen.go.models.request.*
 import com.spectralogic.ds3autogen.go.utils.toGoType
-import com.spectralogic.ds3autogen.utils.ConverterUtil
-import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
-import com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil
@@ -35,10 +32,11 @@ import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGeneratorUtil {
 
     override fun generate(ds3Request: Ds3Request): Request {
-        val name: String = NormalizingContractNamesUtil.removePath(ds3Request.name)
-        val constructor: Constructor = toConstructor(ds3Request)
-        val structParams: ImmutableList<Arguments> = toStructParams(ds3Request)
-        val withConstructors: ImmutableList<WithConstructor> = toWithConstructors(ds3Request.optionalQueryParams)
+        val name = NormalizingContractNamesUtil.removePath(ds3Request.name)
+        val constructor = toConstructor(ds3Request)
+        val structParams = toStructParams(ds3Request)
+        val withConstructors = toWithConstructors(ds3Request.optionalQueryParams)
+        val nullableWithConstructors = toNullableWithConstructors(ds3Request.optionalQueryParams)
 
         return Request(
                 name,
@@ -46,23 +44,18 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
                 getHttpVerb(ds3Request.httpVerb),
                 toRequestPath(ds3Request),
                 structParams,
-                withConstructors)
+                withConstructors,
+                nullableWithConstructors)
     }
 
-    //TODO test
     override fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor> {
-        if (isEmpty(optionalParams)) {
-            return ImmutableList.of()
-        }
-        return optionalParams!!.stream()
-                .map { param -> WithConstructor(
-                        param.name,
-                        toGoType(param.type, param.nullable),
-                        camelToUnderscore(param.name)) }
-                .collect(GuavaCollectors.immutableList())
+        return toWithConstructors(optionalParams, false)
     }
 
-    //TODO test
+    override fun toNullableWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor> {
+        return toWithConstructors(optionalParams, true)
+    }
+
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
@@ -73,7 +66,7 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
         }
         if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
             val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(Arguments(toGoType(resourceArg.type), resourceArg.name))
+            builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
         builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.requiredQueryParams)))
@@ -85,7 +78,6 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
                 .collect(GuavaCollectors.immutableList())
     }
 
-    //TODO test
     override fun toConstructor(ds3Request: Ds3Request): Constructor {
         val constructorParams: String = toConstructorParams(ds3Request)
         val queryParams: ImmutableList<VariableInterface> = toQueryParamsList(ds3Request.requiredQueryParams, ds3Request.operation)
@@ -94,13 +86,11 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
         return Constructor(constructorParams, queryParams, structParams)
     }
 
-    //TODO test
     override fun toConstructorParams(ds3Request: Ds3Request): String {
         val constructorArgs: ImmutableList<Arguments> = toConstructorParamsList(ds3Request)
         return toFunctionInput(constructorArgs)
     }
 
-    //TODO test
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
@@ -111,30 +101,25 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
         }
         if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
             val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(Arguments(toGoType(resourceArg.type), resourceArg.name))
+            builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
         builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.requiredQueryParams)))
         return builder.build()
     }
 
-    //TODO test
     override fun toQueryParamsList(requiredParams: ImmutableList<Ds3Param>?, operation: Operation?): ImmutableList<VariableInterface> {
-        if (ConverterUtil.isEmpty(requiredParams)) {
-            return ImmutableList.of()
-        }
         val builder: ImmutableList.Builder<VariableInterface> = ImmutableList.builder()
 
         if (operation != null) {
             builder.add(Variable("operation", "\"" + operation.toString().toLowerCase() + "\""))
         }
 
-        builder.addAll(toQueryParamVars(requiredParams))
+        builder.addAll(toQueryParamVarList(requiredParams))
 
         return builder.build()
     }
 
-    //TODO test
     override fun toStructAssignmentParams(ds3Request: Ds3Request): ImmutableList<VariableInterface> {
         val builder: ImmutableList.Builder<VariableInterface> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
@@ -148,7 +133,7 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
             builder.add(SimpleVariable(uncapFirst(resourceArg.name)))
         }
 
-        builder.addAll(toSimpleVariables(ds3Request.requiredQueryParams))
+        builder.addAll(toSimpleVariables(removeVoidDs3Params(ds3Request.requiredQueryParams)))
 
         return builder.build()
     }

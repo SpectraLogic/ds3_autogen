@@ -7,6 +7,7 @@
                         <Param Name="OptionalPlaceHolder" Type="java.lang.Integer"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
+                        <Param Name="VoidParam" Type="void"/>
                         <Param Name="PlaceHolder" Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
                     </RequiredQueryParams>
                 </Request>

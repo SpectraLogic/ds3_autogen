@@ -37,9 +37,9 @@ import java.util.Map;
 import static org.mockito.Mockito.when;
 
 /**
- * Used to generate Go code for a single command. Used in functional testing.
+ * Used to generate and capture Go code for a single command. Used in functional testing.
  */
-public class GoTestGeneratedCode {
+public class GoTestCodeUtil {
 
     final static String BASE_PATH = "./ds3/";
     final static String COMMAND_PATH = BASE_PATH + "models/";
@@ -57,7 +57,7 @@ public class GoTestGeneratedCode {
     /**
      * Constructor for generating Go files for a command with NO response payload
      */
-    public GoTestGeneratedCode(
+    public GoTestCodeUtil(
             final FileUtils fileUtils,
             final String requestName) throws IOException {
         this.requestOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + requestName + ".go");
@@ -68,7 +68,7 @@ public class GoTestGeneratedCode {
     /**
      * Constructor for generating Go files for a command with a response payload
      */
-    public GoTestGeneratedCode(
+    public GoTestCodeUtil(
             final FileUtils fileUtils,
             final String requestName,
             final String responseType) throws IOException {
@@ -106,7 +106,7 @@ public class GoTestGeneratedCode {
      */
     public void generateCode(final FileUtils fileUtils, final String inputFileName) throws IOException, TemplateModelException {
         final Ds3SpecParser parser = new Ds3SpecParserImpl();
-        final Ds3ApiSpec spec = parser.getSpec(GoTestGeneratedCode.class.getResourceAsStream(inputFileName));
+        final Ds3ApiSpec spec = parser.getSpec(GoTestCodeUtil.class.getResourceAsStream(inputFileName));
         final CodeGenerator codeGenerator = new GoCodeGenerator();
         final Ds3DocSpec docSpec = new Ds3DocSpecEmptyImpl();
 
