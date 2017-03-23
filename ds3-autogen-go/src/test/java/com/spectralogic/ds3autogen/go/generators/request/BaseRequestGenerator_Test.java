@@ -116,7 +116,10 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Arguments> result = generator.toConstructorParamsList(testRequest);
 
         assertThat(result.size(), is(expectedArgs.size()));
-        expectedArgs.forEach(expected -> assertThat(result, hasItem(expected)));
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
+        }
     }
 
     @Test
@@ -152,7 +155,10 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<Arguments> result = generator.toStructParams(testRequest);
 
         assertThat(result.size(), is(expectedArgs.size()));
-        expectedArgs.forEach(expected -> assertThat(result, hasItem(expected)));
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
+        }
     }
 
     @Test
