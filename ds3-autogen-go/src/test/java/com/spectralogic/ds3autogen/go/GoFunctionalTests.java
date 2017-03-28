@@ -17,7 +17,7 @@ package com.spectralogic.ds3autogen.go;
 
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
-import com.spectralogic.ds3autogen.go.utils.GoTestGeneratedCode;
+import com.spectralogic.ds3autogen.go.utils.GoTestCodeUtil;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
 import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import freemarker.template.TemplateModelException;
@@ -31,15 +31,13 @@ import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.mock;
 
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -48,7 +46,7 @@ public class GoFunctionalTests {
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
         final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestGeneratedCode codeGenerator = new GoTestGeneratedCode(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
 
         codeGenerator.generateCode(fileUtils, "/input/simpleRequestNoPayload.xml");
 
@@ -77,7 +75,7 @@ public class GoFunctionalTests {
     public void simpleRequestWithPayload() throws IOException, TemplateModelException {
         final String requestName = "SimpleWithPayloadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestGeneratedCode codeGenerator = new GoTestGeneratedCode(fileUtils, requestName, "Bucket");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "Bucket");
 
         codeGenerator.generateCode(fileUtils, "/input/simpleRequestWithPayload.xml");
 
@@ -98,6 +96,38 @@ public class GoFunctionalTests {
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+    }
+
+    @Test
+    public void requestWithResourceInPath() throws IOException, TemplateModelException {
+        final String requestName = "DeleteBucketAclSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/requestWithResourceInPath.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        assertTrue(requestCode.contains("func NewDeleteBucketAclSpectraS3Request(bucketAcl string) *DeleteBucketAclSpectraS3Request {"));
+        assertTrue(requestCode.contains("return \"/_rest_/bucket_acl/\" + deleteBucketAclSpectraS3Request.bucketAcl"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
     }
