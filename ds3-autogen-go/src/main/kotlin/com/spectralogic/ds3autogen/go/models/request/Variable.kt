@@ -13,18 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.models.request
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.go.models.request.Request;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
-
-public class BaseRequestGenerator implements RequestModelGenerator<Request>, RequestModelGeneratorUtil {
-
-    @Override
-    public Request generate(final Ds3Request ds3Request) {
-        final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
-
-        return new Request(name);
-    }
+/**
+ * Interface for a variable and its assignment.
+ */
+interface VariableInterface {
+    val name: String
+    val assignment: String
 }
+
+/**
+ * A variable where the name and assignment value are the same.
+ */
+data class SimpleVariable(override val name: String) : VariableInterface {
+    override val assignment: String get() { return name }
+}
+
+/**
+ * A query param where the name and assignment values are different.
+ */
+data class Variable(override val name: String, override val assignment: String) : VariableInterface

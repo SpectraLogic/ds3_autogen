@@ -13,8 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.models.request
 
-public interface RequestModelGeneratorUtil {
-    //TODO implement as needed
-}
+import com.google.common.collect.ImmutableList
+import com.spectralogic.ds3autogen.api.models.Arguments
+
+data class Constructor(
+        val constructorParams: String,
+        val queryParams: ImmutableList<VariableInterface>,
+        val structParams: ImmutableList<VariableInterface>
+)
