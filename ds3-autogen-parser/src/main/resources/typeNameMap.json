@@ -121,6 +121,10 @@
       "SdkName": "DetailedTapeFailure"
     },
     {
+      "ContractName": "Object",
+      "SdkName": "String"
+    },
+    {
       "ContractName": "GetBucketsRequestHandler",
       "SdkName": "GetServiceRequestHandler",
       "Type": "AMAZONS3"
