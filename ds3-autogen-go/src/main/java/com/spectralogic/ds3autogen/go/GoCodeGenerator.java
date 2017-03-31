@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequestModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
@@ -50,6 +51,7 @@ import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
 public class GoCodeGenerator implements CodeGenerator {
 
@@ -125,7 +127,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * specified {@link Ds3Request}
      */
     private RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
-        //TODO add special casing
+        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return new RequiredObjectsPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -133,7 +137,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go request handler
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
-        //TODO add special casing
+        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+            return config.getTemplate("request/request_with_stream.ftl");
+        }
         return config.getTemplate("request/request_template.ftl");
     }
 

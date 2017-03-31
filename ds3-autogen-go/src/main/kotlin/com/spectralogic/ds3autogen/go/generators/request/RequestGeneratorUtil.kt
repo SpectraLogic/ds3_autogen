@@ -58,6 +58,19 @@ fun removeVoidDs3Params(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Ds3P
 }
 
 /**
+ * Removes parameters with either type void or name operation
+ */
+fun removeVoidAndOperationDs3Params(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Ds3Param> {
+    if (ConverterUtil.isEmpty(ds3Params)) {
+        return ImmutableList.of()
+    }
+    return ds3Params!!.stream()
+            .filter{ param -> !param.type.equals("void", ignoreCase = true)
+                           && !param.name.equals("Operation", ignoreCase = true) }
+            .collect(GuavaCollectors.immutableList<Ds3Param>())
+}
+
+/**
  * Converts a list of required Ds3Params into a list of Arguments. Returns an empty list
  * if requiredParams is null or empty.
  */
@@ -108,6 +121,7 @@ fun toQueryParamVarList(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Vari
         return ImmutableList.of()
     }
     return ds3Params!!.stream()
+            .filter { param -> !param.name.equals("Operation", ignoreCase = true) }
             .map(::toQueryParamVar)
             .collect(GuavaCollectors.immutableList())
 }

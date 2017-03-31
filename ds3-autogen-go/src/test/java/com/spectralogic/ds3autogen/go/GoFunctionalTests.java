@@ -29,8 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.spectralogic.ds3autogen.go.utils.GoFunctionalTestUtil.returnsStream;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -115,6 +117,39 @@ public class GoFunctionalTests {
 
         assertTrue(requestCode.contains("func NewDeleteBucketAclSpectraS3Request(bucketAcl string) *DeleteBucketAclSpectraS3Request {"));
         assertTrue(requestCode.contains("return \"/_rest_/bucket_acl/\" + deleteBucketAclSpectraS3Request.bucketAcl"));
+        assertFalse(returnsStream(requestName, requestCode));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+    }
+
+    @Test
+    public void verifyPhysicalPlacement() throws IOException, TemplateModelException {
+        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacement.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
+        assertTrue(requestCode.contains("content: buildDs3ObjectListStream(objects),")); //content is assigned a stream
+        assertTrue(returnsStream(requestName, requestCode));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
