@@ -29,7 +29,7 @@ import com.spectralogic.ds3autogen.utils.RequestConverterUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 
-class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGeneratorUtil {
+open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGeneratorUtil {
 
     override fun generate(ds3Request: Ds3Request): Request {
         val name = NormalizingContractNamesUtil.removePath(ds3Request.name)
@@ -69,7 +69,7 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
             builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
-        builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
         builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.optionalQueryParams)))
 
         // Sort the arguments
@@ -104,7 +104,7 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
             builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
-        builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
         return builder.build()
     }
 
@@ -133,7 +133,7 @@ class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGenerat
             builder.add(SimpleVariable(uncapFirst(resourceArg.name)))
         }
 
-        builder.addAll(toSimpleVariables(removeVoidDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(toSimpleVariables(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
 
         return builder.build()
     }

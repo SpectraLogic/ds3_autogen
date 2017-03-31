@@ -51,7 +51,8 @@ public class BaseRequestGenerator_Test {
             ImmutableList.of( //required query params
                     new Ds3Param("IntReqParam", "int", false),
                     new Ds3Param("StringReqParam", "java.lang.String", false),
-                    new Ds3Param("VoidReqParam", "void", false)
+                    new Ds3Param("VoidReqParam", "void", false),
+                    new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)
             ));
 
     private final String expectedConstructorParams = "bucketName string, objectName string, activeJobId string, intReqParam int, stringReqParam string";

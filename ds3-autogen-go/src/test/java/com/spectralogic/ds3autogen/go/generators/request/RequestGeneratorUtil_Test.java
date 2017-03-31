@@ -27,6 +27,7 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
@@ -57,6 +58,38 @@ public class RequestGeneratorUtil_Test {
         assertThat(result.size(), is(2));
 
         result.forEach(param -> assertThat(param.getType(), not("void")));
+    }
+
+    @Test
+    public void removeVoidAndOperationDs3Params_NullList_Test() {
+        final ImmutableList<Ds3Param> result = removeVoidAndOperationDs3Params(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVoidAndOperationDs3Params_EmptyList_Test() {
+        final ImmutableList<Ds3Param> result = removeVoidAndOperationDs3Params(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void removeVoidAndOperationDs3Params_FullList_Test() {
+        final ImmutableList<Ds3Param> expected = ImmutableList.of(
+                new Ds3Param("Param1", "Type1", false),
+                new Ds3Param("Param3", "int", false)
+        );
+
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("Param1", "Type1", false),
+                new Ds3Param("Param2", "void", false),
+                new Ds3Param("Param3", "int", false),
+                new Ds3Param("Param4", "VOID", false),
+                new Ds3Param("Operation", "RestOperationType", false)
+        );
+
+        final ImmutableList<Ds3Param> result = removeVoidAndOperationDs3Params(params);
+        assertThat(result.size(), is(expected.size()));
+        expected.forEach(param -> assertThat(result, hasItem(param)));
     }
 
     @Test
@@ -168,11 +201,12 @@ public class RequestGeneratorUtil_Test {
                 new Ds3Param("ParamOne", "int", false),
                 new Ds3Param("ParamTwo", "float64", false),
                 new Ds3Param("ParamThree", "string", false),
-                new Ds3Param("ParamFour", "void", false)
+                new Ds3Param("ParamFour", "void", false),
+                new Ds3Param("Operation", "RestOperationType", false)
         );
 
         final ImmutableList<Variable> result = toQueryParamVarList(params);
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(expected.size()));
 
         for (int i = 0; i < result.size(); i++) {
             assertThat(result.get(i), is(expected.get(i)));
