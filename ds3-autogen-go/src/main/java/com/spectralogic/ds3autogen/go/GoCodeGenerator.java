@@ -126,8 +126,8 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the generator used to create the Go request handler for the
      * specified {@link Ds3Request}
      */
-    private RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
-        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
         return new BaseRequestGenerator();
@@ -137,7 +137,7 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go request handler
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request)) {
+        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return config.getTemplate("request/request_with_stream.ftl");
         }
         return config.getTemplate("request/request_template.ftl");

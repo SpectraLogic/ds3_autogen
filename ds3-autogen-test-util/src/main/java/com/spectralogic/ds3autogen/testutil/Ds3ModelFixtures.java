@@ -860,4 +860,76 @@ public class Ds3ModelFixtures {
                         new Ds3Param("FullDetails", "void", false)) //required params
         );
     }
+
+    /**
+     * Retrieves the 3.4.1 contract request for CreateVerifyJobRequestHandler
+     */
+    public static Ds3Request createVerifyJobRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null, //bucketRequirement
+                null, // objectRequirement
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.START_BULK_VERIFY, // operation
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("Aggregating", "boolean", false),
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), //optional params
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 3.4.1 contract request for GetPhysicalPlacementForObjectsRequestHandler
+     */
+    public static Ds3Request getPhysicalPlacementForObjects() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null, //bucketRequirement
+                null, // objectRequirement
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT, // operation
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)), //optional params
+                ImmutableList.of(
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 3.4.1 contract request for VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     */
+    public static Ds3Request verifyPhysicalPlacementForObjectsWithFullDetails() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null, //bucketRequirement
+                null, // objectRequirement
+                Action.SHOW,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.VERIFY_PHYSICAL_PLACEMENT, // operation
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("StorageDomainId", "java.util.UUID", false)), //optional params
+                ImmutableList.of(
+                        new Ds3Param("FullDetails", "void", false),
+                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+        );
+    }
 }
