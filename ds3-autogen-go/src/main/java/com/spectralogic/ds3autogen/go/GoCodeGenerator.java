@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequestModelGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
@@ -126,9 +127,12 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the generator used to create the Go request handler for the
      * specified {@link Ds3Request}
      */
-    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+    static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
         if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
+        }
+        if (hasStringRequestPayload(ds3Request)) {
+            return new StringRequestPayloadGenerator();
         }
         return new BaseRequestGenerator();
     }
@@ -137,7 +141,10 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go request handler
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
+        if (isBulkRequest(ds3Request)
+                || isPhysicalPlacementRequest(ds3Request)
+                || isEjectStorageDomainBlobsRequest(ds3Request)
+                || hasStringRequestPayload(ds3Request)) {
             return config.getTemplate("request/request_with_stream.ftl");
         }
         return config.getTemplate("request/request_template.ftl");

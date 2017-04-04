@@ -78,4 +78,18 @@ public class RequiredObjectsPayloadGenerator_Test {
             assertThat(result.get(i).getType(), is(expected.get(i).getType()));
         }
     }
+
+    @Test
+    public void getPayloadConstructorArgTest() {
+        final Arguments result = generator.getPayloadConstructorArg();
+        assertThat(result.getName(), is("objects"));
+        assertThat(result.getType(), is("[]Ds3Object"));
+    }
+
+    @Test
+    public void getStructAssignmentVariableTest() {
+        final Variable result = generator.getStructAssignmentVariable();
+        assertThat(result.getName(), is("content"));
+        assertThat(result.getAssignment(), is("buildDs3ObjectListStream(objects)"));
+    }
 }
