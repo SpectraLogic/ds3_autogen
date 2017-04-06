@@ -38,7 +38,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      * including contents which contains the request payload in the generated code.
      */
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
-        val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
+        val builder = ImmutableList.builder<Arguments>()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "bucketName"))
         }
@@ -46,7 +46,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
             builder.add(Arguments("string", "objectName"))
         }
         if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
+            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
             builder.add(Arguments(toGoType(resourceArg.type), Helper.uncapFirst(resourceArg.name)))
         }
 
@@ -64,7 +64,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      * Creates the list of constructor parameters, including a list of Ds3Objects.
      */
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
-        val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
+        val builder = ImmutableList.builder<Arguments>()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "bucketName"))
         }
@@ -72,7 +72,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
             builder.add(Arguments("string", "objectName"))
         }
         if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
+            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
             builder.add(Arguments(toGoType(resourceArg.type), Helper.uncapFirst(resourceArg.name)))
         }
 
@@ -87,7 +87,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      * into a stream before being assigned to the content variable.
      */
     override fun toStructAssignmentParams(ds3Request: Ds3Request): ImmutableList<VariableInterface> {
-        val builder: ImmutableList.Builder<VariableInterface> = ImmutableList.builder()
+        val builder = ImmutableList.builder<VariableInterface>()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(SimpleVariable("bucketName"))
         }
@@ -95,7 +95,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
             builder.add(SimpleVariable("objectName"))
         }
         if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
+            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
             builder.add(SimpleVariable(Helper.uncapFirst(resourceArg.name)))
         }
 
