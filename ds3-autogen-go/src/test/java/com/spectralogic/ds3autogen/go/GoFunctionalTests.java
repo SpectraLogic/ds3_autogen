@@ -208,7 +208,7 @@ public class GoFunctionalTests {
         final FileUtils fileUtils = mock(FileUtils.class);
         final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
 
-        codeGenerator.generateCode(fileUtils, "/input/completeMultiPartUpload.xml");
+        codeGenerator.generateCode(fileUtils, "/input/completeMultipartUpload.xml");
 
         // Verify Request file was generated
         final String requestCode = codeGenerator.getRequestCode();
