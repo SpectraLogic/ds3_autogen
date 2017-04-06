@@ -19,22 +19,23 @@ import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.go.models.request.Variable
 
 /**
- * Go generator for request handlers that have a Ds3Object list request payload
- * that is not specified in the contract
+ * The Go generator for request handlers that have a string request payload
+ * that is not specified within the contract
  */
-class RequiredObjectsPayloadGenerator : RequestPayloadGenerator() {
+class StringRequestPayloadGenerator : RequestPayloadGenerator() {
 
     /**
-     * Retrieves the Ds3Object list request payload
+     * Retrieves the string request payload
      */
     override fun getPayloadConstructorArg(): Arguments {
-        return Arguments("[]Ds3Object", "objects")
+        return Arguments("string", "requestPayload")
     }
 
     /**
-     * Retrieves the struct assignment for the Ds3Object list request payload
+     * Retrieves the struct assignment for the string request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildDs3ObjectListStream(objects)")
+        return Variable("content", "buildStreamFromString(requestPayload)")
     }
+
 }

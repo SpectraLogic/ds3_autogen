@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.go;
 
 import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
@@ -38,6 +39,10 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(createVerifyJobRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetails()), instanceOf(RequiredObjectsPayloadGenerator.class));
+
+        //Requests with string payloads
+        assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringRequestPayloadGenerator.class));
 
         // Non-special cased requests
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(BaseRequestGenerator.class));
