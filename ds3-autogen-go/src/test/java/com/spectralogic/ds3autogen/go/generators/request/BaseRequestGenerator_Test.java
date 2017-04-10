@@ -46,7 +46,8 @@ public class BaseRequestGenerator_Test {
             ImmutableList.of( //optional query params
                     new Ds3Param("IntOptParam", "int", false),
                     new Ds3Param("IntegerOptParam", "java.lang.Integer", true),
-                    new Ds3Param("StringOptParam", "java.lang.String", false)
+                    new Ds3Param("StringOptParam", "java.lang.String", false),
+                    new Ds3Param("VoidOptParam", "void", false)
             ),
             ImmutableList.of( //required query params
                     new Ds3Param("IntReqParam", "int", false),
@@ -208,6 +209,30 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<WithConstructor> result = generator.toNullableWithConstructors(testRequest.getOptionalQueryParams());
         assertThat(result.size(), is(expectedConst.size()));
 
+        expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
+    }
+
+    @Test
+    public void toVoidWithConstructors_NullList_Test() {
+        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toVoidWithConstructors_EmptyList_Test() {
+        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toVoidWithConstructors_FullList_Test() {
+        final ImmutableList<WithConstructor> expectedConst = ImmutableList.of(
+                new WithConstructor("VoidOptParam", "", "void_opt_param", "")
+        );
+
+        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(testRequest.getOptionalQueryParams());
+
+        assertThat(result.size(), is(expectedConst.size()));
         expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }
