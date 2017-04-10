@@ -134,6 +134,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isCompleteMultiPartUploadRequest(ds3Request)) {
             return new MultipartUploadPayloadGenerator();
         }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return new DeleteObjectsRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -145,7 +148,8 @@ public class GoCodeGenerator implements CodeGenerator {
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)
                 || hasStringRequestPayload(ds3Request)
-                || isCompleteMultiPartUploadRequest(ds3Request)) {
+                || isCompleteMultiPartUploadRequest(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/request_with_stream.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
