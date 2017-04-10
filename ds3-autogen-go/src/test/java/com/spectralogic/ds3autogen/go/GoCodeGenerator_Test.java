@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.go;
 
 import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.MultipartUploadPayloadGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.DeleteObjectsRequestGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
 import org.junit.Test;
@@ -39,7 +40,10 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetails()), instanceOf(RequiredObjectsPayloadGenerator.class));
 
-        // Requests with string payloads
+        // Request with object name list payload
+        assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(DeleteObjectsRequestGenerator.class));
+
+        //Requests with string payloads
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringRequestPayloadGenerator.class));
 
