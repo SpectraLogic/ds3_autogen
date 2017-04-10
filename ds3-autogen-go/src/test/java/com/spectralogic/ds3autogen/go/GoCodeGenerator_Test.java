@@ -16,16 +16,15 @@
 package com.spectralogic.ds3autogen.go;
 
 import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.MultipartUploadPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getRequestGenerator;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getBucketRequest;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-
-import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getRequestGenerator;
 
 public class GoCodeGenerator_Test {
 
@@ -40,9 +39,12 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetails()), instanceOf(RequiredObjectsPayloadGenerator.class));
 
-        //Requests with string payloads
+        // Requests with string payloads
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringRequestPayloadGenerator.class));
+
+        // Request with CompleteMultipartUpload request payload
+        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(MultipartUploadPayloadGenerator.class));
 
         // Non-special cased requests
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(BaseRequestGenerator.class));

@@ -26,10 +26,7 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.RequestModelGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
@@ -134,6 +131,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new MultipartUploadPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -144,7 +144,8 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)
-                || hasStringRequestPayload(ds3Request)) {
+                || hasStringRequestPayload(ds3Request)
+                || isCompleteMultiPartUploadRequest(ds3Request)) {
             return config.getTemplate("request/request_with_stream.ftl");
         }
         return config.getTemplate("request/request_template.ftl");

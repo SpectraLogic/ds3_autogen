@@ -200,4 +200,37 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
     }
+
+    @Test
+    public void completeMultipartUpload() throws IOException, TemplateModelException {
+        // Test for request with CompleteMultipartUpload payload
+        final String requestName = "CompleteMultiPartUploadRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/completeMultipartUpload.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
+        assertTrue(requestCode.contains("content: buildPartsListStream(parts),")); //content is assigned a stream
+        assertTrue(returnsStream(requestName, requestCode));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+    }
 }
