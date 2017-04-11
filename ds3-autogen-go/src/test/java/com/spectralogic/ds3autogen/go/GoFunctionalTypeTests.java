@@ -38,7 +38,7 @@ public class GoFunctionalTypeTests {
     private final static String requestName = "PlaceHolderRequest";
 
     @Test
-    public void simpleRequestNoPayload() throws IOException, TemplateModelException {
+    public void simpleEnumGeneration() throws IOException, TemplateModelException {
         final String typeName = "DatabasePhysicalSpaceState";
         final FileUtils fileUtils = mock(FileUtils.class);
         final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
