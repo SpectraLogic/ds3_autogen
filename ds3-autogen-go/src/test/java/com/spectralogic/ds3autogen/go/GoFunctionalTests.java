@@ -21,9 +21,7 @@ import com.spectralogic.ds3autogen.go.utils.GoTestCodeUtil;
 import com.spectralogic.ds3autogen.testutil.logging.FileTypeToLog;
 import com.spectralogic.ds3autogen.testutil.logging.GeneratedCodeLogger;
 import freemarker.template.TemplateModelException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +38,6 @@ public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
     private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
-
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {

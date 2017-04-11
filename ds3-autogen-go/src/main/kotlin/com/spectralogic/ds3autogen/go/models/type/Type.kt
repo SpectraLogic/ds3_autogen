@@ -15,5 +15,8 @@
 
 package com.spectralogic.ds3autogen.go.models.type
 
+import com.google.common.collect.ImmutableList
+
 data class Type(
-        val name: String)
+        val name: String,
+        val enumConstants: ImmutableList<String>)

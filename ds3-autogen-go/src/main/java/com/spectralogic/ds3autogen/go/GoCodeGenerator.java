@@ -48,6 +48,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 
@@ -292,7 +293,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go response model
      */
     private Template getTypeTemplate(final Ds3Type ds3Type) throws IOException {
-        //TODO add special casing
+        if (isEnum(ds3Type)) {
+            return config.getTemplate("type/enum_type.ftl");
+        }
         return config.getTemplate("type/type_template.ftl");
     }
 
