@@ -13,8 +13,8 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.type;
+package com.spectralogic.ds3autogen.go.generators.type
 
-public interface TypeModelGeneratorUtil {
+interface TypeModelGeneratorUtil {
     //TODO implement as needed
 }
