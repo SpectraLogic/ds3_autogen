@@ -1,0 +1,172 @@
+<!--
+  ~ *******************************************************************************
+  ~   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+  ~   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+  ~   this file except in compliance with the License. A copy of the License is located at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   or in the "license" file accompanying this file.
+  ~   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  ~   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  ~   specific language governing permissions and limitations under the License.
+  ~ *****************************************************************************
+  -->
+
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.PlaceHolderRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="DELETE" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Placeholder" Type="com.spectralogic.s3.server.domain.JobApiBean"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.D14152B32BAE4D9F43B0E7DFE275A88E</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.JobApiBean">
+                <Elements>
+                    <Element Name="Aggregating" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="BucketName" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CachedSizeInBytes" Type="long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CompletedSizeInBytes" Type="long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="EntirelyInCache" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="JobId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.NodeApiBean" Name="Nodes" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Nodes" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Node" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="OriginalSizeInBytes" Type="long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="StartDate" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Status" Type="com.spectralogic.s3.server.domain.JobStatus">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserName" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

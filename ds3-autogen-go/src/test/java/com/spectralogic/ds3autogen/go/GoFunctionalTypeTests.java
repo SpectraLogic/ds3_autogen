@@ -55,4 +55,74 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("NEAR_LOW DatabasePhysicalSpaceState = 1 + iota"));
         assertTrue(typeCode.contains("NORMAL DatabasePhysicalSpaceState = 1 + iota"));
     }
+
+    @Test
+    public void simpleTypeGeneration() throws IOException, TemplateModelException {
+        final String typeName = "JobCompletedNotificationPayload";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/simpleType.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        assertTrue(typeCode.contains("CancelOccurred bool `xml:\"CancelOccurred\"`"));
+        assertTrue(typeCode.contains("JobId string `xml:\"JobId\"`"));
+        assertTrue(typeCode.contains("NotificationGenerationDate string `xml:\"NotificationGenerationDate\"`"));
+        assertTrue(typeCode.contains("ObjectsNotPersisted []BulkObject `xml:\"ObjectsNotPersisted>Object\"`"));
+    }
+
+    @Test
+    public void jobType() throws IOException, TemplateModelException {
+        final String typeName = "Job";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/jobType.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        assertTrue(typeCode.contains("Aggregating bool `xml:\"Aggregating,attr\"`"));
+        assertTrue(typeCode.contains("BucketName *string `xml:\"BucketName,attr\"`"));
+        assertTrue(typeCode.contains("CachedSizeInBytes int64 `xml:\"CachedSizeInBytes,attr\"`"));
+        assertTrue(typeCode.contains("ChunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee `xml:\"ChunkClientProcessingOrderGuarantee,attr\"`"));
+        assertTrue(typeCode.contains("CompletedSizeInBytes int64 `xml:\"CompletedSizeInBytes,attr\"`"));
+        assertTrue(typeCode.contains("EntirelyInCache bool `xml:\"EntirelyInCache,attr\"`"));
+        assertTrue(typeCode.contains("JobId string `xml:\"JobId,attr\"`"));
+        assertTrue(typeCode.contains("Naked bool `xml:\"Naked,attr\"`"));
+        assertTrue(typeCode.contains("Name *string `xml:\"Name,attr\"`"));
+        assertTrue(typeCode.contains("Nodes []JobNode `xml:\"Nodes>Node\"`"));
+        assertTrue(typeCode.contains("OriginalSizeInBytes int64 `xml:\"OriginalSizeInBytes,attr\"`"));
+        assertTrue(typeCode.contains("Priority Priority `xml:\"Priority,attr\"`"));
+        assertTrue(typeCode.contains("RequestType JobRequestType `xml:\"RequestType,attr\"`"));
+        assertTrue(typeCode.contains("StartDate string `xml:\"StartDate,attr\"`"));
+        assertTrue(typeCode.contains("Status JobStatus `xml:\"Status,attr\"`"));
+        assertTrue(typeCode.contains("UserId string `xml:\"UserId,attr\"`"));
+        assertTrue(typeCode.contains("UserName *string `xml:\"UserName,attr\"`"));
+    }
+
+    @Test
+    public void jobNodeType() throws IOException, TemplateModelException {
+        final String typeName = "JobNode";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/jobNodeType.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        assertTrue(typeCode.contains("EndPoint *string `xml:\"EndPoint,attr\"`"));
+        assertTrue(typeCode.contains("HttpPort *int `xml:\"HttpPort,attr\"`"));
+        assertTrue(typeCode.contains("HttpsPort *int `xml:\"HttpsPort,attr\"`"));
+        assertTrue(typeCode.contains("Id string `xml:\"Id,attr\"`"));
+    }
 }

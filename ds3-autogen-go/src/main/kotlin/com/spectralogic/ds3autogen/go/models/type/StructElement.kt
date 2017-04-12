@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3autogen.go.models.type
 
-import com.google.common.collect.ImmutableList
-
-data class Type(
-        val name: String,
-        val enumConstants: ImmutableList<String>,
-        val structElements: ImmutableList<StructElement>)
+/**
+ * Used to generate
+ */
+data class StructElement(val name: String,
+                         val type: String,
+                         val xmlNotation: String)

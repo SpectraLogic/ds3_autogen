@@ -3,5 +3,7 @@
 package models
 
 type ${name} struct {
-    //TODO implement
+    <#list structElements as element>
+    ${element.name} ${element.type} `${element.xmlNotation}`
+    </#list>
 }
