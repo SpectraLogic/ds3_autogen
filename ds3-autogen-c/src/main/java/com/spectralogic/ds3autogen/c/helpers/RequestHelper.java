@@ -68,14 +68,14 @@ public final class RequestHelper {
         if (!isBucketRequired) {
             return "";
         } else if (isObjectRequired) {
-            return "const char* bucket_name, const char* object_name";
+            return "const char *const bucket_name, const char *const object_name";
         }
-        return "const char* bucket_name";
+        return "const char *const bucket_name";
     }
 
     public static String getSpectraS3InitParams(final boolean isResourceRequired) {
         if (isResourceRequired) {
-            return "const char* resource_id";
+            return "const char *const resource_id";
         }
         return "";
     }
