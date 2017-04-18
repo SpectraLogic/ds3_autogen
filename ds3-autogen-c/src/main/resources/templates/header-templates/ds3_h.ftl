@@ -165,8 +165,11 @@ LIBRARY_API void ds3_metadata_free(ds3_metadata* _metadata);
 LIBRARY_API void ds3_metadata_entry_free(ds3_metadata_entry* entry);
 LIBRARY_API void ds3_metadata_keys_free(ds3_metadata_keys_result* metadata_keys);
 
-LIBRARY_API ds3_creds*  ds3_create_creds(const char* access_id, const char* secret_key);
-LIBRARY_API ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds);
+LIBRARY_API void ds3_creds_free(ds3_creds* client);
+LIBRARY_API void ds3_client_free(ds3_client* client);
+
+LIBRARY_API ds3_creds*  ds3_create_creds(const char *const access_id, const char *const secret_key);
+LIBRARY_API ds3_client* ds3_create_client(const char *const endpoint, ds3_creds* creds);
 LIBRARY_API ds3_error*  ds3_create_client_from_env(ds3_client** client);
 LIBRARY_API void        ds3_client_register_logging(ds3_client* client, ds3_log_lvl log_lvl, void (* log_callback)(const char* log_message, void* user_data), void* user_data);
 LIBRARY_API void        ds3_client_register_net(ds3_client* client, ds3_error* (* net_callback)(const ds3_client* client,
@@ -176,7 +179,7 @@ LIBRARY_API void        ds3_client_register_net(ds3_client* client, ds3_error* (
                                                                                                 void* write_user_struct,
                                                                                                 size_t (*write_handler_func)(void*, size_t, size_t, void*),
                                                                                                 ds3_string_multimap** return_headers));
-LIBRARY_API void ds3_client_proxy(ds3_client* client, const char* proxy);
+LIBRARY_API void ds3_client_proxy(ds3_client* client, const char *const proxy);
 
 // Set optional request query parameters
 LIBRARY_API void ds3_request_set_byte_range(ds3_request* _request, int64_t rangeStart, int64_t rangeEnd);
@@ -186,17 +189,14 @@ LIBRARY_API ${parameterHelper.generateSetQueryParamSignature(queryParam)};
 </#list>
 
 // Set headers / metadata
-LIBRARY_API void ds3_request_set_custom_header(ds3_request* request, const char* header_name, const char* header_value);
-LIBRARY_API void ds3_request_set_md5(ds3_request* request, const char* md5);
-LIBRARY_API void ds3_request_set_sha256(ds3_request* request, const char* sha256);
-LIBRARY_API void ds3_request_set_sha512(ds3_request* request, const char* sha512);
-LIBRARY_API void ds3_request_set_crc32(ds3_request* request, const char* crc32);
-LIBRARY_API void ds3_request_set_crc32c(ds3_request* request, const char* crc32c);
+LIBRARY_API void ds3_request_set_custom_header(ds3_request* request, const char *const header_name, const char *const header_value);
+LIBRARY_API void ds3_request_set_md5(ds3_request* request, const char *const md5);
+LIBRARY_API void ds3_request_set_sha256(ds3_request* request, const char *const sha256);
+LIBRARY_API void ds3_request_set_sha512(ds3_request* request, const char *const sha512);
+LIBRARY_API void ds3_request_set_crc32(ds3_request* request, const char *const crc32);
+LIBRARY_API void ds3_request_set_crc32c(ds3_request* request, const char *const crc32c);
 // Any attempt to set a key with an empty or NULL value will be ignored.
-LIBRARY_API void ds3_request_set_metadata(ds3_request* request, const char* name, const char* value);
-
-LIBRARY_API void ds3_creds_free(ds3_creds* client);
-LIBRARY_API void ds3_client_free(ds3_client* client);
+LIBRARY_API void ds3_request_set_metadata(ds3_request* request, const char *const name, const char *const value);
 
 LIBRARY_API ds3_error* ds3_get_object_with_metadata(const ds3_client* client,
                                                     const ds3_request* request,
@@ -209,10 +209,10 @@ LIBRARY_API ds3_error* ds3_get_object_with_metadata(const ds3_client* client,
 <#list getRequests() as requestEntry>
 
     <#if requestEntry.getName() == "ds3_head_bucket_request">
-LIBRARY_API ds3_request* ds3_init_head_bucket_request(const char* bucket_name);
+LIBRARY_API ds3_request* ds3_init_head_bucket_request(const char *const bucket_name);
 LIBRARY_API ds3_error* ds3_head_bucket_request(const ds3_client* client, const ds3_request* request);
     <#elseif requestEntry.getName() == "ds3_head_object_request">
-LIBRARY_API ds3_request* ds3_init_head_object_request(const char* bucket_name, const char* object_name);
+LIBRARY_API ds3_request* ds3_init_head_object_request(const char* bucket_name, const char *const object_name);
 LIBRARY_API ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
     <#else>
         <#include "RequestCommentDocumentation.ftl">

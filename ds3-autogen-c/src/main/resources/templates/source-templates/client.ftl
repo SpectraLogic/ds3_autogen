@@ -44,7 +44,7 @@ void ds3_client_register_net(ds3_client* client, ds3_error* (* net_callback)(con
     client->net_callback = net_callback;
 }
 
-ds3_client* ds3_create_client(const char* endpoint, ds3_creds* creds) {
+ds3_client* ds3_create_client(const char *const endpoint, ds3_creds* creds) {
     ds3_client* client;
     if (endpoint == NULL) {
         fprintf(stderr, "Null endpoint\n");
