@@ -128,20 +128,19 @@ public class ParameterHelper {
     }
 
     public static String generateSetQueryParamSignature(final Parameter parm) {
-        /*
-        */
         switch(parm.getParameterType()) {
             case "ds3_bool":
                 return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, ds3_bool value)";
             case "ds3_str":
             case "char":
-                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const char" + parm.getParameterPointerType().toString() + " value)";
+                return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const char " + parm.getParameterPointerType().toString() + " const value)";
             case "float":
             case "int":
             case "uint64_t":
             case "uint32_t":
                 return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
             default:
+                // Enum parameter type
                 return "void ds3_request_set_" + parm.getName() + "_" + parm.getParameterType() + "(const ds3_request* request, const " + parm.getParameterType() + parm.getParameterPointerType().toString() + " value)";
         }
     }
@@ -158,6 +157,7 @@ public class ParameterHelper {
             case "ds3_bool":
                 return "_set_query_param_flag(request, \"" + parm.getName() + "\", value);\n";
             default:
+                // Enum parameter type
                 return "_set_query_param(request, \"" + parm.getName() + "\", (const char*)_get_" + parm.getParameterType() + "_str(value));\n";
         }
     }

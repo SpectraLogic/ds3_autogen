@@ -54,7 +54,7 @@ public class Parameter_Test {
     public void testSetQueryParamSignatureString() {
         final Parameter parm = new Parameter(ParameterModifier.CONST, "ds3_str", "bucket_id", ParameterPointerType.SINGLE_POINTER, false);
         final String parmSig = ParameterHelper.generateSetQueryParamSignature(parm);
-        assertThat(parmSig, is("void ds3_request_set_bucket_id(const ds3_request* request, const char* value)"));
+        assertThat(parmSig, is("void ds3_request_set_bucket_id(const ds3_request* request, const char * const value)"));
     }
 
     @Test

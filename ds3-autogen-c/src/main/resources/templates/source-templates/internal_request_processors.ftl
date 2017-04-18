@@ -12,7 +12,7 @@ static ds3_error* _internal_request_dispatcher(
     return net_process_request(client, request, read_user_struct, read_handler_func, write_user_struct, write_handler_func, return_headers);
 }
 
-static int num_chars_in_ds3_str(const ds3_str* str, char ch) {
+static int num_chars_in_ds3_str(const ds3_str *const str, char ch) {
     int num_matches = 0;
     size_t index;
 

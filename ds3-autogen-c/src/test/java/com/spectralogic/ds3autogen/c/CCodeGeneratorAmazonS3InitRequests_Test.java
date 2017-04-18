@@ -62,7 +62,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_request* ds3_init_delete_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* ds3_init_delete_bucket_request(const char *const bucket_name) {"));
         assertTrue(output.contains("    struct _ds3_request* request = _common_request_init(HTTP_DELETE, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("    return request;"));
         assertTrue(output.contains("}"));
@@ -88,7 +88,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_request* ds3_init_get_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* ds3_init_get_bucket_request(const char *const bucket_name) {"));
         assertTrue(output.contains("    struct _ds3_request* request = _common_request_init(HTTP_GET, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("    "));
         assertTrue(output.contains("    return (ds3_request*) request;"));
@@ -112,7 +112,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        assertTrue(output.contains("ds3_request* ds3_init_put_bucket_request(const char* bucket_name) {"));
+        assertTrue(output.contains("ds3_request* ds3_init_put_bucket_request(const char *const bucket_name) {"));
         assertTrue(output.contains("    struct _ds3_request* request = _common_request_init(HTTP_PUT, _build_path(\"/\", bucket_name, NULL));"));
         assertTrue(output.contains("    return (ds3_request*) request;"));
         assertTrue(output.contains("}"));
@@ -170,7 +170,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* ds3_init_create_object(const char* bucket_name, const char* object_name, const uint64_t length) {"  + "\n"
+        final String expectedOutput = "ds3_request* ds3_init_create_object(const char *const bucket_name, const char *const object_name, const uint64_t length) {"  + "\n"
                                     + "    struct _ds3_request* request = _common_request_init(HTTP_PUT, _build_path(\"/\", bucket_name, object_name));" + "\n"
                                     + "    request->length = length;"                                                                                    + "\n"
                                     + "\n"
@@ -208,7 +208,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
 
-        final String expectedOutput = "ds3_request* ds3_init_initiate_multi_part_upload(const char* bucket_name, const char* object_name, const uint64_t length) {" + "\n"
+        final String expectedOutput = "ds3_request* ds3_init_initiate_multi_part_upload(const char *const bucket_name, const char *const object_name, const uint64_t length) {" + "\n"
                 + "    struct _ds3_request* request = _common_request_init(HTTP_POST, _build_path(\"/\", bucket_name, object_name));" + "\n"
                 + "    request->length = length;"                                                                                    + "\n"
                 + "\n"

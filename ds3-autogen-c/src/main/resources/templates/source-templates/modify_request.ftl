@@ -168,7 +168,7 @@ static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) 
     return request;
 }
 
-static ds3_str* _build_path(const char* path_prefix, const char* bucket_name, const char* object_name) {
+static ds3_str* _build_path(const char *const path_prefix, const char *const bucket_name, const char *const object_name) {
     ds3_str* buildPathArgs = NULL;
     char* escaped_bucket_name = NULL;
     char* escaped_object_name = NULL;
