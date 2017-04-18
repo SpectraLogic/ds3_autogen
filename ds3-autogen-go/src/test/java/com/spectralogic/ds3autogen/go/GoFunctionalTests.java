@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -56,6 +56,9 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("func NewGetObjectResponse(webResponse networking.WebResponse) (*GetObjectResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("return &GetObjectResponse{}, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -85,6 +88,12 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("func NewSimpleWithPayloadResponse(webResponse networking.WebResponse) (*SimpleWithPayloadResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
+        assertTrue(responseCode.contains("Bucket Bucket `xml:\"Bucket\"`"));
+        assertTrue(responseCode.contains("var body SimpleWithPayloadResponse"));
+        assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -118,6 +127,9 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("func NewDeleteBucketAclSpectraS3Response(webResponse networking.WebResponse) (*DeleteBucketAclSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
+        assertTrue(responseCode.contains("return &DeleteBucketAclSpectraS3Response{}, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -151,6 +163,11 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("PhysicalPlacement PhysicalPlacement `xml:\"PhysicalPlacement\"`"));
+        assertTrue(responseCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Response(webResponse networking.WebResponse) (*VerifyPhysicalPlacementForObjectsSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("var body VerifyPhysicalPlacementForObjectsSpectraS3Response"));
+        assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -184,6 +201,12 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("MasterObjectList *MasterObjectList `xml:\"MasterObjectList\"`"));
+        assertTrue(responseCode.contains("func NewReplicatePutJobSpectraS3Response(webResponse networking.WebResponse) (*ReplicatePutJobSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 204 }"));
+        assertTrue(responseCode.contains("var body ReplicatePutJobSpectraS3Response"));
+        assertTrue(responseCode.contains("return &body, nil"));
+        assertTrue(responseCode.contains("return &ReplicatePutJobSpectraS3Response{}, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -217,6 +240,11 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("CompleteMultipartUploadResult CompleteMultipartUploadResult `xml:\"CompleteMultipartUploadResult\"`"));
+        assertTrue(responseCode.contains("func NewCompleteMultiPartUploadResponse(webResponse networking.WebResponse) (*CompleteMultiPartUploadResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("var body CompleteMultiPartUploadResponse"));
+        assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -250,6 +278,11 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("DeleteResult DeleteResult `xml:\"DeleteResult\"`"));
+        assertTrue(responseCode.contains("func NewDeleteObjectsResponse(webResponse networking.WebResponse) (*DeleteObjectsResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("var body DeleteObjectsResponse"));
+        assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();

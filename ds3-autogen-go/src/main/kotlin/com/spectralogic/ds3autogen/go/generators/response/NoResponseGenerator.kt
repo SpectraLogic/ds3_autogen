@@ -13,8 +13,22 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.response;
+package com.spectralogic.ds3autogen.go.generators.response
 
-public interface ResponseModelGeneratorUtil {
-    //TODO implement as needed
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
+
+/**
+ * Generates Response for commands with no response payload
+ */
+open class NoResponseGenerator : BaseResponseGenerator() {
+
+    /**
+     * Return an empty string, which represents an empty response struct
+     */
+    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String {
+        return ""
+    }
 }

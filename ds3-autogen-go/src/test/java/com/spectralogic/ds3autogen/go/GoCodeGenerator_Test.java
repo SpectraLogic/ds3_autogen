@@ -20,9 +20,12 @@ import com.spectralogic.ds3autogen.go.generators.request.MultipartUploadPayloadG
 import com.spectralogic.ds3autogen.go.generators.request.DeleteObjectsRequestGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getRequestGenerator;
+import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getResponseGenerator;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -64,5 +67,21 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
+    }
+
+    @Test
+    public void getResponseGeneratorTest() {
+        // Commands with no response payload
+        assertThat(getResponseGenerator(getRequestDeleteNotification()), instanceOf(NoResponseGenerator.class));
+        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(NoResponseGenerator.class));
+
+        // Commands with a standard response payload
+        assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getRequestGetJob()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getAllocateJobChunkRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getHeadBucketRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getBucketRequest()), instanceOf(BaseResponseGenerator.class));
+        assertThat(getResponseGenerator(getBucketsSpectraS3Request()), instanceOf(BaseResponseGenerator.class));
     }
 }

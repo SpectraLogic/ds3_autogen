@@ -15,16 +15,19 @@
 
 package com.spectralogic.ds3autogen.go.generators.response;
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.go.models.response.Response;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Test;
 
-public class BaseResponseGenerator implements ResponseModelGenerator<Response>, ResponseModelGeneratorUtil {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    @Override
-    public Response generate(final Ds3Request ds3Request) {
-        final String name = NormalizingContractNamesUtil.toResponseName(ds3Request.getName());
+public class NoResponseGenerator_Test {
 
-        return new Response(name);
+    private final NoResponseGenerator generator = new NoResponseGenerator();
+
+    @Test
+    public void toResponsePayloadStructTest() {
+        assertThat(generator.toResponsePayloadStruct(ImmutableList.of(), ImmutableMap.of()), is(""));
     }
 }

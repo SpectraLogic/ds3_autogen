@@ -15,7 +15,7 @@
                     <ResponseCode>
                         <Code>204</Code>
                         <ResponseTypes>
-                            <ResponseType Type="null"/>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>

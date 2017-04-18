@@ -31,5 +31,23 @@
                 <Version>1.A4F544C672FC8C11593427E560385533</Version>
             </RequestHandler>
         </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean" NameToMarshal="CompleteMultipartUploadResult">
+                <Elements>
+                    <Element Name="Bucket" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ETag" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Key" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Location" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
     </Contract>
 </Data>

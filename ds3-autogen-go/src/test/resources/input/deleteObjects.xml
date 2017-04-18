@@ -21,5 +21,33 @@
                 <Version>1.773E50A74C3DC9EB87D6CD924CA1B34A</Version>
             </RequestHandler>
         </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.DeleteResultApiBean" NameToMarshal="DeleteResult">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.S3ObjectToDeleteApiBean" Name="DeletedObjects" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Deleted" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.DeleteObjectErrorResultApiBean" Name="Errors" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="UNDEFINED" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Error" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
     </Contract>
 </Data>

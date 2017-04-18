@@ -13,13 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.models.response
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
-import com.spectralogic.ds3autogen.go.models.request.Request;
-
-@FunctionalInterface
-public interface RequestModelGenerator<T extends Request> {
-    T generate(final Ds3Request ds3Request);
-}
+data class ResponseCode(val code: Int,
+                        val parseResponse: String)
