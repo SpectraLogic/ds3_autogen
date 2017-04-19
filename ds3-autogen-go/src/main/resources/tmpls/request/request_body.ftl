@@ -49,6 +49,13 @@ func (${name?uncap_first} *${name}) With${const.name?cap_first}(${const.name?unc
 }
 </#list>
 
+<#list voidWithConstructors as const>
+func (${name?uncap_first} *${name}) With${const.name?cap_first}() *${name} {
+    ${name?uncap_first}.queryParams.Set("${const.key}", "")
+    return ${name?uncap_first}
+}
+</#list>
+
 func (${name}) Verb() networking.HttpVerb {
     return networking.${httpVerb}
 }
