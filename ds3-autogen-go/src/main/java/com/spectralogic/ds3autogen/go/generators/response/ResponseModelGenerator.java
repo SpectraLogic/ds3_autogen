@@ -15,10 +15,12 @@
 
 package com.spectralogic.ds3autogen.go.generators.response;
 
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.go.models.response.Response;
 
 @FunctionalInterface
 public interface ResponseModelGenerator<T extends Response> {
-    T generate(final Ds3Request ds3Request);
+    T generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap);
 }

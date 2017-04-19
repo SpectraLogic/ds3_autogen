@@ -15,7 +15,7 @@
                     <ResponseCode>
                         <Code>200</Code>
                         <ResponseTypes>
-                            <ResponseType Type="java.lang.String" />
+                            <ResponseType Type="null" />
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>

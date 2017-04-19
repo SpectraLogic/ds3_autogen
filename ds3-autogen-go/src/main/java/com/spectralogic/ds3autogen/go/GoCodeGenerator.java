@@ -28,6 +28,7 @@ import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.TypeModelGenerator;
@@ -51,6 +52,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 
 public class GoCodeGenerator implements CodeGenerator {
 
@@ -80,7 +82,7 @@ public class GoCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(ds3Requests);
+            generateCommands(ds3Requests, typeMap);
             generateClient(ds3Requests);
             generateAllTypes(typeMap);
         } catch (final Exception e) {
@@ -91,14 +93,16 @@ public class GoCodeGenerator implements CodeGenerator {
     /**
      * Generates Go code for requests and responses
      */
-    private void generateCommands(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
+    private void generateCommands(
+            final ImmutableList<Ds3Request> ds3Requests,
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         if (isEmpty(ds3Requests)) {
             LOG.info("There were no requests to generate.");
             return;
         }
         for (final Ds3Request ds3Request : ds3Requests) {
             generateRequest(ds3Request);
-            generateResponse(ds3Request);
+            generateResponse(ds3Request, typeMap);
         }
     }
 
@@ -159,10 +163,12 @@ public class GoCodeGenerator implements CodeGenerator {
     /**
      * Generates the Go code for a response handler/parser
      */
-    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateResponse(
+            final Ds3Request ds3Request,
+            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> generator = getResponseGenerator(ds3Request);
-        final Response response = generator.generate(ds3Request);
+        final Response response = generator.generate(ds3Request, typeMap);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
                         Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + response.getName() + ".go")));
@@ -179,8 +185,10 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the generator used to create the Go response handler for the
      * specified {@link Ds3Request}
      */
-    private ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
-        //TODO add special casing
+    static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+        if (!hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
+            return new NoResponseGenerator();
+        }
         return new BaseResponseGenerator();
     }
 
@@ -188,7 +196,7 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go response handler
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        //TODO add special casing
+        //TODO special case if necessary
         return config.getTemplate("response/response_template.ftl");
     }
 

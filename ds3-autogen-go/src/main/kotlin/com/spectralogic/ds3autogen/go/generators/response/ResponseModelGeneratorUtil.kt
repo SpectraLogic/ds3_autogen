@@ -13,13 +13,17 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.request;
+package com.spectralogic.ds3autogen.go.generators.response;
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
-import com.spectralogic.ds3autogen.go.models.request.Request;
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 
-@FunctionalInterface
-public interface RequestModelGenerator<T extends Request> {
-    T generate(final Ds3Request ds3Request);
+interface ResponseModelGeneratorUtil {
+
+    /**
+     * Retrieves the content of the response struct
+     */
+    fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String
 }

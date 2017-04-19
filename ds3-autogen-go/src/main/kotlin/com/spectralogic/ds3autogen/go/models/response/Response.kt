@@ -15,5 +15,10 @@
 
 package com.spectralogic.ds3autogen.go.models.response
 
+import com.google.common.collect.ImmutableList
+
 data class Response(
-        val name: String)
+        val name: String,
+        val payloadStruct: String, //The struct definition for the response payload including xml parsing when relevant
+        val expectedCodes: String,
+        val responseCodes: ImmutableList<ResponseCode>)
