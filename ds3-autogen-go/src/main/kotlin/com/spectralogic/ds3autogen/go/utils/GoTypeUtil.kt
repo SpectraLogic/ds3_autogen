@@ -16,12 +16,26 @@
 package com.spectralogic.ds3autogen.go.utils
 
 import com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent
+import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 
 /**
  * Contains utils for converting contract types into their corresponding Go types
  */
 
+
+/**
+ * Retrieves the Go type associated with the specific contract type/compoundType.
+ */
+fun toGoType(contractType: String?, compoundContractType: String?, nullable: Boolean): String {
+    if (isEmpty(contractType)) {
+        throw IllegalArgumentException("The contract type cannot be null or an empty string")
+    }
+    if (!contractType.equals("array", ignoreCase = true) || isEmpty(compoundContractType)) {
+        return toGoType(contractType!!, nullable)
+    }
+    return "[]" + toGoType(compoundContractType!!)
+}
 
 /**
  * Retrieves the Go type associated with the specific contract type. If the
@@ -44,7 +58,7 @@ fun toGoType(contractType: String): String {
     when (type.toLowerCase()) {
         "boolean" -> return "bool"
         "integer", "int" -> return "int"
-        "string", "uuid" -> return "string"
+        "string", "uuid", "date" -> return "string"
         "double" -> return "float64"
         "long" -> return "int64"
         "void" -> return ""

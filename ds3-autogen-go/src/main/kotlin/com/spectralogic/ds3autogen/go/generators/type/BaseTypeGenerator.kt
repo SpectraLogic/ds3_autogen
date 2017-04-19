@@ -16,10 +16,14 @@
 package com.spectralogic.ds3autogen.go.generators.type
 
 import com.google.common.collect.ImmutableList
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
+import com.spectralogic.ds3autogen.go.models.type.StructElement
 import com.spectralogic.ds3autogen.go.models.type.Type
+import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
+import com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 
@@ -28,8 +32,39 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
     override fun generate(ds3Type: Ds3Type): Type {
         val name = NormalizingContractNamesUtil.removePath(ds3Type.name)
         val enumConstants = toEnumConstantsList(ds3Type.enumConstants)
+        val structElements = toStructElementsList(ds3Type.elements)
 
-        return Type(name, enumConstants)
+        return Type(name, enumConstants, structElements)
+    }
+
+    /**
+     * Creates the list of elements that make up the struct, including the xml parsing notation
+     * used during un-marshaling
+     */
+    fun toStructElementsList(ds3Elements: ImmutableList<Ds3Element>?): ImmutableList<StructElement> {
+        if (isEmpty(ds3Elements)) {
+            return ImmutableList.of()
+        }
+        return ds3Elements!!.stream()
+                .map { element -> StructElement(element.name,
+                                                toGoType(element.type, element.componentType, element.nullable),
+                                                toXmlNotation(element)) }
+                .collect(GuavaCollectors.immutableList())
+    }
+
+    /**
+     * Creates the xml notation for parsing the GO element within the struct
+     */
+    fun toXmlNotation(ds3Element: Ds3Element): String {
+        val xmlTag = getXmlTagName(ds3Element)
+        if (hasWrapperAnnotations(ds3Element.ds3Annotations)) {
+            val encapsulatingTag = getEncapsulatingTagAnnotations(ds3Element.ds3Annotations)
+            return "xml:\"$encapsulatingTag>$xmlTag\""
+        }
+        if (isAttribute(ds3Element.ds3Annotations)) {
+            return "xml:\"$xmlTag,attr\""
+        }
+        return "xml:\"$xmlTag\""
     }
 
     /**

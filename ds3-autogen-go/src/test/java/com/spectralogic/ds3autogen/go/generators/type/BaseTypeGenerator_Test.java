@@ -16,7 +16,11 @@
 package com.spectralogic.ds3autogen.go.generators.type;
 
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Annotation;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3AnnotationElement;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
+import com.spectralogic.ds3autogen.go.models.type.StructElement;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -26,6 +30,36 @@ import static org.junit.Assert.assertThat;
 public class BaseTypeGenerator_Test {
 
     private final BaseTypeGenerator generator = new BaseTypeGenerator();
+
+    private static final Ds3Element elementWithWrapper = new Ds3Element(
+            "ElementWithWrapper",
+            "Type",
+            "",
+            ImmutableList.of(
+                    new Ds3Annotation(
+                            "com.spectralogic.util.marshal.CustomMarshaledName",
+                            ImmutableList.of(
+                                    new Ds3AnnotationElement("CollectionValue", "OuterTag", "java.lang.String"),
+                                    new Ds3AnnotationElement("Value", "InnerTag", "java.lang.String")))),
+            false
+    );
+
+    private static final Ds3Element elementAsAttribute = new Ds3Element(
+            "ElementAsAttribute",
+            "Type",
+            "",
+            ImmutableList.of(
+                    new Ds3Annotation("com.spectralogic.util.marshal.MarshalXmlAsAttribute", null)),
+            false
+    );
+
+    private static final Ds3Element simpleElement = new Ds3Element(
+            "SimpleElement",
+            "Type",
+            "",
+            ImmutableList.of(),
+            false
+    );
 
     @Test
     public void toEnumConstantsList_NullList_Test() {
@@ -53,5 +87,55 @@ public class BaseTypeGenerator_Test {
 
         assertThat(result.size(), is(expectedEnums.size()));
         expectedEnums.forEach(expected -> assertThat(result, hasItem(expected)));
+    }
+
+    @Test
+    public void toXmlNotation_WithWrapper_Test() {
+        final String result = generator.toXmlNotation(elementWithWrapper);
+        assertThat(result, is("xml:\"OuterTag>InnerTag\""));
+    }
+
+    @Test
+    public void toXmlNotation_Attribute_Test() {
+        final String result = generator.toXmlNotation(elementAsAttribute);
+        assertThat(result, is("xml:\"ElementAsAttribute,attr\""));
+    }
+
+    @Test
+    public void toXmlNotation_Test() {
+        final String result = generator.toXmlNotation(simpleElement);
+        assertThat(result, is("xml:\"SimpleElement\""));
+    }
+
+    @Test
+    public void toStructElementsList_NullList_Test() {
+        final ImmutableList<StructElement> result = generator.toStructElementsList(null);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toStructElementsList_EmptyList_Test() {
+        final ImmutableList<StructElement> result = generator.toStructElementsList(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toStructElementsList_FullList_Test() {
+        final ImmutableList<StructElement> expectedElements = ImmutableList.of(
+                new StructElement("ElementWithWrapper", "Type", "xml:\"OuterTag>InnerTag\""),
+                new StructElement("ElementAsAttribute", "Type", "xml:\"ElementAsAttribute,attr\""),
+                new StructElement("SimpleElement", "Type", "xml:\"SimpleElement\"")
+        );
+
+        final ImmutableList<Ds3Element> elements = ImmutableList.of(
+                elementWithWrapper,
+                elementAsAttribute,
+                simpleElement
+        );
+
+        final ImmutableList<StructElement> result = generator.toStructElementsList(elements);
+        assertThat(result.size(), is(expectedElements.size()));
+
+        expectedElements.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

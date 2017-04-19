@@ -37,6 +37,7 @@ public class GoTypeUtil_Test {
         assertThat(toGoType("java.lang.String"), is("string"));
         assertThat(toGoType("string"), is("string"));
         assertThat(toGoType("java.util.UUID"), is("string"));
+        assertThat(toGoType("java.util.Date"), is("string"));
         assertThat(toGoType("ChecksumType"), is("ChecksumType"));
         assertThat(toGoType("OtherType"), is("OtherType"));
     }
@@ -57,6 +58,7 @@ public class GoTypeUtil_Test {
         assertThat(toGoType("java.lang.String", false), is("string"));
         assertThat(toGoType("string", false), is("string"));
         assertThat(toGoType("java.util.UUID", false), is("string"));
+        assertThat(toGoType("java.util.Date", false), is("string"));
         assertThat(toGoType("ChecksumType", false), is("ChecksumType"));
         assertThat(toGoType("OtherType", false), is("OtherType"));
 
@@ -74,7 +76,26 @@ public class GoTypeUtil_Test {
         assertThat(toGoType("java.lang.String", true), is("*string"));
         assertThat(toGoType("string", true), is("*string"));
         assertThat(toGoType("java.util.UUID", true), is("*string"));
+        assertThat(toGoType("java.util.Date", true), is("*string"));
         assertThat(toGoType("ChecksumType", true), is("*ChecksumType"));
         assertThat(toGoType("OtherType", true), is("*OtherType"));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toGoType_NullType_Test() {
+        toGoType(null, null, false);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void toGoType_EmptyType_Test() {
+        toGoType("", "", false);
+    }
+
+    @Test
+    public void toGoType_CompoundType_Test() {
+        assertThat(toGoType("TestType", null, false), is("TestType"));
+        assertThat(toGoType("TestType", "", false), is("TestType"));
+        assertThat(toGoType("array", "", false), is("array"));
+        assertThat(toGoType("array", "CompoundType", false), is("[]CompoundType"));
     }
 }
