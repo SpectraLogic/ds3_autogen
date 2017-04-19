@@ -23,6 +23,8 @@ import com.spectralogic.ds3autogen.api.models.enums.Operation
 import com.spectralogic.ds3autogen.api.models.enums.Requirement
 import com.spectralogic.ds3autogen.go.models.request.*
 import com.spectralogic.ds3autogen.go.utils.toGoType
+import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
+import com.spectralogic.ds3autogen.utils.Helper
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil
@@ -37,6 +39,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         val structParams = toStructParams(ds3Request)
         val withConstructors = toWithConstructors(ds3Request.optionalQueryParams)
         val nullableWithConstructors = toNullableWithConstructors(ds3Request.optionalQueryParams)
+        val voidWithConstructors = toVoidWithConstructors(ds3Request.optionalQueryParams)
 
         return Request(
                 name,
@@ -45,7 +48,25 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
                 toRequestPath(ds3Request),
                 structParams,
                 withConstructors,
-                nullableWithConstructors)
+                nullableWithConstructors,
+                voidWithConstructors)
+    }
+
+    /**
+     * Retreives a list of with-constructors that represent optional parameters of type void
+     */
+    fun toVoidWithConstructors(optionalParams: ImmutableList<Ds3Param>?) : ImmutableList<WithConstructor> {
+        if (isEmpty(optionalParams)) {
+            return ImmutableList.of()
+        }
+        return optionalParams!!.stream()
+                .filter { param -> param.type.equals("void", ignoreCase = true) }
+                .map { param -> WithConstructor(
+                        param.name,
+                        "", // There is no GO type that maps to void
+                        Helper.camelToUnderscore(param.name),
+                        "") }
+                .collect(GuavaCollectors.immutableList())
     }
 
     override fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor> {

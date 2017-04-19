@@ -26,4 +26,5 @@ data class Request(
         val path: String,
         val structParams: ImmutableList<Arguments>, // Parameters that make up the request handler struct
         val withConstructors: ImmutableList<WithConstructor>, // Optional constructors with non-null type
-        val nullableWithConstructors: ImmutableList<WithConstructor>) // Optional constructors that can be null
+        val nullableWithConstructors: ImmutableList<WithConstructor>, // Optional constructors that can be null
+        val voidWithConstructors: ImmutableList<WithConstructor>) // Optional constructor for a void type optional param

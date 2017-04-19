@@ -246,6 +246,10 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("content: buildDeleteObjectsPayload(objectNames),")); //content is assigned a stream
         assertTrue(returnsStream(requestName, requestCode));
 
+        // verify with-constructor of void param type is generated correctly
+        assertTrue(requestCode.contains("func (deleteObjectsRequest *DeleteObjectsRequest) WithRollBack() *DeleteObjectsRequest {"));
+        assertFalse(requestCode.contains("deleteObjectsRequest.rollBack = rollBack"));
+
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);

@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.*;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
+import com.spectralogic.ds3autogen.go.models.request.WithConstructor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
@@ -177,7 +178,7 @@ public class RequestGeneratorUtil_Test {
     }
 
     @Test
-    public void ttoQueryParamVarList_NullList_Test() {
+    public void toQueryParamVarList_NullList_Test() {
         final ImmutableList<Variable> result = toQueryParamVarList(null);
         assertThat(result.size(), is(0));
     }
@@ -379,5 +380,57 @@ public class RequestGeneratorUtil_Test {
         assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete()), is(""));
         assertThat(getSpectraDs3RequestPath(getRequestCreateObject()), is(""));
         assertThat(getSpectraDs3RequestPath(getRequestAmazonS3GetObject()), is(""));
+    }
+
+    @Test
+    public void toWithConstructors_NullList_Test() {
+        final ImmutableList<WithConstructor> result = toWithConstructors(null, false);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toWithConstructors_EmptyList_Test() {
+        final ImmutableList<WithConstructor> result = toWithConstructors(ImmutableList.of(), false);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toWithConstructors_NonNullableParams_Test() {
+        final ImmutableList<WithConstructor> expected = ImmutableList.of(
+                new WithConstructor("ParamOne", "Type1", "param_one", "paramOne.String()"),
+                new WithConstructor("ParamThree", "int", "param_three", "strconv.Itoa(paramThree)")
+        );
+
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("ParamOne", "Type1", false),
+                new Ds3Param("ParamTwo", "void", false),
+                new Ds3Param("ParamThree", "int", false),
+                new Ds3Param("ParamFour", "VOID", false)
+        );
+
+        final ImmutableList<WithConstructor> result = toWithConstructors(params, false);
+        assertThat(result.size(), is(expected.size()));
+
+        expected.forEach(expectedConst -> assertThat(result, hasItem(expectedConst)));
+    }
+
+    @Test
+    public void toWithConstructors_NullableParams_Test() {
+        final ImmutableList<WithConstructor> expected = ImmutableList.of(
+                new WithConstructor("ParamOne", "*Type1", "param_one", "paramOne.String()"),
+                new WithConstructor("ParamThree", "*int", "param_three", "strconv.Itoa(*paramThree)")
+        );
+
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("ParamOne", "Type1", true),
+                new Ds3Param("ParamTwo", "void", true),
+                new Ds3Param("ParamThree", "int", true),
+                new Ds3Param("ParamFour", "VOID", true)
+        );
+
+        final ImmutableList<WithConstructor> result = toWithConstructors(params, true);
+        assertThat(result.size(), is(expected.size()));
+
+        expected.forEach(expectedConst -> assertThat(result, hasItem(expectedConst)));
     }
 }
