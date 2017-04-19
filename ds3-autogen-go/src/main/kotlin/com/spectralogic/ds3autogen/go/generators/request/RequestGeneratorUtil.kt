@@ -244,6 +244,7 @@ fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?, nullableParams:
     }
     return optionalParams!!.stream()
             .filter { param -> param.nullable == nullableParams }
+            .filter { param -> !param.type.equals("void", ignoreCase = true) }
             .map { param -> WithConstructor(
                     param.name,
                     toGoType(param.type, param.nullable),
