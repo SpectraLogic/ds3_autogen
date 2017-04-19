@@ -143,7 +143,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         if (ds3Type == null) {
             throw IllegalArgumentException("No Ds3Type defined for command")
         }
-        if (ds3Type.nameToMarshal != null && !ds3Type.nameToMarshal.equals("Data")) {
+        if (ds3Type.nameToMarshal != null && ds3Type.nameToMarshal != "Data") {
             return ds3Type.nameToMarshal!!
         }
         return removePath(ds3Type.name)
