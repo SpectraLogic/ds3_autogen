@@ -18,4 +18,5 @@ package com.spectralogic.ds3autogen.go.models.client
 import com.google.common.collect.ImmutableList
 
 data class Client(
-        val commands: ImmutableList<Command>)
+        val commandsNoRedirect: ImmutableList<Command>,
+        val commandsWithRedirect: ImmutableList<Command>)

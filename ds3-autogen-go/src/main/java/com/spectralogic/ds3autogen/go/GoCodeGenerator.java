@@ -222,7 +222,7 @@ public class GoCodeGenerator implements CodeGenerator {
                     getClientFileName(httpVerb),
                     httpVerb.toString());
         }
-        final Template tmpl = getClientTemplate(httpVerb);
+        final Template tmpl = config.getTemplate("client/client_template.ftl");
         final ClientModelGenerator<?> generator = new BaseClientGenerator();
         final Client client = generator.generate(ds3Requests);
         final Path path = destDir.resolve(
@@ -235,14 +235,6 @@ public class GoCodeGenerator implements CodeGenerator {
              final Writer writer = new OutputStreamWriter(outputStream)) {
             tmpl.process(client, writer);
         }
-    }
-
-    /**
-     * Retrieves the appropriate template that will generate the Go Client
-     */
-    private Template getClientTemplate(final HttpVerb httpVerb) throws IOException {
-        //TODO special case client template if necessary
-        return config.getTemplate("client/client_template.ftl");
     }
 
     /**
