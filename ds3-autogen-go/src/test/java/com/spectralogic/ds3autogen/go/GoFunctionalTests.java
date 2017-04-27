@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -69,6 +69,9 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 
     @Test
@@ -104,6 +107,9 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) SimpleWithPayload(request *models.SimpleWithPayloadRequest) (*models.SimpleWithPayloadResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 
     @Test
@@ -137,9 +143,12 @@ public class GoFunctionalTests {
         assertTrue(isEmpty(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) DeleteBucketAclSpectraS3(request *models.DeleteBucketAclSpectraS3Request) (*models.DeleteBucketAclSpectraS3Response, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 
     @Test
@@ -178,6 +187,10 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) VerifyPhysicalPlacementForObjectsSpectraS3(request *models.VerifyPhysicalPlacementForObjectsSpectraS3Request) (*models.VerifyPhysicalPlacementForObjectsSpectraS3Response, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
     }
 
     @Test
@@ -214,9 +227,12 @@ public class GoFunctionalTests {
         assertTrue(isEmpty(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) ReplicatePutJobSpectraS3(request *models.ReplicatePutJobSpectraS3Request) (*models.ReplicatePutJobSpectraS3Response, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 
     @Test
@@ -252,9 +268,12 @@ public class GoFunctionalTests {
         assertTrue(isEmpty(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        final String client = codeGenerator.getClientCode(HttpVerb.POST);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) CompleteMultiPartUpload(request *models.CompleteMultiPartUploadRequest) (*models.CompleteMultiPartUploadResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 
     @Test
@@ -294,8 +313,11 @@ public class GoFunctionalTests {
         assertTrue(isEmpty(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        final String client = codeGenerator.getClientCode(HttpVerb.POST);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) DeleteObjects(request *models.DeleteObjectsRequest) (*models.DeleteObjectsResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 }

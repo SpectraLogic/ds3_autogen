@@ -116,7 +116,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestGetNotification() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.GetJobCompletedNotificationRegistrationRequestHandler",
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null,
                 null,
@@ -138,7 +138,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestVerifyPhysicalPlacement() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler",
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null,
                 null,
@@ -172,7 +172,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestBulkGet() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler",
-                null,
+                HttpVerb.PUT,
                 Classification.spectrads3,
                 null,
                 null,
@@ -307,7 +307,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestSpectraS3GetObject() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectRequestHandler",
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null,
                 null,
