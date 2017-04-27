@@ -68,7 +68,7 @@ public class GoCodeGenerator implements CodeGenerator {
     public GoCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        config.setClassForTemplateLoading(GoCodeGenerator.class, "/tmpls");
+        config.setClassForTemplateLoading(GoCodeGenerator.class, "/tmpls/go/");
     }
 
     @Override
