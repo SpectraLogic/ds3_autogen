@@ -73,7 +73,7 @@ public class JavaCodeGenerator implements CodeGenerator {
     public JavaCodeGenerator() throws TemplateModelException {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        config.setClassForTemplateLoading(JavaCodeGenerator.class, "/tmpls");
+        config.setClassForTemplateLoading(JavaCodeGenerator.class, "/tmpls/java/");
         config.setSharedVariable("javaHelper", JavaHelper.getInstance());
         config.setSharedVariable("helper", Helper.getInstance());
     }
