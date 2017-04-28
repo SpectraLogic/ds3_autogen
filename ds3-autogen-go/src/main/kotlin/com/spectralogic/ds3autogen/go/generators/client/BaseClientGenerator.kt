@@ -34,7 +34,6 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
         return Client(commandsNoRedirect, commandsWithRedirect)
     }
 
-    //TODO test
     /**
      * Converts a list of Ds3Requests into a list of Command objects filtering
      * the commands based on whether they handle http redirects or not within
