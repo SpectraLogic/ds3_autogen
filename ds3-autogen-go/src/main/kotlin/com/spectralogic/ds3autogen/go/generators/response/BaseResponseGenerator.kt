@@ -69,6 +69,9 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         if (ds3ResponseCode.ds3ResponseTypes!![0].type.equals("null", ignoreCase = true)) {
             return toNullPayloadResponseCode(ds3ResponseCode.code, responseName)
         }
+        if (ds3ResponseCode.ds3ResponseTypes!![0].type.equals("java.lang.String", ignoreCase = true)) {
+            return toStringPayloadResponseCode(ds3ResponseCode.code, responseName)
+        }
         return toPayloadResponseCode(ds3ResponseCode.code, responseName)
     }
 
@@ -77,6 +80,18 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
      */
     fun toNullPayloadResponseCode(code: Int, responseName: String): ResponseCode {
         return ResponseCode(code, "return &$responseName{}, nil")
+    }
+
+    /**
+     * Creates the Go code for returning a string response payload
+     */
+    fun toStringPayloadResponseCode(code: Int, responseName: String): ResponseCode {
+        val parseResponse = "content, err := getResponseBodyAsString(webResponse)\n" +
+                indent(2) + "if err != nil {\n" +
+                indent(3) + "return nil, err\n" +
+                indent(2) + "}\n" +
+                indent(2) + "return &$responseName{Content: content}, nil"
+        return ResponseCode(code, parseResponse)
     }
 
     /**
@@ -114,8 +129,14 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
             throw IllegalArgumentException("Expected at least one response payload")
         }
         val responsePayloadType = getResponsePayload(expectedResponseCodes)
-        val responseModel = typeMap[responsePayloadType]
 
+        // Check if response payload is a string
+        if (responsePayloadType.equals("java.lang.String", ignoreCase = true)
+                || responsePayloadType.equals("string", ignoreCase = true)) {
+            return "Content string"
+        }
+
+        val responseModel = typeMap[responsePayloadType]
         val responseName = removePath(responsePayloadType)
         val responseType = toResponsePayloadType(responsePayloadType, expectedResponseCodes)
         val xmlParsing = toXmlParsingPayload(responseModel)

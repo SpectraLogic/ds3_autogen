@@ -147,6 +147,18 @@ public class BaseResponseGenerator_Test {
     }
 
     @Test
+    public void toResponsePayloadStruct_StringPayload_Test() {
+        final String expected = "Content string";
+
+        final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("java.lang.String", ""))),
+                new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("null", ""))));
+
+        final String result = generator.toResponsePayloadStruct(responseCodes, ImmutableMap.of());
+        assertThat(result, is(expected));
+    }
+
+    @Test
     public void toResponsePayloadStruct_Test() {
         final String expected = "TypeName *TypeName `xml:\"NameToMarshal\"`";
 
@@ -209,6 +221,19 @@ public class BaseResponseGenerator_Test {
         assertThat(result.getParseResponse(), is(expectedGoCode));
     }
 
+    @Test
+    public void toStringPayloadResponseCode() {
+        final String expect = "content, err := getResponseBodyAsString(webResponse)\n" +
+                "        if err != nil {\n" +
+                "            return nil, err\n" +
+                "        }\n" +
+                "        return &ResponseName{Content: content}, nil";
+
+        final ResponseCode result = generator.toStringPayloadResponseCode(200, "ResponseName");
+        assertThat(result.getCode(), is(200));
+        assertThat(result.getParseResponse(), is(expect));
+    }
+
     @Test (expected = IllegalArgumentException.class)
     public void toResponseCode_Exception_Test() {
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(200, ImmutableList.of());
@@ -221,6 +246,23 @@ public class BaseResponseGenerator_Test {
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,
                 ImmutableList.of(new Ds3ResponseType("null", "")));
+
+        final ResponseCode result = generator.toResponseCode(responseCode, "ResponseName");
+        assertThat(result.getCode(), is(200));
+        assertThat(result.getParseResponse(), is(expectedGoCode));
+    }
+
+    @Test
+    public void toResponseCode_StringPayload_Test() {
+        final String expectedGoCode = "content, err := getResponseBodyAsString(webResponse)\n" +
+                "        if err != nil {\n" +
+                "            return nil, err\n" +
+                "        }\n" +
+                "        return &ResponseName{Content: content}, nil";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(new Ds3ResponseType("java.lang.String", "")));
 
         final ResponseCode result = generator.toResponseCode(responseCode, "ResponseName");
         assertThat(result.getCode(), is(200));
