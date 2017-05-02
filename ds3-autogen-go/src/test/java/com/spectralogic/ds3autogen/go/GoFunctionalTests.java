@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.ALL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -360,5 +360,64 @@ public class GoFunctionalTests {
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
         assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+    }
+
+    @Test
+    public void getObject() throws IOException, TemplateModelException {
+        final String requestName = "GetObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/getObject.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+        // test request imports
+        assertTrue(requestCode.contains("\"fmt\""));
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+        assertTrue(requestCode.contains("\"strconv\""));
+        // test request struct
+        assertTrue(requestCode.contains("rangeHeader *rangeHeader"));
+        assertTrue(requestCode.contains("checksum networking.Checksum"));
+        assertTrue(requestCode.contains("type rangeHeader struct {"));
+        // test constructor and with-constructors
+        assertTrue(requestCode.contains("func NewGetObjectRequest(bucketName string, objectName string) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum(),"));
+        assertTrue(requestCode.contains(""));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithRange(start, end int) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithChecksum(contentHash string, checksumType networking.ChecksumType) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithJob(job string) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithOffset(offset int64) *GetObjectRequest {"));
+        // test header and checksum functions
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) Header() *http.Header {"));
+        assertTrue(requestCode.contains("return &http.Header{ \"Range\": []string{ rng } }"));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) GetChecksum() networking.Checksum {"));
+        assertTrue(requestCode.contains("return getObjectRequest.checksum"));
+        assertTrue(requestCode.contains("func (GetObjectRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("func NewGetObjectResponse(webResponse networking.WebResponse) (*GetObjectResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 206 }"));
+        assertTrue(responseCode.contains("return &GetObjectResponse{}, nil"));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+        assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
 }

@@ -15,11 +15,7 @@
 
 package com.spectralogic.ds3autogen.go;
 
-import com.spectralogic.ds3autogen.go.generators.request.BaseRequestGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.MultipartUploadPayloadGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.DeleteObjectsRequestGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.RequiredObjectsPayloadGenerator;
-import com.spectralogic.ds3autogen.go.generators.request.StringRequestPayloadGenerator;
+import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import org.junit.Test;
@@ -34,6 +30,9 @@ public class GoCodeGenerator_Test {
 
     @Test
     public void getRequestGeneratorTest() {
+        // Amazon Get Object request
+        assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
+
         // Requests with payloads List<Ds3Object>
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(RequiredObjectsPayloadGenerator.class));
@@ -62,7 +61,6 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestGetNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestDeleteNotification()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(BaseRequestGenerator.class));

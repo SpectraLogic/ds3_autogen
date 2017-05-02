@@ -81,6 +81,13 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
+    public void structAssignmentParamsFromRequest_Test() {
+        final ImmutableList<VariableInterface> result = generator.structAssignmentParamsFromRequest(testRequest);
+        assertThat(result.size(), is(expectedStructAssignments.size()));
+        expectedStructAssignments.forEach(expected -> assertThat(result, hasItem(expected)));
+    }
+
+    @Test
     public void toQueryParamsList_NullListWithOperation_Test() {
         final Variable expected = new Variable("operation", "\"allocate\"");
 
@@ -155,6 +162,29 @@ public class BaseRequestGenerator_Test {
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(testRequest);
+
+        assertThat(result.size(), is(expectedArgs.size()));
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
+        }
+    }
+
+    @Test
+    public void structParamsFromRequest_Test() {
+        // Not sorted
+        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
+                new Arguments("string", "bucketName"),
+                new Arguments("string", "objectName"),
+                new Arguments("string", "activeJobId"),
+                new Arguments("int", "intReqParam"),
+                new Arguments("string", "stringReqParam"),
+                new Arguments("int", "intOptParam"),
+                new Arguments("*int", "integerOptParam"),
+                new Arguments("string", "stringOptParam")
+        );
+
+        final ImmutableList<Arguments> result = generator.structParamsFromRequest(testRequest);
 
         assertThat(result.size(), is(expectedArgs.size()));
         for (int i = 0; i < result.size(); i++) {
