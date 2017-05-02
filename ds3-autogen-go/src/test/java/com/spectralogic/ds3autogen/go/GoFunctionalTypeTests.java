@@ -50,10 +50,23 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
         assertTrue(hasContent(typeCode));
 
-        assertTrue(typeCode.contains("CRITICAL DatabasePhysicalSpaceState = 1 + iota"));
-        assertTrue(typeCode.contains("LOW DatabasePhysicalSpaceState = 1 + iota"));
-        assertTrue(typeCode.contains("NEAR_LOW DatabasePhysicalSpaceState = 1 + iota"));
-        assertTrue(typeCode.contains("NORMAL DatabasePhysicalSpaceState = 1 + iota"));
+        // Test const definitions
+        assertTrue(typeCode.contains("DATABASE_PHYSICAL_SPACE_STATE_CRITICAL DatabasePhysicalSpaceState = 1 + iota"));
+        assertTrue(typeCode.contains("DATABASE_PHYSICAL_SPACE_STATE_LOW DatabasePhysicalSpaceState = 1 + iota"));
+        assertTrue(typeCode.contains("DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW DatabasePhysicalSpaceState = 1 + iota"));
+        assertTrue(typeCode.contains("DATABASE_PHYSICAL_SPACE_STATE_NORMAL DatabasePhysicalSpaceState = 1 + iota"));
+
+        // Test un-marshaling
+        assertTrue(typeCode.contains("case \"CRITICAL\": *databasePhysicalSpaceState = DATABASE_PHYSICAL_SPACE_STATE_CRITICAL"));
+        assertTrue(typeCode.contains("case \"LOW\": *databasePhysicalSpaceState = DATABASE_PHYSICAL_SPACE_STATE_LOW"));
+        assertTrue(typeCode.contains("case \"NEAR_LOW\": *databasePhysicalSpaceState = DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW"));
+        assertTrue(typeCode.contains("case \"NORMAL\": *databasePhysicalSpaceState = DATABASE_PHYSICAL_SPACE_STATE_NORMAL"));
+
+        // Test conversion to string
+        assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_CRITICAL: return \"CRITICAL\", nil"));
+        assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_LOW: return \"LOW\", nil"));
+        assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW: return \"NEAR_LOW\", nil"));
+        assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NORMAL: return \"NORMAL\", nil"));
     }
 
     @Test
