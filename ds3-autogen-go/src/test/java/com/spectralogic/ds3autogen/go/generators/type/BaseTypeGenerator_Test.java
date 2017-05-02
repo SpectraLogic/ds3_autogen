@@ -138,4 +138,10 @@ public class BaseTypeGenerator_Test {
 
         expectedElements.forEach(expected -> assertThat(result, hasItem(expected)));
     }
+
+    @Test
+    public void toEnumPrefix_Test() {
+        assertThat(generator.toEnumPrefix("testLowerCamelName"), is("TEST_LOWER_CAMEL_NAME_"));
+        assertThat(generator.toEnumPrefix("TestUpperCamelName"), is("TEST_UPPER_CAMEL_NAME_"));
+    }
 }

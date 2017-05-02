@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3autogen.go.generators.type
 
+import com.google.common.base.CaseFormat
 import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant
@@ -31,10 +32,18 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
 
     override fun generate(ds3Type: Ds3Type): Type {
         val name = NormalizingContractNamesUtil.removePath(ds3Type.name)
+        val enumPrefix = toEnumPrefix(name)
         val enumConstants = toEnumConstantsList(ds3Type.enumConstants)
         val structElements = toStructElementsList(ds3Type.elements)
 
-        return Type(name, enumConstants, structElements)
+        return Type(name, enumPrefix, enumConstants, structElements)
+    }
+
+    /**
+     * Converts the type name into the uppercase prefix used to namespace enum values
+     */
+    fun toEnumPrefix(name: String): String {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name) + "_"
     }
 
     /**
