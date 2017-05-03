@@ -19,5 +19,6 @@ import com.google.common.collect.ImmutableList
 
 data class Type(
         val name: String,
+        val enumPrefix: String,
         val enumConstants: ImmutableList<String>,
         val structElements: ImmutableList<StructElement>)
