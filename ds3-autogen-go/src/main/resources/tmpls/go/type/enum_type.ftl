@@ -6,6 +6,7 @@ import (
     "errors"
     "fmt"
     "bytes"
+    "log"
 )
 
 type ${name} Enum
@@ -24,17 +25,18 @@ func (${name?uncap_first} *${name}) UnmarshalText(text []byte) error {
         </#list>
         default:
             *${name?uncap_first} = UNDEFINED
-            return errors.New(fmt.Sprintf("Cannot marshal %s into ${name}", str))
+            return errors.New(fmt.Sprintf("Cannot marshal '%s' into ${name}", str))
     }
     return nil
 }
 
-func (${name?uncap_first} ${name}) String() (string, error) {
+func (${name?uncap_first} ${name}) String() string {
     switch ${name?uncap_first} {
         <#list enumConstants as const>
-        case ${enumPrefix}${const}: return "${const}", nil
+        case ${enumPrefix}${const}: return "${const}"
         </#list>
-        case UNDEFINED: return "UNDEFINED", nil
-        default: return "", errors.New(fmt.Sprintf("Invalid ${name} represented by: %d", ${name?uncap_first}))
+        default:
+            log.Printf("Error: invalid ${name} represented by '%d'", ${name?uncap_first})
+            return ""
     }
 }
