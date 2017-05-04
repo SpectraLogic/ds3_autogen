@@ -249,6 +249,7 @@ public class RequestGeneratorUtil_Test {
         assertThat(goVarToString("Arg", "float64"), is("strconv.FormatFloat(Arg, 'f', -1, 64)"));
         assertThat(goVarToString("Arg", "*float64"), is("strconv.FormatFloat(*Arg, 'f', -1, 64)"));
         assertThat(goVarToString("Arg", "string"), is("Arg"));
+        assertThat(goVarToString("Arg", "*string"), is("*Arg"));
         assertThat(goVarToString("Arg", "CustomType"), is("Arg.String()"));
     }
 
