@@ -2,7 +2,10 @@
 
 package ds3
 
-import "ds3/models"
+import (
+    "ds3/models"
+    "ds3/networking"
+)
 
 <#list commandsNoRedirect as cmd>
 func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
