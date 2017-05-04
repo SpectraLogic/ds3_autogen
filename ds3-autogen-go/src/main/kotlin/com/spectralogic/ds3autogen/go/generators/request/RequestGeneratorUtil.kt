@@ -152,6 +152,7 @@ fun goVarToString(name: String, goType: String): String {
         "*bool" -> return "strconv.FormatBool(*$name)"
         "*int64" -> return "strconv.FormatInt(*$name, 10)"
         "*float64" -> return "strconv.FormatFloat(*$name, 'f', -1, 64)"
+        "*string" -> return "*$name"
         else -> return name + ".String()"
     }
 }
