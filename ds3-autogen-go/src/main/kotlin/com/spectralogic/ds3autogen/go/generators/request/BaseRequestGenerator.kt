@@ -77,7 +77,23 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         return toWithConstructors(optionalParams, true)
     }
 
+    /**
+     * Retrieves the list of parameters that make up the Go request struct
+     */
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
+        val structParams = structParamsFromRequest(ds3Request)
+
+        // Sort the arguments
+        return structParams.stream()
+                .sorted(CustomArgumentComparator())
+                .collect(GuavaCollectors.immutableList())
+    }
+
+    /**
+     * Retrieves the list of parameters that make up the Go request struct
+     * from the Ds3Request
+     */
+    protected fun structParamsFromRequest(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "bucketName"))
@@ -92,11 +108,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
 
         builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
         builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.optionalQueryParams)))
-
-        // Sort the arguments
-        return builder.build().stream()
-                .sorted(CustomArgumentComparator())
-                .collect(GuavaCollectors.immutableList())
+        return builder.build()
     }
 
     override fun toConstructor(ds3Request: Ds3Request): Constructor {
@@ -141,7 +153,18 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         return builder.build()
     }
 
+    /**
+     * Retrieves the list of struct assignments that are performed within the
+     * Go request constructor
+     */
     override fun toStructAssignmentParams(ds3Request: Ds3Request): ImmutableList<VariableInterface> {
+        return structAssignmentParamsFromRequest(ds3Request)
+    }
+
+    /**
+     * Retrieves the list of struct assignments from the Ds3Request
+     */
+    protected fun structAssignmentParamsFromRequest(ds3Request: Ds3Request): ImmutableList<VariableInterface> {
         val builder: ImmutableList.Builder<VariableInterface> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(SimpleVariable("bucketName"))

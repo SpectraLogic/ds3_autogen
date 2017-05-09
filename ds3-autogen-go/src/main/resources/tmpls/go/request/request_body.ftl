@@ -1,13 +1,3 @@
-<#include "../common/copyright.ftl" />
-
-package models
-
-import (
-    "net/url"
-    "net/http"
-    "ds3/networking"
-)
-
 type ${name} struct {
     <#list structParams as param>
     ${param.name?uncap_first} ${param.type}
@@ -66,12 +56,4 @@ func (${name?uncap_first} *${name}) Path() string {
 
 func (${name?uncap_first} *${name}) QueryParams() *url.Values {
     return ${name?uncap_first}.queryParams
-}
-
-func (${name}) Header() *http.Header {
-    return &http.Header{}
-}
-
-func (${name}) GetChecksum() networking.Checksum {
-    return networking.NewNoneChecksum()
 }

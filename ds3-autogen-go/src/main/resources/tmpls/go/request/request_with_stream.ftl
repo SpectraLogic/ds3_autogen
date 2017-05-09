@@ -1,5 +1,9 @@
+<#include "request_header.ftl" />
+
 <#include "request_body.ftl">
 
-func (${name?uncap_first} *${name}) GetContentStream() networking.ReaderWithSizeDecorator {
-    return ${name?uncap_first}.content
-}
+<#include "no_checksum.ftl" />
+
+<#include "no_headers.ftl" />
+
+<#include "stream_with_content.ftl">

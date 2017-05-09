@@ -130,6 +130,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * specified {@link Ds3Request}
      */
     static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectRequestGenerator();
+        }
         if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
@@ -149,6 +152,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go request handler
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("request/get_object_request.ftl");
+        }
         if (isBulkRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)

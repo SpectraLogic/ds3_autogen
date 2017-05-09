@@ -1,0 +1,48 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="GET" IncludeIdInPath="false" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams>
+                        <Param Name="Job" Type="java.util.UUID"/>
+                        <Param Name="Offset" Type="long"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>206</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>307</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>503</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.F50E6F8DEFB864FE89D9385A71A6C25A</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>
