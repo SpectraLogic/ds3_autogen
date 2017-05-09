@@ -1,0 +1,82 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.GetAzureDataReplicationRulesRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="AZURE_DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="ReplicateDeletes" Type="boolean"/>
+                        <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPlacementRuleState"/>
+                        <Param Name="TargetId" Type="java.util.UUID"/>
+                        <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.AzureDataReplicationRule" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.760344CC17CCA3AAC0D1AEAAB22664BE</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.AzureDataReplicationRule">
+                <Elements>
+                    <Element Name="DataPolicyId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="MaxBlobPartSizeInBytes" Type="long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultLongValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="1073741824" ValueType="java.lang.Long"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ReplicateDeletes" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="State" Type="com.spectralogic.s3.common.dao.domain.ds3.DataPlacementRuleState">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="TargetId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.target.AzureTarget" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

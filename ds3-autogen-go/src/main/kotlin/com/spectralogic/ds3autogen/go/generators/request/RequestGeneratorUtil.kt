@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.enums.Requirement
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor
+import com.spectralogic.ds3autogen.go.utils.toGoParamName
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
@@ -87,7 +88,9 @@ fun toGoArgumentsList(requiredParams: ImmutableList<Ds3Param>?): ImmutableList<A
  * Converts a Ds3Param into an Argument containing the corresponding Go type and parameter name
  */
 fun toGoArgument(ds3Param: Ds3Param): Arguments {
-    return Arguments(toGoType(ds3Param.type, ds3Param.nullable), Helper.uncapFirst(ds3Param.name))
+    val goType = toGoType(ds3Param.type, ds3Param.nullable)
+    val goName = toGoParamName(ds3Param.name, ds3Param.type)
+    return Arguments(goType, Helper.uncapFirst(goName))
 }
 
 /**
@@ -133,8 +136,9 @@ fun toQueryParamVarList(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Vari
  */
 fun toQueryParamVar(ds3Param: Ds3Param): Variable {
     val goType = toGoType(ds3Param.type, ds3Param.nullable)
+    val goName = toGoParamName(ds3Param.name, ds3Param.type)
     val key = camelToUnderscore(ds3Param.name)
-    return Variable(key, goVarToString(uncapFirst(ds3Param.name), goType))
+    return Variable(key, goVarToString(uncapFirst(goName), goType))
 }
 
 /**
@@ -166,7 +170,7 @@ fun toSimpleVariables(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Simple
         return ImmutableList.of()
     }
     return ds3Params!!.stream()
-            .map{ param -> SimpleVariable(uncapFirst(param.name)) }
+            .map{ param -> SimpleVariable(uncapFirst(toGoParamName(param.name, param.type))) }
             .collect(GuavaCollectors.immutableList())
 }
 
@@ -246,10 +250,19 @@ fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?, nullableParams:
     return optionalParams!!.stream()
             .filter { param -> param.nullable == nullableParams }
             .filter { param -> !param.type.equals("void", ignoreCase = true) }
-            .map { param -> WithConstructor(
-                    param.name,
-                    toGoType(param.type, param.nullable),
-                    camelToUnderscore(param.name),
-                    goVarToString(uncapFirst(param.name), toGoType(param.type, param.nullable))) }
+            .map(::toWithConstructor)
             .collect(GuavaCollectors.immutableList())
+}
+
+/**
+ * Converts a Ds3Param into a with-constructor with Go parameter naming schemes
+ */
+fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
+    val goName = toGoParamName(ds3Param.name, ds3Param.type)
+    val goType = toGoType(ds3Param.type, ds3Param.nullable)
+    return WithConstructor(
+            goName,
+            goType,
+            camelToUnderscore(ds3Param.name),
+            goVarToString(uncapFirst(goName), goType))
 }

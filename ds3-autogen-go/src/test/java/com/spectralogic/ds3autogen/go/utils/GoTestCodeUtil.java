@@ -41,8 +41,8 @@ import static org.mockito.Mockito.when;
  */
 public class GoTestCodeUtil {
 
-    final static String BASE_PATH = "./ds3/";
-    final static String COMMAND_PATH = BASE_PATH + "models/";
+    private final static String BASE_PATH = "./ds3/";
+    private final static String COMMAND_PATH = BASE_PATH + "models/";
 
     private final ByteArrayOutputStream requestOutputStream;
     private final ByteArrayOutputStream responseOutputStream;
