@@ -28,7 +28,9 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class RequestGeneratorUtil_Test {
 
@@ -461,5 +463,43 @@ public class RequestGeneratorUtil_Test {
 
         assertThat(params.size(), is(expected.size()));
         params.forEach(param -> assertThat(expected, hasItem(toWithConstructor(param))));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getGoArgFromResource_ExceptionTest() {
+        getGoArgFromResource(Resource.CAPACITY_SUMMARY);
+    }
+
+    @Test
+    public void getGoArgFromResource_Test() {
+        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
+                new Arguments("String", "notificationId"),
+                new Arguments("String", "bucketId"),
+                new Arguments("UUID", "jobId"),
+                new Arguments("String", "activeJob")
+        );
+
+        final ImmutableList<Resource> resources = ImmutableList.of(
+                Resource.DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION,
+                Resource.BUCKET,
+                Resource.JOB,
+                Resource.ACTIVE_JOB
+        );
+
+        assertThat(resources.size(), is(expectedArgs.size()));
+        for (int i = 0; i > resources.size(); i++) {
+            final Arguments result = getGoArgFromResource(resources.get(i));
+            assertThat(result.getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.getType(), is(expectedArgs.get(i).getType()));
+        }
+    }
+
+    @Test
+    public void isGoResourceAnArg_Test() {
+        assertFalse(isGoResourceAnArg(null, true));
+        assertFalse(isGoResourceAnArg(null, false));
+        assertFalse(isGoResourceAnArg(Resource.ACTIVE_JOB, false));
+
+        assertTrue(isGoResourceAnArg(Resource.ACTIVE_JOB, true));
     }
 }

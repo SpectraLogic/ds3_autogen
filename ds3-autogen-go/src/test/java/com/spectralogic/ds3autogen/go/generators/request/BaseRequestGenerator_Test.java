@@ -132,6 +132,25 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
+    public void paramsListFromRequest_Test() {
+        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
+                new Arguments("string", "bucketName"),
+                new Arguments("string", "objectName"),
+                new Arguments("string", "activeJobId"),
+                new Arguments("int", "intReqParam"),
+                new Arguments("string", "stringReqParam")
+        );
+
+        final ImmutableList<Arguments> result = generator.paramsListFromRequest(testRequest);
+
+        assertThat(result.size(), is(expectedArgs.size()));
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
+        }
+    }
+
+    @Test
     public void toConstructorParams_Test() {
         final String result = generator.toConstructorParams(testRequest);
         assertThat(result, is(expectedConstructorParams));
