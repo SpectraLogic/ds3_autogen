@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -543,6 +543,60 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) PutAzureDataReplicationRuleSpectraS3(request *models.PutAzureDataReplicationRuleSpectraS3Request) (*models.PutAzureDataReplicationRuleSpectraS3Response, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+    }
+
+    @Test
+    public void deleteJobCreatedNotificationRegistration() throws IOException, TemplateModelException {
+        // This tests correct generation of notificationId required parameter from resource
+        final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/deleteJobCreatedNotificationRegistration.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        // test request imports
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+
+        // test request struct
+        assertTrue(requestCode.contains("notificationId string"));
+        assertTrue(requestCode.contains("queryParams *url.Values"));
+
+        // test constructor
+        assertTrue(requestCode.contains("func NewDeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationId string) *DeleteJobCreatedNotificationRegistrationSpectraS3Request {"));
+        assertTrue(requestCode.contains("notificationId: notificationId,"));
+
+        // test path
+        assertTrue(requestCode.contains("return \"/_rest_/job_created_notification_registration/\" + deleteJobCreatedNotificationRegistrationSpectraS3Request.notificationId"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("func NewDeleteJobCreatedNotificationRegistrationSpectraS3Response(webResponse networking.WebResponse) (*DeleteJobCreatedNotificationRegistrationSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
+        assertTrue(responseCode.contains("return &DeleteJobCreatedNotificationRegistrationSpectraS3Response{}, nil"));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+
+        assertTrue(client.contains("func (client *Client) DeleteJobCreatedNotificationRegistrationSpectraS3(request *models.DeleteJobCreatedNotificationRegistrationSpectraS3Request) (*models.DeleteJobCreatedNotificationRegistrationSpectraS3Response, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
