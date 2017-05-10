@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -417,6 +417,132 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+    }
+
+    @Test
+    public void getAzureDataReplicationRules() throws IOException, TemplateModelException {
+        // This tests generation of request with "type" optional parameter keyword conflict
+        final String requestName = "GetAzureDataReplicationRulesSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/getAzureDataReplicationRules.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        // test request imports
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+
+        // test request struct
+        assertTrue(requestCode.contains("dataPolicyId string"));
+        assertTrue(requestCode.contains("pageLength int"));
+        assertTrue(requestCode.contains("pageOffset int"));
+        assertTrue(requestCode.contains("pageStartMarker string"));
+        assertTrue(requestCode.contains("replicateDeletes bool"));
+        assertTrue(requestCode.contains("state DataPlacementRuleState"));
+        assertTrue(requestCode.contains("targetId string"));
+        assertTrue(requestCode.contains("dataReplicationRuleType DataReplicationRuleType"));
+
+        // test constructor and with-constructors
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithDataPolicyId(dataPolicyId string) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithPageLength(pageLength int) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithPageOffset(pageOffset int) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithPageStartMarker(pageStartMarker string) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithReplicateDeletes(replicateDeletes bool) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithState(state DataPlacementRuleState) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithTargetId(targetId string) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithDataReplicationRuleType(dataReplicationRuleType DataReplicationRuleType) *GetAzureDataReplicationRulesSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithLastPage() *GetAzureDataReplicationRulesSpectraS3Request {"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("func NewGetAzureDataReplicationRulesSpectraS3Response(webResponse networking.WebResponse) (*GetAzureDataReplicationRulesSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body); err != nil {"));
+        assertTrue(responseCode.contains("return &body, nil"));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+
+        assertTrue(client.contains("func (client *Client) GetAzureDataReplicationRulesSpectraS3(request *models.GetAzureDataReplicationRulesSpectraS3Request) (*models.GetAzureDataReplicationRulesSpectraS3Response, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+    }
+
+    @Test
+    public void putAzureDataReplicationRule() throws IOException, TemplateModelException {
+        // This tests generation of request with "type" required parameter keyword conflict
+        final String requestName = "PutAzureDataReplicationRuleSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/putAzureDataReplicationRule.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        // test request imports
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+
+        // test request struct
+        assertTrue(requestCode.contains("dataPolicyId string"));
+        assertTrue(requestCode.contains("dataReplicationRuleType DataReplicationRuleType"));
+        assertTrue(requestCode.contains("maxBlobPartSizeInBytes int64"));
+        assertTrue(requestCode.contains("replicateDeletes bool"));
+        assertTrue(requestCode.contains("targetId string"));
+
+        // test constructor and
+        assertTrue(requestCode.contains("func NewPutAzureDataReplicationRuleSpectraS3Request(dataPolicyId string, dataReplicationRuleType DataReplicationRuleType, targetId string) *PutAzureDataReplicationRuleSpectraS3Request {"));
+        assertTrue(requestCode.contains("queryParams.Set(\"type\", dataReplicationRuleType.String())"));
+        assertTrue(requestCode.contains("dataReplicationRuleType: dataReplicationRuleType,"));
+
+        // test with-constructors
+        assertTrue(requestCode.contains("func (putAzureDataReplicationRuleSpectraS3Request *PutAzureDataReplicationRuleSpectraS3Request) WithMaxBlobPartSizeInBytes(maxBlobPartSizeInBytes int64) *PutAzureDataReplicationRuleSpectraS3Request {"));
+        assertTrue(requestCode.contains("func (putAzureDataReplicationRuleSpectraS3Request *PutAzureDataReplicationRuleSpectraS3Request) WithReplicateDeletes(replicateDeletes bool) *PutAzureDataReplicationRuleSpectraS3Request {"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("func NewPutAzureDataReplicationRuleSpectraS3Response(webResponse networking.WebResponse) (*PutAzureDataReplicationRuleSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 201 }"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body); err != nil {"));
+        assertTrue(responseCode.contains("return &body, nil"));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.POST);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+
+        assertTrue(client.contains("func (client *Client) PutAzureDataReplicationRuleSpectraS3(request *models.PutAzureDataReplicationRuleSpectraS3Request) (*models.PutAzureDataReplicationRuleSpectraS3Response, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }

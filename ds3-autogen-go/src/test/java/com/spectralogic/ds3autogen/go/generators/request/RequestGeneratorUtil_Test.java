@@ -27,10 +27,7 @@ import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class RequestGeneratorUtil_Test {
@@ -126,19 +123,27 @@ public class RequestGeneratorUtil_Test {
 
     @Test
     public void toGoArgument_Test() {
-        final ImmutableList<String> expectedTypes = ImmutableList.of("", "*int", "float64", "string");
+        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
+                new Arguments("", "param1"),
+                new Arguments("*int", "param2"),
+                new Arguments("float64", "param3"),
+                new Arguments("string", "param4"),
+                new Arguments("TestType", "testType")
+        );
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("Param1", "void", false),
                 new Ds3Param("Param2", "java.lang.Integer", true),
                 new Ds3Param("Param3", "double", false),
-                new Ds3Param("Param4", "java.util.UUID", false)
+                new Ds3Param("Param4", "java.util.UUID", false),
+                new Ds3Param("Type", "com.test.TestType", false)
         );
 
         for (int i = 0; i < params.size(); i++) {
             final Arguments result = toGoArgument(params.get(i));
-            assertThat(result.getName(), is(uncapFirst(params.get(i).getName())));
-            assertThat(result.getType(), is(expectedTypes.get(i)));
+            final Arguments expected = expectedArgs.get(i);
+            assertThat(result.getName(), is(expected.getName()));
+            assertThat(result.getType(), is(expected.getType()));
         }
     }
 
@@ -195,7 +200,8 @@ public class RequestGeneratorUtil_Test {
                 new Variable("param_one", "strconv.Itoa(paramOne)"),
                 new Variable("param_two", "strconv.FormatFloat(paramTwo, 'f', -1, 64)"),
                 new Variable("param_three", "paramThree"),
-                new Variable("param_four", "\"\"")
+                new Variable("param_four", "\"\""),
+                new Variable("type", "typeName.String()")
         );
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
@@ -203,7 +209,8 @@ public class RequestGeneratorUtil_Test {
                 new Ds3Param("ParamTwo", "float64", false),
                 new Ds3Param("ParamThree", "string", false),
                 new Ds3Param("ParamFour", "void", false),
-                new Ds3Param("Operation", "RestOperationType", false)
+                new Ds3Param("Operation", "RestOperationType", false),
+                new Ds3Param("Type", "com.test.TypeName", false)
         );
 
         final ImmutableList<Variable> result = toQueryParamVarList(params);
@@ -270,21 +277,20 @@ public class RequestGeneratorUtil_Test {
         final ImmutableList<SimpleVariable> expected = ImmutableList.of(
                 new SimpleVariable("paramOne"),
                 new SimpleVariable("paramTwo"),
-                new SimpleVariable("paramThree")
+                new SimpleVariable("paramThree"),
+                new SimpleVariable("typeName")
         );
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("ParamOne", "string", false),
                 new Ds3Param("ParamTwo", "string", true),
-                new Ds3Param("ParamThree", "string", false)
+                new Ds3Param("ParamThree", "string", false),
+                new Ds3Param("Type", "com.test.TypeName", false)
         );
 
         final ImmutableList<SimpleVariable> result = toSimpleVariables(params);
-        assertThat(result.size(), is(3));
-
-        for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i), is(expected.get(i)));
-        }
+        assertThat(result.size(), is(expected.size()));
+        expected.forEach(expectedVar -> assertThat(result, hasItem(expectedVar)));
     }
 
     @Test
@@ -399,14 +405,16 @@ public class RequestGeneratorUtil_Test {
     public void toWithConstructors_NonNullableParams_Test() {
         final ImmutableList<WithConstructor> expected = ImmutableList.of(
                 new WithConstructor("ParamOne", "Type1", "param_one", "paramOne.String()"),
-                new WithConstructor("ParamThree", "int", "param_three", "strconv.Itoa(paramThree)")
+                new WithConstructor("ParamThree", "int", "param_three", "strconv.Itoa(paramThree)"),
+                new WithConstructor("TypeName", "TypeName", "type", "typeName.String()")
         );
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("ParamOne", "Type1", false),
                 new Ds3Param("ParamTwo", "void", false),
                 new Ds3Param("ParamThree", "int", false),
-                new Ds3Param("ParamFour", "VOID", false)
+                new Ds3Param("ParamFour", "VOID", false),
+                new Ds3Param("Type", "com.test.TypeName", false)
         );
 
         final ImmutableList<WithConstructor> result = toWithConstructors(params, false);
@@ -419,19 +427,39 @@ public class RequestGeneratorUtil_Test {
     public void toWithConstructors_NullableParams_Test() {
         final ImmutableList<WithConstructor> expected = ImmutableList.of(
                 new WithConstructor("ParamOne", "*Type1", "param_one", "paramOne.String()"),
-                new WithConstructor("ParamThree", "*int", "param_three", "strconv.Itoa(*paramThree)")
+                new WithConstructor("ParamThree", "*int", "param_three", "strconv.Itoa(*paramThree)"),
+                new WithConstructor("TypeName", "*TypeName", "type", "typeName.String()")
         );
 
         final ImmutableList<Ds3Param> params = ImmutableList.of(
                 new Ds3Param("ParamOne", "Type1", true),
                 new Ds3Param("ParamTwo", "void", true),
                 new Ds3Param("ParamThree", "int", true),
-                new Ds3Param("ParamFour", "VOID", true)
+                new Ds3Param("ParamFour", "VOID", true),
+                new Ds3Param("Type", "com.test.TypeName", true)
         );
 
         final ImmutableList<WithConstructor> result = toWithConstructors(params, true);
         assertThat(result.size(), is(expected.size()));
 
         expected.forEach(expectedConst -> assertThat(result, hasItem(expectedConst)));
+    }
+
+    @Test
+    public void toWithConstructor_Test() {
+        final ImmutableList<WithConstructor> expected = ImmutableList.of(
+                new WithConstructor("ParamOne", "Type1", "param_one", "paramOne.String()"),
+                new WithConstructor("ParamTwo", "int", "param_two", "strconv.Itoa(paramTwo)"),
+                new WithConstructor("TypeName", "TypeName", "type", "typeName.String()")
+        );
+
+        final ImmutableList<Ds3Param> params = ImmutableList.of(
+                new Ds3Param("ParamOne", "Type1", false),
+                new Ds3Param("ParamTwo", "int", false),
+                new Ds3Param("Type", "com.test.TypeName", false)
+        );
+
+        assertThat(params.size(), is(expected.size()));
+        params.forEach(param -> assertThat(expected, hasItem(toWithConstructor(param))));
     }
 }
