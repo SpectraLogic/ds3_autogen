@@ -27,7 +27,6 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.Helper
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
-import com.spectralogic.ds3autogen.utils.RequestConverterUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 
@@ -95,18 +94,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
      */
     protected fun structParamsFromRequest(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
-        if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "bucketName"))
-        }
-        if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "objectName"))
-        }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
-        }
-
-        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(paramsListFromRequest(ds3Request))
         builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.optionalQueryParams)))
         return builder.build()
     }
@@ -125,6 +113,14 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
     }
 
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
+        return paramsListFromRequest(ds3Request)
+    }
+
+    /**
+     * Retrieves constructor param list from the Ds3Request. This is reused by special-cased
+     * generators to fetch always-present constructor params.
+     */
+    fun paramsListFromRequest(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder: ImmutableList.Builder<Arguments> = ImmutableList.builder()
         if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "bucketName"))
@@ -132,8 +128,8 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "objectName"))
         }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
+        if (ds3Request.isGoResourceAnArg()) {
+            val resourceArg: Arguments = ds3Request.getGoArgFromResource()
             builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
@@ -172,8 +168,8 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
             builder.add(SimpleVariable("objectName"))
         }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = RequestConverterUtil.getArgFromResource(ds3Request.resource)
+        if (ds3Request.isGoResourceAnArg()) {
+            val resourceArg: Arguments = ds3Request.getGoArgFromResource()
             builder.add(SimpleVariable(uncapFirst(resourceArg.name)))
         }
 

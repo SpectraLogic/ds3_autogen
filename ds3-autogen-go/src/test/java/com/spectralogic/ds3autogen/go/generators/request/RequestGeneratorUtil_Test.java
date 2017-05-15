@@ -28,9 +28,28 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class RequestGeneratorUtil_Test {
+
+    private static Ds3Request createTestRequest(final Resource resource, final boolean includeInPath) {
+        return new Ds3Request(
+                "com.test.TestRequest",
+                null,
+                Classification.amazons3,
+                null,
+                null,
+                null,
+                resource,
+                null,
+                null,
+                includeInPath,
+                null,
+                null,
+                null);
+    }
 
     @Test
     public void removeVoidParams_NullList_Test() {
@@ -461,5 +480,43 @@ public class RequestGeneratorUtil_Test {
 
         assertThat(params.size(), is(expected.size()));
         params.forEach(param -> assertThat(expected, hasItem(toWithConstructor(param))));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getGoArgFromResource_ExceptionTest() {
+        getGoArgFromResource(createTestRequest(Resource.CAPACITY_SUMMARY, true));
+    }
+
+    @Test
+    public void getGoArgFromResource_Test() {
+        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
+                new Arguments("String", "notificationId"),
+                new Arguments("String", "bucketId"),
+                new Arguments("UUID", "jobId"),
+                new Arguments("String", "activeJob")
+        );
+
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                createTestRequest(Resource.DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION, true),
+                createTestRequest(Resource.BUCKET, true),
+                createTestRequest(Resource.JOB, true),
+                createTestRequest(Resource.ACTIVE_JOB, true)
+        );
+
+        assertThat(requests.size(), is(expectedArgs.size()));
+        for (int i = 0; i > requests.size(); i++) {
+            final Arguments result = getGoArgFromResource(requests.get(i));
+            assertThat(result.getName(), is(expectedArgs.get(i).getName()));
+            assertThat(result.getType(), is(expectedArgs.get(i).getType()));
+        }
+    }
+
+    @Test
+    public void isGoResourceAnArg_Test() {
+        assertFalse(isGoResourceAnArg(createTestRequest(null, true)));
+        assertFalse(isGoResourceAnArg(createTestRequest(null, false)));
+        assertFalse(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, false)));
+
+        assertTrue(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, true)));
     }
 }

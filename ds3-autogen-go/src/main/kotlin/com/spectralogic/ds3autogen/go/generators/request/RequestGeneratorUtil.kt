@@ -229,8 +229,8 @@ fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
         builder.append("/\"").append(" + ").append(requestRef).append(".notificationId")
     } else if (hasBucketNameInPath(ds3Request)) {
         builder.append("/\"").append(" + ").append(requestRef).append(".bucketName")
-    } else if (isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-        val resourceArg = getArgFromResource(ds3Request.resource)
+    } else if (ds3Request.isGoResourceAnArg()) {
+        val resourceArg = ds3Request.getGoArgFromResource()
         builder.append("/\"").append(" + ").append(uncapFirst(requestRef))
                 .append(".").append(uncapFirst(resourceArg.name))
     } else {
@@ -265,4 +265,31 @@ fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
             goType,
             camelToUnderscore(ds3Param.name),
             goVarToString(uncapFirst(goName), goType))
+}
+
+/**
+ * Determines if a Ds3Request's Resource describes a required argument or not.
+ */
+fun Ds3Request.isGoResourceAnArg(): Boolean {
+    return resource != null && includeInPath
+}
+
+/**
+ * Creates an argument from a resource. Notification resource args are simplified to notificationId.
+ * If the resource does not describe a valid argument, such as a singleton, an error is thrown.
+ */
+fun Ds3Request.getGoArgFromResource(): Arguments {
+    if (isResourceSingleton(resource)) {
+        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString())
+    }
+    if (isResourceNotification(resource)) {
+        return Arguments("String", "notificationId")
+    }
+    if (isResourceNamed(resource)) {
+        return Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name")
+    }
+    if (isResourceId(resource)) {
+        return Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id")
+    }
+    return Arguments("String", Helper.underscoreToCamel(resource.toString()))
 }

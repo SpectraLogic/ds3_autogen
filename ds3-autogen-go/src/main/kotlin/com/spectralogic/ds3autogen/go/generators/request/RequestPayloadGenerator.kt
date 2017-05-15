@@ -18,13 +18,8 @@ package com.spectralogic.ds3autogen.go.generators.request
 import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
-import com.spectralogic.ds3autogen.api.models.enums.Requirement
-import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.VariableInterface
-import com.spectralogic.ds3autogen.go.utils.toGoType
-import com.spectralogic.ds3autogen.utils.Helper
-import com.spectralogic.ds3autogen.utils.RequestConverterUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 
@@ -39,19 +34,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      */
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
-        if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "bucketName"))
-        }
-        if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "objectName"))
-        }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(Arguments(toGoType(resourceArg.type), Helper.uncapFirst(resourceArg.name)))
-        }
-
-        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
-        builder.addAll(toGoArgumentsList(removeVoidDs3Params(ds3Request.optionalQueryParams)))
+        builder.addAll(structParamsFromRequest(ds3Request))
         builder.add(Arguments("networking.ReaderWithSizeDecorator", "content"))
 
         // Sort the arguments
@@ -65,18 +48,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      */
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
-        if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "bucketName"))
-        }
-        if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
-            builder.add(Arguments("string", "objectName"))
-        }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(Arguments(toGoType(resourceArg.type), Helper.uncapFirst(resourceArg.name)))
-        }
-
-        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(paramsListFromRequest(ds3Request))
         builder.add(getPayloadConstructorArg())
         return builder.build()
     }
@@ -88,18 +60,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
      */
     override fun toStructAssignmentParams(ds3Request: Ds3Request): ImmutableList<VariableInterface> {
         val builder = ImmutableList.builder<VariableInterface>()
-        if (ds3Request.bucketRequirement != null && ds3Request.bucketRequirement == Requirement.REQUIRED) {
-            builder.add(SimpleVariable("bucketName"))
-        }
-        if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
-            builder.add(SimpleVariable("objectName"))
-        }
-        if (RequestConverterUtil.isResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg = RequestConverterUtil.getArgFromResource(ds3Request.resource)
-            builder.add(SimpleVariable(Helper.uncapFirst(resourceArg.name)))
-        }
-
-        builder.addAll(toSimpleVariables(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
+        builder.addAll(structAssignmentParamsFromRequest(ds3Request))
         builder.add(getStructAssignmentVariable())
 
         return builder.build()

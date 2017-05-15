@@ -131,7 +131,7 @@ public final class RequestConverterUtil {
      * name should be name spaced to include "Name". For example, Resource.BUCKET
      * describes an argument whose name should be "BucketName" with type String.
      */
-    private static boolean isResourceNamed(final Resource resource) {
+    public static boolean isResourceNamed(final Resource resource) {
         switch (resource) {
             case BUCKET:
             case OBJECT:
@@ -188,7 +188,7 @@ public final class RequestConverterUtil {
     /**
      * Converts all void Ds3Params into a list of Arguments, excluding the Operations param
      */
-    public static ImmutableList<Arguments> getVoidArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
+    static ImmutableList<Arguments> getVoidArgsFromParamList(final ImmutableList<Ds3Param> paramList) {
         if(isEmpty(paramList)) {
             return ImmutableList.of();
         }
@@ -227,7 +227,7 @@ public final class RequestConverterUtil {
     /**
      * Converts a Ds3Param into an argument
      */
-    public static Arguments toArgument(final Ds3Param ds3Param) {
+    static Arguments toArgument(final Ds3Param ds3Param) {
         final String paramType = ds3Param.getType().substring(ds3Param.getType().lastIndexOf(".") + 1);
         return new Arguments(paramType, ds3Param.getName());
     }
