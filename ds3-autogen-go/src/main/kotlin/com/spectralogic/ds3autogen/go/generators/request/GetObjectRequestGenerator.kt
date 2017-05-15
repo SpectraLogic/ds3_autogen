@@ -69,7 +69,7 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
     override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
         val builder = ImmutableSet.Builder<String>()
         builder.add("fmt")
-        if (importStrconv(ds3Request.requiredQueryParams) || importStrconv(ds3Request.optionalQueryParams)) {
+        if (isStrconvImportRequired(ds3Request.requiredQueryParams) || isStrconvImportRequired(ds3Request.optionalQueryParams)) {
             builder.add("strconv")
         }
         return builder.build()

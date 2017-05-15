@@ -58,7 +58,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
      * Retrieves imports that are not present in all request files
      */
      override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
-        if (importStrconv(ds3Request.requiredQueryParams) || importStrconv(ds3Request.optionalQueryParams)) {
+        if (isStrconvImportRequired(ds3Request.requiredQueryParams) || isStrconvImportRequired(ds3Request.optionalQueryParams)) {
             return ImmutableSet.of("strconv")
         }
         return ImmutableSet.of()
@@ -67,7 +67,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
     /**
      * Checks if strconv should be imported based on the types of the parameters
      */
-    fun importStrconv(ds3Params: ImmutableList<Ds3Param>?): Boolean {
+    fun isStrconvImportRequired(ds3Params: ImmutableList<Ds3Param>?): Boolean {
         if (isEmpty(ds3Params)) {
             return false
         }

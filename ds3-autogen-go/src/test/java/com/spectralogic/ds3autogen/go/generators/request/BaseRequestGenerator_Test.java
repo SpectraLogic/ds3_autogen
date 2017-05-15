@@ -303,22 +303,22 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void importStrconv_NullList_Test() {
-        assertFalse(generator.importStrconv(null));
+        assertFalse(generator.isStrconvImportRequired(null));
     }
 
     @Test
     public void importStrconv_EmptyList_Test() {
-        assertFalse(generator.importStrconv(ImmutableList.of()));
+        assertFalse(generator.isStrconvImportRequired(ImmutableList.of()));
     }
 
     @Test
     public void importStrconv_WithImport_Test() {
-        assertTrue(generator.importStrconv(PARAMS_REQUIRING_STRCONV));
+        assertTrue(generator.isStrconvImportRequired(PARAMS_REQUIRING_STRCONV));
     }
 
     @Test
     public void importStrconv_NoImport_Test() {
-        assertFalse(generator.importStrconv(PARAMS_NOT_REQURING_STRCONV));
+        assertFalse(generator.isStrconvImportRequired(PARAMS_NOT_REQURING_STRCONV));
     }
 
     @Test
