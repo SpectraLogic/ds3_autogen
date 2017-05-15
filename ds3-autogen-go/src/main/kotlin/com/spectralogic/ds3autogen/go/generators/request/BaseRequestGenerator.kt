@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
@@ -39,6 +40,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         val withConstructors = toWithConstructors(ds3Request.optionalQueryParams)
         val nullableWithConstructors = toNullableWithConstructors(ds3Request.optionalQueryParams)
         val voidWithConstructors = toVoidWithConstructors(ds3Request.optionalQueryParams)
+        val imports = toImportSet(ds3Request)
 
         return Request(
                 name,
@@ -48,7 +50,28 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
                 structParams,
                 withConstructors,
                 nullableWithConstructors,
-                voidWithConstructors)
+                voidWithConstructors,
+                imports)
+    }
+
+    /**
+     * Retrieves imports that are not present in all request files
+     */
+     override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
+        if (importStrconv(ds3Request.requiredQueryParams) || importStrconv(ds3Request.optionalQueryParams)) {
+            return ImmutableSet.of("strconv")
+        }
+        return ImmutableSet.of()
+    }
+
+    /**
+     * Checks if strconv should be imported based on the types of the parameters
+     */
+    fun importStrconv(ds3Params: ImmutableList<Ds3Param>?): Boolean {
+        if (isEmpty(ds3Params)) {
+            return false
+        }
+        return ds3Params!!.any { usesStrconv(it.type) }
     }
 
     /**

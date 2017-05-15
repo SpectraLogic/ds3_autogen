@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.go.models.request.Variable
@@ -59,6 +60,18 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
         builder.addAll(assignments)
         builder.add(Variable("checksum", "networking.NewNoneChecksum()"))
 
+        return builder.build()
+    }
+
+    /**
+     * Retrieves imports that are not present in all request files
+     */
+    override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
+        val builder = ImmutableSet.Builder<String>()
+        builder.add("fmt")
+        if (importStrconv(ds3Request.requiredQueryParams) || importStrconv(ds3Request.optionalQueryParams)) {
+            builder.add("strconv")
+        }
         return builder.build()
     }
 }

@@ -34,6 +34,7 @@ import com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath
 import com.spectralogic.ds3autogen.utils.Helper
 import com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
+import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil.*
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
@@ -158,6 +159,18 @@ fun goVarToString(name: String, goType: String): String {
         "*float64" -> return "strconv.FormatFloat(*$name, 'f', -1, 64)"
         "*string" -> return "*$name"
         else -> return name + ".String()"
+    }
+}
+
+/**
+ * Determines if the Go conversion of the specified contract type into a string
+ * requires the import of strconv
+ */
+fun usesStrconv(contractType: String): Boolean {
+    val type = NormalizingContractNamesUtil.removePath(contractType)
+    when (type.toLowerCase()) {
+        "boolean", "integer", "int", "double", "long" -> return true
+        else -> return false
     }
 }
 

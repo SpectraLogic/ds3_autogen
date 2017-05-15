@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
@@ -23,9 +24,12 @@ import com.spectralogic.ds3autogen.api.models.enums.*;
 import com.spectralogic.ds3autogen.go.models.request.*;
 import org.junit.Test;
 
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BaseRequestGenerator_Test {
 
@@ -71,6 +75,18 @@ public class BaseRequestGenerator_Test {
             new SimpleVariable("intReqParam"),
             new SimpleVariable("stringReqParam"),
             new SimpleVariable("activeJobId")
+    );
+
+    private final ImmutableList<Ds3Param> PARAMS_REQUIRING_STRCONV = ImmutableList.of(
+            new Ds3Param("Param1", "java.lang.String", false),
+            new Ds3Param("Param2", "void", false),
+            new Ds3Param("Param3", "java.lang.Integer", false)
+    );
+
+    private final ImmutableList<Ds3Param> PARAMS_NOT_REQURING_STRCONV = ImmutableList.of(
+            new Ds3Param("Param1", "java.lang.String", false),
+            new Ds3Param("Param2", "void", false),
+            new Ds3Param("Param3", "java.util.UUID", false)
     );
 
     @Test
@@ -283,5 +299,41 @@ public class BaseRequestGenerator_Test {
 
         assertThat(result.size(), is(expectedConst.size()));
         expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
+    }
+
+    @Test
+    public void importStrconv_NullList_Test() {
+        assertFalse(generator.importStrconv(null));
+    }
+
+    @Test
+    public void importStrconv_EmptyList_Test() {
+        assertFalse(generator.importStrconv(ImmutableList.of()));
+    }
+
+    @Test
+    public void importStrconv_WithImport_Test() {
+        assertTrue(generator.importStrconv(PARAMS_REQUIRING_STRCONV));
+    }
+
+    @Test
+    public void importStrconv_NoImport_Test() {
+        assertFalse(generator.importStrconv(PARAMS_NOT_REQURING_STRCONV));
+    }
+
+    @Test
+    public void toImportSet_NoStrconv_Test() {
+        final Ds3Request ds3Request = createDs3RequestTestData(false, PARAMS_NOT_REQURING_STRCONV, PARAMS_NOT_REQURING_STRCONV);
+        final ImmutableSet<String> result = generator.toImportSet(ds3Request);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toImportSet_WithStrconv_Test() {
+        final ImmutableSet<String> expectedImports = ImmutableSet.of("strconv");
+        final Ds3Request ds3Request = createDs3RequestTestData(false, PARAMS_NOT_REQURING_STRCONV, PARAMS_REQUIRING_STRCONV);
+        final ImmutableSet<String> result = generator.toImportSet(ds3Request);
+        assertThat(result.size(), is(expectedImports.size()));
+        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.models.request
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 
@@ -27,4 +28,5 @@ data class Request(
         val structParams: ImmutableList<Arguments>, // Parameters that make up the request handler struct
         val withConstructors: ImmutableList<WithConstructor>, // Optional constructors with non-null type
         val nullableWithConstructors: ImmutableList<WithConstructor>, // Optional constructors that can be null
-        val voidWithConstructors: ImmutableList<WithConstructor>) // Optional constructor for a void type optional param
+        val voidWithConstructors: ImmutableList<WithConstructor>, // Optional constructor for a void type optional param
+        val imports: ImmutableSet<String>)
