@@ -22,7 +22,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.enums.Classification
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 import com.spectralogic.ds3autogen.api.models.enums.Requirement
-import com.spectralogic.ds3autogen.api.models.enums.Resource
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor
@@ -37,7 +36,6 @@ import com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil.*
-
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 import com.spectralogic.ds3autogen.utils.models.NotificationType
@@ -231,8 +229,8 @@ fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
         builder.append("/\"").append(" + ").append(requestRef).append(".notificationId")
     } else if (hasBucketNameInPath(ds3Request)) {
         builder.append("/\"").append(" + ").append(requestRef).append(".bucketName")
-    } else if (isGoResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-        val resourceArg = getGoArgFromResource(ds3Request.resource)
+    } else if (ds3Request.isGoResourceAnArg()) {
+        val resourceArg = ds3Request.getGoArgFromResource()
         builder.append("/\"").append(" + ").append(uncapFirst(requestRef))
                 .append(".").append(uncapFirst(resourceArg.name))
     } else {
@@ -272,29 +270,26 @@ fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
 /**
  * Determines if a Ds3Request's Resource describes a required argument or not.
  */
-fun isGoResourceAnArg(
-        resource: Resource?,
-        includeIdInPath: Boolean): Boolean {
-    return resource != null && includeIdInPath
+fun Ds3Request.isGoResourceAnArg(): Boolean {
+    return this.resource != null && this.includeInPath
 }
 
 /**
  * Creates an argument from a resource. Notification resource args are simplified to notificationId.
  * If the resource does not describe a valid argument, such as a singleton, an error is thrown.
- * @param resource A Ds3Request's Resource
  */
-fun getGoArgFromResource(resource: Resource?): Arguments {
-    if (isResourceSingleton(resource)) {
-        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString())
+fun Ds3Request.getGoArgFromResource(): Arguments {
+    if (isResourceSingleton(this.resource)) {
+        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + this.resource.toString())
     }
-    if (isResourceNotification(resource)) {
+    if (isResourceNotification(this.resource)) {
         return Arguments("String", "notificationId")
     }
-    if (isResourceNamed(resource)) {
-        return Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name")
+    if (isResourceNamed(this.resource)) {
+        return Arguments("String", Helper.underscoreToCamel(this.resource.toString()) + "Name")
     }
-    if (isResourceId(resource)) {
-        return Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id")
+    if (isResourceId(this.resource)) {
+        return Arguments("UUID", Helper.underscoreToCamel(this.resource.toString()) + "Id")
     }
-    return Arguments("String", Helper.underscoreToCamel(resource.toString()))
+    return Arguments("String", Helper.underscoreToCamel(this.resource.toString()))
 }

@@ -128,8 +128,8 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
             builder.add(Arguments("string", "objectName"))
         }
-        if (isGoResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = getGoArgFromResource(ds3Request.resource)
+        if (ds3Request.isGoResourceAnArg()) {
+            val resourceArg: Arguments = ds3Request.getGoArgFromResource()
             builder.add(Arguments(toGoType(resourceArg.type), uncapFirst(resourceArg.name)))
         }
 
@@ -168,8 +168,8 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         if (ds3Request.objectRequirement != null && ds3Request.objectRequirement == Requirement.REQUIRED) {
             builder.add(SimpleVariable("objectName"))
         }
-        if (isGoResourceAnArg(ds3Request.resource, ds3Request.includeInPath)) {
-            val resourceArg: Arguments = getGoArgFromResource(ds3Request.resource)
+        if (ds3Request.isGoResourceAnArg()) {
+            val resourceArg: Arguments = ds3Request.getGoArgFromResource()
             builder.add(SimpleVariable(uncapFirst(resourceArg.name)))
         }
 

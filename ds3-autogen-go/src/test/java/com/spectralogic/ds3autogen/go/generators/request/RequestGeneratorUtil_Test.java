@@ -34,6 +34,23 @@ import static org.junit.Assert.assertTrue;
 
 public class RequestGeneratorUtil_Test {
 
+    private static Ds3Request createTestRequest(final Resource resource, final boolean includeInPath) {
+        return new Ds3Request(
+                "com.test.TestRequest",
+                null,
+                Classification.amazons3,
+                null,
+                null,
+                null,
+                resource,
+                null,
+                null,
+                includeInPath,
+                null,
+                null,
+                null);
+    }
+
     @Test
     public void removeVoidParams_NullList_Test() {
         final ImmutableList<Ds3Param> result = removeVoidDs3Params(null);
@@ -467,7 +484,7 @@ public class RequestGeneratorUtil_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void getGoArgFromResource_ExceptionTest() {
-        getGoArgFromResource(Resource.CAPACITY_SUMMARY);
+        getGoArgFromResource(createTestRequest(Resource.CAPACITY_SUMMARY, true));
     }
 
     @Test
@@ -479,16 +496,16 @@ public class RequestGeneratorUtil_Test {
                 new Arguments("String", "activeJob")
         );
 
-        final ImmutableList<Resource> resources = ImmutableList.of(
-                Resource.DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION,
-                Resource.BUCKET,
-                Resource.JOB,
-                Resource.ACTIVE_JOB
+        final ImmutableList<Ds3Request> requests = ImmutableList.of(
+                createTestRequest(Resource.DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION, true),
+                createTestRequest(Resource.BUCKET, true),
+                createTestRequest(Resource.JOB, true),
+                createTestRequest(Resource.ACTIVE_JOB, true)
         );
 
-        assertThat(resources.size(), is(expectedArgs.size()));
-        for (int i = 0; i > resources.size(); i++) {
-            final Arguments result = getGoArgFromResource(resources.get(i));
+        assertThat(requests.size(), is(expectedArgs.size()));
+        for (int i = 0; i > requests.size(); i++) {
+            final Arguments result = getGoArgFromResource(requests.get(i));
             assertThat(result.getName(), is(expectedArgs.get(i).getName()));
             assertThat(result.getType(), is(expectedArgs.get(i).getType()));
         }
@@ -496,10 +513,10 @@ public class RequestGeneratorUtil_Test {
 
     @Test
     public void isGoResourceAnArg_Test() {
-        assertFalse(isGoResourceAnArg(null, true));
-        assertFalse(isGoResourceAnArg(null, false));
-        assertFalse(isGoResourceAnArg(Resource.ACTIVE_JOB, false));
+        assertFalse(isGoResourceAnArg(createTestRequest(null, true)));
+        assertFalse(isGoResourceAnArg(createTestRequest(null, false)));
+        assertFalse(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, false)));
 
-        assertTrue(isGoResourceAnArg(Resource.ACTIVE_JOB, true));
+        assertTrue(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, true)));
     }
 }
