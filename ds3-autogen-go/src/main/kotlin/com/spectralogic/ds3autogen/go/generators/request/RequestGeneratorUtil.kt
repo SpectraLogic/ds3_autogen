@@ -271,7 +271,7 @@ fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
  * Determines if a Ds3Request's Resource describes a required argument or not.
  */
 fun Ds3Request.isGoResourceAnArg(): Boolean {
-    return this.resource != null && this.includeInPath
+    return resource != null && includeInPath
 }
 
 /**
@@ -279,17 +279,17 @@ fun Ds3Request.isGoResourceAnArg(): Boolean {
  * If the resource does not describe a valid argument, such as a singleton, an error is thrown.
  */
 fun Ds3Request.getGoArgFromResource(): Arguments {
-    if (isResourceSingleton(this.resource)) {
-        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + this.resource.toString())
+    if (isResourceSingleton(resource)) {
+        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString())
     }
-    if (isResourceNotification(this.resource)) {
+    if (isResourceNotification(resource)) {
         return Arguments("String", "notificationId")
     }
-    if (isResourceNamed(this.resource)) {
-        return Arguments("String", Helper.underscoreToCamel(this.resource.toString()) + "Name")
+    if (isResourceNamed(resource)) {
+        return Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name")
     }
-    if (isResourceId(this.resource)) {
-        return Arguments("UUID", Helper.underscoreToCamel(this.resource.toString()) + "Id")
+    if (isResourceId(resource)) {
+        return Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id")
     }
-    return Arguments("String", Helper.underscoreToCamel(this.resource.toString()))
+    return Arguments("String", Helper.underscoreToCamel(resource.toString()))
 }
