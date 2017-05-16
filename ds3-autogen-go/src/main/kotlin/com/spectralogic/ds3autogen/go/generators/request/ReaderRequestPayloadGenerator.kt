@@ -19,23 +19,23 @@ import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.go.models.request.Variable
 
 /**
- * The Go generator for request handlers that have a CompleteMultipartUpload
- * request payload not specified within the contract.
+ * Creates requests that have a payload of type ReaderWithSizeDecorator
  */
+class ReaderRequestPayloadGenerator : RequestPayloadGenerator() {
 
-class MultipartUploadPayloadGenerator : RequestPayloadGenerator() {
-
+    //TODO test
     /**
-     * Retrieves the CompleteMultipartUpload request payload
+     * Retrieves the ReaderWithSizeDecorator request payload
      */
     override fun getPayloadConstructorArg(): Arguments {
-        return Arguments("[]Part", "parts")
+        return Arguments("networking.ReaderWithSizeDecorator", "content")
     }
 
+    //TODO test
     /**
-     * Retrieves the struct assignment for the CompleteMultipartUpload request payload
+     * Retrieves the struct assignment for the ReaderWithSizeDecorator request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildPartsListStream(parts)")
+        return Variable("content", "content")
     }
 }

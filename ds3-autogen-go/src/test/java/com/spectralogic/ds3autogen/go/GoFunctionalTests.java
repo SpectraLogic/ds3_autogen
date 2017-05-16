@@ -610,4 +610,70 @@ public class GoFunctionalTests {
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
+
+    @Test
+    public void putMultiPartUploadPart() throws IOException, TemplateModelException {
+        // This tests correct generation of request with ReaderWithSizeDecorator payload
+        final String requestName = "PutMultiPartUploadPartRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/putMultiPartUploadPart.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        // test request imports
+        assertTrue(requestCode.contains("\"strconv\""));
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+
+        // test request struct
+        assertTrue(requestCode.contains("bucketName string"));
+        assertTrue(requestCode.contains("objectName string"));
+        assertTrue(requestCode.contains("partNumber int"));
+        assertTrue(requestCode.contains("uploadId string"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+
+        // test constructor
+        assertTrue(requestCode.contains("func NewPutMultiPartUploadPartRequest(bucketName string, objectName string, content networking.ReaderWithSizeDecorator, partNumber int, uploadId string) *PutMultiPartUploadPartRequest {"));
+        assertTrue(requestCode.contains("bucketName: bucketName,"));
+        assertTrue(requestCode.contains("objectName: objectName,"));
+        assertTrue(requestCode.contains("partNumber: partNumber,"));
+        assertTrue(requestCode.contains("uploadId: uploadId,"));
+        assertTrue(requestCode.contains("content: content,"));
+
+        // test path
+        assertTrue(requestCode.contains("return \"/\" + putMultiPartUploadPartRequest.bucketName + \"/\" + putMultiPartUploadPartRequest.objectName"));
+
+        // test content stream
+        assertTrue(requestCode.contains("func (putMultiPartUploadPartRequest *PutMultiPartUploadPartRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("return putMultiPartUploadPartRequest.content"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("func NewPutMultiPartUploadPartResponse(webResponse networking.WebResponse) (*PutMultiPartUploadPartResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("return &PutMultiPartUploadPartResponse{}, nil"));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+
+        assertTrue(client.contains("func (client *Client) PutMultiPartUploadPart(request *models.PutMultiPartUploadPartRequest) (*models.PutMultiPartUploadPartResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+    }
 }

@@ -22,21 +22,21 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class MultipartUploadPayloadGenerator_Test {
+public class ReaderRequestPayloadGenerator_Test {
 
-    private final PartsRequestPayloadGenerator generator = new PartsRequestPayloadGenerator();
+    private final ReaderRequestPayloadGenerator generator = new ReaderRequestPayloadGenerator();
 
     @Test
     public void getPayloadConstructorArgTest() {
         final Arguments result = generator.getPayloadConstructorArg();
-        assertThat(result.getName(), is("parts"));
-        assertThat(result.getType(), is("[]Part"));
+        assertThat(result.getName(), is("content"));
+        assertThat(result.getType(), is("networking.ReaderWithSizeDecorator"));
     }
 
     @Test
     public void getStructAssignmentVariableTest() {
         final Variable result = generator.getStructAssignmentVariable();
         assertThat(result.getName(), is("content"));
-        assertThat(result.getAssignment(), is("buildPartsListStream(parts)"));
+        assertThat(result.getAssignment(), is("content"));
     }
 }
