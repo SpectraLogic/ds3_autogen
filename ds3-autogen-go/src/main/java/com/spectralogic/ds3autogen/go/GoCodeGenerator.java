@@ -130,6 +130,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * specified {@link Ds3Request}
      */
     static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        if (isAmazonCreateObjectRequest(ds3Request)) {
+            return new PutObjectRequestGenerator();
+        }
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectRequestGenerator();
         }
@@ -157,6 +160,9 @@ public class GoCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
+        }
+        if (isAmazonCreateObjectRequest(ds3Request)) {
+            return config.getTemplate("request/put_object_request.ftl");
         }
         if (isBulkRequest(ds3Request)
                 || isCreateMultiPartUploadPartRequest(ds3Request)

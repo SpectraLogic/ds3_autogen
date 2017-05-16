@@ -34,6 +34,9 @@ public class GoCodeGenerator_Test {
         // Request with ReaderWithSizeDecorator payload
         assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(ReaderRequestPayloadGenerator.class));
 
+        // Amazon Put Object
+        assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(PutObjectRequestGenerator.class));
+
         // Amazon Get Object request
         assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
 
@@ -61,7 +64,6 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getEjectStorageDomainRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getRequestCreateObject()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestCreateNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestGetNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestDeleteNotification()), instanceOf(BaseRequestGenerator.class));
