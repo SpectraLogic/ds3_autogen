@@ -519,4 +519,22 @@ public class RequestGeneratorUtil_Test {
 
         assertTrue(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, true)));
     }
+
+    @Test
+    public void usesStrconv_Test() {
+        assertTrue(usesStrconv("Boolean"));
+        assertTrue(usesStrconv("java.lang.Boolean"));
+        assertTrue(usesStrconv("java.lang.Integer"));
+        assertTrue(usesStrconv("int"));
+        assertTrue(usesStrconv("java.lang.Double"));
+        assertTrue(usesStrconv("double"));
+        assertTrue(usesStrconv("long"));
+        assertTrue(usesStrconv("java.lang.Double"));
+
+        assertFalse(usesStrconv("java.util.UUID"));
+        assertFalse(usesStrconv("String"));
+        assertFalse(usesStrconv("java.lang.String"));
+        assertFalse(usesStrconv("com.test.TestType"));
+        assertFalse(usesStrconv("void"));
+    }
 }

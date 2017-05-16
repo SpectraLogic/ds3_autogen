@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
@@ -70,4 +71,9 @@ interface RequestModelGeneratorUtil {
      * Each constructor sets an optional request parameter
      */
     fun toNullableWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor>
+
+    /**
+     * Creates the set of imports that are not present in all request files (i.e. not in templates)
+     */
+    fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String>
 }

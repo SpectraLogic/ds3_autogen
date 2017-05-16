@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
@@ -63,5 +64,14 @@ public class GetObjectRequestGenerator_Test {
 
         assertThat(result.size(), is(expectedVars.size()));
         expectedVars.forEach(expected -> assertThat(result, hasItem(expected)));
+    }
+
+    @Test
+    public void toImportSet_Test() {
+        final ImmutableSet<String> expectedImports = ImmutableSet.of("fmt", "strconv");
+
+        final ImmutableSet<String> result = generator.toImportSet(getRequestAmazonS3GetObject());
+        assertThat(result.size(), is(expectedImports.size()));
+        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

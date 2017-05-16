@@ -86,6 +86,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertTrue(requestCode.contains("\"strconv\""));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -125,6 +126,7 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("func NewDeleteBucketAclSpectraS3Request(bucketAcl string) *DeleteBucketAclSpectraS3Request {"));
         assertTrue(requestCode.contains("return \"/_rest_/bucket_acl/\" + deleteBucketAclSpectraS3Request.bucketAcl"));
         assertFalse(returnsStream(requestName, requestCode));
@@ -164,6 +166,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
         assertTrue(requestCode.contains("content: buildDs3ObjectListStream(objects),")); //content is assigned a stream
         assertTrue(returnsStream(requestName, requestCode));
@@ -206,6 +209,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
         assertTrue(requestCode.contains("content: buildStreamFromString(requestPayload),")); //content is assigned a stream
         assertTrue(returnsStream(requestName, requestCode));
@@ -248,6 +252,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
         assertTrue(requestCode.contains("content: buildPartsListStream(parts),")); //content is assigned a stream
         assertTrue(returnsStream(requestName, requestCode));
@@ -289,6 +294,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
         assertTrue(requestCode.contains("content: buildDeleteObjectsPayload(objectNames),")); //content is assigned a stream
         assertTrue(returnsStream(requestName, requestCode));
@@ -334,6 +340,7 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("jobId string"));
         assertTrue(requestCode.contains("jobId: jobId,"));
         assertTrue(requestCode.contains("\"/_rest_/job/\" + getJobToReplicateSpectraS3Request.jobId"));
@@ -436,6 +443,7 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         // test request imports
+        assertTrue(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("\"net/url\""));
         assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
@@ -502,6 +510,7 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         // test request imports
+        assertTrue(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("\"net/url\""));
         assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
@@ -562,6 +571,7 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         // test request imports
+        assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("\"net/url\""));
         assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));

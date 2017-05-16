@@ -1,14 +1,4 @@
-<#include "../common/copyright.ftl" />
-
-package models
-
-import (
-    "fmt"
-    "net/url"
-    "net/http"
-    "ds3/networking"
-    "strconv"
-)
+<#include "request_header.ftl" />
 
 type rangeHeader struct {
     start, end int
