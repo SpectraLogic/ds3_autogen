@@ -133,6 +133,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectRequestGenerator();
         }
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return new ReaderRequestPayloadGenerator();
+        }
         if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
@@ -140,7 +143,7 @@ public class GoCodeGenerator implements CodeGenerator {
             return new StringRequestPayloadGenerator();
         }
         if (isCompleteMultiPartUploadRequest(ds3Request)) {
-            return new MultipartUploadPayloadGenerator();
+            return new PartsRequestPayloadGenerator();
         }
         if (isMultiFileDeleteRequest(ds3Request)) {
             return new DeleteObjectsRequestGenerator();
@@ -156,6 +159,7 @@ public class GoCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/get_object_request.ftl");
         }
         if (isBulkRequest(ds3Request)
+                || isCreateMultiPartUploadPartRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)
                 || hasStringRequestPayload(ds3Request)

@@ -30,6 +30,10 @@ public class GoCodeGenerator_Test {
 
     @Test
     public void getRequestGeneratorTest() {
+
+        // Request with ReaderWithSizeDecorator payload
+        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(ReaderRequestPayloadGenerator.class));
+
         // Amazon Get Object request
         assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
 
@@ -50,7 +54,7 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getReplicatePutJob()), instanceOf(StringRequestPayloadGenerator.class));
 
         // Request with CompleteMultipartUpload request payload
-        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(MultipartUploadPayloadGenerator.class));
+        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(PartsRequestPayloadGenerator.class));
 
         // Non-special cased requests
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(BaseRequestGenerator.class));
@@ -62,8 +66,6 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestGetNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestDeleteNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
     }
 
