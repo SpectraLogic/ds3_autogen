@@ -1,8 +1,8 @@
 func (${name?uncap_first} *${name}) WithMetaData(key string, value string) *${name} {
     if strings.HasPrefix(strings.ToLower(key), AMZ_META_HEADER) {
-        ${name?uncap_first}.headers.Add(key, value)
+        ${name?uncap_first}.headers.Add(strings.ToLower(key), value)
     } else {
-        ${name?uncap_first}.headers.Add(AMZ_META_HEADER + key, value)
+        ${name?uncap_first}.headers.Add(strings.ToLower(AMZ_META_HEADER + key), value)
     }
     return ${name?uncap_first}
 }
