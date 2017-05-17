@@ -17,12 +17,14 @@ package com.spectralogic.ds3autogen.go;
 
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getRequestGenerator;
 import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getResponseGenerator;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
@@ -73,6 +75,9 @@ public class GoCodeGenerator_Test {
 
     @Test
     public void getResponseGeneratorTest() {
+        // Amazon Get Object
+        assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
+
         // Commands with no response payload
         assertThat(getResponseGenerator(getRequestDeleteNotification()), instanceOf(NoResponseGenerator.class));
         assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(NoResponseGenerator.class));

@@ -28,6 +28,7 @@ import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
@@ -202,6 +203,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * specified {@link Ds3Request}
      */
     static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectResponseGenerator();
+        }
         if (!hasResponsePayload(ds3Request.getDs3ResponseCodes())) {
             return new NoResponseGenerator();
         }

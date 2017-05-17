@@ -4,6 +4,9 @@ package models
 
 import (
     "ds3/networking"
+    <#list imports as import>
+    "${import}"
+    </#list>
 )
 
 type ${name} struct {
