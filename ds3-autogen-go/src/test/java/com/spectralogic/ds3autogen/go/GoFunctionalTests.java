@@ -676,4 +676,80 @@ public class GoFunctionalTests {
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
     }
+
+    @Test
+    public void putObject() throws IOException, TemplateModelException {
+        // This tests correct generation of request with ReaderWithSizeDecorator payload
+        final String requestName = "PutObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/putObject.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        // test request imports
+        assertTrue(requestCode.contains("\"strconv\""));
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+        assertTrue(requestCode.contains("strings"));
+
+        // test request struct
+        assertTrue(requestCode.contains("bucketName string"));
+        assertTrue(requestCode.contains("objectName string"));
+        assertTrue(requestCode.contains("job string"));
+        assertTrue(requestCode.contains("offset int64"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("checksum networking.Checksum"));
+        assertTrue(requestCode.contains("headers *http.Header"));
+
+        // test constructor
+        assertTrue(requestCode.contains("func NewPutObjectRequest(bucketName string, objectName string, content networking.ReaderWithSizeDecorator) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("bucketName: bucketName,"));
+        assertTrue(requestCode.contains("objectName: objectName,"));
+        assertTrue(requestCode.contains("content: content,"));
+        assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum()"));
+        assertTrue(requestCode.contains("headers: &http.Header{},"));
+
+        // test path
+        assertTrue(requestCode.contains("return \"/\" + putObjectRequest.bucketName + \"/\" + putObjectRequest.objectName"));
+
+        // test content stream
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("return putObjectRequest.content"));
+
+        // test checksum
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithChecksum(contentHash string, checksumType networking.ChecksumType) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetChecksum() networking.Checksum {"));
+        assertTrue(requestCode.contains("return putObjectRequest.checksum"));
+
+        // test metadata
+        assertTrue(requestCode.contains("const ( AMZ_META_HEADER = \"x-amz-meta-\" )"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, value string) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) Header() *http.Header {"));
+        assertTrue(requestCode.contains("return putObjectRequest.headers"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+
+        assertTrue(client.contains("func (client *Client) PutObject(request *models.PutObjectRequest) (*models.PutObjectResponse, error) {"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+    }
 }
