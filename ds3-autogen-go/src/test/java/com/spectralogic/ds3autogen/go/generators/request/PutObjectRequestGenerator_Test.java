@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
@@ -37,7 +38,8 @@ public class PutObjectRequestGenerator_Test {
                 new SimpleVariable("bucketName"),
                 new SimpleVariable("objectName"),
                 new SimpleVariable("content"),
-                new Variable("checksum", "networking.NewNoneChecksum()")
+                new Variable("checksum", "networking.NewNoneChecksum()"),
+                new Variable("headers", "&http.Header{}")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(getRequestCreateObject());
@@ -70,6 +72,7 @@ public class PutObjectRequestGenerator_Test {
                 new Arguments("string", "objectName"),
                 new Arguments("networking.Checksum", "checksum"),
                 new Arguments("networking.ReaderWithSizeDecorator", "content"),
+                new Arguments("*http.Header", "headers"),
                 new Arguments("string", "job"),
                 new Arguments("int64", "offset")
         );
@@ -81,5 +84,15 @@ public class PutObjectRequestGenerator_Test {
             assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
             assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
         }
+    }
+
+    @Test
+    public void toImportSet_Test() {
+        final ImmutableSet<String> expectedImports = ImmutableSet.of("strings", "strconv");
+
+        final ImmutableSet<String> result = generator.toImportSet(getRequestCreateObject());
+
+        assertThat(result.size(), is(expectedImports.size()));
+        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

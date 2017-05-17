@@ -696,6 +696,7 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("\"net/url\""));
         assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
+        assertTrue(requestCode.contains("strings"));
 
         // test request struct
         assertTrue(requestCode.contains("bucketName string"));
@@ -704,6 +705,7 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("offset int64"));
         assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
         assertTrue(requestCode.contains("checksum networking.Checksum"));
+        assertTrue(requestCode.contains("headers *http.Header"));
 
         // test constructor
         assertTrue(requestCode.contains("func NewPutObjectRequest(bucketName string, objectName string, content networking.ReaderWithSizeDecorator) *PutObjectRequest {"));
@@ -711,6 +713,7 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("objectName: objectName,"));
         assertTrue(requestCode.contains("content: content,"));
         assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum()"));
+        assertTrue(requestCode.contains("headers: &http.Header{},"));
 
         // test path
         assertTrue(requestCode.contains("return \"/\" + putObjectRequest.bucketName + \"/\" + putObjectRequest.objectName"));
@@ -723,6 +726,12 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithChecksum(contentHash string, checksumType networking.ChecksumType) *PutObjectRequest {"));
         assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetChecksum() networking.Checksum {"));
         assertTrue(requestCode.contains("return putObjectRequest.checksum"));
+
+        // test metadata
+        assertTrue(requestCode.contains("const ( AMZ_META_HEADER = \"x-amz-meta-\" )"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, value string) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) Header() *http.Header {"));
+        assertTrue(requestCode.contains("return putObjectRequest.headers"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
