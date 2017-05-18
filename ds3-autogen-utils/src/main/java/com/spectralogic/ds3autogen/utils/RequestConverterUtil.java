@@ -121,6 +121,7 @@ public final class RequestConverterUtil {
             case TAPE_LIBRARY:
             case USER:
             case DATA_POLICY:
+            case DATA_PERSISTENCE_RULE:
                 return true;
         }
         return false;
