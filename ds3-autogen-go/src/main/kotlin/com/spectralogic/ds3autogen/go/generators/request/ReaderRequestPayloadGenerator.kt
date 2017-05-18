@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.go.models.request.Variable
  */
 class ReaderRequestPayloadGenerator : RequestPayloadGenerator() {
 
-    //TODO test
     /**
      * Retrieves the ReaderWithSizeDecorator request payload
      */
@@ -31,7 +30,6 @@ class ReaderRequestPayloadGenerator : RequestPayloadGenerator() {
         return Arguments("networking.ReaderWithSizeDecorator", "content")
     }
 
-    //TODO test
     /**
      * Retrieves the struct assignment for the ReaderWithSizeDecorator request payload
      */

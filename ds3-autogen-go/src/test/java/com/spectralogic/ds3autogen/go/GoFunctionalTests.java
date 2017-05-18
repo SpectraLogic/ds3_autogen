@@ -37,11 +37,11 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
-        final String requestName = "GetObjectRequest";
+        final String requestName = "SimpleNoPayloadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
         final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
 
@@ -56,9 +56,9 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("func NewGetObjectResponse(webResponse networking.WebResponse) (*GetObjectResponse, error) {"));
+        assertTrue(responseCode.contains("func NewSimpleNoPayloadResponse(webResponse networking.WebResponse) (*SimpleNoPayloadResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
-        assertTrue(responseCode.contains("return &GetObjectResponse{}, nil"));
+        assertTrue(responseCode.contains("return &SimpleNoPayloadResponse{}, nil"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -69,9 +69,10 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
-        assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
+        assertTrue(client.contains("func (client *Client) SimpleNoPayload(request *models.SimpleNoPayloadRequest) (*models.SimpleNoPayloadResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
     }
 
     @Test
@@ -410,8 +411,11 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
+        assertTrue(responseCode.contains("\"io\""));
+        assertTrue(responseCode.contains("Content io.ReadCloser"));
         assertTrue(responseCode.contains("func NewGetObjectResponse(webResponse networking.WebResponse) (*GetObjectResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 206 }"));
+        assertTrue(responseCode.contains("return &GetObjectResponse{ Content: webResponse.Body() }, nil"));
         assertTrue(responseCode.contains("return &GetObjectResponse{}, nil"));
 
         // Verify response payload type file was not generated

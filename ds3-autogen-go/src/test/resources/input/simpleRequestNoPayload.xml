@@ -1,8 +1,8 @@
 <Data>
     <Contract>
         <RequestHandlers>
-            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.GetObjectRequestHandler">
-                <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="REQUIRED">
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.SimpleNoPayloadRequest">
+                <Request BucketRequirement="REQUIRED" HttpVerb="GET" ObjectRequirement="NOT_ALLOWED">
                     <OptionalQueryParams>
                         <Param Name="UploadId" Type="java.util.UUID" />
                         <Param Name="Offset" Type="long"/>

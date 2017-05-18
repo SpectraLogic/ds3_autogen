@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.go.generators.response
 
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
+import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
@@ -41,8 +42,16 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         val payloadStruct = toResponsePayloadStruct(ds3Request.ds3ResponseCodes, typeMap)
         val expectedCodes = toExpectedStatusCodes(ds3Request.ds3ResponseCodes)
         val responseCodes = toResponseCodeList(ds3Request.ds3ResponseCodes, name)
+        val imports = toImportSet()
 
-        return Response(name, payloadStruct, expectedCodes, responseCodes)
+        return Response(name, payloadStruct, expectedCodes, responseCodes, imports)
+    }
+    
+    /**
+     * The standard response has all of its imports specified within the template file
+     */
+    override fun toImportSet(): ImmutableSet<String> {
+        return ImmutableSet.of()
     }
 
     /**
@@ -62,7 +71,14 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
      * Converts a Ds3ResponseCode into a ResponseCode model which contains the Go
      * code for parsing the specified response.
      */
-    fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode {
+    override fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode {
+        return toStandardResponseCode(ds3ResponseCode, responseName)
+    }
+
+    /**
+     * Converts a Ds3ResponseCode into one of the standard ResponseCode configurations
+     */
+    fun toStandardResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode {
         if (isEmpty(ds3ResponseCode.ds3ResponseTypes)) {
             throw IllegalArgumentException("Ds3ResponseCode does not have any response types " + ds3ResponseCode.code)
         }

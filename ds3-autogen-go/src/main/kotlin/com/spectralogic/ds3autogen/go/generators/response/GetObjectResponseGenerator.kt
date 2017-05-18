@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.response;
+package com.spectralogic.ds3autogen.go.generators.response
 
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
@@ -22,22 +22,30 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode
 
-interface ResponseModelGeneratorUtil {
+/**
+ * Generates the Go Amazon Get Object response handler
+ */
+class GetObjectResponseGenerator : BaseResponseGenerator() {
+
+    override fun toImportSet(): ImmutableSet<String> {
+        return ImmutableSet.of("io")
+    }
 
     /**
-     * Retrieves the content of the response struct
+     * Retrieves the response payload struct content, which is an io.ReadCloser
      */
-    fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String
+    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String {
+        return "Content io.ReadCloser"
+    }
 
     /**
      * Converts a Ds3ResponseCode into a ResponseCode model which contains the Go
      * code for parsing the specified response.
      */
-    fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode
-
-    /**
-     * Retrieves the list of imports that are not common to all responses
-     * i.e. not specified within the templates
-     */
-    fun toImportSet(): ImmutableSet<String>
+    override fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode {
+        if (ds3ResponseCode.code == 200) {
+            return ResponseCode(ds3ResponseCode.code, "return &$responseName{ Content: webResponse.Body() }, nil")
+        }
+        return toStandardResponseCode(ds3ResponseCode, responseName)
+    }
 }
