@@ -159,7 +159,7 @@ public class GoFunctionalTests {
         // Test for request with payload of Ds3Object list
         final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "PhysicalPlacement");
 
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacement.xml");
 
@@ -185,7 +185,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
@@ -202,7 +202,7 @@ public class GoFunctionalTests {
         // Test for request with string payload
         final String requestName = "ReplicatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
 
         codeGenerator.generateCode(fileUtils, "/input/replicatePutJob.xml");
 
@@ -229,7 +229,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.PUT);
@@ -245,7 +245,7 @@ public class GoFunctionalTests {
         // Test for request with CompleteMultipartUpload payload
         final String requestName = "CompleteMultiPartUploadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "CompleteMultipartUploadResult");
 
         codeGenerator.generateCode(fileUtils, "/input/completeMultipartUpload.xml");
 
@@ -271,7 +271,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.POST);
@@ -287,7 +287,7 @@ public class GoFunctionalTests {
         // Test for request with object name list payload and optional void parameter
         final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "DeleteResult");
 
         codeGenerator.generateCode(fileUtils, "/input/deleteObjects.xml");
 
@@ -317,7 +317,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.POST);
@@ -437,7 +437,7 @@ public class GoFunctionalTests {
         // This tests generation of request with "type" optional parameter keyword conflict
         final String requestName = "GetAzureDataReplicationRulesSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "AzureDataReplicationRule");
 
         codeGenerator.generateCode(fileUtils, "/input/getAzureDataReplicationRules.xml");
 
@@ -486,7 +486,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
@@ -504,7 +504,7 @@ public class GoFunctionalTests {
         // This tests generation of request with "type" required parameter keyword conflict
         final String requestName = "PutAzureDataReplicationRuleSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "AzureDataReplicationRule");
 
         codeGenerator.generateCode(fileUtils, "/input/putAzureDataReplicationRule.xml");
 
@@ -548,7 +548,7 @@ public class GoFunctionalTests {
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
-        assertTrue(isEmpty(typeCode));
+        assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
         final String client = codeGenerator.getClientCode(HttpVerb.POST);
