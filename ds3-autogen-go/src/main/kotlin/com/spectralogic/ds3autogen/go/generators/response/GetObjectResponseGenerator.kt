@@ -34,7 +34,7 @@ class GetObjectResponseGenerator : BaseResponseGenerator() {
     /**
      * Retrieves the response payload struct content, which is an io.ReadCloser
      */
-    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String {
+    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?): String {
         return "Content io.ReadCloser"
     }
 

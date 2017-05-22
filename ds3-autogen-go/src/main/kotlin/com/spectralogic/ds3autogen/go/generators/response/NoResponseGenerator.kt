@@ -28,7 +28,7 @@ open class NoResponseGenerator : BaseResponseGenerator() {
     /**
      * Return an empty string, which represents an empty response struct
      */
-    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String {
+    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?): String {
         return ""
     }
 }
