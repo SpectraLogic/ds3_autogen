@@ -16,11 +16,9 @@
 package com.spectralogic.ds3autogen.go.generators.response;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode;
 import org.junit.Test;
 
@@ -77,35 +75,6 @@ public class BaseResponseGenerator_Test {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void toXmlParsingPayload_Exception_Test() {
-        generator.toXmlParsingPayload(null);
-    }
-
-    @Test
-    public void toXmlParsingPayload_WithNameToMarshal_Test() {
-        final String expected = "MyNameToMarshal";
-        final Ds3Type ds3Type = new Ds3Type("com.test.Name", "MyNameToMarshal", ImmutableList.of(), ImmutableList.of());
-        final String result = generator.toXmlParsingPayload(ds3Type);
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void toXmlParsingPayload_WithDataNameToMarshal_Test() {
-        final String expected = "Name";
-        final Ds3Type ds3Type = new Ds3Type("com.test.Name", "Data", ImmutableList.of(), ImmutableList.of());
-        final String result = generator.toXmlParsingPayload(ds3Type);
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void toXmlParsingPayload_Test() {
-        final String expected = "Name";
-        final Ds3Type ds3Type = new Ds3Type("com.test.Name", ImmutableList.of());
-        final String result = generator.toXmlParsingPayload(ds3Type);
-        assertThat(result, is(expected));
-    }
-
-    @Test (expected = IllegalArgumentException.class)
     public void toResponsePayloadType_NullList_Test() {
         generator.toResponsePayloadType("com.test.Type", null);
     }
@@ -144,7 +113,7 @@ public class BaseResponseGenerator_Test {
 
     @Test (expected = IllegalArgumentException.class)
     public void toResponsePayloadStruct_Exception_Test() {
-        generator.toResponsePayloadStruct(ImmutableList.of(), ImmutableMap.of());
+        generator.toResponsePayloadStruct(ImmutableList.of());
     }
 
     @Test
@@ -155,23 +124,19 @@ public class BaseResponseGenerator_Test {
                 new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("java.lang.String", ""))),
                 new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("null", ""))));
 
-        final String result = generator.toResponsePayloadStruct(responseCodes, ImmutableMap.of());
+        final String result = generator.toResponsePayloadStruct(responseCodes);
         assertThat(result, is(expected));
     }
 
     @Test
     public void toResponsePayloadStruct_Test() {
-        final String expected = "TypeName *TypeName `xml:\"NameToMarshal\"`";
-
-        final Ds3Type ds3Type = new Ds3Type("com.test.TypeName", "NameToMarshal", ImmutableList.of(), ImmutableList.of());
+        final String expected = "TypeName *TypeName";
 
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
-                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType(ds3Type.getName(), ""))),
+                new Ds3ResponseCode(200, ImmutableList.of(new Ds3ResponseType("com.test.TypeName", ""))),
                 new Ds3ResponseCode(204, ImmutableList.of(new Ds3ResponseType("null", ""))));
 
-        final ImmutableMap<String, Ds3Type> typeMap = ImmutableMap.of(ds3Type.getName(), ds3Type);
-
-        final String result = generator.toResponsePayloadStruct(responseCodes, typeMap);
+        final String result = generator.toResponsePayloadStruct(responseCodes);
         assertThat(result, is(expected));
     }
 
@@ -203,12 +168,12 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toPayloadResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := readResponseBody(webResponse, &body); err != nil {\n" +
+                "        if err := readResponseBody(webResponse, &body.PayloadName); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
                 "        return &body, nil";
 
-        final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName");
+        final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName", "PayloadName");
         assertThat(result.getCode(), is(200));
         assertThat(result.getParseResponse(), is(expectedGoCode));
     }
@@ -273,7 +238,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := readResponseBody(webResponse, &body); err != nil {\n" +
+                "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
                 "        return &body, nil";
@@ -301,7 +266,7 @@ public class BaseResponseGenerator_Test {
     public void toResponseCodeList_Test() {
         final ImmutableList<ResponseCode> expectedCodes = ImmutableList.of(
                 new ResponseCode(200, "var body ResponseName\n" +
-                        "        if err := readResponseBody(webResponse, &body); err != nil {\n" +
+                        "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
                         "            return nil, err\n" +
                         "        }\n" +
                         "        return &body, nil"),

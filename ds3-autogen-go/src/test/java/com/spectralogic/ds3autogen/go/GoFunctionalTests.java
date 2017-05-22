@@ -94,10 +94,12 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
 
+        assertTrue(responseCode.contains("Bucket Bucket"));
+        assertFalse(responseCode.contains("`xml:\"Bucket\"`"));
         assertTrue(responseCode.contains("func NewSimpleWithPayloadResponse(webResponse networking.WebResponse) (*SimpleWithPayloadResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
-        assertTrue(responseCode.contains("Bucket Bucket `xml:\"Bucket\"`"));
         assertTrue(responseCode.contains("var body SimpleWithPayloadResponse"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.Bucket); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
@@ -176,10 +178,13 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("PhysicalPlacement PhysicalPlacement `xml:\"PhysicalPlacement\"`"));
+
+        assertTrue(responseCode.contains("PhysicalPlacement PhysicalPlacement"));
+        assertFalse(responseCode.contains("`xml:\"PhysicalPlacement\"`"));
         assertTrue(responseCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Response(webResponse networking.WebResponse) (*VerifyPhysicalPlacementForObjectsSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body VerifyPhysicalPlacementForObjectsSpectraS3Response"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.PhysicalPlacement); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
@@ -219,10 +224,13 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("MasterObjectList *MasterObjectList `xml:\"MasterObjectList\"`"));
+
+        assertTrue(responseCode.contains("MasterObjectList *MasterObjectList"));
+        assertFalse(responseCode.contains("`xml:\"MasterObjectList\"`"));
         assertTrue(responseCode.contains("func NewReplicatePutJobSpectraS3Response(webResponse networking.WebResponse) (*ReplicatePutJobSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 204 }"));
         assertTrue(responseCode.contains("var body ReplicatePutJobSpectraS3Response"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.MasterObjectList); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
         assertTrue(responseCode.contains("return &ReplicatePutJobSpectraS3Response{}, nil"));
 
@@ -262,10 +270,12 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("CompleteMultipartUploadResult CompleteMultipartUploadResult `xml:\"CompleteMultipartUploadResult\"`"));
+        assertTrue(responseCode.contains("CompleteMultipartUploadResult CompleteMultipartUploadResult"));
+        assertFalse(responseCode.contains("`xml:\"CompleteMultipartUploadResult\"`"));
         assertTrue(responseCode.contains("func NewCompleteMultiPartUploadResponse(webResponse networking.WebResponse) (*CompleteMultiPartUploadResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body CompleteMultiPartUploadResponse"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.CompleteMultipartUploadResult); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
@@ -308,10 +318,12 @@ public class GoFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("DeleteResult DeleteResult `xml:\"DeleteResult\"`"));
+        assertTrue(responseCode.contains("DeleteResult DeleteResult"));
+        assertFalse(responseCode.contains("`xml:\"DeleteResult\"`"));
         assertTrue(responseCode.contains("func NewDeleteObjectsResponse(webResponse networking.WebResponse) (*DeleteObjectsResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body DeleteObjectsResponse"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.DeleteResult); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
@@ -478,9 +490,11 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
 
+        assertTrue(responseCode.contains("AzureDataReplicationRuleList AzureDataReplicationRuleList"));
+        assertFalse(responseCode.contains("`xml:\"AzureDataReplicationRuleList\"`"));
         assertTrue(responseCode.contains("func NewGetAzureDataReplicationRulesSpectraS3Response(webResponse networking.WebResponse) (*GetAzureDataReplicationRulesSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body); err != nil {"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.AzureDataReplicationRuleList); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated
@@ -540,9 +554,11 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
 
+        assertTrue(responseCode.contains("AzureDataReplicationRule AzureDataReplicationRule"));
+        assertFalse(responseCode.contains("`xml:\"AzureDataReplicationRule\"`"));
         assertTrue(responseCode.contains("func NewPutAzureDataReplicationRuleSpectraS3Response(webResponse networking.WebResponse) (*PutAzureDataReplicationRuleSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 201 }"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body); err != nil {"));
+        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.AzureDataReplicationRule); err != nil {"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         // Verify response payload type file was not generated

@@ -22,5 +22,5 @@ import com.spectralogic.ds3autogen.go.models.response.Response;
 
 @FunctionalInterface
 public interface ResponseModelGenerator<T extends Response> {
-    T generate(final Ds3Request ds3Request, final ImmutableMap<String, Ds3Type> typeMap);
+    T generate(final Ds3Request ds3Request);
 }
