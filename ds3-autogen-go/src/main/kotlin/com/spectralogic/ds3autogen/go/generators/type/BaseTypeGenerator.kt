@@ -27,6 +27,7 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
+import org.apache.commons.lang3.StringUtils.capitalize
 
 open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil {
 
@@ -65,9 +66,9 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
      * Creates the xml notation for parsing the GO element within the struct
      */
     fun toXmlNotation(ds3Element: Ds3Element): String {
-        val xmlTag = getXmlTagName(ds3Element)
+        val xmlTag = capitalize(getXmlTagName(ds3Element))
         if (hasWrapperAnnotations(ds3Element.ds3Annotations)) {
-            val encapsulatingTag = getEncapsulatingTagAnnotations(ds3Element.ds3Annotations)
+            val encapsulatingTag = capitalize(getEncapsulatingTagAnnotations(ds3Element.ds3Annotations))
             return "xml:\"$encapsulatingTag>$xmlTag\""
         }
         if (isAttribute(ds3Element.ds3Annotations)) {
