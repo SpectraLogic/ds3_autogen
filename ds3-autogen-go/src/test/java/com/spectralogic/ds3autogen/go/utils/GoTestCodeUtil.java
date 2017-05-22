@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 import static org.mockito.Mockito.when;
 
 /**
@@ -60,8 +61,8 @@ public class GoTestCodeUtil {
     public GoTestCodeUtil(
             final FileUtils fileUtils,
             final String requestName) throws IOException {
-        this.requestOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + requestName + ".go");
-        this.responseOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + NormalizingContractNamesUtil.toResponseName(requestName) + ".go");
+        this.requestOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(requestName) + ".go");
+        this.responseOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + NormalizingContractNamesUtil.toResponseName(uncapitalize(requestName)) + ".go");
         this.clientOutputStreams = setupClientStreams(fileUtils);
     }
 
@@ -73,7 +74,7 @@ public class GoTestCodeUtil {
             final String requestName,
             final String responseType) throws IOException {
         this(fileUtils, requestName);
-        this.typeOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + responseType + ".go");
+        this.typeOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(responseType) + ".go");
     }
 
     /**
