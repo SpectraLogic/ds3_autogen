@@ -54,6 +54,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
+import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
 public class GoCodeGenerator implements CodeGenerator {
 
@@ -83,7 +84,7 @@ public class GoCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(ds3Requests, typeMap);
+            generateCommands(ds3Requests);
             generateClient(ds3Requests);
             generateAllTypes(typeMap);
         } catch (final Exception e) {
@@ -94,16 +95,14 @@ public class GoCodeGenerator implements CodeGenerator {
     /**
      * Generates Go code for requests and responses
      */
-    private void generateCommands(
-            final ImmutableList<Ds3Request> ds3Requests,
-            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+    private void generateCommands(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
         if (isEmpty(ds3Requests)) {
             LOG.info("There were no requests to generate.");
             return;
         }
         for (final Ds3Request ds3Request : ds3Requests) {
             generateRequest(ds3Request);
-            generateResponse(ds3Request, typeMap);
+            generateResponse(ds3Request);
         }
     }
 
@@ -116,7 +115,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final Request request = generator.generate(ds3Request);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + request.getName() + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(request.getName())  + ".go")));
 
         LOG.info("Getting Output Stream for file: {}", path.toString());
 
@@ -180,15 +179,13 @@ public class GoCodeGenerator implements CodeGenerator {
     /**
      * Generates the Go code for a response handler/parser
      */
-    private void generateResponse(
-            final Ds3Request ds3Request,
-            final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
         final Template tmpl = getResponseTemplate(ds3Request);
         final ResponseModelGenerator<?> generator = getResponseGenerator(ds3Request);
-        final Response response = generator.generate(ds3Request, typeMap);
+        final Response response = generator.generate(ds3Request);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + response.getName() + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(response.getName()) + ".go")));
 
         LOG.info("Getting Output Stream for file: {}", path.toString());
 
@@ -299,7 +296,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final Type type = generator.generate(ds3Type);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + type.getName() + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(type.getName()) + ".go")));
 
         LOG.info("Getting OutputStream for file: {}", path.toString());
 

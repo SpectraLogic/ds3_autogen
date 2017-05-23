@@ -13,13 +13,11 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.generators.response;
+package com.spectralogic.ds3autogen.go.generators.response
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode
 
 interface ResponseModelGeneratorUtil {
@@ -27,7 +25,7 @@ interface ResponseModelGeneratorUtil {
     /**
      * Retrieves the content of the response struct
      */
-    fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String
+    fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?): String
 
     /**
      * Converts a Ds3ResponseCode into a ResponseCode model which contains the Go

@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.response;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -28,6 +27,6 @@ public class NoResponseGenerator_Test {
 
     @Test
     public void toResponsePayloadStructTest() {
-        assertThat(generator.toResponsePayloadStruct(ImmutableList.of(), ImmutableMap.of()), is(""));
+        assertThat(generator.toResponsePayloadStruct(ImmutableList.of()), is(""));
     }
 }

@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.go.generators.response;
 
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
@@ -58,7 +57,7 @@ public class GetObjectResponseGenerator_Test {
 
     @Test
     public void toResponsePayloadStruct_Test() {
-        assertThat(generator.toResponsePayloadStruct(ImmutableList.of(), ImmutableMap.of()), is("Content io.ReadCloser"));
+        assertThat(generator.toResponsePayloadStruct(ImmutableList.of()), is("Content io.ReadCloser"));
     }
 
     @Test

@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.response
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
@@ -36,10 +35,10 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
     /** Status codes are considered errors at this value and higher */
     private val ERROR_THRESHOLD = 300
 
-    override fun generate(ds3Request: Ds3Request, typeMap: ImmutableMap<String, Ds3Type>): Response {
+    override fun generate(ds3Request: Ds3Request): Response {
 
         val name = NormalizingContractNamesUtil.toResponseName(ds3Request.name)
-        val payloadStruct = toResponsePayloadStruct(ds3Request.ds3ResponseCodes, typeMap)
+        val payloadStruct = toResponsePayloadStruct(ds3Request.ds3ResponseCodes)
         val expectedCodes = toExpectedStatusCodes(ds3Request.ds3ResponseCodes)
         val responseCodes = toResponseCodeList(ds3Request.ds3ResponseCodes, name)
         val imports = toImportSet()
@@ -88,7 +87,8 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         if (ds3ResponseCode.ds3ResponseTypes!![0].type.equals("java.lang.String", ignoreCase = true)) {
             return toStringPayloadResponseCode(ds3ResponseCode.code, responseName)
         }
-        return toPayloadResponseCode(ds3ResponseCode.code, responseName)
+        val responsePayloadName = removePath(ds3ResponseCode.ds3ResponseTypes!![0].type)
+        return toPayloadResponseCode(ds3ResponseCode.code, responseName, responsePayloadName)
     }
 
     /**
@@ -113,9 +113,9 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
     /**
      * Creates the Go code for parsing a response with a payload
      */
-    fun toPayloadResponseCode(code: Int, responseName: String): ResponseCode {
+    fun toPayloadResponseCode(code: Int, responseName: String, payloadName: String): ResponseCode {
         val parseResponse = "var body $responseName\n" +
-                indent(2) + "if err := readResponseBody(webResponse, &body); err != nil {\n" +
+                indent(2) + "if err := readResponseBody(webResponse, &body.$payloadName); err != nil {\n" +
                 indent(3) + "return nil, err\n" +
                 indent(2) + "}\n" +
                 indent(2) + "return &body, nil"
@@ -140,7 +140,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
      * Retrieves the content of the response struct, which assumes a spectra defined
      * Ds3Type.
      */
-    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?, typeMap: ImmutableMap<String, Ds3Type>): String {
+    override fun toResponsePayloadStruct(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?): String {
         if (isEmpty(expectedResponseCodes)) {
             throw IllegalArgumentException("Expected at least one response payload")
         }
@@ -152,11 +152,9 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
             return "Content string"
         }
 
-        val responseModel = typeMap[responsePayloadType]
         val responseName = removePath(responsePayloadType)
         val responseType = toResponsePayloadType(responsePayloadType, expectedResponseCodes)
-        val xmlParsing = toXmlParsingPayload(responseModel)
-        return "$responseName $responseType `xml:\"$xmlParsing\"`"
+        return "$responseName $responseType"
     }
 
     /**
@@ -171,19 +169,6 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
             return removePath(responsePayload)
         }
         return "*" + removePath(responsePayload)
-    }
-
-    /**
-     * Retrieves the xml tag to be parsed for the specified Ds3Type
-     */
-    fun toXmlParsingPayload(ds3Type: Ds3Type?): String {
-        if (ds3Type == null) {
-            throw IllegalArgumentException("No Ds3Type defined for command")
-        }
-        if (ds3Type.nameToMarshal != null && ds3Type.nameToMarshal != "Data") {
-            return ds3Type.nameToMarshal!!
-        }
-        return removePath(ds3Type.name)
     }
 
     /**
