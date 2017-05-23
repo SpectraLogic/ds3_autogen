@@ -307,12 +307,16 @@ public final class TestHelper {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.spectrads3." + responseName, code));
         assertTrue(hasImport("com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils", code));
 
-        final BaseParseResponse expectedParsing = new BaseParseResponse(responseName, "MasterObjectList");
-        final String expectedParsingCode = "if (ResponseParserUtils.getSizeFromHeaders(response.getHeaders()) == 0) {\n" +
-                "                    return new " + responseName + "(null, this.getChecksum(), this.getChecksumType());\n" +
-                "                }\n" +
-                "                " + expectedParsing.toJavaCode();
+        final Pattern expectedParsing = Pattern.compile(
+                "\\s+if \\(ResponseParserUtils.getSizeFromHeaders\\(response\\.getHeaders\\(\\)\\) == 0\\) \\{"
+                        + "\\s+return new " + responseName + "\\(null, this\\.getChecksum\\(\\), this\\.getChecksumType\\(\\)\\);"
+                        + "\\s+}"
+                        + "\\s+try \\(final InputStream inputStream = response\\.getResponseStream\\(\\)\\) \\{"
+                        + "\\s+final MasterObjectList result = XmlOutput\\.fromXml\\(inputStream, MasterObjectList\\.class\\);"
+                        + "\\s+return new " + responseName + "\\(result, this\\.getChecksum\\(\\), this\\.getChecksumType\\(\\)\\);"
+                        + "\\s+}",
+                Pattern.MULTILINE | Pattern.UNIX_LINES);
 
-        assertTrue(code.contains(expectedParsingCode));
+        assertTrue(expectedParsing.matcher(code).find());
     }
 }
