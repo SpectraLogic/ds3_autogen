@@ -108,6 +108,38 @@ public class BaseTypeGenerator_Test {
     }
 
     @Test
+    public void toXmlNotation_LowerCasedName_Test() {
+        final Ds3Element lowerCasedElement = new Ds3Element(
+                "lowerCasedElement",
+                "Type",
+                "",
+                ImmutableList.of(),
+                false
+        );
+
+        final String result = generator.toXmlNotation(lowerCasedElement);
+        assertThat(result, is("xml:\"LowerCasedElement\""));
+    }
+
+    @Test
+    public void toXmlNotation_LowerCasedAnnotations_Test() {
+        final Ds3Element lowerCasedElement = new Ds3Element(
+                "lowerCasedElement",
+                "Type",
+                "",
+                ImmutableList.of(new Ds3Annotation(
+                        "com.spectralogic.util.marshal.CustomMarshaledName",
+                        ImmutableList.of(
+                                new Ds3AnnotationElement("CollectionValue", "lowerCasedOuterTag", "java.lang.String"),
+                                new Ds3AnnotationElement("Value", "lowerCasedInnerTag", "java.lang.String")))),
+                false
+        );
+
+        final String result = generator.toXmlNotation(lowerCasedElement);
+        assertThat(result, is("xml:\"LowerCasedOuterTag>LowerCasedInnerTag\""));
+    }
+
+    @Test
     public void toStructElementsList_NullList_Test() {
         final ImmutableList<StructElement> result = generator.toStructElementsList(null);
         assertThat(result.size(), is(0));
