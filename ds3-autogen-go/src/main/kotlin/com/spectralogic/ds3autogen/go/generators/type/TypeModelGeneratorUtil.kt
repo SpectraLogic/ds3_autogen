@@ -15,6 +15,15 @@
 
 package com.spectralogic.ds3autogen.go.generators.type
 
+import com.google.common.collect.ImmutableList
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element
+import com.spectralogic.ds3autogen.go.models.type.StructElement
+
 interface TypeModelGeneratorUtil {
-    //TODO implement as needed
+
+    /**
+     * Creates the list of elements that make up the struct, including the xml parsing notation
+     * used during un-marshaling
+     */
+    fun toStructElementsList(ds3Elements: ImmutableList<Ds3Element>?): ImmutableList<StructElement>
 }

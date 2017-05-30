@@ -32,6 +32,7 @@ import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGener
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
+import com.spectralogic.ds3autogen.go.generators.type.JobListGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.go.models.client.Client;
 import com.spectralogic.ds3autogen.go.models.request.Request;
@@ -53,6 +54,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 import static org.apache.commons.lang3.StringUtils.uncapitalize;
 
@@ -320,8 +322,10 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the generator used to create the Go response model represented by the
      * specified {@link Ds3Type}
      */
-    private TypeModelGenerator<?> getTypeGenerator(final Ds3Type ds3Type) {
-        //TODO add special casing
+    private static TypeModelGenerator<?> getTypeGenerator(final Ds3Type ds3Type) {
+        if (isJobsApiBean(ds3Type)) {
+            return new JobListGenerator();
+        }
         return new BaseTypeGenerator();
     }
 }

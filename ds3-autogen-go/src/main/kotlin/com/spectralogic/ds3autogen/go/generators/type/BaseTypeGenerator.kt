@@ -51,7 +51,7 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
      * Creates the list of elements that make up the struct, including the xml parsing notation
      * used during un-marshaling
      */
-    fun toStructElementsList(ds3Elements: ImmutableList<Ds3Element>?): ImmutableList<StructElement> {
+    override fun toStructElementsList(ds3Elements: ImmutableList<Ds3Element>?): ImmutableList<StructElement> {
         if (isEmpty(ds3Elements)) {
             return ImmutableList.of()
         }
@@ -85,7 +85,7 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
             return ImmutableList.of()
         }
         return ds3EnumConstants!!.stream()
-                .map { constant -> constant.name.toUpperCase() }
+                .map { (name) -> name.toUpperCase() }
                 .collect(GuavaCollectors.immutableList())
     }
 }
