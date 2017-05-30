@@ -139,4 +139,20 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("HttpsPort *int `xml:\"HttpsPort,attr\"`"));
         assertTrue(typeCode.contains("Id string `xml:\"Id,attr\"`"));
     }
+
+    @Test
+    public void jobList() throws IOException, TemplateModelException {
+        final String typeName = "JobList";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/jobListType.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        assertTrue(typeCode.contains("Jobs []Job `xml:\"Job\"`"));
+    }
 }
