@@ -20,6 +20,7 @@ const (
 func (${name?uncap_first} *${name}) UnmarshalText(text []byte) error {
     var str string = string(bytes.ToUpper(text))
     switch str {
+        case "": *${name?uncap_first} = UNDEFINED
         <#list enumConstants as const>
         case "${const}": *${name?uncap_first} = ${enumPrefix}${const}
         </#list>
