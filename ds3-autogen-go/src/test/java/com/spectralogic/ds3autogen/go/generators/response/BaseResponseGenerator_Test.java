@@ -171,6 +171,7 @@ public class BaseResponseGenerator_Test {
                 "        if err := readResponseBody(webResponse, &body.PayloadName); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
+                "        body.Headers = webResponse.Header()\n" +
                 "        return &body, nil";
 
         final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName", "PayloadName");
@@ -180,7 +181,7 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toNullPayloadResponseCode_Test() {
-        final String expectedGoCode = "return &ResponseName{}, nil";
+        final String expectedGoCode = "return &ResponseName{Headers: webResponse.Header()}, nil";
 
         final ResponseCode result = generator.toNullPayloadResponseCode(200, "ResponseName");
         assertThat(result.getCode(), is(200));
@@ -193,7 +194,7 @@ public class BaseResponseGenerator_Test {
                 "        if err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
-                "        return &ResponseName{Content: content}, nil";
+                "        return &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
 
         final ResponseCode result = generator.toStringPayloadResponseCode(200, "ResponseName");
         assertThat(result.getCode(), is(200));
@@ -208,7 +209,7 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toResponseCode_NullPayload_Test() {
-        final String expectedGoCode = "return &ResponseName{}, nil";
+        final String expectedGoCode = "return &ResponseName{Headers: webResponse.Header()}, nil";
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,
                 ImmutableList.of(new Ds3ResponseType("null", "")));
@@ -224,7 +225,7 @@ public class BaseResponseGenerator_Test {
                 "        if err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
-                "        return &ResponseName{Content: content}, nil";
+                "        return &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,
@@ -241,6 +242,7 @@ public class BaseResponseGenerator_Test {
                 "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
+                "        body.Headers = webResponse.Header()\n" +
                 "        return &body, nil";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
@@ -269,8 +271,9 @@ public class BaseResponseGenerator_Test {
                         "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
                         "            return nil, err\n" +
                         "        }\n" +
+                        "        body.Headers = webResponse.Header()\n" +
                         "        return &body, nil"),
-                new ResponseCode(204, "return &ResponseName{}, nil")
+                new ResponseCode(204, "return &ResponseName{Headers: webResponse.Header()}, nil")
         );
 
         final ImmutableList<Ds3ResponseCode> responseCodes = ImmutableList.of(
