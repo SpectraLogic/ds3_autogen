@@ -95,7 +95,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
      * Creates the Go code for returning an empty response when there is no payload
      */
     fun toNullPayloadResponseCode(code: Int, responseName: String): ResponseCode {
-        return ResponseCode(code, "return &$responseName{}, nil")
+        return ResponseCode(code, "return &$responseName{Headers: webResponse.Header()}, nil")
     }
 
     /**
@@ -106,7 +106,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
                 indent(2) + "if err != nil {\n" +
                 indent(3) + "return nil, err\n" +
                 indent(2) + "}\n" +
-                indent(2) + "return &$responseName{Content: content}, nil"
+                indent(2) + "return &$responseName{Content: content, Headers: webResponse.Header()}, nil"
         return ResponseCode(code, parseResponse)
     }
 
@@ -118,6 +118,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
                 indent(2) + "if err := readResponseBody(webResponse, &body.$payloadName); err != nil {\n" +
                 indent(3) + "return nil, err\n" +
                 indent(2) + "}\n" +
+                indent(2) + "body.Headers = webResponse.Header()\n" +
                 indent(2) + "return &body, nil"
 
         return ResponseCode(code, parseResponse)

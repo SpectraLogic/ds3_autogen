@@ -4,6 +4,7 @@ package models
 
 import (
     "ds3/networking"
+    "net/http"
     <#list imports as import>
     "${import}"
     </#list>
@@ -11,6 +12,7 @@ import (
 
 type ${name} struct {
     ${payloadStruct}
+    Headers *http.Header
 }
 
 func New${name}(webResponse networking.WebResponse) (*${name}, error) {
