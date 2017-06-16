@@ -382,9 +382,12 @@ ds3_error* net_process_request(const ds3_client* client,
         url = g_strconcat(client->endpoint->value, request->path->value,"?",query_params, NULL);
         g_free(query_params);
     }
+    ds3_log_message(client->log, DS3_DEBUG, "URL[%s]", url);
 
     while (retry_count < client->num_redirects) {
-        handle = (CURL*)ds3_connection_acquire(client->connection_pool);
+        ds3_log_message(client->log, DS3_DEBUG, "Acquiring connection...");
+        handle = ds3_connection_acquire(client->connection_pool);
+        ds3_log_message(client->log, DS3_DEBUG, "Connection acquired.");
 
         if (handle) {
             char* amz_headers;
@@ -493,7 +496,9 @@ ds3_error* net_process_request(const ds3_client* client,
 
             curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
 
+            ds3_log_message(client->log, DS3_DEBUG, "Attempt curl_easy_perform...");
             res = curl_easy_perform(handle);
+            ds3_log_message(client->log, DS3_DEBUG, "Connection released.");
 
             g_free(date);
             g_free(date_header);
