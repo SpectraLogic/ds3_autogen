@@ -18,6 +18,8 @@ package com.spectralogic.ds3autogen.java.models;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 
 import static com.spectralogic.ds3autogen.java.utils.WithConstructorUtil.putQueryParamLine;
+import static com.spectralogic.ds3autogen.java.utils.WithConstructorUtil.updateQueryParamLine;
+import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
 public class QueryParam {
 
@@ -36,7 +38,12 @@ public class QueryParam {
      * the request handler
      */
     public String toPutJavaCode() {
-        return putQueryParamLine(param);
+        if (param.getType().equals("void")) {
+            // set query params with no value using Put, since UpdateQueryParam will remove null valued parameters
+            return putQueryParamLine(param);
+        }
+        // set query param with updateQueryParam call which percent encodes data
+        return updateQueryParamLine(param.getName(), uncapFirst(param.getName()));
     }
 
     public String getName() {

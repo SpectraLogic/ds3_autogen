@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1212,8 +1212,8 @@ public class JavaFunctionalTests {
         assertTrue(hasConstructor(requestName, streamConstructorArgs, requestGeneratedCode));
         assertTrue(hasConstructor(requestName, modifyType(streamConstructorArgs, "UUID", "String"), requestGeneratedCode));
 
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"job\", job.toString())"));
-        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"offset\", Long.toString(offset))"));
+        assertTrue(requestGeneratedCode.contains("this.updateQueryParam(\"job\", job)"));
+        assertTrue(requestGeneratedCode.contains("this.updateQueryParam(\"offset\", offset)"));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
