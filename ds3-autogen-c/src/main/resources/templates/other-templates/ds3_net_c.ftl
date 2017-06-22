@@ -498,14 +498,16 @@ ds3_error* net_process_request(const ds3_client* client,
 
             ds3_log_message(client->log, DS3_DEBUG, "Attempt curl_easy_perform...");
             res = curl_easy_perform(handle);
-            ds3_log_message(client->log, DS3_DEBUG, "Connection released.");
+            ds3_log_message(client->log, DS3_DEBUG, "curl_easy_perform done.");
 
             g_free(date);
             g_free(date_header);
             g_free(signature);
             g_free(auth_header);
             curl_slist_free_all(headers);
+            ds3_log_message(client->log, DS3_DEBUG, "Releasing connection...");
             ds3_connection_release(client->connection_pool, handle);
+            ds3_log_message(client->log, DS3_DEBUG, "Connection released.");
 
             //process the response
             if (res != CURLE_OK) {

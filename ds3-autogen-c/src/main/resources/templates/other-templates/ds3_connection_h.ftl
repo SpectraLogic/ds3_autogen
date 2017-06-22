@@ -11,7 +11,7 @@ extern "C" {
 #include <curl/curl.h>
 #include <glib.h>
 
-#define CONNECTION_POOL_SIZE 100
+#define CONNECTION_POOL_SIZE 10
 
 typedef GMutex ds3_mutex;
 typedef GCond ds3_condition;
@@ -22,10 +22,10 @@ typedef CURL ds3_connection;
 struct _ds3_connection_pool{
     ds3_connection** connections;
     uint16_t         num_connections;
-    int head;
-    int tail;
-    ds3_mutex mutex;
-    ds3_condition available_connections;
+    int              head;
+    int              tail;
+    ds3_mutex        mutex;
+    ds3_condition    available_connections;
     uint16_t         ref_count;
 };
 
