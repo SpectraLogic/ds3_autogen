@@ -39,7 +39,7 @@ public class MaxUploadSizeWithConstructor implements WithConstructor {
     @Override
     public String toJavaCode() {
         return withConstructorFirstLine(param, requestName) +
-                indent(2) + "if (" + uncapFirst(param.getName()) + " > MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
+                indent(2) + "if (" + uncapFirst(param.getName()) + " >= MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
                 indent(3) + putQueryParamLine(param) + "\n" +
                 indent(2) + "} else {\n" +
                 indent(3) + putQueryParamLine(param.getName(), "MAX_UPLOAD_SIZE_IN_BYTES") + "\n" +

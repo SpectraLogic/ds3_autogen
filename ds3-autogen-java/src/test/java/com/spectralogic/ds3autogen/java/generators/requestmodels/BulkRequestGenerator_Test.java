@@ -155,7 +155,7 @@ public class BulkRequestGenerator_Test {
     public void toWithConstructor_MaxUploadSizeParam_Test() {
         final String expectedResult =
                 "    public CreatePutJobRequestHandler withMaxUploadSize(final long maxUploadSize) {\n" +
-                        "        if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
+                        "        if (maxUploadSize >= MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
                         "            this.getQueryParams().put(\"max_upload_size\", Long.toString(maxUploadSize));\n" +
                         "        } else {\n" +
                         "            this.getQueryParams().put(\"max_upload_size\", MAX_UPLOAD_SIZE_IN_BYTES);\n" +

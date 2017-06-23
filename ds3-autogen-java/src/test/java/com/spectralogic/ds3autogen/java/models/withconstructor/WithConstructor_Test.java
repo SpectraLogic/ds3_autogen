@@ -76,7 +76,7 @@ public class WithConstructor_Test {
     public void maxUploadSizeWithConstructor_Test() {
         final String expected =
                 "    public TestRequest withArgName(final TestType argName) {\n" +
-                "        if (argName > MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
+                "        if (argName >= MIN_UPLOAD_SIZE_IN_BYTES) {\n" +
                 "            this.getQueryParams().put(\"arg_name\", argName.toString());\n" +
                 "        } else {\n" +
                 "            this.getQueryParams().put(\"arg_name\", MAX_UPLOAD_SIZE_IN_BYTES);\n" +
