@@ -7936,7 +7936,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
-                        <Code>410</Code>
+                        <Code>404</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
