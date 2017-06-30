@@ -1,74 +1,31 @@
 <#include "../CopyrightHeader.ftl"/>
 
-<#include "source_includes.ftl"/>
+#include <glib.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <libxml/parser.h>
+#include <errno.h>
 
-<#-- ********************************************* -->
-<#-- Generate "_get_enum_str()"                    -->
-<#list getQueryParamEnums() as enumEntry>
-    <#include "EnumToString.ftl">
-</#list>
+#include "ds3.h"
+#include "ds3_net.h"
+#include "ds3_request.h"
+#include "ds3_string_multimap_impl.h"
+#include "ds3_utils.h"
 
-<#include "metadata.ftl"/>
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
+#ifndef S_ISDIR
+#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
+#endif
+
 <#include "client.ftl"/>
-<#include "modify_request.ftl"/>
 
-<#-- ***************************************** -->
-<#-- Generate all "InitRequests" from Requests -->
-<#list getRequests() as requestEntry>
-    <#include "../request-templates/InitRequest.ftl">
-</#list>
-
-<#include "xml_helpers.ftl"/>
-<#include "internal_request_processors.ftl"/>
-
-<#-- ******************************************* -->
-<#-- Generate all "EnumMatchers" from Enums      -->
-<#list getEnums() as enumEntry>
-    <#if enumEntry.requiresMatcher()>
-        <#include "TypedefEnumMatcher.ftl">
-    </#if>
-</#list>
-
-//************ STRUCT PARSERS **************
-<#list getStructs() as structEntry>
-    <#if structEntry.isEmbedded()>
-        <#include "ResponseParser.ftl">
-    </#if>
-    <#if structEntry.isArrayMember()>
-        <#include "StructArrayParser.ftl">
-    </#if>
-</#list>
-
-//************ TOP LEVEL STRUCT PARSERS **************
-<#list getStructs() as structEntry>
-    <#if structEntry.isTopLevel()>
-        <#include "ResponseParserTopLevel.ftl">
-    </#if>
-</#list>
-<#include "parse_paging_headers.ftl">
-
-
-<#-- ********************************************* -->
-<#-- Generate all "RequestFunctions" from Requests -->
-<#list getRequests() as requestEntry>
-    <#if requestEntry.getName() == "ds3_head_bucket_request">
-        <#include "../request-templates/HeadBucketRequest.ftl"/>
-    <#elseif requestEntry.getName() == "ds3_head_object_request">
-        <#include "../request-templates/HeadObjectRequest.ftl"/>
-    <#elseif requestEntry.getName() == "ds3_get_object_request">
-        <#include "../request-templates/GetObjectRequest.ftl"/>
-        <#include "../request-templates/GetObjectWithMetadataRequest.ftl"/>
-    <#elseif (requestEntry.hasRequestPayload() == true)
-          && (requestEntry.hasResponsePayload() == true)>
-        <#include "../request-templates/RequestWithRequestAndResponsePayload.ftl"/>
-    <#elseif requestEntry.hasRequestPayload()>
-        <#include "../request-templates/RequestWithRequestPayload.ftl"/>
-    <#elseif requestEntry.hasResponsePayload()>
-        <#include "../request-templates/RequestWithResponsePayload.ftl"/>
-    <#else>
-        <#include "../request-templates/Request.ftl"/>
-    </#if>
-</#list>
+<#include "file_utils.ftl"/>
 
 <#include "free_custom_types.ftl"/>
 
@@ -77,5 +34,3 @@
 <#list getStructs() as structEntry>
     <#include "FreeStruct.ftl">
 </#list>
-
-<#include "file_utils.ftl"/>

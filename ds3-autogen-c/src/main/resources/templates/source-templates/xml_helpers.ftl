@@ -75,3 +75,28 @@ static ds3_bool xml_get_bool_from_attribute(const ds3_log* log, xmlDocPtr doc, s
     return xml_get_bool(log, doc, (xmlNodePtr) attribute);
 }
 
+typedef struct {
+    char* buff;
+    size_t size;
+    size_t total_read;
+}ds3_xml_send_buff;
+
+
+static size_t _ds3_send_xml_buff(void* buffer, size_t size, size_t nmemb, void* user_data) {
+    size_t to_read;
+    size_t remaining;
+    ds3_xml_send_buff* xml_buff;
+
+    xml_buff = (ds3_xml_send_buff*) user_data;
+    to_read = size * nmemb;
+    remaining = xml_buff->size - xml_buff->total_read;
+
+    if (remaining < to_read) {
+        to_read = remaining;
+    }
+
+    strncpy((char*)buffer, xml_buff->buff + xml_buff->total_read, to_read);
+    xml_buff->total_read += to_read;
+    return to_read;
+}
+
