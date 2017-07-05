@@ -111,6 +111,11 @@ public class CCodeGenerator implements CodeGenerator {
         final Path path = Paths.get("src/ds3.c");
         processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputFile(path));
 
+        final Path initRequestsPath = Paths.get("src/ds3_init_requests.c");
+        processTemplate(source, "source-templates/ds3_init_requests.ftl", fileUtils.getOutputFile(initRequestsPath));
+
+        final Path requestsPath = Paths.get("src/ds3_requests.c");
+        processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputFile(requestsPath));
     }
 
     public void generateStaticFiles() throws IOException {

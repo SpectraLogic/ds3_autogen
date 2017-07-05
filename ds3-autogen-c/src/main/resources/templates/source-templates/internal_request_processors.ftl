@@ -1,3 +1,14 @@
+typedef enum {
+    BULK_PUT,
+    BULK_GET,
+    BULK_DELETE,
+    GET_PHYSICAL_PLACEMENT,
+    COMPLETE_MPU,
+    STRING,
+    STRING_LIST,
+    DATA
+}object_list_type;
+
 static ds3_error* _internal_request_dispatcher(
         const ds3_client* client,
         const ds3_request* request,
@@ -58,6 +69,16 @@ static ds3_error* _get_request_xml_nodes(
     return NULL;
 }
 
+static char* _get_ds3_job_chunk_client_processing_order_guarantee_str(ds3_job_chunk_client_processing_order_guarantee input) {
+    if (input == DS3_JOB_CHUNK_CLIENT_PROCESSING_ORDER_GUARANTEE_NONE) {
+        return "NONE";
+    } else if (input == DS3_JOB_CHUNK_CLIENT_PROCESSING_ORDER_GUARANTEE_IN_ORDER) {
+        return "IN_ORDER";
+    } else {
+        return "";
+    }
+
+}
 
 static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type, ds3_job_chunk_client_processing_order_guarantee order) {
     char size_buff[UNSIGNED_LONG_LONG_BASE_10_STR_LEN];
@@ -71,8 +92,15 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
     objects_node = xmlNewNode(NULL, (xmlChar*) "Objects");
 
     if (list_type == BULK_GET) {
-        xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (xmlChar*) _get_ds3_job_chunk_client_processing_order_guarantee_str(order));
+        if (order == DS3_JOB_CHUNK_CLIENT_PROCESSING_ORDER_GUARANTEE_NONE) {
+            xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (const xmlChar *) "NONE");
+        } else if (order == DS3_JOB_CHUNK_CLIENT_PROCESSING_ORDER_GUARANTEE_IN_ORDER) {
+            xmlSetProp(objects_node, (xmlChar*) "ChunkClientProcessingOrderGuarantee", (const xmlChar *) "IN_ORDER");
+        } else {
+            return NULL;
+        }
     }
+
 
     for (obj_index = 0; obj_index < obj_list->num_objects; obj_index++) {
         obj = obj_list->objects[obj_index];

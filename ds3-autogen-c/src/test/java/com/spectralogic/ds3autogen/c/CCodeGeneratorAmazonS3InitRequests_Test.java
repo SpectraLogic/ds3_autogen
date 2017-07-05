@@ -57,7 +57,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_init_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -107,7 +107,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_init_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -130,7 +130,7 @@ public class CCodeGeneratorAmazonS3InitRequests_Test {
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_init_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());

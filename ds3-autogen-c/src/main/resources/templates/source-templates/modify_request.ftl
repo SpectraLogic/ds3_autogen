@@ -1,39 +1,4 @@
 
-typedef struct {
-    char* buff;
-    size_t size;
-    size_t total_read;
-}ds3_xml_send_buff;
-
-typedef enum {
-    BULK_PUT,
-    BULK_GET,
-    BULK_DELETE,
-    GET_PHYSICAL_PLACEMENT,
-    COMPLETE_MPU,
-    STRING,
-    STRING_LIST,
-    DATA
-}object_list_type;
-
-static size_t _ds3_send_xml_buff(void* buffer, size_t size, size_t nmemb, void* user_data) {
-    size_t to_read;
-    size_t remaining;
-    ds3_xml_send_buff* xml_buff;
-
-    xml_buff = (ds3_xml_send_buff*) user_data;
-    to_read = size * nmemb;
-    remaining = xml_buff->size - xml_buff->total_read;
-
-    if (remaining < to_read) {
-        to_read = remaining;
-    }
-
-    strncpy((char*)buffer, xml_buff->buff + xml_buff->total_read, to_read);
-    xml_buff->total_read += to_read;
-    return to_read;
-}
-
 static void _set_map_value(GHashTable* map, const char* key, const char* value) {
     gpointer escaped_key = (gpointer) escape_url(key);
 
@@ -155,9 +120,20 @@ static void _set_query_param_float(const ds3_request* _request, const char* key,
     snprintf(string_buffer, sizeof(string_buffer), "%f", value);
     _set_query_param(_request, key, string_buffer);
 }
+
 <#list getOptionalQueryParams() as queryParam>
     <#include "RequestSetQueryParameter.ftl">
 </#list>
+
+
+static void _cleanup_hash_value(gpointer value) {
+    g_free(value);
+}
+
+static GHashTable* _create_hash_table(void) {
+    GHashTable* hash =  g_hash_table_new_full(g_str_hash, g_str_equal, _cleanup_hash_value, _cleanup_hash_value);
+    return hash;
+}
 
 static struct _ds3_request* _common_request_init(http_verb verb, ds3_str* path) {
     struct _ds3_request* request = g_new0(struct _ds3_request, 1);

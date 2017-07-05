@@ -142,15 +142,6 @@ ds3_metadata_keys_result* ds3_metadata_keys(const ds3_metadata* _metadata) {
     return result;
 }
 
-static void _cleanup_hash_value(gpointer value) {
-    g_free(value);
-}
-
-static GHashTable* _create_hash_table(void) {
-    GHashTable* hash =  g_hash_table_new_full(g_str_hash, g_str_equal, _cleanup_hash_value, _cleanup_hash_value);
-    return hash;
-}
-
 void ds3_metadata_free(ds3_metadata* _metadata) {
     struct _ds3_metadata* metadata;
     if (_metadata == NULL) return;

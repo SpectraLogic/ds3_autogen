@@ -55,7 +55,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -83,7 +83,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -104,7 +104,7 @@ public class CCodeGeneratorSpectraS3Requests_Test {
                 CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
                 CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
