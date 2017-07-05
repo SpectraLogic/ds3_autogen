@@ -172,7 +172,7 @@ public class StructHelper_Test {
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
@@ -239,7 +239,7 @@ public class StructHelper_Test {
         final Source source = SourceConverter.toSource(allEnums, allStructs, allRequests);
 
         final CCodeGenerator codeGenerator = new CCodeGenerator();
-        codeGenerator.processTemplate(source, "source-templates/ds3_c.ftl", fileUtils.getOutputStream());
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
 
         final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
         final String output = new String(bstream.toByteArray());
