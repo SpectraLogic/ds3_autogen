@@ -12,19 +12,17 @@
 #include "ds3_utils.h"
 
 #ifdef _WIN32
-#include <io.h>
+  #include <io.h>
+  #ifndef PRIu64
+    #define PRIu64 "I64u"
+  #endif
 #else
-#include <inttypes.h>
+  #include <inttypes.h>
 #endif
 
-
-//The max size of an uint32_t should be 10 characters + NULL
-static const char UNSIGNED_LONG_BASE_10[] = "4294967296";
-static const unsigned int UNSIGNED_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_BASE_10) + 1;
-//The max size of an uint64_t should be 20 characters + NULL
-static const char UNSIGNED_LONG_LONG_BASE_10[] = "18446744073709551615";
-static const unsigned int UNSIGNED_LONG_LONG_BASE_10_STR_LEN = sizeof(UNSIGNED_LONG_LONG_BASE_10) + 1;
-
+//The max size of an uint32_t is 10 characters + NULL
+//The max size of an uint64_t is 20 characters + NULL
+#define STRING_BUFFER_SIZE 32
 
 <#include "metadata.ftl"/>
 <#include "xml_helpers.ftl"/>
