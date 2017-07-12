@@ -101,23 +101,23 @@ static void _set_query_param_flag(const ds3_request* _request, const char* key, 
 }
 
 static void _set_query_param_uint64_t(const ds3_request* _request, const char* key, uint64_t value) {
-    char string_buffer[UNSIGNED_LONG_LONG_BASE_10_STR_LEN];
+    char string_buffer[STRING_BUFFER_SIZE];
     memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%" PRIu64, value);
+    g_snprintf(string_buffer, sizeof(string_buffer), "%" PRIu64, value);
     _set_query_param(_request, key, string_buffer);
 }
 
 static void _set_query_param_int(const ds3_request* _request, const char* key, int value) {
-    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    char string_buffer[STRING_BUFFER_SIZE];
     memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%d", value);
+    g_snprintf(string_buffer, sizeof(string_buffer), "%d", value);
     _set_query_param(_request, key, string_buffer);
 }
 
 static void _set_query_param_float(const ds3_request* _request, const char* key, float value) {
-    char string_buffer[UNSIGNED_LONG_BASE_10_STR_LEN];
+    char string_buffer[STRING_BUFFER_SIZE];
     memset(string_buffer, 0, sizeof(string_buffer));
-    snprintf(string_buffer, sizeof(string_buffer), "%f", value);
+    g_snprintf(string_buffer, sizeof(string_buffer), "%f", value);
     _set_query_param(_request, key, string_buffer);
 }
 
