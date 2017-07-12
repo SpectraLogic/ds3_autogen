@@ -112,11 +112,23 @@ public final class GeneratorUtils {
             builder.append("/\"").append(" + BucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
             final Arguments resourceArg = getArgFromResource(ds3Request.getResource());
-            builder.append("/\"").append(" + ").append(capFirst(NetHelper.argToString(resourceArg)));
+            builder.append("/\"").append(" + ").append(pathArgToString(resourceArg));
         } else {
             builder.append("\"");
         }
         return builder.toString();
+    }
+
+    /**
+     * Creates the Net code for converting an argument into a string for use in creating the
+     * request handler path. If the argument is of type UUID (which translates to Guid), it is
+     * treated as a string since all Guids are stored as strings inside the Net request handlers.
+     */
+    private static String pathArgToString(final Arguments resourceArg) {
+        if (resourceArg.getType().equals("UUID")) {
+            return capFirst(resourceArg.getName());
+        }
+        return capFirst(NetHelper.argToString(resourceArg));
     }
 
     /**
