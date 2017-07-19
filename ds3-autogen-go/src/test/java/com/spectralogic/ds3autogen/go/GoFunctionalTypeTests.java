@@ -27,13 +27,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class GoFunctionalTypeTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
 
     private final static String requestName = "PlaceHolderRequest";
 
@@ -68,6 +69,11 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_LOW: return \"LOW\""));
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW: return \"NEAR_LOW\""));
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NORMAL: return \"NORMAL\""));
+
+        // Verify type parser file was not generated for enum type
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(isEmpty(typeParserCode));
     }
 
     @Test
@@ -87,6 +93,12 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("JobId string `xml:\"JobId\"`"));
         assertTrue(typeCode.contains("NotificationGenerationDate string `xml:\"NotificationGenerationDate\"`"));
         assertTrue(typeCode.contains("ObjectsNotPersisted []BulkObject `xml:\"ObjectsNotPersisted>Object\"`"));
+
+        //TODO add tests
+        // Verify type parser file was generated
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(typeParserCode));
     }
 
     @Test
@@ -119,6 +131,12 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("Status JobStatus `xml:\"Status,attr\"`"));
         assertTrue(typeCode.contains("UserId string `xml:\"UserId,attr\"`"));
         assertTrue(typeCode.contains("UserName *string `xml:\"UserName,attr\"`"));
+
+        //TODO add tests
+        // Verify type parser file was generated
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(typeParserCode));
     }
 
     @Test
@@ -138,6 +156,12 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("HttpPort *int `xml:\"HttpPort,attr\"`"));
         assertTrue(typeCode.contains("HttpsPort *int `xml:\"HttpsPort,attr\"`"));
         assertTrue(typeCode.contains("Id string `xml:\"Id,attr\"`"));
+
+        //TODO add tests
+        // Verify type parser file was generated
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(typeParserCode));
     }
 
     @Test
@@ -154,5 +178,11 @@ public class GoFunctionalTypeTests {
         assertTrue(hasContent(typeCode));
 
         assertTrue(typeCode.contains("Jobs []Job `xml:\"Job\"`"));
+
+        //TODO add tests
+        // Verify type parser file was generated
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(typeParserCode));
     }
 }

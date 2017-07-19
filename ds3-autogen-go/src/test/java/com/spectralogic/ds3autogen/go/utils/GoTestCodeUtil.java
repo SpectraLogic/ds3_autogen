@@ -49,10 +49,12 @@ public class GoTestCodeUtil {
     private final ByteArrayOutputStream responseOutputStream;
     private final ImmutableMap<HttpVerb, ByteArrayOutputStream> clientOutputStreams;
     private ByteArrayOutputStream typeOutputStream;
+    private ByteArrayOutputStream typeParserOutputStream;
 
     private String requestCode;
     private String responseCode;
     private String typeCode;
+    private String typeParserCode;
     private ImmutableMap<HttpVerb, String> clientCode;
 
     /**
@@ -75,6 +77,7 @@ public class GoTestCodeUtil {
             final String responseType) throws IOException {
         this(fileUtils, requestName);
         this.typeOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(responseType) + ".go");
+        this.typeParserOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(responseType) + "Parser.go");
     }
 
     /**
@@ -123,6 +126,11 @@ public class GoTestCodeUtil {
             typeCode = new String(typeOutputStream.toByteArray());
         }
 
+        // Capture the generated response payload parser if one exists
+        if (typeParserOutputStream != null) {
+            typeParserCode = new String(typeParserOutputStream.toByteArray());
+        }
+
         // Capture the generated client files and associate them with the HttpVerb of
         // the commands contained within the file
         final ImmutableMap.Builder<HttpVerb, String> builder = ImmutableMap.builder();
@@ -142,6 +150,10 @@ public class GoTestCodeUtil {
 
     public String getTypeCode() {
         return typeCode;
+    }
+
+    public String getTypeParserCode() {
+        return typeParserCode;
     }
 
     public String getClientCode(final HttpVerb httpVerb) {
