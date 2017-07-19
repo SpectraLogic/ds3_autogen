@@ -38,7 +38,10 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         return TypeParser(name, modelName, attributes, childNodes)
     }
 
-    //todo
+    /**
+     * Converts all non-attribute elements within a Ds3Element list into ParsingElements, which
+     * contain the Go code for parsing the Ds3Elements as child nodes.
+     */
     fun toChildNodeList(
             ds3Elements: ImmutableList<Ds3Element>?,
             typeName: String,
@@ -54,9 +57,12 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
                 .collect(GuavaCollectors.immutableList())
     }
 
-    //todo
+    /**
+     * Converts a Ds3Element into a ParsingElement, which contains the Go code for parsing the
+     * specified Ds3Element as a child node. This assumes that the specified Ds3Element is not an attribute.
+     */
     fun toChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
-        val xmlTag = StringUtils.capitalize(Ds3ElementUtil.getXmlTagName(ds3Element))
+        val xmlTag = getXmlTagName(ds3Element)
         val modelName = StringUtils.uncapitalize(typeName)
         val paramName = StringUtils.capitalize(ds3Element.name)
 
@@ -81,7 +87,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         }
 
         val goType = toGoType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
-        val parserNamespace = getParserNamespace(ds3Element.type!!, ds3Element.nullable)
+        val parserNamespace = getPrimitiveTypeParserNamespace(ds3Element.type!!, ds3Element.nullable)
         when (goType) {
             "bool", "*bool", "int", "*int", "int64", "*int64", "float64", "*float64"  ->
                 return ParseChildNodeAsPrimitiveType(xmlTag, modelName, paramName, parserNamespace)
@@ -94,7 +100,9 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         }
     }
 
-    //todo
+    /**
+     * Determines if the specified type is an enum.
+     */
     fun isElementEnum(elementType: String, typeMap: ImmutableMap<String, Ds3Type>): Boolean {
         if (ConverterUtil.isEmpty(typeMap)) {
             return false
@@ -103,7 +111,10 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         return ConverterUtil.isEnum(ds3Type)
     }
 
-    //todo
+    /**
+     * Converts all attributes within a Ds3Element list into ParsingElements which contain the
+     * Go code for parsing the attributes.
+     */
     fun toAttributeList(ds3Elements: ImmutableList<Ds3Element>?, typeName: String): ImmutableList<ParseElement> {
         if (ConverterUtil.isEmpty(ds3Elements)) {
             return ImmutableList.of()
@@ -114,22 +125,26 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
                 .collect(GuavaCollectors.immutableList())
     }
 
-    //todo
+    /**
+     * Converts a Ds3Element into a ParsingElement, which contains the Go code for parsing the
+     * specified Ds3Element attribute. This assumes that the specified Ds3Element is an attribute.
+     */
     fun toAttribute(ds3Element: Ds3Element, typeName: String): ParseElement {
-        val xmlName = getAttributeXmlName(ds3Element)
+        val xmlName = getXmlTagName(ds3Element)
 
         val goType = toGoType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
-        val parserNamespace = getParserNamespace(ds3Element.type!!, ds3Element.nullable)
         val modelName = StringUtils.uncapitalize(typeName)
         val paramName = StringUtils.capitalize(ds3Element.name)
 
         when (goType) {
-            "bool", "*bool", "int", "*int", "int64", "*int64", "float64", "*float64"  ->
+            "bool", "*bool", "int", "*int", "int64", "*int64", "float64", "*float64"  -> {
+                val parserNamespace = getPrimitiveTypeParserNamespace(ds3Element.type!!, ds3Element.nullable)
                 return ParseSimpleAttr(xmlName, modelName, paramName, parserNamespace)
+            }
             "string" ->
                 return ParseStringAttr(xmlName, modelName, paramName)
             "*string" ->
-                return ParseNullableStringAttr(xmlName, modelName, paramName, parserNamespace)
+                return ParseNullableStringAttr(xmlName, modelName, paramName)
             else -> {
                 if (ds3Element.nullable) {
                     return ParseNullableEnumAttr(xmlName, modelName, paramName)
@@ -139,13 +154,19 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         }
     }
 
-    //todo
-    fun getAttributeXmlName(ds3Element: Ds3Element): String {
+    /**
+     * Retrieves the xml tag name for the specified Ds3Element. The result is capitalized.
+     */
+    fun getXmlTagName(ds3Element: Ds3Element): String {
         return StringUtils.capitalize(Ds3ElementUtil.getXmlTagName(ds3Element))
     }
 
-    //TODO
-    fun getParserNamespace(type: String, nullable: Boolean): String {
+    /**
+     * Gets the namespace of the required primitive type parser used to parse
+     * the specified type. Assumes that the provided type is a Go primitive, or
+     * a pointer to a Go primitive type.
+     */
+    fun getPrimitiveTypeParserNamespace(type: String, nullable: Boolean): String {
         val parserPrefix = StringUtils.capitalize(toGoType(type))
         if (nullable) {
             return "Nullable$parserPrefix"

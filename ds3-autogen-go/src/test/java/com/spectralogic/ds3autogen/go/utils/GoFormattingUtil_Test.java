@@ -13,22 +13,21 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3autogen.go.utils
+package com.spectralogic.ds3autogen.go.utils;
 
-/**
- * Contains utils for formatting generated Go code
- */
+import org.junit.Test;
 
-/** The standard indentation used in the Go SDK */
-private val GO_INDENT = "    "
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-/**
- * Creates the specified indentation in accordance with the Go SDK formatting
- */
-fun indent(indent: Int): String {
-    var curIndent = ""
-    repeat(indent) {
-        curIndent += GO_INDENT
+public class GoFormattingUtil_Test {
+
+    @Test
+    public void indentTest() {
+        assertThat(GoFormattingUtilKt.indent(-1), is(""));
+        assertThat(GoFormattingUtilKt.indent(0), is(""));
+        assertThat(GoFormattingUtilKt.indent(1), is("    "));
+        assertThat(GoFormattingUtilKt.indent(2), is("        "));
+        assertThat(GoFormattingUtilKt.indent(3), is("            "));
     }
-    return curIndent
 }

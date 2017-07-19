@@ -93,12 +93,18 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("JobId string `xml:\"JobId\"`"));
         assertTrue(typeCode.contains("NotificationGenerationDate string `xml:\"NotificationGenerationDate\"`"));
         assertTrue(typeCode.contains("ObjectsNotPersisted []BulkObject `xml:\"ObjectsNotPersisted>Object\"`"));
+        assertTrue(typeCode.contains("ListedElements []TestType `xml:\"ListedElements\"`"));
 
-        //TODO add tests
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
         assertTrue(hasContent(typeParserCode));
+
+        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.CancelOccurred = parseBool(child.Content, aggErr)"));
+        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.JobId = parseString(child.Content)"));
+        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.NotificationGenerationDate = parseString(child.Content)"));
+        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ObjectsNotPersisted = parseBulkObjectSlice(\"Object\", child.Children, aggErr)"));
+        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ListedElements = append(jobCompletedNotificationPayload.ListedElements, model)"));
     }
 
     @Test
@@ -132,11 +138,29 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("UserId string `xml:\"UserId,attr\"`"));
         assertTrue(typeCode.contains("UserName *string `xml:\"UserName,attr\"`"));
 
-        //TODO add tests
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
         assertTrue(hasContent(typeParserCode));
+
+        assertTrue(typeParserCode.contains("job.Aggregating = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("job.BucketName = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeParserCode.contains("job.CachedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.ChunkClientProcessingOrderGuarantee, aggErr)"));
+        assertTrue(typeParserCode.contains("job.CompletedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("job.EntirelyInCache = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("job.JobId = attr.Value"));
+        assertTrue(typeParserCode.contains("job.Naked = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("job.Name = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeParserCode.contains("job.OriginalSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.Priority, aggErr)"));
+        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.RequestType, aggErr)"));
+        assertTrue(typeParserCode.contains("job.StartDate = attr.Value"));
+        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.Status, aggErr)"));
+        assertTrue(typeParserCode.contains("job.UserId = attr.Value"));
+        assertTrue(typeParserCode.contains("job.UserName = parseNullableStringFromString(attr.Value)"));
+
+        assertTrue(typeParserCode.contains("job.Nodes = parseJobNodeSlice(\"Node\", child.Children, aggErr)"));
     }
 
     @Test
@@ -157,11 +181,15 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("HttpsPort *int `xml:\"HttpsPort,attr\"`"));
         assertTrue(typeCode.contains("Id string `xml:\"Id,attr\"`"));
 
-        //TODO add tests
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
         assertTrue(hasContent(typeParserCode));
+
+        assertTrue(typeParserCode.contains("jobNode.EndPoint = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeParserCode.contains("jobNode.HttpPort = parseNullableIntFromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("jobNode.HttpsPort = parseNullableIntFromString(attr.Value, aggErr)"));
+        assertTrue(typeParserCode.contains("jobNode.Id = attr.Value"));
     }
 
     @Test
@@ -179,10 +207,12 @@ public class GoFunctionalTypeTests {
 
         assertTrue(typeCode.contains("Jobs []Job `xml:\"Job\"`"));
 
-        //TODO add tests
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
         assertTrue(hasContent(typeParserCode));
+
+        //TODO uncomment once parser is special cased
+        //assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, job)"));
     }
 }

@@ -20,7 +20,6 @@ package com.spectralogic.ds3autogen.go.models.parser
  */
 
 
-//TODO add tests that touch all parsers
 /**
  * Creates the Go code for parsing most attributes with primitive types
  */
@@ -52,13 +51,11 @@ data class ParseStringAttr(
 data class ParseNullableStringAttr(
         override val xmlTag: String,
         val modelName: String,
-        val paramName: String,
-        val parserNamespace: String) : ParseElement {
+        val paramName: String) : ParseElement {
 
     override val parsingCode: String
-        get() { return "$modelName.$paramName = parse${parserNamespace}FromString(attr.Value)" }
+        get() { return "$modelName.$paramName = parseNullableStringFromString(attr.Value)" }
 }
-
 
 /**
  * Creates the Go code for parsing an enum from an attribute

@@ -320,7 +320,9 @@ public class GoCodeGenerator implements CodeGenerator {
         }
     }
 
-    //todo test
+    /**
+     * Retrieves the appropriate template that will generate the Go model parser
+     */
     private Template getTypeParserTemplate(final Ds3Type ds3Type, ImmutableSet<String> typesParsedAsSlices) throws IOException {
         if (typesParsedAsSlices.contains(ds3Type.getName())) {
             return config.getTemplate("parser/type_parser_as_list.ftl");
@@ -328,16 +330,19 @@ public class GoCodeGenerator implements CodeGenerator {
         return config.getTemplate("parser/base_type_parser.ftl");
     }
 
-    //todo test
+    /**
+     * Retrieves the generator used to create the Go model parser represented by the
+     * specified {@link Ds3Type}
+     */
     private static TypeParserModelGenerator<?> getTypeParserGenerator(final Ds3Type ds3Type) {
+        //TODO special case as necessary
         return new BaseTypeParserGenerator();
     }
-
-    //TODO test test test!!!!!!!!!!
+    
     /**
-     * Retrieves the set of Ds3Type names that require a parse slice function to be generated
+     * Retrieves the set of Ds3Type names that require a parse slice function to be generated.
      */
-    private static ImmutableSet<String> getTypesParsedAsSlices(final ImmutableMap<String, Ds3Type> typeMap) {
+    static ImmutableSet<String> getTypesParsedAsSlices(final ImmutableMap<String, Ds3Type> typeMap) {
         return typeMap.values().stream()
                 .filter(ds3Type -> hasContent(ds3Type.getElements()) && isEmpty(ds3Type.getEnumConstants())) // filter out enums
                 .flatMap(ds3Type -> ds3Type.getElements().stream()) // iterate over all Ds3Elements

@@ -22,7 +22,9 @@ import com.spectralogic.ds3autogen.go.utils.indent
  * in Go models.
  */
 
-//todo
+/**
+ * Creates the Go code for parsing most child nodes with primitive types.
+ */
 data class ParseChildNodeAsPrimitiveType(
         override val xmlTag: String,
         val modelName: String,
@@ -33,7 +35,9 @@ data class ParseChildNodeAsPrimitiveType(
         get() { return "$modelName.$paramName = parse$parserNamespace(child.Content, aggErr)" }
 }
 
-//todo
+/**
+ * Creates the Go code for parsing child nodes of type string and string pointer.
+ */
 data class ParseChildNodeAsString(
         override val xmlTag: String,
         val modelName: String,
@@ -45,7 +49,9 @@ data class ParseChildNodeAsString(
 }
 
 
-//todo
+/**
+ * Creates the Go code for parsing child nodes that are a Ds3 defined type.
+ */
 data class ParseChildNodeAsDs3Type(
         override val xmlTag: String,
         val modelName: String,
@@ -55,7 +61,10 @@ data class ParseChildNodeAsDs3Type(
         get() { return "$modelName.$paramName.parse(&child, aggErr)" }
 }
 
-//todo
+/**
+ * Creates the Go code for parsing multiple child nodes of the same type, which are
+ * encapsulated within a parent xml tag.
+ */
 data class ParseChildNodeAsSlice(
         override val xmlTag: String,
         val childXmlTag: String,
@@ -67,7 +76,11 @@ data class ParseChildNodeAsSlice(
         get() { return "$modelName.$paramName = parse${childType}Slice(\"$childXmlTag\", child.Children, aggErr)" }
 }
 
-//todo
+/**
+ * Creates the Go code for parsing a single child node and adding it to a slice. This
+ * is used when there are multiple child nodes of the same type with no encapsulating
+ * xml tag.
+ */
 data class ParseChildNodeAddToSlice(
         override val xmlTag: String,
         val modelName: String,
@@ -82,7 +95,9 @@ data class ParseChildNodeAddToSlice(
         }
 }
 
-//todo
+/**
+ * Creates the Go code for parsing any non-nullable Ds3 defined enum.
+ */
 data class ParseChildNodeAsEnum(
         override val xmlTag: String,
         val modelName: String,
@@ -92,7 +107,9 @@ data class ParseChildNodeAsEnum(
         get() { return "parseEnum(child.Content, &$modelName.$paramName, aggErr)" }
 }
 
-//todo
+/**
+ * Creates the Go code for parsing any nullable Ds3 defined enum.
+ */
 data class ParseChildNodeAsNullableEnum(
         override val xmlTag: String,
         val modelName: String,
