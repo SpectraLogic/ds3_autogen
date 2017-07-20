@@ -15,17 +15,22 @@
 
 package com.spectralogic.ds3autogen.go;
 
+import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3autogen.Ds3SpecParserImpl;
+import com.spectralogic.ds3autogen.api.Ds3SpecParser;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getRequestGenerator;
-import static com.spectralogic.ds3autogen.go.GoCodeGenerator.getResponseGenerator;
+import java.io.IOException;
+
+import static com.spectralogic.ds3autogen.go.GoCodeGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class GoCodeGenerator_Test {
@@ -90,5 +95,22 @@ public class GoCodeGenerator_Test {
         assertThat(getResponseGenerator(getJobChunksReadyForClientProcessingRequest()), instanceOf(BaseResponseGenerator.class));
         assertThat(getResponseGenerator(getBucketRequest()), instanceOf(BaseResponseGenerator.class));
         assertThat(getResponseGenerator(getBucketsSpectraS3Request()), instanceOf(BaseResponseGenerator.class));
+    }
+
+    @Test
+    public void getTypesParsedAsSlicesTest() throws IOException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(GoCodeGenerator_Test.class.getResourceAsStream("/input/getTypesParsedAsSliceTestInput.xml"));
+        MatcherAssert.assertThat(spec, is(notNullValue()));
+        assertThat(spec.getTypes().size(), is(4));
+
+        final ImmutableSet<String> expected = ImmutableSet.of(
+                "com.spectralogic.s3.server.domain.Job",
+                "com.spectralogic.s3.server.domain.JobNode");
+
+        final ImmutableSet<String> result = getTypesParsedAsSlices(spec.getTypes());
+
+        assertThat(result.size(), is(expected.size()));
+        result.forEach(item -> assertThat(expected, hasItem(item)));
     }
 }
