@@ -15,6 +15,11 @@
 
 package com.spectralogic.ds3autogen.go.generators.parser
 
+/**
+ * Interface for utility functions used to generate Go model parsers. This
+ * defines the methods that are overridden between the {@link BaseResponseParserGenerator}
+ * and other implementations of response parsers during special casing.
+ */
 interface TypeParserGeneratorUtil {
-    //todo implement as needed
+    //todo implement as needed during special casing
 }

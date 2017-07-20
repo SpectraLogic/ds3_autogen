@@ -19,6 +19,10 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.go.models.parser.TypeParser;
 
+/**
+ * Functional interface defining the generation of TypeParser models that are used to generate the
+ * Go model parser files. This is used in {@link com.spectralogic.ds3autogen.go.GoCodeGenerator#generateTypeParser(Ds3Type, ImmutableMap)}
+ */
 @FunctionalInterface
 public interface TypeParserModelGenerator<T extends TypeParser> {
 
