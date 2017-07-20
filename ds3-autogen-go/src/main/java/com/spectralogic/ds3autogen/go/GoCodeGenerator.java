@@ -17,15 +17,19 @@ package com.spectralogic.ds3autogen.go;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.CodeGenerator;
 import com.spectralogic.ds3autogen.api.FileUtils;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
+import com.spectralogic.ds3autogen.go.generators.parser.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.go.generators.parser.TypeParserModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGenerator;
@@ -35,9 +39,11 @@ import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.JobListGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.go.models.client.Client;
+import com.spectralogic.ds3autogen.go.models.parser.TypeParser;
 import com.spectralogic.ds3autogen.go.models.request.Request;
 import com.spectralogic.ds3autogen.go.models.response.Response;
 import com.spectralogic.ds3autogen.go.models.type.Type;
+import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
 import org.slf4j.Logger;
@@ -50,9 +56,8 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEnum;
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.hasWrapperAnnotations;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
@@ -73,6 +78,7 @@ public class GoCodeGenerator implements CodeGenerator {
         config.setDefaultEncoding("UTF-8");
         config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         config.setClassForTemplateLoading(GoCodeGenerator.class, "/tmpls/go/");
+        config.setSharedVariable("helper", Helper.getInstance());
     }
 
     @Override
@@ -257,7 +263,7 @@ public class GoCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates all of the response models
+     * Generates all of the response models and their parsers
      */
     private void generateAllTypes(final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
         if (isEmpty(typeMap)) {
@@ -266,6 +272,11 @@ public class GoCodeGenerator implements CodeGenerator {
         }
         for (final Ds3Type ds3Type : typeMap.values()) {
             generateType(ds3Type);
+
+            // Generate type parser only if the ds3Type is not an enum
+            if (isEmpty(ds3Type.getEnumConstants())) {
+                generateTypeParser(ds3Type, typeMap);
+            }
         }
     }
 
@@ -287,6 +298,58 @@ public class GoCodeGenerator implements CodeGenerator {
             default:
                 throw new IllegalArgumentException("Unrecognized HttpVerb value " + httpVerb.toString());
         }
+    }
+
+    /**
+     * Generates the response model parser for the specified {@link Ds3Type}
+     */
+    private void generateTypeParser(final Ds3Type ds3Type, final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        final ImmutableSet<String> typesParsedAsSlices = getTypesParsedAsSlices(typeMap);
+        final Template tmpl = getTypeParserTemplate(ds3Type, typesParsedAsSlices);
+        final TypeParserModelGenerator<?> generator = getTypeParserGenerator(ds3Type);
+        final TypeParser typeParser = generator.generate(ds3Type, typeMap);
+        final Path path = destDir.resolve(
+                BASE_PROJECT_PATH.resolve(
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(typeParser.getName()) + ".go")));
+
+        LOG.info("Getting OutputStream for file: {}", path.toString());
+
+        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
+             final Writer writer = new OutputStreamWriter(outputStream)) {
+            tmpl.process(typeParser, writer);
+        }
+    }
+
+    /**
+     * Retrieves the appropriate template that will generate the Go model parser
+     */
+    private Template getTypeParserTemplate(final Ds3Type ds3Type, ImmutableSet<String> typesParsedAsSlices) throws IOException {
+        if (typesParsedAsSlices.contains(ds3Type.getName())) {
+            return config.getTemplate("parser/type_parser_as_list.ftl");
+        }
+        return config.getTemplate("parser/base_type_parser.ftl");
+    }
+
+    /**
+     * Retrieves the generator used to create the Go model parser represented by the
+     * specified {@link Ds3Type}
+     */
+    private static TypeParserModelGenerator<?> getTypeParserGenerator(final Ds3Type ds3Type) {
+        //TODO special case as necessary
+        return new BaseTypeParserGenerator();
+    }
+
+    /**
+     * Retrieves the set of Ds3Type names that require a parse slice function to be generated.
+     */
+    static ImmutableSet<String> getTypesParsedAsSlices(final ImmutableMap<String, Ds3Type> typeMap) {
+        return typeMap.values().stream()
+                .filter(ds3Type -> hasContent(ds3Type.getElements()) && isEmpty(ds3Type.getEnumConstants())) // filter out enums
+                .flatMap(ds3Type -> ds3Type.getElements().stream()) // iterate over all Ds3Elements
+                .filter(ds3Element -> "array".equals(ds3Element.getType())) // filter out non-array types
+                .filter(ds3Element -> hasWrapperAnnotations(ds3Element.getDs3Annotations())) // filter for arrays that have an encapsulating tag
+                .map(Ds3Element::getComponentType) // get the component type
+                .collect(GuavaCollectors.immutableSet());
     }
 
     /**

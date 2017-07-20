@@ -42,6 +42,9 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="ListedElements" Type="array" ComponentType="com.test.TestType">
+                        <Annotations/>
+                    </Element>
                 </Elements>
             </Type>
         </Types>
