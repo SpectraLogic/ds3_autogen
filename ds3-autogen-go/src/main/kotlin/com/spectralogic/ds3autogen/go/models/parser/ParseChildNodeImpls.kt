@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.go.utils.indent
  * in Go models.
  */
 
+
 /**
  * Creates the Go code for parsing most child nodes with primitive types.
  */

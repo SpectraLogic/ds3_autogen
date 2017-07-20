@@ -121,6 +121,12 @@ public class BaseTypeParserGenerator_Test {
     }
 
     @Test
+    public void toAttributeListEmptyListTest() {
+        final ImmutableList<ParseElement> result = generator.toAttributeList(ImmutableList.of(), "modelName");
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
     public void toAttributeListTest() {
         final ImmutableList<Ds3Element> input = ImmutableList.of(
                 STR_ATTR,
@@ -149,6 +155,11 @@ public class BaseTypeParserGenerator_Test {
 
         assertThat(result.size(), is(expected.size()));
         expected.forEach(item -> assertThat(result, hasItem(item)));
+    }
+
+    @Test
+    public void isElementEnumEmptyMapTest() {
+        assertFalse(generator.isElementEnum("com.test.something", ImmutableMap.of()));
     }
 
     @Test
@@ -198,6 +209,12 @@ public class BaseTypeParserGenerator_Test {
         for (int i = 0; i < expected.size(); i++) {
             assertThat(generator.toChildNode(input.get(i), modelName, typeMape), is(expected.get(i)));
         }
+    }
+
+    @Test
+    public void toChildNodeListEmptyListTest() {
+        final ImmutableList<ParseElement> result = generator.toChildNodeList(ImmutableList.of(), "modelName", ImmutableMap.of());
+        assertThat(result.size(), is(0));
     }
 
     @Test

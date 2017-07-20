@@ -338,7 +338,7 @@ public class GoCodeGenerator implements CodeGenerator {
         //TODO special case as necessary
         return new BaseTypeParserGenerator();
     }
-    
+
     /**
      * Retrieves the set of Ds3Type names that require a parse slice function to be generated.
      */
