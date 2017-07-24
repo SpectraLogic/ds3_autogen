@@ -168,13 +168,13 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toPayloadResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := readResponseBody(webResponse, &body.PayloadName); err != nil {\n" +
+                "        if err := body.parse(webResponse); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
                 "        body.Headers = webResponse.Header()\n" +
                 "        return &body, nil";
 
-        final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName", "PayloadName");
+        final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName");
         assertThat(result.getCode(), is(200));
         assertThat(result.getParseResponse(), is(expectedGoCode));
     }
@@ -239,7 +239,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
+                "        if err := body.parse(webResponse); err != nil {\n" +
                 "            return nil, err\n" +
                 "        }\n" +
                 "        body.Headers = webResponse.Header()\n" +
@@ -268,7 +268,7 @@ public class BaseResponseGenerator_Test {
     public void toResponseCodeList_Test() {
         final ImmutableList<ResponseCode> expectedCodes = ImmutableList.of(
                 new ResponseCode(200, "var body ResponseName\n" +
-                        "        if err := readResponseBody(webResponse, &body.TypeName); err != nil {\n" +
+                        "        if err := body.parse(webResponse); err != nil {\n" +
                         "            return nil, err\n" +
                         "        }\n" +
                         "        body.Headers = webResponse.Header()\n" +
@@ -290,5 +290,85 @@ public class BaseResponseGenerator_Test {
     public void toImportSet_Test() {
         final ImmutableSet<String> result = generator.toImportSet();
         assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void toDereferenceResponsePayload_Test() {
+        assertThat(generator.toDereferenceResponsePayload("TapeList TapeList"), is("&"));
+        assertThat(generator.toDereferenceResponsePayload("TapeList *TapeList"), is(""));
+    }
+
+    @Test
+    public void toParseResponseMethod_EmptyList_Test() {
+        final String result = generator.toParseResponseMethod("Name", "PayloadStruct PayloadStruct", ImmutableList.of());
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toParseResponseMethod_NoPayload_Test() {
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("null", "")));
+
+        final String result = generator.toParseResponseMethod(
+                "Name",
+                "PayloadStruct PayloadStruct",
+                ImmutableList.of(responseCode));
+
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toParseResponseMethod_StringPayload_Test() {
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("java.lang.String", "")));
+
+        final String result = generator.toParseResponseMethod(
+                "Name",
+                "PayloadStruct PayloadStruct",
+                ImmutableList.of(responseCode));
+
+        assertThat(result, is(""));
+    }
+
+    @Test
+    public void toParseResponseMethod_WithDereference_Test() {
+        final String expected = "func (modelName *ModelName) parse(webResponse networking.WebResponse) error {\n" +
+                "        return parseResponsePayload(webResponse, &modelName.TestType)\n" +
+                "}";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.test.TestType", "")));
+
+        final String result = generator.toParseResponseMethod(
+                "ModelName",
+                "PayloadStruct PayloadStruct",
+                ImmutableList.of(responseCode));
+
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void toParseResponseMethod_WithoutDereference_Test() {
+        final String expected = "func (modelName *ModelName) parse(webResponse networking.WebResponse) error {\n" +
+                "        return parseResponsePayload(webResponse, modelName.TestType)\n" +
+                "}";
+
+        final Ds3ResponseCode responseCode = new Ds3ResponseCode(
+                200,
+                ImmutableList.of(
+                        new Ds3ResponseType("com.test.TestType", "")));
+
+        final String result = generator.toParseResponseMethod(
+                "ModelName",
+                "PayloadStruct *PayloadStruct",
+                ImmutableList.of(responseCode));
+
+        assertThat(result, is(expected));
     }
 }

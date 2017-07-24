@@ -66,6 +66,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("return &SimpleNoPayloadResponse{Headers: webResponse.Header()}, nil"));
 
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
+
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
@@ -110,9 +112,12 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewSimpleWithPayloadResponse(webResponse networking.WebResponse) (*SimpleWithPayloadResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
         assertTrue(responseCode.contains("var body SimpleWithPayloadResponse"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.Bucket); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (simpleWithPayloadResponse *SimpleWithPayloadResponse) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &simpleWithPayloadResponse.Bucket)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -159,6 +164,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewDeleteBucketAclSpectraS3Response(webResponse networking.WebResponse) (*DeleteBucketAclSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
         assertTrue(responseCode.contains("return &DeleteBucketAclSpectraS3Response{Headers: webResponse.Header()}, nil"));
+
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -207,9 +214,12 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Response(webResponse networking.WebResponse) (*VerifyPhysicalPlacementForObjectsSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body VerifyPhysicalPlacementForObjectsSpectraS3Response"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.PhysicalPlacement); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (verifyPhysicalPlacementForObjectsSpectraS3Response *VerifyPhysicalPlacementForObjectsSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &verifyPhysicalPlacementForObjectsSpectraS3Response.PhysicalPlacement)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -259,11 +269,14 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewReplicatePutJobSpectraS3Response(webResponse networking.WebResponse) (*ReplicatePutJobSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 204 }"));
         assertTrue(responseCode.contains("var body ReplicatePutJobSpectraS3Response"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.MasterObjectList); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
 
         assertTrue(responseCode.contains("return &ReplicatePutJobSpectraS3Response{Headers: webResponse.Header()}, nil"));
+
+        assertTrue(responseCode.contains("func (replicatePutJobSpectraS3Response *ReplicatePutJobSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, replicatePutJobSpectraS3Response.MasterObjectList)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -311,9 +324,12 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewCompleteMultiPartUploadResponse(webResponse networking.WebResponse) (*CompleteMultiPartUploadResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body CompleteMultiPartUploadResponse"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.CompleteMultipartUploadResult); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (completeMultiPartUploadResponse *CompleteMultiPartUploadResponse) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &completeMultiPartUploadResponse.CompleteMultipartUploadResult)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -366,9 +382,12 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewDeleteObjectsResponse(webResponse networking.WebResponse) (*DeleteObjectsResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("var body DeleteObjectsResponse"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.DeleteResult); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (deleteObjectsResponse *DeleteObjectsResponse) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &deleteObjectsResponse.DeleteResult)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -416,6 +435,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewGetJobToReplicateSpectraS3Response(webResponse networking.WebResponse) (*GetJobToReplicateSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("return &GetJobToReplicateSpectraS3Response{Content: content, Headers: webResponse.Header()}, nil"));
+
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -486,6 +507,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("return &GetObjectResponse{ Content: webResponse.Body(), Headers: webResponse.Header() }, nil"));
         assertTrue(responseCode.contains("return &GetObjectResponse{Headers: webResponse.Header()}, nil"));
 
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
+
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
@@ -555,9 +578,12 @@ public class GoFunctionalTests {
 
         assertTrue(responseCode.contains("func NewGetAzureDataReplicationRulesSpectraS3Response(webResponse networking.WebResponse) (*GetAzureDataReplicationRulesSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.AzureDataReplicationRuleList); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (getAzureDataReplicationRulesSpectraS3Response *GetAzureDataReplicationRulesSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &getAzureDataReplicationRulesSpectraS3Response.AzureDataReplicationRuleList)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -625,9 +651,12 @@ public class GoFunctionalTests {
 
         assertTrue(responseCode.contains("func NewPutAzureDataReplicationRuleSpectraS3Response(webResponse networking.WebResponse) (*PutAzureDataReplicationRuleSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 201 }"));
-        assertTrue(responseCode.contains("if err := readResponseBody(webResponse, &body.AzureDataReplicationRule); err != nil {"));
+        assertTrue(responseCode.contains("if err := body.parse(webResponse); err != nil {"));
         assertTrue(responseCode.contains("body.Headers = webResponse.Header()"));
         assertTrue(responseCode.contains("return &body, nil"));
+
+        assertTrue(responseCode.contains("func (putAzureDataReplicationRuleSpectraS3Response *PutAzureDataReplicationRuleSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &putAzureDataReplicationRuleSpectraS3Response.AzureDataReplicationRule)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -688,6 +717,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewDeleteJobCreatedNotificationRegistrationSpectraS3Response(webResponse networking.WebResponse) (*DeleteJobCreatedNotificationRegistrationSpectraS3Response, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 204 }"));
         assertTrue(responseCode.contains("return &DeleteJobCreatedNotificationRegistrationSpectraS3Response{Headers: webResponse.Header()}, nil"));
+
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -759,6 +790,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewPutMultiPartUploadPartResponse(webResponse networking.WebResponse) (*PutMultiPartUploadPartResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("return &PutMultiPartUploadPartResponse{Headers: webResponse.Header()}, nil"));
+
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();
@@ -844,6 +877,8 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewPutObjectResponse(webResponse networking.WebResponse) (*PutObjectResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
         assertTrue(responseCode.contains("return &PutObjectResponse{Headers: webResponse.Header()}, nil"));
+
+        assertFalse(responseCode.contains("parse(webResponse networking.WebResponse)"));
 
         // Verify response payload type file was not generated
         final String typeCode = codeGenerator.getTypeCode();

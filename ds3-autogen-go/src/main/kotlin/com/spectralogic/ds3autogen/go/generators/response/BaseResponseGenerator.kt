@@ -19,15 +19,16 @@ import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.response.Response
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode
+import com.spectralogic.ds3autogen.go.utils.goIndent
 import com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
-import com.spectralogic.ds3autogen.utils.Helper.indent
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
+import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
+import org.apache.commons.lang3.StringUtils
 import java.util.stream.Collectors
 
 open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseModelGeneratorUtil {
@@ -40,10 +41,44 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         val name = NormalizingContractNamesUtil.toResponseName(ds3Request.name)
         val payloadStruct = toResponsePayloadStruct(ds3Request.ds3ResponseCodes)
         val expectedCodes = toExpectedStatusCodes(ds3Request.ds3ResponseCodes)
+        val parseResponseMethod = toParseResponseMethod(name, payloadStruct, ds3Request.ds3ResponseCodes)
         val responseCodes = toResponseCodeList(ds3Request.ds3ResponseCodes, name)
         val imports = toImportSet()
 
-        return Response(name, payloadStruct, expectedCodes, responseCodes, imports)
+        return Response(name, payloadStruct, expectedCodes, parseResponseMethod, responseCodes, imports)
+    }
+
+    /**
+     * Creates the Go code for the response parse method if one is needed (i.e. there is a response payload
+     * which is defined by a Ds3Type). Else an empty string is returned.
+     */
+    fun toParseResponseMethod(name: String, payloadStruct: String, ds3ResponseCodes: ImmutableList<Ds3ResponseCode>?): String {
+        if (isEmpty(ds3ResponseCodes) || !ResponsePayloadUtil.hasResponsePayload(ds3ResponseCodes)) {
+            return ""
+        }
+
+        val elementName = removePath(getResponsePayload(ds3ResponseCodes))
+        if (elementName == "String" || elementName == "java.lang.String") {
+            return ""
+        }
+
+        val modelName = StringUtils.uncapitalize(name)
+        val dereference = toDereferenceResponsePayload(payloadStruct)
+        return "func ($modelName *$name) parse(webResponse networking.WebResponse) error {\n" +
+                goIndent(1) + "    return parseResponsePayload(webResponse, $dereference$modelName.$elementName)\n" +
+                "}"
+    }
+
+    /**
+     * Determines if a response payload needs to be de-referenced (i.e. not a pointer), or if
+     * it needs de-referencing in order to be parsed. Returns an ampersand '&' if de-referencing
+     * is needed, else it returns an empty string.
+     */
+    fun toDereferenceResponsePayload(payloadStruct: String): String {
+        if (payloadStruct.contains("*")) {
+            return ""
+        }
+        return "&"
     }
     
     /**
@@ -87,8 +122,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         if (ds3ResponseCode.ds3ResponseTypes!![0].type.equals("java.lang.String", ignoreCase = true)) {
             return toStringPayloadResponseCode(ds3ResponseCode.code, responseName)
         }
-        val responsePayloadName = removePath(ds3ResponseCode.ds3ResponseTypes!![0].type)
-        return toPayloadResponseCode(ds3ResponseCode.code, responseName, responsePayloadName)
+        return toPayloadResponseCode(ds3ResponseCode.code, responseName)
     }
 
     /**
@@ -103,23 +137,23 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
      */
     fun toStringPayloadResponseCode(code: Int, responseName: String): ResponseCode {
         val parseResponse = "content, err := getResponseBodyAsString(webResponse)\n" +
-                indent(2) + "if err != nil {\n" +
-                indent(3) + "return nil, err\n" +
-                indent(2) + "}\n" +
-                indent(2) + "return &$responseName{Content: content, Headers: webResponse.Header()}, nil"
+                goIndent(2) + "if err != nil {\n" +
+                goIndent(3) + "return nil, err\n" +
+                goIndent(2) + "}\n" +
+                goIndent(2) + "return &$responseName{Content: content, Headers: webResponse.Header()}, nil"
         return ResponseCode(code, parseResponse)
     }
 
     /**
      * Creates the Go code for parsing a response with a payload
      */
-    fun toPayloadResponseCode(code: Int, responseName: String, payloadName: String): ResponseCode {
+    fun toPayloadResponseCode(code: Int, responseName: String): ResponseCode {
         val parseResponse = "var body $responseName\n" +
-                indent(2) + "if err := readResponseBody(webResponse, &body.$payloadName); err != nil {\n" +
-                indent(3) + "return nil, err\n" +
-                indent(2) + "}\n" +
-                indent(2) + "body.Headers = webResponse.Header()\n" +
-                indent(2) + "return &body, nil"
+                goIndent(2) + "if err := body.parse(webResponse); err != nil {\n" +
+                goIndent(3) + "return nil, err\n" +
+                goIndent(2) + "}\n" +
+                goIndent(2) + "body.Headers = webResponse.Header()\n" +
+                goIndent(2) + "return &body, nil"
 
         return ResponseCode(code, parseResponse)
     }

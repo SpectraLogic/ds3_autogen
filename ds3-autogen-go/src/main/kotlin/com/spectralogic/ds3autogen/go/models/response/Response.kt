@@ -22,5 +22,6 @@ data class Response(
         val name: String,
         val payloadStruct: String, //The struct definition for the response payload
         val expectedCodes: String,
+        val parseResponseMethod: String, //Contains the Go code for the parse method if one is needed, else empty
         val responseCodes: ImmutableList<ResponseCode>,
         val imports: ImmutableSet<String>)

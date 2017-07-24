@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3autogen.go.models.parser
 
-import com.spectralogic.ds3autogen.go.utils.indent
+import com.spectralogic.ds3autogen.go.utils.goIndent
 
 /**
  * Contains the ParseElement implementation for all non-attribute elements
@@ -91,8 +91,8 @@ data class ParseChildNodeAddToSlice(
     override val parsingCode: String
         get() {
             return "var model $childType\n" +
-                    indent(3) + "model.parse(&child, aggErr)\n" +
-                    indent(3) + "$modelName.$paramName = append($modelName.$paramName, model)"
+                    goIndent(3) + "model.parse(&child, aggErr)\n" +
+                    goIndent(3) + "$modelName.$paramName = append($modelName.$paramName, model)"
         }
 }
 
