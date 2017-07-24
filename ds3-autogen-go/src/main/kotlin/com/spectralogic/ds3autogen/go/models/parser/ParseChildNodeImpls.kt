@@ -78,6 +78,25 @@ data class ParseChildNodeAsSlice(
 }
 
 /**
+ * Creates the Go code for parsing a single child node as an enum and adding it to a
+ * slice. This is used when there are multiple child nodes of the same type with no
+ * encapsulating xml tag.
+ */
+data class ParseChildNodeAddEnumToSlice(
+        override val xmlTag: String,
+        val modelName: String,
+        val paramName: String,
+        val childType: String) : ParseElement {
+
+    override val parsingCode: String
+        get() {
+            return "var model $childType\n" +
+                    goIndent(3) + "parseEnum(child.Content, &model, aggErr)\n" +
+                    goIndent(3) + "$modelName.$paramName = append($modelName.$paramName, model)"
+        }
+}
+
+/**
  * Creates the Go code for parsing a single child node and adding it to a slice. This
  * is used when there are multiple child nodes of the same type with no encapsulating
  * xml tag.

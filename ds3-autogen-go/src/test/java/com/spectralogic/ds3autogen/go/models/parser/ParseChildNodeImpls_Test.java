@@ -20,7 +20,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ParserAttributeImpls_Test {
+public class ParseChildNodeImpls_Test {
 
     private static final String XML_TAG = "XmlTag";
     private static final String MODEL_NAME = "modelName";
@@ -72,6 +72,17 @@ public class ParserAttributeImpls_Test {
                 "            %s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAddToSlice(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
+        assertThat(parseElement.getXmlTag(), is(XML_TAG));
+        assertThat(parseElement.getParsingCode(), is(expected));
+    }
+
+    @Test
+    public void ParseChildNodeAddEnumToSliceTest() {
+        final String expected = String.format("var model %s\n" +
+                "            parseEnum(child.Content, &model, aggErr)\n" +
+                "            %s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+
+        final ParseElement parseElement = new ParseChildNodeAddEnumToSlice(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
         assertThat(parseElement.getParsingCode(), is(expected));
     }

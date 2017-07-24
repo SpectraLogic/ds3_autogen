@@ -46,6 +46,7 @@ public class GoModelFixturesUtil {
     public final static Ds3Element ENUM_PTR_ELEMENT = new Ds3Element("EnumPtrElement", "com.test.TestEnum", "", true);
     public final static Ds3Element LIST_WITH_ENCAPS_TAG_ELEMENT = new Ds3Element("ElementListWithEncpsTag", "array", "com.test.TestType", ImmutableList.of(CUSTOM_MARSHALED_NAME), false);
     public final static Ds3Element DS3_TYPE_ELEMENT = new Ds3Element("Ds3TypeElement", "com.test.TestDs3Type", "", false);
+    public final static Ds3Element LIST_ENUM_ELEMENT = new Ds3Element("ListEnumElement", "array", "com.test.TestEnum", false);
 
     public final static Ds3Element STR_ATTR = new Ds3Element("StringAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), false);
     public final static Ds3Element STR_PTR_ATTR = new Ds3Element("StringPtrAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), true);
