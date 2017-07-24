@@ -23,11 +23,11 @@ import static org.junit.Assert.assertThat;
 public class GoFormattingUtil_Test {
 
     @Test
-    public void indentTest() {
-        assertThat(GoFormattingUtilKt.indent(-1), is(""));
-        assertThat(GoFormattingUtilKt.indent(0), is(""));
-        assertThat(GoFormattingUtilKt.indent(1), is("    "));
-        assertThat(GoFormattingUtilKt.indent(2), is("        "));
-        assertThat(GoFormattingUtilKt.indent(3), is("            "));
+    public void goIndentTest() {
+        assertThat(GoFormattingUtilKt.goIndent(-1), is(""));
+        assertThat(GoFormattingUtilKt.goIndent(0), is(""));
+        assertThat(GoFormattingUtilKt.goIndent(1), is("    "));
+        assertThat(GoFormattingUtilKt.goIndent(2), is("        "));
+        assertThat(GoFormattingUtilKt.goIndent(3), is("            "));
     }
 }

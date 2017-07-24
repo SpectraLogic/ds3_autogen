@@ -325,7 +325,7 @@ public class GoCodeGenerator implements CodeGenerator {
      */
     private Template getTypeParserTemplate(final Ds3Type ds3Type, ImmutableSet<String> typesParsedAsSlices) throws IOException {
         if (typesParsedAsSlices.contains(ds3Type.getName())) {
-            return config.getTemplate("parser/type_parser_as_list.ftl");
+            return config.getTemplate("parser/type_parser_with_list.ftl");
         }
         return config.getTemplate("parser/base_type_parser.ftl");
     }

@@ -15,6 +15,8 @@ type ${name} struct {
     Headers *http.Header
 }
 
+${parseResponseMethod}
+
 func New${name}(webResponse networking.WebResponse) (*${name}, error) {
     expectedStatusCodes := []int { ${expectedCodes} }
 

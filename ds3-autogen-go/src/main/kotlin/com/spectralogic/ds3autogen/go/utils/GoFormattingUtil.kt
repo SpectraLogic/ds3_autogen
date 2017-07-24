@@ -25,7 +25,7 @@ private val GO_INDENT = "    "
 /**
  * Creates the specified indentation in accordance with the Go SDK formatting
  */
-fun indent(indent: Int): String {
+fun goIndent(indent: Int): String {
     var curIndent = ""
     repeat(indent) {
         curIndent += GO_INDENT
