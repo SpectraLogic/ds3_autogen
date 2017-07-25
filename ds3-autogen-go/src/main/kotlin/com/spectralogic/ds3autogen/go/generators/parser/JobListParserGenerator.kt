@@ -21,7 +21,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.parser.ParseChildNodeAddToSlice
 import com.spectralogic.ds3autogen.go.models.parser.ParseElement
 import com.spectralogic.ds3autogen.go.utils.toGoType
-import org.apache.commons.lang3.StringUtils
 
 /**
  * The Go generator for JobList parser. This is special-cased because there is
@@ -38,8 +37,8 @@ class JobListParserGenerator : BaseTypeParserGenerator() {
         println(ds3Element)
         if (ds3Element.name == "Jobs") {
             val xmlTag = getXmlTagName(ds3Element)
-            val modelName = StringUtils.uncapitalize(typeName)
-            val paramName = StringUtils.capitalize(ds3Element.name)
+            val modelName = typeName.decapitalize()
+            val paramName = ds3Element.name.capitalize()
             val childType = toGoType(ds3Element.componentType!!)
             return ParseChildNodeAddToSlice(xmlTag, modelName, paramName, childType)
         }

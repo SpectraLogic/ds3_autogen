@@ -28,7 +28,6 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
-import org.apache.commons.lang3.StringUtils
 import java.util.stream.Collectors
 
 open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseModelGeneratorUtil {
@@ -62,7 +61,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
             return ""
         }
 
-        val modelName = StringUtils.uncapitalize(name)
+        val modelName = name.decapitalize()
         val dereference = toDereferenceResponsePayload(payloadStruct)
         return "func ($modelName *$name) parse(webResponse networking.WebResponse) error {\n" +
                 goIndent(1) + "    return parseResponsePayload(webResponse, $dereference$modelName.$elementName)\n" +
