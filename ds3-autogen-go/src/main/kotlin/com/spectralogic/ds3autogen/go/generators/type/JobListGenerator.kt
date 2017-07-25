@@ -21,7 +21,6 @@ import com.spectralogic.ds3autogen.go.models.type.StructElement
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil
-import org.apache.commons.lang3.StringUtils
 
 /**
  * Generates the Go JobList type (called JobsApiBean within contract)
@@ -37,7 +36,7 @@ class JobListGenerator : BaseTypeGenerator() {
             throw IllegalArgumentException("JobsApiBean should only contain one ds3Elements")
         }
         val element = ds3Elements[0]
-        val xmlTag = StringUtils.capitalize(Ds3ElementUtil.getXmlTagName(element))
+        val xmlTag = Ds3ElementUtil.getXmlTagName(element).capitalize()
         val jobList = StructElement(element.name,
                 toGoType(element.type, element.componentType, element.nullable),
                 "xml:\"$xmlTag\"")

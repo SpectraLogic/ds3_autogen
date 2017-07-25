@@ -17,18 +17,19 @@ package com.spectralogic.ds3autogen.utils;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.*;
+import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.enums.Action;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static kotlin.text.StringsKt.capitalize;
+import static kotlin.text.StringsKt.decapitalize;
 
 public final class Helper {
 
@@ -52,11 +53,11 @@ public final class Helper {
     }
 
     public static String capFirst(final String str) {
-        return StringUtils.capitalize(str);
+        return capitalize(str);
     }
 
     public static String uncapFirst(final String str) {
-        return StringUtils.uncapitalize(str);
+        return decapitalize(str);
     }
 
     public static String camelToUnderscore(final String str) {

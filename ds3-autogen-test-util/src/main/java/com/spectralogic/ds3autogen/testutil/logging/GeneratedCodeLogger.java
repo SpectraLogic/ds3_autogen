@@ -17,7 +17,6 @@ package com.spectralogic.ds3autogen.testutil.logging;
 
 import org.slf4j.Logger;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Used to log generated code based on file type. This is used in unit tests
@@ -51,7 +50,7 @@ public class GeneratedCodeLogger {
      * Creates the message that will be logged, including the generated code
      */
     private String getLogMessage(final String code) {
-        if (isEmpty(code)) {
+        if (code == null || code.equals("")) {
             return "Generated code: <EMPTY>";
         }
         return "Generated code:\n" + code;

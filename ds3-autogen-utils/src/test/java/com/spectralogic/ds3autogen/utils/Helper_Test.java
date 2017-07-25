@@ -279,15 +279,39 @@ public class Helper_Test {
         assertFalse(result.get(0).getType().equals("void"));
         assertFalse(result.get(1).getType().equals("void"));
     }
+
     @Test
     public void testIsBasicType() {
         final String testString = "boolean";
         assertThat(Helper.isPrimitiveType(testString), is(true));
     }
+
     @Test
     public void testIsBasicTypeNegative() {
 
         final String testString = "com.spectralogic.s3.server.domain.UserApiBean";
         assertThat(Helper.isPrimitiveType(testString), is(false));
+    }
+
+    @Test
+    public void capFirstTest() {
+        assertThat(Helper.capFirst(""), is(""));
+        assertThat(Helper.capFirst("helloWorld"), is("HelloWorld"));
+        assertThat(Helper.capFirst("HelloWorld"), is("HelloWorld"));
+        assertThat(Helper.capFirst(".HelloWorld"), is(".HelloWorld"));
+        assertThat(Helper.capFirst(".helloWorld"), is(".helloWorld"));
+        assertThat(Helper.capFirst(" helloWorld"), is(" helloWorld"));
+        assertThat(Helper.capFirst(" HelloWorld"), is(" HelloWorld"));
+    }
+
+    @Test
+    public void uncapFirstTest() {
+        assertThat(Helper.uncapFirst(""), is(""));
+        assertThat(Helper.uncapFirst("helloWorld"), is("helloWorld"));
+        assertThat(Helper.uncapFirst("HelloWorld"), is("helloWorld"));
+        assertThat(Helper.uncapFirst(".HelloWorld"), is(".HelloWorld"));
+        assertThat(Helper.uncapFirst(".helloWorld"), is(".helloWorld"));
+        assertThat(Helper.uncapFirst(" helloWorld"), is(" helloWorld"));
+        assertThat(Helper.uncapFirst(" HelloWorld"), is(" HelloWorld"));
     }
 }

@@ -25,7 +25,6 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
-import org.apache.commons.lang3.StringUtils
 
 open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeParserGeneratorUtil {
 
@@ -72,12 +71,12 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
      */
     fun toStandardChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
         val xmlTag = getXmlTagName(ds3Element)
-        val modelName = StringUtils.uncapitalize(typeName)
-        val paramName = StringUtils.capitalize(ds3Element.name)
+        val modelName = typeName.decapitalize()
+        val paramName = ds3Element.name.capitalize()
 
         // Handle case if there is an encapsulating tag around a list of elements
         if (Ds3ElementUtil.hasWrapperAnnotations(ds3Element.ds3Annotations)) {
-            val encapsulatingTag = StringUtils.capitalize(Ds3ElementUtil.getEncapsulatingTagAnnotations(ds3Element.ds3Annotations))
+            val encapsulatingTag = Ds3ElementUtil.getEncapsulatingTagAnnotations(ds3Element.ds3Annotations).capitalize()
             val childType = NormalizingContractNamesUtil.removePath(ds3Element.componentType)
             return ParseChildNodeAsSlice(encapsulatingTag, xmlTag, modelName, paramName, childType)
         }
@@ -149,8 +148,8 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         val xmlName = getXmlTagName(ds3Element)
 
         val goType = toGoType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
-        val modelName = StringUtils.uncapitalize(typeName)
-        val paramName = StringUtils.capitalize(ds3Element.name)
+        val modelName = typeName.decapitalize()
+        val paramName = ds3Element.name.capitalize()
 
         when (goType) {
             "bool", "*bool", "int", "*int", "int64", "*int64", "float64", "*float64"  -> {
@@ -174,7 +173,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
      * Retrieves the xml tag name for the specified Ds3Element. The result is capitalized.
      */
     fun getXmlTagName(ds3Element: Ds3Element): String {
-        return StringUtils.capitalize(Ds3ElementUtil.getXmlTagName(ds3Element))
+        return Ds3ElementUtil.getXmlTagName(ds3Element).capitalize()
     }
 
     /**
@@ -183,7 +182,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
      * a pointer to a Go primitive type.
      */
     fun getPrimitiveTypeParserNamespace(type: String, nullable: Boolean): String {
-        val parserPrefix = StringUtils.capitalize(toGoType(type))
+        val parserPrefix = toGoType(type).capitalize()
         if (nullable) {
             return "Nullable$parserPrefix"
         }

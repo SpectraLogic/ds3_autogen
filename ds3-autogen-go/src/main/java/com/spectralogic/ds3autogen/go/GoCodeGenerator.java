@@ -62,7 +62,7 @@ import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.hasWrapperAnnotat
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import static kotlin.text.StringsKt.decapitalize;
 
 public class GoCodeGenerator implements CodeGenerator {
 
@@ -124,7 +124,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final Request request = generator.generate(ds3Request);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(request.getName())  + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(request.getName())  + ".go")));
 
         LOG.info("Getting Output Stream for file: {}", path.toString());
 
@@ -194,7 +194,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final Response response = generator.generate(ds3Request);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(response.getName()) + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(response.getName()) + ".go")));
 
         LOG.info("Getting Output Stream for file: {}", path.toString());
 
@@ -311,7 +311,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final TypeParser typeParser = generator.generate(ds3Type, typeMap);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(typeParser.getName()) + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(typeParser.getName()) + ".go")));
 
         LOG.info("Getting OutputStream for file: {}", path.toString());
 
@@ -364,7 +364,7 @@ public class GoCodeGenerator implements CodeGenerator {
         final Type type = generator.generate(ds3Type);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + uncapitalize(type.getName()) + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(type.getName()) + ".go")));
 
         LOG.info("Getting OutputStream for file: {}", path.toString());
 

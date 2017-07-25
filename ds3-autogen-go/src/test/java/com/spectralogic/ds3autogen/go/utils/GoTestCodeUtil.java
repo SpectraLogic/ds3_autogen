@@ -34,7 +34,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.uncapitalize;
+import static kotlin.text.StringsKt.decapitalize;
+
 import static org.mockito.Mockito.when;
 
 /**
@@ -63,8 +64,8 @@ public class GoTestCodeUtil {
     public GoTestCodeUtil(
             final FileUtils fileUtils,
             final String requestName) throws IOException {
-        this.requestOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(requestName) + ".go");
-        this.responseOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + NormalizingContractNamesUtil.toResponseName(uncapitalize(requestName)) + ".go");
+        this.requestOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + decapitalize(requestName) + ".go");
+        this.responseOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + NormalizingContractNamesUtil.toResponseName(decapitalize(requestName)) + ".go");
         this.clientOutputStreams = setupClientStreams(fileUtils);
     }
 
@@ -76,8 +77,8 @@ public class GoTestCodeUtil {
             final String requestName,
             final String responseType) throws IOException {
         this(fileUtils, requestName);
-        this.typeOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(responseType) + ".go");
-        this.typeParserOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + uncapitalize(responseType) + "Parser.go");
+        this.typeOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + decapitalize(responseType) + ".go");
+        this.typeParserOutputStream = setupOutputStream(fileUtils, COMMAND_PATH + decapitalize(responseType) + "Parser.go");
     }
 
     /**
