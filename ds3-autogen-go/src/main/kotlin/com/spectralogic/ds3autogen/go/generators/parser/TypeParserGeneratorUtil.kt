@@ -15,11 +15,32 @@
 
 package com.spectralogic.ds3autogen.go.generators.parser
 
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
+import com.spectralogic.ds3autogen.go.models.parser.ParseElement
+
 /**
  * Interface for utility functions used to generate Go model parsers. This
  * defines the methods that are overridden between the {@link BaseResponseParserGenerator}
  * and other implementations of response parsers during special casing.
  */
 interface TypeParserGeneratorUtil {
-    //todo implement as needed during special casing
+
+    /**
+     * Converts all non-attribute elements within a Ds3Element list into ParsingElements, which
+     * contain the Go code for parsing the Ds3Elements as child nodes.
+     */
+    fun toChildNodeList(
+            ds3Elements: ImmutableList<Ds3Element>?,
+            typeName: String,
+            typeMap: ImmutableMap<String, Ds3Type>): ImmutableList<ParseElement>
+
+    /**
+     * Converts a Ds3Element into a ParsingElements. This is overriden to special-case
+     * individual Ds3Element parsing within a Ds3Type. Non-special-cased Ds3Elements
+     * are passed onto {@link BaseTypeParserGenerator#toStandardChildNode}
+     */
+    fun toChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement
 }

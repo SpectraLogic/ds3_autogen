@@ -209,7 +209,7 @@ public class BaseTypeParserGenerator_Test {
 
         assertThat(input.size(), is(expected.size()));
         for (int i = 0; i < expected.size(); i++) {
-            assertThat(generator.toChildNode(input.get(i), modelName, typeMape), is(expected.get(i)));
+            assertThat(generator.toStandardChildNode(input.get(i), modelName, typeMape), is(expected.get(i)));
         }
     }
 

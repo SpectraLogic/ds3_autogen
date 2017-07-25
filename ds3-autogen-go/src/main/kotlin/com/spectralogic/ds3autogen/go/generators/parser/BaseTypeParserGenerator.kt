@@ -42,7 +42,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
      * Converts all non-attribute elements within a Ds3Element list into ParsingElements, which
      * contain the Go code for parsing the Ds3Elements as child nodes.
      */
-    fun toChildNodeList(
+    override fun toChildNodeList(
             ds3Elements: ImmutableList<Ds3Element>?,
             typeName: String,
             typeMap: ImmutableMap<String, Ds3Type>): ImmutableList<ParseElement> {
@@ -57,11 +57,20 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
                 .collect(GuavaCollectors.immutableList())
     }
 
+
+    /**
+     * Converts a Ds3Element into a ParsingElements.There are no special-cased Ds3Elements within
+     * the BaseTypeParserGenerator.
+     */
+    override fun toChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
+        return toStandardChildNode(ds3Element, typeName, typeMap)
+    }
+
     /**
      * Converts a Ds3Element into a ParsingElement, which contains the Go code for parsing the
      * specified Ds3Element as a child node. This assumes that the specified Ds3Element is not an attribute.
      */
-    fun toChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
+    fun toStandardChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
         val xmlTag = getXmlTagName(ds3Element)
         val modelName = StringUtils.uncapitalize(typeName)
         val paramName = StringUtils.capitalize(ds3Element.name)

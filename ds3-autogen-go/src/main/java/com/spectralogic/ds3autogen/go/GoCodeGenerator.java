@@ -29,6 +29,7 @@ import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.ClientModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.parser.BaseTypeParserGenerator;
+import com.spectralogic.ds3autogen.go.generators.parser.JobListParserGenerator;
 import com.spectralogic.ds3autogen.go.generators.parser.TypeParserModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
@@ -335,7 +336,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * specified {@link Ds3Type}
      */
     private static TypeParserModelGenerator<?> getTypeParserGenerator(final Ds3Type ds3Type) {
-        //TODO special case as necessary
+        if (isJobsApiBean(ds3Type)) {
+            return new JobListParserGenerator();
+        }
         return new BaseTypeParserGenerator();
     }
 

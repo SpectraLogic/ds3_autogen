@@ -28,6 +28,7 @@ import java.io.IOException;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -212,7 +213,12 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
         assertTrue(hasContent(typeParserCode));
 
-        //TODO uncomment once parser is special cased
-        //assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, job)"));
+        assertFalse(typeParserCode.contains("case \"Jobs\":"));
+        assertFalse(typeParserCode.contains("jobList.Jobs = parseJobSlice(\"Job\", child.Children, aggErr)"));
+
+        assertTrue(typeParserCode.contains("case \"Job\":"));
+        assertTrue(typeParserCode.contains("var model Job"));
+        assertTrue(typeParserCode.contains("model.parse(&child, aggErr)"));
+        assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, model)"));
     }
 }
