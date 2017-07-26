@@ -19,5 +19,4 @@ package com.spectralogic.ds3autogen.go.models.type
  * Used to generate
  */
 data class StructElement(val name: String,
-                         val type: String,
-                         val xmlNotation: String)
+                         val type: String)

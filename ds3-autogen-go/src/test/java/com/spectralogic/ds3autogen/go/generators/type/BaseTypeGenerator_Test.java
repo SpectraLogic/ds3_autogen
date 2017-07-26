@@ -90,56 +90,6 @@ public class BaseTypeGenerator_Test {
     }
 
     @Test
-    public void toXmlNotation_WithWrapper_Test() {
-        final String result = generator.toXmlNotation(elementWithWrapper);
-        assertThat(result, is("xml:\"OuterTag>InnerTag\""));
-    }
-
-    @Test
-    public void toXmlNotation_Attribute_Test() {
-        final String result = generator.toXmlNotation(elementAsAttribute);
-        assertThat(result, is("xml:\"ElementAsAttribute,attr\""));
-    }
-
-    @Test
-    public void toXmlNotation_Test() {
-        final String result = generator.toXmlNotation(simpleElement);
-        assertThat(result, is("xml:\"SimpleElement\""));
-    }
-
-    @Test
-    public void toXmlNotation_LowerCasedName_Test() {
-        final Ds3Element lowerCasedElement = new Ds3Element(
-                "lowerCasedElement",
-                "Type",
-                "",
-                ImmutableList.of(),
-                false
-        );
-
-        final String result = generator.toXmlNotation(lowerCasedElement);
-        assertThat(result, is("xml:\"LowerCasedElement\""));
-    }
-
-    @Test
-    public void toXmlNotation_LowerCasedAnnotations_Test() {
-        final Ds3Element lowerCasedElement = new Ds3Element(
-                "lowerCasedElement",
-                "Type",
-                "",
-                ImmutableList.of(new Ds3Annotation(
-                        "com.spectralogic.util.marshal.CustomMarshaledName",
-                        ImmutableList.of(
-                                new Ds3AnnotationElement("CollectionValue", "lowerCasedOuterTag", "java.lang.String"),
-                                new Ds3AnnotationElement("Value", "lowerCasedInnerTag", "java.lang.String")))),
-                false
-        );
-
-        final String result = generator.toXmlNotation(lowerCasedElement);
-        assertThat(result, is("xml:\"LowerCasedOuterTag>LowerCasedInnerTag\""));
-    }
-
-    @Test
     public void toStructElementsList_NullList_Test() {
         final ImmutableList<StructElement> result = generator.toStructElementsList(null);
         assertThat(result.size(), is(0));
@@ -154,9 +104,9 @@ public class BaseTypeGenerator_Test {
     @Test
     public void toStructElementsList_FullList_Test() {
         final ImmutableList<StructElement> expectedElements = ImmutableList.of(
-                new StructElement("ElementWithWrapper", "Type", "xml:\"OuterTag>InnerTag\""),
-                new StructElement("ElementAsAttribute", "Type", "xml:\"ElementAsAttribute,attr\""),
-                new StructElement("SimpleElement", "Type", "xml:\"SimpleElement\"")
+                new StructElement("ElementWithWrapper", "Type"),
+                new StructElement("ElementAsAttribute", "Type"),
+                new StructElement("SimpleElement", "Type")
         );
 
         final ImmutableList<Ds3Element> elements = ImmutableList.of(
