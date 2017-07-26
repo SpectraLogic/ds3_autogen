@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTypeTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
     private final static String requestName = "PlaceHolderRequest";
 
@@ -90,11 +90,17 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
         assertTrue(hasContent(typeCode));
 
-        assertTrue(typeCode.contains("CancelOccurred bool `xml:\"CancelOccurred\"`"));
-        assertTrue(typeCode.contains("JobId string `xml:\"JobId\"`"));
-        assertTrue(typeCode.contains("NotificationGenerationDate string `xml:\"NotificationGenerationDate\"`"));
-        assertTrue(typeCode.contains("ObjectsNotPersisted []BulkObject `xml:\"ObjectsNotPersisted>Object\"`"));
-        assertTrue(typeCode.contains("ListedElements []TestType `xml:\"ListedElements\"`"));
+        assertTrue(typeCode.contains("CancelOccurred bool"));
+        assertTrue(typeCode.contains("JobId string"));
+        assertTrue(typeCode.contains("NotificationGenerationDate string"));
+        assertTrue(typeCode.contains("ObjectsNotPersisted []BulkObject"));
+        assertTrue(typeCode.contains("ListedElements []TestType"));
+
+        assertFalse(typeCode.contains("`xml:\"CancelOccurred\"`"));
+        assertFalse(typeCode.contains("`xml:\"JobId\"`"));
+        assertFalse(typeCode.contains("`xml:\"NotificationGenerationDate\"`"));
+        assertFalse(typeCode.contains("`xml:\"ObjectsNotPersisted>Object\"`"));
+        assertFalse(typeCode.contains("`xml:\"ListedElements\"`"));
 
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
@@ -121,23 +127,42 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
         assertTrue(hasContent(typeCode));
 
-        assertTrue(typeCode.contains("Aggregating bool `xml:\"Aggregating,attr\"`"));
-        assertTrue(typeCode.contains("BucketName *string `xml:\"BucketName,attr\"`"));
-        assertTrue(typeCode.contains("CachedSizeInBytes int64 `xml:\"CachedSizeInBytes,attr\"`"));
-        assertTrue(typeCode.contains("ChunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee `xml:\"ChunkClientProcessingOrderGuarantee,attr\"`"));
-        assertTrue(typeCode.contains("CompletedSizeInBytes int64 `xml:\"CompletedSizeInBytes,attr\"`"));
-        assertTrue(typeCode.contains("EntirelyInCache bool `xml:\"EntirelyInCache,attr\"`"));
-        assertTrue(typeCode.contains("JobId string `xml:\"JobId,attr\"`"));
-        assertTrue(typeCode.contains("Naked bool `xml:\"Naked,attr\"`"));
-        assertTrue(typeCode.contains("Name *string `xml:\"Name,attr\"`"));
-        assertTrue(typeCode.contains("Nodes []JobNode `xml:\"Nodes>Node\"`"));
-        assertTrue(typeCode.contains("OriginalSizeInBytes int64 `xml:\"OriginalSizeInBytes,attr\"`"));
-        assertTrue(typeCode.contains("Priority Priority `xml:\"Priority,attr\"`"));
-        assertTrue(typeCode.contains("RequestType JobRequestType `xml:\"RequestType,attr\"`"));
-        assertTrue(typeCode.contains("StartDate string `xml:\"StartDate,attr\"`"));
-        assertTrue(typeCode.contains("Status JobStatus `xml:\"Status,attr\"`"));
-        assertTrue(typeCode.contains("UserId string `xml:\"UserId,attr\"`"));
-        assertTrue(typeCode.contains("UserName *string `xml:\"UserName,attr\"`"));
+        assertTrue(typeCode.contains("Aggregating bool"));
+        assertTrue(typeCode.contains("BucketName *string"));
+        assertTrue(typeCode.contains("CachedSizeInBytes int64"));
+        assertTrue(typeCode.contains("ChunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee"));
+        assertTrue(typeCode.contains("CompletedSizeInBytes int64"));
+        assertTrue(typeCode.contains("EntirelyInCache bool"));
+        assertTrue(typeCode.contains("JobId string"));
+        assertTrue(typeCode.contains("Naked bool"));
+        assertTrue(typeCode.contains("Name *string"));
+        assertTrue(typeCode.contains("Nodes []JobNode"));
+        assertTrue(typeCode.contains("OriginalSizeInBytes int64"));
+        assertTrue(typeCode.contains("Priority Priority"));
+        assertTrue(typeCode.contains("RequestType JobRequestType"));
+        assertTrue(typeCode.contains("StartDate string"));
+        assertTrue(typeCode.contains("Status JobStatus"));
+        assertTrue(typeCode.contains("UserId string"));
+        assertTrue(typeCode.contains("UserName *string"));
+
+        assertFalse(typeCode.contains("`xml:\"Aggregating,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"BucketName,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"CachedSizeInBytes,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"ChunkClientProcessingOrderGuarantee,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"CompletedSizeInBytes,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"EntirelyInCache,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"JobId,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Naked,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Name,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Nodes>Node\"`"));
+        assertFalse(typeCode.contains("`xml:\"OriginalSizeInBytes,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Priority,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"RequestType,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"StartDate,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Status,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"UserId,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"UserName,attr\"`"));
+
 
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
@@ -177,10 +202,15 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
         assertTrue(hasContent(typeCode));
 
-        assertTrue(typeCode.contains("EndPoint *string `xml:\"EndPoint,attr\"`"));
-        assertTrue(typeCode.contains("HttpPort *int `xml:\"HttpPort,attr\"`"));
-        assertTrue(typeCode.contains("HttpsPort *int `xml:\"HttpsPort,attr\"`"));
-        assertTrue(typeCode.contains("Id string `xml:\"Id,attr\"`"));
+        assertTrue(typeCode.contains("EndPoint *string"));
+        assertTrue(typeCode.contains("HttpPort *int"));
+        assertTrue(typeCode.contains("HttpsPort *int"));
+        assertTrue(typeCode.contains("Id string"));
+
+        assertFalse(typeCode.contains("`xml:\"EndPoint,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"HttpPort,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"HttpsPort,attr\"`"));
+        assertFalse(typeCode.contains("`xml:\"Id,attr\"`"));
 
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();
@@ -206,7 +236,9 @@ public class GoFunctionalTypeTests {
         CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
         assertTrue(hasContent(typeCode));
 
-        assertTrue(typeCode.contains("Jobs []Job `xml:\"Job\"`"));
+        assertTrue(typeCode.contains("Jobs []Job"));
+
+        assertFalse(typeCode.contains("`xml:\"Job\"`"));
 
         // Verify type parser file was generated
         final String typeParserCode = codeGenerator.getTypeParserCode();

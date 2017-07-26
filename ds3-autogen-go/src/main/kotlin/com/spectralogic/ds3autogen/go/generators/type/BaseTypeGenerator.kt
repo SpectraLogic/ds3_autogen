@@ -24,7 +24,6 @@ import com.spectralogic.ds3autogen.go.models.type.StructElement
 import com.spectralogic.ds3autogen.go.models.type.Type
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
-import com.spectralogic.ds3autogen.utils.Ds3ElementUtil.*
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 
@@ -55,25 +54,9 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
             return ImmutableList.of()
         }
         return ds3Elements!!.stream()
-                .map { element -> StructElement(element.name,
-                                                toGoType(element.type, element.componentType, element.nullable),
-                                                toXmlNotation(element)) }
+                .map { (name, type, componentType, _, nullable) ->
+                    StructElement(name, toGoType(type, componentType, nullable)) }
                 .collect(GuavaCollectors.immutableList())
-    }
-
-    /**
-     * Creates the xml notation for parsing the GO element within the struct
-     */
-    fun toXmlNotation(ds3Element: Ds3Element): String {
-        val xmlTag = getXmlTagName(ds3Element).capitalize()
-        if (hasWrapperAnnotations(ds3Element.ds3Annotations)) {
-            val encapsulatingTag = getEncapsulatingTagAnnotations(ds3Element.ds3Annotations).capitalize()
-            return "xml:\"$encapsulatingTag>$xmlTag\""
-        }
-        if (isAttribute(ds3Element.ds3Annotations)) {
-            return "xml:\"$xmlTag,attr\""
-        }
-        return "xml:\"$xmlTag\""
     }
 
     /**

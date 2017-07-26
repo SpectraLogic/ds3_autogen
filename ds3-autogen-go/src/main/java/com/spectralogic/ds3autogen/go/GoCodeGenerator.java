@@ -37,7 +37,6 @@ import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGener
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.ResponseModelGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.BaseTypeGenerator;
-import com.spectralogic.ds3autogen.go.generators.type.JobListGenerator;
 import com.spectralogic.ds3autogen.go.generators.type.TypeModelGenerator;
 import com.spectralogic.ds3autogen.go.models.client.Client;
 import com.spectralogic.ds3autogen.go.models.parser.TypeParser;
@@ -360,7 +359,7 @@ public class GoCodeGenerator implements CodeGenerator {
      */
     private void generateType(final Ds3Type ds3Type) throws IOException, TemplateException {
         final Template tmpl = getTypeTemplate(ds3Type);
-        final TypeModelGenerator<?> generator = getTypeGenerator(ds3Type);
+        final TypeModelGenerator<?> generator = getTypeGenerator();
         final Type type = generator.generate(ds3Type);
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
@@ -385,13 +384,9 @@ public class GoCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Retrieves the generator used to create the Go response model represented by the
-     * specified {@link Ds3Type}
+     * Retrieves the generator used to create the Go response model
      */
-    private static TypeModelGenerator<?> getTypeGenerator(final Ds3Type ds3Type) {
-        if (isJobsApiBean(ds3Type)) {
-            return new JobListGenerator();
-        }
+    private static TypeModelGenerator<?> getTypeGenerator() {
         return new BaseTypeGenerator();
     }
 }
