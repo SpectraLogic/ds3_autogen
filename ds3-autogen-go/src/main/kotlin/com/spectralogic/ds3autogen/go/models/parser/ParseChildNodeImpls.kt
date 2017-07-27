@@ -138,3 +138,17 @@ data class ParseChildNodeAsNullableEnum(
     override val parsingCode: String
         get() { return "parseNullableEnum(child.Content, $modelName.$paramName, aggErr)" }
 }
+
+data class ParseChildNodeAsCommonPrefix(
+        val modelName: String,
+        val paramName: String) : ParseElement {
+
+    override val xmlTag: String = "CommonPrefixes"
+
+    override val parsingCode: String
+        get() {
+            return "var prefixes []string\n" +
+                    goIndent(3) + "prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)\n" +
+                    goIndent(3) +"$modelName.$paramName = append($modelName.$paramName, prefixes...)"
+        }
+}
