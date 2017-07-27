@@ -36,6 +36,16 @@ public class GoModelFixturesUtil {
                             "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
                     new Ds3AnnotationElement("Value", "CustomMarshaledName", "java.lang.String")));
 
+    private final static Ds3Annotation COMMON_PREFIX_ANNOTATION = new Ds3Annotation(
+            "com.spectralogic.util.marshal.CustomMarshaledName",
+            ImmutableList.of(
+                    new Ds3AnnotationElement("CollectionValue", "CommonPrefixes", "java.lang.String"),
+                    new Ds3AnnotationElement(
+                            "CollectionValueRenderingMode",
+                            "BLOCK_FOR_EVERY_ELEMENT",
+                            "com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"),
+                    new Ds3AnnotationElement("Value", "Prefix", "java.lang.String")));
+
     private final static Ds3Annotation ATTR_ANNOTATION = new Ds3Annotation("com.spectralogic.util.marshal.MarshalXmlAsAttribute", null);
 
     public final static Ds3Element STR_ELEMENT = new Ds3Element("StringElement", "java.lang.String", "", false);
@@ -47,6 +57,7 @@ public class GoModelFixturesUtil {
     public final static Ds3Element LIST_WITH_ENCAPS_TAG_ELEMENT = new Ds3Element("ElementListWithEncpsTag", "array", "com.test.TestType", ImmutableList.of(CUSTOM_MARSHALED_NAME), false);
     public final static Ds3Element DS3_TYPE_ELEMENT = new Ds3Element("Ds3TypeElement", "com.test.TestDs3Type", "", false);
     public final static Ds3Element LIST_ENUM_ELEMENT = new Ds3Element("ListEnumElement", "array", "com.test.TestEnum", false);
+    public final static Ds3Element COMMON_PREFIX_ELEMENT = new Ds3Element("CommonPrefixes", "array", "java.lang.String", ImmutableList.of(COMMON_PREFIX_ANNOTATION), false);
 
     public final static Ds3Element STR_ATTR = new Ds3Element("StringAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), false);
     public final static Ds3Element STR_PTR_ATTR = new Ds3Element("StringPtrAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), true);
