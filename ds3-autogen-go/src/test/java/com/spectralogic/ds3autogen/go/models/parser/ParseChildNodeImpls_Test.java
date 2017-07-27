@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ParseChildNodeImpls_Test {
 
@@ -102,6 +103,17 @@ public class ParseChildNodeImpls_Test {
 
         final ParseElement parseElement = new ParseChildNodeAsNullableEnum(XML_TAG, MODEL_NAME, PARAM_NAME);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
+        assertThat(parseElement.getParsingCode(), is(expected));
+    }
+
+    @Test
+    public void ParseChildNodeAsCommonPrefixTest() {
+        final String expected = String.format("var prefixes []string\n" +
+                "            prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)\n" +
+                "            %s.%s = append(%s.%s, prefixes...)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+
+        final ParseElement parseElement = new ParseChildNodeAsCommonPrefix(MODEL_NAME, PARAM_NAME);
+        assertThat(parseElement.getXmlTag(), is("CommonPrefixes"));
         assertThat(parseElement.getParsingCode(), is(expected));
     }
 }

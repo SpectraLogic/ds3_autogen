@@ -78,6 +78,12 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         if (Ds3ElementUtil.hasWrapperAnnotations(ds3Element.ds3Annotations)) {
             val encapsulatingTag = Ds3ElementUtil.getEncapsulatingTagAnnotations(ds3Element.ds3Annotations).capitalize()
             val childType = NormalizingContractNamesUtil.removePath(ds3Element.componentType)
+
+            // Handle if the slice is common prefixes
+            if (encapsulatingTag == "CommonPrefixes") {
+                return ParseChildNodeAsCommonPrefix(modelName, paramName)
+
+            }
             return ParseChildNodeAsSlice(encapsulatingTag, xmlTag, modelName, paramName, childType)
         }
 

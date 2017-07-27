@@ -253,4 +253,49 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("model.parse(&child, aggErr)"));
         assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, model)"));
     }
+
+    @Test
+    public void listBucketResultTest() throws IOException, TemplateModelException {
+        final String typeName = "ListBucketResult";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/listBucketResult.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        assertTrue(typeCode.contains("CommonPrefixes []string"));
+        assertTrue(typeCode.contains("CreationDate *string"));
+        assertTrue(typeCode.contains("Delimiter *string"));
+        assertTrue(typeCode.contains("Marker *string"));
+        assertTrue(typeCode.contains("MaxKeys int"));
+        assertTrue(typeCode.contains("Name *string"));
+        assertTrue(typeCode.contains("NextMarker *string"));
+        assertTrue(typeCode.contains("Objects []Contents"));
+        assertTrue(typeCode.contains("Prefix *string"));
+        assertTrue(typeCode.contains("Truncated bool"));
+
+        // Verify type parser file was generated
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(hasContent(typeParserCode));
+
+        assertTrue(typeParserCode.contains("case \"CommonPrefixes\":"));
+        assertTrue(typeParserCode.contains("var prefixes []string"));
+        assertTrue(typeParserCode.contains("prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)"));
+        assertTrue(typeParserCode.contains("listBucketResult.CommonPrefixes = append(listBucketResult.CommonPrefixes, prefixes...)"));
+
+        assertTrue(typeParserCode.contains("listBucketResult.CreationDate = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Delimiter = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Marker = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.MaxKeys = parseInt(child.Content, aggErr)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Name = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.NextMarker = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Objects = append(listBucketResult.Objects, model)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Prefix = parseNullableString(child.Content)"));
+        assertTrue(typeParserCode.contains("listBucketResult.Truncated = parseBool(child.Content, aggErr)"));
+    }
 }
