@@ -31,6 +31,7 @@ For specific instructions on how to generate and integrate each languages SDK fi
 * [NET module](ds3-autogen-net/README.md)
 * [Python module](ds3-autogen-python/README.md)
 * [Python3 module](ds3-autogen-python3/README.md)
+* [Go module](ds3-autogen-go/README.md)
 
 ## Arguments
 
@@ -49,5 +50,5 @@ The command line has 3 required arguments and 3 optional arguments.
 ## Tests
 
 To run the Autogen tests for a given language module, use the following command with `language` substituted for the
-desired language module (c, java, net, python, or python3):
+desired language module (c, java, net, python, python3 or go):
   * `./gradlew clean ds3-autogen-language:test`
