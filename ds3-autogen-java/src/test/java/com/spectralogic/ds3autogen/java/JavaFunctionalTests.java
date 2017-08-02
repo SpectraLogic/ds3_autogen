@@ -2564,6 +2564,54 @@ public class JavaFunctionalTests {
     }
 
     @Test
+    public void clearSuspectBlobAzureTargetsSpectraS3Request_Test() throws IOException, TemplateModelException {
+        final String requestName = "ClearSuspectBlobAzureTargetsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/clearSuspectBlobAzureTargetsSpectraS3Request.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
+
+        assertTrue(extendsClass(requestName, "AbstractIdsPayloadRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractIdsPayloadRequest", requestGeneratedCode));
+        assertTrue(hasImport("java.util.List", requestGeneratedCode));
+
+        assertTrue(hasCopyright(requestGeneratedCode));
+        assertTrue(isReqParamOfType("ids", "List<String>", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("force", "boolean", requestName, requestGeneratedCode, false));
+
+        //Test the generated response
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
+        assertFalse(responseGeneratedCode.isEmpty());
+
+        //Test the Ds3Client
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        assertTrue(ds3ClientGeneratedCode.contains("@Action(\"BULK_DELETE\")"));
+        assertTrue(ds3ClientGeneratedCode.contains("@Resource(\"SUSPECT_BLOB_AZURE_TARGET\")"));
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+
+        //Test the response parser
+        final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
+        CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
+        assertFalse(responseParserCode.isEmpty());
+    }
+
+    @Test
     public void wholeXmlDoc() throws IOException, TemplateModelException {
         final FileUtils fileUtils = new TestFileUtilsImpl();
         final Ds3SpecParser parser = new Ds3SpecParserImpl();

@@ -507,7 +507,10 @@ public class JavaCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the associated request generator for the specified Ds3Request
      */
-    protected static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+    static RequestModelGenerator<?> getRequestGenerator(final Ds3Request ds3Request) {
+        if (hasIdsRequestPayload(ds3Request)) {
+            return new IdsRequestPayloadGenerator();
+        }
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
@@ -551,25 +554,38 @@ public class JavaCodeGenerator implements CodeGenerator {
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
         if (isBulkRequest(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
-        } else if(hasStringRequestPayload(ds3Request)) {
+        }
+        if (hasIdsRequestPayload(ds3Request)) {
+            return config.getTemplate("request/ids_request_payload_template.ftl");
+        }
+        if (hasStringRequestPayload(ds3Request)) {
             return config.getTemplate("request/request_with_string_payload_template.ftl");
-        } else if (hasListObjectsRequestPayload(ds3Request)) {
+        }
+        if (hasListObjectsRequestPayload(ds3Request)) {
             return config.getTemplate("request/objects_request_payload_request_template.ftl");
-        } else if (isMultiFileDeleteRequest(ds3Request)) {
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/multi_file_delete_request_template.ftl");
-        } else if (isGetObjectRequest(ds3Request)) {
+        }
+        if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_template.ftl");
-        } else if (isCreateObjectRequest(ds3Request)) {
+        }
+        if (isCreateObjectRequest(ds3Request)) {
             return config.getTemplate("request/create_object_template.ftl");
-        } else if (isDeleteNotificationRequest(ds3Request)) {
+        }
+        if (isDeleteNotificationRequest(ds3Request)) {
             return config.getTemplate("request/delete_notification_request_template.ftl");
-        } else if (isCreateNotificationRequest(ds3Request)) {
+        }
+        if (isCreateNotificationRequest(ds3Request)) {
             return config.getTemplate("request/create_notification_request_template.ftl");
-        } else if (isGetNotificationRequest(ds3Request) && ds3Request.getIncludeInPath()) {
+        }
+        if (isGetNotificationRequest(ds3Request) && ds3Request.getIncludeInPath()) {
             return config.getTemplate("request/get_notification_request_template.ftl");
-        } else if (isGetJobRequest(ds3Request)) {
+        }
+        if (isGetJobRequest(ds3Request)) {
             return config.getTemplate("request/get_job_request_template.ftl");
-        } else if (isCompleteMultiPartUploadRequest(ds3Request)) {
+        }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
             return config.getTemplate("request/complete_multipart_upload_template.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
