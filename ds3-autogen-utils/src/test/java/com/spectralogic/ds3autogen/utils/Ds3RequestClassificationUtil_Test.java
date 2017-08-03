@@ -574,4 +574,293 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectsWithFullDetails(getRequestSpectraS3GetObject()));
         assertFalse(isGetObjectsWithFullDetails(getObjectsDetailsRequest()));
     }
+
+    @Test
+    public void isClearSuspectBlobAzureTargetsRequest_Test() {
+        assertTrue(isClearSuspectBlobAzureTargetsRequest(clearSuspectBlobAzureTargetsRequest()));
+
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestGetJob()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestDeleteNotification()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestCreateNotification()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestGetNotification()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestBulkGet()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestMultiFileDelete()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestCreateObject()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isClearSuspectBlobPoolsRequest_Test() {
+        assertTrue(isClearSuspectBlobPoolsRequest(clearSuspectBlobPoolsRequest()));
+
+        assertFalse(isClearSuspectBlobPoolsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isClearSuspectBlobPoolsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestGetJob()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestDeleteNotification()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestCreateNotification()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestGetNotification()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestBulkGet()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestMultiFileDelete()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestCreateObject()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isClearSuspectBlobS3TargetsRequest_Test() {
+        assertTrue(isClearSuspectBlobS3TargetsRequest(clearSuspectBlobS3TargetsRequest()));
+
+        assertFalse(isClearSuspectBlobS3TargetsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestGetJob()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestDeleteNotification()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestCreateNotification()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestGetNotification()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestBulkGet()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestMultiFileDelete()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestCreateObject()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isClearSuspectBlobTapesRequest_Test() {
+        assertTrue(isClearSuspectBlobTapesRequest(clearSuspectBlobTapesRequest()));
+
+        assertFalse(isClearSuspectBlobTapesRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isClearSuspectBlobTapesRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestGetJob()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestDeleteNotification()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestCreateNotification()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestGetNotification()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestBulkGet()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestMultiFileDelete()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestCreateObject()));
+        assertFalse(isClearSuspectBlobTapesRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isClearSuspectBlobTapesRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isMarkSuspectBlobAzureTargetsAsDegradedRequest_Test() {
+        assertTrue(isMarkSuspectBlobAzureTargetsAsDegradedRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestGetJob()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestDeleteNotification()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestCreateNotification()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestGetNotification()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestBulkGet()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestMultiFileDelete()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestCreateObject()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isMarkSuspectBlobDs3TargetsAsDegradedRequest_Test() {
+        assertTrue(isMarkSuspectBlobDs3TargetsAsDegradedRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestGetJob()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestDeleteNotification()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestCreateNotification()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestGetNotification()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestBulkGet()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestMultiFileDelete()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestCreateObject()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isMarkSuspectBlobPoolsAsDegradedRequest_Test() {
+        assertTrue(isMarkSuspectBlobPoolsAsDegradedRequest(markSuspectBlobPoolsAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestGetJob()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestDeleteNotification()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestCreateNotification()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestGetNotification()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestBulkGet()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestMultiFileDelete()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestCreateObject()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isMarkSuspectBlobS3TargetsAsDegradedRequest_Test() {
+        assertTrue(isMarkSuspectBlobS3TargetsAsDegradedRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestGetJob()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestDeleteNotification()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestCreateNotification()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestGetNotification()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestBulkGet()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestMultiFileDelete()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestCreateObject()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void isMarkSuspectBlobTapesAsDegradedRequest_Test() {
+        assertTrue(isMarkSuspectBlobTapesAsDegradedRequest(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestGetJob()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestDeleteNotification()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestCreateNotification()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestGetNotification()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestVerifyPhysicalPlacement()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestBulkGet()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestMultiFileDelete()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestCreateObject()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getObjectsDetailsRequest()));
+    }
+
+    @Test
+    public void hasIdsRequestPayload_Test() {
+        assertTrue(hasIdsRequestPayload(clearSuspectBlobAzureTargetsRequest()));
+        assertTrue(hasIdsRequestPayload(clearSuspectBlobPoolsRequest()));
+        assertTrue(hasIdsRequestPayload(clearSuspectBlobS3TargetsRequest()));
+        assertTrue(hasIdsRequestPayload(clearSuspectBlobTapesRequest()));
+        assertTrue(hasIdsRequestPayload(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertTrue(hasIdsRequestPayload(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertTrue(hasIdsRequestPayload(markSuspectBlobPoolsAsDegradedRequest()));
+        assertTrue(hasIdsRequestPayload(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertTrue(hasIdsRequestPayload(markSuspectBlobTapesAsDegradedRequest()));
+
+        assertFalse(hasIdsRequestPayload(getObjectsWithFullDetailsRequest()));
+        assertFalse(hasIdsRequestPayload(getCompleteMultipartUploadRequest()));
+        assertFalse(hasIdsRequestPayload(getCreateMultiPartUploadPart()));
+        assertFalse(hasIdsRequestPayload(getRequestGetJob()));
+        assertFalse(hasIdsRequestPayload(getRequestAmazonS3GetObject()));
+        assertFalse(hasIdsRequestPayload(getRequestDeleteNotification()));
+        assertFalse(hasIdsRequestPayload(getRequestCreateNotification()));
+        assertFalse(hasIdsRequestPayload(getRequestGetNotification()));
+        assertFalse(hasIdsRequestPayload(getRequestVerifyPhysicalPlacement()));
+        assertFalse(hasIdsRequestPayload(getRequestBulkGet()));
+        assertFalse(hasIdsRequestPayload(getRequestMultiFileDelete()));
+        assertFalse(hasIdsRequestPayload(getRequestCreateObject()));
+        assertFalse(hasIdsRequestPayload(getRequestSpectraS3GetObject()));
+        assertFalse(hasIdsRequestPayload(getObjectsDetailsRequest()));
+    }
 }

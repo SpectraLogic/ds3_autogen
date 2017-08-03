@@ -20,9 +20,7 @@ import com.spectralogic.ds3autogen.java.generators.responsemodels.*;
 import com.spectralogic.ds3autogen.java.generators.responseparser.*;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseParserGenerator;
-import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getResponseGenerator;
-import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.getRequestGenerator;
+import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -54,6 +52,16 @@ public class JavaCodeGenerator_Test {
 
     @Test
     public void getRequestGenerator_Test() {
+        assertThat(getRequestGenerator(clearSuspectBlobAzureTargetsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobPoolsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobS3TargetsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobTapesRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobPoolsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(StringRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(BulkRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(BulkRequestGenerator.class));

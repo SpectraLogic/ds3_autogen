@@ -372,4 +372,138 @@ public final class Ds3RequestClassificationUtil {
                 && paramListContainsParam(request.getOptionalQueryParams(), "PageOffset", "int")
                 && paramListContainsParam(request.getOptionalQueryParams(), "PageStartMarker", "java.util.UUID");
     }
+
+    /**
+     * Determines if a Ds3Request has the payload: <Ids><id>id1</id><id>id2</id>...</Ids>
+     *
+     * @return true if request is one of the following:
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobAzureTargetsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobPoolsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobS3TargetsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobTapesRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobAzureTargetsAsDegradedRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobDs3TargetsAsDegradedRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobPoolsAsDegradedRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobS3TargetsAsDegradedRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobTapesAsDegradedRequestHandler
+     */
+    public static boolean hasIdsRequestPayload(final Ds3Request ds3Request) {
+        return isClearSuspectBlobAzureTargetsRequest(ds3Request)
+                || isClearSuspectBlobPoolsRequest(ds3Request)
+                || isClearSuspectBlobS3TargetsRequest(ds3Request)
+                || isClearSuspectBlobTapesRequest(ds3Request)
+                || isMarkSuspectBlobAzureTargetsAsDegradedRequest(ds3Request)
+                || isMarkSuspectBlobDs3TargetsAsDegradedRequest(ds3Request)
+                || isMarkSuspectBlobPoolsAsDegradedRequest(ds3Request)
+                || isMarkSuspectBlobS3TargetsAsDegradedRequest(ds3Request)
+                || isMarkSuspectBlobTapesAsDegradedRequest(ds3Request);
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command ClearSuspectBlobAzureTargetsRequestHandler
+     */
+    static boolean isClearSuspectBlobAzureTargetsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_DELETE
+                && ds3Request.getHttpVerb() == HttpVerb.DELETE
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_AZURE_TARGET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command ClearSuspectBlobPoolsRequestHandler
+     */
+    static boolean isClearSuspectBlobPoolsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_DELETE
+                && ds3Request.getHttpVerb() == HttpVerb.DELETE
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_POOL
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command ClearSuspectBlobS3TargetsRequestHandler
+     */
+    static boolean isClearSuspectBlobS3TargetsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_DELETE
+                && ds3Request.getHttpVerb() == HttpVerb.DELETE
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_S3_TARGET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command ClearSuspectBlobTapesRequestHandler
+     */
+    static boolean isClearSuspectBlobTapesRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_DELETE
+                && ds3Request.getHttpVerb() == HttpVerb.DELETE
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_TAPE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command MarkSuspectBlobAzureTargetsAsDegradedRequestHandler
+     */
+    static boolean isMarkSuspectBlobAzureTargetsAsDegradedRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_AZURE_TARGET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command MarkSuspectBlobDs3TargetsAsDegradedRequestHandler
+     */
+    static boolean isMarkSuspectBlobDs3TargetsAsDegradedRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_DS3_TARGET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command MarkSuspectBlobPoolsAsDegradedRequestHandler
+     */
+    static boolean isMarkSuspectBlobPoolsAsDegradedRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_POOL
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command MarkSuspectBlobS3TargetsAsDegradedRequestHandler
+     */
+    static boolean isMarkSuspectBlobS3TargetsAsDegradedRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_S3_TARGET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command MarkSuspectBlobTapesAsDegradedRequestHandler
+     */
+    static boolean isMarkSuspectBlobTapesAsDegradedRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.BULK_MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.SUSPECT_BLOB_TAPE
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
 }

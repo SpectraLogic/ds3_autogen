@@ -1,0 +1,35 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobAzureTargetsRequestHandler">
+                <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="SUSPECT_BLOB_AZURE_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Force" Type="void"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>204</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="null"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.F51C99474F629A2CFD5CDB6BC5CB7C6D</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

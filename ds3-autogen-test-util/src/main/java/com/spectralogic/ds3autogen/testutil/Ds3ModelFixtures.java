@@ -28,6 +28,8 @@ import com.spectralogic.ds3autogen.api.models.enums.*;
  */
 public class Ds3ModelFixtures {
 
+    private static final Ds3Param FORCE_PARAM = new Ds3Param("Force", "void", false);
+
     /**
      * Creates a populated list of Ds3ResponseTypes with the ability to set a variation to append
      * to type and component type names to ensure name uniqueness.
@@ -755,8 +757,7 @@ public class Ds3ModelFixtures {
                 null, // operation
                 true,// includeIdInPath
                 null, // ds3ResponseCodes
-                ImmutableList.of(
-                        new Ds3Param("Force", "void", false)), // optional query params
+                ImmutableList.of(FORCE_PARAM), // optional query params
                 ImmutableList.of()); // required query params
     }
 
@@ -930,6 +931,195 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("FullDetails", "void", false),
                         new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for ClearSuspectBlobAzureTargetsRequestHandler
+     */
+    public static Ds3Request clearSuspectBlobAzureTargetsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobAzureTargetsRequestHandler",
+                HttpVerb.DELETE,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_DELETE,
+                Resource.SUSPECT_BLOB_AZURE_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for ClearSuspectBlobPoolsRequestHandler
+     */
+    public static Ds3Request clearSuspectBlobPoolsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobPoolsRequestHandler",
+                HttpVerb.DELETE,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_DELETE,
+                Resource.SUSPECT_BLOB_POOL,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for ClearSuspectBlobS3TargetsRequestHandler
+     */
+    public static Ds3Request clearSuspectBlobS3TargetsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobS3TargetsRequestHandler",
+                HttpVerb.DELETE,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_DELETE,
+                Resource.SUSPECT_BLOB_S3_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for ClearSuspectBlobTapesRequestHandler
+     */
+    public static Ds3Request clearSuspectBlobTapesRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobTapesRequestHandler",
+                HttpVerb.DELETE,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_DELETE,
+                Resource.SUSPECT_BLOB_TAPE,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for MarkSuspectBlobAzureTargetsAsDegradedRequestHandler
+     */
+    public static Ds3Request markSuspectBlobAzureTargetsAsDegradedRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobAzureTargetsAsDegradedRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.SUSPECT_BLOB_AZURE_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for MarkSuspectBlobDs3TargetsAsDegradedRequestHandler
+     */
+    public static Ds3Request markSuspectBlobDs3TargetsAsDegradedRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobDs3TargetsAsDegradedRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.SUSPECT_BLOB_DS3_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for MarkSuspectBlobPoolsAsDegradedRequestHandler
+     */
+    public static Ds3Request markSuspectBlobPoolsAsDegradedRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobPoolsAsDegradedRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.SUSPECT_BLOB_POOL,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for MarkSuspectBlobS3TargetsAsDegradedRequestHandler
+     */
+    public static Ds3Request markSuspectBlobS3TargetsAsDegradedRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobS3TargetsAsDegradedRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.SUSPECT_BLOB_S3_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for MarkSuspectBlobTapesAsDegradedRequestHandler
+     */
+    public static Ds3Request markSuspectBlobTapesAsDegradedRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.MarkSuspectBlobTapesAsDegradedRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_MODIFY,
+                Resource.SUSPECT_BLOB_TAPE,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
         );
     }
 }
