@@ -150,6 +150,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
+        if (hasIdsRequestPayload(ds3Request)) {
+            return new IdsPayloadRequestGenerator();
+        }
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
@@ -178,7 +181,8 @@ public class GoCodeGenerator implements CodeGenerator {
                 || isEjectStorageDomainBlobsRequest(ds3Request)
                 || hasStringRequestPayload(ds3Request)
                 || isCompleteMultiPartUploadRequest(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)) {
+                || isMultiFileDeleteRequest(ds3Request)
+                || hasIdsRequestPayload(ds3Request)) {
             return config.getTemplate("request/request_with_stream.ftl");
         }
         return config.getTemplate("request/request_template.ftl");

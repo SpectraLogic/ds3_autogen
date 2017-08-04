@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -893,5 +893,53 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) PutObject(request *models.PutObjectRequest) (*models.PutObjectResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+    }
+
+    @Test
+    public void clearSuspectBlobAzureTargetsSpectraS3() throws IOException, TemplateModelException {
+        final String requestName = "ClearSuspectBlobAzureTargetsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/clearSuspectBlobAzureTargetsSpectraS3.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+
+        assertTrue(requestCode.contains("type ClearSuspectBlobAzureTargetsSpectraS3Request struct {"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+
+        assertTrue(requestCode.contains("func NewClearSuspectBlobAzureTargetsSpectraS3Request(ids []string) *ClearSuspectBlobAzureTargetsSpectraS3Request {"));
+        assertTrue(requestCode.contains("content: buildIdListPayload(ids),"));
+
+        assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) WithForce() *ClearSuspectBlobAzureTargetsSpectraS3Request {"));
+        assertTrue(requestCode.contains("clearSuspectBlobAzureTargetsSpectraS3Request.queryParams.Set(\"force\", \"\")"));
+
+        assertTrue(requestCode.contains("return networking.DELETE"));
+        assertTrue(requestCode.contains("return \"/_rest_/suspect_blob_azure_target\""));
+
+        assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("return clearSuspectBlobAzureTargetsSpectraS3Request.content"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        // Verify response payload type file was not generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(isEmpty(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
     }
 }

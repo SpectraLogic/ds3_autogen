@@ -66,6 +66,17 @@ public class GoCodeGenerator_Test {
         // Request with CompleteMultipartUpload request payload
         assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(PartsRequestPayloadGenerator.class));
 
+        // Requests with ids payload
+        assertThat(getRequestGenerator(clearSuspectBlobAzureTargetsRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobPoolsRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobS3TargetsRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(clearSuspectBlobTapesRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobPoolsAsDegradedRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+        assertThat(getRequestGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(IdsPayloadRequestGenerator.class));
+
         // Non-special cased requests
         assertThat(getRequestGenerator(getGetBlobPersistence()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(BaseRequestGenerator.class));
