@@ -1447,4 +1447,53 @@ public class NetCodeGenerator_Test {
         assertTrue(parserHasResponseCode(200, parserCode));
         assertTrue(parserHasPayload("S3ObjectList", "Data", parserCode));
     }
+
+    @Test
+    public void ClearSuspectBlobAzureTargetsSpectraS3() throws IOException, TemplateModelException {
+        final String requestName = "ClearSuspectBlobAzureTargetsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/");
+
+        codeGenerator.generateCode(fileUtils, "/input/clearSuspectBlobAzureTargetsRequest.xml");
+        final String requestCode = codeGenerator.getRequestCode();
+
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "AbstractIdsPayloadRequest", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Force", "bool?", requestCode));
+
+        assertTrue(requestCode.contains("public ClearSuspectBlobAzureTargetsSpectraS3Request(List<string> ids) : base(ids)"));
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("List<string>", "ids"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(isEmpty(responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(isEmpty(parserCode));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasVoidCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+    }
 }

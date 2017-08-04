@@ -507,6 +507,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/multi_file_delete_request.ftl");
         }
+        if (hasIdsRequestPayload(ds3Request)) {
+            return config.getTemplate("request/ids_request_payload.ftl");
+        }
         if (hasStringRequestPayload(ds3Request)) {
             return config.getTemplate("request/string_request_payload.ftl");
         }

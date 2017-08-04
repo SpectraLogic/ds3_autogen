@@ -17,7 +17,9 @@ files and folders should be removed:
 Within the folder `ds3-net-sdk/Ds3/`:
 
   * Within the `Ds3/Calls/` folder:
-    * Delete all files EXCEPT for `Ds3Request`
+    * Delete all files EXCEPT for the following: 
+      * Do not delete `Ds3Request.cs`
+      * Do not delete `AbstractIdsPayloadRequest.cs`
 
   * Within the `Ds3/ResponseParsers/` folder:
     * Delete all files EXCEPT for the following:
