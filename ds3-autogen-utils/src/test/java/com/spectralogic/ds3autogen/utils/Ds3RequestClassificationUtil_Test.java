@@ -863,4 +863,33 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasIdsRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasIdsRequestPayload(getObjectsDetailsRequest()));
     }
+
+    @Test
+    public void hasPutObjectsWithSizeRequestPayload_Test() {
+        assertTrue(hasPutObjectsWithSizeRequestPayload(getRequestBulkPut()));
+
+        assertFalse(hasPutObjectsWithSizeRequestPayload(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(clearSuspectBlobPoolsRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(clearSuspectBlobTapesRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getObjectsWithFullDetailsRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getCompleteMultipartUploadRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getCreateMultiPartUploadPart()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestGetJob()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestAmazonS3GetObject()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestDeleteNotification()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestCreateNotification()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestGetNotification()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestVerifyPhysicalPlacement()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestBulkGet()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestMultiFileDelete()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestCreateObject()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestSpectraS3GetObject()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getObjectsDetailsRequest()));
+    }
 }
