@@ -538,4 +538,29 @@ public final class Ds3RequestClassificationUtil {
     public static boolean hasGetObjectsWithLengthOffsetRequestPayload(final Ds3Request ds3Request) {
         return isBulkGetRequest(ds3Request);
     }
+
+    /**
+     * Determines if a Ds3Request has the request payload:
+     * <Objects><Object Name="o1" Length="1" /><Object Name="o2" Length="3" />...</Objects>
+     *
+     * @return true if request is one of the following:
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler
+     */
+    public static boolean hasObjectsWithLengthRequestPayload(final Ds3Request ds3Request) {
+        return isCreateVerifyJobRequest(ds3Request);
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command CreateVerifyJobRequest also known
+     * as VerifyBulkJobSpectraS3Request
+     */
+    static boolean isCreateVerifyJobRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.START_BULK_VERIFY
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
 }

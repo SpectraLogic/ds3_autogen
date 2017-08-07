@@ -1078,4 +1078,67 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
     }
+
+    @Test
+    public void verifyBulkJobSpectraS3Request() throws IOException, TemplateModelException {
+        final String requestName = "VerifyBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+
+        codeGenerator.generateCode(fileUtils, "/input/verifyBulkJob.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+        assertTrue(requestCode.contains("\"strconv\""));
+
+        assertTrue(requestCode.contains("bucketName string"));
+        assertTrue(requestCode.contains("aggregating bool"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("name *string"));
+        assertTrue(requestCode.contains("priority Priority"));
+
+        assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3Request(bucketName string, objects []Ds3VerifyObject) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_verify\")"));
+        assertTrue(requestCode.contains("bucketName: bucketName,"));
+        assertTrue(requestCode.contains("content: buildDs3VerifyObjectListStream(objects),"));
+
+        assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("return verifyBulkJobSpectraS3Request.content"));
+
+        assertTrue(requestCode.contains("return networking.PUT"));
+        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + verifyBulkJobSpectraS3Request.bucketName"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("\"ds3/networking\""));
+        assertTrue(responseCode.contains("\"net/http\""));
+
+        assertTrue(responseCode.contains("MasterObjectList MasterObjectList"));
+
+        assertTrue(responseCode.contains("func (verifyBulkJobSpectraS3Response *VerifyBulkJobSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &verifyBulkJobSpectraS3Response.MasterObjectList)"));
+
+        assertTrue(responseCode.contains("func NewVerifyBulkJobSpectraS3Response(webResponse networking.WebResponse) (*VerifyBulkJobSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("case 200:"));
+        assertTrue(responseCode.contains("var body VerifyBulkJobSpectraS3Response"));
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+    }
 }
