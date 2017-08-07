@@ -63,7 +63,40 @@ public class PythonFunctionalTests {
         final ImmutableList<String> optArgs = ImmutableList.of("delimiter", "marker", "max_keys", "prefix");
         final ImmutableList<String> voidArgs = ImmutableList.of("test_void_param");
 
-        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, "object_list", ds3Code);
+        hasRequestHandler(requestName, HttpVerb.GET, reqArgs, optArgs, voidArgs, ds3Code);
+        hasOperation(Operation.START_BULK_PUT, ds3Code);
+
+        //Test Client
+        hasClient(ImmutableList.of(requestName), ds3Code);
+
+        //Test static functions present
+        assertTrue(ds3Code.contains("def createClientFromEnv():"));
+    }
+
+    @Test
+    public void bulkPut() throws IOException, TemplateModelException {
+        final String requestName = "PutBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/requests/putBulkJob.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
+
+        final ImmutableList<String> reqArgs = ImmutableList.of("bucket_name");
+        final ImmutableList<String> optArgs = ImmutableList.of(
+                "aggregating",
+                "force",
+                "ignore_naming_conflicts",
+                "implicit_job_id_resolution",
+                "max_upload_size",
+                "minimize_spanning_across_media",
+                "name",
+                "priority",
+                "verify_after_write");
+
+        hasRequestHandler(requestName, HttpVerb.PUT, reqArgs, optArgs, ImmutableList.of(), "object_list", ds3Code);
         hasOperation(Operation.START_BULK_PUT, ds3Code);
 
         //Test Client

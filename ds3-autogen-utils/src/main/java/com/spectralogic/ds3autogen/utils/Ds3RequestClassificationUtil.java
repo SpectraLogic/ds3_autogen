@@ -117,11 +117,16 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
-     * Determines if the request is a Bulk Put request
+     * Determines if the request is a CreatePutJobRequestHandler also known as BulkPutJobSpectraS3Request
      */
     public static boolean isBulkPutRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null
+        return ds3Request.getClassification() == Classification.spectrads3
                 && ds3Request.getOperation() == Operation.START_BULK_PUT
+                && ds3Request.getAction() == Action.MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
                 && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "Replicate", "void");
     }
 
@@ -505,5 +510,16 @@ public final class Ds3RequestClassificationUtil {
                 && !ds3Request.getIncludeInPath()
                 && ds3Request.getResource() == Resource.SUSPECT_BLOB_TAPE
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request has the payload:
+     * <Objects><Object Name="o1" Size="1" /><Object Name="o2" Size="2" /></Objects>
+     *
+     * @return true if request is one of the following:
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler
+     */
+    public static boolean hasPutObjectsWithSizeRequestPayload(final Ds3Request ds3Request) {
+        return isBulkPutRequest(ds3Request);
     }
 }

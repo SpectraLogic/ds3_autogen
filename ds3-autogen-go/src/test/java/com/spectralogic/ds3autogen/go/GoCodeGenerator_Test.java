@@ -47,9 +47,11 @@ public class GoCodeGenerator_Test {
         // Amazon Get Object request
         assertThat(getRequestGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectRequestGenerator.class));
 
+        // Request with payload List<Ds3PutObject>
+        assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(Ds3PutObjectPayloadGenerator.class));
+
         // Requests with payloads List<Ds3Object>
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(RequiredObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(createVerifyJobRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));

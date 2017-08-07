@@ -147,7 +147,10 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new ReaderRequestPayloadGenerator();
         }
-        if (isBulkRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
+        if (hasPutObjectsWithSizeRequestPayload(ds3Request)) {
+            return new Ds3PutObjectPayloadGenerator();
+        }
+        if (isBulkGetRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
         if (hasIdsRequestPayload(ds3Request)) {
