@@ -50,8 +50,10 @@ public class GoCodeGenerator_Test {
         // Request with payload List<Ds3PutObject>
         assertThat(getRequestGenerator(getRequestBulkPut()), instanceOf(Ds3PutObjectPayloadGenerator.class));
 
+        // Request with payload List<Ds3GetObject>
+        assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(GetBulkJobRequestGenerator.class));
+
         // Requests with payloads List<Ds3Object>
-        assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(RequiredObjectsPayloadGenerator.class));
         assertThat(getRequestGenerator(createVerifyJobRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));

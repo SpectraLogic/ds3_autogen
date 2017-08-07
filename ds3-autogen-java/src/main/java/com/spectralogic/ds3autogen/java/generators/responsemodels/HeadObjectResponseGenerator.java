@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 /**
@@ -39,9 +38,7 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
                 new Arguments("long", "ObjectSize"),
                 new Arguments("Status", "Status"));
 
-        return params.stream()
-                .sorted(new CustomArgumentComparator())
-                .collect(GuavaCollectors.immutableList());
+        return ImmutableList.sortedCopyOf(new CustomArgumentComparator(), params);
     }
 
     /**

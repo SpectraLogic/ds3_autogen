@@ -22,7 +22,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.VariableInterface
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 
 /**
@@ -54,9 +53,7 @@ class PutObjectRequestGenerator : BaseRequestGenerator() {
         builder.add(Arguments("*http.Header", "headers"))
 
         // Sort the arguments
-        return builder.build().stream()
-                .sorted(CustomArgumentComparator())
-                .collect(GuavaCollectors.immutableList())
+        return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
     }
 
     /**

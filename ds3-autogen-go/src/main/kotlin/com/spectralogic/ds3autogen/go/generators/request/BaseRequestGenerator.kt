@@ -83,10 +83,10 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         }
         return optionalParams!!.stream()
                 .filter { param -> param.type.equals("void", ignoreCase = true) }
-                .map { param -> WithConstructor(
-                        param.name,
+                .map { (name) -> WithConstructor(
+                        name,
                         "", // There is no GO type that maps to void
-                        Helper.camelToUnderscore(param.name),
+                        Helper.camelToUnderscore(name),
                         "") }
                 .collect(GuavaCollectors.immutableList())
     }
@@ -106,9 +106,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         val structParams = structParamsFromRequest(ds3Request)
 
         // Sort the arguments
-        return structParams.stream()
-                .sorted(CustomArgumentComparator())
-                .collect(GuavaCollectors.immutableList())
+        return ImmutableList.sortedCopyOf(CustomArgumentComparator(), structParams)
     }
 
     /**

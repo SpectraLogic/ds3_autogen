@@ -18,6 +18,7 @@ package com.spectralogic.ds3autogen.go.generators.request
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.go.models.request.Variable
 
+//TODO delete once fully replaced
 /**
  * Go generator for request handlers that have a Ds3Object list request payload
  * that is not specified in the contract

@@ -158,11 +158,16 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
-     * Determines if the request is a Bulk Get request
+     * Determines if the request is a CreateGetJobRequestHandler also known as GetBulkJobSpectraS3Request
      */
     public static boolean isBulkGetRequest(final Ds3Request ds3Request) {
-        return ds3Request.getOperation() != null
-                && ds3Request.getOperation() == Operation.START_BULK_GET;
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getOperation() == Operation.START_BULK_GET
+                && ds3Request.getAction() == Action.MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
     }
 
     /**
@@ -514,12 +519,23 @@ public final class Ds3RequestClassificationUtil {
 
     /**
      * Determines if a Ds3Request has the payload:
-     * <Objects><Object Name="o1" Size="1" /><Object Name="o2" Size="2" /></Objects>
+     * <Objects><Object Name="o1" Size="1" /><Object Name="o2" Size="2" />...</Objects>
      *
      * @return true if request is one of the following:
      *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreatePutJobRequestHandler
      */
     public static boolean hasPutObjectsWithSizeRequestPayload(final Ds3Request ds3Request) {
         return isBulkPutRequest(ds3Request);
+    }
+
+    /**
+     * Determines if a Ds3Request has the payload:
+     * <Objects><Object Name="o1" Length="1" Offset="2" /><Object Name="o2" Length="3" Offset="4" />...</Objects>
+     *
+     * @return true if request is one of the following:
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler
+     */
+    public static boolean hasGetObjectsWithLengthOffsetRequestPayload(final Ds3Request ds3Request) {
+        return isBulkGetRequest(ds3Request);
     }
 }

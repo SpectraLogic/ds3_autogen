@@ -150,7 +150,10 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasPutObjectsWithSizeRequestPayload(ds3Request)) {
             return new Ds3PutObjectPayloadGenerator();
         }
-        if (isBulkGetRequest(ds3Request) || isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
+            return new GetBulkJobRequestGenerator();
+        }
+        if (isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
         if (hasIdsRequestPayload(ds3Request)) {
@@ -178,7 +181,10 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isAmazonCreateObjectRequest(ds3Request)) {
             return config.getTemplate("request/put_object_request.ftl");
         }
-        if (isBulkRequest(ds3Request)
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
+            return config.getTemplate("request/get_bulk_job_request.ftl");
+        }
+        if (hasPutObjectsWithSizeRequestPayload(ds3Request)
                 || isCreateMultiPartUploadPartRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)

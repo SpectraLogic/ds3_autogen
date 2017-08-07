@@ -1009,4 +1009,73 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
     }
+
+    @Test
+    public void getBulkJobSpectraS3Request() throws IOException, TemplateModelException {
+        final String requestName = "GetBulkJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+
+        codeGenerator.generateCode(fileUtils, "/input/getBulkJob.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
+        assertTrue(requestCode.contains("\"strconv\""));
+
+        assertTrue(requestCode.contains("bucketName string"));
+        assertTrue(requestCode.contains("aggregating bool"));
+        assertTrue(requestCode.contains("chunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("implicitJobIdResolution bool"));
+        assertTrue(requestCode.contains("name *string"));
+        assertTrue(requestCode.contains("priority Priority"));
+        assertTrue(requestCode.contains("queryParams *url.Values"));
+
+        assertTrue(requestCode.contains("func NewGetBulkJobSpectraS3Request(bucketName string, objectNames []string) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_get\")"));
+        assertTrue(requestCode.contains("bucketName: bucketName,"));
+        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
+
+        assertTrue(requestCode.contains("func NewGetBulkJobSpectraS3RequestWithPartialObjects(bucketName string, objects []Ds3GetObject) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("content: buildDs3GetObjectListStream(objects),"));
+
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("return getBulkJobSpectraS3Request.content"));
+
+        assertTrue(requestCode.contains("return networking.PUT"));
+        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + getBulkJobSpectraS3Request.bucketName"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("\"ds3/networking\""));
+        assertTrue(responseCode.contains("\"net/http\""));
+
+        assertTrue(responseCode.contains("MasterObjectList MasterObjectList"));
+
+        assertTrue(responseCode.contains("func (getBulkJobSpectraS3Response *GetBulkJobSpectraS3Response) parse(webResponse networking.WebResponse) error {"));
+        assertTrue(responseCode.contains("return parseResponsePayload(webResponse, &getBulkJobSpectraS3Response.MasterObjectList)"));
+
+        assertTrue(responseCode.contains("func NewGetBulkJobSpectraS3Response(webResponse networking.WebResponse) (*GetBulkJobSpectraS3Response, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("case 200:"));
+        assertTrue(responseCode.contains("var body GetBulkJobSpectraS3Response"));
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        // Verify that the client code was generated
+        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
+        assertTrue(hasContent(client));
+    }
 }
