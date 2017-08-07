@@ -20,12 +20,6 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
-import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
-
-import java.util.stream.Collectors;
-
-import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 
 /**
  * Response handler generator for AmazonS3 Get Object command

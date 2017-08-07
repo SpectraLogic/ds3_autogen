@@ -51,8 +51,6 @@ public class RetryAfterResponseGenerator extends BaseResponseGenerator {
             builder.addAll(responseCodeArgs);
         }
 
-        return builder.build().stream()
-                .sorted(new CustomArgumentComparator()) //Sorts the arguments by name
-                .collect(GuavaCollectors.immutableList());
+        return ImmutableList.sortedCopyOf(new CustomArgumentComparator(), builder.build());
     }
 }
