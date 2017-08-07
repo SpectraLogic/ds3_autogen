@@ -25,14 +25,14 @@ import com.spectralogic.ds3autogen.go.models.request.Variable
 class Ds3PutObjectPayloadGenerator : RequestPayloadGenerator() {
 
     /**
-     * Retrieves the Ds3Object list request payload
+     * Retrieves the Ds3PutObject list request payload
      */
     override fun getPayloadConstructorArg(): Arguments {
         return Arguments("[]Ds3PutObject", "objects")
     }
 
     /**
-     * Retrieves the struct assignment for the Ds3Object list request payload
+     * Retrieves the struct assignment for the Ds3PutObject list request payload
      */
     override fun getStructAssignmentVariable(): Variable {
         return Variable("content", "buildDs3PutObjectListStream(objects)")
