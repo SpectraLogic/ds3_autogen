@@ -156,8 +156,8 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasObjectsWithLengthRequestPayload(ds3Request)) {
             return new Ds3VerifyObjectPayloadGenerator();
         }
-        if (isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
-            return new RequiredObjectsPayloadGenerator();
+        if (hasSimpleObjectsRequestPayload(ds3Request)) {
+            return new ObjectNamesPayloadGenerator();
         }
         if (hasIdsRequestPayload(ds3Request)) {
             return new IdsPayloadRequestGenerator();
@@ -190,8 +190,7 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasPutObjectsWithSizeRequestPayload(ds3Request)
                 || hasObjectsWithLengthRequestPayload(ds3Request)
                 || isCreateMultiPartUploadPartRequest(ds3Request)
-                || isPhysicalPlacementRequest(ds3Request)
-                || isEjectStorageDomainBlobsRequest(ds3Request)
+                || hasSimpleObjectsRequestPayload(ds3Request)
                 || hasStringRequestPayload(ds3Request)
                 || isCompleteMultiPartUploadRequest(ds3Request)
                 || isMultiFileDeleteRequest(ds3Request)

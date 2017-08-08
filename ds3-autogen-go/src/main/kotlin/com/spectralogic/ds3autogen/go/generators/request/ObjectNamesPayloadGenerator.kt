@@ -18,24 +18,31 @@ package com.spectralogic.ds3autogen.go.generators.request
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.go.models.request.Variable
 
-//TODO delete once fully replaced
 /**
- * Go generator for request handlers that have a Ds3Object list request payload
- * that is not specified in the contract
+ * Go generator for request handlers that take in a list of object names
+ * and convert them into the payload:
+ *   <Objects><Object Name="o1" /><Object Name="o2" />...</Objects>
+ *
+ * Used to generate the commands:
+ *   GetPhysicalPlacementForObjectsSpectraS3Request
+ *   GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request
+ *   VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request
+ *   VerifyPhysicalPlacementForObjectsSpectraS3Request
+ *   EjectStorageDomainBlobsSpectraS3Request
  */
-class RequiredObjectsPayloadGenerator : RequestPayloadGenerator() {
+class ObjectNamesPayloadGenerator : RequestPayloadGenerator() {
 
     /**
-     * Retrieves the Ds3Object list request payload
+     * Retrieves the list of object names that make up the request payload
      */
     override fun getPayloadConstructorArg(): Arguments {
-        return Arguments("[]Ds3Object", "objects")
+        return Arguments("[]string", "objectNames")
     }
 
     /**
      * Retrieves the struct assignment for the Ds3Object list request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildDs3ObjectListStream(objects)")
+        return Variable("content", "buildDs3ObjectStreamFromNames(objectNames)")
     }
 }

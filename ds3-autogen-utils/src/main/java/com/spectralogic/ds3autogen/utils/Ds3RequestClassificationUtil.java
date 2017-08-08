@@ -81,11 +81,12 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
-     * Determines if this request is an Eject Storage Domain (Blobs) request.
+     * Determines if this request is the Spectra S3 EjectStorageDomainBlobsRequest
      */
     public static boolean isEjectStorageDomainBlobsRequest(final Ds3Request ds3Request) {
         return ds3Request.getAction() == Action.BULK_MODIFY
                 && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && !ds3Request.getIncludeInPath()
                 && ds3Request.getOperation() == Operation.EJECT
                 && ds3Request.getResource() == Resource.TAPE
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
@@ -562,5 +563,80 @@ public final class Ds3RequestClassificationUtil {
                 && ds3Request.getOperation() == Operation.START_BULK_VERIFY
                 && ds3Request.getResource() == Resource.BUCKET
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
+    }
+
+    /**
+     * Determines if a Ds3Request has the request payload:
+     * <Objects><Object Name="o1" /><Object Name="o2" />...</Objects>
+     *
+     * @return true if request is one of the following:
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainBlobsRequestHandler
+     */
+    public static boolean hasSimpleObjectsRequestPayload(final Ds3Request ds3Request) {
+        return isGetPhysicalPlacementForObjectsRequest(ds3Request)
+                || isGetPhysicalPlacementForObjectsWithFullDetailsRequest(ds3Request)
+                || isVerifyPhysicalPlacementForObjectsRequest(ds3Request)
+                || isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(ds3Request)
+                || isEjectStorageDomainBlobsRequest(ds3Request);
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command GetPhysicalPlacementForObjectsRequest
+     */
+    static boolean isGetPhysicalPlacementForObjectsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "FullDetails", "void");
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command GetPhysicalPlacementForObjectsWithFullDetailsRequest
+     */
+    static boolean isGetPhysicalPlacementForObjectsWithFullDetailsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.MODIFY
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "FullDetails", "void");
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command VerifyPhysicalPlacementForObjectsRequest
+     */
+    static boolean isVerifyPhysicalPlacementForObjectsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.SHOW
+                && ds3Request.getHttpVerb() == HttpVerb.GET
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
+                && !paramListContainsParam(ds3Request.getRequiredQueryParams(), "FullDetails", "void");
+    }
+
+    /**
+     * Determines if a Ds3Request is the SpectraDs3 command VerifyPhysicalPlacementForObjectsWithFullDetailsRequest
+     */
+    static boolean isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getAction() == Action.SHOW
+                && ds3Request.getHttpVerb() == HttpVerb.GET
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "FullDetails", "void");
     }
 }

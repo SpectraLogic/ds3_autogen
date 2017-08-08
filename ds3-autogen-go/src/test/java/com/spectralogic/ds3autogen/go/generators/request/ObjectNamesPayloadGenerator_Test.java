@@ -28,9 +28,9 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class RequiredObjectsPayloadGenerator_Test {
+public class ObjectNamesPayloadGenerator_Test {
 
-    private final RequiredObjectsPayloadGenerator generator = new RequiredObjectsPayloadGenerator();
+    private final ObjectNamesPayloadGenerator generator = new ObjectNamesPayloadGenerator();
 
     private final Ds3Request testRequest = getRequestVerifyPhysicalPlacement();
 
@@ -55,7 +55,7 @@ public class RequiredObjectsPayloadGenerator_Test {
     public void toStructAssignmentParamsTest() {
         final ImmutableList<VariableInterface> expected = ImmutableList.of(
                 new SimpleVariable("bucketName"),
-                new Variable("content", "buildDs3ObjectListStream(objects)")
+                new Variable("content", "buildDs3ObjectStreamFromNames(objectNames)")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(testRequest);
@@ -67,7 +67,7 @@ public class RequiredObjectsPayloadGenerator_Test {
     public void toConstructorParamsListTest() {
         final ImmutableList<Arguments> expected = ImmutableList.of(
                 new Arguments("string", "bucketName"),
-                new Arguments("[]Ds3Object", "objects")
+                new Arguments("[]string", "objectNames")
         );
 
         final ImmutableList<Arguments> result = generator.toConstructorParamsList(testRequest);
@@ -82,14 +82,14 @@ public class RequiredObjectsPayloadGenerator_Test {
     @Test
     public void getPayloadConstructorArgTest() {
         final Arguments result = generator.getPayloadConstructorArg();
-        assertThat(result.getName(), is("objects"));
-        assertThat(result.getType(), is("[]Ds3Object"));
+        assertThat(result.getName(), is("objectNames"));
+        assertThat(result.getType(), is("[]string"));
     }
 
     @Test
     public void getStructAssignmentVariableTest() {
         final Variable result = generator.getStructAssignmentVariable();
         assertThat(result.getName(), is("content"));
-        assertThat(result.getAssignment(), is("buildDs3ObjectListStream(objects)"));
+        assertThat(result.getAssignment(), is("buildDs3ObjectStreamFromNames(objectNames)"));
     }
 }
