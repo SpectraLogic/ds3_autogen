@@ -153,6 +153,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return new GetBulkJobRequestGenerator();
         }
+        if (hasObjectsWithLengthRequestPayload(ds3Request)) {
+            return new Ds3VerifyObjectPayloadGenerator();
+        }
         if (isPhysicalPlacementRequest(ds3Request) || isEjectStorageDomainBlobsRequest(ds3Request)) {
             return new RequiredObjectsPayloadGenerator();
         }
@@ -185,6 +188,7 @@ public class GoCodeGenerator implements CodeGenerator {
             return config.getTemplate("request/get_bulk_job_request.ftl");
         }
         if (hasPutObjectsWithSizeRequestPayload(ds3Request)
+                || hasObjectsWithLengthRequestPayload(ds3Request)
                 || isCreateMultiPartUploadPartRequest(ds3Request)
                 || isPhysicalPlacementRequest(ds3Request)
                 || isEjectStorageDomainBlobsRequest(ds3Request)
