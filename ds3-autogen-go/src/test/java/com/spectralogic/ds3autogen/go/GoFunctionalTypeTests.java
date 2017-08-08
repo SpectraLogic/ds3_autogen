@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTypeTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
 
     private final static String requestName = "PlaceHolderRequest";
 
@@ -112,6 +112,7 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.NotificationGenerationDate = parseString(child.Content)"));
         assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ObjectsNotPersisted = parseBulkObjectSlice(\"Object\", child.Children, aggErr)"));
         assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ListedElements = append(jobCompletedNotificationPayload.ListedElements, model)"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobCompletedNotificationPayload.\", child.XMLName.Local)"));
     }
 
     @Test
@@ -185,8 +186,10 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.Status, aggErr)"));
         assertTrue(typeParserCode.contains("job.UserId = attr.Value"));
         assertTrue(typeParserCode.contains("job.UserName = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing Job.\", attr.Name.Local)"));
 
         assertTrue(typeParserCode.contains("job.Nodes = parseJobNodeSlice(\"Node\", child.Children, aggErr)"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing Job.\", child.XMLName.Local)"));
     }
 
     @Test
@@ -221,6 +224,7 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("jobNode.HttpPort = parseNullableIntFromString(attr.Value, aggErr)"));
         assertTrue(typeParserCode.contains("jobNode.HttpsPort = parseNullableIntFromString(attr.Value, aggErr)"));
         assertTrue(typeParserCode.contains("jobNode.Id = attr.Value"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing JobNode.\", attr.Name.Local)"));
     }
 
     @Test
@@ -252,6 +256,7 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("var model Job"));
         assertTrue(typeParserCode.contains("model.parse(&child, aggErr)"));
         assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, model)"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobList.\", child.XMLName.Local)"));
     }
 
     @Test
@@ -297,5 +302,6 @@ public class GoFunctionalTypeTests {
         assertTrue(typeParserCode.contains("listBucketResult.Objects = append(listBucketResult.Objects, model)"));
         assertTrue(typeParserCode.contains("listBucketResult.Prefix = parseNullableString(child.Content)"));
         assertTrue(typeParserCode.contains("listBucketResult.Truncated = parseBool(child.Content, aggErr)"));
+        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing ListBucketResult.\", child.XMLName.Local)"));
     }
 }
