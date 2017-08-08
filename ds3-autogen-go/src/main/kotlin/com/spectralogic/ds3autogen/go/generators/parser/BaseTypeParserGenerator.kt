@@ -116,6 +116,9 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
                 return ParseChildNodeAsString(xmlTag, modelName, paramName, parserNamespace)
             else -> {
                 // All remaining elements represent Ds3Types
+                if (goType.first() == '*') {
+                    return ParseChildNodeAsNullableDs3Type(xmlTag, modelName, paramName, goType.drop(1))
+                }
                 return ParseChildNodeAsDs3Type(xmlTag, modelName, paramName)
             }
         }
