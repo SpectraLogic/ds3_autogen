@@ -194,9 +194,24 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+
+        assertTrue(requestCode.contains("\"net/url\""));
+        assertTrue(requestCode.contains("\"net/http\""));
+        assertTrue(requestCode.contains("\"ds3/networking\""));
         assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
-        assertTrue(requestCode.contains("content: buildDs3ObjectListStream(objects),")); //content is assigned a stream
+
+        assertTrue(requestCode.contains("bucketName string"));
+        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("storageDomainId string"));
+
+        assertTrue(requestCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Request(bucketName string, objectNames []string) *VerifyPhysicalPlacementForObjectsSpectraS3Request {"));
+        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"verify_physical_placement\")"));
+        assertTrue(requestCode.contains("bucketName: bucketName,"));
+        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
+
+        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + verifyPhysicalPlacementForObjectsSpectraS3Request.bucketName"));
+        assertTrue(requestCode.contains("return networking.GET"));
+
         assertTrue(returnsStream(requestName, requestCode));
 
         // Verify Response file was generated

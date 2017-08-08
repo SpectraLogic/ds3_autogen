@@ -56,11 +56,11 @@ public class GoCodeGenerator_Test {
         // Request with payload List<Ds3VerifyObject>
         assertThat(getRequestGenerator(createVerifyJobRequest()), instanceOf(Ds3VerifyObjectPayloadGenerator.class));
 
-        // Requests with payloads List<Ds3Object>
-        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(RequiredObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(RequiredObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(RequiredObjectsPayloadGenerator.class));
-        assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetails()), instanceOf(RequiredObjectsPayloadGenerator.class));
+        // Requests with payloads List<string>
+        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectNamesPayloadGenerator.class));
+        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectNamesPayloadGenerator.class));
+        assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(ObjectNamesPayloadGenerator.class));
+        assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()), instanceOf(ObjectNamesPayloadGenerator.class));
 
         // Request with object name list payload
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(DeleteObjectsRequestGenerator.class));
@@ -93,6 +93,12 @@ public class GoCodeGenerator_Test {
         assertThat(getRequestGenerator(getRequestDeleteNotification()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(BaseRequestGenerator.class));
         assertThat(getRequestGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
+
+        assertThat(getRequestGenerator(getBlobsOnAzureTargetSpectraS3Request()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getRequestGenerator(getBlobsOnTapeSpectraS3Request()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getRequestGenerator(getBlobsOnS3TargetSpectraS3Request()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getRequestGenerator(getBlobsOnPoolSpectraS3Request()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getRequestGenerator(getBlobsOnDs3TargetSpectraS3Request()), instanceOf(BaseRequestGenerator.class));
     }
 
     @Test

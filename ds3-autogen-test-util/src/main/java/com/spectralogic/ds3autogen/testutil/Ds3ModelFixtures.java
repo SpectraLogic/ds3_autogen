@@ -29,6 +29,9 @@ import com.spectralogic.ds3autogen.api.models.enums.*;
 public class Ds3ModelFixtures {
 
     private static final Ds3Param FORCE_PARAM = new Ds3Param("Force", "void", false);
+    private static final Ds3Param OPERATION_PARAM = new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false);
+    private static final Ds3Param FULL_DETAILS_PARAM = new Ds3Param("FullDetails", "void", false);
+    private static final Ds3Param STORAGE_DOMAIN_ID_PARAM = new Ds3Param("StorageDomainId", "java.util.UUID", false);
 
     /**
      * Creates a populated list of Ds3ResponseTypes with the ability to set a variation to append
@@ -134,7 +137,11 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the SpectraDs3 Physical Placement request VerifyPhysicalPlacementForObjectsRequestHandler
-     * as described in the Contract, excluding the response codes
+     * as described in the Contract, excluding the response codes.
+     *
+     * Note: This predates the splitting up of commands with "full_details" specified. For commands after
+     * split use {@link #verifyPhysicalPlacementForObjectsRequest()} and {@link #verifyPhysicalPlacementForObjectsWithFullDetailsRequest()} ()}
+     *
      * @return A Physical Placement request
      */
     public static Ds3Request getRequestVerifyPhysicalPlacement() {
@@ -160,10 +167,65 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(
                                         new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
-                        new Ds3Param("FullDetails", "void", false),
-                        new Ds3Param("StorageDomainId", "java.util.UUID", false)),
+                        FULL_DETAILS_PARAM,
+                        STORAGE_DOMAIN_ID_PARAM),
+                ImmutableList.of(OPERATION_PARAM));
+    }
+
+    /**
+     * Creates the 4.0.0 SpectraDs3 request VerifyPhysicalPlacementForObjectsRequestHandler
+     */
+    public static Ds3Request verifyPhysicalPlacementForObjectsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.VERIFY_PHYSICAL_PLACEMENT,
+                true,
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.common.dao.domain.PhysicalPlacementApiBean", null))),
+                        new Ds3ResponseCode(
+                                404,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
+                ImmutableList.of(STORAGE_DOMAIN_ID_PARAM), // optional params
+                ImmutableList.of(OPERATION_PARAM)); // required params
+    }
+
+    /**
+     * Creates the 4.0.0 SpectraDs3 request VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     */
+    public static Ds3Request verifyPhysicalPlacementForObjectsWithFullDetailsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.VERIFY_PHYSICAL_PLACEMENT,
+                true,
+                ImmutableList.of(
+                        new Ds3ResponseCode(
+                                200,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer", null))),
+                        new Ds3ResponseCode(
+                                404,
+                                ImmutableList.of(
+                                        new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
+                ImmutableList.of(STORAGE_DOMAIN_ID_PARAM), // optional params
+                ImmutableList.of(FULL_DETAILS_PARAM, OPERATION_PARAM)); // required params
     }
 
     /**
@@ -187,8 +249,7 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("ChunkClientProcessingOrderGuarantee", "com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee", false),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
-                ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
+                ImmutableList.of(OPERATION_PARAM));
     }
 
     /**
@@ -215,8 +276,7 @@ public class Ds3ModelFixtures {
                         new Ds3Param("MaxUploadSize", "long", false),
                         new Ds3Param("Name", "java.lang.String", true),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
-                ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)));
+                ImmutableList.of(OPERATION_PARAM));
     }
 
     /**
@@ -378,7 +438,7 @@ public class Ds3ModelFixtures {
                         new Ds3Param("ConflictResolutionMode", "com.spectralogic.s3.common.dao.domain.shared.ReplicationConflictResolutionMode", false),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
+                        OPERATION_PARAM,
                         new Ds3Param("Replicate", "void", false)));
     }
 
@@ -451,8 +511,8 @@ public class Ds3ModelFixtures {
                         new Ds3Param("EjectLabel", "java.lang.String", true),
                         new Ds3Param("EjectLocation", "java.lang.String", true)),
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
-                        new Ds3Param("StorageDomainId", "java.util.UUID", false)));
+                        OPERATION_PARAM,
+                        STORAGE_DOMAIN_ID_PARAM));
     }
 
     /**
@@ -478,8 +538,8 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("Blobs", "void", false),
                         new Ds3Param("BucketId", "java.util.UUID", false),
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false),
-                        new Ds3Param("StorageDomainId", "java.util.UUID", false)));
+                        OPERATION_PARAM,
+                        STORAGE_DOMAIN_ID_PARAM));
     }
 
     /**
@@ -530,7 +590,7 @@ public class Ds3ModelFixtures {
                 ),
                 null,
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false))
+                        OPERATION_PARAM)
         );
     }
 
@@ -857,8 +917,7 @@ public class Ds3ModelFixtures {
                         new Ds3Param("PageStartMarker", "java.util.UUID", false),
                         new Ds3Param("Type", "com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType", true),
                         new Ds3Param("Version", "long", false)), //optional params
-                ImmutableList.of(
-                        new Ds3Param("FullDetails", "void", false)) //required params
+                ImmutableList.of(FULL_DETAILS_PARAM) //required params
         );
     }
 
@@ -883,7 +942,7 @@ public class Ds3ModelFixtures {
                         new Ds3Param("Name", "java.lang.String", true),
                         new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)), //optional params
                 ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+                        OPERATION_PARAM) //required params
         );
     }
 
@@ -903,34 +962,29 @@ public class Ds3ModelFixtures {
                 Operation.GET_PHYSICAL_PLACEMENT, // operation
                 true,
                 null, // ds3ResponseCodes are in the Contract, but are currently omitted
-                ImmutableList.of(
-                        new Ds3Param("StorageDomainId", "java.util.UUID", false)), //optional params
-                ImmutableList.of(
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+                ImmutableList.of(STORAGE_DOMAIN_ID_PARAM), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
         );
     }
 
     /**
-     * Retrieves the 3.4.1 contract request for VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     * Retrieves the 4.0.0 contract request for GetPhysicalPlacementForObjectsWithFullDetailsRequestHandler
      */
-    public static Ds3Request verifyPhysicalPlacementForObjectsWithFullDetails() {
+    public static Ds3Request getPhysicalPlacementForObjectsWithFullDetails() {
         return new Ds3Request(
-                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
-                HttpVerb.GET,
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsWithFullDetailsRequestHandler",
+                HttpVerb.PUT,
                 Classification.spectrads3,
                 null, //bucketRequirement
                 null, // objectRequirement
-                Action.SHOW,
+                Action.MODIFY,
                 Resource.BUCKET,
                 ResourceType.NON_SINGLETON,
-                Operation.VERIFY_PHYSICAL_PLACEMENT, // operation
+                Operation.GET_PHYSICAL_PLACEMENT, // operation
                 true,
                 null, // ds3ResponseCodes are in the Contract, but are currently omitted
-                ImmutableList.of(
-                        new Ds3Param("StorageDomainId", "java.util.UUID", false)), //optional params
-                ImmutableList.of(
-                        new Ds3Param("FullDetails", "void", false),
-                        new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)) //required params
+                ImmutableList.of(STORAGE_DOMAIN_ID_PARAM), //optional params
+                ImmutableList.of(FULL_DETAILS_PARAM, OPERATION_PARAM) //required params
         );
     }
 
@@ -1120,6 +1174,111 @@ public class Ds3ModelFixtures {
                 null, // ds3ResponseCodes are in the Contract, but are currently omitted
                 ImmutableList.of(FORCE_PARAM), //optional params
                 ImmutableList.of() //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for GetBlobsOnAzureTargetSpectraS3Request
+     */
+    public static Ds3Request getBlobsOnAzureTargetSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.azure.GetBlobsOnAzureTargetRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.AZURE_TARGET,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for GetBlobsOnTapeSpectraS3Request
+     */
+    public static Ds3Request getBlobsOnTapeSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.GetBlobsOnTapeRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.TAPE,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for GetBlobsOnS3TargetSpectraS3Request
+     */
+    public static Ds3Request getBlobsOnS3TargetSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.s3.GetBlobsOnS3TargetRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.S3_TARGET,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for GetBlobsOnPoolSpectraS3Request
+     */
+    public static Ds3Request getBlobsOnPoolSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.GetBlobsOnPoolRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.POOL,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
+        );
+    }
+
+    /**
+     * Retrieves the 4.0.0 contract request for GetBlobsOnDs3TargetSpectraS3Request
+     */
+    public static Ds3Request getBlobsOnDs3TargetSpectraS3Request() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.ds3.GetBlobsOnDs3TargetRequestHandler",
+                HttpVerb.GET,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.SHOW,
+                Resource.DS3_TARGET,
+                ResourceType.NON_SINGLETON,
+                Operation.GET_PHYSICAL_PLACEMENT,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
         );
     }
 }

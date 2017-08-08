@@ -46,6 +46,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isAmazonCreateObjectRequest(getObjectsDetailsRequest()));
         assertFalse(isAmazonCreateObjectRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isAmazonCreateObjectRequest(createVerifyJobRequest()));
+        assertFalse(isAmazonCreateObjectRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isAmazonCreateObjectRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isAmazonCreateObjectRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isAmazonCreateObjectRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isAmazonCreateObjectRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -68,6 +73,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isNotificationRequest(getObjectsDetailsRequest()));
         assertFalse(isNotificationRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isNotificationRequest(createVerifyJobRequest()));
+        assertFalse(isNotificationRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isNotificationRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isNotificationRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isNotificationRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isNotificationRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -91,6 +101,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectsDetailsRequest(getUsersSpectraS3Request()));
         assertFalse(isGetObjectsDetailsRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetObjectsDetailsRequest(createVerifyJobRequest()));
+        assertFalse(isGetObjectsDetailsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetObjectsDetailsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetObjectsDetailsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetObjectsDetailsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetObjectsDetailsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -114,6 +129,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetUsersSpectraS3Request(getCompleteMultipartUploadRequest()));
         assertFalse(isGetUsersSpectraS3Request(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetUsersSpectraS3Request(createVerifyJobRequest()));
+        assertFalse(isGetUsersSpectraS3Request(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetUsersSpectraS3Request(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetUsersSpectraS3Request(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetUsersSpectraS3Request(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetUsersSpectraS3Request(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -137,6 +157,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(supportsPaginationRequest(getEjectStorageDomainRequest()));
         assertFalse(supportsPaginationRequest(getCompleteMultipartUploadRequest()));
         assertFalse(supportsPaginationRequest(createVerifyJobRequest()));
+        assertFalse(supportsPaginationRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(supportsPaginationRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(supportsPaginationRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(supportsPaginationRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(supportsPaginationRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -159,6 +184,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isDeleteNotificationRequest(getObjectsDetailsRequest()));
         assertFalse(isDeleteNotificationRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isDeleteNotificationRequest(createVerifyJobRequest()));
+        assertFalse(isDeleteNotificationRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isDeleteNotificationRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isDeleteNotificationRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isDeleteNotificationRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isDeleteNotificationRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -181,6 +211,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateNotificationRequest(getObjectsDetailsRequest()));
         assertFalse(isCreateNotificationRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isCreateNotificationRequest(createVerifyJobRequest()));
+        assertFalse(isCreateNotificationRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isCreateNotificationRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isCreateNotificationRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isCreateNotificationRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isCreateNotificationRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -203,12 +238,23 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetNotificationRequest(getObjectsDetailsRequest()));
         assertFalse(isGetNotificationRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetNotificationRequest(createVerifyJobRequest()));
+        assertFalse(isGetNotificationRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetNotificationRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetNotificationRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetNotificationRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetNotificationRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
     public void isPhysicalPlacementRequest_test() {
         assertTrue(isPhysicalPlacementRequest(getRequestVerifyPhysicalPlacement()));
         assertTrue(isPhysicalPlacementRequest(createVerifyJobRequest()));
+
+        assertTrue(isPhysicalPlacementRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertTrue(isPhysicalPlacementRequest(getBlobsOnTapeSpectraS3Request()));
+        assertTrue(isPhysicalPlacementRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertTrue(isPhysicalPlacementRequest(getBlobsOnPoolSpectraS3Request()));
+        assertTrue(isPhysicalPlacementRequest(getBlobsOnDs3TargetSpectraS3Request()));
 
         assertFalse(isPhysicalPlacementRequest(getReplicatePutJob()));
         assertFalse(isPhysicalPlacementRequest(getRequestDeleteNotification()));
@@ -248,6 +294,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkRequest(getObjectsDetailsRequest()));
         assertFalse(isBulkRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isBulkRequest(createVerifyJobRequest()));
+        assertFalse(isBulkRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isBulkRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isBulkRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isBulkRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isBulkRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test public void isBulkPutRequest_Test() {
@@ -267,6 +318,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkPutRequest(getObjectsDetailsRequest()));
         assertFalse(isBulkPutRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isBulkPutRequest(createVerifyJobRequest()));
+        assertFalse(isBulkPutRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isBulkPutRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isBulkPutRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isBulkPutRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isBulkPutRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test public void isBulkReplicateRequest_Test() {
@@ -289,6 +345,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkReplicateRequest(getObjectsDetailsRequest()));
         assertFalse(isBulkReplicateRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isBulkReplicateRequest(createVerifyJobRequest()));
+        assertFalse(isBulkReplicateRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isBulkReplicateRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isBulkReplicateRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isBulkReplicateRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isBulkReplicateRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test public void isBulkGetRequest_Test() {
@@ -311,6 +372,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isBulkGetRequest(getObjectsDetailsRequest()));
         assertFalse(isBulkGetRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isBulkGetRequest(createVerifyJobRequest()));
+        assertFalse(isBulkGetRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isBulkGetRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isBulkGetRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isBulkGetRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isBulkGetRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -333,6 +399,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMultiFileDeleteRequest(getObjectsDetailsRequest()));
         assertFalse(isMultiFileDeleteRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isMultiFileDeleteRequest(createVerifyJobRequest()));
+        assertFalse(isMultiFileDeleteRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMultiFileDeleteRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMultiFileDeleteRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMultiFileDeleteRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMultiFileDeleteRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -355,6 +426,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateObjectRequest(getObjectsDetailsRequest()));
         assertFalse(isCreateObjectRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isCreateObjectRequest(createVerifyJobRequest()));
+        assertFalse(isCreateObjectRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isCreateObjectRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isCreateObjectRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isCreateObjectRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isCreateObjectRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -377,6 +453,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectRequest(getObjectsDetailsRequest()));
         assertFalse(isGetObjectRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetObjectRequest(createVerifyJobRequest()));
+        assertFalse(isGetObjectRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetObjectRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetObjectRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetObjectRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetObjectRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -398,6 +479,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectSpectraS3Request(getObjectsDetailsRequest()));
         assertFalse(isGetObjectSpectraS3Request(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetObjectSpectraS3Request(createVerifyJobRequest()));
+        assertFalse(isGetObjectSpectraS3Request(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetObjectSpectraS3Request(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetObjectSpectraS3Request(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetObjectSpectraS3Request(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetObjectSpectraS3Request(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -420,6 +506,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectAmazonS3Request(getObjectsDetailsRequest()));
         assertFalse(isGetObjectAmazonS3Request(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetObjectAmazonS3Request(createVerifyJobRequest()));
+        assertFalse(isGetObjectAmazonS3Request(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetObjectAmazonS3Request(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetObjectAmazonS3Request(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetObjectAmazonS3Request(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetObjectAmazonS3Request(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -440,6 +531,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetJobRequest(getObjectsDetailsRequest()));
         assertFalse(isGetJobRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetJobRequest(createVerifyJobRequest()));
+        assertFalse(isGetJobRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetJobRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetJobRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetJobRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetJobRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -460,6 +556,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetBlobPersistenceRequest(getObjectsDetailsRequest()));
         assertFalse(isGetBlobPersistenceRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isGetBlobPersistenceRequest(createVerifyJobRequest()));
+        assertFalse(isGetBlobPersistenceRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetBlobPersistenceRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetBlobPersistenceRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetBlobPersistenceRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetBlobPersistenceRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -483,6 +584,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasStringRequestPayload(getObjectsDetailsRequest()));
         assertFalse(hasStringRequestPayload(getObjectsWithFullDetailsRequest()));
         assertFalse(hasStringRequestPayload(createVerifyJobRequest()));
+        assertFalse(hasStringRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasStringRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasStringRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasStringRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasStringRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -504,6 +610,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isEjectStorageDomainBlobsRequest(getObjectsDetailsRequest()));
         assertFalse(isEjectStorageDomainBlobsRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isEjectStorageDomainBlobsRequest(createVerifyJobRequest()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isEjectStorageDomainBlobsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -511,6 +622,12 @@ public class Ds3RequestClassificationUtil_Test {
         assertTrue(hasListObjectsRequestPayload(getEjectStorageDomainBlobsRequest()));
         assertTrue(hasListObjectsRequestPayload(getRequestVerifyPhysicalPlacement()));
         assertTrue(hasListObjectsRequestPayload(createVerifyJobRequest()));
+
+        assertTrue(hasListObjectsRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertTrue(hasListObjectsRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertTrue(hasListObjectsRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertTrue(hasListObjectsRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertTrue(hasListObjectsRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
 
         assertFalse(hasListObjectsRequestPayload(getEjectStorageDomainRequest()));
         assertFalse(hasListObjectsRequestPayload(getRequestGetJob()));
@@ -559,6 +676,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateMultiPartUploadPartRequest(getObjectsDetailsRequest()));
         assertFalse(isCreateMultiPartUploadPartRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isCreateMultiPartUploadPartRequest(createVerifyJobRequest()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isCreateMultiPartUploadPartRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -579,6 +701,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCompleteMultiPartUploadRequest(getObjectsDetailsRequest()));
         assertFalse(isCompleteMultiPartUploadRequest(getObjectsWithFullDetailsRequest()));
         assertFalse(isCompleteMultiPartUploadRequest(createVerifyJobRequest()));
+        assertFalse(isCompleteMultiPartUploadRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isCompleteMultiPartUploadRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isCompleteMultiPartUploadRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isCompleteMultiPartUploadRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isCompleteMultiPartUploadRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -599,6 +726,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isGetObjectsWithFullDetails(getRequestSpectraS3GetObject()));
         assertFalse(isGetObjectsWithFullDetails(getObjectsDetailsRequest()));
         assertFalse(isGetObjectsWithFullDetails(createVerifyJobRequest()));
+        assertFalse(isGetObjectsWithFullDetails(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetObjectsWithFullDetails(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetObjectsWithFullDetails(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetObjectsWithFullDetails(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetObjectsWithFullDetails(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -629,6 +761,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isClearSuspectBlobAzureTargetsRequest(getRequestSpectraS3GetObject()));
         assertFalse(isClearSuspectBlobAzureTargetsRequest(getObjectsDetailsRequest()));
         assertFalse(isClearSuspectBlobAzureTargetsRequest(createVerifyJobRequest()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isClearSuspectBlobAzureTargetsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -659,6 +796,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isClearSuspectBlobPoolsRequest(getRequestSpectraS3GetObject()));
         assertFalse(isClearSuspectBlobPoolsRequest(getObjectsDetailsRequest()));
         assertFalse(isClearSuspectBlobPoolsRequest(createVerifyJobRequest()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isClearSuspectBlobPoolsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -689,6 +831,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isClearSuspectBlobS3TargetsRequest(getRequestSpectraS3GetObject()));
         assertFalse(isClearSuspectBlobS3TargetsRequest(getObjectsDetailsRequest()));
         assertFalse(isClearSuspectBlobS3TargetsRequest(createVerifyJobRequest()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isClearSuspectBlobS3TargetsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -719,6 +866,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isClearSuspectBlobTapesRequest(getRequestSpectraS3GetObject()));
         assertFalse(isClearSuspectBlobTapesRequest(getObjectsDetailsRequest()));
         assertFalse(isClearSuspectBlobTapesRequest(createVerifyJobRequest()));
+        assertFalse(isClearSuspectBlobTapesRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobTapesRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isClearSuspectBlobTapesRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isClearSuspectBlobTapesRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isClearSuspectBlobTapesRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -749,6 +901,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
         assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getObjectsDetailsRequest()));
         assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(createVerifyJobRequest()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobAzureTargetsAsDegradedRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -779,6 +936,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
         assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getObjectsDetailsRequest()));
         assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(createVerifyJobRequest()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobDs3TargetsAsDegradedRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -809,6 +971,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getRequestSpectraS3GetObject()));
         assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getObjectsDetailsRequest()));
         assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(createVerifyJobRequest()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobPoolsAsDegradedRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -839,6 +1006,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getRequestSpectraS3GetObject()));
         assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getObjectsDetailsRequest()));
         assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(createVerifyJobRequest()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobS3TargetsAsDegradedRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -869,6 +1041,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getRequestSpectraS3GetObject()));
         assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getObjectsDetailsRequest()));
         assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(createVerifyJobRequest()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isMarkSuspectBlobTapesAsDegradedRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -898,6 +1075,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasIdsRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasIdsRequestPayload(getObjectsDetailsRequest()));
         assertFalse(hasIdsRequestPayload(createVerifyJobRequest()));
+        assertFalse(hasIdsRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasIdsRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasIdsRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasIdsRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasIdsRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -928,6 +1110,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasPutObjectsWithSizeRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasPutObjectsWithSizeRequestPayload(getObjectsDetailsRequest()));
         assertFalse(hasPutObjectsWithSizeRequestPayload(createVerifyJobRequest()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasPutObjectsWithSizeRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -958,6 +1145,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getObjectsDetailsRequest()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(createVerifyJobRequest()));
+        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -988,6 +1180,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasObjectsWithLengthRequestPayload(getRequestCreateObject()));
         assertFalse(hasObjectsWithLengthRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasObjectsWithLengthRequestPayload(getObjectsDetailsRequest()));
+        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
@@ -1018,5 +1215,205 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(isCreateVerifyJobRequest(getRequestCreateObject()));
         assertFalse(isCreateVerifyJobRequest(getRequestSpectraS3GetObject()));
         assertFalse(isCreateVerifyJobRequest(getObjectsDetailsRequest()));
+        assertFalse(isCreateVerifyJobRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isCreateVerifyJobRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isCreateVerifyJobRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isCreateVerifyJobRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isCreateVerifyJobRequest(getBlobsOnDs3TargetSpectraS3Request()));
+    }
+
+    @Test
+    public void hasSimpleObjectsRequestPayload_Test() {
+        assertTrue(hasSimpleObjectsRequestPayload(getPhysicalPlacementForObjects()));
+        assertTrue(hasSimpleObjectsRequestPayload(getPhysicalPlacementForObjectsWithFullDetails()));
+        assertTrue(hasSimpleObjectsRequestPayload(verifyPhysicalPlacementForObjectsRequest()));
+        assertTrue(hasSimpleObjectsRequestPayload(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+        assertTrue(hasSimpleObjectsRequestPayload(getEjectStorageDomainBlobsRequest()));
+
+        assertFalse(hasSimpleObjectsRequestPayload(createVerifyJobRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestBulkGet()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestBulkPut()));
+        assertFalse(hasSimpleObjectsRequestPayload(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(clearSuspectBlobPoolsRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(clearSuspectBlobTapesRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(getObjectsWithFullDetailsRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(getCompleteMultipartUploadRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(getCreateMultiPartUploadPart()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestGetJob()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestAmazonS3GetObject()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestDeleteNotification()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestCreateNotification()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestGetNotification()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestMultiFileDelete()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestCreateObject()));
+        assertFalse(hasSimpleObjectsRequestPayload(getRequestSpectraS3GetObject()));
+        assertFalse(hasSimpleObjectsRequestPayload(getObjectsDetailsRequest()));
+        assertFalse(hasSimpleObjectsRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(hasSimpleObjectsRequestPayload(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(hasSimpleObjectsRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(hasSimpleObjectsRequestPayload(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(hasSimpleObjectsRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
+    }
+
+    @Test
+    public void isGetPhysicalPlacementForObjectsRequest_Test() {
+        assertTrue(isGetPhysicalPlacementForObjectsRequest(getPhysicalPlacementForObjects()));
+
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getPhysicalPlacementForObjectsWithFullDetails()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(verifyPhysicalPlacementForObjectsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getEjectStorageDomainBlobsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(createVerifyJobRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestBulkGet()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestBulkPut()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestGetJob()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestDeleteNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestCreateNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestGetNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestMultiFileDelete()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestCreateObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsRequest(getBlobsOnDs3TargetSpectraS3Request()));
+    }
+
+    @Test
+    public void isGetPhysicalPlacementForObjectsWithFullDetailsRequest_Test() {
+        assertTrue(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getPhysicalPlacementForObjectsWithFullDetails()));
+
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getPhysicalPlacementForObjects()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(verifyPhysicalPlacementForObjectsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getEjectStorageDomainBlobsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(createVerifyJobRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestBulkGet()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestBulkPut()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestGetJob()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestDeleteNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestCreateNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestGetNotification()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestMultiFileDelete()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestCreateObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getObjectsDetailsRequest()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isGetPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnDs3TargetSpectraS3Request()));
+    }
+
+    @Test
+    public void isVerifyPhysicalPlacementForObjectsRequest_Test() {
+        assertTrue(isVerifyPhysicalPlacementForObjectsRequest(verifyPhysicalPlacementForObjectsRequest()));
+
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getPhysicalPlacementForObjects()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getPhysicalPlacementForObjectsWithFullDetails()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getEjectStorageDomainBlobsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(createVerifyJobRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestBulkGet()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestBulkPut()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestGetJob()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestDeleteNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestCreateNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestGetNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestMultiFileDelete()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestCreateObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getObjectsDetailsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsRequest(getBlobsOnDs3TargetSpectraS3Request()));
+    }
+
+    @Test
+    public void isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest_Test() {
+        assertTrue(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getPhysicalPlacementForObjectsWithFullDetails()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getPhysicalPlacementForObjects()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(verifyPhysicalPlacementForObjectsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getEjectStorageDomainBlobsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(createVerifyJobRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestBulkGet()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestBulkPut()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobAzureTargetsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobPoolsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobS3TargetsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(clearSuspectBlobTapesRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobAzureTargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobDs3TargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobPoolsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobS3TargetsAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(markSuspectBlobTapesAsDegradedRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getObjectsWithFullDetailsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getCompleteMultipartUploadRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getCreateMultiPartUploadPart()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestGetJob()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestAmazonS3GetObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestDeleteNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestCreateNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestGetNotification()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestMultiFileDelete()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestCreateObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getRequestSpectraS3GetObject()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getObjectsDetailsRequest()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnAzureTargetSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnTapeSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnS3TargetSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnPoolSpectraS3Request()));
+        assertFalse(isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(getBlobsOnDs3TargetSpectraS3Request()));
     }
 }
