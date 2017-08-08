@@ -1,10 +1,4 @@
-<#include "../common/copyright.ftl" />
-
-package models
-
-import "log"
-
-<#include "parser_body.ftl" />
+<#include "base_type_parser.ftl" />
 
 func parse${modelName}Slice(tagName string, xmlNodes []XmlNode, aggErr *AggregateError) []${modelName} {
     var result []${modelName}
