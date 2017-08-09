@@ -116,4 +116,15 @@ public class ParseChildNodeImpls_Test {
         assertThat(parseElement.getXmlTag(), is("CommonPrefixes"));
         assertThat(parseElement.getParsingCode(), is(expected));
     }
+
+    @Test
+    public void ParseChildNodeAsNullableDs3TypeTest() {
+        final String expected = String.format("var model %s\n" +
+                "            model.parse(&child, aggErr)\n" +
+                "            %s.%s = &model", CHILD_TYPE, MODEL_NAME, PARAM_NAME);
+
+        final ParseElement parseElement = new ParseChildNodeAsNullableDs3Type(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
+        assertThat(parseElement.getXmlTag(), is(XML_TAG));
+        assertThat(parseElement.getParsingCode(), is(expected));
+    }
 }

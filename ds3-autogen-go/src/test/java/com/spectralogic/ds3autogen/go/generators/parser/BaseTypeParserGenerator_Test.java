@@ -190,7 +190,8 @@ public class BaseTypeParserGenerator_Test {
                 LIST_WITH_ENCAPS_TAG_ELEMENT,
                 DS3_TYPE_ELEMENT,
                 LIST_ENUM_ELEMENT,
-                COMMON_PREFIX_ELEMENT);
+                COMMON_PREFIX_ELEMENT,
+                DS3_PTR_TYPE_ELEMENT);
 
         final String modelName = "modelName";
 
@@ -204,7 +205,8 @@ public class BaseTypeParserGenerator_Test {
                 new ParseChildNodeAsSlice("TestCollectionValue", "CustomMarshaledName", modelName, LIST_WITH_ENCAPS_TAG_ELEMENT.getName(), removePath(LIST_WITH_ENCAPS_TAG_ELEMENT.getComponentType())),
                 new ParseChildNodeAsDs3Type(DS3_TYPE_ELEMENT.getName(), modelName, DS3_TYPE_ELEMENT.getName()),
                 new ParseChildNodeAddEnumToSlice(LIST_ENUM_ELEMENT.getName(), modelName, LIST_ENUM_ELEMENT.getName(), removePath(LIST_ENUM_ELEMENT.getComponentType())),
-                new ParseChildNodeAsCommonPrefix(modelName, "CommonPrefixes"));
+                new ParseChildNodeAsCommonPrefix(modelName, "CommonPrefixes"),
+                new ParseChildNodeAsNullableDs3Type(DS3_PTR_TYPE_ELEMENT.getName(), modelName, DS3_PTR_TYPE_ELEMENT.getName(), removePath(DS3_PTR_TYPE_ELEMENT.getType())));
 
         final ImmutableMap<String, Ds3Type> typeMape = ImmutableMap.of(
                 ENUM_ELEMENT.getType(), new Ds3Type(ENUM_ELEMENT.getType(), "", ImmutableList.of(), ImmutableList.of(ENUM_CONSTANT)));

@@ -63,6 +63,23 @@ data class ParseChildNodeAsDs3Type(
 }
 
 /**
+ * Creates the Go code for parsing child nodes that are pointers to a Ds3 defined type.
+ */
+data class ParseChildNodeAsNullableDs3Type(
+        override val xmlTag: String,
+        val modelName: String,
+        val paramName: String,
+        val childType: String) : ParseElement {
+
+    override val parsingCode: String
+        get() {
+            return "var model $childType\n" +
+                    goIndent(3) + "model.parse(&child, aggErr)\n" +
+                    goIndent(3) + "$modelName.$paramName = &model"
+        }
+}
+
+/**
  * Creates the Go code for parsing multiple child nodes of the same type, which are
  * encapsulated within a parent xml tag.
  */
