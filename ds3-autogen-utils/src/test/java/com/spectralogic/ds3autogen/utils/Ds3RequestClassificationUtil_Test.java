@@ -1120,6 +1120,7 @@ public class Ds3RequestClassificationUtil_Test {
     @Test
     public void hasGetObjectsWithLengthOffsetRequestPayload_Test() {
         assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getRequestBulkGet()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(createVerifyJobRequest()));
 
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestBulkPut()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(clearSuspectBlobAzureTargetsRequest()));
@@ -1144,47 +1145,11 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestCreateObject()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestSpectraS3GetObject()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getObjectsDetailsRequest()));
-        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(createVerifyJobRequest()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnTapeSpectraS3Request()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnPoolSpectraS3Request()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
-    }
-
-    @Test
-    public void hasObjectsWithLengthRequestPayload_Test() {
-        assertTrue(hasObjectsWithLengthRequestPayload(createVerifyJobRequest()));
-
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestBulkGet()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestBulkPut()));
-        assertFalse(hasObjectsWithLengthRequestPayload(clearSuspectBlobAzureTargetsRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(clearSuspectBlobPoolsRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(clearSuspectBlobS3TargetsRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(clearSuspectBlobTapesRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(markSuspectBlobAzureTargetsAsDegradedRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(markSuspectBlobDs3TargetsAsDegradedRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(markSuspectBlobPoolsAsDegradedRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(markSuspectBlobS3TargetsAsDegradedRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(markSuspectBlobTapesAsDegradedRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getObjectsWithFullDetailsRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getCompleteMultipartUploadRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getCreateMultiPartUploadPart()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestGetJob()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestAmazonS3GetObject()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestDeleteNotification()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestCreateNotification()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestGetNotification()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestVerifyPhysicalPlacement()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestMultiFileDelete()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestCreateObject()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getRequestSpectraS3GetObject()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getObjectsDetailsRequest()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnAzureTargetSpectraS3Request()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnTapeSpectraS3Request()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnS3TargetSpectraS3Request()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnPoolSpectraS3Request()));
-        assertFalse(hasObjectsWithLengthRequestPayload(getBlobsOnDs3TargetSpectraS3Request()));
     }
 
     @Test
