@@ -537,18 +537,7 @@ public final class Ds3RequestClassificationUtil {
      *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler
      */
     public static boolean hasGetObjectsWithLengthOffsetRequestPayload(final Ds3Request ds3Request) {
-        return isBulkGetRequest(ds3Request);
-    }
-
-    /**
-     * Determines if a Ds3Request has the request payload:
-     * <Objects><Object Name="o1" Length="1" /><Object Name="o2" Length="3" />...</Objects>
-     *
-     * @return true if request is one of the following:
-     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler
-     */
-    public static boolean hasObjectsWithLengthRequestPayload(final Ds3Request ds3Request) {
-        return isCreateVerifyJobRequest(ds3Request);
+        return isBulkGetRequest(ds3Request) || isCreateVerifyJobRequest(ds3Request);
     }
 
     /**

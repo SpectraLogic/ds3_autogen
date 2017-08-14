@@ -1117,10 +1117,13 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("name *string"));
         assertTrue(requestCode.contains("priority Priority"));
 
-        assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3Request(bucketName string, objects []Ds3VerifyObject) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3Request(bucketName string, objectNames []string) *VerifyBulkJobSpectraS3Request {"));
         assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_verify\")"));
         assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("content: buildDs3VerifyObjectListStream(objects),"));
+        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
+
+        assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3RequestWithPartialObjects(bucketName string, objects []Ds3GetObject) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("content: buildDs3GetObjectListStream(objects),"));
 
         assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return verifyBulkJobSpectraS3Request.content"));
