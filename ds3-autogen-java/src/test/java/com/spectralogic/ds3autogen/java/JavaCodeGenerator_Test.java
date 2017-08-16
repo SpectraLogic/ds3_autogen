@@ -23,6 +23,7 @@ import org.junit.Test;
 import static com.spectralogic.ds3autogen.java.JavaCodeGenerator.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 public class JavaCodeGenerator_Test {
@@ -76,5 +77,12 @@ public class JavaCodeGenerator_Test {
         assertThat(getRequestGenerator(getCreateMultiPartUploadPart()), instanceOf(StreamRequestPayloadGenerator.class));
         assertThat(getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(CompleteMultipartUploadRequestGenerator.class));
         assertThat(getRequestGenerator(getBucketRequest()), instanceOf(BaseRequestGenerator.class));
+
+        // Verify get blobs on target commands are NOT special cased to have List<Ds3Object> request payloads
+        assertThat(getRequestGenerator(getBlobsOnAzureTargetSpectraS3Request()), not(instanceOf(ObjectsRequestPayloadGenerator.class)));
+        assertThat(getRequestGenerator(getBlobsOnTapeSpectraS3Request()), not(instanceOf(ObjectsRequestPayloadGenerator.class)));
+        assertThat(getRequestGenerator(getBlobsOnS3TargetSpectraS3Request()), not(instanceOf(ObjectsRequestPayloadGenerator.class)));
+        assertThat(getRequestGenerator(getBlobsOnPoolSpectraS3Request()), not(instanceOf(ObjectsRequestPayloadGenerator.class)));
+        assertThat(getRequestGenerator(getBlobsOnDs3TargetSpectraS3Request()), not(instanceOf(ObjectsRequestPayloadGenerator.class)));
     }
 }

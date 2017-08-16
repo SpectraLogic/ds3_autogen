@@ -517,7 +517,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (isBulkRequest(ds3Request)) {
             return new BulkRequestGenerator();
         }
-        if (hasListObjectsRequestPayload(ds3Request)) {
+        if (hasSimpleObjectsRequestPayload(ds3Request) || isCreateVerifyJobRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
         }
         if (isCreateObjectRequest(ds3Request)) {
@@ -561,7 +561,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (hasStringRequestPayload(ds3Request)) {
             return config.getTemplate("request/request_with_string_payload_template.ftl");
         }
-        if (hasListObjectsRequestPayload(ds3Request)) {
+        if (hasSimpleObjectsRequestPayload(ds3Request) || isCreateVerifyJobRequest(ds3Request)) {
             return config.getTemplate("request/objects_request_payload_request_template.ftl");
         }
         if (isMultiFileDeleteRequest(ds3Request)) {

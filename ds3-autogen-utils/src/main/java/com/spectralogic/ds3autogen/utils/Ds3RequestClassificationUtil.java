@@ -544,7 +544,7 @@ public final class Ds3RequestClassificationUtil {
      * Determines if a Ds3Request is the SpectraDs3 command CreateVerifyJobRequest also known
      * as VerifyBulkJobSpectraS3Request
      */
-    static boolean isCreateVerifyJobRequest(final Ds3Request ds3Request) {
+    public static boolean isCreateVerifyJobRequest(final Ds3Request ds3Request) {
         return ds3Request.getClassification() == Classification.spectrads3
                 && ds3Request.getAction() == Action.MODIFY
                 && ds3Request.getHttpVerb() == HttpVerb.PUT
