@@ -645,6 +645,13 @@ public class NetCodeGenerator_Test {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
+        assertTrue(requestCode.contains("using Ds3.Calls.Util;"));
+        assertTrue(requestCode.contains("using Ds3.Models;"));
+        assertTrue(requestCode.contains("using System;"));
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+        assertTrue(requestCode.contains("using System.IO;"));
+        assertTrue(requestCode.contains("using System.Linq;"));
+
         assertFalse(TestHelper.hasRequiredParam("Blobs", "bool", requestCode));
         assertTrue(TestHelper.hasRequiredParam("BucketId", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "string", requestCode));
@@ -659,6 +666,12 @@ public class NetCodeGenerator_Test {
                 new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
         assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
+
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalDs3ObjectNames(this.Objects);"));
+
+        assertTrue(requestCode.contains("internal override long GetContentLength()"));
+        assertTrue(requestCode.contains("return GetContentStream().Length;"));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
