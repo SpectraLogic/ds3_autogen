@@ -470,9 +470,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
-        if (isEjectStorageDomainBlobsRequest(ds3Request)
-                || isPhysicalPlacementRequest(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)) {
+        if (hasSimpleObjectsRequestPayload(ds3Request)
+                || isMultiFileDeleteRequest(ds3Request)
+                || isCreateVerifyJobRequest(ds3Request)) { //TODO SA-207
             return new ObjectsRequestPayloadGenerator();
         }
         if (hasStringRequestPayload(ds3Request)) {
@@ -504,16 +504,16 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return config.getTemplate("request/stream_request_payload.ftl");
         }
-        if (isEjectStorageDomainBlobsRequest(ds3Request)) {
-            return config.getTemplate("request/eject_storage_domain_blobs.ftl");
+        if (hasSimpleObjectsRequestPayload(ds3Request)) {
+            return config.getTemplate("request/object_names_request_payload.ftl");
         }
-        if (isPhysicalPlacementRequest(ds3Request)) {
+        if (isCreateVerifyJobRequest(ds3Request)) { //TODO SA-207
             return config.getTemplate("request/objects_request_payload.ftl");
         }
-        if (isMultiFileDeleteRequest(ds3Request)) {
+        if (isMultiFileDeleteRequest(ds3Request)) { //TODO cleanup template to use Net marshaling util
             return config.getTemplate("request/multi_file_delete_request.ftl");
         }
-        if (hasIdsRequestPayload(ds3Request)) {
+        if (hasIdsRequestPayload(ds3Request)) { //TODO cleanup move adding ids param to generator
             return config.getTemplate("request/ids_request_payload.ftl");
         }
         if (hasStringRequestPayload(ds3Request)) {
