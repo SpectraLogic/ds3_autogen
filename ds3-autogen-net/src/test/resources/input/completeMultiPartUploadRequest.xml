@@ -1,0 +1,53 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="amazons3" Name="com.spectralogic.s3.server.handler.reqhandler.amazons3.CompleteMultiPartUploadRequestHandler">
+                <Request BucketRequirement="REQUIRED" HttpVerb="POST" IncludeIdInPath="false" ObjectRequirement="REQUIRED">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="UploadId" Type="java.util.UUID"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>404</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.A4F544C672FC8C11593427E560385533</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.server.domain.CompleteMultipartUploadResultApiBean" NameToMarshal="CompleteMultipartUploadResult">
+                <Elements>
+                    <Element Name="Bucket" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="ETag" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Key" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Location" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

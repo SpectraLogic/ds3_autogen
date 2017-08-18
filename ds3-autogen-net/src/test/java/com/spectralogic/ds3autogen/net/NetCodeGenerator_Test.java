@@ -1496,4 +1496,81 @@ public class NetCodeGenerator_Test {
 
         assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
     }
+
+    @Test
+    public void completeMultiPartUploadRequest_Test() throws IOException, TemplateModelException {
+        final String requestName = "CompleteMultiPartUploadRequest";
+        final String responseType = "CompleteMultipartUploadResult";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                responseType);
+
+        codeGenerator.generateCode(fileUtils, "/input/completeMultiPartUploadRequest.xml");
+
+        //Generate Request code
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(requestCode.contains("using Ds3.Models;"));
+        assertTrue(requestCode.contains("using System;"));
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+        assertTrue(requestCode.contains("using System.IO;"));
+        assertTrue(requestCode.contains("using Ds3.Calls.Util;"));
+        assertTrue(requestCode.contains("using System.Linq;"));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("UploadId", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("Parts", "IEnumerable<Part>", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("String", "ObjectName"),
+                new Arguments("IEnumerable<Part>", "Parts"),
+                new Arguments("Guid", "uploadId"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
+
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalPartsToStream(Parts);"));
+
+        assertTrue(requestCode.contains("internal override long GetContentLength()"));
+        assertTrue(requestCode.contains("return GetContentStream().Length;"));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responseType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responseType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(parserHasResponseCode(200, parserCode));
+        assertTrue(parserHasPayload(responseType, responseType, parserCode));
+    }
 }
