@@ -452,6 +452,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * Retrieves the associated .net request generator for the specified Ds3Request
      */
     private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new PartsRequestPayloadGenerator();
+        }
         if (isGetObjectRequest(ds3Request)) {
             return new GetObjectRequestGenerator();
         }
@@ -483,6 +486,9 @@ public class NetCodeGenerator implements CodeGenerator {
      * code for this Ds3Request
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return config.getTemplate("request/parts_request_payload.ftl");
+        }
         if (isGetObjectRequest(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
