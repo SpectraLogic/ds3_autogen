@@ -12,10 +12,12 @@ namespace Ds3.Calls
 
         <#list constructors as constructor>
         ${constructor.documentation}
-        public ${name}(${netHelper.constructor(helper.addArgument(constructor.constructorArgs, "ids", "List<string>"))}) : base(ids)
+        public ${name}(${netHelper.constructor(constructor.constructorArgs)}) : base(ids)
         {
             <#list constructor.constructorArgs as arg>
+            <#if arg.getName() != "Ids">
             this.${arg.getName()?cap_first} = ${netHelper.paramAssignmentRightValue(arg)};
+            </#if>
             </#list>
             <#if constructor.operation??>
             this.QueryParams.Add("operation", "${constructor.operation.toString()?lower_case}");
@@ -24,7 +26,6 @@ namespace Ds3.Calls
 
         }
         </#list>
-
 
         <#include "common/http_verb_and_path.ftl" />
     }

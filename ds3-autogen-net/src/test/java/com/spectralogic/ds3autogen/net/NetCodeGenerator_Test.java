@@ -61,15 +61,15 @@ public class NetCodeGenerator_Test {
         assertThat(getTemplateModelGenerator(getCompleteMultipartUploadRequest()), instanceOf(PartsRequestPayloadGenerator.class));
 
         // Requests with ids payload
-        assertThat(getTemplateModelGenerator(clearSuspectBlobAzureTargetsRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(clearSuspectBlobPoolsRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(clearSuspectBlobS3TargetsRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(clearSuspectBlobTapesRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(markSuspectBlobPoolsAsDegradedRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(BaseRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(BaseRequestGenerator.class));
+        assertThat(getTemplateModelGenerator(clearSuspectBlobAzureTargetsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(clearSuspectBlobPoolsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(clearSuspectBlobS3TargetsRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(clearSuspectBlobTapesRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(markSuspectBlobPoolsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(IdsRequestPayloadGenerator.class));
 
         // Non-special cased requests
         assertThat(getTemplateModelGenerator(getGetBlobPersistence()), instanceOf(BaseRequestGenerator.class));

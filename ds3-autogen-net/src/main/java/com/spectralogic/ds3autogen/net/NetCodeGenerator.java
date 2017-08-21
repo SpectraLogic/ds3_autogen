@@ -480,6 +480,9 @@ public class NetCodeGenerator implements CodeGenerator {
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
+        if (hasIdsRequestPayload(ds3Request)) {
+            return new IdsRequestPayloadGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -512,10 +515,10 @@ public class NetCodeGenerator implements CodeGenerator {
         if (hasSimpleObjectsRequestPayload(ds3Request)) {
             return config.getTemplate("request/object_names_request_payload.ftl");
         }
-        if (isMultiFileDeleteRequest(ds3Request)) { //TODO cleanup template to use Net marshaling util
+        if (isMultiFileDeleteRequest(ds3Request)) {
             return config.getTemplate("request/multi_file_delete_request.ftl");
         }
-        if (hasIdsRequestPayload(ds3Request)) { //TODO cleanup move adding ids param to generator
+        if (hasIdsRequestPayload(ds3Request)) {
             return config.getTemplate("request/ids_request_payload.ftl");
         }
         if (hasStringRequestPayload(ds3Request)) {

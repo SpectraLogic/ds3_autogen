@@ -271,6 +271,12 @@ public class NetFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
+        assertTrue(requestCode.contains("using Ds3.Calls.Util;"));
+        assertTrue(requestCode.contains("using Ds3.Models;"));
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+        assertTrue(requestCode.contains("using System.IO;"));
+        assertTrue(requestCode.contains("using System.Linq;"));
+
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
@@ -285,6 +291,11 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_put\");"));
+
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalDs3ObjectNameAndSize(this.Objects);"));
+        assertTrue(requestCode.contains("internal override long GetContentLength()"));
+        assertTrue(requestCode.contains("return GetContentStream().Length;"));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
@@ -984,6 +995,12 @@ public class NetFunctionalTests {
 
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
 
+        assertTrue(requestCode.contains("using Ds3.Calls.Util;"));
+        assertTrue(requestCode.contains("using Ds3.Models;"));
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+        assertTrue(requestCode.contains("using System.IO;"));
+        assertTrue(requestCode.contains("using System.Linq;"));
+
         assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
@@ -997,6 +1014,11 @@ public class NetFunctionalTests {
                 new Arguments("string", "BucketName"),
                 new Arguments("IEnumerable<Ds3Object>", "Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalDeleteObjectNames(this.Objects);"));
+        assertTrue(requestCode.contains("internal override long GetContentLength()"));
+        assertTrue(requestCode.contains("return GetContentStream().Length;"));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
@@ -1511,9 +1533,10 @@ public class NetFunctionalTests {
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "Force", "bool?", requestCode));
 
-        assertTrue(requestCode.contains("public ClearSuspectBlobAzureTargetsSpectraS3Request(List<string> ids) : base(ids)"));
-        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("List<string>", "ids"));
+        assertTrue(requestCode.contains("public ClearSuspectBlobAzureTargetsSpectraS3Request(IEnumerable<string> ids) : base(ids)"));
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(new Arguments("IEnumerable<string>", "ids"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+        assertFalse(requestCode.contains("this.Ids = ids.ToList();"));
 
         //Generate Responses
         final String responseCode = codeGenerator.getResponseCode();
