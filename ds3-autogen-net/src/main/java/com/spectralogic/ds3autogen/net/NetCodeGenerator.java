@@ -451,7 +451,7 @@ public class NetCodeGenerator implements CodeGenerator {
     /**
      * Retrieves the associated .net request generator for the specified Ds3Request
      */
-    private RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
+    static RequestModelGenerator<?> getTemplateModelGenerator(final Ds3Request ds3Request) {
         if (isCompleteMultiPartUploadRequest(ds3Request)) {
             return new PartsRequestPayloadGenerator();
         }
@@ -461,8 +461,11 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkPutRequest(ds3Request)) {
             return new BulkPutRequestGenerator();
         }
-        if (isBulkGetRequest(ds3Request)) {
+        if (isBulkGetRequest(ds3Request)) { //Note: this must come before hasGetObjectsWithLengthOffsetRequestPayload
             return new BulkGetRequestGenerator();
+        }
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
+            return new PartialObjectRequestPayloadGenerator();
         }
         if (isCreateObjectRequest(ds3Request)) {
             return new PutObjectRequestGenerator();
@@ -471,8 +474,7 @@ public class NetCodeGenerator implements CodeGenerator {
             return new StreamRequestPayloadGenerator();
         }
         if (hasSimpleObjectsRequestPayload(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)
-                || isCreateVerifyJobRequest(ds3Request)) { //TODO SA-207
+                || isMultiFileDeleteRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
         }
         if (hasStringRequestPayload(ds3Request)) {
@@ -495,8 +497,11 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkPutRequest(ds3Request)) {
             return config.getTemplate("request/bulk_put_request.ftl");
         }
-        if (isBulkGetRequest(ds3Request)) {
+        if (isBulkGetRequest(ds3Request)) { //Note: this must come before hasGetObjectsWithLengthOffsetRequestPayload
             return config.getTemplate("request/bulk_get_request.ftl");
+        }
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
+            return config.getTemplate("request/partial_objects_request_payload.ftl");
         }
         if (isCreateObjectRequest(ds3Request)) {
             return config.getTemplate("request/put_object_request.ftl");
@@ -506,9 +511,6 @@ public class NetCodeGenerator implements CodeGenerator {
         }
         if (hasSimpleObjectsRequestPayload(ds3Request)) {
             return config.getTemplate("request/object_names_request_payload.ftl");
-        }
-        if (isCreateVerifyJobRequest(ds3Request)) { //TODO SA-207
-            return config.getTemplate("request/objects_request_payload.ftl");
         }
         if (isMultiFileDeleteRequest(ds3Request)) { //TODO cleanup template to use Net marshaling util
             return config.getTemplate("request/multi_file_delete_request.ftl");
