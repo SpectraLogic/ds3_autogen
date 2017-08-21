@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 
 public class NetCodeGenerator_ModelParsers_Test {
 
-    private final static Logger LOG = LoggerFactory.getLogger(NetCodeGenerator_Test.class);
+    private final static Logger LOG = LoggerFactory.getLogger(NetFunctionalTests.class);
     private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
 
     @Rule

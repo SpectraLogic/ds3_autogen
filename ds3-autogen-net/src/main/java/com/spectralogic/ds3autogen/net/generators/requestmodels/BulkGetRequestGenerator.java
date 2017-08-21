@@ -17,37 +17,19 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
-import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
-public class BulkGetRequestGenerator extends BaseRequestGenerator {
-
-    /**
-     * Gets the list of Arguments for creating the constructor, which is derived from the
-     * required parameters
-     */
-    @Override
-    public ImmutableList<Arguments> toConstructorArgsList(final Ds3Request ds3Request) {
-        return toRequiredArgumentsList(ds3Request);
-    }
-
-    /**
-     * Gets the list of required Arguments from a Ds3Request
-     */
-    @Override
-    public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.add(new Arguments("IEnumerable<string>", "FullObjects"));
-        builder.add(new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
-        return builder.build();
-    }
+/**
+ * Used to generate GetBulkJobSpectraS3Request which has a special-cased implementation
+ * of the optional argument ChunkClientProcessingOrderGuarantee in template
+ * bulk_get_request.ftl, and also has an xml request payload of format:
+ * <Objects><Object Name="o1" Length="1" Offset="2" /><Object Name="o2" Length="3" Offset="4" />...</Objects>
+ */
+public class BulkGetRequestGenerator extends PartialObjectRequestPayloadGenerator {
 
     /**
      * Gets the list of optional Arguments from the Ds3Request list of optional Ds3Param,
