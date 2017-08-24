@@ -32,7 +32,7 @@ public class GetObjectRequestGenerator_Test {
     @Test
     public void getAdditionalContent_Test() {
         final String expected = "self.offset = offset\n" +
-                "    self.stream = stream\n";
+                "        self.stream = stream\n";
         final String result = generator.getAdditionalContent(null, null);
         assertThat(result, is(expected));
     }

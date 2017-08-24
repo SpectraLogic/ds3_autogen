@@ -262,10 +262,10 @@ public class BaseRequestGenerator_Test {
     @Test
     public void toDocumentation_Test() {
         final String expected = "'''\n" +
-                "  This is how you use test one request\n" +
-                "  `param_one` This is how you use param one\n" +
-                "  `does_not_exist` \n" +
-                "  '''\n";
+                "    This is how you use test one request\n" +
+                "    `param_one` This is how you use param one\n" +
+                "    `does_not_exist` \n" +
+                "    '''\n";
 
         final Ds3DocSpec docSpec = new Ds3DocSpecImpl(
                 ImmutableMap.of(

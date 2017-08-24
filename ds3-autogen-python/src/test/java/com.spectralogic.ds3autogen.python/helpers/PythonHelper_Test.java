@@ -47,9 +47,9 @@ public class PythonHelper_Test {
     public void pythonIndent_Test() {
         assertThat(pythonIndent(-1), is(""));
         assertThat(pythonIndent(0), is(""));
-        assertThat(pythonIndent(1), is("  "));
-        assertThat(pythonIndent(2), is("    "));
-        assertThat(pythonIndent(3), is("      "));
+        assertThat(pythonIndent(1), is("    "));
+        assertThat(pythonIndent(2), is("        "));
+        assertThat(pythonIndent(3), is("            "));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class PythonHelper_Test {
 
     @Test
     public void toTypeContentLines_Attribute_Test() {
-        final String expected = "\n  Line1,\n  Line2\n";
+        final String expected = "\n    Line1,\n    Line2\n";
         final ImmutableList<String> typeContents = ImmutableList.of("Line1", "Line2");
 
         final String result = toCommaSeparatedLines(typeContents, 1);

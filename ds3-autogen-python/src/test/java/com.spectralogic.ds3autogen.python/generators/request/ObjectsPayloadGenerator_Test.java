@@ -33,9 +33,9 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void getAdditionalContent_OptionalFileObjectList_Test() {
         final String expected = "if object_list is not None:\n" +
-                "      if not isinstance(object_list, FileObjectList):\n" +
-                "        raise TypeError('com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler should have request payload of type: FileObjectList')\n" +
-                "      self.body = xmldom.tostring(object_list.to_xml())\n";
+                "            if not isinstance(object_list, FileObjectList):\n" +
+                "                raise TypeError('com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainRequestHandler should have request payload of type: FileObjectList')\n" +
+                "            self.body = xmldom.tostring(object_list.to_xml())\n";
         final Ds3Request request = getEjectStorageDomainBlobsRequest();
         final String result = generator.getAdditionalContent(request, request.getName());
         assertThat(result, is(expected));
@@ -44,9 +44,9 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void getAdditionalContent_RequiredFileObjectList_Test() {
         final String expected = "if object_list is not None:\n" +
-                "      if not isinstance(object_list, FileObjectList):\n" +
-                "        raise TypeError('com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler should have request payload of type: FileObjectList')\n" +
-                "      self.body = xmldom.tostring(object_list.to_xml())\n";
+                "            if not isinstance(object_list, FileObjectList):\n" +
+                "                raise TypeError('com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler should have request payload of type: FileObjectList')\n" +
+                "            self.body = xmldom.tostring(object_list.to_xml())\n";
         final Ds3Request request = getRequestBulkGet();
         final String result = generator.getAdditionalContent(request, request.getName());
         assertThat(result, is(expected));
@@ -55,9 +55,9 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void getAdditionalContent_RequiredDeleteObjectList_Test() {
         final String expected = "if object_list is not None:\n" +
-                "      if not isinstance(object_list, DeleteObjectList):\n" +
-                "        raise TypeError('com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectsRequestHandler should have request payload of type: DeleteObjectList')\n" +
-                "      self.body = xmldom.tostring(object_list.to_xml())\n";
+                "            if not isinstance(object_list, DeleteObjectList):\n" +
+                "                raise TypeError('com.spectralogic.s3.server.handler.reqhandler.amazons3.DeleteObjectsRequestHandler should have request payload of type: DeleteObjectList')\n" +
+                "            self.body = xmldom.tostring(object_list.to_xml())\n";
         final Ds3Request request = getRequestMultiFileDelete();
         final String result = generator.getAdditionalContent(request, request.getName());
         assertThat(result, is(expected));
@@ -66,9 +66,9 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void getAdditionalContent_RequiredPartList_Test() {
         final String expected = "if part_list is not None:\n" +
-                "      if not isinstance(part_list, PartList):\n" +
-                "        raise TypeError('com.spectralogic.s3.server.handler.reqhandler.amazons3.CompleteMultiPartUploadRequestHandler should have request payload of type: PartList')\n" +
-                "      self.body = xmldom.tostring(part_list.to_xml())\n";
+                "            if not isinstance(part_list, PartList):\n" +
+                "                raise TypeError('com.spectralogic.s3.server.handler.reqhandler.amazons3.CompleteMultiPartUploadRequestHandler should have request payload of type: PartList')\n" +
+                "            self.body = xmldom.tostring(part_list.to_xml())\n";
         final Ds3Request request = getCompleteMultipartUploadRequest();
         final String result = generator.getAdditionalContent(request, request.getName());
         assertThat(result, is(expected));
@@ -83,9 +83,9 @@ public class ObjectsPayloadGenerator_Test {
     @Test
     public void toPayloadAssignment_Test() {
         final String expected = "if PayloadName is not None:\n" +
-                "      if not isinstance(PayloadName, PayloadType):\n" +
-                "        raise TypeError('RequestName should have request payload of type: PayloadType')\n" +
-                "      self.body = xmldom.tostring(PayloadName.to_xml())\n";
+                "            if not isinstance(PayloadName, PayloadType):\n" +
+                "                raise TypeError('RequestName should have request payload of type: PayloadType')\n" +
+                "            self.body = xmldom.tostring(PayloadName.to_xml())\n";
 
         final String result = toPayloadAssignment("RequestName", "PayloadName", "PayloadType");
         assertThat(result, is(expected));
