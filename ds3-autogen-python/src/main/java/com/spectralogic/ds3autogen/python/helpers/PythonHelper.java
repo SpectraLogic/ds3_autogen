@@ -28,7 +28,7 @@ import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 public final class PythonHelper {
 
     private final static PythonHelper pythonHelper = new PythonHelper();
-    private final static String PYTHON_INDENT = "  ";
+    private final static String PYTHON_INDENT = "    ";
 
     private PythonHelper() {
         //pass

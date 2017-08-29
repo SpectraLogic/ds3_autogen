@@ -29,18 +29,18 @@ public class PaginationResponseGenerator_Test {
     @Test
     public void toInitResponse_Test() {
         final String expected = "def __init__(self, response, request):\n" +
-                "    self.paging_truncated = None\n" +
-                "    self.paging_total_result_count = None\n" +
-                "    super(self.__class__, self).__init__(response, request)\n";
+                "        self.paging_truncated = None\n" +
+                "        self.paging_total_result_count = None\n" +
+                "        super(self.__class__, self).__init__(response, request)\n";
         assertThat(generator.toInitResponse(), is(expected));
     }
 
     @Test
     public void toParseResponsePayload_GetObjects_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), array())\n" +
-                "      self.paging_truncated = self.parse_int_header('page-truncated', response.getheaders())\n" +
-                "      self.paging_total_result_count = self.parse_int_header('total-result-count', response.getheaders())";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), array())\n" +
+                "            self.paging_truncated = self.parse_int_header('page-truncated', response.getheaders())\n" +
+                "            self.paging_total_result_count = self.parse_int_header('total-result-count', response.getheaders())";
 
         final Ds3Request ds3Request = getObjectsDetailsRequest();
         assertThat(generator.toParseResponsePayload(ds3Request), is(expected));

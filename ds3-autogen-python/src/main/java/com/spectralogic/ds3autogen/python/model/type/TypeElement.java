@@ -33,7 +33,7 @@ public class TypeElement implements TypeContent {
 
     public String toPythonCode() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("'").append(capFirst(xmlTag)).append("' : ").append(typeModel);
+        builder.append("'").append(capFirst(xmlTag)).append("': ").append(typeModel);
         if (!typeModel.equals("None")) {
             builder.append("()");
         }

@@ -28,13 +28,13 @@ public class P3PutObjectRequestGenerator_Test {
     @Test
     public void getAdditionalContent_Test() {
         final String expected = "if headers is not None:\n" +
-                "      for key, val in headers.items():\n" +
-                "        if val:\n" +
-                "          self.headers[key] = val\n" +
-                "    self.headers['Content-Length'] = length\n" +
-                "    self.object_name = typeCheckString(object_name)\n" +
-                "    object_data = StreamWithLength(stream, length)\n" +
-                "    self.body = object_data\n";
+                "            for key, val in headers.items():\n" +
+                "                if val:\n" +
+                "                    self.headers[key] = val\n" +
+                "        self.headers['Content-Length'] = length\n" +
+                "        self.object_name = typeCheckString(object_name)\n" +
+                "        object_data = StreamWithLength(stream, length)\n" +
+                "        self.body = object_data\n";
         final String result = generator.getAdditionalContent(getRequestCreateObject(), "PutObjectRequest");
         assertThat(result, is(expected));
     }

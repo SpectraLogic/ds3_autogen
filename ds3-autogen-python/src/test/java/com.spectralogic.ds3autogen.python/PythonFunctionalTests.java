@@ -257,14 +257,14 @@ public class PythonFunctionalTests {
 
         assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
         assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
-                "    if self.response.status == 200:\n" +
-                "      self.result = HeadRequestStatus.EXISTS\n" +
-                "    elif self.response.status == 403:\n" +
-                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
-                "    elif self.response.status == 404:\n" +
-                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
-                "    else:\n" +
-                "      self.result = HeadRequestStatus.UNKNOWN"));
+                "        if self.response.status == 200:\n" +
+                "            self.result = HeadRequestStatus.EXISTS\n" +
+                "        elif self.response.status == 403:\n" +
+                "            self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
+                "        elif self.response.status == 404:\n" +
+                "            self.result = HeadRequestStatus.DOESNTEXIST\n" +
+                "        else:\n" +
+                "            self.result = HeadRequestStatus.UNKNOWN"));
 
         assertTrue(ds3Code.contains("class HeadRequestStatus(object):"));
 
@@ -290,14 +290,14 @@ public class PythonFunctionalTests {
 
         assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
         assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
-                "    if self.response.status == 200:\n" +
-                "      self.result = HeadRequestStatus.EXISTS\n" +
-                "    elif self.response.status == 403:\n" +
-                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
-                "    elif self.response.status == 404:\n" +
-                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
-                "    else:\n" +
-                "      self.result = HeadRequestStatus.UNKNOWN"));
+                "        if self.response.status == 200:\n" +
+                "            self.result = HeadRequestStatus.EXISTS\n" +
+                "        elif self.response.status == 403:\n" +
+                "            self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
+                "        elif self.response.status == 404:\n" +
+                "            self.result = HeadRequestStatus.DOESNTEXIST\n" +
+                "        else:\n" +
+                "            self.result = HeadRequestStatus.UNKNOWN"));
 
         assertTrue(ds3Code.contains("class HeadRequestStatus(object):"));
 

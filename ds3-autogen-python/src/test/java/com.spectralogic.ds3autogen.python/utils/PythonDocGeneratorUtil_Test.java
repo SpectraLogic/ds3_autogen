@@ -39,7 +39,7 @@ public class PythonDocGeneratorUtil_Test {
 
     @Test
     public void toParamDocs_Test() {
-        final String expected = "  `param_one` Descriptor for param one\n";
+        final String expected = "    `param_one` Descriptor for param one\n";
         final String result = toParamDocs("param_one", "Descriptor for param one", 1);
         assertThat(result, is(expected));
     }
@@ -59,8 +59,8 @@ public class PythonDocGeneratorUtil_Test {
     @Test
     public void toParamListDocs_FullList_Test() throws IOException {
         final String expected =
-                "  `param_one` This is how you use param one\n" +
-                "  `does_not_exist` \n";
+                "    `param_one` This is how you use param one\n" +
+                "    `does_not_exist` \n";
 
         final ImmutableList<String> params = ImmutableList.of("param_one", "does_not_exist");
         final String result = toParamListDocs(params, getTestDocSpec(), 1);
@@ -76,10 +76,10 @@ public class PythonDocGeneratorUtil_Test {
     @Test
     public void toConstructorDocs_Test() throws IOException {
         final String expected = "'''\n" +
-                "  This is how you use test one request\n" +
-                "  `param_one` This is how you use param one\n" +
-                "  `does_not_exist` \n" +
-                "  '''\n";
+                "    This is how you use test one request\n" +
+                "    `param_one` This is how you use param one\n" +
+                "    `does_not_exist` \n" +
+                "    '''\n";
 
         final ImmutableList<String> params = ImmutableList.of("param_one", "does_not_exist");
         final String result = toConstructorDocs("TestOneRequest", params, getTestDocSpec(), 1);
@@ -95,8 +95,8 @@ public class PythonDocGeneratorUtil_Test {
     @Test
     public void toCommandDocs_Test() throws IOException {
         final String expected = "'''\n" +
-                "  This is how you use test one request\n" +
-                "  '''\n";
+                "    This is how you use test one request\n" +
+                "    '''\n";
 
         final String result = toCommandDocs("TestOneRequest", getTestDocSpec(), 1);
         assertThat(result, is(expected));
