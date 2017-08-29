@@ -95,7 +95,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toParseResponsePayload_NoNameToMarshal_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
 
         final Ds3Request request = getBucketRequest();
         assertThat(generator.toParseResponsePayload(request), is(expected));
@@ -104,7 +104,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toParseResponsePayload_WithNameToMarshal_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), JobWithChunksApiBean())";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), JobWithChunksApiBean())";
 
         final Ds3Request request = getRequestGetJob();
         assertThat(generator.toParseResponsePayload(request), is(expected));

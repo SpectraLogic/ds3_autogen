@@ -32,14 +32,14 @@ public class HeadResponseGenerator_Test {
     @Test
     public void toParseResponsePayload_Test() {
         final String expected = "self.status_code = self.response.status\n" +
-                "    if self.response.status == 200:\n" +
-                "      self.result = HeadRequestStatus.EXISTS\n" +
-                "    elif self.response.status == 403:\n" +
-                "      self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
-                "    elif self.response.status == 404:\n" +
-                "      self.result = HeadRequestStatus.DOESNTEXIST\n" +
-                "    else:\n" +
-                "      self.result = HeadRequestStatus.UNKNOWN";
+                "        if self.response.status == 200:\n" +
+                "            self.result = HeadRequestStatus.EXISTS\n" +
+                "        elif self.response.status == 403:\n" +
+                "            self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
+                "        elif self.response.status == 404:\n" +
+                "            self.result = HeadRequestStatus.DOESNTEXIST\n" +
+                "        else:\n" +
+                "            self.result = HeadRequestStatus.UNKNOWN";
         assertThat(generator.toParseResponsePayload(null), is(expected));
         assertThat(generator.toParseResponsePayload(getHeadObjectRequest()), is(expected));
     }

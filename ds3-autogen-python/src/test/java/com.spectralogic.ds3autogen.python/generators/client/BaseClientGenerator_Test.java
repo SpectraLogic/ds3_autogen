@@ -50,8 +50,8 @@ public class BaseClientGenerator_Test {
     @Test
     public void toDocumentation_Test() {
         final String expected = "'''\n" +
-                "  This is how you use test one request\n" +
-                "  '''\n";
+                "    This is how you use test one request\n" +
+                "    '''\n";
 
         final Ds3DocSpec docSpec = getTestDocSpec();
         assertThat(toDocumentation("com.test.TestOneRequest", docSpec), is(expected));

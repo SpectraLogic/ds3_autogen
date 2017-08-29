@@ -30,7 +30,7 @@ public class ResponsesToPythonCode_Test {
     @Test
     public void baseParsePayload_PrimitiveType_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), None)";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), None)";
 
         assertThat(new BaseParsePayload("None", 200).toPythonCode(), is(expected));
     }
@@ -38,7 +38,7 @@ public class ResponsesToPythonCode_Test {
     @Test
     public void baseParsePayloadType_WithType_Test() {
         final String expected = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), TestType())";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), TestType())";
 
         assertThat(new BaseParsePayload("TestType", 200).toPythonCode(), is(expected));
     }

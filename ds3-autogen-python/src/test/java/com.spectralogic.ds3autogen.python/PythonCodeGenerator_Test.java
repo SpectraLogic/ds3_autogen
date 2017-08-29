@@ -133,7 +133,7 @@ public class PythonCodeGenerator_Test {
         assertThat(result.getAttributes().size(), is(0));
         assertThat(result.getElementLists().size(), is(0));
         assertThat(result.getElements().size(), is(1));
-        assertThat(result.getElements().get(0), is("'ElementName' : None"));
+        assertThat(result.getElements().get(0), is("'ElementName': None"));
     }
 
     @Test
@@ -181,7 +181,7 @@ public class PythonCodeGenerator_Test {
         assertThat(result.getCodes().size(), is(1));
 
         final String expectedParseResponse = "if self.response.status == 200:\n" +
-                "      self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
+                "            self.result = parseModel(xmldom.fromstring(response.read()), ListBucketResult())";
         assertThat(result.getParseResponseCode(), is(expectedParseResponse));
     }
 

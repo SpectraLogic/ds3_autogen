@@ -29,8 +29,8 @@ public class TypesToPythonCode_Test {
 
     @Test
     public void typeElement_Test() {
-        assertThat(new TypeElement("XmlTag", "None").toPythonCode(), is("'XmlTag' : None"));
-        assertThat(new TypeElement("XmlTag", "TypeModel").toPythonCode(), is("'XmlTag' : TypeModel()"));
+        assertThat(new TypeElement("XmlTag", "None").toPythonCode(), is("'XmlTag': None"));
+        assertThat(new TypeElement("XmlTag", "TypeModel").toPythonCode(), is("'XmlTag': TypeModel()"));
     }
 
     @Test

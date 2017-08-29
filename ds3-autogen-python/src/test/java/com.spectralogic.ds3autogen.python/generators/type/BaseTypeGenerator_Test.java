@@ -212,19 +212,19 @@ public class BaseTypeGenerator_Test {
     @Test
     public void toElement_NullMap_Test() {
         final TypeElement result = toElement(createDs3Element(), null);
-        assertThat(result.toPythonCode(), is("'Element' : None"));
+        assertThat(result.toPythonCode(), is("'Element': None"));
     }
 
     @Test
     public void toElement_EmptyMap_Test() {
         final TypeElement result = toElement(createDs3Element(), ImmutableMap.of());
-        assertThat(result.toPythonCode(), is("'Element' : None"));
+        assertThat(result.toPythonCode(), is("'Element': None"));
     }
 
     @Test
     public void toElement_Test() {
         final TypeElement result = toElement(createDs3Element(), createTestTypeMap());
-        assertThat(result.toPythonCode(), is("'Element' : ElementType()"));
+        assertThat(result.toPythonCode(), is("'Element': ElementType()"));
     }
 
     @Test
@@ -243,7 +243,7 @@ public class BaseTypeGenerator_Test {
     public void toElements_Test() {
         final ImmutableList<String> result = toElements(createDs3Elements(), createTestTypeMap());
         assertThat(result.size(), is(1));
-        assertThat(result.get(0), is("'Element' : ElementType()"));
+        assertThat(result.get(0), is("'Element': ElementType()"));
     }
 
     @Test
