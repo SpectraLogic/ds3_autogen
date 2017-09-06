@@ -20,9 +20,13 @@ import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
+import com.spectralogic.ds3autogen.java.models.Precondition;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toConstructorParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toPreconditions;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isDeleteNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetNotificationRequest;
@@ -54,13 +58,17 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
     @Override
     public ImmutableList<String> getAllImports(
             final Ds3Request ds3Request,
-            final String packageName) {
+            final String packageName,
+            final ImmutableList<RequestConstructor> constructors) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         builder.add(getParentImport(ds3Request));
         builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
         builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
         builder.add("java.util.UUID");
+
+        builder.addAll(annotationImports(constructors));
+        builder.addAll(preconditionImports(constructors));
 
         return builder.build().asList();
     }
@@ -84,10 +92,15 @@ public class NotificationRequestGenerator extends BaseRequestGenerator {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(builder.build());
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         final RequestConstructor constructor = new RequestConstructor(
-                builder.build(),
+                constructorParams,
                 constructorArgs,
                 toQueryParamsList(ds3Request),
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);

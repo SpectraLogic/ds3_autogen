@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
@@ -48,26 +49,23 @@ public class StreamRequestPayloadGenerator_Test {
     public void toConstructorList_Test() {
         final ImmutableList<RequestConstructor> result = generator.toConstructorList(getCreateMultiPartUploadPart(), "", new Ds3DocSpecEmptyImpl());
         assertThat(result.size(), is(2));
-        assertThat(result.get(0).getParameters().size(), is(6));
-        assertThat(result.get(0).getParameters().get(0).getName(), is("BucketName"));
-        assertThat(result.get(0).getParameters().get(1).getName(), is("ObjectName"));
-        assertThat(result.get(0).getParameters().get(2).getName(), is("PartNumber"));
-        assertThat(result.get(0).getParameters().get(3).getName(), is("UploadId"));
-        assertThat(result.get(0).getParameters().get(4).getName(), is("Size"));
-        assertThat(result.get(0).getParameters().get(5).getName(), is("Channel"));
 
-        assertThat(result.get(1).getParameters().size(), is(6));
-        assertThat(result.get(1).getParameters().get(0).getName(), is("BucketName"));
-        assertThat(result.get(1).getParameters().get(1).getName(), is("ObjectName"));
-        assertThat(result.get(1).getParameters().get(2).getName(), is("PartNumber"));
-        assertThat(result.get(1).getParameters().get(3).getName(), is("UploadId"));
-        assertThat(result.get(1).getParameters().get(4).getName(), is("Size"));
-        assertThat(result.get(1).getParameters().get(5).getName(), is("Stream"));
+        final ImmutableList<String> expectedNamesChannel = ImmutableList.of("BucketName", "ObjectName", "PartNumber", "UploadId", "Size", "Channel");
+        assertThat(result.get(0).getParameters().size(), is(expectedNamesChannel.size()));
+        result.get(0).getParameters().forEach(param -> assertThat(expectedNamesChannel, hasItem(param.getName())));
+
+        final ImmutableList<String> expectedNamesStream = ImmutableList.of("BucketName", "ObjectName", "PartNumber", "UploadId", "Size", "Stream");
+        assertThat(result.get(1).getParameters().size(), is(expectedNamesStream.size()));
+        result.get(1).getParameters().forEach(param -> assertThat(expectedNamesStream, hasItem(param.getName())));
     }
 
     @Test
     public void getAllImports_Test() {
-        final ImmutableList<String> result = generator.getAllImports(getCreateMultiPartUploadPart(), "com.test.package");
+        final Ds3Request ds3Request = getCreateMultiPartUploadPart();
+        final ImmutableList<String> result = generator.getAllImports(
+                ds3Request,
+                "com.test.package",
+                generator.toConstructorList(ds3Request, "", new Ds3DocSpecEmptyImpl()));
         assertThat(result, hasItem("com.spectralogic.ds3client.utils.SeekableByteChannelInputStream"));
         assertThat(result, hasItem("java.nio.channels.SeekableByteChannel"));
         assertThat(result, hasItem("java.io.InputStream"));

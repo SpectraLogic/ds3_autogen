@@ -16,9 +16,9 @@
 package com.spectralogic.ds3autogen.java.generators.requestmodels;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
 
@@ -59,7 +59,8 @@ public class NotificationRequestGenerator_Test {
 
         final ImmutableList<String> result = generator.getAllImports(
                 request,
-                "com.spectralogic.ds3client.commands.spectrads3.notifications");
+                "com.spectralogic.ds3client.commands.spectrads3.notifications",
+                generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl()));
 
         assertThat(result.size(), is(2));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractDeleteNotificationRequest"));
@@ -72,7 +73,8 @@ public class NotificationRequestGenerator_Test {
 
         final ImmutableList<String> result = generator.getAllImports(
                 request,
-                "com.spectralogic.ds3client.commands.spectrads3.notifications");
+                "com.spectralogic.ds3client.commands.spectrads3.notifications",
+                generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl()));
 
         assertThat(result.size(), is(2));
         assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest"));
@@ -82,7 +84,10 @@ public class NotificationRequestGenerator_Test {
     @Test(expected = IllegalArgumentException.class)
     public void getAllImports_Exception_Test() {
         final Ds3Request request = createSimpleTestDs3Request();
-        generator.getAllImports(request, "com.spectralogic.ds3client.commands.spectrads3.notifications");
+        generator.getAllImports(
+                request,
+                "com.spectralogic.ds3client.commands.spectrads3.notifications",
+                generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl()));
     }
 
     @Test
@@ -96,7 +101,7 @@ public class NotificationRequestGenerator_Test {
         assertThat(constructor.getAdditionalLines().size(), is(0));
         assertThat(constructor.isDeprecated(), is(false));
 
-        final ImmutableList<Arguments> constructorParams = constructor.getParameters();
+        final ImmutableList<ConstructorParam> constructorParams = constructor.getParameters();
         assertThat(constructorParams.size(), is(1));
         assertThat(constructorParams.get(0).getName(), is("NotificationId"));
 

@@ -13,13 +13,18 @@
  * ****************************************************************************
  */
 
-apply plugin: 'kotlin'
+package com.spectralogic.ds3autogen.java.models;
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-utils')
-    testCompile project(':ds3-autogen-parser')
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
-    compile     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
+import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class Precondition_Test {
+
+    @Test
+    public void toJavaCodeTest() {
+        final String expected = "Preconditions.checkNotNull(paramName, \"ParamName may not be null.\");";
+        final Precondition precondition = new NotNullPrecondition("ParamName");
+        assertThat(precondition.toJavaCode(), is(expected));
+    }
 }

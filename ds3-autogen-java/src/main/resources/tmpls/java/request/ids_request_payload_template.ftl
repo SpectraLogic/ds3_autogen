@@ -17,6 +17,9 @@ public class ${name} extends ${parentClass} {
     ${constructor.documentation}
     public ${name}(final List<String> ids) {
         super(ids);
+        <#list constructor.getPreconditions() as precondition>
+        ${precondition.toJavaCode()}
+        </#list>
         <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${javaHelper.paramAssignmentRHS(arg)};
         </#list>

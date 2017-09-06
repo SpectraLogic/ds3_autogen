@@ -21,7 +21,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 public class RequestConstructor {
 
     /** Constructor parameters */
-    private final ImmutableList<Arguments> parameters;
+    private final ImmutableList<ConstructorParam> parameters;
 
     /** Parameters that are assigned to self within constructor */
     private final ImmutableList<Arguments> assignments;
@@ -34,33 +34,39 @@ public class RequestConstructor {
 
     private final String documentation;
 
+    private final ImmutableList<Precondition> preconditions;
+
     public RequestConstructor(
-            final ImmutableList<Arguments> parameters,
+            final ImmutableList<ConstructorParam> parameters,
             final ImmutableList<Arguments> assignments,
             final ImmutableList<QueryParam> queryParams,
+            final ImmutableList<Precondition> preconditions,
             final String documentation) {
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.preconditions = preconditions;
         this.documentation = documentation;
     }
 
     public RequestConstructor(
             final boolean isDeprecated,
             final ImmutableList<String> additionalLines,
-            final ImmutableList<Arguments> parameters,
+            final ImmutableList<ConstructorParam> parameters,
             final ImmutableList<Arguments> assignments,
             final ImmutableList<QueryParam> queryParams,
+            final ImmutableList<Precondition> preconditions,
             final String documentation) {
         this.isDeprecated = isDeprecated;
         this.additionalLines = additionalLines;
         this.parameters = parameters;
         this.assignments = assignments;
         this.queryParams = queryParams;
+        this.preconditions = preconditions;
         this.documentation = documentation;
     }
 
-    public ImmutableList<Arguments> getParameters() {
+    public ImmutableList<ConstructorParam> getParameters() {
         return parameters;
     }
 
@@ -82,5 +88,9 @@ public class RequestConstructor {
 
     public String getDocumentation() {
         return documentation;
+    }
+
+    public ImmutableList<Precondition> getPreconditions() {
+        return preconditions;
     }
 }

@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTest
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestCreateObject;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -79,19 +81,16 @@ public class CreateObjectRequestGenerator_Test {
                 constructor1.getAdditionalLines().get(0),
                 is("this.stream = new SeekableByteChannelInputStream(channel);"));
 
-        final ImmutableList<Arguments> constructorParams1 = constructor1.getParameters();
-        assertThat(constructorParams1.size(), is(4));
-        assertThat(constructorParams1.get(0).getName(), is("BucketName"));
-        assertThat(constructorParams1.get(1).getName(), is("ObjectName"));
-        assertThat(constructorParams1.get(2).getName(), is("Size"));
-        assertThat(constructorParams1.get(3).getName(), is("Channel"));
+        final ImmutableList<ConstructorParam> constructorParams1 = constructor1.getParameters();
+
+        final ImmutableList<String> expectedParamNames1 = ImmutableList.of("BucketName", "ObjectName", "Size", "Channel");
+
+        assertThat(constructorParams1.size(), is(expectedParamNames1.size()));
+        constructorParams1.forEach(param -> assertThat(expectedParamNames1, hasItem(param.getName())));
 
         final ImmutableList<Arguments> constructorAssignments1 = constructor1.getAssignments();
-        assertThat(constructorAssignments1.size(), is(4));
-        assertThat(constructorAssignments1.get(0).getName(), is("BucketName"));
-        assertThat(constructorAssignments1.get(1).getName(), is("ObjectName"));
-        assertThat(constructorAssignments1.get(2).getName(), is("Size"));
-        assertThat(constructorAssignments1.get(3).getName(), is("Channel"));
+        assertThat(constructorAssignments1.size(), is(expectedParamNames1.size()));
+        constructorAssignments1.forEach(param -> assertThat(expectedParamNames1, hasItem(param.getName())));
 
         final ImmutableList<QueryParam> queryParams1 = constructor1.getQueryParams();
         assertThat(queryParams1.size(), is(0));
@@ -104,23 +103,17 @@ public class CreateObjectRequestGenerator_Test {
                 constructor2.getAdditionalLines().get(0),
                 is("this.stream = new SeekableByteChannelInputStream(channel);"));
 
-        final ImmutableList<Arguments> constructorParams2 = constructor2.getParameters();
-        assertThat(constructorParams2.size(), is(6));
-        assertThat(constructorParams2.get(0).getName(), is("BucketName"));
-        assertThat(constructorParams2.get(1).getName(), is("ObjectName"));
-        assertThat(constructorParams2.get(2).getName(), is("Size"));
-        assertThat(constructorParams2.get(3).getName(), is("Job"));
-        assertThat(constructorParams2.get(4).getName(), is("Offset"));
-        assertThat(constructorParams2.get(5).getName(), is("Channel"));
+        final ImmutableList<ConstructorParam> constructorParams2 = constructor2.getParameters();
+
+        final ImmutableList<String> expectedParamNames2 = ImmutableList.of("BucketName", "ObjectName", "Size", "Channel", "Job", "Offset");
+
+        assertThat(constructorParams2.size(), is(expectedParamNames2.size()));
+        constructorParams2.forEach(param -> assertThat(expectedParamNames2, hasItem(param.getName())));
 
         final ImmutableList<Arguments> constructorAssignments2 = constructor2.getAssignments();
-        assertThat(constructorAssignments2.size(), is(6));
-        assertThat(constructorAssignments2.get(0).getName(), is("BucketName"));
-        assertThat(constructorAssignments2.get(1).getName(), is("ObjectName"));
-        assertThat(constructorAssignments2.get(2).getName(), is("Size"));
-        assertThat(constructorAssignments2.get(3).getName(), is("Job"));
-        assertThat(constructorAssignments2.get(4).getName(), is("Offset"));
-        assertThat(constructorAssignments2.get(5).getName(), is("Channel"));
+        assertThat(constructorAssignments2.size(), is(expectedParamNames2.size()));
+
+        constructorParams2.forEach(param -> assertThat(expectedParamNames2, hasItem(param.getName())));
 
         final ImmutableList<QueryParam> queryParams2 = constructor2.getQueryParams();
         assertThat(queryParams2.size(), is(2));
@@ -132,23 +125,15 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(constructor3.isDeprecated(), is(false));
         assertThat(constructor3.getAdditionalLines().size(), is(0));
 
-        final ImmutableList<Arguments> constructorParams3 = constructor3.getParameters();
-        assertThat(constructorParams3.size(), is(6));
-        assertThat(constructorParams3.get(0).getName(), is("BucketName"));
-        assertThat(constructorParams3.get(1).getName(), is("ObjectName"));
-        assertThat(constructorParams3.get(2).getName(), is("Size"));
-        assertThat(constructorParams3.get(3).getName(), is("Job"));
-        assertThat(constructorParams3.get(4).getName(), is("Offset"));
-        assertThat(constructorParams3.get(5).getName(), is("Stream"));
+        final ImmutableList<String> expectedParamNames3 = ImmutableList.of("BucketName", "ObjectName", "Size", "Stream", "Job", "Offset");
+
+        final ImmutableList<ConstructorParam> constructorParams3 = constructor3.getParameters();
+        assertThat(constructorParams3.size(), is(expectedParamNames3.size()));
+        constructorParams3.forEach(param -> assertThat(expectedParamNames3, hasItem(param.getName())));
 
         final ImmutableList<Arguments> constructorAssignments3 = constructor3.getAssignments();
-        assertThat(constructorAssignments3.size(), is(6));
-        assertThat(constructorAssignments3.get(0).getName(), is("BucketName"));
-        assertThat(constructorAssignments3.get(1).getName(), is("ObjectName"));
-        assertThat(constructorAssignments3.get(2).getName(), is("Size"));
-        assertThat(constructorAssignments3.get(3).getName(), is("Job"));
-        assertThat(constructorAssignments3.get(4).getName(), is("Offset"));
-        assertThat(constructorAssignments3.get(5).getName(), is("Stream"));
+        assertThat(constructorAssignments3.size(), is(expectedParamNames3.size()));
+        constructorAssignments3.forEach(param -> assertThat(expectedParamNames3, hasItem(param.getName())));
 
         final ImmutableList<QueryParam> queryParams3 = constructor3.getQueryParams();
         assertThat(queryParams3.size(), is(2));
@@ -168,7 +153,7 @@ public class CreateObjectRequestGenerator_Test {
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
 
-        final ImmutableList<Arguments> params = result.getParameters();
+        final ImmutableList<ConstructorParam> params = result.getParameters();
         assertThat(params.size(), is(3));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Arg2"));
@@ -200,7 +185,7 @@ public class CreateObjectRequestGenerator_Test {
                 result.getAdditionalLines().get(0),
                 is("this.stream = new SeekableByteChannelInputStream(channel);"));
 
-        final ImmutableList<Arguments> params = result.getParameters();
+        final ImmutableList<ConstructorParam> params = result.getParameters();
         assertThat(params.size(), is(3));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Arg2"));
@@ -230,7 +215,7 @@ public class CreateObjectRequestGenerator_Test {
                 result.getAdditionalLines().get(0),
                 is("this.stream = new SeekableByteChannelInputStream(channel);"));
 
-        final ImmutableList<Arguments> params = result.getParameters();
+        final ImmutableList<ConstructorParam> params = result.getParameters();
         assertThat(params.size(), is(2));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Channel"));

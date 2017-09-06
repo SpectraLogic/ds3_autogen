@@ -23,13 +23,11 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
-import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.createChannelConstructor;
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.createInputStreamConstructor;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.isResourceAnArg;
 
 /**
  * Used to generate requests that have a payload which is specified by either
@@ -79,19 +77,12 @@ public class StreamRequestPayloadGenerator extends BaseRequestGenerator {
     @Override
     public ImmutableList<String> getAllImports(
             final Ds3Request ds3Request,
-            final String packageName) {
+            final String packageName,
+            final ImmutableList<RequestConstructor> constructors) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-        builder.add(getParentImport(ds3Request));
-        builder.addAll(getImportsFromParamList(ds3Request.getRequiredQueryParams()));
-        builder.addAll(getImportsFromParamList(ds3Request.getOptionalQueryParams()));
+        builder.addAll(commonImports(ds3Request, constructors));
 
-        if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {
-            if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
-                builder.add("java.util.UUID");
-            }
-            builder.add("com.google.common.net.UrlEscapers");
-        }
         builder.add("com.spectralogic.ds3client.utils.SeekableByteChannelInputStream");
         builder.add("java.nio.channels.SeekableByteChannel");
         builder.add("java.io.InputStream");

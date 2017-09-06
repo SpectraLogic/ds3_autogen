@@ -13,7 +13,9 @@ public class ${name} extends ${parentClass} {
     ${constructor.documentation}
     public ${name}(${javaHelper.constructorArgs(constructor.getParameters())}) {
         super(notificationEndPoint);
-
+        <#list constructor.getPreconditions() as precondition>
+        ${precondition.toJavaCode()}
+        </#list>
         <#list constructor.getAssignments() as arg>
         this.${arg.getName()?uncap_first} = ${arg.getName()?uncap_first};
         </#list>

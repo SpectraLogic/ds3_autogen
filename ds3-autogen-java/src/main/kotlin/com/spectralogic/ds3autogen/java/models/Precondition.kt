@@ -13,13 +13,23 @@
  * ****************************************************************************
  */
 
-apply plugin: 'kotlin'
+package com.spectralogic.ds3autogen.java.models
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-utils')
-    testCompile project(':ds3-autogen-parser')
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
-    compile     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
+/**
+ * Represents a Java precondition. Used to perform certain input validation
+ * in Java request handler constructors.
+ */
+interface Precondition {
+    fun toJavaCode(): String
+}
+
+/**
+ * Represents a precondition check that a given parameter is not null.
+ */
+data class NotNullPrecondition(val name: String) : Precondition {
+
+    override fun toJavaCode(): String {
+        val paramName = name.decapitalize()
+        return "Preconditions.checkNotNull($paramName, \"$name may not be null.\");"
+    }
 }
