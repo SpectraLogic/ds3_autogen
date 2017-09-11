@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.*;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.java.models.*;
-import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.*;
@@ -33,21 +32,15 @@ import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createEmptyDs3Request;
-import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.getAllArgumentTypes;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BaseRequestGenerator_Test {
 
     private final static BaseRequestGenerator generator = new BaseRequestGenerator();
-
-    private static ImmutableList<String> getQueryParamTypes(final ImmutableList<QueryParam> params) {
-        return params.stream()
-                .map(QueryParam::getType)
-                .collect(GuavaCollectors.immutableList());
-    }
 
     private static final ImmutableList<Arguments> SIMPLE_ARGS = ImmutableList.of(
             new Arguments("String", "StringArg"),
@@ -353,12 +346,14 @@ public class BaseRequestGenerator_Test {
                 "com.spectralogic.ds3client.commands.spectrads3",
                 generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl()));
 
-        assertThat(result.size(), is(5));
-        assertTrue(result.contains("com.spectralogic.ds3client.commands.interfaces.AbstractRequest"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.JobRequestType"));
-        assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
-        assertTrue(result.contains("java.util.UUID"));
-        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
+        assertThat(result)
+                .hasSize(5)
+                .contains(
+                        "com.spectralogic.ds3client.commands.interfaces.AbstractRequest",
+                        "com.spectralogic.ds3client.models.JobRequestType",
+                        "com.spectralogic.ds3client.models.BlobStoreTaskPriority",
+                        "java.util.UUID",
+                        "com.google.common.net.UrlEscapers");
     }
 
     @Test
@@ -484,9 +479,9 @@ public class BaseRequestGenerator_Test {
 
         final RequestConstructor result = convertUuidConstructorToStringConstructor(constructor);
 
-        result.getParameters().forEach(param -> assertThat(param.getType(), not("UUID")));
-        assertThat(getQueryParamTypes(result.getQueryParams()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.getAssignments()), not(hasItem("UUID")));
+        assertThat(result.getParameters()).extracting(ConstructorParam::getType).doesNotContain("UUID");
+        assertThat(result.getQueryParams()).extracting(QueryParam::getType).doesNotContain("UUID");
+        assertThat(result.getAssignments()).extracting(Arguments::getType).doesNotContain("UUID");
     }
 
     @Test
@@ -502,7 +497,7 @@ public class BaseRequestGenerator_Test {
         final RequestConstructor constructor = new RequestConstructor(params, args, argsToQueryParams(args), ImmutableList.of(), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
-        assertThat(result.size(), is(1));
+        assertThat(result).hasSize(1);
     }
 
 
@@ -513,17 +508,15 @@ public class BaseRequestGenerator_Test {
         final RequestConstructor constructor = new RequestConstructor(SIMPLE_PARAMS, SIMPLE_ARGS, argsToQueryParams(SIMPLE_ARGS), ImmutableList.of(), "");
 
         final ImmutableList<RequestConstructor> result = splitUuidConstructor(constructor);
-        assertThat(result.size(), is(2));
+        assertThat(result).hasSize(2);
 
-        assertTrue(result.get(0).getParameters().stream()
-                .anyMatch(param -> param.getType().equals("UUID")));
+        assertThat(result.get(0).getParameters()).extracting(ConstructorParam::getType).contains("UUID");
+        assertThat(result.get(0).getQueryParams()).extracting(QueryParam::getType).contains("UUID");
+        assertThat(result.get(0).getAssignments()).extracting(Arguments::getType).contains("UUID");
 
-        assertThat(getQueryParamTypes(result.get(0).getQueryParams()), hasItem("UUID"));
-        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
-
-        result.get(1).getParameters().forEach(param -> assertThat(param.getType(), not("UUID")));
-        assertThat(getQueryParamTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
+        assertThat(result.get(1).getParameters()).extracting(ConstructorParam::getType).doesNotContain("UUID");
+        assertThat(result.get(1).getQueryParams()).extracting(QueryParam::getType).doesNotContain("UUID");
+        assertThat(result.get(1).getAssignments()).extracting(Arguments::getType).doesNotContain("UUID");
     }
 
     @Test
@@ -531,38 +524,36 @@ public class BaseRequestGenerator_Test {
         final RequestConstructor constructor = new RequestConstructor(SIMPLE_PARAMS, SIMPLE_ARGS, argsToQueryParams(SIMPLE_ARGS), ImmutableList.of(), "");
 
         final ImmutableList<RequestConstructor> result = splitAllUuidConstructors(ImmutableList.of(constructor));
-        assertThat(result.size(), is(2));
+        assertThat(result).hasSize(2);
 
-        assertTrue(result.get(0).getParameters().stream()
-                .anyMatch(param -> param.getType().equals("UUID")));
+        assertThat(result.get(0).getParameters()).extracting(ConstructorParam::getType).contains("UUID");
+        assertThat(result.get(0).getQueryParams()).extracting(QueryParam::getType).contains("UUID");
+        assertThat(result.get(0).getAssignments()).extracting(Arguments::getType).contains("UUID");
 
-        assertThat(getQueryParamTypes(result.get(0).getQueryParams()), hasItem("UUID"));
-        assertThat(getAllArgumentTypes(result.get(0).getAssignments()), hasItem("UUID"));
-
-        result.get(1).getParameters().forEach(param -> assertThat(param.getType(), not("UUID")));
-        assertThat(getQueryParamTypes(result.get(1).getQueryParams()), not(hasItem("UUID")));
-        assertThat(getAllArgumentTypes(result.get(1).getAssignments()), not(hasItem("UUID")));
+        assertThat(result.get(1).getParameters()).extracting(ConstructorParam::getType).doesNotContain("UUID");
+        assertThat(result.get(1).getQueryParams()).extracting(QueryParam::getType).doesNotContain("UUID");
+        assertThat(result.get(1).getAssignments()).extracting(Arguments::getType).doesNotContain("UUID");
     }
 
     @Test
     public void convertUuidClassVariable_Test() {
         final Variable uuidVar = convertUuidClassVariable(new Variable("UuidVar", "UUID", true));
-        assertThat(uuidVar.getType(), is("String"));
+        assertThat(uuidVar.getType()).isEqualTo("String");
 
         final Variable intVar = convertUuidClassVariable(new Variable("IntVar", "int", true));
-        assertThat(intVar.getType(), is("int"));
+        assertThat(intVar.getType()).isEqualTo("int");
     }
 
     @Test
     public void convertAllUuidClassVariables_NullList_Test() {
         final ImmutableList<Variable> result = convertAllUuidClassVariables(null);
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
     public void convertAllUuidClassVariables_EmptyList_Test() {
         final ImmutableList<Variable> result = convertAllUuidClassVariables(ImmutableList.of());
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
@@ -574,37 +565,34 @@ public class BaseRequestGenerator_Test {
                 new Variable("Var", "Integer", true));
 
         final ImmutableList<Variable> result = convertAllUuidClassVariables(variables);
-        assertThat(result.size(), is(4));
-        for (final Variable var : result) {
-            assertThat(var.getType(), not(is("UUID")));
-        }
+        assertThat(result).hasSize(4)
+                .extracting(Variable::getType).doesNotContain("UUID");
     }
 
     @Test
     public void splitUuidOptionalArgument_UUID_Test() {
         final ImmutableList<Arguments> result = splitUuidOptionalArgument(new Arguments("UUID", "Arg"));
-        assertThat(result.size(), is(2));
-        assertThat(result.get(0).getType(), is("UUID"));
-        assertThat(result.get(1).getType(), is("String"));
+        assertThat(result).hasSize(2)
+                .extracting(Arguments::getType).containsExactly("UUID", "String");
     }
 
     @Test
     public void splitUuidOptionalArgument_Test() {
         final ImmutableList<Arguments> result = splitUuidOptionalArgument(new Arguments("Integer", "Arg"));
-        assertThat(result.size(), is(1));
-        assertThat(result.get(0).getType(), is("Integer"));
+        assertThat(result).hasSize(1)
+                .extracting(Arguments::getType).containsExactly("Integer");
     }
 
     @Test
     public void splitAllUuidOptionalArguments_NullList_Test() {
         final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(null);
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
     public void splitAllUuidOptionalArguments_EmptyList_Test() {
         final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(ImmutableList.of());
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
@@ -614,20 +602,16 @@ public class BaseRequestGenerator_Test {
                 new Arguments("Integer", "Var2"));
 
         final ImmutableList<Arguments> result = splitAllUuidOptionalArguments(variables);
-        assertThat(result.size(), is(3));
-        assertThat(result.get(0).getName(), is("Var1"));
-        assertThat(result.get(0).getType(), is("UUID"));
-        assertThat(result.get(1).getName(), is("Var1"));
-        assertThat(result.get(1).getType(), is("String"));
-        assertThat(result.get(2).getName(), is("Var2"));
-        assertThat(result.get(2).getType(), is("Integer"));
+        assertThat(result).hasSize(3);
+        assertThat(result).extracting(Arguments::getName).containsExactly("Var1", "Var1", "Var2");
+        assertThat(result).extracting(Arguments::getType).containsExactly("UUID", "String", "Integer");
     }
 
     @Test
     public void resourceArgToString_Test() {
-        assertThat(resourceArgToString(new Arguments("UUID", "Arg")), is("arg"));
-        assertThat(resourceArgToString(new Arguments("String", "Arg")), is("arg"));
-        assertThat(resourceArgToString(new Arguments("Integer", "Arg")), is("String.valueOf(arg)"));
+        assertThat(resourceArgToString(new Arguments("UUID", "Arg"))).isEqualTo("arg");
+        assertThat(resourceArgToString(new Arguments("String", "Arg"))).isEqualTo("arg");
+        assertThat(resourceArgToString(new Arguments("Integer", "Arg"))).isEqualTo("String.valueOf(arg)");
     }
 
     @Test
@@ -735,7 +719,7 @@ public class BaseRequestGenerator_Test {
     @Test
     public void preconditionImportsNotIncludedTest() {
         final ImmutableList<String> result = preconditionImports(ImmutableList.of(EMPTY_REQUEST_CONSTRUCTOR));
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
@@ -745,14 +729,14 @@ public class BaseRequestGenerator_Test {
                 REQUEST_CONSTRUCTOR_WITH_STREAM);
 
         final ImmutableList<String> result = preconditionImports(constructors);
-        assertThat(result.size(), is(1));
-        assertThat(result, hasItem("com.google.common.base.Preconditions"));
+        assertThat(result).hasSize(1)
+                .contains("com.google.common.base.Preconditions");
     }
 
     @Test
     public void annotationImportsNotIncludedTest() {
         final ImmutableList<String> result = annotationImports(ImmutableList.of(EMPTY_REQUEST_CONSTRUCTOR));
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
@@ -762,8 +746,7 @@ public class BaseRequestGenerator_Test {
                 REQUEST_CONSTRUCTOR_WITH_STREAM);
 
         final ImmutableList<String> result = annotationImports(constructors);
-        assertThat(result.size(), is(1));
-        assertThat(result, hasItem("javax.annotation.Nonnull"));
+        assertThat(result).hasSize(1).contains("javax.annotation.Nonnull");
     }
 
     @Test
@@ -778,9 +761,8 @@ public class BaseRequestGenerator_Test {
                 "javax.annotation.Nonnull");
 
         final ImmutableList<String> result = generator.commonImports(request, ImmutableList.of(REQUEST_CONSTRUCTOR_WITH_STREAM));
-        assertThat(result.size(), is(expected.size()));
-
-        result.forEach(item -> assertThat(expected, hasItem(item)));
+        assertThat(result).hasSize(expected.size())
+                .containsAll(expected);
     }
 
     @Test
@@ -801,13 +783,13 @@ public class BaseRequestGenerator_Test {
 
         final ImmutableList<ConstructorParam> result = modifyConstructorParamTypes(constructorParams, "UUID", "String");
 
-        assertThat(result.size(), is(expected.size()));
+        assertThat(result).hasSize(expected.size());
 
         for (int i = 0; i < expected.size(); i++) {
-            assertThat(result.get(i).getName(), is(expected.get(i).getName()));
-            assertThat(result.get(i).getType(), is(expected.get(i).getType()));
-            assertThat(result.get(i).getAnnotation(), is(expected.get(i).getAnnotation()));
-            assertThat(result.get(i).toJavaCode(), is(expected.get(i).toJavaCode()));
+            assertThat(result.get(i).getName()).isEqualTo(expected.get(i).getName());
+            assertThat(result.get(i).getType()).isEqualTo(expected.get(i).getType());
+            assertThat(result.get(i).getAnnotation()).isEqualTo(expected.get(i).getAnnotation());
+            assertThat(result.get(i).toJavaCode()).isEqualTo(expected.get(i).toJavaCode());
         }
     }
 }

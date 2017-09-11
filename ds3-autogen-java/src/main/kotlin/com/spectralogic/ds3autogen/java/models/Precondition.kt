@@ -26,7 +26,7 @@ interface Precondition {
 /**
  * Represents a precondition check that a given parameter is not null.
  */
-data class NotNullPrecondition(val name: String) : Precondition {
+data class NotNullPrecondition(private val name: String) : Precondition {
 
     override fun toJavaCode(): String {
         val paramName = name.decapitalize()
