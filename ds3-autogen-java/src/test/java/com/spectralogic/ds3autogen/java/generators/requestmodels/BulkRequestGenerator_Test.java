@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.models.Variable;
@@ -29,6 +30,7 @@ import static com.spectralogic.ds3autogen.java.generators.requestmodels.BulkRequ
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createSimpleTestDs3Request;
 import static com.spectralogic.ds3autogen.java.test.helpers.RequestGeneratorTestHelper.createTestDs3ParamList;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -90,24 +92,20 @@ public class BulkRequestGenerator_Test {
         assertThat(constructor.getAdditionalLines().size(), is(0));
         assertThat(constructor.isDeprecated(), is(false));
 
-        final ImmutableList<Arguments> constructorParams = constructor.getParameters();
-        assertThat(constructorParams.size(), is(4));
-        assertThat(constructorParams.get(0).getName(), is("MaxUploadSize"));
-        assertThat(constructorParams.get(1).getName(), is("Name"));
-        assertThat(constructorParams.get(2).getName(), is("Priority"));
-        assertThat(constructorParams.get(3).getName(), is("Objects"));
+        final ImmutableList<ConstructorParam> constructorParams = constructor.getParameters();
+        final ImmutableList<String> expectedParams = ImmutableList.of("MaxUploadSize", "Name", "Priority", "Objects");
+        assertThat(constructorParams.size(), is(expectedParams.size()));
+        constructorParams.forEach(param -> assertThat(expectedParams, hasItem(param.getName())));
 
         final ImmutableList<Arguments> constructorAssignments = constructor.getAssignments();
-        assertThat(constructorAssignments.size(), is(2));
-        assertThat(constructorAssignments.get(0).getName(), is("MaxUploadSize"));
-        assertThat(constructorAssignments.get(1).getName(), is("Name"));
+        final ImmutableList<String> expectedAssignments = ImmutableList.of("MaxUploadSize", "Name");
+        assertThat(constructorAssignments.size(), is(expectedAssignments.size()));
+        constructorAssignments.forEach(assignment -> assertThat(expectedAssignments, hasItem(assignment.getName())));
 
         final ImmutableList<QueryParam> queryParams = constructor.getQueryParams();
-        assertThat(queryParams.size(), is(4));
-        assertThat(queryParams.get(0).getName(), is("IgnoreNamingConflicts"));
-        assertThat(queryParams.get(1).getName(), is("MaxUploadSize"));
-        assertThat(queryParams.get(2).getName(), is("Name"));
-        assertThat(queryParams.get(3).getName(), is("Priority"));
+        final ImmutableList<String> expectedQueryParams = ImmutableList.of("IgnoreNamingConflicts", "MaxUploadSize", "Name", "Priority");
+        assertThat(queryParams.size(), is(expectedQueryParams.size()));
+        queryParams.forEach(param -> assertThat(expectedQueryParams, hasItem(param.getName())));
     }
 
     @Test

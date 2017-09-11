@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class MultiFileDeleteRequestGenerator_Test {
         assertThat(constructor1.isDeprecated(), is(false));
         assertThat(constructor1.getAdditionalLines().size(), is(0));
 
-        final ImmutableList<Arguments> constructorParams1 = constructor1.getParameters();
+        final ImmutableList<ConstructorParam> constructorParams1 = constructor1.getParameters();
         assertThat(constructorParams1.size(), is(2));
         assertThat(constructorParams1.get(0).getName(), is("BucketName"));
         assertThat(constructorParams1.get(1).getName(), is("Objects"));
@@ -67,7 +68,7 @@ public class MultiFileDeleteRequestGenerator_Test {
                 constructor2.getAdditionalLines().get(0),
                 is("this.objects = contentsToString(objs);"));
 
-        final ImmutableList<Arguments> constructorParams2 = constructor2.getParameters();
+        final ImmutableList<ConstructorParam> constructorParams2 = constructor2.getParameters();
         assertThat(constructorParams2.size(), is(2));
         assertThat(constructorParams2.get(0).getName(), is("BucketName"));
         assertThat(constructorParams2.get(1).getName(), is("Objs"));
@@ -92,7 +93,7 @@ public class MultiFileDeleteRequestGenerator_Test {
         assertThat(result.isDeprecated(), is(false));
         assertThat(result.getAdditionalLines().size(), is(0));
 
-        final ImmutableList<Arguments> params = result.getParameters();
+        final ImmutableList<ConstructorParam> params = result.getParameters();
         assertThat(params.size(), is(2));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Objects"));
@@ -121,7 +122,7 @@ public class MultiFileDeleteRequestGenerator_Test {
                 result.getAdditionalLines().get(0),
                 is("this.objects = contentsToString(objs);"));
 
-        final ImmutableList<Arguments> params = result.getParameters();
+        final ImmutableList<ConstructorParam> params = result.getParameters();
         assertThat(params.size(), is(2));
         assertThat(params.get(0).getName(), is("Arg1"));
         assertThat(params.get(1).getName(), is("Objs"));

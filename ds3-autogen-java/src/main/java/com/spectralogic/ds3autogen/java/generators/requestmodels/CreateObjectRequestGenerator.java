@@ -19,12 +19,16 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
+import com.spectralogic.ds3autogen.java.models.Precondition;
 import com.spectralogic.ds3autogen.java.models.QueryParam;
 import com.spectralogic.ds3autogen.java.models.RequestConstructor;
 import com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toConstructorParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toPreconditions;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
@@ -146,12 +150,17 @@ public class CreateObjectRequestGenerator extends BaseRequestGenerator {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedArgs);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
                 true,
                 additionalLines,
-                updatedArgs,
+                constructorParams,
                 updatedArgs,
                 ImmutableList.of(),
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 }

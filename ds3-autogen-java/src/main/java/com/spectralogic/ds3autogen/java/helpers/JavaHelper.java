@@ -18,12 +18,10 @@ package com.spectralogic.ds3autogen.java.helpers;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
-import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
-import com.spectralogic.ds3autogen.java.models.Element;
-import com.spectralogic.ds3autogen.java.models.EnumConstant;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,18 +129,16 @@ public final class JavaHelper {
     }
 
     /**
-     * Creates a comma separated parameter list from a list of Arguments.
+     * Creates a comma separated parameter list from a list of ConstructorParams.
      * Used for building Java constructors.
-     * @param requiredArguments List of Arguments
-     * @return Comma separated list of function parameters
      */
-    public static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
-        if (isEmpty(requiredArguments)) {
+    public static String constructorArgs(final ImmutableList<ConstructorParam> constructorParams) {
+        if (isEmpty(constructorParams)) {
             return "";
         }
-        return sortConstructorArgs(requiredArguments)
-                .stream()
-                .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+        return constructorParams.stream()
+                .sorted(new CustomArgumentComparator())
+                .map(ConstructorParam::toJavaCode)
                 .collect(Collectors.joining(", "));
     }
 

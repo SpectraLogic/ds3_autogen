@@ -19,14 +19,17 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.java.helpers.JavaHelper;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
 import com.spectralogic.ds3autogen.java.models.Element;
-import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.utils.Helper;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.getType;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.Helper.sortConstructorArgs;
 import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
 import static org.junit.Assert.assertTrue;
 
@@ -155,8 +158,35 @@ public final class TestHelper {
             final String requestName,
             final ImmutableList<Arguments> arguments,
             final String code) {
-        final String expected = "public " + requestName + "(" + JavaHelper.constructorArgs(arguments) + ")";
+        final String expected = "public " + requestName + "(" + constructorArgs(arguments) + ")";
         return code.contains(expected);
+    }
+
+    public static boolean hasConstructorWithAnnotations(
+            final String requestName,
+            final ImmutableList<ConstructorParam> params,
+            final String code) {
+        final String camaSeparatedParams = params.stream()
+                .sorted(new CustomArgumentComparator())
+                .map(ConstructorParam::toJavaCode)
+                .collect(Collectors.joining(", "));
+
+        final String expected = "public " + requestName + "(" + camaSeparatedParams + ")";
+        return code.contains(expected);
+    }
+
+    /**
+     * Creates a comma separated parameter list from a list of Arguments.
+     * Used for testing java constructors
+     */
+    private static String constructorArgs(final ImmutableList<Arguments> requiredArguments) {
+        if (isEmpty(requiredArguments)) {
+            return "";
+        }
+        return sortConstructorArgs(requiredArguments)
+                .stream()
+                .map(i -> "final " + getType(i) + " " + uncapFirst(i.getName()))
+                .collect(Collectors.joining(", "));
     }
 
     /**

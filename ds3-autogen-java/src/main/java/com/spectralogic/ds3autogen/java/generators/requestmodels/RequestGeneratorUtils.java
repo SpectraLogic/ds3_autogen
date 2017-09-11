@@ -35,7 +35,7 @@ public interface RequestGeneratorUtils {
      * Gets all the required imports that the Request will need in order to properly
      * generate the Java request code
      */
-    ImmutableList<String> getAllImports(final Ds3Request ds3Request, final String packageName);
+    ImmutableList<String> getAllImports(final Ds3Request ds3Request, final String packageName, final ImmutableList<RequestConstructor> constructors);
 
     /**
      * Returns the import for the parent class for the request

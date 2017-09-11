@@ -18,10 +18,11 @@ package com.spectralogic.ds3autogen.java.utils;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
-import com.spectralogic.ds3autogen.java.models.QueryParam;
-import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.getType;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -53,10 +54,15 @@ public class CommonRequestGeneratorUtils {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedParameters);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
-                updatedParameters,
+                constructorParams,
                 updatedParameters,
                 queryParams,
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
@@ -82,12 +88,17 @@ public class CommonRequestGeneratorUtils {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedParameters);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
                 false,
                 additionalLines,
-                updatedParameters,
+                constructorParams,
                 updatedParameters,
                 queryParams,
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
@@ -100,6 +111,52 @@ public class CommonRequestGeneratorUtils {
         }
         return args.stream()
                 .map(QueryParam::new)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts a list of arguments into a sorted list of constructor parameters.
+     */
+    public static ImmutableList<ConstructorParam> toConstructorParams(final ImmutableList<Arguments> arguments) {
+        return arguments.stream()
+                .sorted(new CustomArgumentComparator())
+                .map(CommonRequestGeneratorUtils::toConstructorParam)
+                .collect(GuavaCollectors.immutableList());
+    }
+
+    /**
+     * Converts an Argument into a Constructor Param of the correct type
+     */
+    static ConstructorParam toConstructorParam(final Arguments arg) {
+        final String type = getType(arg);
+
+        switch (type) {
+            case "WritableByteChannel":
+            case "SeekableByteChannel":
+            case "OutputStream":
+            case "InputStream":
+                return new NonnullConstructorParam(arg.getName(), type);
+            default:
+                return new SimpleConstructorParam(arg.getName(), type);
+        }
+
+    }
+
+    /**
+     * Determines if any of the constructor parameters has the specified type.
+     */
+    public static boolean containsType(final ImmutableList<ConstructorParam> constructorParams, final String type) {
+        return constructorParams.stream()
+                .anyMatch(param -> param.getType().equals(type));
+    }
+
+    /**
+     * Gets the list of preconditions for a constructor based on the constructor parameters.
+     */
+    public static ImmutableList<Precondition> toPreconditions(final ImmutableList<ConstructorParam> constructorParams) {
+        return constructorParams.stream()
+                .filter(param -> param instanceof NonnullConstructorParam)
+                .map(param -> new NotNullPrecondition(param.getName()))
                 .collect(GuavaCollectors.immutableList());
     }
 }

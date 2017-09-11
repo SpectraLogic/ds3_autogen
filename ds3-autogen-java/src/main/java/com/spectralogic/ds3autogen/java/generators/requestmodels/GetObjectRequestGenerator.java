@@ -20,15 +20,13 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
-import com.spectralogic.ds3autogen.java.models.QueryParam;
-import com.spectralogic.ds3autogen.java.models.RequestConstructor;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toConstructorParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.toPreconditions;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
-import static com.spectralogic.ds3autogen.utils.Helper.removeVoidArguments;
-import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.getRequiredArgsFromRequestHeader;
 
 public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
@@ -111,12 +109,17 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedConstructorArgs);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
                 true,
                 ImmutableList.of(),
-                updatedConstructorArgs,
+                constructorParams,
                 updatedConstructorArgs,
                 queryParams,
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
@@ -144,10 +147,15 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedConstructorArgs);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
-                updatedConstructorArgs,
+                constructorParams,
                 updatedConstructorArgs,
                 queryParamsBuilder.build(),
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 
@@ -181,12 +189,17 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
         final ImmutableList<String> additionalLines = ImmutableList.of("this.channel = Channels.newChannel(stream);");
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedConstructorArgs);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         return new RequestConstructor(
                 false,
                 additionalLines,
-                updatedConstructorArgs,
+                constructorParams,
                 assignmentsBuilder.build(),
                 queryParamsBuilder.build(),
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
     }
 }

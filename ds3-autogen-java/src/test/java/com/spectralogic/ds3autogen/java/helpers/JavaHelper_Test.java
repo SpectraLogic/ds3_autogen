@@ -18,10 +18,7 @@ package com.spectralogic.ds3autogen.java.helpers;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
-import com.spectralogic.ds3autogen.java.models.AnnotationInfo;
-import com.spectralogic.ds3autogen.java.models.Element;
-import com.spectralogic.ds3autogen.java.models.EnumConstant;
-import com.spectralogic.ds3autogen.java.models.Variable;
+import com.spectralogic.ds3autogen.java.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.*;
@@ -70,25 +67,25 @@ public class JavaHelper_Test {
     @Test
     public void constructorArgs_FullList_Test() {
         final String expectedResult = "final String bucketName, final String objectName, final Type1 arg1, final Type2 arg2, final Type3 arg3";
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("Type1", "Arg1"),
-                new Arguments("Type3", "Arg3"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("Type2", "Arg2"),
-                new Arguments("String", "BucketName"));
-        final String result = constructorArgs(arguments);
+        final ImmutableList<ConstructorParam> params = ImmutableList.of(
+                new SimpleConstructorParam("Arg1", "Type1"),
+                new SimpleConstructorParam("Arg3", "Type3"),
+                new SimpleConstructorParam("ObjectName", "String"),
+                new SimpleConstructorParam("Arg2", "Type2"),
+                new SimpleConstructorParam("BucketName", "String"));
+        final String result = constructorArgs(params);
         assertThat(result, is(expectedResult));
     }
 
     @Test
     public void constructorArgs_FullList_Test2() {
-        final String expectedResult = "final String bucketName, final String objectName, final SeekableByteChannel channel, final long size";
-        final ImmutableList<Arguments> arguments = ImmutableList.of(
-                new Arguments("SeekableByteChannel", "Channel"),
-                new Arguments("long", "Size"),
-                new Arguments("String", "bucketName"),
-                new Arguments("String", "objectName"));
-        final String result = constructorArgs(arguments);
+        final String expectedResult = "final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final long size";
+        final ImmutableList<ConstructorParam> params = ImmutableList.of(
+                new NonnullConstructorParam("Channel", "SeekableByteChannel"),
+                new SimpleConstructorParam("Size", "long"),
+                new SimpleConstructorParam("bucketName", "String"),
+                new SimpleConstructorParam("objectName", "String"));
+        final String result = constructorArgs(params);
         assertThat(result, is(expectedResult));
     }
 

@@ -24,6 +24,9 @@ import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.java.models.ConstructorParam;
+import com.spectralogic.ds3autogen.java.models.NonnullConstructorParam;
+import com.spectralogic.ds3autogen.java.models.SimpleConstructorParam;
 import com.spectralogic.ds3autogen.java.models.parseresponse.BaseParseResponse;
 import com.spectralogic.ds3autogen.java.models.parseresponse.EmptyParseResponse;
 import com.spectralogic.ds3autogen.java.models.parseresponse.NullParseResponse;
@@ -43,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static com.spectralogic.ds3autogen.java.generators.requestmodels.BaseRequestGenerator.modifyConstructorParamTypes;
 import static com.spectralogic.ds3autogen.java.test.helpers.JavaCodeGeneratorTestHelper.*;
 import static com.spectralogic.ds3autogen.java.utils.TestHelper.*;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
@@ -1088,31 +1092,33 @@ public class JavaFunctionalTests {
         assertTrue(hasCopyright(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
 
-        final ImmutableList<Arguments> commonConstructorArgs = ImmutableList.of(
-                new Arguments("String", "BucketName"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("long", "Size"));
+        final ImmutableList<ConstructorParam> commonConstructorArgs = ImmutableList.of(
+                new SimpleConstructorParam("BucketName", "String"),
+                new SimpleConstructorParam("ObjectName", "String"),
+                new SimpleConstructorParam("Size", "long"));
 
-        final ImmutableList.Builder<Arguments> deprecatedBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> deprecatedBuilder = ImmutableList.builder();
         deprecatedBuilder.addAll(commonConstructorArgs);
-        deprecatedBuilder.add(new Arguments("SeekableByteChannel", "Channel"));
-        assertTrue(hasConstructor(requestName, deprecatedBuilder.build(), requestGeneratedCode));
+        deprecatedBuilder.add(new NonnullConstructorParam("Channel", "SeekableByteChannel"));
+        assertTrue(hasConstructorWithAnnotations(requestName, deprecatedBuilder.build(), requestGeneratedCode));
 
-        final ImmutableList.Builder<Arguments> channelBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> channelBuilder = ImmutableList.builder();
         channelBuilder.addAll(commonConstructorArgs);
-        channelBuilder.add(new Arguments("UUID", "Job"));
-        channelBuilder.add(new Arguments("long", "Offset"));
-        channelBuilder.add(new Arguments("SeekableByteChannel", "Channel"));
-        assertTrue(hasConstructor(requestName, channelBuilder.build(), requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
+        channelBuilder.add(new SimpleConstructorParam("Job", "UUID"));
+        channelBuilder.add(new SimpleConstructorParam("Offset", "long"));
+        channelBuilder.add(new NonnullConstructorParam("Channel", "SeekableByteChannel"));
+        assertTrue(hasConstructorWithAnnotations(requestName, channelBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
-        final ImmutableList.Builder<Arguments> streamBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> streamBuilder = ImmutableList.builder();
         streamBuilder.addAll(commonConstructorArgs);
-        streamBuilder.add(new Arguments("UUID", "Job"));
-        streamBuilder.add(new Arguments("long", "Offset"));
-        streamBuilder.add(new Arguments("InputStream", "Stream"));
-        assertTrue(hasConstructor(requestName, streamBuilder.build(), requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(streamBuilder.build(), "UUID", "String"), requestGeneratedCode));
+        streamBuilder.add(new SimpleConstructorParam("Job", "UUID"));
+        streamBuilder.add(new SimpleConstructorParam("Offset", "long"));
+        streamBuilder.add(new NonnullConstructorParam("Stream", "InputStream"));
+        assertTrue(hasConstructorWithAnnotations(requestName, streamBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(streamBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
@@ -1190,27 +1196,29 @@ public class JavaFunctionalTests {
         assertTrue(hasCopyright(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
 
-        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
-                new Arguments("String", "BucketName"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("WritableByteChannel", "Channel"));
-        assertTrue(hasConstructor(requestName, constructorArgs, requestGeneratedCode));
+        final ImmutableList<ConstructorParam> constructorArgs = ImmutableList.of(
+                new SimpleConstructorParam("BucketName", "String"),
+                new SimpleConstructorParam("ObjectName", "String"),
+                new NonnullConstructorParam("Channel", "WritableByteChannel"));
+        assertTrue(hasConstructorWithAnnotations(requestName, constructorArgs, requestGeneratedCode));
 
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> builder = ImmutableList.builder();
         builder.addAll(constructorArgs);
-        builder.add(new Arguments("UUID", "Job"));
-        builder.add(new Arguments("long", "Offset"));
-        assertTrue(hasConstructor(requestName, builder.build(), requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(builder.build(), "UUID", "String"), requestGeneratedCode));
+        builder.add(new SimpleConstructorParam("Job", "UUID"));
+        builder.add(new SimpleConstructorParam("Offset", "long"));
+        assertTrue(hasConstructorWithAnnotations(requestName, builder.build(), requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(builder.build(), "UUID", "String"), requestGeneratedCode));
 
-        final ImmutableList<Arguments> streamConstructorArgs = ImmutableList.of(
-                new Arguments("String", "BucketName"),
-                new Arguments("String", "ObjectName"),
-                new Arguments("OutputStream", "Stream"),
-                new Arguments("UUID", "Job"),
-                new Arguments("long", "Offset"));
-        assertTrue(hasConstructor(requestName, streamConstructorArgs, requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(streamConstructorArgs, "UUID", "String"), requestGeneratedCode));
+        final ImmutableList<ConstructorParam> streamConstructorArgs = ImmutableList.of(
+                new SimpleConstructorParam("BucketName", "String"),
+                new SimpleConstructorParam("ObjectName", "String"),
+                new NonnullConstructorParam("Stream", "OutputStream"),
+                new SimpleConstructorParam("Job", "UUID"),
+                new SimpleConstructorParam("Offset", "long"));
+        assertTrue(hasConstructorWithAnnotations(requestName, streamConstructorArgs, requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(streamConstructorArgs, "UUID", "String"), requestGeneratedCode));
 
         assertTrue(requestGeneratedCode.contains("this.updateQueryParam(\"job\", job)"));
         assertTrue(requestGeneratedCode.contains("this.updateQueryParam(\"offset\", offset)"));
@@ -2414,24 +2422,26 @@ public class JavaFunctionalTests {
         assertTrue(doesNotHaveOperation(requestGeneratedCode));
         assertTrue(hasPath("\"/\" + this.bucketName + \"/\" + this.objectName", requestGeneratedCode));
 
-        final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.add(new Arguments("String", "BucketName"));
-        builder.add(new Arguments("String", "ObjectName"));
-        builder.add(new Arguments("int", "PartNumber"));
-        builder.add(new Arguments("long", "Size"));
-        builder.add(new Arguments("UUID", "UploadId"));
+        final ImmutableList.Builder<ConstructorParam> builder = ImmutableList.builder();
+        builder.add(new SimpleConstructorParam("BucketName", "String"));
+        builder.add(new SimpleConstructorParam("ObjectName", "String"));
+        builder.add(new SimpleConstructorParam("PartNumber", "int"));
+        builder.add(new SimpleConstructorParam("Size", "long"));
+        builder.add(new SimpleConstructorParam("UploadId", "UUID"));
 
-        final ImmutableList.Builder<Arguments> channelBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> channelBuilder = ImmutableList.builder();
         channelBuilder.addAll(builder.build());
-        channelBuilder.add(new Arguments("SeekableByteChannel", "Channel"));
-        assertTrue(hasConstructor(requestName, channelBuilder.build(), requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
+        channelBuilder.add(new NonnullConstructorParam("Channel", "SeekableByteChannel"));
+        assertTrue(hasConstructorWithAnnotations(requestName, channelBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
-        final ImmutableList.Builder<Arguments> streamBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<ConstructorParam> streamBuilder = ImmutableList.builder();
         streamBuilder.addAll(builder.build());
-        streamBuilder.add(new Arguments("InputStream", "Stream"));
-        assertTrue(hasConstructor(requestName, channelBuilder.build(), requestGeneratedCode));
-        assertTrue(hasConstructor(requestName, modifyType(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
+        streamBuilder.add(new NonnullConstructorParam("Stream", "InputStream"));
+        assertTrue(hasConstructorWithAnnotations(requestName, channelBuilder.build(), requestGeneratedCode));
+        assertTrue(hasConstructorWithAnnotations(requestName,
+                modifyConstructorParamTypes(channelBuilder.build(), "UUID", "String"), requestGeneratedCode));
 
         //Test the generated response
         final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();

@@ -33,10 +33,10 @@ import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import com.spectralogic.ds3autogen.utils.models.NotificationType;
 
-import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.argsToQueryParams;
+import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.*;
 import static com.spectralogic.ds3autogen.java.utils.JavaDocGenerator.toConstructorDocs;
-import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.containsType;
 import static com.spectralogic.ds3autogen.utils.ArgumentsUtil.modifyType;
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.supportsPaginationRequest;
@@ -67,7 +67,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         final ImmutableList<Variable> classVariableArguments =
                 convertAllUuidClassVariables(toClassVariableArguments(updatedRequest));
 
-        final ImmutableList<String> imports = getAllImports(updatedRequest, packageName);
+        final ImmutableList<String> imports = getAllImports(updatedRequest, packageName, constructors);
 
         final ImmutableList<String> withConstructors = toWithConstructorList(optionalArguments, requestName, docSpec);
 
@@ -115,7 +115,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
         return formatDocumentation(documentation) + new BaseWithConstructor(param, requestName).toJavaCode();
     }
 
-    protected static String formatDocumentation(final String documentation) {
+    static String formatDocumentation(final String documentation) {
         if (isEmpty(documentation)) {
             return "";
         }
@@ -126,7 +126,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Updates the Ds3Request's parameter: BucketId is changed from type UUID
      * to String if said parameter exists within the request
      */
-    protected static Ds3Request updateDs3RequestParamTypes(final Ds3Request ds3Request) {
+    static Ds3Request updateDs3RequestParamTypes(final Ds3Request ds3Request) {
         return new Ds3Request(
                 ds3Request.getName(),
                 ds3Request.getHttpVerb(),
@@ -149,7 +149,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Updates the Ds3Param list where all instances of BucketId have their
      * type updated to String
      */
-    protected static ImmutableList<Ds3Param> updateDs3ParamListTypes(final ImmutableList<Ds3Param> params) {
+    static ImmutableList<Ds3Param> updateDs3ParamListTypes(final ImmutableList<Ds3Param> params) {
         if (isEmpty(params)) {
             return ImmutableList.of();
         }
@@ -175,24 +175,32 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             final String requestName,
             final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
+
         final ImmutableList<String> argNames = constructorArgs.stream()
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(constructorArgs);
+
+        final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
+
         final RequestConstructor constructor = new RequestConstructor(
-                constructorArgs,
+                constructorParams,
                 constructorArgs,
                 toQueryParamsList(ds3Request),
+                preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
 
         return ImmutableList.of(constructor);
     }
+
+
     
     /**
      * Takes a list of constructors and splits all constructors containing at least one UUID into two
      * constructors: an original, and a constructor where all UUIDs are replaced with String type.
      */
-    protected static ImmutableList<RequestConstructor> splitAllUuidConstructors(
+    static ImmutableList<RequestConstructor> splitAllUuidConstructors(
             final ImmutableList<RequestConstructor> constructors) {
         if (isEmpty(constructors)) {
             return ImmutableList.of();
@@ -210,7 +218,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * strings. If the constructor does not have a UUID parameter, then the original constructor is
      * returned.
      */
-    protected static ImmutableList<RequestConstructor> splitUuidConstructor(final RequestConstructor constructor) {
+    static ImmutableList<RequestConstructor> splitUuidConstructor(final RequestConstructor constructor) {
         final ImmutableList.Builder<RequestConstructor> builder = ImmutableList.builder();
         builder.add(constructor);
         if (!containsType(constructor.getParameters(), "UUID")) {
@@ -223,24 +231,42 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     /**
      * Converts all UUID types into Strings within a given request constructor
      */
-    protected static RequestConstructor convertUuidConstructorToStringConstructor(
+    static RequestConstructor convertUuidConstructorToStringConstructor(
             final RequestConstructor constructor) {
         final String curType = "UUID";
         final String newType = "String";
         return new RequestConstructor(
                 constructor.isDeprecated(),
                 constructor.getAdditionalLines(),
-                modifyType(constructor.getParameters(), curType, newType),
+                modifyConstructorParamTypes(constructor.getParameters(), curType, newType),
                 modifyType(constructor.getAssignments(), curType, newType),
                 modifyQueryParamType(constructor.getQueryParams(), curType, newType),
+                constructor.getPreconditions(),
                 constructor.getDocumentation());
+    }
+
+    /**
+     * Creates a modified list of constructor parameters with the specified type changed to the desired type.
+     */
+    public static ImmutableList<ConstructorParam> modifyConstructorParamTypes(
+            final ImmutableList<ConstructorParam> constructorParams,
+            final String oldType,
+            final String newType) {
+        return constructorParams.stream()
+                .map(param -> {
+                    if (param.getType().equals(oldType)) {
+                        return new ConstructorParam(param.getName(), newType, param.getAnnotation());
+                    }
+                    return param;
+                })
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Changes the type of all arguments with the specified type, and converts
      * the arguments into query params
      */
-    public static ImmutableList<QueryParam> modifyQueryParamType(
+    static ImmutableList<QueryParam> modifyQueryParamType(
             final ImmutableList<QueryParam> params,
             final String curType,
             final String newType) {
@@ -271,7 +297,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Converts all UUID class variable arguments from type UUID to type String.
      * All other variables are left un-modified.
      */
-    public static ImmutableList<Variable> convertAllUuidClassVariables(final ImmutableList<Variable> variables) {
+    static ImmutableList<Variable> convertAllUuidClassVariables(final ImmutableList<Variable> variables) {
         if (isEmpty(variables)) {
             return ImmutableList.of();
         }
@@ -286,7 +312,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Converts a UUID class variable argument's type to String. If the variable
      * is not of type UUID, then the variable is not modified.
      */
-    public static Variable convertUuidClassVariable(final Variable var) {
+    static Variable convertUuidClassVariable(final Variable var) {
         if (var.getType().equals("UUID")) {
             return new Variable(var.getName(), "String", var.isRequired());
         }
@@ -320,7 +346,17 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
     @Override
     public ImmutableList<String> getAllImports(
             final Ds3Request ds3Request,
-            final String packageName) {
+            final String packageName,
+            final ImmutableList<RequestConstructor> constructors) {
+        return commonImports(ds3Request, constructors);
+    }
+
+    /**
+     * Retrieves the common imports for java request handlers.
+     */
+    ImmutableList<String> commonImports(
+            final Ds3Request ds3Request,
+            final ImmutableList<RequestConstructor> constructors) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
         builder.add(getParentImport(ds3Request));
@@ -334,7 +370,41 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             builder.add("com.google.common.net.UrlEscapers");
         }
 
+        // Determine if any of the constructor parameters use the Nonnull annotation
+        builder.addAll(annotationImports(constructors));
+        builder.addAll(preconditionImports(constructors));
+
         return builder.build().asList();
+    }
+
+    /**
+     * Retrieves imports necessary to support all annotations present in the constructors.
+     */
+    static ImmutableList<String> annotationImports(final ImmutableList<RequestConstructor> constructors) {
+        // Determine if any of the constructor parameters use the Nonnull annotation
+        final boolean usesNonnull = constructors.stream()
+                .flatMap(constructor -> constructor.getParameters().stream())
+                .anyMatch(param -> param instanceof NonnullConstructorParam);
+
+        if (usesNonnull) {
+            return ImmutableList.of("javax.annotation.Nonnull");
+        }
+
+        return ImmutableList.of();
+    }
+
+    /**
+     * Retrieves imports necessary to support all preconditions present in the request constructors.
+     */
+    static ImmutableList<String> preconditionImports(final ImmutableList<RequestConstructor> constructors) {
+        // Determine if any of the constructors have preconditions
+        final boolean hasPreconditions = constructors.stream()
+                .anyMatch(constructor -> hasContent(constructor.getPreconditions()));
+
+        if (hasPreconditions) {
+            return ImmutableList.of("com.google.common.base.Preconditions");
+        }
+        return ImmutableList.of();
     }
 
     /**
@@ -365,7 +435,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @return The list of imports necessary for including all generated models within
      *         the Ds3Params list
      */
-    protected static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> ds3Params) {
+    static ImmutableSet<String> getImportsFromParamList(final ImmutableList<Ds3Param> ds3Params) {
         if (isEmpty(ds3Params)) {
             return ImmutableSet.of();
         }
@@ -415,7 +485,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Splits all UUID arguments into two arguments (UUID and String) for support of both
      * UUID and String with-constructors. All non-UUID arguments are left unmodified.
      */
-    protected static ImmutableList<Arguments> splitAllUuidOptionalArguments(final ImmutableList<Arguments> arguments) {
+    static ImmutableList<Arguments> splitAllUuidOptionalArguments(final ImmutableList<Arguments> arguments) {
         if (isEmpty(arguments)) {
             return ImmutableList.of();
         }
@@ -430,7 +500,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * Splits UUID arguments into two arguments, one UUID and one String. This is done
      * so that both a UUID and String with-constructor will be crated for this parameter
      */
-    protected static ImmutableList<Arguments> splitUuidOptionalArgument(final Arguments arg) {
+    static ImmutableList<Arguments> splitUuidOptionalArgument(final Arguments arg) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.add(arg);
         if (arg.getType().equals("UUID")) {
@@ -444,7 +514,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @param optionalDs3Params A list of optional Ds3Params
      * @return A list of optional Arguments
      */
-    protected static ImmutableList<Arguments> toOptionalArgumentsList(
+    static ImmutableList<Arguments> toOptionalArgumentsList(
             final ImmutableList<Ds3Param> optionalDs3Params) {
         if (isEmpty(optionalDs3Params)) {
             return ImmutableList.of();
@@ -460,7 +530,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @param ds3Params A list of Ds3Params
      * @return A list of Arguments
      */
-    protected static ImmutableList<Arguments> toArgumentsList(
+    static ImmutableList<Arguments> toArgumentsList(
             final ImmutableList<Ds3Param> ds3Params) {
         if(isEmpty(ds3Params)) {
             return ImmutableList.of();
@@ -479,7 +549,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @param ds3Request A request
      * @return The Java code for the request path
      */
-    protected static String getRequestPath(final Ds3Request ds3Request) {
+    static String getRequestPath(final Ds3Request ds3Request) {
         if (ds3Request.getClassification() == Classification.amazons3) {
             return getAmazonS3RequestPath(ds3Request);
         }
@@ -492,7 +562,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @param ds3Request A request
      * @return The Java request path code for an AmazonS3 request
      */
-    protected static String getAmazonS3RequestPath(final Ds3Request ds3Request) {
+    static String getAmazonS3RequestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
         if (ds3Request.getClassification() != Classification.amazons3) {
             return builder.toString();
@@ -512,7 +582,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * @param ds3Request A request
      * @return The Java request path code for an SpectraS3 request
      */
-    protected static String getSpectraDs3RequestPath(final Ds3Request ds3Request) {
+    static String getSpectraDs3RequestPath(final Ds3Request ds3Request) {
         final StringBuilder builder = new StringBuilder();
         if (ds3Request.getClassification() != Classification.spectrads3
                 && ds3Request.getClassification() != Classification.spectrainternal) {
@@ -544,7 +614,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * to prevent previously UUID parameters (which are now stored as Strings) from
      * being incorrectly converted.
      */
-    protected static String resourceArgToString(final Arguments arg) {
+    static String resourceArgToString(final Arguments arg) {
         if (arg.getType().equals("UUID")) {
             return Helper.uncapFirst(arg.getName());
         }
@@ -556,7 +626,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
      * need to include an import to parent class.
      * @return True if package is part of SpectraDs3, else false
      */
-    public static boolean isSpectraDs3(final String packageName) {
+    static boolean isSpectraDs3(final String packageName) {
         return packageName.contains(Constants.SPECTRA_DS3_PACKAGE);
     }
 }

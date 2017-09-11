@@ -18,13 +18,13 @@ package com.spectralogic.ds3autogen.java.utils;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
-import com.spectralogic.ds3autogen.java.models.QueryParam;
-import com.spectralogic.ds3autogen.java.models.RequestConstructor;
+import com.spectralogic.ds3autogen.java.models.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.java.utils.CommonRequestGeneratorUtils.*;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class CommonRequestGeneratorUtils_Test {
 
@@ -93,5 +93,73 @@ public class CommonRequestGeneratorUtils_Test {
         assertThat(result.get(0).getType(), is("TypeOne"));
         assertThat(result.get(1).getName(), is("NameTwo"));
         assertThat(result.get(1).getType(), is("TypeTwo"));
+    }
+
+    @Test
+    public void toConstructorParamsEmptyListTest() {
+        final ImmutableList<ConstructorParam> result = toConstructorParams(ImmutableList.of());
+        assertThat(result.size(), is(0));
+    }
+
+    private static final ImmutableList<Arguments> CHANNEL_STREAM_ARGS = ImmutableList.of(
+            new Arguments("InputStream", "InStreamArg"),
+            new Arguments("Integer", "IntArg"),
+            new Arguments("OutputStream", "OutStreamArg"),
+            new Arguments("SeekableByteChannel", "SeekableChannelArg"),
+            new Arguments("WritableByteChannel", "WriteChannelArg")
+    );
+
+    private static final ImmutableList<ConstructorParam> CHANNEL_STREAM_PARAMS = ImmutableList.of(
+            new NonnullConstructorParam("InStreamArg", "InputStream"),
+            new SimpleConstructorParam("IntArg", "Integer"),
+            new NonnullConstructorParam("OutStreamArg", "OutputStream"),
+            new NonnullConstructorParam("SeekableChannelArg", "SeekableByteChannel"),
+            new NonnullConstructorParam("WriteChannelArg", "WritableByteChannel")
+    );
+
+    @Test
+    public void toConstructorParamsFullListTest() {
+        final ImmutableList<ConstructorParam> result = toConstructorParams(CHANNEL_STREAM_ARGS);
+
+        assertThat(result.size(), is(CHANNEL_STREAM_ARGS.size()));
+
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).toJavaCode(), is(CHANNEL_STREAM_PARAMS.get(i).toJavaCode()));
+        }
+    }
+
+    @Test
+    public void toConstructorParamTest() {
+        for (int i = 0; i < CHANNEL_STREAM_ARGS.size(); i++) {
+            final ConstructorParam result = toConstructorParam(CHANNEL_STREAM_ARGS.get(i));
+            assertThat(result.toJavaCode(), is(CHANNEL_STREAM_PARAMS.get(i).toJavaCode()));
+        }
+    }
+
+    @Test
+    public void containsTypeTest() {
+        assertTrue(containsType(CHANNEL_STREAM_PARAMS, "InputStream"));
+        assertTrue(containsType(CHANNEL_STREAM_PARAMS, "Integer"));
+        assertTrue(containsType(CHANNEL_STREAM_PARAMS, "OutputStream"));
+        assertTrue(containsType(CHANNEL_STREAM_PARAMS, "SeekableByteChannel"));
+        assertTrue(containsType(CHANNEL_STREAM_PARAMS, "WritableByteChannel"));
+
+        assertFalse(containsType(CHANNEL_STREAM_PARAMS, "integer"));
+        assertFalse(containsType(CHANNEL_STREAM_PARAMS, "String"));
+    }
+
+    @Test
+    public void toPreconditionsTest() {
+        final ImmutableList<Precondition> expected = ImmutableList.of(
+                new NotNullPrecondition("InStreamArg"),
+                new NotNullPrecondition("OutStreamArg"),
+                new NotNullPrecondition("SeekableChannelArg"),
+                new NotNullPrecondition("WriteChannelArg")
+        );
+
+        final ImmutableList<Precondition> result = toPreconditions(CHANNEL_STREAM_PARAMS);
+        assertThat(result.size(), is(expected.size()));
+
+        result.forEach(condition -> assertThat(expected, hasItem(condition)));
     }
 }
