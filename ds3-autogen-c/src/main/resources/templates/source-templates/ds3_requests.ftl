@@ -20,6 +20,7 @@
   #include <inttypes.h>
 #endif
 
+
 //The max size of an uint32_t is 10 characters + NULL
 //The max size of an uint64_t is 20 characters + NULL
 #define STRING_BUFFER_SIZE 32
