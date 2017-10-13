@@ -25,7 +25,7 @@ import com.spectralogic.ds3autogen.utils.Ds3RequestUtils
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil
 import com.spectralogic.ds3autogen.utils.models.NotificationType
 
-private val PATH_REQUEST_REFERENCE = "request"
+private const val PATH_REQUEST_REFERENCE = "request"
 
 /**
  * Creates the Go request path code for a Ds3 request
@@ -45,12 +45,10 @@ fun toRequestPath(ds3Request: Ds3Request): String {
  * Creates the Go request path code for an AmazonS3 request
  */
 fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
-    val builder = StringBuilder()
-
     if (ds3Request.classification != Classification.amazons3) {
-        return builder.toString()
+        return ""
     }
-    builder.append("\"/\"")
+    val builder = StringBuilder("\"/\"")
     if (ds3Request.bucketRequirement == Requirement.REQUIRED) {
         builder.append(" + ").append(PATH_REQUEST_REFERENCE).append(".BucketName")
     }
@@ -64,16 +62,16 @@ fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
  * Creates the Go request path code for a SpectraS3 request
  */
 fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
-    val builder = StringBuilder()
-
     if (ds3Request.classification != Classification.spectrads3) {
-        return builder.toString()
+        return ""
     }
     if (ds3Request.resource == null) {
-        return builder.append("\"/_rest_/\"").toString()
+        return "\"/_rest_/\""
     }
 
-    builder.append("\"/_rest_/").append(ds3Request.resource!!.toString().toLowerCase())
+    val builder = StringBuilder("\"/_rest_/")
+            .append(ds3Request.resource!!.toString().toLowerCase())
+
     if (Ds3RequestClassificationUtil.isNotificationRequest(ds3Request)
             && ds3Request.includeInPath
             && (RequestConverterUtil.getNotificationType(ds3Request) == NotificationType.DELETE

@@ -86,14 +86,14 @@ public class ClientGeneratorUtil_Test {
                 .isEqualTo("\"/\" + request.BucketName + \"/\" + request.ObjectName");
 
         //Spectra requests
-        assertThat(getAmazonS3RequestPath(getRequestDeleteNotification())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestCreateNotification())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestGetNotification())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestVerifyPhysicalPlacement())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestBulkGet())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestBulkPut())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestSpectraS3GetObject())).isEqualTo("");
-        assertThat(getAmazonS3RequestPath(getRequestGetJob())).isEqualTo("");
+        assertThat(getAmazonS3RequestPath(getRequestDeleteNotification())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestCreateNotification())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestGetNotification())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestVerifyPhysicalPlacement())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestBulkGet())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestBulkPut())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestSpectraS3GetObject())).isEmpty();
+        assertThat(getAmazonS3RequestPath(getRequestGetJob())).isEmpty();
     }
 
     @Test
@@ -117,8 +117,8 @@ public class ClientGeneratorUtil_Test {
                 .isEqualTo("\"/_rest_/job/\" + request.JobId");
 
         //Amazon requests
-        assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete())).isEqualTo("");
-        assertThat(getSpectraDs3RequestPath(getRequestCreateObject())).isEqualTo("");
-        assertThat(getSpectraDs3RequestPath(getRequestAmazonS3GetObject())).isEqualTo("");
+        assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete())).isEmpty();
+        assertThat(getSpectraDs3RequestPath(getRequestCreateObject())).isEmpty();
+        assertThat(getSpectraDs3RequestPath(getRequestAmazonS3GetObject())).isEmpty();
     }
 }
