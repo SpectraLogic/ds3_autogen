@@ -15,8 +15,23 @@
 
 package com.spectralogic.ds3autogen.go.models.client
 
-import com.google.common.collect.ImmutableList
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 
-data class Command(
-        val name: String,
-        val requestBuildLine: ImmutableList<RequestBuildLine>)
+interface RequestBuildLine {
+    val line: String
+}
+
+// Creates the Go request builder line for adding an http verb to an http request
+data class HttpVerbBuildLine(private val httpVerb: HttpVerb) : RequestBuildLine {
+    override val line: String get() {
+        val verb = httpVerb.toString()
+        return "WithHttpVerb(HTTP_VERB_$verb)."
+    }
+}
+
+// Creates the Go request builder line for adding a path to an http request
+data class PathBuildLine(private val path: String) : RequestBuildLine {
+    override val line: String get() {
+        return "WithPath($path)."
+    }
+}

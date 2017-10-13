@@ -37,7 +37,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -78,9 +78,9 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) SimpleNoPayload(request *models.SimpleNoPayloadRequest) (*models.SimpleNoPayloadResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
-        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -129,8 +129,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) SimpleWithPayload(request *models.SimpleWithPayloadRequest) (*models.SimpleWithPayloadResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -148,7 +148,6 @@ public class GoFunctionalTests {
 
         assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("func NewDeleteBucketAclSpectraS3Request(bucketAcl string) *DeleteBucketAclSpectraS3Request {"));
-        assertTrue(requestCode.contains("return \"/_rest_/bucket_acl/\" + deleteBucketAclSpectraS3Request.bucketAcl"));
         assertFalse(returnsStream(requestName, requestCode));
 
         // Verify Response file was generated
@@ -176,9 +175,13 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
         assertTrue(client.contains("func (client *Client) DeleteBucketAclSpectraS3(request *models.DeleteBucketAclSpectraS3Request) (*models.DeleteBucketAclSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)"));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket_acl/\" + request.BucketAcl)."));
     }
 
     @Test
@@ -208,9 +211,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"verify_physical_placement\")"));
         assertTrue(requestCode.contains("bucketName: bucketName,"));
         assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
-
-        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + verifyPhysicalPlacementForObjectsSpectraS3Request.bucketName"));
-        assertTrue(requestCode.contains("return networking.GET"));
 
         assertTrue(returnsStream(requestName, requestCode));
 
@@ -246,9 +246,12 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) VerifyPhysicalPlacementForObjectsSpectraS3(request *models.VerifyPhysicalPlacementForObjectsSpectraS3Request) (*models.VerifyPhysicalPlacementForObjectsSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
-        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
     }
 
     @Test
@@ -303,8 +306,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) ReplicatePutJobSpectraS3(request *models.ReplicatePutJobSpectraS3Request) (*models.ReplicatePutJobSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -356,8 +359,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) CompleteMultiPartUpload(request *models.CompleteMultiPartUploadRequest) (*models.CompleteMultiPartUploadResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -414,8 +417,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) DeleteObjects(request *models.DeleteObjectsRequest) (*models.DeleteObjectsResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -434,7 +437,6 @@ public class GoFunctionalTests {
         assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("jobId string"));
         assertTrue(requestCode.contains("jobId: jobId,"));
-        assertTrue(requestCode.contains("\"/_rest_/job/\" + getJobToReplicateSpectraS3Request.jobId"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -463,9 +465,12 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) GetJobToReplicateSpectraS3(request *models.GetJobToReplicateSpectraS3Request) (*models.GetJobToReplicateSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
-        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/job/\" + request.JobId)"));
     }
 
     @Test
@@ -534,8 +539,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
         assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -611,9 +616,9 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) GetAzureDataReplicationRulesSpectraS3(request *models.GetAzureDataReplicationRulesSpectraS3Request) (*models.GetAzureDataReplicationRulesSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
-        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(request)"));
+        assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -684,8 +689,8 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) PutAzureDataReplicationRuleSpectraS3(request *models.PutAzureDataReplicationRuleSpectraS3Request) (*models.PutAzureDataReplicationRuleSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
     }
 
     @Test
@@ -716,9 +721,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func NewDeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationId string) *DeleteJobCreatedNotificationRegistrationSpectraS3Request {"));
         assertTrue(requestCode.contains("notificationId: notificationId,"));
 
-        // test path
-        assertTrue(requestCode.contains("return \"/_rest_/job_created_notification_registration/\" + deleteJobCreatedNotificationRegistrationSpectraS3Request.notificationId"));
-
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
@@ -746,8 +748,11 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) DeleteJobCreatedNotificationRegistrationSpectraS3(request *models.DeleteJobCreatedNotificationRegistrationSpectraS3Request) (*models.DeleteJobCreatedNotificationRegistrationSpectraS3Response, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/job_created_notification_registration/\" + request.NotificationId)."));
     }
 
     @Test
@@ -785,9 +790,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("uploadId: uploadId,"));
         assertTrue(requestCode.contains("content: content,"));
 
-        // test path
-        assertTrue(requestCode.contains("return \"/\" + putMultiPartUploadPartRequest.bucketName + \"/\" + putMultiPartUploadPartRequest.objectName"));
-
         // test content stream
         assertTrue(requestCode.contains("func (putMultiPartUploadPartRequest *PutMultiPartUploadPartRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return putMultiPartUploadPartRequest.content"));
@@ -819,8 +821,10 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) PutMultiPartUploadPart(request *models.PutMultiPartUploadPartRequest) (*models.PutMultiPartUploadPartResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
     }
 
     @Test
@@ -860,9 +864,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("content: content,"));
         assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum()"));
         assertTrue(requestCode.contains("headers: &http.Header{},"));
-
-        // test path
-        assertTrue(requestCode.contains("return \"/\" + putObjectRequest.bucketName + \"/\" + putObjectRequest.objectName"));
 
         // test content stream
         assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
@@ -906,8 +907,11 @@ public class GoFunctionalTests {
         assertTrue(hasContent(client));
 
         assertTrue(client.contains("func (client *Client) PutObject(request *models.PutObjectRequest) (*models.PutObjectResponse, error) {"));
-        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.netLayer), client.clientPolicy.maxRetries)"));
-        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(request)"));
+        assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
+        assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)"));
     }
 
     @Test
@@ -936,9 +940,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) WithForce() *ClearSuspectBlobAzureTargetsSpectraS3Request {"));
         assertTrue(requestCode.contains("clearSuspectBlobAzureTargetsSpectraS3Request.queryParams.Set(\"force\", \"\")"));
 
-        assertTrue(requestCode.contains("return networking.DELETE"));
-        assertTrue(requestCode.contains("return \"/_rest_/suspect_blob_azure_target\""));
-
         assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return clearSuspectBlobAzureTargetsSpectraS3Request.content"));
 
@@ -953,9 +954,12 @@ public class GoFunctionalTests {
         assertTrue(isEmpty(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.GET);
+        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/suspect_blob_azure_target\")"));
     }
 
     @Test
@@ -994,8 +998,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return putBulkJobSpectraS3Request.content"));
 
-        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + putBulkJobSpectraS3Request.bucketName"));
-
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
@@ -1020,9 +1022,12 @@ public class GoFunctionalTests {
         assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
     }
 
     @Test
@@ -1062,9 +1067,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return getBulkJobSpectraS3Request.content"));
 
-        assertTrue(requestCode.contains("return networking.PUT"));
-        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + getBulkJobSpectraS3Request.bucketName"));
-
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
@@ -1089,9 +1091,12 @@ public class GoFunctionalTests {
         assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
     }
 
     @Test
@@ -1128,9 +1133,6 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
         assertTrue(requestCode.contains("return verifyBulkJobSpectraS3Request.content"));
 
-        assertTrue(requestCode.contains("return networking.PUT"));
-        assertTrue(requestCode.contains("return \"/_rest_/bucket/\" + verifyBulkJobSpectraS3Request.bucketName"));
-
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
@@ -1155,8 +1157,11 @@ public class GoFunctionalTests {
         assertTrue(hasContent(typeCode));
 
         // Verify that the client code was generated
-        final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
+        final String client = codeGenerator.getClientCode(HttpVerb.PUT);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
     }
 }

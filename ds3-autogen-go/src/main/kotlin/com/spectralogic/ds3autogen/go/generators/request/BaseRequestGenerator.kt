@@ -22,7 +22,10 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.enums.Operation
 import com.spectralogic.ds3autogen.api.models.enums.Requirement
+import com.spectralogic.ds3autogen.go.generators.client.toRequestPath
 import com.spectralogic.ds3autogen.go.models.request.*
+import com.spectralogic.ds3autogen.go.utils.getGoArgFromResource
+import com.spectralogic.ds3autogen.go.utils.isGoResourceAnArg
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.Helper

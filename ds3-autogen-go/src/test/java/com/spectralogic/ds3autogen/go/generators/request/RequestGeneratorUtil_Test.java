@@ -18,38 +18,17 @@ package com.spectralogic.ds3autogen.go.generators.request;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.enums.*;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.go.generators.request.RequestGeneratorUtilKt.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RequestGeneratorUtil_Test {
-
-    private static Ds3Request createTestRequest(final Resource resource, final boolean includeInPath) {
-        return new Ds3Request(
-                "com.test.TestRequest",
-                null,
-                Classification.amazons3,
-                null,
-                null,
-                null,
-                resource,
-                null,
-                null,
-                includeInPath,
-                null,
-                null,
-                null);
-    }
 
     @Test
     public void removeVoidParams_NullList_Test() {
@@ -313,102 +292,6 @@ public class RequestGeneratorUtil_Test {
     }
 
     @Test
-    public void toRequestPath_Test() {
-        //Spectra requests
-        assertThat(toRequestPath(getRequestDeleteNotification()),
-                is("\"/_rest_/job_created_notification_registration/\" + deleteJobCreatedNotificationRegistrationRequestHandler.notificationId"));
-        assertThat(toRequestPath(getRequestCreateNotification()),
-                is("\"/_rest_/job_created_notification_registration\""));
-        assertThat(toRequestPath(getRequestGetNotification()),
-                is("\"/_rest_/job_completed_notification_registration/\" + getJobCompletedNotificationRegistrationRequestHandler.notificationId"));
-        assertThat(toRequestPath(getRequestVerifyPhysicalPlacement()),
-                is("\"/_rest_/bucket/\" + verifyPhysicalPlacementForObjectsRequestHandler.bucketName"));
-        assertThat(toRequestPath(getRequestBulkGet()),
-                is("\"/_rest_/bucket/\" + createGetJobRequestHandler.bucketName"));
-        assertThat(toRequestPath(getRequestBulkPut()),
-                is("\"/_rest_/bucket/\" + createPutJobRequestHandler.bucketName"));
-        assertThat(toRequestPath(getRequestSpectraS3GetObject()),
-                is("\"/_rest_/object/\" + getObjectRequestHandler.objectName"));
-        assertThat(toRequestPath(getRequestGetJob()),
-                is("\"/_rest_/job/\" + getJobRequestHandler.jobId"));
-
-        //Amazon requests
-        assertThat(toRequestPath(getRequestMultiFileDelete()),
-                is("\"/\" + deleteObjectsRequestHandler.bucketName"));
-        assertThat(toRequestPath(getRequestCreateObject()),
-                is("\"/\" + createObjectRequestHandler.bucketName + \"/\" + createObjectRequestHandler.objectName"));
-        assertThat(toRequestPath(getRequestAmazonS3GetObject()),
-                is("\"/\" + getObjectRequestHandler.bucketName + \"/\" + getObjectRequestHandler.objectName"));
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void toRequestPath_Exception_Test() {
-        final Ds3Request request = new Ds3Request(
-                "Test",
-                HttpVerb.GET,
-                Classification.spectrainternal,
-                Requirement.NOT_ALLOWED,
-                Requirement.NOT_ALLOWED,
-                Action.BULK_DELETE,
-                Resource.ACTIVE_JOB,
-                ResourceType.NON_SINGLETON,
-                Operation.ALLOCATE,
-                false,
-                ImmutableList.of(),
-                ImmutableList.of(),
-                ImmutableList.of());
-
-        toRequestPath(request);
-    }
-
-    @Test
-    public void getAmazonS3RequestPath_Test() {
-        //Amazon requests
-        assertThat(getAmazonS3RequestPath(getRequestMultiFileDelete()),
-                is("\"/\" + deleteObjectsRequestHandler.bucketName"));
-        assertThat(getAmazonS3RequestPath(getRequestCreateObject()),
-                is("\"/\" + createObjectRequestHandler.bucketName + \"/\" + createObjectRequestHandler.objectName"));
-        assertThat(getAmazonS3RequestPath(getRequestAmazonS3GetObject()),
-                is("\"/\" + getObjectRequestHandler.bucketName + \"/\" + getObjectRequestHandler.objectName"));
-
-        //Spectra requests
-        assertThat(getAmazonS3RequestPath(getRequestDeleteNotification()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestCreateNotification()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestGetNotification()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestVerifyPhysicalPlacement()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestBulkGet()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestBulkPut()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestSpectraS3GetObject()), is(""));
-        assertThat(getAmazonS3RequestPath(getRequestGetJob()), is(""));
-    }
-
-    @Test
-    public void getSpectraDs3RequestPath_Test() {
-        //Spectra requests
-        assertThat(getSpectraDs3RequestPath(getRequestDeleteNotification()),
-                is("\"/_rest_/job_created_notification_registration/\" + deleteJobCreatedNotificationRegistrationRequestHandler.notificationId"));
-        assertThat(getSpectraDs3RequestPath(getRequestCreateNotification()),
-                is("\"/_rest_/job_created_notification_registration\""));
-        assertThat(getSpectraDs3RequestPath(getRequestGetNotification()),
-                is("\"/_rest_/job_completed_notification_registration/\" + getJobCompletedNotificationRegistrationRequestHandler.notificationId"));
-        assertThat(getSpectraDs3RequestPath(getRequestVerifyPhysicalPlacement()),
-                is("\"/_rest_/bucket/\" + verifyPhysicalPlacementForObjectsRequestHandler.bucketName"));
-        assertThat(getSpectraDs3RequestPath(getRequestBulkGet()),
-                is("\"/_rest_/bucket/\" + createGetJobRequestHandler.bucketName"));
-        assertThat(getSpectraDs3RequestPath(getRequestBulkPut()),
-                is("\"/_rest_/bucket/\" + createPutJobRequestHandler.bucketName"));
-        assertThat(getSpectraDs3RequestPath(getRequestSpectraS3GetObject()),
-                is("\"/_rest_/object/\" + getObjectRequestHandler.objectName"));
-        assertThat(getSpectraDs3RequestPath(getRequestGetJob()),
-                is("\"/_rest_/job/\" + getJobRequestHandler.jobId"));
-
-        //Amazon requests
-        assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete()), is(""));
-        assertThat(getSpectraDs3RequestPath(getRequestCreateObject()), is(""));
-        assertThat(getSpectraDs3RequestPath(getRequestAmazonS3GetObject()), is(""));
-    }
-
-    @Test
     public void toWithConstructors_NullList_Test() {
         final ImmutableList<WithConstructor> result = toWithConstructors(null, false);
         assertThat(result.size(), is(0));
@@ -480,44 +363,6 @@ public class RequestGeneratorUtil_Test {
 
         assertThat(params.size(), is(expected.size()));
         params.forEach(param -> assertThat(expected, hasItem(toWithConstructor(param))));
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void getGoArgFromResource_ExceptionTest() {
-        getGoArgFromResource(createTestRequest(Resource.CAPACITY_SUMMARY, true));
-    }
-
-    @Test
-    public void getGoArgFromResource_Test() {
-        final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("String", "notificationId"),
-                new Arguments("String", "bucketId"),
-                new Arguments("UUID", "jobId"),
-                new Arguments("String", "activeJob")
-        );
-
-        final ImmutableList<Ds3Request> requests = ImmutableList.of(
-                createTestRequest(Resource.DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION, true),
-                createTestRequest(Resource.BUCKET, true),
-                createTestRequest(Resource.JOB, true),
-                createTestRequest(Resource.ACTIVE_JOB, true)
-        );
-
-        assertThat(requests.size(), is(expectedArgs.size()));
-        for (int i = 0; i > requests.size(); i++) {
-            final Arguments result = getGoArgFromResource(requests.get(i));
-            assertThat(result.getName(), is(expectedArgs.get(i).getName()));
-            assertThat(result.getType(), is(expectedArgs.get(i).getType()));
-        }
-    }
-
-    @Test
-    public void isGoResourceAnArg_Test() {
-        assertFalse(isGoResourceAnArg(createTestRequest(null, true)));
-        assertFalse(isGoResourceAnArg(createTestRequest(null, false)));
-        assertFalse(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, false)));
-
-        assertTrue(isGoResourceAnArg(createTestRequest(Resource.ACTIVE_JOB, true)));
     }
 
     @Test
