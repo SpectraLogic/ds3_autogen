@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.go.generators.request
 import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
-import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor
@@ -95,17 +94,6 @@ fun toFunctionInput(arguments: ImmutableList<Arguments>): String {
             .sorted(CustomArgumentComparator())
             .map { arg -> uncapFirst(arg.name) + " " + arg.type }
             .collect(Collectors.joining(", "))
-}
-
-/**
- * Converts a nullable HttpVerb into a non-nullable HttpVerb and throws an error
- * if the input is null.
- */
-fun getHttpVerb(httpVerb: HttpVerb?): HttpVerb {
-    if (httpVerb == null) {
-        throw IllegalArgumentException("Cannot have a null HttpVerb")
-    }
-    return httpVerb
 }
 
 /**

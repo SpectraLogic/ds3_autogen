@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.api.models.enums.Resource;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class Ds3RequestUtil_Test {
     private static Ds3Request createTestRequest(final Resource resource, final boolean includeInPath) {
         return new Ds3Request(
                 "com.test.TestRequest",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 null,
                 null,

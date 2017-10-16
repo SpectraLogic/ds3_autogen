@@ -20,7 +20,7 @@ import com.spectralogic.ds3autogen.api.models.enums.*
 
 data class Ds3Request(
         val name: String,
-        val httpVerb: HttpVerb?,
+        val httpVerb: HttpVerb,
         val classification: Classification,
         val bucketRequirement: Requirement?,
         val objectRequirement: Requirement?,
