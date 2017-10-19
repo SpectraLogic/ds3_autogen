@@ -17,14 +17,16 @@ package com.spectralogic.ds3autogen.go.generators.client;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.models.client.Command;
+import com.spectralogic.ds3autogen.go.models.client.HttpVerbBuildLine;
+import com.spectralogic.ds3autogen.go.models.client.PathBuildLine;
+import com.spectralogic.ds3autogen.go.models.client.RequestBuildLine;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class BaseClientGenerator_Test {
@@ -67,21 +69,37 @@ public class BaseClientGenerator_Test {
 
     @Test
     public void toCommand_Test() {
-        final Command expected = new Command("GetBucketHandler");
-        assertThat(generator.toCommand(getBucketRequest()), is(expected));
+        final Command expected = new Command(
+                "GetBucketHandler",
+                ImmutableList.of(
+                        new HttpVerbBuildLine(HttpVerb.GET),
+                        new PathBuildLine("\"/\" + request.BucketName")
+                ));
+
+        assertThat(generator.toCommand(getBucketRequest())).isEqualTo(expected);
     }
 
     @Test
     public void toCommandList_EmptyList_Test() {
         final ImmutableList<Command> result = generator.toCommandList(ImmutableList.of(), true);
-        assertThat(result.size(), is(0));
+        assertThat(result).hasSize(0);
     }
 
     @Test
     public void toCommandList_HttpRedirectTrue_Test() {
         final ImmutableList<Command> expected = ImmutableList.of(
-                new Command("GetBucketsHandler"),
-                new Command("GetObjectsHandler")
+                new Command(
+                        "GetBucketsHandler",
+                        ImmutableList.of(
+                                new HttpVerbBuildLine(HttpVerb.GET),
+                                new PathBuildLine("\"/_rest_/bucket\"")
+                        )),
+                new Command(
+                        "GetObjectsHandler",
+                        ImmutableList.of(
+                                new HttpVerbBuildLine(HttpVerb.GET),
+                                new PathBuildLine("\"/_rest_/object\"")
+                        ))
         );
 
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
@@ -92,16 +110,25 @@ public class BaseClientGenerator_Test {
         );
 
         final ImmutableList<Command> result = generator.toCommandList(requests, true);
-        assertThat(result.size(), is(expected.size()));
-
-        expected.forEach(cmd -> assertThat(result, hasItem(cmd)));
+        assertThat(result)
+                .hasSameSizeAs(expected)
+                .containsExactlyElementsOf(expected);
     }
 
     @Test
     public void toCommandList_HttpRedirectFalse_Test() {
         final ImmutableList<Command> expected = ImmutableList.of(
-                new Command("DeleteBucketHandler"),
-                new Command("CreateGetJobHandler")
+                new Command(
+                        "DeleteBucketHandler",
+                        ImmutableList.of(
+                                new HttpVerbBuildLine(HttpVerb.DELETE),
+                                new PathBuildLine("\"/_rest_/bucket/\" + request.BucketName"))),
+                new Command(
+                        "CreateGetJobHandler",
+                        ImmutableList.of(
+                                new HttpVerbBuildLine(HttpVerb.PUT),
+                                new PathBuildLine("\"/_rest_/bucket/\" + request.BucketName")
+                        ))
         );
 
         final ImmutableList<Ds3Request> requests = ImmutableList.of(
@@ -112,8 +139,22 @@ public class BaseClientGenerator_Test {
         );
 
         final ImmutableList<Command> result = generator.toCommandList(requests, false);
-        assertThat(result.size(), is(expected.size()));
 
-        expected.forEach(cmd -> assertThat(result, hasItem(cmd)));
+        assertThat(result)
+                .hasSameSizeAs(expected)
+                .containsExactlyElementsOf(expected);
+    }
+
+    @Test
+    public void toRequestBuildLines_Test() {
+        final ImmutableList<RequestBuildLine> expected = ImmutableList.of(
+                new HttpVerbBuildLine(HttpVerb.PUT),
+                new PathBuildLine("\"/\" + request.BucketName + \"/\" + request.ObjectName")
+        );
+        final ImmutableList<RequestBuildLine> result = generator.toRequestBuildLines(getRequestCreateObject());
+
+        assertThat(result)
+                .hasSameSizeAs(expected)
+                .containsExactlyElementsOf(expected);
     }
 }

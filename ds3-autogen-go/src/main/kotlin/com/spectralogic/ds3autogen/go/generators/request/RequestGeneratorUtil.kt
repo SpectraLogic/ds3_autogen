@@ -18,10 +18,7 @@ package com.spectralogic.ds3autogen.go.generators.request
 import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
-import com.spectralogic.ds3autogen.api.models.enums.Classification
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
-import com.spectralogic.ds3autogen.api.models.enums.Requirement
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor
@@ -29,17 +26,12 @@ import com.spectralogic.ds3autogen.go.utils.toGoParamName
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
-import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isNotificationRequest
-import com.spectralogic.ds3autogen.utils.Ds3RequestUtils.hasBucketNameInPath
 import com.spectralogic.ds3autogen.utils.Helper
 import com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore
 import com.spectralogic.ds3autogen.utils.Helper.uncapFirst
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
-import com.spectralogic.ds3autogen.utils.RequestConverterUtil.*
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
-import com.spectralogic.ds3autogen.utils.models.NotificationType
 import java.util.stream.Collectors
 
 /**
@@ -188,71 +180,6 @@ fun toSimpleVariables(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Simple
 }
 
 /**
- * Creates the Go request path code for a Ds3 request
- */
-fun toRequestPath(ds3Request: Ds3Request): String {
-    if (ds3Request.classification == Classification.amazons3) {
-        return getAmazonS3RequestPath(ds3Request)
-    }
-    if (ds3Request.classification == Classification.spectrads3) {
-        return getSpectraDs3RequestPath(ds3Request)
-    }
-
-    throw IllegalArgumentException("Unsupported classification: " + ds3Request.classification.toString())
-}
-
-/**
- * Creates the Go request path code for an AmazonS3 request
- */
-fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
-    val requestRef = uncapFirst(removePath(ds3Request.name))
-    val builder = StringBuilder()
-
-    if (ds3Request.classification != Classification.amazons3) {
-        return builder.toString()
-    }
-    builder.append("\"/\"")
-    if (ds3Request.bucketRequirement == Requirement.REQUIRED) {
-        builder.append(" + ").append(requestRef).append(".bucketName")
-    }
-    if (ds3Request.objectRequirement == Requirement.REQUIRED) {
-        builder.append(" + \"/\" + ").append(requestRef).append(".objectName")
-    }
-    return builder.toString()
-}
-
-/**
- * Creates the Go request path code for a SpectraS3 request
- */
-fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
-    val builder = StringBuilder()
-    val requestRef = uncapFirst(removePath(ds3Request.name))
-
-    if (ds3Request.classification != Classification.spectrads3) {
-        return builder.toString()
-    }
-    if (ds3Request.resource == null) {
-        return builder.append("\"/_rest_/\"").toString()
-    }
-
-    builder.append("\"/_rest_/").append(ds3Request.resource!!.toString().toLowerCase())
-    if (isNotificationRequest(ds3Request)
-            && ds3Request.includeInPath
-            && (getNotificationType(ds3Request) == NotificationType.DELETE || getNotificationType(ds3Request) == NotificationType.GET)) {
-        builder.append("/\"").append(" + ").append(requestRef).append(".notificationId")
-    } else if (hasBucketNameInPath(ds3Request)) {
-        builder.append("/\"").append(" + ").append(requestRef).append(".bucketName")
-    } else if (ds3Request.isGoResourceAnArg()) {
-        val resourceArg = ds3Request.getGoArgFromResource()
-        builder.append("/\"").append(" + ").append(uncapFirst(requestRef))
-                .append(".").append(uncapFirst(resourceArg.name))
-    } else {
-        builder.append("\"")
-    }
-    return builder.toString()
-}
-
-/**
  * Converts a list of Ds3Params into a list of with-constructors, and filters for parameters
  * whose nullability matches nullableParams
  */
@@ -278,31 +205,4 @@ fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
             goType,
             camelToUnderscore(ds3Param.name),
             goVarToString(uncapFirst(goName), goType))
-}
-
-/**
- * Determines if a Ds3Request's Resource describes a required argument or not.
- */
-fun Ds3Request.isGoResourceAnArg(): Boolean {
-    return resource != null && includeInPath
-}
-
-/**
- * Creates an argument from a resource. Notification resource args are simplified to notificationId.
- * If the resource does not describe a valid argument, such as a singleton, an error is thrown.
- */
-fun Ds3Request.getGoArgFromResource(): Arguments {
-    if (isResourceSingleton(resource)) {
-        throw IllegalArgumentException("Cannot create an argument from a singleton resource: " + resource.toString())
-    }
-    if (isResourceNotification(resource)) {
-        return Arguments("String", "notificationId")
-    }
-    if (isResourceNamed(resource)) {
-        return Arguments("String", Helper.underscoreToCamel(resource.toString()) + "Name")
-    }
-    if (isResourceId(resource)) {
-        return Arguments("UUID", Helper.underscoreToCamel(resource.toString()) + "Id")
-    }
-    return Arguments("String", Helper.underscoreToCamel(resource.toString()))
 }
