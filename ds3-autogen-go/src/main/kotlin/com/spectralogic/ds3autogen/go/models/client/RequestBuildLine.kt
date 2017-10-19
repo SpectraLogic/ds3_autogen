@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.go.models.client
 
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
+import com.spectralogic.ds3autogen.api.models.enums.Operation
 
 interface RequestBuildLine {
     val line: String
@@ -31,7 +32,35 @@ data class HttpVerbBuildLine(private val httpVerb: HttpVerb) : RequestBuildLine 
 
 // Creates the Go request builder line for adding a path to an http request
 data class PathBuildLine(private val path: String) : RequestBuildLine {
+    override val line: String
+        get() = "WithPath($path)."
+}
+
+// Creates the Go request builder line for adding the operation query param
+data class OperationBuildLine(private val operation: Operation) : RequestBuildLine {
     override val line: String get() {
-        return "WithPath($path)."
+        val op = operation.toString().toLowerCase()
+        return "WithQueryParam(\"operation\", \"$op\")."
     }
+}
+
+// Creates the Go request builder line for adding a required query param
+data class QueryParamBuildLine(private val key: String, private val value: String) : RequestBuildLine {
+    override val line: String
+        get() = "WithQueryParam(\"$key\", $value)."
+}
+
+// Creates the Go request builder line for adding an optional query param.
+// An optional parameter may be nil to indicate it has not been set.
+data class OptionalQueryParamBuildLine(private val key: String, private val value: String) : RequestBuildLine {
+    override val line: String
+        get() = "WithOptionalQueryParam(\"$key\", $value)."
+}
+
+// Creates the Go request builder line for adding an optional void query param.
+// Optional voids are represented by booleans within the Go request handler
+data class VoidOptionalQueryParamBuildLine(private val key: String, private val paramName: String) : RequestBuildLine {
+    override val line: String
+        get() = "WithOptionalVoidQueryParam(\"$key\", request.$paramName)."
+
 }

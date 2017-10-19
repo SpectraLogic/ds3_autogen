@@ -77,10 +77,17 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.GET);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
         assertTrue(client.contains("func (client *Client) SimpleNoPayload(request *models.SimpleNoPayloadRequest) (*models.SimpleNoPayloadResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
         assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName)."));
+        assertTrue(client.contains("WithQueryParam(\"id\", request.Id)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"upload_id\", request.UploadId)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"offset\", networking.Int64PtrToStrPtr(request.Offset))."));
     }
 
     @Test
@@ -128,9 +135,17 @@ public class GoFunctionalTests {
         final String client = codeGenerator.getClientCode(HttpVerb.DELETE);
         CODE_LOGGER.logFile(client, FileTypeToLog.CLIENT);
         assertTrue(hasContent(client));
+
         assertTrue(client.contains("func (client *Client) SimpleWithPayload(request *models.SimpleWithPayloadRequest) (*models.SimpleWithPayloadResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
+        assertTrue(client.contains("WithQueryParam(\"void_param\", \"\")."));
+        assertTrue(client.contains("WithQueryParam(\"place_holder\", request.PlaceHolder.String())."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"optional_place_holder\", networking.IntPtrToStrPtr(request.OptionalPlaceHolder))."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_get\")."));
     }
 
     @Test
@@ -252,6 +267,8 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"storage_domain_id\", request.StorageDomainId)."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"verify_physical_placement\")."));
     }
 
     @Test
@@ -308,6 +325,12 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) ReplicatePutJobSpectraS3(request *models.ReplicatePutJobSpectraS3Request) (*models.ReplicatePutJobSpectraS3Response, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
+        assertTrue(client.contains("WithQueryParam(\"replicate\", \"\")."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_put\")."));
     }
 
     @Test
@@ -361,6 +384,10 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) CompleteMultiPartUpload(request *models.CompleteMultiPartUploadRequest) (*models.CompleteMultiPartUploadResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_POST)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
+        assertTrue(client.contains("WithQueryParam(\"upload_id\", request.UploadId)."));
     }
 
     @Test
@@ -419,6 +446,11 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) DeleteObjects(request *models.DeleteObjectsRequest) (*models.DeleteObjectsResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_POST)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName)."));
+        assertTrue(client.contains("WithQueryParam(\"delete\", \"\")."));
+        assertTrue(client.contains("WithOptionalVoidQueryParam(\"roll_back\", request.RollBack)."));
     }
 
     @Test
@@ -471,6 +503,7 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
         assertTrue(client.contains("WithPath(\"/_rest_/job/\" + request.JobId)"));
+        assertTrue(client.contains("WithQueryParam(\"replicate\", \"\")."));
     }
 
     @Test
@@ -541,6 +574,11 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) GetObject(request *models.GetObjectRequest) (*models.GetObjectResponse, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
+        assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"job\", request.Job)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"offset\", networking.Int64PtrToStrPtr(request.Offset))."));
     }
 
     @Test
@@ -619,6 +657,18 @@ public class GoFunctionalTests {
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)"));
         assertTrue(client.contains("response, requestErr := httpRedirectDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/azure_data_replication_rule\")."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"data_policy_id\", request.DataPolicyId)."));
+        assertTrue(client.contains("WithOptionalVoidQueryParam(\"last_page\", request.LastPage)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"page_length\", networking.IntPtrToStrPtr(request.PageLength))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"page_offset\", networking.IntPtrToStrPtr(request.PageOffset))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"page_start_marker\", request.PageStartMarker)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"replicate_deletes\", networking.BoolPtrToStrPtr(request.ReplicateDeletes))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"state\", networking.InterfaceToStrPtr(request.State))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"target_id\", request.TargetId)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"type\", networking.InterfaceToStrPtr(request.DataReplicationRuleType))."));
     }
 
     @Test
@@ -691,6 +741,14 @@ public class GoFunctionalTests {
         assertTrue(client.contains("func (client *Client) PutAzureDataReplicationRuleSpectraS3(request *models.PutAzureDataReplicationRuleSpectraS3Request) (*models.PutAzureDataReplicationRuleSpectraS3Response, error) {"));
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
+
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_POST)."));
+        assertTrue(client.contains("WithPath(\"/_rest_/azure_data_replication_rule\")."));
+        assertTrue(client.contains("WithQueryParam(\"data_policy_id\", request.DataPolicyId)."));
+        assertTrue(client.contains("WithQueryParam(\"target_id\", request.TargetId)."));
+        assertTrue(client.contains("WithQueryParam(\"type\", request.DataReplicationRuleType.String())."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"max_blob_part_size_in_bytes\", networking.Int64PtrToStrPtr(request.MaxBlobPartSizeInBytes))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"replicate_deletes\", networking.BoolPtrToStrPtr(request.ReplicateDeletes))."));
     }
 
     @Test
@@ -824,7 +882,10 @@ public class GoFunctionalTests {
         assertTrue(client.contains("networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)"));
         assertTrue(client.contains("response, requestErr := networkRetryDecorator.Invoke(httpRequest)"));
 
+        assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
+        assertTrue(client.contains("WithQueryParam(\"part_number\", strconv.Itoa(request.PartNumber))."));
+        assertTrue(client.contains("WithQueryParam(\"upload_id\", request.UploadId)."));
     }
 
     @Test
@@ -912,6 +973,8 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)"));
+        assertTrue(client.contains("WithOptionalQueryParam(\"job\", request.Job)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"offset\", networking.Int64PtrToStrPtr(request.Offset))."));
     }
 
     @Test
@@ -960,6 +1023,7 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)."));
         assertTrue(client.contains("WithPath(\"/_rest_/suspect_blob_azure_target\")"));
+        assertTrue(client.contains("WithOptionalVoidQueryParam(\"force\", request.Force)."));
     }
 
     @Test
@@ -1028,6 +1092,16 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"aggregating\", networking.BoolPtrToStrPtr(request.Aggregating))."));
+        assertTrue(client.contains("WithOptionalVoidQueryParam(\"force\", request.Force)."));
+        assertTrue(client.contains("WithOptionalVoidQueryParam(\"ignore_naming_conflicts\", request.IgnoreNamingConflicts)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"implicit_job_id_resolution\", networking.BoolPtrToStrPtr(request.ImplicitJobIdResolution))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"max_upload_size\", networking.Int64PtrToStrPtr(request.MaxUploadSize))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"minimize_spanning_across_media\", networking.BoolPtrToStrPtr(request.MinimizeSpanningAcrossMedia))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"name\", request.Name)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"verify_after_write\", networking.BoolPtrToStrPtr(request.VerifyAfterWrite))."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_put\")."));
     }
 
     @Test
@@ -1097,6 +1171,12 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"aggregating\", networking.BoolPtrToStrPtr(request.Aggregating))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"chunk_client_processing_order_guarantee\", networking.InterfaceToStrPtr(request.ChunkClientProcessingOrderGuarantee))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"implicit_job_id_resolution\", networking.BoolPtrToStrPtr(request.ImplicitJobIdResolution))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"name\", request.Name)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_get\")."));
     }
 
     @Test
@@ -1163,5 +1243,9 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_PUT)."));
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"aggregating\", networking.BoolPtrToStrPtr(request.Aggregating))."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"name\", request.Name)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
+        assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_verify\")."));
     }
 }

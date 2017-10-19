@@ -88,3 +88,41 @@ fun Ds3Request.getSpectraDs3RequestPath(): String {
     }
     return builder.toString()
 }
+
+/**
+ * Creates the Go code for transforming a variable to string based on its Go type.
+ * Requires that the specified Go type is a non-pointer variable or an interface.
+ * This is used to convert required parameters into query parameters within the
+ * Go client code.
+ */
+fun goQueryParamToString(name: String, goType: String): String {
+    return when (goType) {
+        "*int", "*int64", "*bool", "*float64", "*string" ->
+            throw IllegalArgumentException("Expected Go variable to be a non-pointer or an interface, but was '$goType'")
+        "" -> "\"\"" // Denotes void parameter in contract
+        "bool" -> "strconv.FormatBool(request.$name)"
+        "int" -> "strconv.Itoa(request.$name)"
+        "int64" -> "strconv.FormatInt(request.$name, 10)"
+        "float64" -> "strconv.FormatFloat(request.$name, 'f', -1, 64)"
+        "string" -> "request.$name"
+        else -> "request.$name.String()"
+    }
+}
+
+/**
+ * Creates the Go code for transforming a variable pointer to a string pointer based on its Go type.
+ * Go code does not assume that it is safe to access pointer values. This is used to convert
+ * optional request parameters into query parameters within the Go client code.
+ */
+fun goPtrQueryParamToStringPtr(name: String, goType: String): String {
+    return when (goType) {
+        "", "int", "bool", "int64", "float64", "string" ->
+            throw IllegalArgumentException("Expected Go variable to be a pointer or an interface, but was '$goType'")
+        "*int" -> "networking.IntPtrToStrPtr(request.$name)"
+        "*int64" -> "networking.Int64PtrToStrPtr(request.$name)"
+        "*bool" -> "networking.BoolPtrToStrPtr(request.$name)"
+        "*float64" -> "networking.Float64PtrToStrPtr(request.$name)"
+        "*string" -> "request.$name"
+        else -> "networking.InterfaceToStrPtr(request.$name)"
+    }
+}
