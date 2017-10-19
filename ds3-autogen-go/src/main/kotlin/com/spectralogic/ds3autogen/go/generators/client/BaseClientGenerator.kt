@@ -66,7 +66,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
     fun toRequestBuildLines(ds3Request: Ds3Request): ImmutableList<RequestBuildLine> {
         val builder = ImmutableList.builder<RequestBuildLine>()
         builder.add(HttpVerbBuildLine(ds3Request.httpVerb!!))
-        builder.add(PathBuildLine(toRequestPath(ds3Request)))
+        builder.add(PathBuildLine(ds3Request.toRequestPath()))
         //todo add required params, optional params, reader, read closer, checksum, headers
         return builder.build()
     }

@@ -30,29 +30,29 @@ private const val PATH_REQUEST_REFERENCE = "request"
 /**
  * Creates the Go request path code for a Ds3 request
  */
-fun toRequestPath(ds3Request: Ds3Request): String {
-    if (ds3Request.classification == Classification.amazons3) {
-        return getAmazonS3RequestPath(ds3Request)
+fun Ds3Request.toRequestPath(): String {
+    if (classification == Classification.amazons3) {
+        return getAmazonS3RequestPath()
     }
-    if (ds3Request.classification == Classification.spectrads3) {
-        return getSpectraDs3RequestPath(ds3Request)
+    if (classification == Classification.spectrads3) {
+        return getSpectraDs3RequestPath()
     }
 
-    throw IllegalArgumentException("Unsupported classification: " + ds3Request.classification.toString())
+    throw IllegalArgumentException("Unsupported classification: " + classification.toString())
 }
 
 /**
  * Creates the Go request path code for an AmazonS3 request
  */
-fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
-    if (ds3Request.classification != Classification.amazons3) {
+fun Ds3Request.getAmazonS3RequestPath(): String {
+    if (classification != Classification.amazons3) {
         return ""
     }
     val builder = StringBuilder("\"/\"")
-    if (ds3Request.bucketRequirement == Requirement.REQUIRED) {
+    if (bucketRequirement == Requirement.REQUIRED) {
         builder.append(" + ").append(PATH_REQUEST_REFERENCE).append(".BucketName")
     }
-    if (ds3Request.objectRequirement == Requirement.REQUIRED) {
+    if (objectRequirement == Requirement.REQUIRED) {
         builder.append(" + \"/\" + ").append(PATH_REQUEST_REFERENCE).append(".ObjectName")
     }
     return builder.toString()
@@ -61,26 +61,26 @@ fun getAmazonS3RequestPath(ds3Request: Ds3Request): String {
 /**
  * Creates the Go request path code for a SpectraS3 request
  */
-fun getSpectraDs3RequestPath(ds3Request: Ds3Request): String {
-    if (ds3Request.classification != Classification.spectrads3) {
+fun Ds3Request.getSpectraDs3RequestPath(): String {
+    if (classification != Classification.spectrads3) {
         return ""
     }
-    if (ds3Request.resource == null) {
+    if (resource == null) {
         return "\"/_rest_/\""
     }
 
     val builder = StringBuilder("\"/_rest_/")
-            .append(ds3Request.resource!!.toString().toLowerCase())
+            .append(resource!!.toString().toLowerCase())
 
-    if (Ds3RequestClassificationUtil.isNotificationRequest(ds3Request)
-            && ds3Request.includeInPath
-            && (RequestConverterUtil.getNotificationType(ds3Request) == NotificationType.DELETE
-                || RequestConverterUtil.getNotificationType(ds3Request) == NotificationType.GET)) {
+    if (Ds3RequestClassificationUtil.isNotificationRequest(this)
+            && includeInPath
+            && (RequestConverterUtil.getNotificationType(this) == NotificationType.DELETE
+                || RequestConverterUtil.getNotificationType(this) == NotificationType.GET)) {
         builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE).append(".NotificationId")
-    } else if (Ds3RequestUtils.hasBucketNameInPath(ds3Request)) {
+    } else if (Ds3RequestUtils.hasBucketNameInPath(this)) {
         builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE).append(".BucketName")
-    } else if (ds3Request.isGoResourceAnArg()) {
-        val resourceArg = ds3Request.getGoArgFromResource()
+    } else if (this.isGoResourceAnArg()) {
+        val resourceArg = this.getGoArgFromResource()
         builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE)
                 .append(".").append(resourceArg.name.capitalize())
     } else {
