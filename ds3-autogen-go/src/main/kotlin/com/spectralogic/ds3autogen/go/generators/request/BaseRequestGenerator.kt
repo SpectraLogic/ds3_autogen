@@ -48,7 +48,7 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
         return Request(
                 name,
                 constructor,
-                getHttpVerb(ds3Request.httpVerb),
+                ds3Request.httpVerb,
                 ds3Request.toRequestPath(),
                 structParams,
                 withConstructors,

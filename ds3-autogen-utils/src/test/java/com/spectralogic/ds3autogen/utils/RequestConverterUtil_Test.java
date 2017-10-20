@@ -19,10 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.*;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
-import com.spectralogic.ds3autogen.api.models.enums.Requirement;
-import com.spectralogic.ds3autogen.api.models.enums.Resource;
-import com.spectralogic.ds3autogen.api.models.enums.ResourceType;
+import com.spectralogic.ds3autogen.api.models.enums.*;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.utils.RequestConverterUtil.*;
@@ -77,7 +74,7 @@ public class RequestConverterUtil_Test {
     public void getRequiredArgsFromRequestHeader_Null_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 null,
                 null,
@@ -98,7 +95,7 @@ public class RequestConverterUtil_Test {
     public void getRequiredArgsFromRequestHeader_Singleton_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,
@@ -123,7 +120,7 @@ public class RequestConverterUtil_Test {
     public void getRequiredArgsFromRequestHeader_Notification_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,
@@ -148,7 +145,7 @@ public class RequestConverterUtil_Test {
     public void getRequiredArgsFromRequestHeader_Full_Test() {
         final Ds3Request ds3Request = new Ds3Request(
                 "RequestName",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 Requirement.REQUIRED,
                 Requirement.REQUIRED,

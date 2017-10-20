@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.apispec.*;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -149,7 +150,7 @@ public final class RemoveDollarSignConverterHelper {
     public static Ds3Request createPopulatedRequest(final String variation) {
         return new Ds3Request(
                 "com.test.package.Base$RequestType" + variation,
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null,
                 null,

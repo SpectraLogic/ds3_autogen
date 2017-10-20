@@ -17,10 +17,7 @@ package com.spectralogic.ds3autogen.testutil;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.*;
-import com.spectralogic.ds3autogen.api.models.enums.Classification;
-import com.spectralogic.ds3autogen.api.models.enums.Requirement;
-import com.spectralogic.ds3autogen.api.models.enums.Resource;
-import com.spectralogic.ds3autogen.api.models.enums.ResourceType;
+import com.spectralogic.ds3autogen.api.models.enums.*;
 
 /**
  * This class provides utilities for generating partially filled in Ds3 models for use in testing.
@@ -55,7 +52,7 @@ public final class Ds3ModelPartialDataFixture {
             final ImmutableList<Ds3ResponseCode> responseCodes,
             final ImmutableList<Ds3Param> optionalParams,
             final ImmutableList<Ds3Param> requiredParams) {
-        return new Ds3Request("test", null, Classification.amazons3, null, null, null, null, null, null,
+        return new Ds3Request("test", HttpVerb.GET, Classification.amazons3, null, null, null, null, null, null,
                 includeIdInPath,
                 responseCodes,
                 optionalParams,
@@ -80,7 +77,7 @@ public final class Ds3ModelPartialDataFixture {
             final Requirement objectRequirement) {
         return new Ds3Request(
                 requestName,
-                null,
+                HttpVerb.PUT,
                 classification,
                 bucketRequirement,
                 objectRequirement,
@@ -100,7 +97,7 @@ public final class Ds3ModelPartialDataFixture {
     ) {
         return new Ds3Request(
                 requestName,
-                null,
+                HttpVerb.PUT,
                 classification,
                 null, null, null,
                 resource,

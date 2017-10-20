@@ -250,7 +250,7 @@ public class Ds3SpecConverter_Test {
             final ImmutableList<Ds3Param> optionalParams) {
         return new Ds3Request(
                 requestName,
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null, null, null, null, null, null, false, null,
                 optionalParams,

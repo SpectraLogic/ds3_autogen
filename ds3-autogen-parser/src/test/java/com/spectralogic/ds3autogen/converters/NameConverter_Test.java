@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.enums.Classification;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
+import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.converters.NameConverter.*;
@@ -68,7 +69,7 @@ public class NameConverter_Test {
     public void toUpdatedDs3Request_SpectraS3_Test() {
         final Ds3Request request = new Ds3Request(
                 "com.spectralogic.test.MyTestRequestHandler",
-                null,
+                HttpVerb.GET,
                 Classification.spectrads3,
                 null, null, null, null, null, null, false, null, null, null);
         final Ds3Request result = toUpdatedDs3Request(request);
@@ -79,7 +80,7 @@ public class NameConverter_Test {
     public void toUpdatedDs3Request_AmazonS3_Test() {
         final Ds3Request request = new Ds3Request(
                 "com.spectralogic.test.MyTestRequestHandler",
-                null,
+                HttpVerb.GET,
                 Classification.amazons3,
                 null, null, null, null, null, null, false, null, null, null);
         final Ds3Request result = toUpdatedDs3Request(request);
@@ -104,12 +105,12 @@ public class NameConverter_Test {
                 ImmutableList.of(
                         new Ds3Request(
                                 "com.spectralogic.test.MyTestOneRequestHandler",
-                                null,
+                                HttpVerb.GET,
                                 Classification.spectrads3,
                                 null, null, null, null, null, null, false, null, null, null),
                         new Ds3Request(
                                 "com.spectralogic.test.MyTestTwoRequestHandler",
-                                null,
+                                HttpVerb.GET,
                                 Classification.amazons3,
                                 null, null, null, null, null, null, false, null, null, null)),
                 null);

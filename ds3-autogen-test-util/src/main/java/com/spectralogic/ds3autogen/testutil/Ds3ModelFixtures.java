@@ -69,7 +69,7 @@ public class Ds3ModelFixtures {
     public static Ds3Request getRequestDeleteNotification() {
         return new Ds3Request(
                 "com.spectralogic.s3.server.handler.reqhandler.spectrads3.notification.DeleteJobCreatedNotificationRegistrationRequestHandler",
-                null,
+                HttpVerb.DELETE,
                 Classification.spectrads3,
                 null,
                 null,

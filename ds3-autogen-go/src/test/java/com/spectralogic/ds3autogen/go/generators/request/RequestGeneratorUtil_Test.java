@@ -18,7 +18,6 @@ package com.spectralogic.ds3autogen.go.generators.request;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
-import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor;
@@ -164,20 +163,6 @@ public class RequestGeneratorUtil_Test {
 
         final String result = toFunctionInput(args);
         assertThat(result, is(expected));
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void getHttpVerb_Exception_Test() {
-        getHttpVerb(null);
-    }
-
-    @Test
-    public void getHttpVerb_Test() {
-        assertThat(getHttpVerb(HttpVerb.DELETE), is(HttpVerb.DELETE));
-        assertThat(getHttpVerb(HttpVerb.GET), is(HttpVerb.GET));
-        assertThat(getHttpVerb(HttpVerb.HEAD), is(HttpVerb.HEAD));
-        assertThat(getHttpVerb(HttpVerb.POST), is(HttpVerb.POST));
-        assertThat(getHttpVerb(HttpVerb.PUT), is(HttpVerb.PUT));
     }
 
     @Test
