@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClientGeneratorUtil_Test {
 
     @Test
-    public void toRequestPath_Test() {
+    public void toRequestPathTest() {
         //Spectra requests
         assertThat(toRequestPath(getRequestDeleteNotification()))
                 .isEqualTo("\"/_rest_/job_created_notification_registration/\" + request.NotificationId");
@@ -56,7 +56,7 @@ public class ClientGeneratorUtil_Test {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void toRequestPath_Exception_Test() {
+    public void toRequestPath_ExceptionTest() {
         final Ds3Request request = new Ds3Request(
                 "Test",
                 HttpVerb.GET,
@@ -76,7 +76,7 @@ public class ClientGeneratorUtil_Test {
     }
 
     @Test
-    public void getAmazonS3RequestPath_Test() {
+    public void getAmazonS3RequestPathTest() {
         //Amazon requests
         assertThat(getAmazonS3RequestPath(getRequestMultiFileDelete()))
                 .isEqualTo("\"/\" + request.BucketName");
@@ -97,7 +97,7 @@ public class ClientGeneratorUtil_Test {
     }
 
     @Test
-    public void getSpectraDs3RequestPath_Test() {
+    public void getSpectraDs3RequestPathTest() {
         //Spectra requests
         assertThat(getSpectraDs3RequestPath(getRequestDeleteNotification()))
                 .isEqualTo("\"/_rest_/job_created_notification_registration/\" + request.NotificationId");
@@ -120,5 +120,49 @@ public class ClientGeneratorUtil_Test {
         assertThat(getSpectraDs3RequestPath(getRequestMultiFileDelete())).isEmpty();
         assertThat(getSpectraDs3RequestPath(getRequestCreateObject())).isEmpty();
         assertThat(getSpectraDs3RequestPath(getRequestAmazonS3GetObject())).isEmpty();
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void goPtrQueryParamToStringPtrExceptionTest() {
+        goPtrQueryParamToStringPtr("ParamName", "bool");
+    }
+
+    @Test
+    public void goPtrQueryParamToStringPtrTest() {
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "*int"))
+                .isEqualTo("networking.IntPtrToStrPtr(request.ParamName)");
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "*int64"))
+                .isEqualTo("networking.Int64PtrToStrPtr(request.ParamName)");
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "*bool"))
+                .isEqualTo("networking.BoolPtrToStrPtr(request.ParamName)");
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "*float64"))
+                .isEqualTo("networking.Float64PtrToStrPtr(request.ParamName)");
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "*string"))
+                .isEqualTo("request.ParamName");
+        assertThat(goPtrQueryParamToStringPtr("ParamName", "com.test.SpectraType"))
+                .isEqualTo("networking.InterfaceToStrPtr(request.ParamName)");
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void goQueryParamToStringExceptionTest() {
+        goQueryParamToString("ParamName", "*int");
+    }
+
+    @Test
+    public void goQueryParamToStringTest() {
+        assertThat(goQueryParamToString("ParamName", ""))
+                .isEqualTo("\"\"");
+        assertThat(goQueryParamToString("ParamName", "bool"))
+                .isEqualTo("strconv.FormatBool(request.ParamName)");
+        assertThat(goQueryParamToString("ParamName", "int"))
+                .isEqualTo("strconv.Itoa(request.ParamName)");
+        assertThat(goQueryParamToString("ParamName", "int64"))
+                .isEqualTo("strconv.FormatInt(request.ParamName, 10)");
+        assertThat(goQueryParamToString("ParamName", "float64"))
+                .isEqualTo("strconv.FormatFloat(request.ParamName, 'f', -1, 64)");
+        assertThat(goQueryParamToString("ParamName", "string"))
+                .isEqualTo("request.ParamName");
+        assertThat(goQueryParamToString("ParamName", "com.test.SpectraType"))
+                .isEqualTo("request.ParamName.String()");
     }
 }
