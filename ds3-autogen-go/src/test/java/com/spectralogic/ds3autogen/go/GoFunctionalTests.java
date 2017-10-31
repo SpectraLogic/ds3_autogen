@@ -975,6 +975,9 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)"));
         assertTrue(client.contains("WithOptionalQueryParam(\"job\", request.Job)."));
         assertTrue(client.contains("WithOptionalQueryParam(\"offset\", networking.Int64PtrToStrPtr(request.Offset))."));
+        assertTrue(client.contains("WithReader(request.Content)."));
+        assertTrue(client.contains("WithChecksum(request.Checksum)."));
+        assertTrue(client.contains("WithHeaders(request.Metadata)."));
     }
 
     @Test
