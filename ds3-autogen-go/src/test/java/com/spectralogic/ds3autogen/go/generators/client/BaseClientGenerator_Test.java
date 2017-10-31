@@ -157,7 +157,8 @@ public class BaseClientGenerator_Test {
                                 new PathBuildLine("\"/_rest_/bucket/\" + request.BucketName"),
                                 new OptionalQueryParamBuildLine("chunk_client_processing_order_guarantee", "networking.InterfaceToStrPtr(request.ChunkClientProcessingOrderGuarantee)"),
                                 new OptionalQueryParamBuildLine("priority", "networking.InterfaceToStrPtr(request.Priority)"),
-                                new OperationBuildLine(Operation.START_BULK_GET)
+                                new OperationBuildLine(Operation.START_BULK_GET),
+                                new ReadCloserBuildLine("buildDs3GetObjectListStream(request.Objects)")
                         ))
                 );
     }
@@ -178,5 +179,8 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getRequestBulkPut()))
                 .isInstanceOf(Ds3PutObjectPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getRequestBulkGet()))
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
     }
 }

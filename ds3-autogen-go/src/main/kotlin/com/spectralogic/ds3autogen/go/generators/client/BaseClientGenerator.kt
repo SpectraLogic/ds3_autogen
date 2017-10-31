@@ -75,6 +75,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
             isGetObjectAmazonS3Request(ds3Request) -> GetObjectCommandGenerator()
             isCreateMultiPartUploadPartRequest(ds3Request) -> ReaderPayloadCommandGenerator()
             hasPutObjectsWithSizeRequestPayload(ds3Request) -> Ds3PutObjectPayloadCommandGenerator()
+            hasGetObjectsWithLengthOffsetRequestPayload(ds3Request) -> Ds3GetObjectPayloadCommandGenerator()
             else -> BaseCommandGenerator()
         }
     }
