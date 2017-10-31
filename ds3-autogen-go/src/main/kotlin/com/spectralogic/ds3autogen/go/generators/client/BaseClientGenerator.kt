@@ -22,7 +22,6 @@ import com.spectralogic.ds3autogen.go.generators.client.command.BaseCommandGener
 import com.spectralogic.ds3autogen.go.generators.client.command.CommandModelGenerator
 import com.spectralogic.ds3autogen.go.generators.client.command.GetObjectCommandGenerator
 import com.spectralogic.ds3autogen.go.generators.client.command.PutObjectCommandGenerator
-import com.spectralogic.ds3autogen.go.generators.request.GetObjectRequestGenerator
 import com.spectralogic.ds3autogen.go.models.client.Client
 import com.spectralogic.ds3autogen.go.models.client.Command
 import com.spectralogic.ds3autogen.utils.ConverterUtil
