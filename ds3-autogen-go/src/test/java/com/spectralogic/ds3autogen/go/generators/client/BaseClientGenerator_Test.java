@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.enums.Operation;
 import com.spectralogic.ds3autogen.go.generators.client.command.BaseCommandGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.command.GetObjectCommandGenerator;
 import com.spectralogic.ds3autogen.go.generators.client.command.PutObjectCommandGenerator;
+import com.spectralogic.ds3autogen.go.generators.client.command.ReaderPayloadCommandGenerator;
 import com.spectralogic.ds3autogen.go.models.client.*;
 import org.junit.Test;
 
@@ -174,5 +175,8 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getRequestAmazonS3GetObject()))
                 .isInstanceOf(GetObjectCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getCreateMultiPartUploadPart()))
+                .isInstanceOf(ReaderPayloadCommandGenerator.class);
     }
 }

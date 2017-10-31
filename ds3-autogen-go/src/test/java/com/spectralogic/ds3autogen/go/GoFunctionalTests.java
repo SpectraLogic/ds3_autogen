@@ -888,6 +888,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
         assertTrue(client.contains("WithQueryParam(\"part_number\", strconv.Itoa(request.PartNumber))."));
         assertTrue(client.contains("WithQueryParam(\"upload_id\", request.UploadId)."));
+        assertTrue(client.contains("WithReader(request.Content)."));
     }
 
     @Test
