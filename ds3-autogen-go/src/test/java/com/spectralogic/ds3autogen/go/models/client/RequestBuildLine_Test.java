@@ -76,4 +76,10 @@ public class RequestBuildLine_Test {
         assertThat(new ReaderBuildLine("RequestPayloadReader").getLine())
                 .isEqualTo("WithReader(RequestPayloadReader).");
     }
+
+    @Test
+    public void readCloserBuldLineTest() {
+        assertThat(new ReadCloserBuildLine("PayloadReadCloser").getLine())
+                .isEqualTo("WithReadCloser(PayloadReadCloser).");
+    }
 }

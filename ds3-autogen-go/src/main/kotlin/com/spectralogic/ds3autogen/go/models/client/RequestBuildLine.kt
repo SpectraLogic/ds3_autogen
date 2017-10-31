@@ -78,3 +78,8 @@ data class CustomBuildLine(private val customLine: String) : RequestBuildLine {
 data class ReaderBuildLine(private val reader: String) : RequestBuildLine {
     override val line = "WithReader($reader)."
 }
+
+// Creates the Go request builder line for adding a readCloser that contains the request payload.
+data class ReadCloserBuildLine(private val readCloser: String) : RequestBuildLine {
+    override val line = "WithReadCloser($readCloser)."
+}

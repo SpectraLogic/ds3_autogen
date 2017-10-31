@@ -1108,6 +1108,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
         assertTrue(client.contains("WithOptionalQueryParam(\"verify_after_write\", networking.BoolPtrToStrPtr(request.VerifyAfterWrite))."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_put\")."));
+        assertTrue(client.contains("WithReadCloser(buildDs3PutObjectListStream(request.Objects))."));
     }
 
     @Test
