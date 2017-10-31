@@ -32,8 +32,7 @@ data class HttpVerbBuildLine(private val httpVerb: HttpVerb) : RequestBuildLine 
 
 // Creates the Go request builder line for adding a path to an http request
 data class PathBuildLine(private val path: String) : RequestBuildLine {
-    override val line: String
-        get() = "WithPath($path)."
+    override val line = "WithPath($path)."
 }
 
 // Creates the Go request builder line for adding the operation query param
@@ -46,22 +45,19 @@ data class OperationBuildLine(private val operation: Operation) : RequestBuildLi
 
 // Creates the Go request builder line for adding a required query param
 data class QueryParamBuildLine(private val key: String, private val value: String) : RequestBuildLine {
-    override val line: String
-        get() = "WithQueryParam(\"$key\", $value)."
+    override val line = "WithQueryParam(\"$key\", $value)."
 }
 
 // Creates the Go request builder line for adding an optional query param.
 // An optional parameter may be nil to indicate it has not been set.
 data class OptionalQueryParamBuildLine(private val key: String, private val value: String) : RequestBuildLine {
-    override val line: String
-        get() = "WithOptionalQueryParam(\"$key\", $value)."
+    override val line = "WithOptionalQueryParam(\"$key\", $value)."
 }
 
 // Creates the Go request builder line for adding an optional void query param.
 // Optional voids are represented by booleans within the Go request handler
 data class VoidOptionalQueryParamBuildLine(private val key: String, private val paramName: String) : RequestBuildLine {
-    override val line: String
-        get() = "WithOptionalVoidQueryParam(\"$key\", request.$paramName)."
+    override val line = "WithOptionalVoidQueryParam(\"$key\", request.$paramName)."
 
 }
 
@@ -75,12 +71,10 @@ data class CustomBuildLine(private val customLine: String) : RequestBuildLine {
         val METADATA_BUILD_LINE = CustomBuildLine("WithHeaders(request.Metadata).")
     }
 
-    override val line: String
-        get() = customLine
+    override val line = customLine
 }
 
 // Creates the GO request builder line for adding a reader that contains the request payload.
 data class ReaderBuildLine(private val reader: String) : RequestBuildLine {
-    override val line: String
-        get() = "WithReader($reader)."
+    override val line = "WithReader($reader)."
 }
