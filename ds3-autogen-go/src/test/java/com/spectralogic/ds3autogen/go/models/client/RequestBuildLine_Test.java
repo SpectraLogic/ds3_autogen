@@ -70,4 +70,10 @@ public class RequestBuildLine_Test {
         assertThat(new VoidOptionalQueryParamBuildLine("ParamKey", "ParamName").getLine())
                 .isEqualTo("WithOptionalVoidQueryParam(\"ParamKey\", request.ParamName).");
     }
+
+    @Test
+    public void readerBuildLineTest() {
+        assertThat(new ReaderBuildLine("RequestPayloadReader").getLine())
+                .isEqualTo("WithReader(RequestPayloadReader).");
+    }
 }

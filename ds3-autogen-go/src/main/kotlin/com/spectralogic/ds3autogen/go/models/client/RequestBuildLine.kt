@@ -64,3 +64,23 @@ data class VoidOptionalQueryParamBuildLine(private val key: String, private val 
         get() = "WithOptionalVoidQueryParam(\"$key\", request.$paramName)."
 
 }
+
+// Creates a custom request builder line.
+data class CustomBuildLine(private val customLine: String) : RequestBuildLine {
+
+    companion object {
+        @JvmStatic
+        val CHECKSUM_BUILD_LINE = CustomBuildLine("WithChecksum(request.Checksum).")
+        @JvmStatic
+        val METADATA_BUILD_LINE = CustomBuildLine("WithHeaders(request.Metadata).")
+    }
+
+    override val line: String
+        get() = customLine
+}
+
+// Creates the GO request builder line for adding a reader that contains the request payload.
+data class ReaderBuildLine(private val reader: String) : RequestBuildLine {
+    override val line: String
+        get() = "WithReader($reader)."
+}

@@ -20,9 +20,11 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb
 import com.spectralogic.ds3autogen.go.generators.client.command.BaseCommandGenerator
 import com.spectralogic.ds3autogen.go.generators.client.command.CommandModelGenerator
+import com.spectralogic.ds3autogen.go.generators.client.command.PutObjectCommandGenerator
 import com.spectralogic.ds3autogen.go.models.client.Client
 import com.spectralogic.ds3autogen.go.models.client.Command
 import com.spectralogic.ds3autogen.utils.ConverterUtil
+import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isAmazonCreateObjectRequest
 import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.isGetObjectAmazonS3Request
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 
@@ -71,7 +73,8 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
      * Retrieves the command generator for the specified Ds3Request.
      */
     fun getCommandGenerator(ds3Request: Ds3Request): CommandModelGenerator<*> {
-        //todo add special casing
-        return BaseCommandGenerator()
+        return if (isAmazonCreateObjectRequest(ds3Request)) {
+            PutObjectCommandGenerator()
+        } else BaseCommandGenerator()
     }
 }
