@@ -178,5 +178,8 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getRequestBulkPut()))
                 .isInstanceOf(Ds3PutObjectPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getRequestBulkGet()))
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
     }
 }
