@@ -182,5 +182,20 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getRequestBulkGet()))
                 .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getPhysicalPlacementForObjects()))
+                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getPhysicalPlacementForObjectsWithFullDetails()))
+                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(verifyPhysicalPlacementForObjectsRequest()))
+                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()))
+                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getEjectStorageDomainBlobsRequest()))
+                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
     }
 }
