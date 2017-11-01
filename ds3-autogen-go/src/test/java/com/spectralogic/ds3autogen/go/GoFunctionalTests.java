@@ -269,6 +269,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
         assertTrue(client.contains("WithOptionalQueryParam(\"storage_domain_id\", request.StorageDomainId)."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"verify_physical_placement\")."));
+        assertTrue(client.contains("WithReadCloser(buildDs3ObjectStreamFromNames(request.ObjectNames))."));
     }
 
     @Test
