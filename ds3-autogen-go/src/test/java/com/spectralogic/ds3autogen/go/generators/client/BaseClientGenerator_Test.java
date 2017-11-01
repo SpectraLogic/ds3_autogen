@@ -224,5 +224,11 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(markSuspectBlobTapesAsDegradedRequest()))
                 .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getGetBlobPersistence()))
+                .isInstanceOf(StringPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getReplicatePutJob()))
+                .isInstanceOf(StringPayloadCommandGenerator.class);
     }
 }

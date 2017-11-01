@@ -332,6 +332,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithQueryParam(\"replicate\", \"\")."));
         assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_put\")."));
+        assertTrue(client.contains("WithReadCloser(buildStreamFromString(request.Content))."));
     }
 
     @Test
