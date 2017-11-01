@@ -77,6 +77,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
             hasPutObjectsWithSizeRequestPayload(ds3Request) -> Ds3PutObjectPayloadCommandGenerator()
             hasGetObjectsWithLengthOffsetRequestPayload(ds3Request) -> Ds3GetObjectPayloadCommandGenerator()
             hasSimpleObjectsRequestPayload(ds3Request) -> ObjectNamePayloadCommandGenerator()
+            hasIdsRequestPayload(ds3Request) -> IdsPayloadCommandGenerator()
             else -> BaseCommandGenerator()
         }
     }
