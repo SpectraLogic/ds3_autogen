@@ -197,5 +197,32 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getEjectStorageDomainBlobsRequest()))
                 .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(clearSuspectBlobAzureTargetsRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(clearSuspectBlobPoolsRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(clearSuspectBlobS3TargetsRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(clearSuspectBlobTapesRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(markSuspectBlobPoolsAsDegradedRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(markSuspectBlobS3TargetsAsDegradedRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(markSuspectBlobTapesAsDegradedRequest()))
+                .isInstanceOf(IdsPayloadCommandGenerator.class);
     }
 }

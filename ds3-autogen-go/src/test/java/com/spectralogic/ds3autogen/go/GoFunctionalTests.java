@@ -1031,6 +1031,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_DELETE)."));
         assertTrue(client.contains("WithPath(\"/_rest_/suspect_blob_azure_target\")"));
         assertTrue(client.contains("WithOptionalVoidQueryParam(\"force\", request.Force)."));
+        assertTrue(client.contains("WithReadCloser(buildIdListPayload(request.Ids))."));
     }
 
     @Test
