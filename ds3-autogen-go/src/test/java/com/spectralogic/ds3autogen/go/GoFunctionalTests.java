@@ -390,6 +390,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_POST)."));
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName + \"/\" + request.ObjectName)."));
         assertTrue(client.contains("WithQueryParam(\"upload_id\", request.UploadId)."));
+        assertTrue(client.contains("WithReadCloser(buildPartsListStream(request.Parts))."));
     }
 
     @Test

@@ -230,5 +230,8 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getReplicatePutJob()))
                 .isInstanceOf(StringPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getCompleteMultipartUploadRequest()))
+                .isInstanceOf(PartsPayloadCommandGenerator.class);
     }
 }
