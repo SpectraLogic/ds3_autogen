@@ -80,6 +80,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
             hasIdsRequestPayload(ds3Request) -> IdsPayloadCommandGenerator()
             hasStringRequestPayload(ds3Request) -> StringPayloadCommandGenerator()
             isCompleteMultiPartUploadRequest(ds3Request) -> PartsPayloadCommandGenerator()
+            isMultiFileDeleteRequest(ds3Request) -> DeleteObjectsCommandGenerator()
             else -> BaseCommandGenerator()
         }
     }

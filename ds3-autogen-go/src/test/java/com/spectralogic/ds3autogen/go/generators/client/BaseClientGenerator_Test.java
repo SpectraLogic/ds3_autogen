@@ -233,5 +233,8 @@ public class BaseClientGenerator_Test {
 
         assertThat(generator.getCommandGenerator(getCompleteMultipartUploadRequest()))
                 .isInstanceOf(PartsPayloadCommandGenerator.class);
+
+        assertThat(generator.getCommandGenerator(getRequestMultiFileDelete()))
+                .isInstanceOf(DeleteObjectsCommandGenerator.class);
     }
 }

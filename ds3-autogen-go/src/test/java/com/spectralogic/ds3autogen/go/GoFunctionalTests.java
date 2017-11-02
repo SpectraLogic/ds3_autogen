@@ -454,6 +454,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithPath(\"/\" + request.BucketName)."));
         assertTrue(client.contains("WithQueryParam(\"delete\", \"\")."));
         assertTrue(client.contains("WithOptionalVoidQueryParam(\"roll_back\", request.RollBack)."));
+        assertTrue(client.contains("WithReadCloser(buildDeleteObjectsPayload(request.ObjectNames))."));
     }
 
     @Test
