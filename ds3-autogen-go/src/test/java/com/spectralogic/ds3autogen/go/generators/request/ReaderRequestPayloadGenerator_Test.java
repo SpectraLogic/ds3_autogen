@@ -28,7 +28,7 @@ public class ReaderRequestPayloadGenerator_Test {
 
     @Test
     public void getPayloadConstructorArgTest() {
-        final Arguments result = generator.getPayloadConstructorArg();
+        final Arguments result = generator.getPayloadArgument();
         assertThat(result.getName(), is("content"));
         assertThat(result.getType(), is("networking.ReaderWithSizeDecorator"));
     }

@@ -16,11 +16,9 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
-import com.spectralogic.ds3autogen.api.models.enums.Operation
 import com.spectralogic.ds3autogen.go.models.request.Constructor
 import com.spectralogic.ds3autogen.go.models.request.VariableInterface
 import com.spectralogic.ds3autogen.go.models.request.WithConstructor
@@ -44,12 +42,6 @@ interface RequestModelGeneratorUtil {
     fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments>
 
     /**
-     * Creates the list of variables that are added to the query parameters list
-     * within the request handler constructor.
-     */
-    fun toQueryParamsList(requiredParams: ImmutableList<Ds3Param>?, operation: Operation?): ImmutableList<VariableInterface>
-
-    /**
      * Creates the list of variables that are assigned to the request handler struct
      * within the constructor.
      */
@@ -65,15 +57,4 @@ interface RequestModelGeneratorUtil {
      * Each constructor sets an optional request parameter
      */
     fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor>
-
-    /**
-     * Creates the list of request handler with-constructors that have nullable parameters.
-     * Each constructor sets an optional request parameter
-     */
-    fun toNullableWithConstructors(optionalParams: ImmutableList<Ds3Param>?): ImmutableList<WithConstructor>
-
-    /**
-     * Creates the set of imports that are not present in all request files (i.e. not in templates)
-     */
-    fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String>
 }

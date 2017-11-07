@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.go.models.request.Variable
@@ -38,8 +37,8 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
 
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParams)
-        builder.add(Arguments("*rangeHeader", "rangeHeader"))
-        builder.add(Arguments("networking.Checksum", "checksum"))
+        builder.add(Arguments("map[string]string", "Metadata"))
+        builder.add(Arguments("networking.Checksum", "Checksum"))
 
         // Sort the arguments
         return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
@@ -55,20 +54,8 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
 
         val builder = ImmutableList.builder<VariableInterface>()
         builder.addAll(assignments)
-        builder.add(Variable("checksum", "networking.NewNoneChecksum()"))
+        builder.add(Variable("Checksum", "networking.NewNoneChecksum()"))
 
-        return builder.build()
-    }
-
-    /**
-     * Retrieves imports that are not present in all request files
-     */
-    override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
-        val builder = ImmutableSet.Builder<String>()
-        builder.add("fmt")
-        if (isStrconvImportRequired(ds3Request.requiredQueryParams) || isStrconvImportRequired(ds3Request.optionalQueryParams)) {
-            builder.add("strconv")
-        }
         return builder.build()
     }
 }

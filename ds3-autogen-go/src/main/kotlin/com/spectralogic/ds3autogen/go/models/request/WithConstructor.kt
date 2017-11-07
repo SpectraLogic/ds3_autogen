@@ -16,11 +16,40 @@
 package com.spectralogic.ds3autogen.go.models.request
 
 /**
- * Represents a with-constructor used to set optional parameters in a
- * request handler.
+ * Represents a with-constructor used to set optional parameters
+ * in a request handler
  */
-data class WithConstructor(val name: String, // name of the optional parameter
-                           val type: String, // type of the optional parameter
-                           val key: String, // the key used to set the optional query parameter
-                           val assignment: String) { //The value to assign to the query parameter entry
+interface WithConstructor {
+    val name: String // name of the optional parameter
+    val type: String // type of the optional parameter
+    val constructorParams: String // contains the constructor parameters
+    val assignment: String // The value to assign to the request struct
+}
+
+/**
+ * Represents an optional 'void' query parameter which is translated
+ * into a Go bool type to determine if the query parameter should be set.
+ */
+data class VoidWithConstructor(override val name: String) : WithConstructor {
+    override val type: String = "bool"
+    override val constructorParams: String = ""
+    override val assignment: String = "true"
+}
+
+/**
+ * Represents an optional query parameter of a primitive type, which
+ * needs to be referenced when storing the primitive as a pointer.
+ */
+data class PrimitivePointerWithConstructor(override val name: String, override val type: String) : WithConstructor {
+    override val constructorParams: String = "$name $type"
+    override val assignment: String = "&$name"
+}
+
+/**
+ * Represents an optional query parameter with a Spectra defined type.
+ * Since interfaces default to nil, no referencing is needed to maintain nullability in Go type.
+ */
+data class InterfaceWithConstructor(override val name: String, override val type: String) : WithConstructor {
+    override val constructorParams: String = "$name $type"
+    override val assignment: String = name
 }

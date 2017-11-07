@@ -1,5 +1,10 @@
 <#include "request_header.ftl" />
 
+import (
+    "ds3/networking"
+    "strings"
+)
+
 const ( AMZ_META_HEADER = "x-amz-meta-" )
 
 <#include "request_body.ftl" />
@@ -7,5 +12,3 @@ const ( AMZ_META_HEADER = "x-amz-meta-" )
 <#include "with_checksum.ftl" />
 
 <#include "with_headers.ftl" />
-
-<#include "stream_with_content.ftl" />

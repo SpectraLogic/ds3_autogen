@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
@@ -38,8 +37,8 @@ public class PutObjectRequestGenerator_Test {
                 new SimpleVariable("bucketName"),
                 new SimpleVariable("objectName"),
                 new SimpleVariable("content"),
-                new Variable("checksum", "networking.NewNoneChecksum()"),
-                new Variable("headers", "&http.Header{}")
+                new Variable("Checksum", "networking.NewNoneChecksum()"),
+                new Variable("Metadata", "make(map[string]string)")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(getRequestCreateObject());
@@ -51,8 +50,8 @@ public class PutObjectRequestGenerator_Test {
     @Test
     public void toConstructorParamsList_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
                 new Arguments("networking.ReaderWithSizeDecorator", "content")
         );
 
@@ -68,13 +67,14 @@ public class PutObjectRequestGenerator_Test {
     @Test
     public void toStructParams_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("networking.Checksum", "checksum"),
-                new Arguments("networking.ReaderWithSizeDecorator", "content"),
-                new Arguments("*http.Header", "headers"),
-                new Arguments("string", "job"),
-                new Arguments("int64", "offset")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("networking.Checksum", "Checksum"),
+                new Arguments("networking.ReaderWithSizeDecorator", "Content"),
+                new Arguments("*string", "Job"),
+                new Arguments("map[string]string", "Metadata"),
+                new Arguments("*int64", "Offset")
+
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(getRequestCreateObject());
@@ -84,15 +84,5 @@ public class PutObjectRequestGenerator_Test {
             assertThat(result.get(i).getName(), is(expectedArgs.get(i).getName()));
             assertThat(result.get(i).getType(), is(expectedArgs.get(i).getType()));
         }
-    }
-
-    @Test
-    public void toImportSet_Test() {
-        final ImmutableSet<String> expectedImports = ImmutableSet.of("strings", "strconv");
-
-        final ImmutableSet<String> result = generator.toImportSet(getRequestCreateObject());
-
-        assertThat(result.size(), is(expectedImports.size()));
-        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

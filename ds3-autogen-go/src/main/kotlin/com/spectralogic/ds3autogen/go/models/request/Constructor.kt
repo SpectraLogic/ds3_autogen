@@ -20,6 +20,5 @@ import com.spectralogic.ds3autogen.api.models.Arguments
 
 data class Constructor(
         val constructorParams: String,
-        val queryParams: ImmutableList<VariableInterface>,
         val structParams: ImmutableList<VariableInterface>
 )

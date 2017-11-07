@@ -27,7 +27,7 @@ class DeleteObjectsRequestGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the string list request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("[]string", "objectNames")
     }
 
@@ -35,6 +35,6 @@ class DeleteObjectsRequestGenerator : RequestPayloadGenerator() {
      * Retrieves the struct assignment for the string list request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildDeleteObjectsPayload(objectNames)")
+        return Variable("ObjectNames", "objectNames")
     }
 }

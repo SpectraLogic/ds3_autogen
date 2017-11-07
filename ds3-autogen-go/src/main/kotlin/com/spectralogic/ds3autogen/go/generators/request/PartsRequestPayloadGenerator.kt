@@ -28,7 +28,7 @@ class PartsRequestPayloadGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the CompleteMultipartUpload request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("[]Part", "parts")
     }
 
@@ -36,6 +36,6 @@ class PartsRequestPayloadGenerator : RequestPayloadGenerator() {
      * Retrieves the struct assignment for the CompleteMultipartUpload request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildPartsListStream(parts)")
+        return Variable("Parts", "parts")
     }
 }

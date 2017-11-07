@@ -20,8 +20,8 @@ import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
 import com.spectralogic.ds3autogen.go.models.request.Variable
-import com.spectralogic.ds3autogen.go.models.request.WithConstructor
 import com.spectralogic.ds3autogen.go.utils.toGoParamName
+import com.spectralogic.ds3autogen.go.utils.toGoRequestType
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
@@ -36,19 +36,6 @@ import java.util.stream.Collectors
 /**
  * Contains utilities used in by Go request generators
  */
-
-
-/**
- * Removes parameters with type void
- */
-fun removeVoidDs3Params(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Ds3Param> {
-    if (ConverterUtil.isEmpty(ds3Params)) {
-        return ImmutableList.of()
-    }
-    return ds3Params!!.stream()
-            .filter{ param -> !param.type.equals("void", ignoreCase = true) }
-            .collect(GuavaCollectors.immutableList<Ds3Param>())
-}
 
 /**
  * Removes parameters with either type void or name operation
@@ -80,9 +67,9 @@ fun toGoArgumentsList(requiredParams: ImmutableList<Ds3Param>?): ImmutableList<A
  * Converts a Ds3Param into an Argument containing the corresponding Go type and parameter name
  */
 fun toGoArgument(ds3Param: Ds3Param): Arguments {
-    val goType = toGoType(ds3Param.type, ds3Param.nullable)
+    val goType = toGoRequestType(ds3Param.type, ds3Param.nullable)
     val goName = toGoParamName(ds3Param.name, ds3Param.type)
-    return Arguments(goType, Helper.uncapFirst(goName))
+    return Arguments(goType, goName)
 }
 
 /**
@@ -96,52 +83,7 @@ fun toFunctionInput(arguments: ImmutableList<Arguments>): String {
             .collect(Collectors.joining(", "))
 }
 
-/**
- * Converts a list of Ds3Param into a list of Variables which represent query
- * parameter assignments.
- */
-fun toQueryParamVarList(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Variable> {
-    if (isEmpty(ds3Params)) {
-        return ImmutableList.of()
-    }
-    return ds3Params!!.stream()
-            .filter { param -> !param.name.equals("Operation", ignoreCase = true) }
-            .map(::toQueryParamVar)
-            .collect(GuavaCollectors.immutableList())
-}
-
-/**
- * Creates the variable that represents the key-value pair that will be added to the
- * query parameters in the request handler. The parameter value must be converted to
- * a string.
- */
-fun toQueryParamVar(ds3Param: Ds3Param): Variable {
-    val goType = toGoType(ds3Param.type, ds3Param.nullable)
-    val goName = toGoParamName(ds3Param.name, ds3Param.type)
-    val key = camelToUnderscore(ds3Param.name)
-    return Variable(key, goVarToString(uncapFirst(goName), goType))
-}
-
-/**
- * Creates the Go code for transforming a variable to string based on its Go type
- */
-fun goVarToString(name: String, goType: String): String {
-    when (goType) {
-        "" -> return "\"\"" // Denotes void parameter in contract
-        "int" -> return "strconv.Itoa($name)"
-        "bool" -> return "strconv.FormatBool($name)"
-        "int64" -> return "strconv.FormatInt($name, 10)"
-        "float64" -> return "strconv.FormatFloat($name, 'f', -1, 64)"
-        "string" -> return name
-        "*int" -> return "strconv.Itoa(*$name)"
-        "*bool" -> return "strconv.FormatBool(*$name)"
-        "*int64" -> return "strconv.FormatInt(*$name, 10)"
-        "*float64" -> return "strconv.FormatFloat(*$name, 'f', -1, 64)"
-        "*string" -> return "*$name"
-        else -> return name + ".String()"
-    }
-}
-
+//TODO move to client to determine import of Strconv
 /**
  * Determines if the Go conversion of the specified contract type into a string
  * requires the import of strconv
@@ -165,32 +107,4 @@ fun toSimpleVariables(ds3Params: ImmutableList<Ds3Param>?): ImmutableList<Simple
     return ds3Params!!.stream()
             .map{ param -> SimpleVariable(uncapFirst(toGoParamName(param.name, param.type))) }
             .collect(GuavaCollectors.immutableList())
-}
-
-/**
- * Converts a list of Ds3Params into a list of with-constructors, and filters for parameters
- * whose nullability matches nullableParams
- */
-fun toWithConstructors(optionalParams: ImmutableList<Ds3Param>?, nullableParams: Boolean): ImmutableList<WithConstructor> {
-    if (isEmpty(optionalParams)) {
-        return ImmutableList.of()
-    }
-    return optionalParams!!.stream()
-            .filter { param -> param.nullable == nullableParams }
-            .filter { param -> !param.type.equals("void", ignoreCase = true) }
-            .map(::toWithConstructor)
-            .collect(GuavaCollectors.immutableList())
-}
-
-/**
- * Converts a Ds3Param into a with-constructor with Go parameter naming schemes
- */
-fun toWithConstructor(ds3Param: Ds3Param): WithConstructor {
-    val goName = toGoParamName(ds3Param.name, ds3Param.type)
-    val goType = toGoType(ds3Param.type, ds3Param.nullable)
-    return WithConstructor(
-            goName,
-            goType,
-            camelToUnderscore(ds3Param.name),
-            goVarToString(uncapFirst(goName), goType))
 }

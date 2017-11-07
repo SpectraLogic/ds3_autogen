@@ -16,20 +16,18 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.enums.*;
 import com.spectralogic.ds3autogen.go.models.request.*;
+import org.assertj.core.groups.Tuple;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class BaseRequestGenerator_Test {
 
@@ -37,37 +35,30 @@ public class BaseRequestGenerator_Test {
 
     private final Ds3Request testRequest =
             new Ds3Request("com.test.TestRequest",
-            HttpVerb.DELETE,
-            Classification.amazons3,
-            Requirement.REQUIRED,
-            Requirement.REQUIRED,
-            Action.BULK_DELETE,
-            Resource.ACTIVE_JOB,
-            ResourceType.SINGLETON,
-            Operation.CANCEL_EJECT,
-            true,
-            ImmutableList.of(),
-            ImmutableList.of( //optional query params
-                    new Ds3Param("IntOptParam", "int", false),
-                    new Ds3Param("IntegerOptParam", "java.lang.Integer", true),
-                    new Ds3Param("StringOptParam", "java.lang.String", false),
-                    new Ds3Param("VoidOptParam", "void", false)
-            ),
-            ImmutableList.of( //required query params
-                    new Ds3Param("IntReqParam", "int", false),
-                    new Ds3Param("StringReqParam", "java.lang.String", false),
-                    new Ds3Param("VoidReqParam", "void", false),
-                    new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)
-            ));
+                    HttpVerb.DELETE,
+                    Classification.amazons3,
+                    Requirement.REQUIRED,
+                    Requirement.REQUIRED,
+                    Action.BULK_DELETE,
+                    Resource.ACTIVE_JOB,
+                    ResourceType.SINGLETON,
+                    Operation.CANCEL_EJECT,
+                    true,
+                    ImmutableList.of(),
+                    ImmutableList.of( //optional query params
+                            new Ds3Param("IntOptParam", "int", false),
+                            new Ds3Param("IntegerOptParam", "java.lang.Integer", true),
+                            new Ds3Param("StringOptParam", "java.lang.String", false),
+                            new Ds3Param("VoidOptParam", "void", false)
+                    ),
+                    ImmutableList.of( //required query params
+                            new Ds3Param("IntReqParam", "int", false),
+                            new Ds3Param("StringReqParam", "java.lang.String", false),
+                            new Ds3Param("VoidReqParam", "void", false),
+                            new Ds3Param("Operation", "com.spectralogic.s3.server.request.rest.RestOperationType", false)
+                    ));
 
     private final String expectedConstructorParams = "bucketName string, objectName string, activeJobId string, intReqParam int, stringReqParam string";
-
-    private final ImmutableList<VariableInterface> expectedQueryParams = ImmutableList.of(
-            new Variable("operation", "\"cancel_eject\""),
-            new Variable("int_req_param", "strconv.Itoa(intReqParam)"),
-            new Variable("string_req_param", "stringReqParam"),
-            new Variable("void_req_param", "\"\"")
-    );
 
     private final ImmutableList<VariableInterface> expectedStructAssignments = ImmutableList.of(
             new SimpleVariable("bucketName"),
@@ -75,18 +66,6 @@ public class BaseRequestGenerator_Test {
             new SimpleVariable("intReqParam"),
             new SimpleVariable("stringReqParam"),
             new SimpleVariable("activeJobId")
-    );
-
-    private final ImmutableList<Ds3Param> PARAMS_REQUIRING_STRCONV = ImmutableList.of(
-            new Ds3Param("Param1", "java.lang.String", false),
-            new Ds3Param("Param2", "void", false),
-            new Ds3Param("Param3", "java.lang.Integer", false)
-    );
-
-    private final ImmutableList<Ds3Param> PARAMS_NOT_REQURING_STRCONV = ImmutableList.of(
-            new Ds3Param("Param1", "java.lang.String", false),
-            new Ds3Param("Param2", "void", false),
-            new Ds3Param("Param3", "java.util.UUID", false)
     );
 
     @Test
@@ -104,38 +83,13 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void toQueryParamsList_NullListWithOperation_Test() {
-        final Variable expected = new Variable("operation", "\"allocate\"");
-
-        final ImmutableList<VariableInterface> result = generator.toQueryParamsList(null, Operation.ALLOCATE);
-        assertThat(result.size(), is(1));
-        assertThat(result.get(0), is(expected));
-    }
-
-    @Test
-    public void toQueryParamsList_EmptyListWithoutOperation_Test() {
-        final ImmutableList<VariableInterface> result = generator.toQueryParamsList(ImmutableList.of(), null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toQueryParamsList_FullContent_Test() {
-        final ImmutableList<VariableInterface> result = generator.toQueryParamsList(
-                testRequest.getRequiredQueryParams(),
-                testRequest.getOperation());
-
-        assertThat(result.size(), is(expectedQueryParams.size()));
-        expectedQueryParams.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
     public void toConstructorParamsList_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("string", "activeJobId"),
-                new Arguments("int", "intReqParam"),
-                new Arguments("string", "stringReqParam")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("string", "ActiveJobId"),
+                new Arguments("int", "IntReqParam"),
+                new Arguments("string", "StringReqParam")
         );
 
         final ImmutableList<Arguments> result = generator.toConstructorParamsList(testRequest);
@@ -150,11 +104,11 @@ public class BaseRequestGenerator_Test {
     @Test
     public void paramsListFromRequest_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("string", "activeJobId"),
-                new Arguments("int", "intReqParam"),
-                new Arguments("string", "stringReqParam")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("string", "ActiveJobId"),
+                new Arguments("int", "IntReqParam"),
+                new Arguments("string", "StringReqParam")
         );
 
         final ImmutableList<Arguments> result = generator.paramsListFromRequest(testRequest);
@@ -177,8 +131,6 @@ public class BaseRequestGenerator_Test {
         final Constructor result = generator.toConstructor(testRequest);
 
         assertThat(result.getConstructorParams(), is(expectedConstructorParams));
-        assertThat(result.getQueryParams().size(), is(expectedQueryParams.size()));
-        expectedQueryParams.forEach(expected -> assertThat(result.getQueryParams(), hasItem(expected)));
         assertThat(result.getStructParams().size(), is(expectedStructAssignments.size()));
         expectedStructAssignments.forEach(expected -> assertThat(result.getStructParams(), hasItem(expected)));
     }
@@ -186,14 +138,15 @@ public class BaseRequestGenerator_Test {
     @Test
     public void toStructParams_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("string", "activeJobId"),
-                new Arguments("*int", "integerOptParam"),
-                new Arguments("int", "intOptParam"),
-                new Arguments("int", "intReqParam"),
-                new Arguments("string", "stringOptParam"),
-                new Arguments("string", "stringReqParam")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("string", "ActiveJobId"),
+                new Arguments("*int", "IntegerOptParam"),
+                new Arguments("*int", "IntOptParam"),
+                new Arguments("int", "IntReqParam"),
+                new Arguments("*string", "StringOptParam"),
+                new Arguments("string", "StringReqParam"),
+                new Arguments("bool", "VoidOptParam")
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(testRequest);
@@ -209,14 +162,15 @@ public class BaseRequestGenerator_Test {
     public void structParamsFromRequest_Test() {
         // Not sorted
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("string", "activeJobId"),
-                new Arguments("int", "intReqParam"),
-                new Arguments("string", "stringReqParam"),
-                new Arguments("int", "intOptParam"),
-                new Arguments("*int", "integerOptParam"),
-                new Arguments("string", "stringOptParam")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("string", "ActiveJobId"),
+                new Arguments("int", "IntReqParam"),
+                new Arguments("string", "StringReqParam"),
+                new Arguments("*int", "IntOptParam"),
+                new Arguments("*int", "IntegerOptParam"),
+                new Arguments("*string", "StringOptParam"),
+                new Arguments("bool", "VoidOptParam")
         );
 
         final ImmutableList<Arguments> result = generator.structParamsFromRequest(testRequest);
@@ -229,111 +183,89 @@ public class BaseRequestGenerator_Test {
     }
 
     @Test
-    public void toWithConstructors_NullList_Test() {
+    public void toOptionalStructParamsNullListTest() {
+        final ImmutableList<Arguments> result = generator.toOptionalStructParams(null);
+        assertThat(result).hasSize(0);
+    }
+
+    @Test
+    public void toOptionalStructParamsEmptyListTest() {
+        final ImmutableList<Arguments> result = generator.toOptionalStructParams(ImmutableList.of());
+        assertThat(result).hasSize(0);
+    }
+
+    @Test
+    public void toOptionalStructParamsTest() {
+        final ImmutableList<Ds3Param> input = ImmutableList.of(
+                new Ds3Param("VoidParam", "void", false),
+                new Ds3Param("BoolParam", "bool", false),
+                new Ds3Param("IntType", "java.lang.Integer", true)
+        );
+
+        final ImmutableList<Arguments> result = generator.toOptionalStructParams(input);
+
+        assertThat(result).hasSize(3)
+                .extracting("type", "name")
+                .contains(
+                        Tuple.tuple("bool", "VoidParam"),
+                        Tuple.tuple("*bool", "BoolParam"),
+                        Tuple.tuple("*int", "IntType")
+                );
+    }
+
+    @Test
+    public void toWithConstructorVoidParamTest() {
+        final Ds3Param param = new Ds3Param("VoidParam", "void", false);
+        final WithConstructor result = generator.toWithConstructor(param);
+
+        assertThat(result)
+                .isEqualTo(new VoidWithConstructor("voidParam"));
+    }
+
+    @Test
+    public void toWithConstructorGoPrimitiveParamTest() {
+        final Ds3Param param = new Ds3Param("IntParam", "java.lang.Integer", false);
+        final WithConstructor result = generator.toWithConstructor(param);
+
+        assertThat(result)
+                .isEqualTo(new PrimitivePointerWithConstructor("intParam", "int"));
+    }
+
+    @Test
+    public void toWithConstructorInterfaceParamTest() {
+        final Ds3Param param = new Ds3Param("InterfaceParam", "com.test.SpectraType", false);
+        final WithConstructor result = generator.toWithConstructor(param);
+
+        assertThat(result)
+                .isEqualTo(new InterfaceWithConstructor("interfaceParam", "SpectraType"));
+    }
+
+    @Test
+    public void toWithConstructorsNullListTest() {
         final ImmutableList<WithConstructor> result = generator.toWithConstructors(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toWithConstructors_EmptyList_Test() {
+    public void toWithConstructorsEmptyListTest() {
         final ImmutableList<WithConstructor> result = generator.toWithConstructors(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
     @Test
-    public void toWithConstructors_FullList_Test() {
-        final ImmutableList<WithConstructor> expectedConst = ImmutableList.of(
-                new WithConstructor("IntOptParam", "int", "int_opt_param", "strconv.Itoa(intOptParam)"),
-                new WithConstructor("StringOptParam", "string", "string_opt_param", "stringOptParam")
+    public void toWithConstructorsTest() {
+        final ImmutableList<Ds3Param> input = ImmutableList.of(
+                new Ds3Param("VoidParam", "void", false),
+                new Ds3Param("IntParam", "java.lang.Integer", false),
+                new Ds3Param("InterfaceParam", "com.test.SpectraType", false)
         );
 
-        final ImmutableList<WithConstructor> result = generator.toWithConstructors(testRequest.getOptionalQueryParams());
-        assertThat(result.size(), is(expectedConst.size()));
-
-        expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
-    public void toNullableWithConstructors_NullList_Test() {
-        final ImmutableList<WithConstructor> result = generator.toNullableWithConstructors(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toNullableWithConstructors_EmptyList_Test() {
-        final ImmutableList<WithConstructor> result = generator.toNullableWithConstructors(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toNullableWithConstructors_FullList_Test() {
-        final ImmutableList<WithConstructor> expectedConst = ImmutableList.of(
-                new WithConstructor("IntegerOptParam", "*int", "integer_opt_param", "strconv.Itoa(*integerOptParam)")
-        );
-
-        final ImmutableList<WithConstructor> result = generator.toNullableWithConstructors(testRequest.getOptionalQueryParams());
-        assertThat(result.size(), is(expectedConst.size()));
-
-        expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
-    public void toVoidWithConstructors_NullList_Test() {
-        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(null);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toVoidWithConstructors_EmptyList_Test() {
-        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(ImmutableList.of());
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toVoidWithConstructors_FullList_Test() {
-        final ImmutableList<WithConstructor> expectedConst = ImmutableList.of(
-                new WithConstructor("VoidOptParam", "", "void_opt_param", "")
-        );
-
-        final ImmutableList<WithConstructor> result = generator.toVoidWithConstructors(testRequest.getOptionalQueryParams());
-
-        assertThat(result.size(), is(expectedConst.size()));
-        expectedConst.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
-    public void importStrconv_NullList_Test() {
-        assertFalse(generator.isStrconvImportRequired(null));
-    }
-
-    @Test
-    public void importStrconv_EmptyList_Test() {
-        assertFalse(generator.isStrconvImportRequired(ImmutableList.of()));
-    }
-
-    @Test
-    public void importStrconv_WithImport_Test() {
-        assertTrue(generator.isStrconvImportRequired(PARAMS_REQUIRING_STRCONV));
-    }
-
-    @Test
-    public void importStrconv_NoImport_Test() {
-        assertFalse(generator.isStrconvImportRequired(PARAMS_NOT_REQURING_STRCONV));
-    }
-
-    @Test
-    public void toImportSet_NoStrconv_Test() {
-        final Ds3Request ds3Request = createDs3RequestTestData(false, PARAMS_NOT_REQURING_STRCONV, PARAMS_NOT_REQURING_STRCONV);
-        final ImmutableSet<String> result = generator.toImportSet(ds3Request);
-        assertThat(result.size(), is(0));
-    }
-
-    @Test
-    public void toImportSet_WithStrconv_Test() {
-        final ImmutableSet<String> expectedImports = ImmutableSet.of("strconv");
-        final Ds3Request ds3Request = createDs3RequestTestData(false, PARAMS_NOT_REQURING_STRCONV, PARAMS_REQUIRING_STRCONV);
-        final ImmutableSet<String> result = generator.toImportSet(ds3Request);
-        assertThat(result.size(), is(expectedImports.size()));
-        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
+        final ImmutableList<WithConstructor> result = generator.toWithConstructors(input);
+        assertThat(result).hasSize(3)
+                .contains(
+                        new VoidWithConstructor("voidParam"),
+                        new PrimitivePointerWithConstructor("intParam", "int"),
+                        new InterfaceWithConstructor("interfaceParam", "SpectraType")
+                );
     }
 }

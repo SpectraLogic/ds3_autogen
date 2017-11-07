@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.request;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.Arguments;
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable;
 import com.spectralogic.ds3autogen.go.models.request.Variable;
@@ -35,12 +34,12 @@ public class GetObjectRequestGenerator_Test {
     @Test
     public void toStructParams_Test() {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("string", "objectName"),
-                new Arguments("networking.Checksum", "checksum"),
-                new Arguments("string", "job"),
-                new Arguments("int64", "offset"),
-                new Arguments("*rangeHeader", "rangeHeader")
+                new Arguments("string", "BucketName"),
+                new Arguments("string", "ObjectName"),
+                new Arguments("networking.Checksum", "Checksum"),
+                new Arguments("*string", "Job"),
+                new Arguments("map[string]string", "Metadata"),
+                new Arguments("*int64", "Offset")
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(getRequestAmazonS3GetObject());
@@ -57,21 +56,12 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<VariableInterface> expectedVars = ImmutableList.of(
                 new SimpleVariable("bucketName"),
                 new SimpleVariable("objectName"),
-                new Variable("checksum", "networking.NewNoneChecksum()")
+                new Variable("Checksum", "networking.NewNoneChecksum()")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(getRequestAmazonS3GetObject());
 
         assertThat(result.size(), is(expectedVars.size()));
         expectedVars.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
-    public void toImportSet_Test() {
-        final ImmutableSet<String> expectedImports = ImmutableSet.of("fmt", "strconv");
-
-        final ImmutableSet<String> result = generator.toImportSet(getRequestAmazonS3GetObject());
-        assertThat(result.size(), is(expectedImports.size()));
-        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

@@ -30,10 +30,10 @@ public class GetBulkJobRequestGenerator_Test {
     @Test
     public void toStructParams_Test() {
         final ImmutableList<Arguments> expected = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("JobChunkClientProcessingOrderGuarantee", "chunkClientProcessingOrderGuarantee"),
-                new Arguments("networking.ReaderWithSizeDecorator", "content"),
-                new Arguments("BlobStoreTaskPriority", "priority")
+                new Arguments("string", "BucketName"),
+                new Arguments("JobChunkClientProcessingOrderGuarantee", "ChunkClientProcessingOrderGuarantee"),
+                new Arguments("[]Ds3GetObject", "Objects"),
+                new Arguments("BlobStoreTaskPriority", "Priority")
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(getRequestBulkGet());

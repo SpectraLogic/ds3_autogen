@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.spectralogic.ds3autogen.go.utils.GoFunctionalTestUtil.returnsStream;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static org.junit.Assert.assertFalse;
@@ -37,7 +36,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.CLIENT, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -102,7 +101,6 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
-        assertTrue(requestCode.contains("\"strconv\""));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -163,7 +161,6 @@ public class GoFunctionalTests {
 
         assertFalse(requestCode.contains("\"strconv\""));
         assertTrue(requestCode.contains("func NewDeleteBucketAclSpectraS3Request(bucketAcl string) *DeleteBucketAclSpectraS3Request {"));
-        assertFalse(returnsStream(requestName, requestCode));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -213,21 +210,13 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-        assertFalse(requestCode.contains("\"strconv\""));
-
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
-        assertTrue(requestCode.contains("storageDomainId string"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectNames []string"));
+        assertTrue(requestCode.contains("StorageDomainId *string"));
 
         assertTrue(requestCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Request(bucketName string, objectNames []string) *VerifyPhysicalPlacementForObjectsSpectraS3Request {"));
-        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"verify_physical_placement\")"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
-
-        assertTrue(returnsStream(requestName, requestCode));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectNames: objectNames,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -286,9 +275,8 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
         assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
-        assertTrue(requestCode.contains("content: buildStreamFromString(requestPayload),")); //content is assigned a stream
-        assertTrue(returnsStream(requestName, requestCode));
+        assertTrue(requestCode.contains("RequestPayload string"));
+        assertTrue(requestCode.contains("RequestPayload: requestPayload,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -332,7 +320,7 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithQueryParam(\"replicate\", \"\")."));
         assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_put\")."));
-        assertTrue(client.contains("WithReadCloser(buildStreamFromString(request.Content))."));
+        assertTrue(client.contains("WithReadCloser(buildStreamFromString(request.RequestPayload))."));
     }
 
     @Test
@@ -349,9 +337,16 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
         assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
-        assertTrue(requestCode.contains("content: buildPartsListStream(parts),")); //content is assigned a stream
-        assertTrue(returnsStream(requestName, requestCode));
+
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectName string"));
+        assertTrue(requestCode.contains("Parts []Part"));
+        assertTrue(requestCode.contains("UploadId string"));
+
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectName: objectName,"));
+        assertTrue(requestCode.contains("UploadId: uploadId,"));
+        assertTrue(requestCode.contains("Parts: parts,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -407,13 +402,16 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
         assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator")); //content is in request struct
-        assertTrue(requestCode.contains("content: buildDeleteObjectsPayload(objectNames),")); //content is assigned a stream
-        assertTrue(returnsStream(requestName, requestCode));
 
-        // verify with-constructor of void param type is generated correctly
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectNames []string"));
+        assertTrue(requestCode.contains("RollBack bool"));
+
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectNames: objectNames,"));
+
         assertTrue(requestCode.contains("func (deleteObjectsRequest *DeleteObjectsRequest) WithRollBack() *DeleteObjectsRequest {"));
-        assertFalse(requestCode.contains("deleteObjectsRequest.rollBack = rollBack"));
+        assertTrue(requestCode.contains("deleteObjectsRequest.RollBack = true"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -471,8 +469,9 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
         assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("jobId string"));
-        assertTrue(requestCode.contains("jobId: jobId,"));
+
+        assertTrue(requestCode.contains("JobId string"));
+        assertTrue(requestCode.contains("JobId: jobId,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -522,30 +521,39 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
+
         // test request imports
         assertTrue(requestCode.contains("\"fmt\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
-        assertTrue(requestCode.contains("\"strconv\""));
+
         // test request struct
-        assertTrue(requestCode.contains("rangeHeader *rangeHeader"));
-        assertTrue(requestCode.contains("checksum networking.Checksum"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectName string"));
+        assertTrue(requestCode.contains("Checksum networking.Checksum"));
+        assertTrue(requestCode.contains("Job *string"));
+        assertTrue(requestCode.contains("Offset *int64"));
+        assertTrue(requestCode.contains("Metadata map[string]string"));
+
         assertTrue(requestCode.contains("type rangeHeader struct {"));
+
         // test constructor and with-constructors
         assertTrue(requestCode.contains("func NewGetObjectRequest(bucketName string, objectName string) *GetObjectRequest {"));
-        assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum(),"));
-        assertTrue(requestCode.contains(""));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectName: objectName,"));
+        assertTrue(requestCode.contains("Checksum: networking.NewNoneChecksum(),"));
+
         assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithRange(start, end int) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("getObjectRequest.Metadata[\"Range\"] = fmt.Sprintf(\"bytes=%d-%d\", start, end)"));
+
         assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithChecksum(contentHash string, checksumType networking.ChecksumType) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("getObjectRequest.Checksum.ContentHash = contentHash"));
+        assertTrue(requestCode.contains("getObjectRequest.Checksum.Type = checksumType"));
+
         assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithJob(job string) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("getObjectRequest.Job = &job"));
+
         assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithOffset(offset int64) *GetObjectRequest {"));
-        // test header and checksum functions
-        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) Header() *http.Header {"));
-        assertTrue(requestCode.contains("return &http.Header{ \"Range\": []string{ rng } }"));
-        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) GetChecksum() networking.Checksum {"));
-        assertTrue(requestCode.contains("return getObjectRequest.checksum"));
-        assertTrue(requestCode.contains("func (GetObjectRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
+        assertTrue(requestCode.contains("getObjectRequest.Offset = &offset"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -601,21 +609,16 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
-        // test request imports
-        assertTrue(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-
         // test request struct
-        assertTrue(requestCode.contains("dataPolicyId string"));
-        assertTrue(requestCode.contains("pageLength int"));
-        assertTrue(requestCode.contains("pageOffset int"));
-        assertTrue(requestCode.contains("pageStartMarker string"));
-        assertTrue(requestCode.contains("replicateDeletes bool"));
-        assertTrue(requestCode.contains("state DataPlacementRuleState"));
-        assertTrue(requestCode.contains("targetId string"));
-        assertTrue(requestCode.contains("dataReplicationRuleType DataReplicationRuleType"));
+        assertTrue(requestCode.contains("DataPolicyId *string"));
+        assertTrue(requestCode.contains("DataReplicationRuleType DataReplicationRuleType"));
+        assertTrue(requestCode.contains("PageLength *int"));
+        assertTrue(requestCode.contains("PageOffset *int"));
+        assertTrue(requestCode.contains("PageStartMarker *string"));
+        assertTrue(requestCode.contains("ReplicateDeletes *bool"));
+        assertTrue(requestCode.contains("State DataPlacementRuleState"));
+        assertTrue(requestCode.contains("TargetId *string"));
+        assertTrue(requestCode.contains("LastPage bool"));
 
         // test constructor and with-constructors
         assertTrue(requestCode.contains("func (getAzureDataReplicationRulesSpectraS3Request *GetAzureDataReplicationRulesSpectraS3Request) WithDataPolicyId(dataPolicyId string) *GetAzureDataReplicationRulesSpectraS3Request {"));
@@ -691,23 +694,18 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
-        // test request imports
-        assertTrue(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-
         // test request struct
-        assertTrue(requestCode.contains("dataPolicyId string"));
-        assertTrue(requestCode.contains("dataReplicationRuleType DataReplicationRuleType"));
-        assertTrue(requestCode.contains("maxBlobPartSizeInBytes int64"));
-        assertTrue(requestCode.contains("replicateDeletes bool"));
-        assertTrue(requestCode.contains("targetId string"));
+        assertTrue(requestCode.contains("DataPolicyId string"));
+        assertTrue(requestCode.contains("DataReplicationRuleType DataReplicationRuleType"));
+        assertTrue(requestCode.contains("MaxBlobPartSizeInBytes *int64"));
+        assertTrue(requestCode.contains("ReplicateDeletes *bool"));
+        assertTrue(requestCode.contains("TargetId string"));
 
         // test constructor and
         assertTrue(requestCode.contains("func NewPutAzureDataReplicationRuleSpectraS3Request(dataPolicyId string, dataReplicationRuleType DataReplicationRuleType, targetId string) *PutAzureDataReplicationRuleSpectraS3Request {"));
-        assertTrue(requestCode.contains("queryParams.Set(\"type\", dataReplicationRuleType.String())"));
-        assertTrue(requestCode.contains("dataReplicationRuleType: dataReplicationRuleType,"));
+        assertTrue(requestCode.contains("DataPolicyId: dataPolicyId,"));
+        assertTrue(requestCode.contains("TargetId: targetId,"));
+        assertTrue(requestCode.contains("DataReplicationRuleType: dataReplicationRuleType,"));
 
         // test with-constructors
         assertTrue(requestCode.contains("func (putAzureDataReplicationRuleSpectraS3Request *PutAzureDataReplicationRuleSpectraS3Request) WithMaxBlobPartSizeInBytes(maxBlobPartSizeInBytes int64) *PutAzureDataReplicationRuleSpectraS3Request {"));
@@ -771,19 +769,12 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
-        // test request imports
-        assertFalse(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-
         // test request struct
-        assertTrue(requestCode.contains("notificationId string"));
-        assertTrue(requestCode.contains("queryParams *url.Values"));
+        assertTrue(requestCode.contains("NotificationId string"));
 
         // test constructor
         assertTrue(requestCode.contains("func NewDeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationId string) *DeleteJobCreatedNotificationRegistrationSpectraS3Request {"));
-        assertTrue(requestCode.contains("notificationId: notificationId,"));
+        assertTrue(requestCode.contains("NotificationId: notificationId,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -834,29 +825,22 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         // test request imports
-        assertTrue(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
 
         // test request struct
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("objectName string"));
-        assertTrue(requestCode.contains("partNumber int"));
-        assertTrue(requestCode.contains("uploadId string"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectName string"));
+        assertTrue(requestCode.contains("Content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("PartNumber int"));
+        assertTrue(requestCode.contains("UploadId string"));
 
         // test constructor
         assertTrue(requestCode.contains("func NewPutMultiPartUploadPartRequest(bucketName string, objectName string, content networking.ReaderWithSizeDecorator, partNumber int, uploadId string) *PutMultiPartUploadPartRequest {"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("objectName: objectName,"));
-        assertTrue(requestCode.contains("partNumber: partNumber,"));
-        assertTrue(requestCode.contains("uploadId: uploadId,"));
-        assertTrue(requestCode.contains("content: content,"));
-
-        // test content stream
-        assertTrue(requestCode.contains("func (putMultiPartUploadPartRequest *PutMultiPartUploadPartRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return putMultiPartUploadPartRequest.content"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectName: objectName,"));
+        assertTrue(requestCode.contains("PartNumber: partNumber,"));
+        assertTrue(requestCode.contains("UploadId: uploadId,"));
+        assertTrue(requestCode.contains("Content: content,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -910,43 +894,42 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         // test request imports
-        assertTrue(requestCode.contains("\"strconv\""));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
         assertTrue(requestCode.contains("\"ds3/networking\""));
         assertTrue(requestCode.contains("strings"));
 
         // test request struct
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("objectName string"));
-        assertTrue(requestCode.contains("job string"));
-        assertTrue(requestCode.contains("offset int64"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
-        assertTrue(requestCode.contains("checksum networking.Checksum"));
-        assertTrue(requestCode.contains("headers *http.Header"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectName string"));
+        assertTrue(requestCode.contains("Job *string"));
+        assertTrue(requestCode.contains("Offset *int64"));
+        assertTrue(requestCode.contains("Content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("Checksum networking.Checksum"));
+        assertTrue(requestCode.contains("Metadata map[string]string"));
 
         // test constructor
         assertTrue(requestCode.contains("func NewPutObjectRequest(bucketName string, objectName string, content networking.ReaderWithSizeDecorator) *PutObjectRequest {"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("objectName: objectName,"));
-        assertTrue(requestCode.contains("content: content,"));
-        assertTrue(requestCode.contains("checksum: networking.NewNoneChecksum()"));
-        assertTrue(requestCode.contains("headers: &http.Header{},"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectName: objectName,"));
+        assertTrue(requestCode.contains("Content: content,"));
+        assertTrue(requestCode.contains("Checksum: networking.NewNoneChecksum()"));
+        assertTrue(requestCode.contains("Metadata: make(map[string]string),"));
 
-        // test content stream
-        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return putObjectRequest.content"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithJob(job string) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("putObjectRequest.Job = &job"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithOffset(offset int64) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("putObjectRequest.Offset = &offset"));
 
         // test checksum
         assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithChecksum(contentHash string, checksumType networking.ChecksumType) *PutObjectRequest {"));
-        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) GetChecksum() networking.Checksum {"));
-        assertTrue(requestCode.contains("return putObjectRequest.checksum"));
+        assertTrue(requestCode.contains("putObjectRequest.Checksum.ContentHash = contentHash"));
+        assertTrue(requestCode.contains("putObjectRequest.Checksum.Type = checksumType"));
 
         // test metadata
         assertTrue(requestCode.contains("const ( AMZ_META_HEADER = \"x-amz-meta-\" )"));
-        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, value string) *PutObjectRequest {"));
-        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) Header() *http.Header {"));
-        assertTrue(requestCode.contains("return putObjectRequest.headers"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, values ...string) *PutObjectRequest {"));
+        assertTrue(requestCode.contains("if strings.HasPrefix(strings.ToLower(key), AMZ_META_HEADER) {"));
+        assertTrue(requestCode.contains("putObjectRequest.Metadata[key] = strings.Join(values, \",\")"));
+        assertTrue(requestCode.contains("putObjectRequest.Metadata[strings.ToLower(AMZ_META_HEADER + key)] = strings.Join(values, \",\")"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -1000,21 +983,15 @@ public class GoFunctionalTests {
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
 
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-
         assertTrue(requestCode.contains("type ClearSuspectBlobAzureTargetsSpectraS3Request struct {"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
+        assertTrue(requestCode.contains("Ids []string"));
+        assertTrue(requestCode.contains("Force bool"));
 
         assertTrue(requestCode.contains("func NewClearSuspectBlobAzureTargetsSpectraS3Request(ids []string) *ClearSuspectBlobAzureTargetsSpectraS3Request {"));
-        assertTrue(requestCode.contains("content: buildIdListPayload(ids),"));
+        assertTrue(requestCode.contains("Ids: ids,"));
 
         assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) WithForce() *ClearSuspectBlobAzureTargetsSpectraS3Request {"));
-        assertTrue(requestCode.contains("clearSuspectBlobAzureTargetsSpectraS3Request.queryParams.Set(\"force\", \"\")"));
-
-        assertTrue(requestCode.contains("func (clearSuspectBlobAzureTargetsSpectraS3Request *ClearSuspectBlobAzureTargetsSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return clearSuspectBlobAzureTargetsSpectraS3Request.content"));
+        assertTrue(requestCode.contains("clearSuspectBlobAzureTargetsSpectraS3Request.Force = true"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -1049,29 +1026,49 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-        assertTrue(requestCode.contains("\"strconv\""));
 
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("aggregating bool"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
-        assertTrue(requestCode.contains("implicitJobIdResolution bool"));
-        assertTrue(requestCode.contains("maxUploadSize int64"));
-        assertTrue(requestCode.contains("minimizeSpanningAcrossMedia bool"));
-        assertTrue(requestCode.contains("name *string"));
-        assertTrue(requestCode.contains("priority Priority"));
-        assertTrue(requestCode.contains("verifyAfterWrite bool"));
-        assertTrue(requestCode.contains("queryParams *url.Values"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("Aggregating *bool"));
+        assertTrue(requestCode.contains("ImplicitJobIdResolution *bool"));
+        assertTrue(requestCode.contains("MaxUploadSize *int64"));
+        assertTrue(requestCode.contains("MinimizeSpanningAcrossMedia *bool"));
+        assertTrue(requestCode.contains("Name *string"));
+        assertTrue(requestCode.contains("Priority Priority"));
+        assertTrue(requestCode.contains("VerifyAfterWrite *bool"));
+        assertTrue(requestCode.contains("Objects []Ds3PutObject"));
+        assertTrue(requestCode.contains("IgnoreNamingConflicts bool"));
+        assertTrue(requestCode.contains("Force bool"));
 
         assertTrue(requestCode.contains("func NewPutBulkJobSpectraS3Request(bucketName string, objects []Ds3PutObject) *PutBulkJobSpectraS3Request {"));
-        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_put\")"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("content: buildDs3PutObjectListStream(objects),"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("Objects: objects,"));
 
-        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return putBulkJobSpectraS3Request.content"));
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithAggregating(aggregating bool) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.Aggregating = &aggregating"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithImplicitJobIdResolution(implicitJobIdResolution bool) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.ImplicitJobIdResolution = &implicitJobIdResolution"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithMaxUploadSize(maxUploadSize int64) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.MaxUploadSize = &maxUploadSize"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithMinimizeSpanningAcrossMedia(minimizeSpanningAcrossMedia bool) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.MinimizeSpanningAcrossMedia = &minimizeSpanningAcrossMedia"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithPriority(priority Priority) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.Priority = priority"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithVerifyAfterWrite(verifyAfterWrite bool) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.VerifyAfterWrite = &verifyAfterWrite"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithName(name string) *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.Name = &name"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithForce() *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.Force = true"));
+
+        assertTrue(requestCode.contains("func (putBulkJobSpectraS3Request *PutBulkJobSpectraS3Request) WithIgnoreNamingConflicts() *PutBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBulkJobSpectraS3Request.IgnoreNamingConflicts = true"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -1128,30 +1125,38 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-        assertTrue(requestCode.contains("\"strconv\""));
 
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("aggregating bool"));
-        assertTrue(requestCode.contains("chunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
-        assertTrue(requestCode.contains("implicitJobIdResolution bool"));
-        assertTrue(requestCode.contains("name *string"));
-        assertTrue(requestCode.contains("priority Priority"));
-        assertTrue(requestCode.contains("queryParams *url.Values"));
+        assertTrue(requestCode.contains("import \"ds3\""));
+
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("Aggregating *bool"));
+        assertTrue(requestCode.contains("ChunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee"));
+        assertTrue(requestCode.contains("ImplicitJobIdResolution *bool"));
+        assertTrue(requestCode.contains("Name *string"));
+        assertTrue(requestCode.contains("Priority Priority"));
+        assertTrue(requestCode.contains("Objects []Ds3GetObject"));
 
         assertTrue(requestCode.contains("func NewGetBulkJobSpectraS3Request(bucketName string, objectNames []string) *GetBulkJobSpectraS3Request {"));
-        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_get\")"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("Objects: ds3.BuildDs3GetObjectSliceFromNames(objectNames),"));
 
         assertTrue(requestCode.contains("func NewGetBulkJobSpectraS3RequestWithPartialObjects(bucketName string, objects []Ds3GetObject) *GetBulkJobSpectraS3Request {"));
-        assertTrue(requestCode.contains("content: buildDs3GetObjectListStream(objects),"));
+        assertTrue(requestCode.contains("Objects: objects,"));
 
-        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return getBulkJobSpectraS3Request.content"));
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) WithAggregating(aggregating bool) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("getBulkJobSpectraS3Request.Aggregating = &aggregating"));
+
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) WithChunkClientProcessingOrderGuarantee(chunkClientProcessingOrderGuarantee JobChunkClientProcessingOrderGuarantee) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("getBulkJobSpectraS3Request.ChunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee"));
+
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) WithImplicitJobIdResolution(implicitJobIdResolution bool) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("getBulkJobSpectraS3Request.ImplicitJobIdResolution = &implicitJobIdResolution"));
+
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) WithPriority(priority Priority) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("getBulkJobSpectraS3Request.Priority = priority"));
+
+        assertTrue(requestCode.contains("func (getBulkJobSpectraS3Request *GetBulkJobSpectraS3Request) WithName(name string) *GetBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("getBulkJobSpectraS3Request.Name = &name"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -1204,27 +1209,30 @@ public class GoFunctionalTests {
         final String requestCode = codeGenerator.getRequestCode();
         CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
         assertTrue(hasContent(requestCode));
-        assertTrue(requestCode.contains("\"net/url\""));
-        assertTrue(requestCode.contains("\"net/http\""));
-        assertTrue(requestCode.contains("\"ds3/networking\""));
-        assertTrue(requestCode.contains("\"strconv\""));
 
-        assertTrue(requestCode.contains("bucketName string"));
-        assertTrue(requestCode.contains("aggregating bool"));
-        assertTrue(requestCode.contains("content networking.ReaderWithSizeDecorator"));
-        assertTrue(requestCode.contains("name *string"));
-        assertTrue(requestCode.contains("priority Priority"));
+        assertTrue(requestCode.contains("import \"ds3\""));
+
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("Aggregating *bool"));
+        assertTrue(requestCode.contains("Name *string"));
+        assertTrue(requestCode.contains("Priority Priority"));
+        assertTrue(requestCode.contains("Objects []Ds3GetObject"));
 
         assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3Request(bucketName string, objectNames []string) *VerifyBulkJobSpectraS3Request {"));
-        assertTrue(requestCode.contains("queryParams.Set(\"operation\", \"start_bulk_verify\")"));
-        assertTrue(requestCode.contains("bucketName: bucketName,"));
-        assertTrue(requestCode.contains("content: buildDs3ObjectStreamFromNames(objectNames),"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("Objects: ds3.BuildDs3GetObjectSliceFromNames(objectNames),"));
 
         assertTrue(requestCode.contains("func NewVerifyBulkJobSpectraS3RequestWithPartialObjects(bucketName string, objects []Ds3GetObject) *VerifyBulkJobSpectraS3Request {"));
-        assertTrue(requestCode.contains("content: buildDs3GetObjectListStream(objects),"));
+        assertTrue(requestCode.contains("Objects: objects,"));
 
-        assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) GetContentStream() networking.ReaderWithSizeDecorator {"));
-        assertTrue(requestCode.contains("return verifyBulkJobSpectraS3Request.content"));
+        assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) WithAggregating(aggregating bool) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("verifyBulkJobSpectraS3Request.Aggregating = &aggregating"));
+
+        assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) WithPriority(priority Priority) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("verifyBulkJobSpectraS3Request.Priority = priority"));
+
+        assertTrue(requestCode.contains("func (verifyBulkJobSpectraS3Request *VerifyBulkJobSpectraS3Request) WithName(name string) *VerifyBulkJobSpectraS3Request {"));
+        assertTrue(requestCode.contains("verifyBulkJobSpectraS3Request.Name = &name"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -1260,5 +1268,6 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithOptionalQueryParam(\"name\", request.Name)."));
         assertTrue(client.contains("WithOptionalQueryParam(\"priority\", networking.InterfaceToStrPtr(request.Priority))."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_verify\")."));
+        assertTrue(client.contains("WithReadCloser(buildDs3GetObjectListStream(request.Objects))."));
     }
 }

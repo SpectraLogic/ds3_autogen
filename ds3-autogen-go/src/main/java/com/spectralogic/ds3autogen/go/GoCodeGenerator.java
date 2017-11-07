@@ -184,14 +184,8 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return config.getTemplate("request/get_bulk_job_request.ftl");
         }
-        if (hasPutObjectsWithSizeRequestPayload(ds3Request)
-                || isCreateMultiPartUploadPartRequest(ds3Request)
-                || hasSimpleObjectsRequestPayload(ds3Request)
-                || hasStringRequestPayload(ds3Request)
-                || isCompleteMultiPartUploadRequest(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)
-                || hasIdsRequestPayload(ds3Request)) {
-            return config.getTemplate("request/request_with_stream.ftl");
+        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
+            return config.getTemplate("request/request_with_network_import.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }

@@ -26,7 +26,7 @@ class ReaderRequestPayloadGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the ReaderWithSizeDecorator request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("networking.ReaderWithSizeDecorator", "content")
     }
 
