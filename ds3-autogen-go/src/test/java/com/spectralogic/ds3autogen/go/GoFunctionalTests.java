@@ -1270,4 +1270,36 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithQueryParam(\"operation\", \"start_bulk_verify\")."));
         assertTrue(client.contains("WithReadCloser(buildDs3GetObjectListStream(request.Objects))."));
     }
+
+    @Test
+    public void putBucketSpectraS3Test() throws IOException, TemplateModelException {
+        final String requestName = "PutBucketSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "Bucket");
+
+        codeGenerator.generateCode(fileUtils, "/input/putBucketSpectraS3.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        assertTrue(requestCode.contains("type PutBucketSpectraS3Request struct {"));
+        assertTrue(requestCode.contains("DataPolicyId *string"));
+        assertTrue(requestCode.contains("Id *string"));
+        assertTrue(requestCode.contains("Name string"));
+        assertTrue(requestCode.contains("UserId *string"));
+
+        assertTrue(requestCode.contains("func NewPutBucketSpectraS3Request(name string) *PutBucketSpectraS3Request {"));
+        assertTrue(requestCode.contains("Name: name,"));
+
+        assertTrue(requestCode.contains("func (putBucketSpectraS3Request *PutBucketSpectraS3Request) WithDataPolicyId(dataPolicyId string) *PutBucketSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBucketSpectraS3Request.DataPolicyId = &dataPolicyId"));
+
+        assertTrue(requestCode.contains("func (putBucketSpectraS3Request *PutBucketSpectraS3Request) WithId(id string) *PutBucketSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBucketSpectraS3Request.Id = &id"));
+
+        assertTrue(requestCode.contains("func (putBucketSpectraS3Request *PutBucketSpectraS3Request) WithUserId(userId string) *PutBucketSpectraS3Request {"));
+        assertTrue(requestCode.contains("putBucketSpectraS3Request.UserId = &userId"));
+    }
 }

@@ -1,0 +1,131 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.bucket.CreateBucketRequestHandler">
+                <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="DataPolicyId" Type="java.util.UUID"/>
+                        <Param Name="Id" Type="java.util.UUID"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Name" Type="java.lang.String"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>201</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.Bucket"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.4751D97F3546F963C451CE9F9AE16C76</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.Bucket">
+                <Elements>
+                    <Element Name="CreationDate" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DataPolicyId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.DataPolicy" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Empty" Type="java.lang.Boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="LastPreferredChunkSizeInBytes" Type="java.lang.Long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="LogicalUsedCapacity" Type="java.lang.Long">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="[A-Za-z0-9\.\-\_]{1,63}" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

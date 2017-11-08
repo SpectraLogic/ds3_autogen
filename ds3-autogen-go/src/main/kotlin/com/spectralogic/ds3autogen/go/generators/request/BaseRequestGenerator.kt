@@ -143,7 +143,20 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
             builder.add(Arguments(toGoType(resourceArg.type), resourceArg.name))
         }
 
-        builder.addAll(toGoArgumentsList(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
+        if (isEmpty(ds3Request.requiredQueryParams)) {
+            return builder.build()
+        }
+
+        ds3Request.requiredQueryParams!!.stream()
+                .filter{ param -> !param.type.equals("void", ignoreCase = true) //filter out void parameters
+                        && !param.name.equals("Operation", ignoreCase = true) } //filter out Operation parameter
+                .forEach { param ->
+                    // Convert to a non-nullable Go argument and add to builder
+                    val goType = toGoRequestType(param.type, false)
+                    val goName = toGoParamName(param.name, param.type)
+                    builder.add(Arguments(goType, goName))
+                }
+
         return builder.build()
     }
 
@@ -171,7 +184,17 @@ open class BaseRequestGenerator : RequestModelGenerator<Request>, RequestModelGe
             builder.add(SimpleVariable(uncapFirst(resourceArg.name)))
         }
 
-        builder.addAll(toSimpleVariables(removeVoidAndOperationDs3Params(ds3Request.requiredQueryParams)))
+        if (isEmpty(ds3Request.requiredQueryParams)) {
+            return builder.build()
+        }
+
+        ds3Request.requiredQueryParams!!.stream()
+                .filter{ param -> !param.type.equals("void", ignoreCase = true) //filter out void parameters
+                        && !param.name.equals("Operation", ignoreCase = true) } //filter out Operation parameter
+                .forEach { param ->
+                    // Create a simple variable from the parameter
+                    builder.add(SimpleVariable(uncapFirst(toGoParamName(param.name, param.type))))
+                }
 
         return builder.build()
     }
