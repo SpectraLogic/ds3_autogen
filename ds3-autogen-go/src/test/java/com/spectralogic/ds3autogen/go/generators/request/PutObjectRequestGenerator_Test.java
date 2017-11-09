@@ -37,7 +37,7 @@ public class PutObjectRequestGenerator_Test {
                 new SimpleVariable("bucketName"),
                 new SimpleVariable("objectName"),
                 new SimpleVariable("content"),
-                new Variable("Checksum", "networking.NewNoneChecksum()"),
+                new Variable("Checksum", "NewNoneChecksum()"),
                 new Variable("Metadata", "make(map[string]string)")
         );
 
@@ -52,7 +52,7 @@ public class PutObjectRequestGenerator_Test {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
                 new Arguments("string", "ObjectName"),
-                new Arguments("networking.ReaderWithSizeDecorator", "content")
+                new Arguments("ReaderWithSizeDecorator", "content")
         );
 
         final ImmutableList<Arguments> result = generator.toConstructorParamsList(getRequestCreateObject());
@@ -69,8 +69,8 @@ public class PutObjectRequestGenerator_Test {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
                 new Arguments("string", "ObjectName"),
-                new Arguments("networking.Checksum", "Checksum"),
-                new Arguments("networking.ReaderWithSizeDecorator", "Content"),
+                new Arguments("Checksum", "Checksum"),
+                new Arguments("ReaderWithSizeDecorator", "Content"),
                 new Arguments("*string", "Job"),
                 new Arguments("map[string]string", "Metadata"),
                 new Arguments("*int64", "Offset")

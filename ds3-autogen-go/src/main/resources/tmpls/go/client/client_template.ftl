@@ -20,7 +20,7 @@ func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.$
         return nil, err
     }
 
-    networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)
+    networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
 
     // Invoke the HTTP request.
     response, requestErr := networkRetryDecorator.Invoke(httpRequest)
@@ -47,8 +47,8 @@ func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.$
         return nil, err
     }
 
-    networkRetryDecorator := networking.NewNetworkRetryDecorator(&(client.sendNetwork), client.clientPolicy.maxRetries)
-    httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(&networkRetryDecorator, client.clientPolicy.maxRedirect)
+    networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
+    httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(networkRetryDecorator, client.clientPolicy.maxRedirect)
 
     // Invoke the HTTP request.
     response, requestErr := httpRedirectDecorator.Invoke(httpRequest)

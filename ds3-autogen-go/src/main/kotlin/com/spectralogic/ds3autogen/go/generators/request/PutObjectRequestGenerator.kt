@@ -35,8 +35,8 @@ class PutObjectRequestGenerator : BaseRequestGenerator() {
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParamsFromRequest(ds3Request))
-        builder.add(Arguments("networking.ReaderWithSizeDecorator", "Content"))
-        builder.add(Arguments("networking.Checksum", "Checksum"))
+        builder.add(Arguments("ReaderWithSizeDecorator", "Content"))
+        builder.add(Arguments("Checksum", "Checksum"))
         builder.add(Arguments("map[string]string", "Metadata"))
 
         // Sort the arguments
@@ -49,7 +49,7 @@ class PutObjectRequestGenerator : BaseRequestGenerator() {
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(paramsListFromRequest(ds3Request))
-        builder.add(Arguments("networking.ReaderWithSizeDecorator", "content"))
+        builder.add(Arguments("ReaderWithSizeDecorator", "content"))
         return builder.build()
     }
 
@@ -62,7 +62,7 @@ class PutObjectRequestGenerator : BaseRequestGenerator() {
         val builder = ImmutableList.builder<VariableInterface>()
         builder.addAll(structAssignmentParamsFromRequest(ds3Request))
         builder.add(SimpleVariable("content"))
-        builder.add(Variable("Checksum", "networking.NewNoneChecksum()"))
+        builder.add(Variable("Checksum", "NewNoneChecksum()"))
         builder.add(Variable("Metadata", "make(map[string]string)"))
 
         return builder.build()
