@@ -27,7 +27,7 @@ class Ds3PutObjectPayloadGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the Ds3PutObject list request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("[]Ds3PutObject", "objects")
     }
 
@@ -35,6 +35,6 @@ class Ds3PutObjectPayloadGenerator : RequestPayloadGenerator() {
      * Retrieves the struct assignment for the Ds3PutObject list request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildDs3PutObjectListStream(objects)")
+        return Variable("Objects", "objects")
     }
 }

@@ -34,7 +34,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParamsFromRequest(ds3Request))
-        builder.add(Arguments("networking.ReaderWithSizeDecorator", "content"))
+        builder.add(getPayloadArgument())
 
         // Sort the arguments
         return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
@@ -46,7 +46,7 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
     override fun toConstructorParamsList(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(paramsListFromRequest(ds3Request))
-        builder.add(getPayloadConstructorArg())
+        builder.add(getPayloadArgument())
         return builder.build()
     }
 
@@ -64,9 +64,10 @@ abstract class RequestPayloadGenerator : BaseRequestGenerator() {
     }
 
     /**
-     * Retrieves the parameter representing the request payload passed into the constructor
+     * Retrieves the parameter representing the request payload. This is used when
+     * creating the list of constructor parameters and in creating struct parameters.
      */
-    abstract fun getPayloadConstructorArg(): Arguments
+    abstract fun getPayloadArgument(): Arguments
 
     /**
      * Retrieves the variable that holds the struct assignment for the request payload type

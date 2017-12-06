@@ -27,21 +27,43 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 /**
  * Retrieves the Go type associated with the specific contract type/compoundType.
  */
-fun toGoType(contractType: String?, compoundContractType: String?, nullable: Boolean): String {
+fun toGoResponseType(contractType: String?, compoundContractType: String?, nullable: Boolean): String {
     if (isEmpty(contractType)) {
         throw IllegalArgumentException("The contract type cannot be null or an empty string")
     }
     if (!contractType.equals("array", ignoreCase = true) || isEmpty(compoundContractType)) {
-        return toGoType(contractType!!, nullable)
+        return toGoResponseType(contractType!!, nullable)
     }
     return "[]" + toGoType(compoundContractType!!)
+}
+
+/**
+ * Retrieves the Go type associated with the specific contract type for a request.
+ * If the type is nullable and a primitive, then the Go type is a pointer.
+ */
+fun toGoRequestType(contractType: String, nullable: Boolean): String {
+    val goType: String = toGoType(contractType)
+    if (nullable && hasContent(goType) && isGoPrimitiveType(goType)) {
+        return "*" + goType
+    }
+    return goType
+}
+
+/**
+ * Determines if a Go type is a primitive type.
+ */
+fun isGoPrimitiveType(goType: String): Boolean {
+    return when (goType) {
+        "bool", "int", "string", "float64", "int64" -> true
+        else -> false
+    }
 }
 
 /**
  * Retrieves the Go type associated with the specific contract type. If the
  * type is nullable, then the Go type is a pointer to the specified type.
  */
-fun toGoType(contractType: String, nullable: Boolean): String {
+fun toGoResponseType(contractType: String, nullable: Boolean): String {
     val goType: String = toGoType(contractType)
     if (nullable && hasContent(goType)) {
         return "*" + goType
@@ -55,13 +77,13 @@ fun toGoType(contractType: String, nullable: Boolean): String {
  */
 fun toGoType(contractType: String): String {
     val type: String = NormalizingContractNamesUtil.removePath(contractType)
-    when (type.toLowerCase()) {
-        "boolean" -> return "bool"
-        "integer", "int" -> return "int"
-        "string", "uuid", "date" -> return "string"
-        "double" -> return "float64"
-        "long" -> return "int64"
-        "void" -> return ""
-        else -> return type
+    return when (type.toLowerCase()) {
+        "boolean" -> "bool"
+        "integer", "int" -> "int"
+        "string", "uuid", "date" -> "string"
+        "double" -> "float64"
+        "long" -> "int64"
+        "void" -> ""
+        else -> type
     }
 }

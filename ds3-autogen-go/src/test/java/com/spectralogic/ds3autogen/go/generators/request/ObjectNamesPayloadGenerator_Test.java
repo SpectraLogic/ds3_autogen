@@ -37,9 +37,10 @@ public class ObjectNamesPayloadGenerator_Test {
     @Test
     public void toStructParamsTest() {
         final ImmutableList<Arguments> expected = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("networking.ReaderWithSizeDecorator", "content"),
-                new Arguments("string", "storageDomainId")
+                new Arguments("string", "BucketName"),
+                new Arguments("bool", "FullDetails"),
+                new Arguments("[]string", "ObjectNames"),
+                new Arguments("*string", "StorageDomainId")
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(testRequest);
@@ -55,7 +56,7 @@ public class ObjectNamesPayloadGenerator_Test {
     public void toStructAssignmentParamsTest() {
         final ImmutableList<VariableInterface> expected = ImmutableList.of(
                 new SimpleVariable("bucketName"),
-                new Variable("content", "buildDs3ObjectStreamFromNames(objectNames)")
+                new Variable("ObjectNames", "objectNames")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(testRequest);
@@ -66,8 +67,8 @@ public class ObjectNamesPayloadGenerator_Test {
     @Test
     public void toConstructorParamsListTest() {
         final ImmutableList<Arguments> expected = ImmutableList.of(
-                new Arguments("string", "bucketName"),
-                new Arguments("[]string", "objectNames")
+                new Arguments("string", "BucketName"),
+                new Arguments("[]string", "ObjectNames")
         );
 
         final ImmutableList<Arguments> result = generator.toConstructorParamsList(testRequest);
@@ -81,15 +82,15 @@ public class ObjectNamesPayloadGenerator_Test {
 
     @Test
     public void getPayloadConstructorArgTest() {
-        final Arguments result = generator.getPayloadConstructorArg();
-        assertThat(result.getName(), is("objectNames"));
+        final Arguments result = generator.getPayloadArgument();
+        assertThat(result.getName(), is("ObjectNames"));
         assertThat(result.getType(), is("[]string"));
     }
 
     @Test
     public void getStructAssignmentVariableTest() {
         final Variable result = generator.getStructAssignmentVariable();
-        assertThat(result.getName(), is("content"));
-        assertThat(result.getAssignment(), is("buildDs3ObjectStreamFromNames(objectNames)"));
+        assertThat(result.getName(), is("ObjectNames"));
+        assertThat(result.getAssignment(), is("objectNames"));
     }
 }

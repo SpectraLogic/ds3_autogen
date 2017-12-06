@@ -1,41 +1,27 @@
 <#include "request_header.ftl" />
 
+import "ds3"
+
 <#include "request_struct.ftl" />
 
 func New${name}(${constructor.constructorParams}, objectNames []string) *${name} {
-    queryParams := &url.Values{}
-    <#list constructor.queryParams as param>
-    queryParams.Set("${param.name}", ${param.assignment})
-    </#list>
 
     return &${name}{
         <#list constructor.structParams as param>
-        ${param.name}: ${param.assignment},
+        ${param.name?cap_first}: ${param.assignment},
         </#list>
-        content: buildDs3ObjectStreamFromNames(objectNames),
-        queryParams: queryParams,
+        Objects: ds3.BuildDs3GetObjectSliceFromNames(objectNames),
     }
 }
 
 func New${name}WithPartialObjects(${constructor.constructorParams}, objects []Ds3GetObject) *${name} {
-    queryParams := &url.Values{}
-    <#list constructor.queryParams as param>
-    queryParams.Set("${param.name}", ${param.assignment})
-    </#list>
 
     return &${name}{
         <#list constructor.structParams as param>
-        ${param.name}: ${param.assignment},
+        ${param.name?cap_first}: ${param.assignment},
         </#list>
-        content: buildDs3GetObjectListStream(objects),
-        queryParams: queryParams,
+        Objects: objects,
     }
 }
 
-<#include "with_constructors_verb_path.ftl" />
-
-<#include "no_checksum.ftl" />
-
-<#include "no_headers.ftl" />
-
-<#include "stream_with_content.ftl">
+<#include "with_constructors.ftl" />

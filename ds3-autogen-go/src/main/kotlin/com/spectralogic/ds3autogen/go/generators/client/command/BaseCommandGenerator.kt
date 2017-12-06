@@ -19,10 +19,12 @@ import com.google.common.collect.ImmutableList
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.enums.Operation
-import com.spectralogic.ds3autogen.go.generators.client.*
+import com.spectralogic.ds3autogen.go.generators.client.goPtrQueryParamToStringPtr
+import com.spectralogic.ds3autogen.go.generators.client.goQueryParamToString
+import com.spectralogic.ds3autogen.go.generators.client.toRequestPath
 import com.spectralogic.ds3autogen.go.models.client.*
 import com.spectralogic.ds3autogen.go.utils.toGoParamName
-import com.spectralogic.ds3autogen.go.utils.toGoType
+import com.spectralogic.ds3autogen.go.utils.toGoRequestType
 import com.spectralogic.ds3autogen.utils.ClientGeneratorUtil
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.Helper
@@ -75,7 +77,7 @@ open class BaseCommandGenerator : CommandModelGenerator<Command>, CommandGenerat
      * Generates the request builder line for adding this required query parameter.
      */
     fun toRequiredQueryParamBuildLine(ds3Param: Ds3Param): RequestBuildLine {
-        val goType = toGoType(ds3Param.type, nullable = false)
+        val goType = toGoRequestType(ds3Param.type, nullable = false)
         val goName = toGoParamName(ds3Param.name, ds3Param.type)
         val key = Helper.camelToUnderscore(ds3Param.name)
         val value = goQueryParamToString(goName, goType)
@@ -100,7 +102,7 @@ open class BaseCommandGenerator : CommandModelGenerator<Command>, CommandGenerat
      * Converts a Ds3Param into an optional query parameter RequestBuildLine.
      */
     fun toOptionalQueryParamBuildLine(ds3Param: Ds3Param): RequestBuildLine {
-        val goType = toGoType(ds3Param.type, nullable = true)
+        val goType = toGoRequestType(ds3Param.type, nullable = true)
         val goName = toGoParamName(ds3Param.name, ds3Param.type)
         val key = Helper.camelToUnderscore(ds3Param.name)
 

@@ -28,7 +28,7 @@ public class StringRequestPayloadGenerator_Test {
 
     @Test
     public void getPayloadConstructorArgTest() {
-        final Arguments result = generator.getPayloadConstructorArg();
+        final Arguments result = generator.getPayloadArgument();
         assertThat(result.getName(), is("requestPayload"));
         assertThat(result.getType(), is("string"));
     }
@@ -36,7 +36,7 @@ public class StringRequestPayloadGenerator_Test {
     @Test
     public void getStructAssignmentVariableTest() {
         final Variable result = generator.getStructAssignmentVariable();
-        assertThat(result.getName(), is("content"));
-        assertThat(result.getAssignment(), is("buildStreamFromString(requestPayload)"));
+        assertThat(result.getName(), is("RequestPayload"));
+        assertThat(result.getAssignment(), is("requestPayload"));
     }
 }

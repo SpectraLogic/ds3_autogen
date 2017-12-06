@@ -28,7 +28,7 @@ public class MultipartUploadPayloadGenerator_Test {
 
     @Test
     public void getPayloadConstructorArgTest() {
-        final Arguments result = generator.getPayloadConstructorArg();
+        final Arguments result = generator.getPayloadArgument();
         assertThat(result.getName(), is("parts"));
         assertThat(result.getType(), is("[]Part"));
     }
@@ -36,7 +36,7 @@ public class MultipartUploadPayloadGenerator_Test {
     @Test
     public void getStructAssignmentVariableTest() {
         final Variable result = generator.getStructAssignmentVariable();
-        assertThat(result.getName(), is("content"));
-        assertThat(result.getAssignment(), is("buildPartsListStream(parts)"));
+        assertThat(result.getName(), is("Parts"));
+        assertThat(result.getAssignment(), is("parts"));
     }
 }

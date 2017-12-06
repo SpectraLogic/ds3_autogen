@@ -33,6 +33,6 @@ class StringPayloadCommandGenerator : BaseCommandGenerator() {
      * Retrieves the request builder line for adding the request payload in string format.
      */
     override fun toReaderBuildLine(): Optional<RequestBuildLine> {
-        return Optional.of(ReadCloserBuildLine("buildStreamFromString(request.Content)"))
+        return Optional.of(ReadCloserBuildLine("buildStreamFromString(request.RequestPayload)"))
     }
 }

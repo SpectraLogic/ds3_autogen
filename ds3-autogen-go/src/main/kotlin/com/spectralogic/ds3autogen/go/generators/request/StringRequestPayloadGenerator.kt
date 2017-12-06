@@ -27,7 +27,7 @@ class StringRequestPayloadGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the string request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("string", "requestPayload")
     }
 
@@ -35,7 +35,7 @@ class StringRequestPayloadGenerator : RequestPayloadGenerator() {
      * Retrieves the struct assignment for the string request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildStreamFromString(requestPayload)")
+        return Variable("RequestPayload", "requestPayload")
     }
 
 }

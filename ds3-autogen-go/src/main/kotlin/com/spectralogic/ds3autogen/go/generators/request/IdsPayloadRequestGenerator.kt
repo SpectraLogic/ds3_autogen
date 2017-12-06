@@ -23,7 +23,7 @@ class IdsPayloadRequestGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the ids request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
+    override fun getPayloadArgument(): Arguments {
         return Arguments("[]string", "ids")
     }
 
@@ -31,6 +31,6 @@ class IdsPayloadRequestGenerator : RequestPayloadGenerator() {
      * Retrieves the struct assignment for the ids request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildIdListPayload(ids)")
+        return Variable("Ids", "ids")
     }
 }

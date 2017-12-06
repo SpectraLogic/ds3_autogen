@@ -28,6 +28,6 @@ class StringPayloadCommandGeneratorTest {
     fun toReaderBuildLineTest() {
         Assertions.assertThat<RequestBuildLine>(generator.toReaderBuildLine())
                 .isNotEmpty
-                .contains(ReadCloserBuildLine("buildStreamFromString(request.Content)"))
+                .contains(ReadCloserBuildLine("buildStreamFromString(request.RequestPayload)"))
     }
 }

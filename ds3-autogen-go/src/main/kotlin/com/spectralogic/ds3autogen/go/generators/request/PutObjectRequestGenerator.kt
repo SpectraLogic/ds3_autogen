@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.request
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.go.models.request.SimpleVariable
@@ -30,27 +29,15 @@ import com.spectralogic.ds3autogen.utils.comparators.CustomArgumentComparator
 class PutObjectRequestGenerator : BaseRequestGenerator() {
 
     /**
-     * Retrieves imports that are not present in all request files
-     */
-    override fun toImportSet(ds3Request: Ds3Request): ImmutableSet<String> {
-        val builder = ImmutableSet.builder<String>()
-        builder.add("strings")
-        if (isStrconvImportRequired(ds3Request.requiredQueryParams) || isStrconvImportRequired(ds3Request.optionalQueryParams)) {
-            builder.add("strconv")
-        }
-        return builder.build()
-    }
-
-    /**
      * Creates the list of arguments that composes the request handler struct,
      * including the content reader, checksum, and headers.
      */
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParamsFromRequest(ds3Request))
-        builder.add(Arguments("networking.ReaderWithSizeDecorator", "content"))
-        builder.add(Arguments("networking.Checksum", "checksum"))
-        builder.add(Arguments("*http.Header", "headers"))
+        builder.add(Arguments("networking.ReaderWithSizeDecorator", "Content"))
+        builder.add(Arguments("networking.Checksum", "Checksum"))
+        builder.add(Arguments("map[string]string", "Metadata"))
 
         // Sort the arguments
         return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
@@ -75,8 +62,8 @@ class PutObjectRequestGenerator : BaseRequestGenerator() {
         val builder = ImmutableList.builder<VariableInterface>()
         builder.addAll(structAssignmentParamsFromRequest(ds3Request))
         builder.add(SimpleVariable("content"))
-        builder.add(Variable("checksum", "networking.NewNoneChecksum()"))
-        builder.add(Variable("headers", "&http.Header{}"))
+        builder.add(Variable("Checksum", "networking.NewNoneChecksum()"))
+        builder.add(Variable("Metadata", "make(map[string]string)"))
 
         return builder.build()
     }

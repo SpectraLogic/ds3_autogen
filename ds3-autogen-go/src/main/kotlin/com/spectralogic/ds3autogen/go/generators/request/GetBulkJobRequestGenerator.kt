@@ -28,12 +28,12 @@ class GetBulkJobRequestGenerator : BaseRequestGenerator() {
 
     /**
      * Creates the list of arguments that composes the request handler struct,
-     * including contents which contains the request payload in the generated code.
+     * including the list of objects to get
      */
     override fun toStructParams(ds3Request: Ds3Request): ImmutableList<Arguments> {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParamsFromRequest(ds3Request))
-        builder.add(Arguments("networking.ReaderWithSizeDecorator", "content"))
+        builder.add(Arguments("[]Ds3GetObject", "Objects"))
 
         return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
     }

@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.parser.*
+import com.spectralogic.ds3autogen.go.utils.toGoResponseType
 import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil
@@ -107,7 +108,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
             return ParseChildNodeAsEnum(xmlTag, modelName, paramName)
         }
 
-        val goType = toGoType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
+        val goType = toGoResponseType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
         val parserNamespace = getPrimitiveTypeParserNamespace(ds3Element.type!!, ds3Element.nullable)
         when (goType) {
             "bool", "*bool", "int", "*int", "int64", "*int64", "float64", "*float64"  ->
@@ -156,7 +157,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
     fun toAttribute(ds3Element: Ds3Element, typeName: String): ParseElement {
         val xmlName = getXmlTagName(ds3Element)
 
-        val goType = toGoType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
+        val goType = toGoResponseType(ds3Element.type, ds3Element.componentType, ds3Element.nullable)
         val modelName = typeName.decapitalize()
         val paramName = ds3Element.name.capitalize()
 

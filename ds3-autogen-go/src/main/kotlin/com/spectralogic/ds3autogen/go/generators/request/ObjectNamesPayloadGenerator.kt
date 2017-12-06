@@ -35,14 +35,14 @@ class ObjectNamesPayloadGenerator : RequestPayloadGenerator() {
     /**
      * Retrieves the list of object names that make up the request payload
      */
-    override fun getPayloadConstructorArg(): Arguments {
-        return Arguments("[]string", "objectNames")
+    override fun getPayloadArgument(): Arguments {
+        return Arguments("[]string", "ObjectNames")
     }
 
     /**
      * Retrieves the struct assignment for the Ds3Object list request payload
      */
     override fun getStructAssignmentVariable(): Variable {
-        return Variable("content", "buildDs3ObjectStreamFromNames(objectNames)")
+        return Variable("ObjectNames", "objectNames")
     }
 }
