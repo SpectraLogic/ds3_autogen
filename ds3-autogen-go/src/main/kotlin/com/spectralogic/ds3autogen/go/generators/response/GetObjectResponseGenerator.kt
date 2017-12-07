@@ -43,7 +43,7 @@ class GetObjectResponseGenerator : BaseResponseGenerator() {
      * code for parsing the specified response.
      */
     override fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode {
-        if (ds3ResponseCode.code == 200) {
+        if (ds3ResponseCode.code == 200 || ds3ResponseCode.code == 206) {
             return ResponseCode(ds3ResponseCode.code, "return &$responseName{ Content: webResponse.Body(), Headers: webResponse.Header() }, nil")
         }
         return toStandardResponseCode(ds3ResponseCode, responseName)
