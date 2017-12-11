@@ -1,7 +1,5 @@
 <#include "request_header.ftl" />
 
-import "ds3"
-
 <#include "request_struct.ftl" />
 
 func New${name}(${constructor.constructorParams}, objectNames []string) *${name} {
@@ -10,7 +8,7 @@ func New${name}(${constructor.constructorParams}, objectNames []string) *${name}
         <#list constructor.structParams as param>
         ${param.name?cap_first}: ${param.assignment},
         </#list>
-        Objects: ds3.BuildDs3GetObjectSliceFromNames(objectNames),
+        Objects: buildDs3GetObjectSliceFromNames(objectNames),
     }
 }
 

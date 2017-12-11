@@ -38,7 +38,7 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
         val builder = ImmutableList.builder<Arguments>()
         builder.addAll(structParams)
         builder.add(Arguments("map[string]string", "Metadata"))
-        builder.add(Arguments("networking.Checksum", "Checksum"))
+        builder.add(Arguments("Checksum", "Checksum"))
 
         // Sort the arguments
         return ImmutableList.sortedCopyOf(CustomArgumentComparator(), builder.build())
@@ -54,7 +54,8 @@ open class GetObjectRequestGenerator : BaseRequestGenerator() {
 
         val builder = ImmutableList.builder<VariableInterface>()
         builder.addAll(assignments)
-        builder.add(Variable("Checksum", "networking.NewNoneChecksum()"))
+        builder.add(Variable("Checksum", "NewNoneChecksum()"))
+        builder.add(Variable("Metadata", "make(map[string]string)"))
 
         return builder.build()
     }

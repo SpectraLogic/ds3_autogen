@@ -63,7 +63,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
 
         val modelName = name.decapitalize()
         val dereference = toDereferenceResponsePayload(payloadStruct)
-        return "func ($modelName *$name) parse(webResponse networking.WebResponse) error {\n" +
+        return "func ($modelName *$name) parse(webResponse WebResponse) error {\n" +
                 goIndent(1) + "    return parseResponsePayload(webResponse, $dereference$modelName.$elementName)\n" +
                 "}"
     }

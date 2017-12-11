@@ -36,7 +36,7 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<Arguments> expectedArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
                 new Arguments("string", "ObjectName"),
-                new Arguments("networking.Checksum", "Checksum"),
+                new Arguments("Checksum", "Checksum"),
                 new Arguments("*string", "Job"),
                 new Arguments("map[string]string", "Metadata"),
                 new Arguments("*int64", "Offset")
@@ -56,7 +56,8 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<VariableInterface> expectedVars = ImmutableList.of(
                 new SimpleVariable("bucketName"),
                 new SimpleVariable("objectName"),
-                new Variable("Checksum", "networking.NewNoneChecksum()")
+                new Variable("Checksum", "NewNoneChecksum()"),
+                new Variable("Metadata", "make(map[string]string)")
         );
 
         final ImmutableList<VariableInterface> result = generator.toStructAssignmentParams(getRequestAmazonS3GetObject());

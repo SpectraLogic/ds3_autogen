@@ -3,7 +3,6 @@
 package models
 
 import (
-    "ds3/networking"
     "net/http"
     <#list imports as import>
     "${import}"
@@ -17,7 +16,7 @@ type ${name} struct {
 
 ${parseResponseMethod}
 
-func New${name}(webResponse networking.WebResponse) (*${name}, error) {
+func New${name}(webResponse WebResponse) (*${name}, error) {
     expectedStatusCodes := []int { ${expectedCodes} }
 
     switch code := webResponse.StatusCode(); code {

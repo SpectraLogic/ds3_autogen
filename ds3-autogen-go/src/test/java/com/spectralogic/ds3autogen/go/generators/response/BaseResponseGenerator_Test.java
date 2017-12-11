@@ -336,7 +336,7 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toParseResponseMethod_WithDereference_Test() {
-        final String expected = "func (modelName *ModelName) parse(webResponse networking.WebResponse) error {\n" +
+        final String expected = "func (modelName *ModelName) parse(webResponse WebResponse) error {\n" +
                 "        return parseResponsePayload(webResponse, &modelName.TestType)\n" +
                 "}";
 
@@ -355,7 +355,7 @@ public class BaseResponseGenerator_Test {
 
     @Test
     public void toParseResponseMethod_WithoutDereference_Test() {
-        final String expected = "func (modelName *ModelName) parse(webResponse networking.WebResponse) error {\n" +
+        final String expected = "func (modelName *ModelName) parse(webResponse WebResponse) error {\n" +
                 "        return parseResponsePayload(webResponse, modelName.TestType)\n" +
                 "}";
 

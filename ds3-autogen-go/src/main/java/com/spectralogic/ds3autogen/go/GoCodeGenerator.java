@@ -59,6 +59,7 @@ import java.nio.file.Paths;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.*;
 import static com.spectralogic.ds3autogen.utils.Ds3ElementUtil.hasWrapperAnnotations;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isChecksumType;
 import static com.spectralogic.ds3autogen.utils.Ds3TypeClassificationUtil.isJobsApiBean;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.hasResponsePayload;
 import static kotlin.text.StringsKt.decapitalize;
@@ -183,9 +184,6 @@ public class GoCodeGenerator implements CodeGenerator {
         }
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return config.getTemplate("request/get_bulk_job_request.ftl");
-        }
-        if (isCreateMultiPartUploadPartRequest(ds3Request)) {
-            return config.getTemplate("request/request_with_network_import.ftl");
         }
         return config.getTemplate("request/request_template.ftl");
     }
@@ -383,6 +381,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go response model
      */
     private Template getTypeTemplate(final Ds3Type ds3Type) throws IOException {
+        if (isChecksumType(ds3Type)) {
+            return config.getTemplate("type/checksum_type_enum.ftl");
+        }
         if (isEnum(ds3Type)) {
             return config.getTemplate("type/enum_type.ftl");
         }

@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTypeTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL_PARSERS, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
     private final static String requestName = "PlaceHolderRequest";
 
@@ -70,6 +70,48 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_LOW: return \"LOW\""));
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW: return \"NEAR_LOW\""));
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NORMAL: return \"NORMAL\""));
+
+        // Verify type parser file was not generated for enum type
+        final String typeParserCode = codeGenerator.getTypeParserCode();
+        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
+        assertTrue(isEmpty(typeParserCode));
+    }
+
+    @Test
+    public void checksumTypeEnum() throws IOException, TemplateModelException {
+        final String typeName = "ChecksumType";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+
+        codeGenerator.generateCode(fileUtils, "/input/checksumType.xml");
+
+        // Verify response payload type file was generated
+        final String typeCode = codeGenerator.getTypeCode();
+        CODE_LOGGER.logFile(typeCode, FileTypeToLog.MODEL);
+        assertTrue(hasContent(typeCode));
+
+        // Test const definitions
+        assertTrue(typeCode.contains("CHECKSUM_TYPE_CRC_32 ChecksumType = 1 + iota"));
+        assertTrue(typeCode.contains("CHECKSUM_TYPE_CRC_32C ChecksumType = 1 + iota"));
+        assertTrue(typeCode.contains("CHECKSUM_TYPE_MD5 ChecksumType = 1 + iota"));
+        assertTrue(typeCode.contains("CHECKSUM_TYPE_SHA_256 ChecksumType = 1 + iota"));
+        assertTrue(typeCode.contains("CHECKSUM_TYPE_SHA_512 ChecksumType = 1 + iota"));
+        assertTrue(typeCode.contains("NONE ChecksumType = 1 + iota"));
+
+        // Test un-marshaling
+        assertTrue(typeCode.contains("case \"\": *checksumType = UNDEFINED"));
+        assertTrue(typeCode.contains("case \"CRC_32\": *checksumType = CHECKSUM_TYPE_CRC_32"));
+        assertTrue(typeCode.contains("case \"CRC_32C\": *checksumType = CHECKSUM_TYPE_CRC_32C"));
+        assertTrue(typeCode.contains("case \"MD5\": *checksumType = CHECKSUM_TYPE_MD5"));
+        assertTrue(typeCode.contains("case \"SHA_256\": *checksumType = CHECKSUM_TYPE_SHA_256"));
+        assertTrue(typeCode.contains("case \"SHA_512\": *checksumType = CHECKSUM_TYPE_SHA_512"));
+
+        // Test conversion to string
+        assertTrue(typeCode.contains("case CHECKSUM_TYPE_CRC_32: return \"CRC_32\""));
+        assertTrue(typeCode.contains("case CHECKSUM_TYPE_CRC_32C: return \"CRC_32C\""));
+        assertTrue(typeCode.contains("case CHECKSUM_TYPE_MD5: return \"MD5\""));
+        assertTrue(typeCode.contains("case CHECKSUM_TYPE_SHA_256: return \"SHA_256\""));
+        assertTrue(typeCode.contains("case CHECKSUM_TYPE_SHA_512: return \"SHA_512\""));
 
         // Verify type parser file was not generated for enum type
         final String typeParserCode = codeGenerator.getTypeParserCode();
