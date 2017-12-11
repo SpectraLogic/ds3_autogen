@@ -22,3 +22,11 @@ func (${name?uncap_first} ${name}) String() string {
             return ""
     }
 }
+
+func (${name?uncap_first} ${name}) StringPtr() *string {
+    if ${name?uncap_first} == UNDEFINED {
+        return nil
+    }
+    result := ${name?uncap_first}.String()
+    return &result
+}

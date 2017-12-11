@@ -71,6 +71,9 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NEAR_LOW: return \"NEAR_LOW\""));
         assertTrue(typeCode.contains("case DATABASE_PHYSICAL_SPACE_STATE_NORMAL: return \"NORMAL\""));
 
+        // Verify conversion to string pointer
+        assertTrue(typeCode.contains("func (databasePhysicalSpaceState DatabasePhysicalSpaceState) StringPtr() *string {"));
+
         // Verify type parser file was not generated for enum type
         final String typeParserCode = codeGenerator.getTypeParserCode();
         CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
@@ -112,6 +115,9 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("case CHECKSUM_TYPE_MD5: return \"MD5\""));
         assertTrue(typeCode.contains("case CHECKSUM_TYPE_SHA_256: return \"SHA_256\""));
         assertTrue(typeCode.contains("case CHECKSUM_TYPE_SHA_512: return \"SHA_512\""));
+
+        // Verify conversion to string pointer
+        assertTrue(typeCode.contains("func (checksumType ChecksumType) StringPtr() *string {"));
 
         // Verify type parser file was not generated for enum type
         final String typeParserCode = codeGenerator.getTypeParserCode();
