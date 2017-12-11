@@ -3,8 +3,8 @@
 package ds3
 
 import (
-    "ds3/models"
-    "ds3/networking"
+    "spectra/ds3_go_sdk/ds3/models"
+    "spectra/ds3_go_sdk/ds3/networking"
 )
 
 <#list commandsNoRedirect as cmd>
