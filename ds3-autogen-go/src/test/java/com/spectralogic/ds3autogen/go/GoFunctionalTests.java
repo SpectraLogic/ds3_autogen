@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -571,7 +571,7 @@ public class GoFunctionalTests {
         assertTrue(responseCode.contains("func NewGetObjectResponse(webResponse WebResponse) (*GetObjectResponse, error) {"));
         assertTrue(responseCode.contains("expectedStatusCodes := []int { 200, 206 }"));
         assertTrue(responseCode.contains("return &GetObjectResponse{ Content: webResponse.Body(), Headers: webResponse.Header() }, nil"));
-        assertTrue(responseCode.contains("return &GetObjectResponse{Headers: webResponse.Header()}, nil"));
+        assertFalse(responseCode.contains("return &GetObjectResponse{Headers: webResponse.Header()}, nil"));
 
         assertFalse(responseCode.contains("parse(webResponse WebResponse)"));
 

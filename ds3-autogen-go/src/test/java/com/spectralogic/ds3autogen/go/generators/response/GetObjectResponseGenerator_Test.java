@@ -45,7 +45,7 @@ public class GetObjectResponseGenerator_Test {
 
     @Test
     public void toResponseCode_206_Test() {
-        final ResponseCode expected = new ResponseCode(206, "return &GetObjectResponse{Headers: webResponse.Header()}, nil");
+        final ResponseCode expected = new ResponseCode(206, "return &GetObjectResponse{ Content: webResponse.Body(), Headers: webResponse.Header() }, nil");
 
         final Ds3ResponseCode code = new Ds3ResponseCode(206,
                 ImmutableList.of(new Ds3ResponseType("null", null)));
