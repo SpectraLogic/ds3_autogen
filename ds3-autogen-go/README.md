@@ -14,13 +14,16 @@ Go to the Go SDK folder and delete the old commands and models. This is necessar
 and models can be deleted or renamed between releases, and phantom code should be removed. The following
 files and folders should be removed:
 
-Within the folder `ds3-go-sdk/src/ds3/models`:
+Within the folder `ds3-go-sdk/ds3/models`:
 
   * Delete all files in `models` EXCEPT for the following:
       * Do not delete `aggregateError.go`
       * Do not delete `badStatusCodeError.go`
+      * Do not delete `checksum.go`
+      * Do not delete `ds3Response.go`
       * Do not delete `enum.go`
-      * Do not delete `requestPayloadUtils.go`
+      * Do not delete `readerWithSizeDecorator.go`
+      * Do not delete `requestPayloadModels.go`
       * Do not delete `responseHandlingUtil.go`
       * Do not delete `responseParsingUtil.go`
       * Do not delete `xmlTree.go`
@@ -37,7 +40,7 @@ This will generate the command and model code in proper folders starting at the 
 
 ## Integrate Generated Code Into Go SDK
 
-Copy the generated folder `ds3` and all its contents. Go to the `ds3-go-sdk/src/` folder and
+Copy the generated folder `ds3` and all its contents. Go to the `ds3-go-sdk/` folder and
 paste the copied `ds3` into the Go SDK. There may be warnings about overwriting `ds3Deletes.go`,
 `ds3Gets.go`, `ds3Heads.go`, `ds3Posts.go`, and `ds3Puts`. Accept the overwrites, and continue. 
 
