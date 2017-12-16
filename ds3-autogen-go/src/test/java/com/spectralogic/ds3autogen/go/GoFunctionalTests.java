@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -524,6 +524,7 @@ public class GoFunctionalTests {
 
         // test request imports
         assertTrue(requestCode.contains("\"fmt\""));
+        assertTrue(requestCode.contains("\"strings\""));
         assertFalse(requestCode.contains("\"ds3/networking\""));
 
         // test request struct
@@ -534,7 +535,7 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("Offset *int64"));
         assertTrue(requestCode.contains("Metadata map[string]string"));
 
-        assertTrue(requestCode.contains("type rangeHeader struct {"));
+        assertTrue(requestCode.contains("type Range struct {"));
 
         // test constructor and with-constructors
         assertTrue(requestCode.contains("func NewGetObjectRequest(bucketName string, objectName string) *GetObjectRequest {"));
@@ -543,8 +544,10 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("Checksum: NewNoneChecksum(),"));
         assertTrue(requestCode.contains("Metadata: make(map[string]string)"));
 
-        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithRange(start, end int) *GetObjectRequest {"));
-        assertTrue(requestCode.contains("getObjectRequest.Metadata[\"Range\"] = fmt.Sprintf(\"bytes=%d-%d\", start, end)"));
+        assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithRanges(ranges ...Range) *GetObjectRequest {"));
+        assertTrue(requestCode.contains("getObjectRequest.Metadata[\"Range\"] = fmt.Sprintf(\"bytes=%s\", strings.Join(rangeElements[:], \",\"))"));
+        assertFalse(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithRange(start, end int) *GetObjectRequest {"));
+        assertFalse(requestCode.contains("getObjectRequest.Metadata[\"Range\"] = fmt.Sprintf(\"bytes=%d-%d\", start, end)"));
 
         assertTrue(requestCode.contains("func (getObjectRequest *GetObjectRequest) WithChecksum(contentHash string, checksumType ChecksumType) *GetObjectRequest {"));
         assertTrue(requestCode.contains("getObjectRequest.Checksum.ContentHash = contentHash"));
