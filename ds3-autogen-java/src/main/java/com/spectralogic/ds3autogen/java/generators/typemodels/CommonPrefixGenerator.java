@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
@@ -65,13 +66,13 @@ public class CommonPrefixGenerator extends BaseTypeGenerator {
      * generate the java model code, including importing for common prefix
      */
     @Override
-    public ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
+    public ImmutableSet<String> getAllImports(final Ds3Type ds3Type) {
         //If this is an enum, then there are no imports
         if (hasContent(ds3Type.getEnumConstants())) {
-            return ImmutableList.of();
+            return ImmutableSet.of();
         }
-        final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        builder.addAll(getImportsFromDs3Elements(ds3Type.getElements()));
+        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        builder.addAll(getImportsFromAllDs3Elements(ds3Type.getElements()));
         builder.add("com.spectralogic.ds3client.models.common.CommonPrefixes");
         return builder.build();
     }

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.models;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class Model {
 
@@ -24,14 +25,14 @@ public class Model {
     private final String nameToMarshal;
     private final ImmutableList<Element> elements;
     private final ImmutableList<EnumConstant> enumConstants;
-    private final ImmutableList<String> imports;
+    private final ImmutableSet<String> imports;
 
     public Model(final String packageName,
                  final String name,
                  final String nameToMarshal,
                  final ImmutableList<Element> elements,
                  final ImmutableList<EnumConstant> enumConstants,
-                 final ImmutableList<String> imports) {
+                 final ImmutableSet<String> imports) {
         this.packageName = packageName;
         this.name = name;
         this.nameToMarshal = nameToMarshal;
@@ -52,7 +53,7 @@ public class Model {
         return elements;
     }
 
-    public ImmutableList<String> getImports() {
+    public ImmutableSet<String> getImports() {
         return imports;
     }
 

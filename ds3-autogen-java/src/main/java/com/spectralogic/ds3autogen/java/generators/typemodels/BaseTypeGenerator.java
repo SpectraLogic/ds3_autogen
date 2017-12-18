@@ -25,6 +25,9 @@ import com.spectralogic.ds3autogen.java.models.Element;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
 import com.spectralogic.ds3autogen.java.models.Model;
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+
+import java.util.Collection;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
@@ -40,7 +43,7 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
         final String nameToMarshal = toNameToMarshal(ds3Type);
         final ImmutableList<Element> elements = toElementList(ds3Type.getElements());
         final ImmutableList<EnumConstant> enumConstants = toEnumConstantList(ds3Type.getEnumConstants());
-        final ImmutableList<String> imports = getAllImports(ds3Type);
+        final ImmutableSet<String> imports = getAllImports(ds3Type);
         return new Model(
                 packageName,
                 modelName,
@@ -124,41 +127,78 @@ public class BaseTypeGenerator implements TypeModelGenerator<Model>, TypeGenerat
      * generate the java model code
      */
     @Override
-    public ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
+    public ImmutableSet<String> getAllImports(final Ds3Type ds3Type) {
         //If this is an enum, then there are no imports
         if (hasContent(ds3Type.getEnumConstants())) {
-            return ImmutableList.of();
+            return ImmutableSet.of();
         }
-        return getImportsFromDs3Elements(ds3Type.getElements());
+        return getImportsFromAllDs3Elements(ds3Type.getElements());
     }
 
     /**
      * Gets all the required imports that the elements will need in order to properly
      * generate the java model
      */
-    protected static ImmutableList<String> getImportsFromDs3Elements(final ImmutableList<Ds3Element> elements) {
+    static ImmutableSet<String> getImportsFromAllDs3Elements(final ImmutableList<Ds3Element> elements) {
         if (isEmpty(elements)) {
-            return ImmutableList.of();
+            return ImmutableSet.of();
         }
+
+        return elements.stream()
+                .map(BaseTypeGenerator::getImportsFromDs3Element)
+                .flatMap(Collection::stream)
+                .collect(GuavaCollectors.immutableSet());
+    }
+
+    /**
+     * Retrieves the required imports that the Ds3Element needs in order to properly generate the java model
+     */
+    private static ImmutableSet<String> getImportsFromDs3Element(final Ds3Element ds3Element) {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        for (final Ds3Element element : elements) {
-            if (element.getType().contains(".")
-                    && !ConvertType.isModelName(element.getType())) {
-                builder.add(ConvertType.toModelName(element.getType()));
-            }
-            if (hasContent(element.getComponentType())
-                    && element.getComponentType().contains(".")) {
-                if (!ConvertType.isModelName(element.getComponentType())) {
-                    builder.add(ConvertType.toModelName(element.getComponentType()));
-                }
-                builder.add("java.util.List");
-                builder.add("java.util.ArrayList");
-                builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
-            }
-            if (isAttribute(element.getDs3Annotations())) {
-                builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty");
-            }
+
+        // Retrieve import for spectra defined model
+        if (ds3Element.getType().contains(".")
+                && !ConvertType.isModelName(ds3Element.getType())
+                && !isJavaPrimitiveType(ds3Element.getType())) {
+            builder.add(ConvertType.toModelName(ds3Element.getType()));
         }
-        return builder.build().asList();
+
+        // Retrieve import for spectra defined model within component type
+        if (hasContent(ds3Element.getComponentType())
+                && ds3Element.getComponentType().contains(".")
+                && !isJavaPrimitiveType(ds3Element.getComponentType())) {
+            if (!ConvertType.isModelName(ds3Element.getComponentType())) {
+                builder.add(ConvertType.toModelName(ds3Element.getComponentType()));
+            }
+            builder.add("java.util.List");
+            builder.add("java.util.ArrayList");
+            builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper");
+        }
+
+        // Retrieve XmlProperty import if applicable
+        if (isAttribute(ds3Element.getDs3Annotations())) {
+            builder.add("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty");
+        }
+        return builder.build();
+    }
+
+    /**
+     * Determines if a contract type represents a primitive or an object of a primitive.
+     * Used to determine if an import of the type is necessary.
+     */
+    private static boolean isJavaPrimitiveType(final String type) {
+        switch (type) {
+            case "java.lang.String":
+            case "java.lang.Double":
+            case "double":
+            case "java.lang.Long":
+            case "long":
+            case "java.lang.Integer":
+            case "int":
+            case "boolean":
+                return true;
+            default:
+                return false;
+        }
     }
 }

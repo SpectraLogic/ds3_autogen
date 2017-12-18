@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
@@ -100,13 +101,13 @@ public class BaseTypeGenerator_Test {
 
     @Test
     public void getImportsFromDs3Elements_NullList_Test() {
-        final ImmutableList<String> result = getImportsFromDs3Elements(null);
+        final ImmutableSet<String> result = getImportsFromAllDs3Elements(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void getImportsFromDs3Elements_EmptyList_Test() {
-        final ImmutableList<String> result = getImportsFromDs3Elements(ImmutableList.of());
+        final ImmutableSet<String> result = getImportsFromAllDs3Elements(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
@@ -115,9 +116,14 @@ public class BaseTypeGenerator_Test {
         final ImmutableList<Ds3Element> ds3Elements = ImmutableList.of(
                 new Ds3Element("Name1", "com.spectralogic.test.Type1", "ComponentType1", false),
                 new Ds3Element("Name2", "Type2", "com.spectralogic.test.ComponentType2", false),
-                new Ds3Element("Name3", "Type3", null, false));
+                new Ds3Element("Name3", "Type3", null, false),
+                new Ds3Element("Name4", "java.lang.String", null, false),
+                new Ds3Element("Name5", "java.lang.Double", null, true),
+                new Ds3Element("Name6", "java.lang.Long", null, false),
+                new Ds3Element("Name7", "java.lang.Integer", null, true),
+                new Ds3Element("Name4", "Type4", "java.lang.String", false));
 
-        final ImmutableList<String> result = getImportsFromDs3Elements(ds3Elements);
+        final ImmutableSet<String> result = getImportsFromAllDs3Elements(ds3Elements);
         assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.List"));
         assertTrue(result.contains("com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper"));
@@ -141,7 +147,7 @@ public class BaseTypeGenerator_Test {
                 ds3Elements,
                 ds3EnumConstants);
 
-        final ImmutableList<String> result = generator.getAllImports(enumType);
+        final ImmutableSet<String> result = generator.getAllImports(enumType);
         assertThat(result.size(), is(0));
     }
 
@@ -158,7 +164,7 @@ public class BaseTypeGenerator_Test {
                 ds3Elements,
                 null);
 
-        final ImmutableList<String> result = generator.getAllImports(ds3Type);
+        final ImmutableSet<String> result = generator.getAllImports(ds3Type);
         assertThat(result.size(), is(3));
         assertTrue(result.contains("java.util.List"));
         assertTrue(result.contains("java.util.ArrayList"));

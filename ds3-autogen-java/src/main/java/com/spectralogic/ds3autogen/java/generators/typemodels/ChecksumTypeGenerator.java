@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.EnumConstant;
@@ -28,8 +29,8 @@ public class ChecksumTypeGenerator extends BaseTypeGenerator {
      * Returns an empty list as the ChecksumType does not have any imports
      */
     @Override
-    public ImmutableList<String> getAllImports(final Ds3Type ds3Type) {
-        return ImmutableList.of();
+    public ImmutableSet<String> getAllImports(final Ds3Type ds3Type) {
+        return ImmutableSet.of();
     }
 
     /**
