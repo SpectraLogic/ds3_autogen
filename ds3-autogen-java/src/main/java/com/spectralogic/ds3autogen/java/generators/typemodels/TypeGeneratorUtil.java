@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3EnumConstant;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
@@ -49,5 +50,5 @@ public interface TypeGeneratorUtil {
      * Gets all the required imports that the Model will need in order to properly
      * generate the java model code
      */
-    ImmutableList<String> getAllImports(final Ds3Type ds3Type);
+    ImmutableSet<String> getAllImports(final Ds3Type ds3Type);
 }

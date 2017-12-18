@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.java.generators.typemodels;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Element;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.java.models.Element;
@@ -73,7 +74,7 @@ public class CommonPrefixGenerator_Test {
                 ds3Elements,
                 null);
 
-        final ImmutableList<String> result = generator.getAllImports(ds3Type);
+        final ImmutableSet<String> result = generator.getAllImports(ds3Type);
 
         assertThat(result.size(), is(4));
         assertThat(result, hasItem("java.util.List"));
