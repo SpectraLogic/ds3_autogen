@@ -61,7 +61,5 @@ class SdkTypeMapper(private val typeMapFileName: String) {
     /**
      * Retrieves the underlying map used in the re-typing process. This is used for testing.
      */
-    fun getMap(): Map<String, String> {
-        return typeMapper
-    }
+    fun getMap(): Map<String, String> = typeMapper
 }
