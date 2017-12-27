@@ -1205,7 +1205,7 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasOptionalParam(requestName, "SerialNumber", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "State", "TapeState", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
-        assertTrue(TestHelper.hasOptionalParam(requestName, "Type", "TapeType", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Type", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "WriteProtected", "bool", requestCode));
 
         assertTrue(TestHelper.hasConstructor(requestName, ImmutableList.of(), requestCode));

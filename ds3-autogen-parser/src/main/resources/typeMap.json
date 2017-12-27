@@ -1,0 +1,8 @@
+{
+  "TypeMap": [
+    {
+      "ContractType": "TapeType",
+      "SdkType": "java.lang.String"
+    }
+  ]
+}
