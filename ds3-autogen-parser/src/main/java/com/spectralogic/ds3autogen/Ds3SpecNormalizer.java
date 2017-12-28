@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
+import com.spectralogic.ds3autogen.converters.TypeConverter;
 
 import static com.spectralogic.ds3autogen.converters.NameConverter.renameRequests;
 import static com.spectralogic.ds3autogen.converters.RemoveDollarSignConverter.removeDollarSigns;
@@ -48,11 +49,15 @@ public final class Ds3SpecNormalizer {
             final Ds3ApiSpec spec,
             final boolean generateInternal) {
         verifySingleResponsePayloadRequests(spec.getRequests());
-        return updateElementsInSpec( //Updates Ds3Elements to account for ExcludeFromMarshaler values
+
+        final TypeConverter typeConverter = new TypeConverter();
+
+        return typeConverter.modifyTypes( //Converts contract types to sdk types as specified in file typeMap.json
+                updateElementsInSpec( //Updates Ds3Elements to account for ExcludeFromMarshaler values
                 renameRequests( //Rename requests from RequestHandler to Request
                 convertResponseTypes( //Converts response types with components into new encapsulating types
                 removeDollarSigns( //Converts all type names containing '$' into proper type names
-                removeInternalRequestsFromSpec(spec, generateInternal))))); //Removes/keeps spectra internal requests
+                removeInternalRequestsFromSpec(spec, generateInternal)))))); //Removes/keeps spectra internal requests
     }
 
     /**

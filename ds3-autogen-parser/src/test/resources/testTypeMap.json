@@ -1,0 +1,16 @@
+{
+  "TypeMap": [
+    {
+      "ContractType": "ContractType1",
+      "SdkType": "SdkType1"
+    },
+    {
+      "ContractType": "ContractType2",
+      "SdkType": "SdkType2"
+    },
+    {
+      "ContractType": "ContractType3",
+      "SdkType": "SdkType3"
+    }
+  ]
+}
