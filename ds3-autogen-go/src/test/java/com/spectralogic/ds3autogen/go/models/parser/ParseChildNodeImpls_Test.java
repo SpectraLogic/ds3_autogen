@@ -89,6 +89,16 @@ public class ParseChildNodeImpls_Test {
     }
 
     @Test
+    public void ParseChildNodeAddStringToSliceTest() {
+        final String expected = String.format("var str = parseString(child.Content)\n" +
+                "            %s.%s = append(%s.%s, str)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+
+        final ParseElement parseElement = new ParseChildNodeAddStringToSlice(XML_TAG, MODEL_NAME, PARAM_NAME);
+        assertThat(parseElement.getXmlTag(), is(XML_TAG));
+        assertThat(parseElement.getParsingCode(), is(expected));
+    }
+
+    @Test
     public void ParseChildNodeAsEnumTest() {
         final String expected = String.format("parseEnum(child.Content, &%s.%s, aggErr)", MODEL_NAME, PARAM_NAME);
 
