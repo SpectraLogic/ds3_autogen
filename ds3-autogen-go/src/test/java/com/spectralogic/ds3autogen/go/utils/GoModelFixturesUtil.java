@@ -59,6 +59,7 @@ public class GoModelFixturesUtil {
     public final static Ds3Element DS3_PTR_TYPE_ELEMENT = new Ds3Element("Ds3TypePtrElement", "com.test.TestDs3PtrType", "", true);
     public final static Ds3Element LIST_ENUM_ELEMENT = new Ds3Element("ListEnumElement", "array", "com.test.TestEnum", false);
     public final static Ds3Element COMMON_PREFIX_ELEMENT = new Ds3Element("CommonPrefixes", "array", "java.lang.String", ImmutableList.of(COMMON_PREFIX_ANNOTATION), false);
+    public final static Ds3Element LIST_STRING_ELEMENT = new Ds3Element("ListStringElement", "array", "java.lang.String", false);
 
     public final static Ds3Element STR_ATTR = new Ds3Element("StringAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), false);
     public final static Ds3Element STR_PTR_ATTR = new Ds3Element("StringPtrAttribute", "java.lang.String", "", ImmutableList.of(ATTR_ANNOTATION), true);

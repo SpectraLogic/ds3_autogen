@@ -92,6 +92,11 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         if (ds3Element.type.equals("array")) {
             val childType = toGoType(ds3Element.componentType!!)
 
+            // Handle if the slice is a string
+            if (childType == "string") {
+                return ParseChildNodeAddStringToSlice(xmlTag, modelName, paramName)
+            }
+
             // Handle if the slice is a Ds3Type defined enum
             if (isElementEnum(ds3Element.componentType!!, typeMap)) {
                 return ParseChildNodeAddEnumToSlice(xmlTag, modelName, paramName, childType)
