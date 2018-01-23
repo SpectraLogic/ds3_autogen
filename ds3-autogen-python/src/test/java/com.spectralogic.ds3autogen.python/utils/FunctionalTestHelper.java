@@ -210,10 +210,12 @@ public class FunctionalTestHelper {
      * Determines if the code contains the client command for the specified request
      */
     public static boolean hasClientCommand(final String requestName, final String code) {
+        final String commandName = camelToUnderscore(toCommandName(requestName));
         final Pattern search = Pattern.compile(
-                "def " + camelToUnderscore(toCommandName(requestName)) + "\\(self, request\\):"
-                + "\\s+return " + toResponseName(requestName)
-                + "\\(self\\.net_client.get_response\\(request\\), request\\)",
+                "def " + commandName + "\\(self, request\\):"
+                + "\\s+if not isinstance\\(request, " + requestName + "\\):"
+                + "\\s+raise TypeError\\('request for " + commandName + " should be of type " + requestName + " but was ' \\+ request\\.__class__\\.__name__\\)"
+                + "\\s+return " + toResponseName(requestName) + "\\(self\\.net_client.get_response\\(request\\), request\\)",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return search.matcher(code).find();
     }

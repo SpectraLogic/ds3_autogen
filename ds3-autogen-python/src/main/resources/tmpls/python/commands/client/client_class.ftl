@@ -10,5 +10,7 @@ class Client(object):
 <#list clientCommands as cmd>
     ${cmd.documentation}
     def ${cmd.commandName}(self, request):
+        if not isinstance(request, ${cmd.requestType}):
+            raise TypeError('request for ${cmd.commandName} should be of type ${cmd.requestType} but was ' + request.__class__.__name__)
         return ${cmd.responseName}(self.net_client.get_response(request), request)
 </#list>
