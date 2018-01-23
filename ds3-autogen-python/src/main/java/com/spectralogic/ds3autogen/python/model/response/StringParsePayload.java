@@ -11,8 +11,8 @@ public class StringParsePayload implements ParsePayload {
 
     @Override
     public String toPythonCode() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("if self.response.status == ").append(code).append(":\n")
+        final StringBuilder builder = new StringBuilder("if self.response.status == ");
+        builder.append(code).append(":\n")
                 .append(pythonIndent(3))
                 .append("self.result = response.read()");
         return builder.toString();
