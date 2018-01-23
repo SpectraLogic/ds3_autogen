@@ -22,12 +22,11 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.python.model.response.BaseParsePayload;
 import com.spectralogic.ds3autogen.python.model.response.NoPayload;
+import com.spectralogic.ds3autogen.python.model.response.StringParsePayload;
 import org.junit.Test;
 
 import static com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator.*;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getBucketRequest;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestAmazonS3GetObject;
-import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestGetJob;
+import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.*;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelPartialDataFixture.createDs3RequestTestData;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -87,6 +86,12 @@ public class BaseResponseGenerator_Test {
     }
 
     @Test
+    public void getParsePayload_TypeString_Test() {
+        final Ds3Request request = getGetBlobPersistence();
+        assertThat(getParsePayload(request), instanceOf(StringParsePayload.class));
+    }
+
+    @Test
     public void toParseResponsePayload_NoPayload_Test() {
         final Ds3Request request = createDs3RequestTestData("com.test.Request", Classification.amazons3);
         assertThat(generator.toParseResponsePayload(request), is(""));
@@ -107,6 +112,15 @@ public class BaseResponseGenerator_Test {
                 "            self.result = parseModel(xmldom.fromstring(response.read()), JobWithChunksApiBean())";
 
         final Ds3Request request = getRequestGetJob();
+        assertThat(generator.toParseResponsePayload(request), is(expected));
+    }
+
+    @Test
+    public void toParseResponsePayload_WithStringPayload_Test() {
+        final String expected = "if self.response.status == 200:\n" +
+                "            self.result = response.read()";
+
+        final Ds3Request request = getGetBlobPersistence();
         assertThat(generator.toParseResponsePayload(request), is(expected));
     }
 

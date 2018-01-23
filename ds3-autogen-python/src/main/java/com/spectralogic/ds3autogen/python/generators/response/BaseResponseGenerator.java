@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.getParserModelName;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
+import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 import static com.spectralogic.ds3autogen.utils.ResponsePayloadUtil.*;
 
@@ -89,6 +90,10 @@ public class BaseResponseGenerator implements ResponseModelGenerator<BaseRespons
         }
         final String responsePayload = getResponsePayload(ds3Request.getDs3ResponseCodes());
         final Integer responseCode = getPayloadResponseCode(ds3Request.getDs3ResponseCodes());
+
+        if (removePath(responsePayload).equalsIgnoreCase("String")) {
+            return new StringParsePayload(responseCode);
+        }
         return new BaseParsePayload(getParserModelName(responsePayload), responseCode);
     }
 
