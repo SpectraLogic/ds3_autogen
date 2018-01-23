@@ -18,17 +18,23 @@ package com.spectralogic.ds3autogen.python.model.client;
 public class BaseClient {
 
     private final String commandName;
+    private final String requestType;
     private final String responseName;
     private final String documentation;
 
-    public BaseClient(final String commandName, final String responseName, final String documentation) {
+    public BaseClient(final String commandName, final String requestType, final String responseName, final String documentation) {
         this.commandName = commandName;
+        this.requestType = requestType;
         this.responseName = responseName;
         this.documentation = documentation;
     }
 
     public String getCommandName() {
         return commandName;
+    }
+
+    public String getRequestType() {
+        return requestType;
     }
 
     public String getResponseName() {

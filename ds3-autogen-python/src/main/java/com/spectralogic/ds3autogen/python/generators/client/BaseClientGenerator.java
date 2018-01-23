@@ -30,10 +30,11 @@ public class BaseClientGenerator implements ClientModelGenerator<BaseClient> {
     @Override
     public BaseClient generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final String commandName = toPythonCommandName(ds3Request.getName());
+        final String requestType = removePath(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
         final String documentation = toDocumentation(ds3Request.getName(), docSpec);
 
-        return new BaseClient(commandName, responseName, documentation);
+        return new BaseClient(commandName, requestType, responseName, documentation);
     }
 
     /**
