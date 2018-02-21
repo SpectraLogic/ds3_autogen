@@ -4,9 +4,11 @@ package ${packageName};
 
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.models.ChecksumType;
 <#include "../imports.ftl"/>
 
-import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;
+import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;
 
 public class ${name} extends ${parentClass}<${responseName}> {
     private final int[] expectedStatusCodes = new int[]{${expectedStatusCodes}};

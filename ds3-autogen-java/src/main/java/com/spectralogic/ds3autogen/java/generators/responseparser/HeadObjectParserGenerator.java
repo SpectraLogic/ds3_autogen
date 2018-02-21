@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 
 import static com.spectralogic.ds3autogen.java.utils.ResponseAndParserUtils.getResponseCodes;
+import static com.spectralogic.ds3autogen.utils.Helper.indent;
 
 /**
  * Response parser generator for Head Object command
@@ -42,17 +43,25 @@ public class HeadObjectParserGenerator extends BaseResponseParserGenerator {
             throw new IllegalArgumentException("Does not contain expected response codes: " + EXPECTED_RESPONSE_CODES.toString());
         }
 
-        final ResponseCode code200 = new ResponseCode(200, toReturnCode(responseName, "EXISTS"));
-        final ResponseCode code404 = new ResponseCode(404, toReturnCode(responseName, "DOESNTEXIST"));
+        final ResponseCode code200 = new ResponseCode(200, toExistsReturnCode(responseName));
+        final ResponseCode code404 = new ResponseCode(404, toDoesntExistReturnCode(responseName));
 
         return ImmutableList.of(code200, code404);
     }
 
     /**
-     * Gets the java code for returning the response handler with the specified status,
-     * metadata, and object size
+     * Gets the java code for returning the response handler for an object that exists
      */
-    protected static String toReturnCode(final String responseName, final String status) {
-        return "return new " + responseName + "(metadata, objectSize, " + responseName + ".Status." + status + ", this.getChecksum(), this.getChecksumType());\n";
+    protected static String toExistsReturnCode(final String responseName) {
+        return "final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
+                indent(4) + "final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
+                indent(4) + "return new " + responseName + "(blobChecksumMap, blobChecksumType, metadata, objectSize, " + responseName + ".Status.EXISTS, this.getChecksum(), this.getChecksumType());\n";
+    }
+
+    /**
+     * Gets the java code for returning the response handler for an object that does not exist
+     */
+    protected static String toDoesntExistReturnCode(final String responseName) {
+        return "return new " + responseName + "(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, " + responseName + ".Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n";
     }
 }
