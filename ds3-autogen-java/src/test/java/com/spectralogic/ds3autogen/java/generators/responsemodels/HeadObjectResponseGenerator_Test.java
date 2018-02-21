@@ -31,21 +31,32 @@ public class HeadObjectResponseGenerator_Test {
     @Test
     public void getAllImports_Test() {
         final ImmutableSet<String> result = generator.getAllImports(null);
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(4));
         assertThat(result, hasItem("com.spectralogic.ds3client.networking.Metadata"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
         assertThat(result, hasItem("com.spectralogic.ds3client.models.ChecksumType"));
+        assertThat(result, hasItem("com.google.common.collect.ImmutableMap"));
     }
 
     @Test
     public void toParamList_Test() {
         final ImmutableList<Arguments> result = generator.toParamList(null);
-        assertThat(result.size(), is(3));
-        assertThat(result.get(0).getName(), is("Metadata"));
-        assertThat(result.get(0).getType(), is("Metadata"));
-        assertThat(result.get(1).getName(), is("ObjectSize"));
-        assertThat(result.get(1).getType(), is("long"));
-        assertThat(result.get(2).getName(), is("Status"));
-        assertThat(result.get(2).getType(), is("Status"));
+        assertThat(result.size(), is(5));
+
+        // Verify that parameters were sorted alphabetically by name
+        assertThat(result.get(0).getName(), is("BlobChecksums"));
+        assertThat(result.get(0).getType(), is("ImmutableMap<Long, String>"));
+
+        assertThat(result.get(1).getName(), is("BlobChecksumType"));
+        assertThat(result.get(1).getType(), is("ChecksumType.Type"));
+
+        assertThat(result.get(2).getName(), is("Metadata"));
+        assertThat(result.get(2).getType(), is("Metadata"));
+
+        assertThat(result.get(3).getName(), is("ObjectSize"));
+        assertThat(result.get(3).getType(), is("long"));
+
+        assertThat(result.get(4).getName(), is("Status"));
+        assertThat(result.get(4).getType(), is("Status"));
     }
 }

@@ -19,7 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3autogen.java.models.ResponseCode;
 import org.junit.Test;
 
-import static com.spectralogic.ds3autogen.java.generators.responseparser.HeadObjectParserGenerator.toReturnCode;
+import static com.spectralogic.ds3autogen.java.generators.responseparser.HeadObjectParserGenerator.toDoesntExistReturnCode;
+import static com.spectralogic.ds3autogen.java.generators.responseparser.HeadObjectParserGenerator.toExistsReturnCode;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getHeadBucketRequest;
 import static com.spectralogic.ds3autogen.testutil.Ds3ModelFixtures.getRequestDeleteNotification;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,9 +31,17 @@ public class HeadObjectParserGenerator_Test {
     private final HeadObjectParserGenerator generator = new HeadObjectParserGenerator();
 
     @Test
-    public void toReturnCode_Test() {
-        final String expected = "return new MyResponse(metadata, objectSize, MyResponse.Status.MyStatus, this.getChecksum(), this.getChecksumType());\n";
-        assertThat(toReturnCode("MyResponse", "MyStatus"), is(expected));
+    public void toExistsReturnCode_Test() {
+        final String expected = "final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
+                "                final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
+                "                return new MyResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, MyResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n";
+        assertThat(toExistsReturnCode("MyResponse"), is(expected));
+    }
+
+    @Test
+    public void toDoesntExistReturnCode_Test() {
+        final String expected = "return new MyResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, MyResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n";
+        assertThat(toDoesntExistReturnCode("MyResponse"), is(expected));
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -51,10 +60,12 @@ public class HeadObjectParserGenerator_Test {
 
         assertThat(result.get(0).getCode(), is(200));
         assertThat(result.get(0).getProcessingCode(),
-                is("return new TestResponse(metadata, objectSize, TestResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n"));
+                is("final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
+                        "                final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
+                        "                return new TestResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, TestResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n"));
 
         assertThat(result.get(1).getCode(), is(404));
         assertThat(result.get(1).getProcessingCode(),
-                is("return new TestResponse(metadata, objectSize, TestResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n"));
+                is("return new TestResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, TestResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n"));
     }
 }

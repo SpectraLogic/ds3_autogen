@@ -36,7 +36,9 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
         final ImmutableList<Arguments> params = ImmutableList.of(
                 new Arguments("Metadata", "Metadata"),
                 new Arguments("long", "ObjectSize"),
-                new Arguments("Status", "Status"));
+                new Arguments("Status", "Status"),
+                new Arguments("ChecksumType.Type", "BlobChecksumType"),
+                new Arguments("ImmutableMap<Long, String>", "BlobChecksums"));
 
         return ImmutableList.sortedCopyOf(new CustomArgumentComparator(), params);
     }
@@ -49,6 +51,7 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
         return ImmutableSet.of(
                 getParentImport(),
                 "com.spectralogic.ds3client.networking.Metadata",
-                "com.spectralogic.ds3client.models.ChecksumType");
+                "com.spectralogic.ds3client.models.ChecksumType",
+                "com.google.common.collect.ImmutableMap");
     }
 }
