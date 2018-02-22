@@ -14,6 +14,8 @@ namespace Ds3.ResponseParsers
             using (response)
             {
                 return new ${responseName}(
+                    ResponseParseUtilities.ParseBlobChecksumHeaders(response.Headers),
+                    ResponseParseUtilities.ParseBlobChecksumTypeHeader(response.Headers),
                     long.Parse(response.Headers.Single(kvp => kvp.Key.ToLowerInvariant() == "content-length").Value),
                     response.Headers.Single(kvp => kvp.Key.ToLowerInvariant() == "etag").Value,
                     ResponseParseUtilities.ExtractCustomMetadata(response.Headers)
