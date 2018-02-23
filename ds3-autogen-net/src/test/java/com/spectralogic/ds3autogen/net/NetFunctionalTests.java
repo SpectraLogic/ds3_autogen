@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 public class NetFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -1433,12 +1433,25 @@ public class NetFunctionalTests {
         final String responseCode = codeGenerator.getResponseCode();
         CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
         assertTrue(hasContent(responseCode));
-        assertTrue(responseCode.contains("public HeadObjectResponse(long length, string eTag, IDictionary<string, string> metadata)"));
+        assertTrue(responseCode.contains("using System.Collections.Generic;"));
+        assertTrue(responseCode.contains("using Ds3.Models;"));
+        assertTrue(responseCode.contains("public IDictionary<long, string> BlobChecksums { get; private set; }"));
+        assertTrue(responseCode.contains("public ChecksumType.Type BlobChecksumType { get; private set; }"));
+        assertTrue(responseCode.contains("public IDictionary<string, string> Metadata { get; private set; }"));
+        assertTrue(responseCode.contains("public string ETag { get; private set; }"));
+        assertTrue(responseCode.contains("public long Length { get; private set; }"));
+        assertTrue(responseCode.contains("public HeadObjectResponse(IDictionary<long, string> blobChecksums, ChecksumType.Type blobChecksumType, long length, string eTag, IDictionary<string, string> metadata)"));
 
         //Generate Parser
         final String parserCode = codeGenerator.getParserCode();
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(hasContent(parserCode));
+
+        assertTrue(parserCode.contains("ResponseParseUtilities.ParseBlobChecksumHeaders(response.Headers),"));
+        assertTrue(parserCode.contains("ResponseParseUtilities.ParseBlobChecksumTypeHeader(response.Headers),"));
+        assertTrue(parserCode.contains("long.Parse(response.Headers.Single(kvp => kvp.Key.ToLowerInvariant() == \"content-length\").Value),"));
+        assertTrue(parserCode.contains("response.Headers.Single(kvp => kvp.Key.ToLowerInvariant() == \"etag\").Value,"));
+        assertTrue(parserCode.contains("ResponseParseUtilities.ExtractCustomMetadata(response.Headers)"));
 
         //Generate Client code
         final String commandName = requestName.replace("Request", "");
