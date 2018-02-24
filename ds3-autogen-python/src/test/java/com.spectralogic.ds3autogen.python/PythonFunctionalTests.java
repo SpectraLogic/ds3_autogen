@@ -288,9 +288,13 @@ public class PythonFunctionalTests {
         hasRequestHandler(requestName, HttpVerb.GET, reqArgs, ImmutableList.of(), ImmutableList.of(), ds3Code);
         hasOperation(Operation.START_BULK_PUT, ds3Code);
 
+        assertTrue(ds3Code.contains("def __process_checksum_headers(self, headers):"));
+        assertTrue(ds3Code.contains("def __process_checksum_type(self, headers):"));
+        assertTrue(ds3Code.contains("def __process_blob_checksums(self, headers):"));
+
         assertTrue(ds3Code.contains("self.__check_status_codes__([200, 403, 404])"));
-        assertTrue(ds3Code.contains("self.status_code = self.response.status\n" +
-                "        if self.response.status == 200:\n" +
+        assertTrue(ds3Code.contains("if self.response.status == 200:\n" +
+                "            self.__process_checksum_headers(response.getheaders())\n" +
                 "            self.result = HeadRequestStatus.EXISTS\n" +
                 "        elif self.response.status == 403:\n" +
                 "            self.result = HeadRequestStatus.NOTAUTHORIZED\n" +
