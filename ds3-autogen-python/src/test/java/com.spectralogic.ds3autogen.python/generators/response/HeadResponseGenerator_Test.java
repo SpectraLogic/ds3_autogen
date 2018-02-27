@@ -41,7 +41,7 @@ public class HeadResponseGenerator_Test {
                 "        else:\n" +
                 "            self.result = HeadRequestStatus.UNKNOWN";
         assertThat(generator.toParseResponsePayload(null), is(expected));
-        assertThat(generator.toParseResponsePayload(getHeadObjectRequest()), is(expected));
+        assertThat(generator.toParseResponsePayload(getHeadBucketRequest()), is(expected));
     }
 
     @Test(expected = IllegalArgumentException.class)
