@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -1305,5 +1305,43 @@ public class GoFunctionalTests {
 
         assertTrue(requestCode.contains("func (putBucketSpectraS3Request *PutBucketSpectraS3Request) WithUserId(userId string) *PutBucketSpectraS3Request {"));
         assertTrue(requestCode.contains("putBucketSpectraS3Request.UserId = &userId"));
+    }
+
+    @Test
+    public void headObjectTest() throws IOException, TemplateModelException {
+        final String requestName = "HeadObjectRequest";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+
+        codeGenerator.generateCode(fileUtils, "/input/headObjectRequest.xml");
+
+        // Verify Request file was generated
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+        assertTrue(hasContent(requestCode));
+
+        assertTrue(requestCode.contains("type HeadObjectRequest struct {"));
+        assertTrue(requestCode.contains("BucketName string"));
+        assertTrue(requestCode.contains("ObjectName string"));
+
+        assertTrue(requestCode.contains("func NewHeadObjectRequest(bucketName string, objectName string) *HeadObjectRequest {"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("ObjectName: objectName,"));
+
+        // Verify Response file was generated
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+        assertTrue(hasContent(responseCode));
+
+        assertTrue(responseCode.contains("type HeadObjectResponse struct {"));
+        assertTrue(responseCode.contains("BlobChecksumType ChecksumType"));
+        assertTrue(responseCode.contains("BlobChecksums map[int64]string"));
+        assertTrue(responseCode.contains("Headers *http.Header"));
+
+        assertTrue(responseCode.contains("func NewHeadObjectResponse(webResponse WebResponse) (*HeadObjectResponse, error) {"));
+        assertTrue(responseCode.contains("expectedStatusCodes := []int { 200 }"));
+        assertTrue(responseCode.contains("checksumType, err := getBlobChecksumType(webResponse.Header())"));
+        assertTrue(responseCode.contains("checksumMap, err := getBlobChecksumMap(webResponse.Header())"));
+        assertTrue(responseCode.contains("return &HeadObjectResponse{BlobChecksumType: checksumType, BlobChecksums: checksumMap, Headers: webResponse.Header()}, nil"));
     }
 }
