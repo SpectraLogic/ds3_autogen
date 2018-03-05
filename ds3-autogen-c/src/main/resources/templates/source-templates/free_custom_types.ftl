@@ -34,6 +34,23 @@ void ds3_delete_objects_response_free(ds3_delete_objects_response* response) {
     g_free(response);
 }
 
+void ds3_head_object_response_free(ds3_head_object_response* response) {
+    if (response == NULL) {
+        return;
+    }
+    if (response->blob_checksum_type != NULL) {
+        g_free(response->blob_checksum_type);
+    }
+    if (response->metadata != NULL) {
+        ds3_metadata_free(response->metadata);
+    }
+    if (response->blob_checksums != NULL) {
+        ds3_uint64_string_map_free(response->blob_checksums);
+    }
+
+    g_free(response);
+}
+
 void ds3_paging_free(ds3_paging* paging) {
     g_free(paging);
 }

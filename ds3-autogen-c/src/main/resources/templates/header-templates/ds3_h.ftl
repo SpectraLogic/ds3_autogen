@@ -12,6 +12,7 @@
 #include <curl/curl.h>
 #include "ds3_string.h"
 #include "ds3_string_multimap.h"
+#include "ds3_uint64_string_map.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -115,6 +116,12 @@ typedef struct {
 </#list>
 <#-- **************************************** -->
 
+typedef struct {
+    ds3_metadata* metadata;
+    ds3_checksum_type *blob_checksum_type;
+    ds3_uint64_string_map* blob_checksums;
+}ds3_head_object_response;
+
 <#-- **************************************** -->
 <#-- Generate all Structs                     -->
 <#list getStructs() as structEntry>
@@ -153,6 +160,7 @@ typedef struct _ds3_client {
 
 LIBRARY_API void ds3_request_free(ds3_request* request);
 LIBRARY_API void ds3_error_free(ds3_error* error);
+LIBRARY_API void ds3_head_object_response_free(ds3_head_object_response* response);
 LIBRARY_API void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response* response);
 LIBRARY_API void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response);
 LIBRARY_API void ds3_delete_objects_response_free(ds3_delete_objects_response* response);
@@ -214,7 +222,7 @@ LIBRARY_API ds3_request* ds3_init_head_bucket_request(const char *const bucket_n
 LIBRARY_API ds3_error* ds3_head_bucket_request(const ds3_client* client, const ds3_request* request);
     <#elseif requestEntry.getName() == "ds3_head_object_request">
 LIBRARY_API ds3_request* ds3_init_head_object_request(const char* bucket_name, const char *const object_name);
-LIBRARY_API ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_metadata** _metadata);
+LIBRARY_API ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_head_object_response** response);
     <#else>
         <#include "RequestCommentDocumentation.ftl">
         <#include "InitRequestPrototype.ftl">
