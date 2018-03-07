@@ -22,6 +22,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3ApiSpec;
 import com.spectralogic.ds3autogen.go.generators.request.*;
 import com.spectralogic.ds3autogen.go.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.GetObjectResponseGenerator;
+import com.spectralogic.ds3autogen.go.generators.response.HeadObjectResponseGenerator;
 import com.spectralogic.ds3autogen.go.generators.response.NoResponseGenerator;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -104,9 +105,11 @@ public class GoCodeGenerator_Test {
         // Amazon Get Object
         assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
 
+        // Head Object
+        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadObjectResponseGenerator.class));
+
         // Commands with no response payload
         assertThat(getResponseGenerator(getRequestDeleteNotification()), instanceOf(NoResponseGenerator.class));
-        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(NoResponseGenerator.class));
 
         // Commands with a standard response payload
         assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(BaseResponseGenerator.class));

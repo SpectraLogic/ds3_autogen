@@ -194,4 +194,47 @@ public class CCodeGeneratorSpectraS3Requests_Test {
         final String expectedOutput = "LIBRARY_API ds3_error* ds3_get_bucket_request(const ds3_client* client, const ds3_request* request, ds3_list_bucket_result_response** response);";
         assertEquals(expectedOutput, output);
     }
+
+    @Test
+    public void testHeadObjectRequest() throws IOException, ParseException, TemplateModelException {
+        final String inputSpecFile = "/input/HeadObjectRequest.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final Source source = SourceConverter.toSource(CCodeGenerator.getAllEnums(spec),
+                CCodeGenerator.getAllStructs(spec, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of()),
+                CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl()));
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        assertTrue(output.contains("ds3_error* ds3_head_object_request(const ds3_client* client, const ds3_request* request, ds3_head_object_response** response) {\n" +
+                "    ds3_error* error;\n" +
+                "    ds3_string_multimap* return_headers;\n" +
+                "    ds3_metadata* metadata;\n" +
+                "\n" +
+                "    int num_slashes = num_chars_in_ds3_str(request->path, '/');\n" +
+                "    if (num_slashes < 2 || ((num_slashes == 2) && ('/' == request->path->value[request->path->size-1]))) {\n" +
+                "        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The object name parameter is required.\");\n" +
+                "    } else if (g_ascii_strncasecmp(request->path->value, \"//\", 2) == 0) {\n" +
+                "        return ds3_create_error(DS3_ERROR_MISSING_ARGS, \"The bucket name parameter is required.\");\n" +
+                "    }\n" +
+                "\n" +
+                "    error = _internal_request_dispatcher(client, request, NULL, NULL, NULL, NULL, &return_headers);\n" +
+                "\n" +
+                "    if (error == NULL) {\n" +
+                "        ds3_head_object_response* response_ptr = g_new0(ds3_head_object_response, 1);\n" +
+                "        response_ptr->metadata = _init_metadata(return_headers);\n" +
+                "        response_ptr->blob_checksum_type = get_blob_checksum_type(client->log, return_headers);\n" +
+                "        response_ptr->blob_checksums = get_blob_checksums(client->log, return_headers);\n" +
+                "        *response = response_ptr;\n" +
+                "        ds3_string_multimap_free(return_headers);\n" +
+                "    }\n" +
+                "\n" +
+                "    return error;\n" +
+                "}"));
+    }
 }

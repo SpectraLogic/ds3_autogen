@@ -274,7 +274,10 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return new GetObjectResponseGenerator();
         }
-        if(isHeadBucketRequest(ds3Request) || isHeadObjectRequest(ds3Request)) {
+        if (isHeadObjectRequest(ds3Request)) {
+            return new HeadObjectResponseGenerator();
+        }
+        if(isHeadBucketRequest(ds3Request)) {
             return new HeadResponseGenerator();
         }
         return new BaseResponseGenerator();
