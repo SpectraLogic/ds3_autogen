@@ -8,7 +8,9 @@
 #include "ds3.h"
 #include "ds3_net.h"
 #include "ds3_request.h"
+#include "ds3_response_header_utils.h"
 #include "ds3_string_multimap_impl.h"
+#include "ds3_uint64_string_map.h"
 #include "ds3_utils.h"
 
 #ifdef _WIN32
