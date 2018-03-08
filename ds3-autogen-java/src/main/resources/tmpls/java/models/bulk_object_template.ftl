@@ -26,7 +26,7 @@ ${javaHelper.getModelVariable(elmt)}
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
+        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, versionId);
     }
 
     @Override
@@ -44,7 +44,7 @@ ${javaHelper.getModelVariable(elmt)}
                 && nullableEquals(this.getName(), bulkObject.getName())
                 && this.getOffset() == bulkObject.getOffset()
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
-                && this.getVersion() == bulkObject.getVersion();
+                && nullableEquals(this.getVersionId(), bulkObject.getVersionId());
     }
 
     /**

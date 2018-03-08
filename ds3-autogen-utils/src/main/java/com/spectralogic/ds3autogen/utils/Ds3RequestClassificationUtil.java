@@ -90,7 +90,7 @@ public final class Ds3RequestClassificationUtil {
                 && ds3Request.getOperation() == Operation.EJECT
                 && ds3Request.getResource() == Resource.TAPE
                 && ds3Request.getResourceType() == ResourceType.NON_SINGLETON
-                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "StorageDomainId", "java.util.UUID")
+                && paramListContainsParam(ds3Request.getRequiredQueryParams(), "StorageDomain", "java.lang.String")
                 && paramListContainsParam(ds3Request.getRequiredQueryParams(), "Blobs", "void");
     }
 
@@ -105,6 +105,18 @@ public final class Ds3RequestClassificationUtil {
                 && (ds3Request.getOperation() == Operation.GET_PHYSICAL_PLACEMENT
                         || ds3Request.getOperation() == Operation.VERIFY_PHYSICAL_PLACEMENT
                         || ds3Request.getOperation() == Operation.START_BULK_VERIFY);
+    }
+
+    /**
+     * Determines if this request is SpectraS3 StageObjectsJobRequestHandler
+     */
+    public static boolean isStageObjectsJob(final Ds3Request ds3Request) {
+        return ds3Request.getClassification() == Classification.spectrads3
+                && ds3Request.getHttpVerb() == HttpVerb.PUT
+                && ds3Request.getIncludeInPath()
+                && ds3Request.getOperation() == Operation.START_BULK_STAGE
+                && ds3Request.getResource() == Resource.BUCKET
+                && ds3Request.getResourceType() == ResourceType.NON_SINGLETON;
     }
 
     /**

@@ -329,7 +329,7 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the AmazonS3 Get Object request GetObjectRequestHandler
-     * as described in the Contract
+     * as described in the 5.0.x Contract
      * @return An AmazonS3 Get Object request
      */
     public static Ds3Request getRequestAmazonS3GetObject() {
@@ -357,7 +357,8 @@ public class Ds3ModelFixtures {
                                 ImmutableList.of(new Ds3ResponseType("com.spectralogic.s3.server.domain.HttpErrorResultApiBean", null)))),
                 ImmutableList.of(
                         new Ds3Param("Job", "java.util.UUID", false),
-                        new Ds3Param("Offset", "long", false)),
+                        new Ds3Param("Offset", "long", false),
+                        new Ds3Param("VersionId", "java.util.UUID", false)),
                 null);
     }
 
@@ -517,7 +518,7 @@ public class Ds3ModelFixtures {
 
     /**
      * Creates the SpectraDs3 Eject Storage Domain Blobs request handler as
-     * described in the contract, excluding the response codes.
+     * described in the 5.0.x contract, excluding the response codes.
      */
     public static Ds3Request getEjectStorageDomainBlobsRequest() {
         return new Ds3Request(
@@ -538,8 +539,8 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(
                         new Ds3Param("Blobs", "void", false),
                         new Ds3Param("BucketId", "java.util.UUID", false),
-                        OPERATION_PARAM,
-                        STORAGE_DOMAIN_ID_PARAM));
+                        new Ds3Param("StorageDomain", "java.lang.String", false),
+                        OPERATION_PARAM));
     }
 
     /**
