@@ -6,6 +6,7 @@
                     <OptionalQueryParams>
                         <Param Name="Job" Type="java.util.UUID"/>
                         <Param Name="Offset" Type="long"/>
+                        <Param Name="VersionId" Type="java.util.UUID"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
                 </Request>
@@ -35,13 +36,13 @@
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
-                        <Code>503</Code>
+                        <Code>404</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.F50E6F8DEFB864FE89D9385A71A6C25A</Version>
+                <Version>1.9E10AB31443900A845A6A64AACDA46A8</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

@@ -3195,6 +3195,12 @@
         </Request>
         <ResponseCodes>
           <ResponseCode>
+            <Code>200</Code> <!-- Manually added the expected 200 response -->
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
+            </ResponseTypes>
+          </ResponseCode>
+          <ResponseCode>
             <Code>400</Code>
             <ResponseTypes>
               <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
@@ -4613,6 +4619,12 @@
             </ResponseTypes>
           </ResponseCode>
           <ResponseCode>
+            <Code>400</Code>
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+            </ResponseTypes>
+          </ResponseCode>
+          <ResponseCode>
             <Code>404</Code>
             <ResponseTypes>
               <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
@@ -5008,7 +5020,6 @@
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportAllPoolsRequestHandler">
         <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="POOL" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
-            <Param Name="ConflictResolutionMode" Type="java.lang.String"/>
             <Param Name="DataPolicyId" Type="java.util.UUID"/>
             <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
             <Param Name="StorageDomainId" Type="java.util.UUID"/>
@@ -5028,12 +5039,11 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.A2C4FD5193ABBFDE8B56745D670AB25A</Version>
+        <Version>1.179F228C42340ABB9EEB830006BC5F2A</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportPoolRequestHandler">
         <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="IMPORT" Resource="POOL" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
-            <Param Name="ConflictResolutionMode" Type="java.lang.String"/>
             <Param Name="DataPolicyId" Type="java.util.UUID"/>
             <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
             <Param Name="StorageDomainId" Type="java.util.UUID"/>
@@ -5053,7 +5063,7 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.764B90CE7E2C3DEF7EA8E81F9B8DFDB1</Version>
+        <Version>1.3DDC7451EA1620AE50203012113A61CC</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ModifyAllPoolsRequestHandler">
         <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="POOL" ResourceType="NON_SINGLETON">
@@ -6432,7 +6442,6 @@
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler">
         <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
-            <Param Name="ConflictResolutionMode" Type="java.lang.String"/>
             <Param Name="DataPolicyId" Type="java.util.UUID"/>
             <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
             <Param Name="StorageDomainId" Type="java.util.UUID"/>
@@ -6452,12 +6461,11 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.E8AEEFAEC67C2B8BD701A35920F06D08</Version>
+        <Version>1.FF1951EAE0ACBAB8DB513DF209D32122</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportTapeRequestHandler">
         <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
-            <Param Name="ConflictResolutionMode" Type="java.lang.String"/>
             <Param Name="DataPolicyId" Type="java.util.UUID"/>
             <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
             <Param Name="StorageDomainId" Type="java.util.UUID"/>
@@ -6483,7 +6491,7 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.D02425C0AF41D18225D75C3B2C8D5AE5</Version>
+        <Version>1.B73F07D16A191E0EFD397E3DCB5CE051</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.InspectAllTapesRequestHandler">
         <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="INSPECT" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -9143,18 +9151,6 @@
               </Annotation>
             </Annotations>
           </Element>
-          <Element Name="AlwaysReplicateDeletes" Type="boolean">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
-                </AnnotationElements>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
-                <AnnotationElements/>
-              </Annotation>
-            </Annotations>
-          </Element>
           <Element Name="BlobbingEnabled" Type="boolean">
             <Annotations>
               <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
@@ -9234,18 +9230,6 @@
           </Element>
           <Element Name="Id" Type="java.util.UUID">
             <Annotations/>
-          </Element>
-          <Element Name="LtfsObjectNamingAllowed" Type="boolean">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
-                </AnnotationElements>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
-                <AnnotationElements/>
-              </Annotation>
-            </Annotations>
           </Element>
           <Element Name="MaxVersionsToKeep" Type="int">
             <Annotations>
@@ -10216,15 +10200,6 @@
           </Element>
           <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType">
             <Annotations/>
-          </Element>
-          <Element Name="Version" Type="long">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.DefaultLongValue">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Long"/>
-                </AnnotationElements>
-              </Annotation>
-            </Annotations>
           </Element>
         </Elements>
       </Type>
@@ -15102,7 +15077,7 @@
               </Annotation>
             </Annotations>
           </Element>
-          <Element Name="Version" Type="long">
+          <Element Name="VersionId" Type="java.util.UUID">
             <Annotations>
               <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                 <AnnotationElements>
@@ -16732,15 +16707,6 @@
           </Element>
           <Element Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.S3ObjectType">
             <Annotations/>
-          </Element>
-          <Element Name="Version" Type="long">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.DefaultLongValue">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Long"/>
-                </AnnotationElements>
-              </Annotation>
-            </Annotations>
           </Element>
         </Elements>
       </Type>

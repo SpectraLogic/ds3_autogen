@@ -514,7 +514,7 @@ public class JavaCodeGenerator implements CodeGenerator {
         if (hasStringRequestPayload(ds3Request)) {
             return new StringRequestPayloadGenerator();
         }
-        if (isBulkRequest(ds3Request)) {
+        if (isBulkRequest(ds3Request) || isStageObjectsJob(ds3Request)) {
             return new BulkRequestGenerator();
         }
         if (hasSimpleObjectsRequestPayload(ds3Request) || isCreateVerifyJobRequest(ds3Request)) {
@@ -552,7 +552,7 @@ public class JavaCodeGenerator implements CodeGenerator {
      * @throws IOException
      */
     private Template getRequestTemplate(final Ds3Request ds3Request) throws IOException {
-        if (isBulkRequest(ds3Request)) {
+        if (isBulkRequest(ds3Request) || isStageObjectsJob(ds3Request)) {
             return config.getTemplate("request/bulk_request_template.ftl");
         }
         if (hasIdsRequestPayload(ds3Request)) {
