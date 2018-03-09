@@ -18,7 +18,7 @@ package com.spectralogic.ds3autogen.net.generators.requestmodels;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3autogen.api.models.Arguments;
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Param;
+import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import org.junit.Test;
 
@@ -45,12 +45,12 @@ public class GetObjectRequestGenerator_Test {
 
     @Test
     public void toOptionalArgumentsList_FullList_Test() {
-        final ImmutableList<Ds3Param> params = ImmutableList.of(
-                new Ds3Param("SimpleArg", "SimpleType", false),
-                new Ds3Param("ArgWithPath", "com.test.TypeWithPath", false));
+        final Ds3Request request = getRequestAmazonS3GetObject();
+        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(request.getOptionalQueryParams(), ImmutableMap.of());
 
-        final ImmutableList<NetNullableVariable> result = generator.toOptionalArgumentsList(params, ImmutableMap.of());
-        assertThat(result.size(), is(0));
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getName(), is("VersionId"));
+        assertThat(result.get(0).getNetType(), is("Guid?"));
     }
 
     @Test
