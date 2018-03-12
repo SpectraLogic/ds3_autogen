@@ -308,4 +308,31 @@ public class PythonFunctionalTests {
         //Test Client
         hasClient(ImmutableList.of(requestName), ds3Code);
     }
+
+    @Test
+    public void clearSuspectBlobAzureTargetsRequest() throws IOException, TemplateModelException {
+        final String requestName = "ClearSuspectBlobAzureTargetsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPythonGeneratedCode codeGenerator = new TestPythonGeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/requests/clearSuspectBlobAzureTargets.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
+
+        final ImmutableList<String> optArgs = ImmutableList.of("force");
+        final String requestPayload = "id_list";
+
+        hasRequestHandler(requestName, HttpVerb.DELETE, ImmutableList.of(), optArgs, ImmutableList.of(), requestPayload, ds3Code);
+
+        assertTrue(ds3Code.contains("if id_list is not None:\n" +
+                "            if not (isinstance(cur_id, basestring) for cur_id in id_list):\n" +
+                "                raise TypeError(\n" +
+                "                    'ClearSuspectBlobAzureTargetsSpectraS3Request should have request payload of type: list of strings')\n" +
+                "            xml_id_list = IdsList(id_list)\n" +
+                "            self.body = xmldom.tostring(xml_id_list.to_xml())"));
+
+        //Test Client
+        hasClient(ImmutableList.of(requestName), ds3Code);
+    }
 }
