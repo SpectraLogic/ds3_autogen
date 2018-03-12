@@ -17,11 +17,12 @@ package com.spectralogic.ds3autogen.python3
 
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator
+import com.spectralogic.ds3autogen.python3.generators.request.P3IdListRequestGenerator
 import com.spectralogic.ds3autogen.python3.generators.request.P3PutObjectRequestGenerator
 import freemarker.template.Configuration
 import freemarker.template.Template
 
-class Python3CodeGenerator() : PythonCodeGenerator() {
+class Python3CodeGenerator : PythonCodeGenerator() {
 
     /**
      * Retrieves the base command template used to generate the Python 3 ds3.py
@@ -35,5 +36,12 @@ class Python3CodeGenerator() : PythonCodeGenerator() {
      */
     override fun getPutObjectRequestGenerator() : BaseRequestGenerator {
         return P3PutObjectRequestGenerator()
+    }
+
+    /**
+     * Retrieves the generator for the Python 3 clear blob and mark blob commands
+     */
+    override fun getIdsRequestGenerator(): BaseRequestGenerator {
+        return P3IdListRequestGenerator()
     }
 }
