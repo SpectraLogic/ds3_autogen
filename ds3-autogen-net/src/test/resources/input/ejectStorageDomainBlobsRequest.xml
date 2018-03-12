@@ -11,7 +11,7 @@
                         <Param Name="Blobs" Type="void"/>
                         <Param Name="BucketId" Type="java.util.UUID"/>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
-                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
+                        <Param Name="StorageDomain" Type="java.lang.String"/>
                     </RequiredQueryParams>
                 </Request>
                 <ResponseCodes>
@@ -28,7 +28,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D07A22B79C602A5E8C570C5E049FD7AB</Version>
+                <Version>1.221F7DCAF04AE6EB1BADF4997871733E</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>
