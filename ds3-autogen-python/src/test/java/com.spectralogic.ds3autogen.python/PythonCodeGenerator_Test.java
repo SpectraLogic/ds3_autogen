@@ -72,6 +72,17 @@ public class PythonCodeGenerator_Test {
         assertThat(generator.getRequestGenerator(getGetBlobPersistence()), instanceOf(StringPayloadGenerator.class));
         assertThat(generator.getRequestGenerator(getReplicatePutJob()), instanceOf(StringPayloadGenerator.class));
 
+        assertThat(generator.getRequestGenerator(clearSuspectBlobAzureTargetsRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(clearSuspectBlobDs3TargetsRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(clearSuspectBlobPoolsRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(clearSuspectBlobS3TargetsRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(clearSuspectBlobTapesRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(markSuspectBlobAzureTargetsAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(markSuspectBlobDs3TargetsAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(markSuspectBlobPoolsAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
+
         assertThat(generator.getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(generator.getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
         assertThat(generator.getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
