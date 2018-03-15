@@ -1032,6 +1032,27 @@ public class Ds3ModelFixtures {
     }
 
     /**
+     * Retrieves the 4.0.0 contract request for ClearSuspectBlobDs3TargetsRequestHandler
+     */
+    public static Ds3Request clearSuspectBlobDs3TargetsRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobDs3TargetsRequestHandler",
+                HttpVerb.DELETE,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.BULK_DELETE,
+                Resource.SUSPECT_BLOB_DS3_TARGET,
+                ResourceType.NON_SINGLETON,
+                null,
+                false,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(FORCE_PARAM), //optional params
+                ImmutableList.of() //required params
+        );
+    }
+
+    /**
      * Retrieves the 4.0.0 contract request for ClearSuspectBlobS3TargetsRequestHandler
      */
     public static Ds3Request clearSuspectBlobS3TargetsRequest() {

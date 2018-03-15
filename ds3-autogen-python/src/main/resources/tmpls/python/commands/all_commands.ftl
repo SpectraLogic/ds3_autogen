@@ -17,6 +17,22 @@ from ds3network import *
 <#include "static_classes.ftl" />
 
 
+class IdsList(object):
+    def __init__(self, id_list):
+        for cur_id in id_list:
+            if not isinstance(cur_id, basestring):
+                raise TypeError("Ids should only contain strings")
+        self.id_list = id_list
+
+    def to_xml(self):
+        xml_id_list = xmldom.Element('Ids')
+        for cur_id in self.id_list:
+            xml_cur_id = xmldom.Element('Id')
+            xml_cur_id.text = cur_id
+            xml_id_list.append(xml_cur_id)
+        return xml_id_list
+
+
 # Type Descriptors
 
 

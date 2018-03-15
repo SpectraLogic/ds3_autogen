@@ -232,7 +232,18 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
                 || isBulkReplicateRequest(ds3Request)) {
             return new StringPayloadGenerator();
         }
+        if (hasIdsRequestPayload(ds3Request)) {
+            return getIdsRequestGenerator();
+        }
         return new BaseRequestGenerator();
+    }
+
+    /**
+     * Retrieves the generator for the clear blob and mark blob commands
+     */
+    @Override
+    public BaseRequestGenerator getIdsRequestGenerator() {
+        return new IdListRequestPayloadGenerator();
     }
 
     /**

@@ -30,9 +30,7 @@ import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class Python3FunctionalTests {
@@ -86,5 +84,23 @@ public class Python3FunctionalTests {
 
         assertTrue(ds3Code.contains("for key, val in headers.items():"));
         assertFalse(ds3Code.contains("for key, val in headers.iteritems():"));
+    }
+
+    @Test
+    public void clearSuspectBlobAzureTargetsRequest() throws IOException, TemplateModelException {
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestPython3GeneratedCode codeGenerator = new TestPython3GeneratedCode(fileUtils);
+
+        codeGenerator.generateCode(fileUtils, "/input/requests/clearSuspectBlobAzureTargets.xml");
+        final String ds3Code = codeGenerator.getDs3Code();
+
+        CODE_LOGGER.logFile(ds3Code, FileTypeToLog.REQUEST);
+
+        assertTrue(ds3Code.contains("if id_list is not None:\n" +
+                "            if not (isinstance(cur_id, str) for cur_id in id_list):\n" +
+                "                raise TypeError(\n" +
+                "                    'ClearSuspectBlobAzureTargetsSpectraS3Request should have request payload of type: list of strings')\n" +
+                "            xml_id_list = IdsList(id_list)\n" +
+                "            self.body = xmldom.tostring(xml_id_list.to_xml())"));
     }
 }

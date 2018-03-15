@@ -1052,6 +1052,7 @@ public class Ds3RequestClassificationUtil_Test {
     public void hasIdsRequestPayload_Test() {
         assertTrue(hasIdsRequestPayload(clearSuspectBlobAzureTargetsRequest()));
         assertTrue(hasIdsRequestPayload(clearSuspectBlobPoolsRequest()));
+        assertTrue(hasIdsRequestPayload(clearSuspectBlobDs3TargetsRequest()));
         assertTrue(hasIdsRequestPayload(clearSuspectBlobS3TargetsRequest()));
         assertTrue(hasIdsRequestPayload(clearSuspectBlobTapesRequest()));
         assertTrue(hasIdsRequestPayload(markSuspectBlobAzureTargetsAsDegradedRequest()));
