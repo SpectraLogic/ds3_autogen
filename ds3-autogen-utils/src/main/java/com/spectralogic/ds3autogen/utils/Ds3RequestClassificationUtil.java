@@ -556,14 +556,28 @@ public final class Ds3RequestClassificationUtil {
 
     /**
      * Determines if a Ds3Request has the payload:
-     * <Objects><Object Name="o1" Length="1" Offset="2" /><Object Name="o2" Length="3" Offset="4" />...</Objects>
+     *   <Objects><Object Name="o1" Length="1" Offset="2" VersionId="id" /><Object Name="o2" Length="3" Offset="4" VersionId="id" />...</Objects>
+     * where length, offset and versionID are optional object parameters.
      *
      * @return true if request is one of the following:
      *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler
      *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateVerifyJobRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsWithFullDetailsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.EjectStorageDomainBlobsRequestHandler
+     *   com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.StageObjectsJobRequestHandler
      */
     public static boolean hasGetObjectsWithLengthOffsetRequestPayload(final Ds3Request ds3Request) {
-        return isBulkGetRequest(ds3Request) || isCreateVerifyJobRequest(ds3Request);
+        return isBulkGetRequest(ds3Request)
+                || isCreateVerifyJobRequest(ds3Request)
+                || isStageObjectsJob(ds3Request)
+                || isGetPhysicalPlacementForObjectsRequest(ds3Request)
+                || isGetPhysicalPlacementForObjectsWithFullDetailsRequest(ds3Request)
+                || isVerifyPhysicalPlacementForObjectsRequest(ds3Request)
+                || isVerifyPhysicalPlacementForObjectsWithFullDetailsRequest(ds3Request)
+                || isEjectStorageDomainBlobsRequest(ds3Request);
     }
 
     /**

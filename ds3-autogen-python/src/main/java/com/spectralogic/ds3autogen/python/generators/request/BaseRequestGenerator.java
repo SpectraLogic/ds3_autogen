@@ -43,7 +43,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
     public BaseRequest generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
         final String name = NormalizingContractNamesUtil.removePath(ds3Request.getName());
         final String path = GeneratorUtils.toRequestPath(ds3Request);
-        final String additionalContent = getAdditionalContent(ds3Request, name);
+        final String additionalContent = getAdditionalContent(name);
         final ImmutableList<String> assignments = toAssignments(ds3Request);
         final ImmutableList<String> constructorParams = toConstructorParams(ds3Request);
         final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
@@ -137,7 +137,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<BaseRequest>,
      * Non-special-cased requests do not contain any additional code
      */
     @Override
-    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+    public String getAdditionalContent(final String requestName) {
         return null;
     }
 

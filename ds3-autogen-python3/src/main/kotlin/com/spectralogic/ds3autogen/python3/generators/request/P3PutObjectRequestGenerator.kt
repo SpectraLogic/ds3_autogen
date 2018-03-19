@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.python3.generators.request
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.python.generators.request.PutObjectRequestGenerator
 import com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent
 
@@ -27,7 +26,7 @@ class P3PutObjectRequestGenerator : PutObjectRequestGenerator() {
     /**
      * Gets the Python 3 code that handles processing the request payload and headers
      */
-    override fun getAdditionalContent(ds3Request: Ds3Request, requestName : String) : String {
+    override fun getAdditionalContent(requestName : String) : String {
         return "if headers is not None:\n" +
                 pythonIndent(3) + "for key, val in headers.items():\n" +
                 pythonIndent(4) + "if val:\n" +

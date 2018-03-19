@@ -67,7 +67,7 @@ public class PutObjectRequestGenerator extends BaseRequestGenerator {
      * Gets the python code that handles processing the request payload and headers
      */
     @Override
-    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+    public String getAdditionalContent(final String requestName) {
         return "if headers is not None:\n" +
                 pythonIndent(3) + "for key, val in headers.iteritems():\n" +
                 pythonIndent(4) + "if val:\n" +
