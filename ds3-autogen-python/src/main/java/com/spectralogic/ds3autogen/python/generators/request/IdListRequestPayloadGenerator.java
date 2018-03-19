@@ -53,7 +53,7 @@ public class IdListRequestPayloadGenerator extends BaseRequestGenerator {
      * Gets the python code that handles processing the request payload and headers
      */
     @Override
-    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+    public String getAdditionalContent(final String requestName) {
         return "if " + PAYLOAD_NAME + " is not None:\n" +
                 pythonIndent(3) + "if not (isinstance(cur_id, basestring) for cur_id in " + PAYLOAD_NAME + "):\n" +
                 pythonIndent(4) + "raise TypeError(\n" +

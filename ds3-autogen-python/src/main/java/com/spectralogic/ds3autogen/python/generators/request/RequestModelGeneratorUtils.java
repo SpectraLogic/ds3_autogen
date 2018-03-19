@@ -51,5 +51,5 @@ public interface RequestModelGeneratorUtils {
     /**
      * Gets any additional python code for special casing, or null if no additional code is required
      */
-    String getAdditionalContent(final Ds3Request ds3Request, final String requestName);
+    String getAdditionalContent(final String requestName);
 }

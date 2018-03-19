@@ -33,7 +33,7 @@ public class GetObjectRequestGenerator_Test {
     public void getAdditionalContent_Test() {
         final String expected = "self.offset = offset\n" +
                 "        self.stream = stream\n";
-        final String result = generator.getAdditionalContent(null, null);
+        final String result = generator.getAdditionalContent(null);
         assertThat(result, is(expected));
     }
 
@@ -44,9 +44,10 @@ public class GetObjectRequestGenerator_Test {
         final ImmutableList<String> result = optParams.stream()
                 .map(ConstructorParam::toPythonCode)
                 .collect(GuavaCollectors.immutableList());
-        assertThat(result.size(), is(2));
+        assertThat(result.size(), is(3));
         assertThat(result, hasItem("job=None"));
         assertThat(result, hasItem("offset=None"));
+        assertThat(result, hasItem("version_id=None"));
     }
 
     @Test

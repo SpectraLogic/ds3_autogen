@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3autogen.python3.generators.request
 
-import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.python.generators.request.IdListRequestPayloadGenerator
 import com.spectralogic.ds3autogen.python.helpers.PythonHelper.pythonIndent
 
@@ -27,7 +26,7 @@ class P3IdListRequestGenerator : IdListRequestPayloadGenerator() {
     /**
      * Gets the Python 3 code that handles processing the request payload and headers
      */
-    override fun getAdditionalContent(ds3Request: Ds3Request, requestName : String) : String {
+    override fun getAdditionalContent(requestName : String) : String {
         return "if $PAYLOAD_NAME is not None:\n" +
                 pythonIndent(3) + "if not (isinstance(cur_id, str) for cur_id in $PAYLOAD_NAME):\n" +
                 pythonIndent(4) + "raise TypeError(\n" +

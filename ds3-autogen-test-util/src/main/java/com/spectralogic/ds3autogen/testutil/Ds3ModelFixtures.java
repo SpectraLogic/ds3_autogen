@@ -1303,4 +1303,28 @@ public class Ds3ModelFixtures {
                 ImmutableList.of(OPERATION_PARAM) //required params
         );
     }
+
+    /**
+     * Retrieves the 5.0.x contract request for SpectraS3 StageObjectsJobRequest
+     */
+    public static Ds3Request getStageObjectsJobRequest() {
+        return new Ds3Request(
+                "com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.StageObjectsJobRequestHandler",
+                HttpVerb.PUT,
+                Classification.spectrads3,
+                null,
+                null,
+                Action.MODIFY,
+                Resource.BUCKET,
+                ResourceType.NON_SINGLETON,
+                Operation.START_BULK_STAGE,
+                true,
+                null, // ds3ResponseCodes are in the Contract, but are currently omitted
+                ImmutableList.of(
+                        new Ds3Param("Name", "java.lang.String", true),
+                        new Ds3Param("Priority", "com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority", false)
+                ), //optional params
+                ImmutableList.of(OPERATION_PARAM) //required params
+        );
+    }
 }

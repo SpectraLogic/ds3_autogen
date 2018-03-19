@@ -37,7 +37,7 @@ public class IdListRequestPayloadGenerator_Test {
                 "                    'ClearSuspectBlobAzureTargetsSpectraS3Request should have request payload of type: list of strings')\n" +
                 "            xml_id_list = IdsList(id_list)\n" +
                 "            self.body = xmldom.tostring(xml_id_list.to_xml())\n";
-        final String result = generator.getAdditionalContent(clearSuspectBlobAzureTargetsRequest(), "ClearSuspectBlobAzureTargetsSpectraS3Request");
+        final String result = generator.getAdditionalContent("ClearSuspectBlobAzureTargetsSpectraS3Request");
         assertThat(result, is(expected));
     }
 

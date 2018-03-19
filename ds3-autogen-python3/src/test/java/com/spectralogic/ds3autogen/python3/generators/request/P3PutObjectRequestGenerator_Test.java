@@ -35,7 +35,7 @@ public class P3PutObjectRequestGenerator_Test {
                 "        self.object_name = typeCheckString(object_name)\n" +
                 "        object_data = StreamWithLength(stream, length)\n" +
                 "        self.body = object_data\n";
-        final String result = generator.getAdditionalContent(getRequestCreateObject(), "PutObjectRequest");
+        final String result = generator.getAdditionalContent("PutObjectRequest");
         assertThat(result, is(expected));
     }
 }

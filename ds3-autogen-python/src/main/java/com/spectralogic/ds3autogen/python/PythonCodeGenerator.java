@@ -48,10 +48,10 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.spectralogic.ds3autogen.python.utils.GeneratorUtils.hasFileObjectListPayload;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.removeUnusedTypes;
 import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.*;
+import static com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil.hasPutObjectsWithSizeRequestPayload;
 
 public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorInterface {
 
@@ -222,10 +222,17 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
         if (isAmazonCreateObjectRequest(ds3Request)) {
             return getPutObjectRequestGenerator();
         }
-        if (hasFileObjectListPayload(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)
-                || isCompleteMultiPartUploadRequest(ds3Request)) {
-            return new ObjectsPayloadGenerator();
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
+            return new Ds3GetObjectsPayloadGenerator();
+        }
+        if (hasPutObjectsWithSizeRequestPayload(ds3Request)) {
+            return new Ds3PutObjectsPayloadGenerator();
+        }
+        if (isCompleteMultiPartUploadRequest(ds3Request)) {
+            return new PartsRequestPayloadGenerator();
+        }
+        if (isMultiFileDeleteRequest(ds3Request)) {
+            return new DeleteObjectsPayloadGenerator();
         }
         if (isCreateMultiPartUploadPartRequest(ds3Request)
                 || isGetBlobPersistenceRequest(ds3Request)
