@@ -76,7 +76,6 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
             isCreateMultiPartUploadPartRequest(ds3Request) -> ReaderPayloadCommandGenerator()
             hasPutObjectsWithSizeRequestPayload(ds3Request) -> Ds3PutObjectPayloadCommandGenerator()
             hasGetObjectsWithLengthOffsetRequestPayload(ds3Request) -> Ds3GetObjectPayloadCommandGenerator()
-            hasSimpleObjectsRequestPayload(ds3Request) -> ObjectNamePayloadCommandGenerator()
             hasIdsRequestPayload(ds3Request) -> IdsPayloadCommandGenerator()
             hasStringRequestPayload(ds3Request) -> StringPayloadCommandGenerator()
             isCompleteMultiPartUploadRequest(ds3Request) -> PartsPayloadCommandGenerator()

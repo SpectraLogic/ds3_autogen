@@ -54,12 +54,10 @@ public class GoCodeGenerator_Test {
         // Request with payload List<Ds3GetObject>
         assertThat(getRequestGenerator(getRequestBulkGet()), instanceOf(GetBulkJobRequestGenerator.class));
         assertThat(getRequestGenerator(createVerifyJobRequest()), instanceOf(GetBulkJobRequestGenerator.class));
-
-        // Requests with payloads List<string>
-        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectNamesPayloadGenerator.class));
-        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectNamesPayloadGenerator.class));
-        assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(ObjectNamesPayloadGenerator.class));
-        assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()), instanceOf(ObjectNamesPayloadGenerator.class));
+        assertThat(getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(GetBulkJobRequestGenerator.class));
+        assertThat(getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(GetBulkJobRequestGenerator.class));
+        assertThat(getRequestGenerator(getPhysicalPlacementForObjects()), instanceOf(GetBulkJobRequestGenerator.class));
+        assertThat(getRequestGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()), instanceOf(GetBulkJobRequestGenerator.class));
 
         // Request with object name list payload
         assertThat(getRequestGenerator(getRequestMultiFileDelete()), instanceOf(DeleteObjectsRequestGenerator.class));

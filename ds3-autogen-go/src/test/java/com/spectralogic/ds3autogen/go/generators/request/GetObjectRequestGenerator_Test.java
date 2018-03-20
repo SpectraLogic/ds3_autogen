@@ -39,7 +39,8 @@ public class GetObjectRequestGenerator_Test {
                 new Arguments("Checksum", "Checksum"),
                 new Arguments("*string", "Job"),
                 new Arguments("map[string]string", "Metadata"),
-                new Arguments("*int64", "Offset")
+                new Arguments("*int64", "Offset"),
+                new Arguments("*string", "VersionId")
         );
 
         final ImmutableList<Arguments> result = generator.toStructParams(getRequestAmazonS3GetObject());
