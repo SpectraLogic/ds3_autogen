@@ -464,7 +464,7 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) { //Note: this must come before hasGetObjectsWithLengthOffsetRequestPayload
             return new BulkGetRequestGenerator();
         }
-        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request) || isStageObjectsJob(ds3Request)) {
+        if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return new PartialObjectRequestPayloadGenerator();
         }
         if (isCreateObjectRequest(ds3Request)) {
@@ -473,8 +473,7 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isCreateMultiPartUploadPartRequest(ds3Request)) {
             return new StreamRequestPayloadGenerator();
         }
-        if (hasSimpleObjectsRequestPayload(ds3Request)
-                || isMultiFileDeleteRequest(ds3Request)) {
+        if (isMultiFileDeleteRequest(ds3Request)) {
             return new ObjectsRequestPayloadGenerator();
         }
         if (hasStringRequestPayload(ds3Request)) {
@@ -503,8 +502,8 @@ public class NetCodeGenerator implements CodeGenerator {
         if (isBulkGetRequest(ds3Request)) { //Note: this must come before hasGetObjectsWithLengthOffsetRequestPayload
             return config.getTemplate("request/bulk_get_request.ftl");
         }
-        if (isStageObjectsJob(ds3Request)) {
-            return config.getTemplate("request/stage_objects_request.ftl");
+        if (isEjectStorageDomainBlobsRequest(ds3Request)) { //Note: this must come before hasGetObjectsWithLengthOffsetRequestPayload
+            return config.getTemplate("request/eject_storage_domain_blobs_request.ftl");
         }
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return config.getTemplate("request/partial_objects_request_payload.ftl");

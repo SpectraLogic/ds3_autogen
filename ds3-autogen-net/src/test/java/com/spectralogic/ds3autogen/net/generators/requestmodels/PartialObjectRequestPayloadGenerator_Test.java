@@ -48,7 +48,7 @@ public class PartialObjectRequestPayloadGenerator_Test {
         assertThat(result.get(0).getName(), is("BucketName"));
         assertThat(result.get(0).getType(), is("String"));
         assertThat(result.get(1).getName(), is("FullObjects"));
-        assertThat(result.get(1).getType(), is("IEnumerable<string>"));
+        assertThat(result.get(1).getType(), is("IEnumerable<Ds3Object>"));
         assertThat(result.get(2).getName(), is("PartialObjects"));
         assertThat(result.get(2).getType(), is("IEnumerable<Ds3PartialObject>"));
     }
@@ -60,7 +60,7 @@ public class PartialObjectRequestPayloadGenerator_Test {
         assertThat(result.get(0).getName(), is("BucketName"));
         assertThat(result.get(0).getType(), is("String"));
         assertThat(result.get(1).getName(), is("FullObjects"));
-        assertThat(result.get(1).getType(), is("IEnumerable<string>"));
+        assertThat(result.get(1).getType(), is("IEnumerable<Ds3Object>"));
         assertThat(result.get(2).getName(), is("PartialObjects"));
         assertThat(result.get(2).getType(), is("IEnumerable<Ds3PartialObject>"));
     }
