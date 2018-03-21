@@ -42,13 +42,12 @@ public class NetCodeGenerator_Test {
 
         // Request with payload List<Ds3Partial>
         assertThat(getTemplateModelGenerator(getRequestBulkGet()), instanceOf(BulkGetRequestGenerator.class));
-        assertThat(getTemplateModelGenerator(createVerifyJobRequest()), instanceOf(PartialObjectRequestPayloadGenerator.class));
 
-        // Requests with payloads List<string>
-        assertThat(getTemplateModelGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectsRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(getPhysicalPlacementForObjects()), instanceOf(ObjectsRequestPayloadGenerator.class));
-        assertThat(getTemplateModelGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()), instanceOf(ObjectsRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(createVerifyJobRequest()), instanceOf(PartialObjectRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(PartialObjectRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(PartialObjectRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(getPhysicalPlacementForObjects()), instanceOf(PartialObjectRequestPayloadGenerator.class));
+        assertThat(getTemplateModelGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()), instanceOf(PartialObjectRequestPayloadGenerator.class));
 
         // Request with object name list payload
         assertThat(getTemplateModelGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsRequestPayloadGenerator.class));

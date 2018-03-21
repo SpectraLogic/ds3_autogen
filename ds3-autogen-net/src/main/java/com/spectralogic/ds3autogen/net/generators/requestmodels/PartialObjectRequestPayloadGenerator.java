@@ -46,7 +46,7 @@ public class PartialObjectRequestPayloadGenerator extends BaseRequestGenerator {
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.add(new Arguments("IEnumerable<string>", "FullObjects"));
+        builder.add(new Arguments("IEnumerable<Ds3Object>", "FullObjects"));
         builder.add(new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         return builder.build();
     }
