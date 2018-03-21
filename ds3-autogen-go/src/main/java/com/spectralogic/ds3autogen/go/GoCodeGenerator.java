@@ -151,9 +151,6 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return new GetBulkJobRequestGenerator();
         }
-        if (hasSimpleObjectsRequestPayload(ds3Request)) {
-            return new ObjectNamesPayloadGenerator();
-        }
         if (hasIdsRequestPayload(ds3Request)) {
             return new IdsPayloadRequestGenerator();
         }

@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.RESPONSE, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
@@ -211,12 +211,16 @@ public class GoFunctionalTests {
         assertTrue(hasContent(requestCode));
 
         assertTrue(requestCode.contains("BucketName string"));
-        assertTrue(requestCode.contains("ObjectNames []string"));
-        assertTrue(requestCode.contains("StorageDomainId *string"));
+        assertTrue(requestCode.contains("Objects []Ds3GetObject"));
+        assertTrue(requestCode.contains("StorageDomain *string"));
 
         assertTrue(requestCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3Request(bucketName string, objectNames []string) *VerifyPhysicalPlacementForObjectsSpectraS3Request {"));
         assertTrue(requestCode.contains("BucketName: bucketName,"));
-        assertTrue(requestCode.contains("ObjectNames: objectNames,"));
+        assertTrue(requestCode.contains("Objects: buildDs3GetObjectSliceFromNames(objectNames),"));
+
+        assertTrue(requestCode.contains("func NewVerifyPhysicalPlacementForObjectsSpectraS3RequestWithPartialObjects(bucketName string, objects []Ds3GetObject) *VerifyPhysicalPlacementForObjectsSpectraS3Request {"));
+        assertTrue(requestCode.contains("BucketName: bucketName,"));
+        assertTrue(requestCode.contains("Objects: objects,"));
 
         // Verify Response file was generated
         final String responseCode = codeGenerator.getResponseCode();
@@ -256,9 +260,9 @@ public class GoFunctionalTests {
 
         assertTrue(client.contains("WithHttpVerb(HTTP_VERB_GET)."));
         assertTrue(client.contains("WithPath(\"/_rest_/bucket/\" + request.BucketName)."));
-        assertTrue(client.contains("WithOptionalQueryParam(\"storage_domain_id\", request.StorageDomainId)."));
+        assertTrue(client.contains("WithOptionalQueryParam(\"storage_domain\", request.StorageDomain)."));
         assertTrue(client.contains("WithQueryParam(\"operation\", \"verify_physical_placement\")."));
-        assertTrue(client.contains("WithReadCloser(buildDs3ObjectStreamFromNames(request.ObjectNames))."));
+        assertTrue(client.contains("WithReadCloser(buildDs3GetObjectListStream(request.Objects))."));
     }
 
     @Test
