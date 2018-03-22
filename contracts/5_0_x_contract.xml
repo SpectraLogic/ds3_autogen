@@ -12592,23 +12592,6 @@
               </Annotation>
             </Annotations>
           </Element>
-          <Element Name="ObsoletionId" Type="java.util.UUID">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                <AnnotationElements/>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                </AnnotationElements>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.References">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Obsoletion" ValueType="java.lang.Class"/>
-                </AnnotationElements>
-              </Annotation>
-            </Annotations>
-          </Element>
           <Element Name="PoolId" Type="java.util.UUID">
             <Annotations>
               <Annotation Name="com.spectralogic.util.db.lang.References">
@@ -12679,23 +12662,6 @@
               <Annotation Name="com.spectralogic.util.db.lang.References">
                 <AnnotationElements>
                   <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.BlobTape" ValueType="java.lang.Class"/>
-                </AnnotationElements>
-              </Annotation>
-            </Annotations>
-          </Element>
-          <Element Name="ObsoletionId" Type="java.util.UUID">
-            <Annotations>
-              <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                <AnnotationElements/>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="DELETE_THIS_BEAN" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
-                </AnnotationElements>
-              </Annotation>
-              <Annotation Name="com.spectralogic.util.db.lang.References">
-                <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Obsoletion" ValueType="java.lang.Class"/>
                 </AnnotationElements>
               </Annotation>
             </Annotations>
@@ -13911,13 +13877,7 @@
           <Element Name="DefaultAutoCompactionThreshold" Type="java.lang.Integer">
             <Annotations/>
           </Element>
-          <Element Name="DefaultAutoCompactionThresholdInBytes" Type="java.lang.Long">
-            <Annotations/>
-          </Element>
           <Element Name="MinimumAutoCompactionThreshold" Type="java.lang.Integer">
-            <Annotations/>
-          </Element>
-          <Element Name="MinimumAutoCompactionThresholdInBytes" Type="java.lang.Long">
             <Annotations/>
           </Element>
         </Elements>
@@ -13925,121 +13885,91 @@
           <EnumConstant Name="LTO5">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="LTO6">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="LTO7">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="LTOM8">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="LTO8">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="LTO_CLEANING_TAPE">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JC">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JY">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JK">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JD">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JZ">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_JL">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="0" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="TS_CLEANING_TAPE">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="UNKNOWN">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
           <EnumConstant Name="FORBIDDEN">
             <Properties>
               <Property Name="DefaultAutoCompactionThreshold" Value="20" ValueType="java.lang.Integer"/>
-              <Property Name="DefaultAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
               <Property Name="MinimumAutoCompactionThreshold" Value="10" ValueType="java.lang.Integer"/>
-              <Property Name="MinimumAutoCompactionThresholdInBytes" Value="null" ValueType="java.lang.Long"/>
             </Properties>
           </EnumConstant>
         </EnumConstants>
