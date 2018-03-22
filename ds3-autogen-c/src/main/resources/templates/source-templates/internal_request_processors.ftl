@@ -92,6 +92,10 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
         if (list_type == BULK_PUT) {
             xmlSetProp(object_node, (xmlChar*) "Size", (xmlChar*) size_buff);
         }
+
+        if (list_type == BULK_GET && obj->version_id != NULL && strlen(obj->version_id->value) != 0) {
+        	xmlSetProp(object_node, (xmlChar*) "VersionId", (xmlChar*) obj->version_id->value);
+        }
     }
 
     xmlDocSetRootElement(doc, objects_node);

@@ -33,6 +33,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class RequestConverter_Test {
@@ -77,6 +78,16 @@ public class RequestConverter_Test {
     public void testConvertDs3RequestWithRequestPayload() {
         final ImmutableMap<String, Parameter> hasRequestPayload = RequestConverter.buildRequestPayloadMap();
         assertNotNull(hasRequestPayload.get("get_bulk_job_spectra_s3_request"));
+    }
+
+    @Test
+    public void testStageObjectsHasRequestPayload() {
+        final ImmutableMap<String, Parameter> hasRequestPayload = RequestConverter.buildRequestPayloadMap();
+        final Parameter result = hasRequestPayload.get("stage_objects_job_spectra_s3_request");
+        assertNotNull(result);
+
+        assertThat(result.getName(), is("object_list"));
+        assertThat(result.getParameterType(), is("ds3_bulk_object_list_response"));
     }
 
     @Test
