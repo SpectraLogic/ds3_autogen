@@ -40,23 +40,16 @@ public class ParameterHelper {
     }
 
     public static boolean requiresParameterCondition(final Parameter parm) {
-        if (parm.getName().equalsIgnoreCase("length")) {
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_bulk_object_list_response")) { // special case - bulk request payload
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_job_chunk_client_processing_order_guarantee")) { // special case - enum property of ds3_request for BULK_GET
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_complete_multipart_upload_response")) { // special case
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_delete_objects_response")) { // special case - delete objects list
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("void")) { // special case - file IO
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired()) {
-            return false;
-        } else if (parm.getParameterType().equalsIgnoreCase("operation")) {
-            return false;
-        } else if (parm.getParameterPointerType().equals(ParameterPointerType.NONE)) {
+        if (parm.getName().equalsIgnoreCase("length")
+                || parm.getParameterType().equalsIgnoreCase("ds3_bulk_object_list_response") // special case - bulk request payload
+                || parm.getParameterType().equalsIgnoreCase("ds3_job_chunk_client_processing_order_guarantee") // special case - enum property of ds3_request for BULK_GET
+                || parm.getParameterType().equalsIgnoreCase("ds3_complete_multipart_upload_response") // special case
+                || parm.getParameterType().equalsIgnoreCase("ds3_delete_objects_response") // special case - delete objects list
+                || parm.getParameterType().equalsIgnoreCase("ds3_ids_list") // special case suspect blob commands
+                || parm.getParameterType().equalsIgnoreCase("void") // special case - file IO
+                || (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired())
+                || parm.getParameterType().equalsIgnoreCase("operation")
+                || parm.getParameterPointerType().equals(ParameterPointerType.NONE)) {
             return false;
         }
         return true;
@@ -100,6 +93,8 @@ public class ParameterHelper {
                 return indent(depth) + "request->mpu_list = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_delete_objects_response":
                 return indent(depth) + "request->delete_objects = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
+            case "ds3_ids_list":
+                return indent(depth) + "request->ids = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_bool":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", NULL);\n";
             case "operation":

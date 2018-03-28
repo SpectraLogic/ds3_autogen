@@ -14,20 +14,10 @@
 #include "ds3_string.h"
 #include "ds3_string_multimap.h"
 #include "ds3_uint64_string_map.h"
+#include "ds3_library_exports.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-// For windows DLL symbol exports.
-#ifdef _WIN32
-#    ifdef LIBRARY_EXPORTS
-#        define LIBRARY_API __declspec(dllexport)
-#    else
-#        define LIBRARY_API __declspec(dllimport)
-#    endif
-#else
-#    define LIBRARY_API
 #endif
 
 #define DS3_READFUNC_ABORT CURL_READFUNC_ABORT
@@ -106,6 +96,11 @@ typedef struct {
     int       num_strings;
 }ds3_delete_objects_response;
 
+typedef struct {
+    ds3_str** strings_list;
+    int       num_strings;
+}ds3_ids_list;
+
 <#-- **************************************** -->
 <#-- Generate all Models                      -->
 <#list getEnums() as enumEntry>
@@ -161,6 +156,7 @@ LIBRARY_API void ds3_head_object_response_free(ds3_head_object_response* respons
 LIBRARY_API void ds3_multipart_upload_part_response_free(ds3_multipart_upload_part_response* response);
 LIBRARY_API void ds3_complete_multipart_upload_response_free(ds3_complete_multipart_upload_response* response);
 LIBRARY_API void ds3_delete_objects_response_free(ds3_delete_objects_response* response);
+LIBRARY_API void ds3_ids_list_free(ds3_ids_list* ids);
 
 LIBRARY_API ds3_metadata_entry* ds3_metadata_get_entry(const ds3_metadata* metadata, const char* name);
 LIBRARY_API unsigned int ds3_metadata_size(const ds3_metadata* metadata);

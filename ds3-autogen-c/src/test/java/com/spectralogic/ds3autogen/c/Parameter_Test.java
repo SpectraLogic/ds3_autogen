@@ -71,4 +71,14 @@ public class Parameter_Test {
         System.out.println(parmSig);
         assertThat(parmSig, is("void ds3_request_set_max_keys(const ds3_request* request, const int value)"));
     }
+
+    @Test
+    public void testSetParamBlockIdsPayload() {
+        final Parameter idsList = new Parameter(ParameterModifier.CONST, "ds3_ids_list", "ids", ParameterPointerType.SINGLE_POINTER, true);
+
+        final String expected = "request->ids = (ds3_ids_list*) ids;\n";
+
+        final String result = ParameterHelper.getSetParamBlock(idsList, 0);
+        assertThat(result, is(expected));
+    }
 }
