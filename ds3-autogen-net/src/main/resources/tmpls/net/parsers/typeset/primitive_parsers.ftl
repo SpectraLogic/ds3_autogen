@@ -244,8 +244,8 @@
             string encapsulatingXmlTag,
             Func<XElement, TResult> parser)
         {
-            var encapsulatingElement = element.Element(encapsulatingXmlTag);
-            if (null == encapsulatingElement || encapsulatingElement.IsEmpty)
+            var encapsulatingElement = element.Elements(encapsulatingXmlTag);
+            if (null == encapsulatingElement || encapsulatingElement.Count() == 0)
             {
                 return Enumerable.Empty<TResult>();
             }
