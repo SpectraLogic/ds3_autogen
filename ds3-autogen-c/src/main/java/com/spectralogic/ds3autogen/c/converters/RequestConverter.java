@@ -258,6 +258,21 @@ public final class RequestConverter {
                 new Parameter(ParameterModifier.CONST, "char", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
         requestPayloadMap.put("replicate_put_job_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "char", "payload", ParameterPointerType.SINGLE_POINTER, true)); // String
+
+        // requests with payloads of ids
+        final Parameter idListParameter = new Parameter(ParameterModifier.CONST, "ds3_ids_list", "ids", ParameterPointerType.SINGLE_POINTER, true);
+
+        requestPayloadMap.put("clear_suspect_blob_azure_targets_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("clear_suspect_blob_ds3_targets_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("clear_suspect_blob_pools_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("clear_suspect_blob_s3_targets_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("clear_suspect_blob_tapes_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("mark_suspect_blob_azure_targets_as_degraded_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("mark_suspect_blob_ds3_targets_as_degraded_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("mark_suspect_blob_pools_as_degraded_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("mark_suspect_blob_s3_targets_as_degraded_spectra_s3_request", idListParameter);
+        requestPayloadMap.put("mark_suspect_blob_tapes_as_degraded_spectra_s3_request", idListParameter);
+
         return requestPayloadMap.build();
     }
 
