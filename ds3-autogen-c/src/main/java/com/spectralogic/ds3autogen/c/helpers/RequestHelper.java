@@ -175,6 +175,7 @@ public final class RequestHelper {
     public String getRequestObjectListType(final String requestName) {
         switch(requestName) {
             case "ds3_get_bulk_job_spectra_s3_request":
+            case "ds3_stage_objects_job_spectra_s3_request":
                 return "BULK_GET";
 
             case "ds3_put_bulk_job_spectra_s3_request":

@@ -228,6 +228,8 @@ public final class RequestConverter {
 
     public static ImmutableMap<String, Parameter> buildRequestPayloadMap() {
         final ImmutableMap.Builder<String, Parameter> requestPayloadMap =  ImmutableMap.builder();
+        requestPayloadMap.put("stage_objects_job_spectra_s3_request",
+                new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("get_bulk_job_spectra_s3_request",
                 new Parameter(ParameterModifier.CONST, "ds3_bulk_object_list_response", "object_list", ParameterPointerType.SINGLE_POINTER, true));
         requestPayloadMap.put("put_bulk_job_spectra_s3_request",
