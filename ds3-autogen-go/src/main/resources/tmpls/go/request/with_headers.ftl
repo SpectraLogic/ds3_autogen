@@ -1,4 +1,4 @@
-func (${name?uncap_first} *PutObjectRequest) WithMetaData(key string, values ...string) *${name} {
+func (${name?uncap_first} *PutObjectRequest) WithMetaData(key string, values ...string) interface{} {
     if strings.HasPrefix(strings.ToLower(key), AMZ_META_HEADER) {
         ${name?uncap_first}.Metadata[key] = strings.Join(values, ",")
     } else {

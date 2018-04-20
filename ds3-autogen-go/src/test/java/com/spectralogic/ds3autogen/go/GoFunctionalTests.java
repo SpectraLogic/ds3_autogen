@@ -933,8 +933,8 @@ public class GoFunctionalTests {
         assertTrue(requestCode.contains("putObjectRequest.Checksum.Type = checksumType"));
 
         // test metadata
-        assertTrue(requestCode.contains("const ( AMZ_META_HEADER = \"x-amz-meta-\" )"));
-        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, values ...string) *PutObjectRequest {"));
+        assertFalse(requestCode.contains("const ( AMZ_META_HEADER = \"x-amz-meta-\" )"));
+        assertTrue(requestCode.contains("func (putObjectRequest *PutObjectRequest) WithMetaData(key string, values ...string) interface{} {"));
         assertTrue(requestCode.contains("if strings.HasPrefix(strings.ToLower(key), AMZ_META_HEADER) {"));
         assertTrue(requestCode.contains("putObjectRequest.Metadata[key] = strings.Join(values, \",\")"));
         assertTrue(requestCode.contains("putObjectRequest.Metadata[strings.ToLower(AMZ_META_HEADER + key)] = strings.Join(values, \",\")"));
