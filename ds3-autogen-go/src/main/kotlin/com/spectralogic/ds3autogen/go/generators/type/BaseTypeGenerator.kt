@@ -23,7 +23,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.type.StructElement
 import com.spectralogic.ds3autogen.go.models.type.Type
 import com.spectralogic.ds3autogen.go.utils.toGoResponseType
-import com.spectralogic.ds3autogen.go.utils.toGoType
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors

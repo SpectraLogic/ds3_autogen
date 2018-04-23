@@ -33,9 +33,4 @@ interface ResponseModelGeneratorUtil {
      */
     fun toResponseCode(ds3ResponseCode: Ds3ResponseCode, responseName: String): ResponseCode
 
-    /**
-     * Retrieves the list of imports that are not common to all responses
-     * i.e. not specified within the templates
-     */
-    fun toImportSet(): ImmutableSet<String>
 }

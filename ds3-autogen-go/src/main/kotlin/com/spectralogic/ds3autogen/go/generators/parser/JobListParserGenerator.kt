@@ -34,7 +34,6 @@ class JobListParserGenerator : BaseTypeParserGenerator() {
      * is special-cased to ignore the encapsulating tag "Job".
      */
     override fun toChildNode(ds3Element: Ds3Element, typeName: String, typeMap: ImmutableMap<String, Ds3Type>): ParseElement {
-        println(ds3Element)
         if (ds3Element.name == "Jobs") {
             val xmlTag = getXmlTagName(ds3Element)
             val modelName = typeName.decapitalize()

@@ -1,9 +1,3 @@
-<#include "../common/copyright.ftl" />
-
-package models
-
-import "log"
-
 func (${modelName?uncap_first} *${modelName?cap_first}) parse(xmlNode *XmlNode, aggErr *AggregateError) {
     <#if helper.hasContent(attributes) == true>
     // Parse Attributes
@@ -33,3 +27,4 @@ func (${modelName?uncap_first} *${modelName?cap_first}) parse(xmlNode *XmlNode, 
     }
     </#if>
 }
+

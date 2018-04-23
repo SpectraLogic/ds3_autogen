@@ -36,13 +36,12 @@ import static org.mockito.Mockito.mock;
 public class GoFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
     @Test
     public void simpleRequestNoPayload() throws IOException, TemplateModelException {
-        final String requestName = "SimpleNoPayloadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/simpleRequestNoPayload.xml");
 
@@ -91,9 +90,8 @@ public class GoFunctionalTests {
 
     @Test
     public void simpleRequestWithPayload() throws IOException, TemplateModelException {
-        final String requestName = "SimpleWithPayloadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "Bucket");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/simpleRequestWithPayload.xml");
 
@@ -148,9 +146,8 @@ public class GoFunctionalTests {
 
     @Test
     public void requestWithResourceInPath() throws IOException, TemplateModelException {
-        final String requestName = "DeleteBucketAclSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/requestWithResourceInPath.xml");
 
@@ -199,9 +196,8 @@ public class GoFunctionalTests {
     @Test
     public void verifyPhysicalPlacement() throws IOException, TemplateModelException {
         // Test for request with payload of Ds3Object list
-        final String requestName = "VerifyPhysicalPlacementForObjectsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "PhysicalPlacement");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/verifyPhysicalPlacement.xml");
 
@@ -268,9 +264,8 @@ public class GoFunctionalTests {
     @Test
     public void replicatePutJob() throws IOException, TemplateModelException {
         // Test for request with string payload
-        final String requestName = "ReplicatePutJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/replicatePutJob.xml");
 
@@ -330,9 +325,8 @@ public class GoFunctionalTests {
     @Test
     public void completeMultipartUpload() throws IOException, TemplateModelException {
         // Test for request with CompleteMultipartUpload payload
-        final String requestName = "CompleteMultiPartUploadRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "CompleteMultipartUploadResult");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/completeMultipartUpload.xml");
 
@@ -395,9 +389,8 @@ public class GoFunctionalTests {
     @Test
     public void deleteObjects() throws IOException, TemplateModelException {
         // Test for request with object name list payload and optional void parameter
-        final String requestName = "DeleteObjectsRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "DeleteResult");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/deleteObjects.xml");
 
@@ -462,9 +455,8 @@ public class GoFunctionalTests {
     @Test
     public void getJobToReplicate() throws IOException, TemplateModelException {
         // Test for request with string response payload
-        final String requestName = "GetJobToReplicateSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/getJobToReplicate.xml");
 
@@ -515,9 +507,8 @@ public class GoFunctionalTests {
 
     @Test
     public void getObject() throws IOException, TemplateModelException {
-        final String requestName = "GetObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/getObject.xml");
 
@@ -606,9 +597,8 @@ public class GoFunctionalTests {
     @Test
     public void getAzureDataReplicationRules() throws IOException, TemplateModelException {
         // This tests generation of request with "type" optional parameter keyword conflict
-        final String requestName = "GetAzureDataReplicationRulesSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "AzureDataReplicationRule");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/getAzureDataReplicationRules.xml");
 
@@ -691,9 +681,8 @@ public class GoFunctionalTests {
     @Test
     public void putAzureDataReplicationRule() throws IOException, TemplateModelException {
         // This tests generation of request with "type" required parameter keyword conflict
-        final String requestName = "PutAzureDataReplicationRuleSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "AzureDataReplicationRule");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/putAzureDataReplicationRule.xml");
 
@@ -766,9 +755,8 @@ public class GoFunctionalTests {
     @Test
     public void deleteJobCreatedNotificationRegistration() throws IOException, TemplateModelException {
         // This tests correct generation of notificationId required parameter from resource
-        final String requestName = "DeleteJobCreatedNotificationRegistrationSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/deleteJobCreatedNotificationRegistration.xml");
 
@@ -821,9 +809,8 @@ public class GoFunctionalTests {
     @Test
     public void putMultiPartUploadPart() throws IOException, TemplateModelException {
         // This tests correct generation of request with ReaderWithSizeDecorator payload
-        final String requestName = "PutMultiPartUploadPartRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/putMultiPartUploadPart.xml");
 
@@ -890,9 +877,8 @@ public class GoFunctionalTests {
     @Test
     public void putObject() throws IOException, TemplateModelException {
         // This tests correct generation of request with ReaderWithSizeDecorator payload
-        final String requestName = "PutObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/putObject.xml");
 
@@ -980,9 +966,8 @@ public class GoFunctionalTests {
 
     @Test
     public void clearSuspectBlobAzureTargetsSpectraS3() throws IOException, TemplateModelException {
-        final String requestName = "ClearSuspectBlobAzureTargetsSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/clearSuspectBlobAzureTargetsSpectraS3.xml");
 
@@ -1024,9 +1009,8 @@ public class GoFunctionalTests {
 
     @Test
     public void putBulkJobSpectraS3Request() throws IOException, TemplateModelException {
-        final String requestName = "PutBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/putBulkJob.xml");
 
@@ -1123,9 +1107,8 @@ public class GoFunctionalTests {
 
     @Test
     public void getBulkJobSpectraS3Request() throws IOException, TemplateModelException {
-        final String requestName = "GetBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/getBulkJob.xml");
 
@@ -1207,9 +1190,8 @@ public class GoFunctionalTests {
 
     @Test
     public void verifyBulkJobSpectraS3Request() throws IOException, TemplateModelException {
-        final String requestName = "VerifyBulkJobSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "MasterObjectList");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/verifyBulkJob.xml");
 
@@ -1281,9 +1263,8 @@ public class GoFunctionalTests {
 
     @Test
     public void putBucketSpectraS3Test() throws IOException, TemplateModelException {
-        final String requestName = "PutBucketSpectraS3Request";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, "Bucket");
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/putBucketSpectraS3.xml");
 
@@ -1313,9 +1294,8 @@ public class GoFunctionalTests {
 
     @Test
     public void headObjectTest() throws IOException, TemplateModelException {
-        final String requestName = "HeadObjectRequest";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/headObjectRequest.xml");
 
