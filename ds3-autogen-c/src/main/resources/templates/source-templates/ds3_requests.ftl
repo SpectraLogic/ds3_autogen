@@ -12,6 +12,7 @@
 #include "ds3_string_multimap_impl.h"
 #include "ds3_uint64_string_map.h"
 #include "ds3_utils.h"
+#include "ds3_marshaling.h"
 
 #ifdef _WIN32
   #include <io.h>

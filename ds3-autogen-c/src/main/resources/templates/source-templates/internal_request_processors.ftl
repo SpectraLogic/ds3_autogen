@@ -1,15 +1,3 @@
-typedef enum {
-    BULK_PUT,
-    BULK_GET,
-    BULK_DELETE,
-    GET_PHYSICAL_PLACEMENT,
-    COMPLETE_MPU,
-    STRING,
-    STRING_LIST,
-    ID_LIST,
-    DATA
-}object_list_type;
-
 static ds3_error* _internal_request_dispatcher(
         const ds3_client* client,
         const ds3_request* request,
@@ -70,7 +58,7 @@ static ds3_error* _get_request_xml_nodes(
     return NULL;
 }
 
-static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type) {
+xmlDocPtr ds3_generate_xml_bulk_objects_list(const ds3_bulk_object_list_response* obj_list, object_list_type list_type) {
     char size_buff[STRING_BUFFER_SIZE];
     xmlDocPtr doc;
     ds3_bulk_object_response* obj;
@@ -104,7 +92,7 @@ static xmlDocPtr _generate_xml_bulk_objects_list(const ds3_bulk_object_list_resp
     return doc;
 }
 
-static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_response* mpu_list) {
+xmlDocPtr ds3_generate_xml_complete_mpu(const ds3_complete_multipart_upload_response* mpu_list) {
     char size_buff[STRING_BUFFER_SIZE];
     xmlDocPtr doc;
     ds3_multipart_upload_part_response* part;
@@ -131,7 +119,7 @@ static xmlDocPtr _generate_xml_complete_mpu(const ds3_complete_multipart_upload_
     return doc;
 }
 
-static xmlDocPtr _generate_xml_delete_objects(ds3_delete_objects_response* keys_list) {
+xmlDocPtr ds3_generate_xml_delete_objects(ds3_delete_objects_response* keys_list) {
     xmlDocPtr doc;
     ds3_str* key;
     xmlNodePtr del_node, obj_node;
@@ -154,7 +142,7 @@ static xmlDocPtr _generate_xml_delete_objects(ds3_delete_objects_response* keys_
     return doc;
 }
 
-static xmlDocPtr _generate_xml_ids(ds3_ids_list* ids_list) {
+xmlDocPtr ds3_generate_xml_ids(ds3_ids_list* ids_list) {
     xmlDocPtr doc;
     ds3_str* key;
     xmlNodePtr ids_node, id_node;
@@ -167,7 +155,7 @@ static xmlDocPtr _generate_xml_ids(ds3_ids_list* ids_list) {
     for (id_num = 0; id_num < ids_list->num_strings; id_num++) {
         key = ids_list->strings_list[id_num];
 
-        xmlNewTextChild(id_node, NULL, (xmlChar*) "Id", (xmlChar*) key->value);
+        id_node = xmlNewTextChild(ids_node, NULL, (xmlChar*) "Id", (xmlChar*) key->value);
         xmlAddChild(ids_node, id_node);
     }
 
@@ -192,14 +180,14 @@ static ds3_error* _init_request_payload(const ds3_request* _request,
             if (request->object_list == NULL || request->object_list->num_objects == 0) {
                 return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The bulk command requires a list of objects to process");
             }
-            doc = _generate_xml_bulk_objects_list(request->object_list, operation_type);
+            doc = ds3_generate_xml_bulk_objects_list(request->object_list, operation_type);
             break;
 
         case COMPLETE_MPU:
             if (request->mpu_list == NULL || request->mpu_list->num_parts == 0) {
                 return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The complete multipart upload command requires a list of objects to process");
             }
-            doc = _generate_xml_complete_mpu(request->mpu_list);
+            doc = ds3_generate_xml_complete_mpu(request->mpu_list);
             break;
 
         case BULK_DELETE:
@@ -207,14 +195,14 @@ static ds3_error* _init_request_payload(const ds3_request* _request,
             if (request->delete_objects == NULL || request->delete_objects->num_strings == 0) {
                 return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The delete objects command requires a list of objects to process");
             }
-            doc = _generate_xml_delete_objects(request->delete_objects);
+            doc = ds3_generate_xml_delete_objects(request->delete_objects);
             break;
 
         case ID_LIST:
             if (request->ids == NULL || request->ids->num_strings == 0) {
                 return ds3_create_error(DS3_ERROR_MISSING_ARGS, "The suspect blob command requires a list of ids to process");
             }
-            doc = _generate_xml_ids(request->ids);
+            doc = ds3_generate_xml_ids(request->ids);
             break;
 
         case STRING: // *** not XML - do not interpret
