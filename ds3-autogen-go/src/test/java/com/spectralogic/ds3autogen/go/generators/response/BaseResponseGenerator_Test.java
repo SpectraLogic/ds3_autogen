@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.response;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode;
@@ -284,12 +283,6 @@ public class BaseResponseGenerator_Test {
         final ImmutableList<ResponseCode> result = generator.toResponseCodeList(responseCodes, "ResponseName");
 
         expectedCodes.forEach(expected -> assertThat(result, hasItem(expected)));
-    }
-
-    @Test
-    public void toImportSet_Test() {
-        final ImmutableSet<String> result = generator.toImportSet();
-        assertThat(result.size(), is(0));
     }
 
     @Test

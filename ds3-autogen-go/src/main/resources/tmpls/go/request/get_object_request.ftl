@@ -1,10 +1,3 @@
-<#include "request_header.ftl" />
-
-import (
-    "fmt"
-    "strings"
-)
-
 type Range struct {
     Start int64
     End int64
