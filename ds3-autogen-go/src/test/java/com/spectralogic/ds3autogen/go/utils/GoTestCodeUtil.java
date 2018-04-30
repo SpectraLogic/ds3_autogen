@@ -25,7 +25,6 @@ import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.go.GoCodeGenerator;
-import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil;
 import freemarker.template.TemplateModelException;
 
 import java.io.ByteArrayOutputStream;
@@ -33,8 +32,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-
-import static kotlin.text.StringsKt.decapitalize;
 
 import static org.mockito.Mockito.when;
 
