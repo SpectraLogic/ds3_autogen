@@ -31,12 +31,19 @@ public class GetObjectResponseGenerator extends BaseResponseGenerator {
     public String toParseResponsePayload(final Ds3Request ds3Request) {
         return "stream = self.request.stream\n" +
                 pythonIndent(2) + "try:\n" +
-                pythonIndent(3) + "bytes_read = response.read()\n" +
+                pythonIndent(3) + "bytes_read = response.read(self.buffer_size)\n" +
                 pythonIndent(3) + "while bytes_read:\n" +
                 pythonIndent(4) + "stream.write(bytes_read)\n" +
-                pythonIndent(4) + "bytes_read = response.read()\n" +
+                pythonIndent(4) + "bytes_read = response.read(self.buffer_size)\n" +
                 pythonIndent(2) + "finally:\n" +
                 pythonIndent(3) + "stream.close()\n" +
                 pythonIndent(3) + "response.close()\n";
+    }
+
+    @Override
+    public String toInitResponse() {
+        return "def __init__(self, response, request, buffer_size=None):\n" +
+                pythonIndent(2) + "self.buffer_size = buffer_size\n" +
+                pythonIndent(2) + "super(self.__class__, self).__init__(response, request)\n";
     }
 }
