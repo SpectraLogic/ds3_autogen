@@ -23,6 +23,8 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.enums.HttpVerb;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
+import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
+import com.spectralogic.ds3autogen.python.generators.client.GetObjectCommandGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator;
 import com.spectralogic.ds3autogen.python.generators.response.GetObjectResponseGenerator;
@@ -175,22 +177,22 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void getResponseGenerator_Test() {
-        assertThat(getResponseGenerator(createDs3RequestTestData("com.test.EmptyRequest", Classification.spectrads3)),
+        assertThat(generator.getResponseGenerator(createDs3RequestTestData("com.test.EmptyRequest", Classification.spectrads3)),
                 instanceOf(BaseResponseGenerator.class));
 
-        assertThat(getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
+        assertThat(generator.getResponseGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectResponseGenerator.class));
 
-        assertThat(getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadResponseGenerator.class));
+        assertThat(generator.getResponseGenerator(getHeadObjectRequest()), instanceOf(HeadResponseGenerator.class));
 
-        assertThat(getResponseGenerator(getObjectsDetailsRequest()), instanceOf(PaginationResponseGenerator.class));
+        assertThat(generator.getResponseGenerator(getObjectsDetailsRequest()), instanceOf(PaginationResponseGenerator.class));
 
-        assertThat(getResponseGenerator(getUsersSpectraS3Request()), instanceOf(PaginationResponseGenerator.class));
+        assertThat(generator.getResponseGenerator(getUsersSpectraS3Request()), instanceOf(PaginationResponseGenerator.class));
     }
 
     @Test
     public void toResponseModel_Test() {
         final Ds3Request request = getBucketRequest();
-        final BaseResponse result = toResponseModel(request);
+        final BaseResponse result = generator.toResponseModel(request);
         assertThat(result.getName(), is("GetBucketResponseHandler"));
         assertThat(result.getCodes().size(), is(1));
 
@@ -201,20 +203,20 @@ public class PythonCodeGenerator_Test {
 
     @Test
     public void toResponseModelList_NullList_Test() {
-        final ImmutableList<BaseResponse> result = toResponseModelList(null);
+        final ImmutableList<BaseResponse> result = generator.toResponseModelList(null);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toResponseModelList_EmptyList_Test() {
-        final ImmutableList<BaseResponse> result = toResponseModelList(ImmutableList.of());
+        final ImmutableList<BaseResponse> result = generator.toResponseModelList(ImmutableList.of());
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void toResponseModelList_Test() {
         final ImmutableList<Ds3Request> requests = ImmutableList.of(getBucketRequest());
-        final ImmutableList<BaseResponse> result = toResponseModelList(requests);
+        final ImmutableList<BaseResponse> result = generator.toResponseModelList(requests);
         assertThat(result.size(), is(1));
         assertThat(result.get(0).getName(), is("GetBucketResponseHandler"));
     }
@@ -252,5 +254,11 @@ public class PythonCodeGenerator_Test {
         assertThat(result.get(0).getCommandName(), is("put_bucket"));
         assertThat(result.get(1).getResponseName(), is("PutBucketSpectraS3Response"));
         assertThat(result.get(1).getCommandName(), is("put_bucket_spectra_s3"));
+    }
+
+    @Test
+    public void getClientGenerator_Test() {
+        assertThat(getClientGenerator(getRequestAmazonS3GetObject()), instanceOf(GetObjectCommandGenerator.class));
+        assertThat(getClientGenerator(getRequestSpectraS3GetObject()), instanceOf(BaseClientGenerator.class));
     }
 }

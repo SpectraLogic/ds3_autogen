@@ -27,6 +27,8 @@ import static org.junit.Assert.assertThat;
 
 public class BaseClientGenerator_Test {
 
+    private static final BaseClientGenerator generator = new BaseClientGenerator();
+
     private static Ds3DocSpec getTestDocSpec() {
         return new Ds3DocSpecImpl(
                 ImmutableMap.of(
@@ -56,5 +58,17 @@ public class BaseClientGenerator_Test {
         final Ds3DocSpec docSpec = getTestDocSpec();
         assertThat(toDocumentation("com.test.TestOneRequest", docSpec), is(expected));
         assertThat(toDocumentation("TestOneRequest", docSpec), is(expected));
+    }
+
+    @Test
+    public void getFunctionParametersTest() {
+        final String expected = "self, request";
+        assertThat(generator.getFunctionParameters(), is(expected));
+    }
+
+    @Test
+    public void getResponseParametersTest() {
+        final String expected = "self.net_client.get_response(request), request";
+        assertThat(generator.getResponseParameters(), is(expected));
     }
 }

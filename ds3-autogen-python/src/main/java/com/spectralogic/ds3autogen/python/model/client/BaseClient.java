@@ -21,12 +21,22 @@ public class BaseClient {
     private final String requestType;
     private final String responseName;
     private final String documentation;
+    private final String functionParams; /** comma separated list of function parameters */
+    private final String responseParams; /** comma separated list of parameters passed to response */
 
-    public BaseClient(final String commandName, final String requestType, final String responseName, final String documentation) {
+    public BaseClient(
+            final String commandName,
+            final String requestType,
+            final String responseName,
+            final String documentation,
+            final String functionParams,
+            final String responseParams) {
         this.commandName = commandName;
         this.requestType = requestType;
         this.responseName = responseName;
         this.documentation = documentation;
+        this.functionParams = functionParams;
+        this.responseParams = responseParams;
     }
 
     public String getCommandName() {
@@ -43,5 +53,13 @@ public class BaseClient {
 
     public String getDocumentation() {
         return documentation;
+    }
+
+    public String getFunctionParams() {
+        return functionParams;
+    }
+
+    public String getResponseParams() {
+        return responseParams;
     }
 }
