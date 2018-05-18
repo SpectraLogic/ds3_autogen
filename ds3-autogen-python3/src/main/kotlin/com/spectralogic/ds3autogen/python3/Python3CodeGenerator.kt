@@ -17,8 +17,10 @@ package com.spectralogic.ds3autogen.python3
 
 import com.spectralogic.ds3autogen.python.PythonCodeGenerator
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator
+import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator
 import com.spectralogic.ds3autogen.python3.generators.request.P3IdListRequestGenerator
 import com.spectralogic.ds3autogen.python3.generators.request.P3PutObjectRequestGenerator
+import com.spectralogic.ds3autogen.python3.generators.response.P3GetObjectResponseGenerator
 import freemarker.template.Configuration
 import freemarker.template.Template
 
@@ -43,5 +45,12 @@ class Python3CodeGenerator : PythonCodeGenerator() {
      */
     override fun getIdsRequestGenerator(): BaseRequestGenerator {
         return P3IdListRequestGenerator()
+    }
+
+    /**
+     * Retrieves the Python 3 compatible generator for the GetObjectResponse
+     */
+    override fun getGetObjectResponseGenerator(): BaseResponseGenerator {
+        return P3GetObjectResponseGenerator()
     }
 }
