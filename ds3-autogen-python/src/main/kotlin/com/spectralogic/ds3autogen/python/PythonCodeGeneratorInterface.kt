@@ -21,6 +21,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec
 import com.spectralogic.ds3autogen.python.generators.request.BaseRequestGenerator
+import com.spectralogic.ds3autogen.python.generators.response.BaseResponseGenerator
 import com.spectralogic.ds3autogen.python.model.request.BaseRequest
 import freemarker.template.Configuration
 import freemarker.template.Template
@@ -48,4 +49,6 @@ interface PythonCodeGeneratorInterface {
 
     fun toRequestModelList(ds3Requests: ImmutableList<Ds3Request>,
                            docSpec: Ds3DocSpec) : ImmutableList<BaseRequest>
+
+    fun getGetObjectResponseGenerator() : BaseResponseGenerator
 }

@@ -25,7 +25,7 @@ import static com.spectralogic.ds3autogen.utils.Helper.camelToUnderscore;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath;
 import static com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.toResponseName;
 
-public class BaseClientGenerator implements ClientModelGenerator<BaseClient> {
+public class BaseClientGenerator implements ClientModelGenerator<BaseClient>, ClientModelGeneratorUtils {
 
     @Override
     public BaseClient generate(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
@@ -33,15 +33,17 @@ public class BaseClientGenerator implements ClientModelGenerator<BaseClient> {
         final String requestType = removePath(ds3Request.getName());
         final String responseName = toResponseName(ds3Request.getName());
         final String documentation = toDocumentation(ds3Request.getName(), docSpec);
+        final String funcParams = getFunctionParameters();
+        final String responseParams = getResponseParameters();
 
-        return new BaseClient(commandName, requestType, responseName, documentation);
+        return new BaseClient(commandName, requestType, responseName, documentation, funcParams, responseParams);
     }
 
     /**
      * Creates the client documentation for the request
      * @param requestName The request name with path
      */
-    protected static String toDocumentation(final String requestName, final Ds3DocSpec docSpec) {
+    static String toDocumentation(final String requestName, final Ds3DocSpec docSpec) {
         return toCommandDocs(removePath(requestName), docSpec, 1);
     }
 
@@ -49,7 +51,17 @@ public class BaseClientGenerator implements ClientModelGenerator<BaseClient> {
      * Converts the Ds3Request name into the command name used in the client
      * ex: GetBucketRequest -> get_bucket
      */
-    protected static String toPythonCommandName(final String requestName) {
+    static String toPythonCommandName(final String requestName) {
         return camelToUnderscore(toCommandName(requestName));
+    }
+
+    @Override
+    public String getFunctionParameters() {
+        return "self, request";
+    }
+
+    @Override
+    public String getResponseParameters() {
+        return "self.net_client.get_response(request), request";
     }
 }

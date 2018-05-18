@@ -25,6 +25,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.api.models.docspec.Ds3DocSpec;
 import com.spectralogic.ds3autogen.python.generators.client.BaseClientGenerator;
 import com.spectralogic.ds3autogen.python.generators.client.ClientModelGenerator;
+import com.spectralogic.ds3autogen.python.generators.client.GetObjectCommandGenerator;
 import com.spectralogic.ds3autogen.python.generators.request.*;
 import com.spectralogic.ds3autogen.python.generators.response.*;
 import com.spectralogic.ds3autogen.python.generators.type.BaseTypeGenerator;
@@ -38,6 +39,7 @@ import com.spectralogic.ds3autogen.python.model.type.TypeDescriptor;
 import com.spectralogic.ds3autogen.utils.Helper;
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
 import freemarker.template.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,8 +148,18 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
      * Generates the python model for a client command
      */
     protected static BaseClient toClientCommand(final Ds3Request ds3Request, final Ds3DocSpec docSpec) {
-        final ClientModelGenerator<?> clientGenerator = new BaseClientGenerator();
+        final ClientModelGenerator<?> clientGenerator = getClientGenerator(ds3Request);
         return clientGenerator.generate(ds3Request, docSpec);
+    }
+
+    /**
+     * Retrieves the appropriate generator for creating the specified client command
+     */
+    static ClientModelGenerator<?> getClientGenerator(final Ds3Request ds3Request) {
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return new GetObjectCommandGenerator();
+        }
+        return new BaseClientGenerator();
     }
 
     /**
@@ -264,20 +276,20 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
     /**
      * Converts all Ds3Requests into the python response handler models
      */
-    protected static ImmutableList<BaseResponse> toResponseModelList(
+    protected ImmutableList<BaseResponse> toResponseModelList(
             final ImmutableList<Ds3Request> ds3Requests) {
         if (isEmpty(ds3Requests)) {
             return ImmutableList.of();
         }
         return ds3Requests.stream()
-                .map(PythonCodeGenerator::toResponseModel)
+                .map(this::toResponseModel)
                 .collect(GuavaCollectors.immutableList());
     }
 
     /**
      * Converts a Ds3Request into a python response handler model
      */
-    protected static BaseResponse toResponseModel(final Ds3Request ds3Request) {
+    protected BaseResponse toResponseModel(final Ds3Request ds3Request) {
         final ResponseModelGenerator<?> responseGenerator = getResponseGenerator(ds3Request);
         return responseGenerator.generate(ds3Request);
     }
@@ -285,12 +297,12 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
     /**
      * Retrieves the Response Generator associated with the Ds3Request
      */
-    protected static ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
+    protected ResponseModelGenerator<?> getResponseGenerator(final Ds3Request ds3Request) {
         if (supportsPaginationRequest(ds3Request)) {
             return new PaginationResponseGenerator();
         }
         if (isGetObjectAmazonS3Request(ds3Request)) {
-            return new GetObjectResponseGenerator();
+            return getGetObjectResponseGenerator();
         }
         if (isHeadObjectRequest(ds3Request)) {
             return new HeadObjectResponseGenerator();
@@ -299,5 +311,13 @@ public class PythonCodeGenerator implements CodeGenerator, PythonCodeGeneratorIn
             return new HeadResponseGenerator();
         }
         return new BaseResponseGenerator();
+    }
+
+    /**
+     * Retrieves the Python 2.7 compatible generator for the GetObjectResponse
+     */
+    @Override
+    public BaseResponseGenerator getGetObjectResponseGenerator() {
+        return new GetObjectResponseGenerator();
     }
 }
