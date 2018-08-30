@@ -1,4 +1,5 @@
 <Data>
+  <script/>
   <Contract>
     <NotificationPayloadTypes>
       <NotificationPayloadType>
@@ -4420,7 +4421,7 @@
         <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="FOLDER" ResourceType="NON_SINGLETON">
           <OptionalQueryParams/>
           <RequiredQueryParams>
-            <Param Name="BucketId" Type="java.util.UUID"/>
+            <Param Name="BucketId" Type="java.lang.String"/>
             <Param Name="Recursive" Type="void"/>
           </RequiredQueryParams>
         </Request>
@@ -4438,7 +4439,7 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.DCC71D6527639A19725050B37CB780DE</Version>
+        <Version>1.D65C68901F23BADFA697712B7F496D8B</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetBlobPersistenceRequestHandler">
         <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="BLOB_PERSISTENCE" ResourceType="NON_SINGLETON">
@@ -5295,6 +5296,12 @@
             <Code>201</Code>
             <ResponseTypes>
               <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.StorageDomainMember"/>
+            </ResponseTypes>
+          </ResponseCode>
+          <ResponseCode>
+            <Code>400</Code>
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
@@ -7928,6 +7935,7 @@
         <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="USER" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
             <Param Name="Id" Type="java.util.UUID"/>
+            <Param Name="MaxBuckets" Type="int"/>
             <Param Name="SecretKey" Type="java.lang.String"/>
           </OptionalQueryParams>
           <RequiredQueryParams>
@@ -7954,7 +7962,7 @@
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
-        <Version>1.6BCFED905208FF2C3021E49E1113053C</Version>
+        <Version>1.FDB6B21613281BC2D3D643F130FF943C</Version>
       </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.user.DelegateDeleteUserRequestHandler">
         <Request Action="DELETE" HttpVerb="DELETE" IncludeIdInPath="true" Resource="USER" ResourceType="NON_SINGLETON">
@@ -9268,7 +9276,7 @@
             <Annotations>
               <Annotation Name="com.spectralogic.util.bean.lang.DefaultIntegerValue">
                 <AnnotationElements>
-                  <AnnotationElement Name="Value" Value="2147483647" ValueType="java.lang.Integer"/>
+                  <AnnotationElement Name="Value" Value="1000" ValueType="java.lang.Integer"/>
                 </AnnotationElements>
               </Annotation>
             </Annotations>
@@ -15178,6 +15186,13 @@
       </Type>
       <Type Name="com.spectralogic.s3.common.platform.notification.domain.payload.JobCreationFailedNotificationPayload">
         <Elements>
+          <Element Name="ErrorMessage" Type="java.lang.String">
+            <Annotations>
+              <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                <AnnotationElements/>
+              </Annotation>
+            </Annotations>
+          </Element>
           <Element Name="NotificationGenerationDate" Type="java.util.Date">
             <Annotations/>
           </Element>
@@ -15762,6 +15777,18 @@
           </Element>
           <Element Name="Message" Type="java.lang.String">
             <Annotations/>
+          </Element>
+          <Element Name="VersionId" Type="java.util.UUID">
+            <Annotations>
+              <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                <AnnotationElements/>
+              </Annotation>
+              <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                <AnnotationElements>
+                  <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                </AnnotationElements>
+              </Annotation>
+            </Annotations>
           </Element>
         </Elements>
       </Type>
@@ -16534,6 +16561,18 @@
         <Elements>
           <Element Name="Key" Type="java.lang.String">
             <Annotations/>
+          </Element>
+          <Element Name="VersionId" Type="java.util.UUID">
+            <Annotations>
+              <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                <AnnotationElements/>
+              </Annotation>
+              <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                <AnnotationElements>
+                  <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                </AnnotationElements>
+              </Annotation>
+            </Annotations>
           </Element>
         </Elements>
       </Type>
