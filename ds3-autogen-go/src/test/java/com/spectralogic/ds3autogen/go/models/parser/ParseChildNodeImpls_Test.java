@@ -109,8 +109,7 @@ public class ParseChildNodeImpls_Test {
 
     @Test
     public void ParseChildNodeAsNullableEnumTest() {
-        final String expected = String.format("%s.%s = new(%s)\n" +
-                "            parseNullableEnum(child.Content, %s.%s, aggErr)", MODEL_NAME, PARAM_NAME, PARAM_TYPE, MODEL_NAME, PARAM_NAME);
+        final String expected = String.format("%s.%s = new%sFromContent(child.Content, aggErr)", MODEL_NAME, PARAM_NAME, PARAM_TYPE);
 
         final ParseElement parseElement = new ParseChildNodeAsNullableEnum(XML_TAG, MODEL_NAME, PARAM_NAME, PARAM_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));

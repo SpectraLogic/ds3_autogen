@@ -171,8 +171,7 @@ data class ParseChildNodeAsNullableEnum(
         val paramType: String) : ParseElement {
 
     override val parsingCode: String
-        get() { return "$modelName.$paramName = new($paramType)\n" +
-                goIndent(3) + "parseNullableEnum(child.Content, $modelName.$paramName, aggErr)" }
+        get() { return "$modelName.$paramName = new${paramType}FromContent(child.Content, aggErr)" }
 }
 
 data class ParseChildNodeAsCommonPrefix(
