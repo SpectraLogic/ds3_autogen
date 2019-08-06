@@ -202,7 +202,7 @@ public class BaseTypeParserGenerator_Test {
                 new ParseChildNodeAsPrimitiveType(INT_ELEMENT.getName(), modelName, INT_ELEMENT.getName(), "Int"),
                 new ParseChildNodeAddToSlice(LIST_ELEMENT.getName(), modelName, LIST_ELEMENT.getName(), removePath(LIST_ELEMENT.getComponentType())),
                 new ParseChildNodeAsEnum(ENUM_ELEMENT.getName(), modelName, ENUM_ELEMENT.getName()),
-                new ParseChildNodeAsNullableEnum(ENUM_PTR_ELEMENT.getName(), modelName, ENUM_PTR_ELEMENT.getName()),
+                new ParseChildNodeAsNullableEnum(ENUM_PTR_ELEMENT.getName(), modelName, ENUM_PTR_ELEMENT.getName(), removePath(ENUM_PTR_ATTR.getType())),
                 new ParseChildNodeAsSlice("TestCollectionValue", "CustomMarshaledName", modelName, LIST_WITH_ENCAPS_TAG_ELEMENT.getName(), removePath(LIST_WITH_ENCAPS_TAG_ELEMENT.getComponentType())),
                 new ParseChildNodeAsDs3Type(DS3_TYPE_ELEMENT.getName(), modelName, DS3_TYPE_ELEMENT.getName()),
                 new ParseChildNodeAddEnumToSlice(LIST_ENUM_ELEMENT.getName(), modelName, LIST_ENUM_ELEMENT.getName(), removePath(LIST_ENUM_ELEMENT.getComponentType())),
@@ -250,7 +250,7 @@ public class BaseTypeParserGenerator_Test {
                 new ParseChildNodeAsPrimitiveType(INT_ELEMENT.getName(), modelName, INT_ELEMENT.getName(), "Int"),
                 new ParseChildNodeAddToSlice(LIST_ELEMENT.getName(), modelName, LIST_ELEMENT.getName(), removePath(LIST_ELEMENT.getComponentType())),
                 new ParseChildNodeAsEnum(ENUM_ELEMENT.getName(), modelName, ENUM_ELEMENT.getName()),
-                new ParseChildNodeAsNullableEnum(ENUM_PTR_ELEMENT.getName(), modelName, ENUM_PTR_ELEMENT.getName()),
+                new ParseChildNodeAsNullableEnum(ENUM_PTR_ELEMENT.getName(), modelName, ENUM_PTR_ELEMENT.getName(), removePath(ENUM_PTR_ATTR.getType())),
                 new ParseChildNodeAsSlice("TestCollectionValue", "CustomMarshaledName", modelName, LIST_WITH_ENCAPS_TAG_ELEMENT.getName(), removePath(LIST_WITH_ENCAPS_TAG_ELEMENT.getComponentType())),
                 new ParseChildNodeAsDs3Type(DS3_TYPE_ELEMENT.getName(), modelName, DS3_TYPE_ELEMENT.getName()));
 

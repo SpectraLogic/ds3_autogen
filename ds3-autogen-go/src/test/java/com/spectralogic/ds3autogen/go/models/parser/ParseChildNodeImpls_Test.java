@@ -19,13 +19,13 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class ParseChildNodeImpls_Test {
 
     private static final String XML_TAG = "XmlTag";
     private static final String MODEL_NAME = "modelName";
     private static final String PARAM_NAME = "ParamName";
+    private static final String PARAM_TYPE = "ParamType";
     private static final String PARSER_NAMESPACE = "ParserNamespace";
     private static final String CHILD_TYPE = "ChildType";
 
@@ -109,9 +109,10 @@ public class ParseChildNodeImpls_Test {
 
     @Test
     public void ParseChildNodeAsNullableEnumTest() {
-        final String expected = String.format("parseNullableEnum(child.Content, %s.%s, aggErr)", MODEL_NAME, PARAM_NAME);
+        final String expected = String.format("%s.%s = new(%s)\n" +
+                "            parseNullableEnum(child.Content, %s.%s, aggErr)", MODEL_NAME, PARAM_NAME, PARAM_TYPE, MODEL_NAME, PARAM_NAME);
 
-        final ParseElement parseElement = new ParseChildNodeAsNullableEnum(XML_TAG, MODEL_NAME, PARAM_NAME);
+        final ParseElement parseElement = new ParseChildNodeAsNullableEnum(XML_TAG, MODEL_NAME, PARAM_NAME, PARAM_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
         assertThat(parseElement.getParsingCode(), is(expected));
     }
