@@ -108,7 +108,7 @@ open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeP
         // Handle case if the element is an enum
         if (isElementEnum(ds3Element.type!!, typeMap)) {
             if (ds3Element.nullable) {
-                return ParseChildNodeAsNullableEnum(xmlTag, modelName, paramName)
+                return ParseChildNodeAsNullableEnum(xmlTag, modelName, paramName, toGoType(ds3Element.type!!))
             }
             return ParseChildNodeAsEnum(xmlTag, modelName, paramName)
         }
