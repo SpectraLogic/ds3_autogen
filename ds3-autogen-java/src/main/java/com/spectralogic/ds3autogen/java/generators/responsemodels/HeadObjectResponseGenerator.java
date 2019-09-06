@@ -38,7 +38,9 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
                 new Arguments("long", "ObjectSize"),
                 new Arguments("Status", "Status"),
                 new Arguments("ChecksumType.Type", "BlobChecksumType"),
-                new Arguments("ImmutableMap<Long, String>", "BlobChecksums"));
+                new Arguments("ImmutableMap<Long, String>", "BlobChecksums"),
+                new Arguments("ZonedDateTime", "CreationDate"),
+                new Arguments("UUID", "VersionId"));
 
         return ImmutableList.sortedCopyOf(new CustomArgumentComparator(), params);
     }
@@ -52,6 +54,8 @@ public class HeadObjectResponseGenerator extends BaseResponseGenerator {
                 getParentImport(),
                 "com.spectralogic.ds3client.networking.Metadata",
                 "com.spectralogic.ds3client.models.ChecksumType",
-                "com.google.common.collect.ImmutableMap");
+                "com.google.common.collect.ImmutableMap",
+                "java.time.ZonedDateTime",
+                "java.util.UUID");
     }
 }

@@ -57,7 +57,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -2036,12 +2036,16 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableMap", responseGeneratedCode));
+        assertTrue(hasImport("java.time.ZonedDateTime", responseGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("metadata", "Metadata", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("objectSize", "long", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("blobChecksumType", "ChecksumType.Type", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("blobChecksums", "ImmutableMap<Long, String>", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("versionId", "UUID", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("creationDate", "ZonedDateTime", responseName, responseGeneratedCode, false));
 
         assertTrue(responseGeneratedCode.contains("public enum Status { EXISTS, DOESNTEXIST, UNKNOWN }"));
 
@@ -2069,16 +2073,20 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseParserCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableMap", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.ChecksumType", responseParserCode));
+        assertTrue(hasImport("java.time.ZonedDateTime", responseParserCode));
+        assertTrue(hasImport("java.util.UUID", responseParserCode));
         assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;"));
         assertFalse(responseParserCode.contains("import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;"));
 
         // 200 response code
         assertTrue(responseParserCode.contains("final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());"));
         assertTrue(responseParserCode.contains("final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());"));
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("final ZonedDateTime creationDate = getCreationDate(response.getHeaders());"));
+        assertTrue(responseParserCode.contains("final UUID versionId = getVersionId(response.getHeaders());"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, HeadObjectResponse.Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());"));
 
         // 404 response code
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());"));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 404};"));
     }
