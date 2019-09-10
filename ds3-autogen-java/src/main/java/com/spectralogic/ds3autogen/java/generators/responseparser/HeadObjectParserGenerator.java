@@ -55,13 +55,15 @@ public class HeadObjectParserGenerator extends BaseResponseParserGenerator {
     protected static String toExistsReturnCode(final String responseName) {
         return "final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
                 indent(4) + "final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
-                indent(4) + "return new " + responseName + "(blobChecksumMap, blobChecksumType, metadata, objectSize, " + responseName + ".Status.EXISTS, this.getChecksum(), this.getChecksumType());\n";
+                indent(4) + "final ZonedDateTime creationDate = getCreationDate(response.getHeaders());\n" +
+                indent(4) + "final UUID versionId = getVersionId(response.getHeaders());\n" +
+                indent(4) + "return new " + responseName + "(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, " + responseName + ".Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());\n";
     }
 
     /**
      * Gets the java code for returning the response handler for an object that does not exist
      */
     protected static String toDoesntExistReturnCode(final String responseName) {
-        return "return new " + responseName + "(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, " + responseName + ".Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n";
+        return "return new " + responseName + "(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, " + responseName + ".Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());\n";
     }
 }

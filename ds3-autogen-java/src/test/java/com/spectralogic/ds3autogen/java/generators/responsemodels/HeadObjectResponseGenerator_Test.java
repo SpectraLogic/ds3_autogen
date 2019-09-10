@@ -31,17 +31,19 @@ public class HeadObjectResponseGenerator_Test {
     @Test
     public void getAllImports_Test() {
         final ImmutableSet<String> result = generator.getAllImports(null);
-        assertThat(result.size(), is(4));
+        assertThat(result.size(), is(6));
         assertThat(result, hasItem("com.spectralogic.ds3client.networking.Metadata"));
         assertThat(result, hasItem("com.spectralogic.ds3client.commands.interfaces.AbstractResponse"));
         assertThat(result, hasItem("com.spectralogic.ds3client.models.ChecksumType"));
         assertThat(result, hasItem("com.google.common.collect.ImmutableMap"));
+        assertThat(result, hasItem("java.time.ZonedDateTime"));
+        assertThat(result, hasItem("java.util.UUID"));
     }
 
     @Test
     public void toParamList_Test() {
         final ImmutableList<Arguments> result = generator.toParamList(null);
-        assertThat(result.size(), is(5));
+        assertThat(result.size(), is(7));
 
         // Verify that parameters were sorted alphabetically by name
         assertThat(result.get(0).getName(), is("BlobChecksums"));
@@ -50,13 +52,19 @@ public class HeadObjectResponseGenerator_Test {
         assertThat(result.get(1).getName(), is("BlobChecksumType"));
         assertThat(result.get(1).getType(), is("ChecksumType.Type"));
 
-        assertThat(result.get(2).getName(), is("Metadata"));
-        assertThat(result.get(2).getType(), is("Metadata"));
+        assertThat(result.get(2).getName(), is("CreationDate"));
+        assertThat(result.get(2).getType(), is("ZonedDateTime"));
 
-        assertThat(result.get(3).getName(), is("ObjectSize"));
-        assertThat(result.get(3).getType(), is("long"));
+        assertThat(result.get(3).getName(), is("Metadata"));
+        assertThat(result.get(3).getType(), is("Metadata"));
 
-        assertThat(result.get(4).getName(), is("Status"));
-        assertThat(result.get(4).getType(), is("Status"));
+        assertThat(result.get(4).getName(), is("ObjectSize"));
+        assertThat(result.get(4).getType(), is("long"));
+
+        assertThat(result.get(5).getName(), is("Status"));
+        assertThat(result.get(5).getType(), is("Status"));
+
+        assertThat(result.get(6).getName(), is("VersionId"));
+        assertThat(result.get(6).getType(), is("UUID"));
     }
 }

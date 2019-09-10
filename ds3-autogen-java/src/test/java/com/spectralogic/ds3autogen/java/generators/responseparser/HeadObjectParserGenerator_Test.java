@@ -34,13 +34,15 @@ public class HeadObjectParserGenerator_Test {
     public void toExistsReturnCode_Test() {
         final String expected = "final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
                 "                final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
-                "                return new MyResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, MyResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n";
+                "                final ZonedDateTime creationDate = getCreationDate(response.getHeaders());\n" +
+                "                final UUID versionId = getVersionId(response.getHeaders());\n" +
+                "                return new MyResponse(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, MyResponse.Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());\n";
         assertThat(toExistsReturnCode("MyResponse"), is(expected));
     }
 
     @Test
     public void toDoesntExistReturnCode_Test() {
-        final String expected = "return new MyResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, MyResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n";
+        final String expected = "return new MyResponse(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, MyResponse.Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());\n";
         assertThat(toDoesntExistReturnCode("MyResponse"), is(expected));
     }
 
@@ -62,10 +64,12 @@ public class HeadObjectParserGenerator_Test {
         assertThat(result.get(0).getProcessingCode(),
                 is("final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());\n" +
                         "                final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());\n" +
-                        "                return new TestResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, TestResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());\n"));
+                        "                final ZonedDateTime creationDate = getCreationDate(response.getHeaders());\n" +
+                        "                final UUID versionId = getVersionId(response.getHeaders());\n" +
+                        "                return new TestResponse(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, TestResponse.Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());\n"));
 
         assertThat(result.get(1).getCode(), is(404));
         assertThat(result.get(1).getProcessingCode(),
-                is("return new TestResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, TestResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());\n"));
+                is("return new TestResponse(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, TestResponse.Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());\n"));
     }
 }
