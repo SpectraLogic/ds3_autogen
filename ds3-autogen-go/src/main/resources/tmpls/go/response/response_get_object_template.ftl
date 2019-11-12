@@ -6,7 +6,6 @@ type ${name} struct {
 ${parseResponseMethod}
 
 func New${name}(webResponse WebResponse) (*${name}, error) {
-    defer webResponse.Body().Close()
     expectedStatusCodes := []int { ${expectedCodes} }
 
     switch code := webResponse.StatusCode(); code {
@@ -15,6 +14,7 @@ func New${name}(webResponse WebResponse) (*${name}, error) {
         ${code.parseResponse}
     </#list>
     default:
+        defer webResponse.Body().Close()
         return nil, buildBadStatusCodeError(webResponse, expectedStatusCodes)
     }
 }

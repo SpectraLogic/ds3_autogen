@@ -251,7 +251,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go response handler
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        //TODO special case if necessary
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("response/response_get_object_template.ftl");
+        }
         return config.getTemplate("response/response_template.ftl");
     }
 
