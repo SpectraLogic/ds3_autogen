@@ -20,7 +20,8 @@ import com.spectralogic.ds3autogen.go.models.client.RequestBuildLine
 import java.util.*
 
 /**
- * Generates the Go client command for Amazon GetObject
+ * Generates the Go client command for Amazon GetObject and CompleteBlob.
+ * Adds checksum and metadata to the request construction.
  */
 class GetObjectCommandGenerator : BaseCommandGenerator() {
 

@@ -72,7 +72,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
     fun getCommandGenerator(ds3Request: Ds3Request): CommandModelGenerator<*> {
         return when {
             isAmazonCreateObjectRequest(ds3Request) -> PutObjectCommandGenerator()
-            isGetObjectAmazonS3Request(ds3Request) -> GetObjectCommandGenerator()
+            isGetObjectAmazonS3Request(ds3Request) || isCompleteBlobRequest(ds3Request) -> GetObjectCommandGenerator()
             isCreateMultiPartUploadPartRequest(ds3Request) -> ReaderPayloadCommandGenerator()
             hasPutObjectsWithSizeRequestPayload(ds3Request) -> Ds3PutObjectPayloadCommandGenerator()
             hasGetObjectsWithLengthOffsetRequestPayload(ds3Request) -> Ds3GetObjectPayloadCommandGenerator()

@@ -171,6 +171,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isMultiFileDeleteRequest(ds3Request)) {
             return new DeleteObjectsRequestGenerator();
         }
+        if (isCompleteBlobRequest(ds3Request)) {
+            return new CompleteBlobRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -181,7 +184,7 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isAmazonCreateObjectRequest(ds3Request)) {
+        if (isAmazonCreateObjectRequest(ds3Request) || isCompleteBlobRequest(ds3Request)) {
             return config.getTemplate("request/put_object_request.ftl");
         }
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {

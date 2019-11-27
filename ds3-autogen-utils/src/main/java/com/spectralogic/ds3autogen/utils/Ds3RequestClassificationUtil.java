@@ -386,6 +386,17 @@ public final class Ds3RequestClassificationUtil {
     }
 
     /**
+     * Determines if a Ds3Request is the AmazonS3 Complete Blob request
+     */
+    public static boolean isCompleteBlobRequest(final Ds3Request request) {
+        return request.getHttpVerb() == HttpVerb.POST
+                && request.getBucketRequirement() == Requirement.REQUIRED
+                && request.getObjectRequirement() == Requirement.REQUIRED
+                && !request.getIncludeInPath()
+                && paramListContainsParam(request.getRequiredQueryParams(), "Blob", "java.util.UUID");
+    }
+
+    /**
      * Determines if a Ds3Request supports pagination. This is used to determine
      * which response handlers need to parse pagination headers.
      */
