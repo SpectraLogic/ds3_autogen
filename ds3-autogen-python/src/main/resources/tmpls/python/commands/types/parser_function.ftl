@@ -1,6 +1,6 @@
 def parseModel(root, model):
 
-    if root.tag is 'Data':
+    if root.tag == 'Data':
         children = list(root.iter())
         if not children:
             return None
