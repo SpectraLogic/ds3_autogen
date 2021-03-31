@@ -13,7 +13,7 @@ class Ds3PutObject(object):
 
     def to_xml(self):
         xml_object = xmldom.Element('Object')
-        xml_object.set('Name', posixpath.normpath(self.name))
+        xml_object.set('Name', self.name)
         xml_object.set('Size', str(self.size))
         return xml_object
 
@@ -27,7 +27,7 @@ class Ds3GetObject(object):
 
     def to_xml(self):
         xml_object = xmldom.Element('Object')
-        xml_object.set('Name', posixpath.normpath(self.name))
+        xml_object.set('Name', self.name)
         if self.length is not None:
             xml_object.set('Length', str(self.length))
         if self.offset is not None:
