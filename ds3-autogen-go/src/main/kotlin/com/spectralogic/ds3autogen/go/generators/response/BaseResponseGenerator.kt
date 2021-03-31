@@ -42,9 +42,8 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         val expectedCodes = toExpectedStatusCodes(ds3Request.ds3ResponseCodes)
         val parseResponseMethod = toParseResponseMethod(name, payloadStruct, ds3Request.ds3ResponseCodes)
         val responseCodes = toResponseCodeList(ds3Request.ds3ResponseCodes, name)
-        val imports = toImportSet()
 
-        return Response(name, payloadStruct, expectedCodes, parseResponseMethod, responseCodes, imports)
+        return Response(name, payloadStruct, expectedCodes, parseResponseMethod, responseCodes)
     }
 
     /**
@@ -78,13 +77,6 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
             return ""
         }
         return "&"
-    }
-    
-    /**
-     * The standard response has all of its imports specified within the template file
-     */
-    override fun toImportSet(): ImmutableSet<String> {
-        return ImmutableSet.of()
     }
 
     /**

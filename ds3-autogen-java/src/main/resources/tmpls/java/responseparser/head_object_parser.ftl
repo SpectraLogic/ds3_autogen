@@ -6,6 +6,8 @@ import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.models.ChecksumType;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 <#include "../imports.ftl"/>
 
 import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;

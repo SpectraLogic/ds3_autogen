@@ -27,7 +27,7 @@ ${javaHelper.getModelVariable(elmt)}
 
     @Override
     public int hashCode() {
-        return Objects.hash(bucketId, name, id, latest, creationDate, type, version);
+        return Objects.hash(bucketId, name, id, latest, creationDate, type);
     }
 
     @Override
@@ -43,7 +43,6 @@ ${javaHelper.getModelVariable(elmt)}
                 && this.id.equals(s3obj.getId())
                 && this.latest == s3obj.getLatest()
                 && this.name.equals(s3obj.getName())
-                && this.type == s3obj.getType()
-                && this.version == s3obj.getVersion();
+                && this.type == s3obj.getType();
     }
 }

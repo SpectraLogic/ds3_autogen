@@ -24,26 +24,45 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type;
 import com.spectralogic.ds3autogen.net.model.common.NetNullableVariable;
 import com.spectralogic.ds3autogen.net.utils.GeneratorUtils;
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil;
+import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors;
+
+import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
 
 public class GetObjectRequestGenerator extends BaseRequestGenerator {
 
     /**
-     * The get object request has no optional arguments
+     * The get object request treats both job and offset as required parameters.
      */
     @Override
     public ImmutableList<NetNullableVariable> toOptionalArgumentsList(final ImmutableList<Ds3Param> optionalParams, final ImmutableMap<String, Ds3Type> typeMap) {
-        return ImmutableList.of();
+        if (isEmpty(optionalParams)) {
+            return ImmutableList.of();
+        }
+        return optionalParams.stream()
+                .filter(param -> !isOptionalParamConstructorParam(param.getName()))
+                .map(param -> toNullableArgument(param, typeMap))
+                .collect(GuavaCollectors.immutableList());
     }
 
     /**
-     * The get object request has both optional and required params as required arguments.
+     * The get object request has both optional and some required params as required arguments.
      */
     @Override
     public ImmutableList<Arguments> toRequiredArgumentsList(final Ds3Request ds3Request) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
         builder.addAll(GeneratorUtils.getRequiredArgs(ds3Request));
-        builder.addAll(RequestConverterUtil.getArgsFromParamList(ds3Request.getOptionalQueryParams()));
+
+        RequestConverterUtil.getArgsFromParamList(ds3Request.getOptionalQueryParams()).stream()
+                .filter(arg -> isOptionalParamConstructorParam(arg.getName()))
+                .forEach(builder::add);
         return builder.build();
+    }
+
+    /**
+     * Determines if the name of the provided optional parameter is treated as a constructor parameter.
+     */
+    private static boolean isOptionalParamConstructorParam(final String paramName) {
+        return paramName.equalsIgnoreCase("job") || paramName.equalsIgnoreCase("offset");
     }
 
     /**

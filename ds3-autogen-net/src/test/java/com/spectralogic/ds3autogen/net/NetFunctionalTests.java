@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 public class NetFunctionalTests {
 
     private final static Logger LOG = LoggerFactory.getLogger(NetFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -150,6 +150,7 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
+        assertTrue(TestHelper.hasOptionalParam(requestName, "VersionId", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("ObjectName", "string", requestCode));
         assertTrue(TestHelper.hasRequiredParam("Job", "string", requestCode));
@@ -412,7 +413,7 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<string>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
         assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "ChunkClientProcessingOrderGuarantee?", "JobChunkClientProcessingOrderGuarantee?", requestCode));
@@ -422,13 +423,13 @@ public class NetFunctionalTests {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("IEnumerable<string>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
                 new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         final ImmutableList<Arguments> secondConstructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Ds3Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Ds3Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, secondConstructorArgs, requestCode));
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_get\");"));
@@ -610,7 +611,7 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<string>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
         assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool", requestCode));
@@ -619,13 +620,13 @@ public class NetFunctionalTests {
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("IEnumerable<string>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
                 new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         final ImmutableList<Arguments> secondConstructorArgs = ImmutableList.of(
                 new Arguments("String", "BucketName"),
-                new Arguments("List<Ds3Object>", "Ds3Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "Ds3Objects"));
         assertTrue(TestHelper.hasConstructor(requestName, secondConstructorArgs, requestCode));
 
         assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_verify\");"));
@@ -693,21 +694,23 @@ public class NetFunctionalTests {
 
         assertFalse(TestHelper.hasRequiredParam("Blobs", "bool", requestCode));
         assertTrue(TestHelper.hasRequiredParam("BucketId", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("StorageDomainId", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("StorageDomain", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLabel", "string", requestCode));
         assertTrue(TestHelper.hasOptionalParam(requestName, "EjectLocation", "string", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("Guid", "BucketId"),
-                new Arguments("Guid", "StorageDomainId"),
-                new Arguments("IEnumerable<Ds3Object>", "Objects"));
+                new Arguments("string", "StorageDomain"),
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
         assertTrue(TestHelper.hasConstructor(requestName, modifyType(constructorArgs, "Guid", "string"), requestCode));
 
         assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
-        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalDs3ObjectNames(this.Objects);"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalFullAndPartialObjects(this.FullObjects, this.PartialObjects);"));
 
         assertTrue(requestCode.contains("internal override long GetContentLength()"));
         assertTrue(requestCode.contains("return GetContentStream().Length;"));
@@ -816,13 +819,15 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("IEnumerable<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -877,13 +882,15 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("IEnumerable<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -938,14 +945,16 @@ public class NetFunctionalTests {
         assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
 
         assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
-        assertTrue(TestHelper.hasRequiredParam("Objects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
         assertFalse(TestHelper.hasRequiredParam("FullDetails", "bool", requestCode));
 
         assertTrue(TestHelper.hasOptionalParam(requestName, "StorageDomainId", "Guid", requestCode));
 
         final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
                 new Arguments("string", "BucketName"),
-                new Arguments("IEnumerable<Ds3Object>", "Objects"));
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
         assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
 
         //Generate Client code
@@ -1649,5 +1658,88 @@ public class NetFunctionalTests {
         CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
         assertTrue(parserHasResponseCode(200, parserCode));
         assertTrue(parserHasPayload(responseType, responseType, parserCode));
+    }
+
+    @Test
+    public void stageObjectsJobTest() throws IOException, TemplateModelException {
+        final String requestName = "StageObjectsJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGenerateCode codeGenerator = new TestGenerateCode(
+                fileUtils,
+                requestName,
+                "./Ds3/Calls/",
+                "MasterObjectList");
+
+        codeGenerator.generateCode(fileUtils, "/input/stageObjectsJob.xml");
+
+        //Generate Request code
+        final String requestCode = codeGenerator.getRequestCode();
+        CODE_LOGGER.logFile(requestCode, FileTypeToLog.REQUEST);
+
+        assertTrue(requestCode.contains("using Ds3.Calls.Util;"));
+        assertTrue(requestCode.contains("using Ds3.Models;"));
+        assertTrue(requestCode.contains("using System;"));
+        assertTrue(requestCode.contains("using System.Collections.Generic;"));
+        assertTrue(requestCode.contains("using System.IO;"));
+        assertTrue(requestCode.contains("using System.Linq;"));
+
+        assertTrue(TestHelper.extendsClass(requestName, "Ds3Request", requestCode));
+        assertTrue(TestHelper.hasProperty("Verb", "HttpVerb", requestCode));
+        assertTrue(TestHelper.hasProperty("Path", "string", requestCode));
+
+        assertTrue(TestHelper.hasRequiredParam("BucketName", "string", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("FullObjects", "IEnumerable<Ds3Object>", requestCode));
+        assertTrue(TestHelper.hasRequiredParam("PartialObjects", "IEnumerable<Ds3PartialObject>", requestCode));
+
+        assertFalse(TestHelper.hasOptionalParam(requestName, "ChunkClientProcessingOrderGuarantee?", "JobChunkClientProcessingOrderGuarantee?", requestCode));
+        assertFalse(TestHelper.hasOptionalParam(requestName, "Aggregating", "bool?", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Name", "string", requestCode));
+        assertTrue(TestHelper.hasOptionalParam(requestName, "Priority", "Priority?", requestCode));
+
+        final ImmutableList<Arguments> constructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("IEnumerable<Ds3Object>", "FullObjects"),
+                new Arguments("IEnumerable<Ds3PartialObject>", "PartialObjects"));
+        assertTrue(TestHelper.hasConstructor(requestName, constructorArgs, requestCode));
+
+        final ImmutableList<Arguments> secondConstructorArgs = ImmutableList.of(
+                new Arguments("String", "BucketName"),
+                new Arguments("IEnumerable<Ds3Object>", "Ds3Objects"));
+        assertTrue(TestHelper.hasConstructor(requestName, secondConstructorArgs, requestCode));
+
+        assertTrue(requestCode.contains("this.QueryParams.Add(\"operation\", \"start_bulk_stage\");"));
+        assertTrue(requestCode.contains("internal override Stream GetContentStream()"));
+        assertTrue(requestCode.contains("return RequestPayloadUtil.MarshalFullAndPartialObjects(this.FullObjects, this.PartialObjects);"));
+        assertFalse(requestCode.contains("private static string BuildChunkOrderingEnumString(JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee)"));
+
+        //Generate Client code
+        final String commandName = requestName.replace("Request", "");
+        final String clientCode = codeGenerator.getClientCode();
+        CODE_LOGGER.logFile(clientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasPayloadCommand(commandName, clientCode));
+
+        final String idsClientCode = codeGenerator.getIdsClientCode();
+        CODE_LOGGER.logFile(idsClientCode, FileTypeToLog.CLIENT);
+
+        assertTrue(TestHelper.hasIDsCommand(commandName, idsClientCode));
+
+        //Generate Responses
+        final String responseCode = codeGenerator.getResponseCode();
+        CODE_LOGGER.logFile(responseCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = NormalizingContractNamesUtil.toResponseName(requestName);
+        final String responsePayloadType = "MasterObjectList";
+        assertTrue(TestHelper.hasConstructor(
+                responseName,
+                ImmutableList.of(new Arguments(responsePayloadType, "ResponsePayload")),
+                responseCode));
+        assertTrue(TestHelper.hasRequiredParam("ResponsePayload", responsePayloadType, responseCode));
+
+        //Generate Parser
+        final String parserCode = codeGenerator.getParserCode();
+        CODE_LOGGER.logFile(parserCode, FileTypeToLog.PARSER);
+        assertTrue(parserCode.contains("ResponseParseUtilities.HandleStatusCode(response, (HttpStatusCode)200, HttpStatusCode.ServiceUnavailable)"));
+        assertTrue(parserHasPayload("MasterObjectList", "MasterObjectList", parserCode));
     }
 }

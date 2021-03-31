@@ -59,7 +59,12 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
             final String requestName,
             final Ds3DocSpec docSpec) {
         final ImmutableList<Arguments> constructorArgs = toConstructorArgumentsList(ds3Request);
-        final ImmutableList<Arguments> optionalArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams());
+
+        // Add the Job and Offset optional params to non-deprecated constructors
+        final ImmutableList<Arguments> optionalConstructorArgs = toOptionalArgumentsList(ds3Request.getOptionalQueryParams()).stream()
+                .filter(arg -> arg.getName().equalsIgnoreCase("Job") || arg.getName().equalsIgnoreCase("Offset"))
+                .collect(GuavaCollectors.immutableList());
+
         final ImmutableList<QueryParam> queryParams = toQueryParamsList(ds3Request);
 
         final ImmutableList.Builder<RequestConstructor> constructorBuilder = ImmutableList.builder();
@@ -76,7 +81,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         constructorBuilder.add(
                 createChannelConstructor(
                         constructorArgs,
-                        optionalArgs,
+                        optionalConstructorArgs,
                         queryParams,
                         requestName,
                         docSpec));
@@ -84,7 +89,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
         constructorBuilder.add(
                 createOutputStreamConstructor(
                         constructorArgs,
-                        optionalArgs,
+                        optionalConstructorArgs,
                         queryParams,
                         requestName,
                         docSpec));

@@ -104,6 +104,16 @@ static void get_file_size_posix(const char* file_path, uint64_t* file_size) {
     }
 }
 
+uint64_t ds3_get_file_size(const char* file_path) {
+    uint64_t size = 0;
+#ifdef _WIN32
+    get_file_size_windows(file_path, &size);
+#else
+    get_file_size_posix(file_path, &size);
+#endif
+    return size;
+}
+
 static ds3_bulk_object_response* _ds3_bulk_object_from_file(const char* file_name, const char* base_path) {
     struct stat file_info;
     int result;
@@ -159,6 +169,8 @@ ds3_bulk_object_list_response* ds3_convert_object_list(const ds3_contents_respon
     for (object_index = 0; object_index < num_objects; object_index++) {
         ds3_bulk_object_response* response = g_new0(ds3_bulk_object_response, 1);
         response->name = ds3_str_dup(objects[object_index]->key);
+        response->version_id = ds3_str_dup(objects[object_index]->version_id);
+
         g_ptr_array_add(ds3_bulk_object_response_array, response);
     }
 

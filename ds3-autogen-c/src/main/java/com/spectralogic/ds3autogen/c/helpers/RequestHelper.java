@@ -175,6 +175,7 @@ public final class RequestHelper {
     public String getRequestObjectListType(final String requestName) {
         switch(requestName) {
             case "ds3_get_bulk_job_spectra_s3_request":
+            case "ds3_stage_objects_job_spectra_s3_request":
                 return "BULK_GET";
 
             case "ds3_put_bulk_job_spectra_s3_request":
@@ -203,6 +204,17 @@ public final class RequestHelper {
             case "ds3_replicate_put_job_spectra_s3_request":
                 return "STRING";
 
+            case "ds3_clear_suspect_blob_azure_targets_spectra_s3_request":
+            case "ds3_clear_suspect_blob_ds3_targets_spectra_s3_request":
+            case "ds3_clear_suspect_blob_pools_spectra_s3_request":
+            case "ds3_clear_suspect_blob_s3_targets_spectra_s3_request":
+            case "ds3_clear_suspect_blob_tapes_spectra_s3_request":
+            case "ds3_mark_suspect_blob_azure_targets_as_degraded_spectra_s3_request":
+            case "ds3_mark_suspect_blob_ds3_targets_as_degraded_spectra_s3_request":
+            case "ds3_mark_suspect_blob_pools_as_degraded_spectra_s3_request":
+            case "ds3_mark_suspect_blob_s3_targets_as_degraded_spectra_s3_request":
+            case "ds3_mark_suspect_blob_tapes_as_degraded_spectra_s3_request":
+                return "ID_LIST";
             default:
                 throw new InvalidParameterException("Unknown request:" + requestName);
         }

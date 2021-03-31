@@ -33,7 +33,7 @@ public class P3IdListRequestGenerator_Test {
                 "                    'ClearSuspectBlobPoolsSpectraS3Request should have request payload of type: list of strings')\n" +
                 "            xml_id_list = IdsList(id_list)\n" +
                 "            self.body = xmldom.tostring(xml_id_list.to_xml())\n";
-        final String result = generator.getAdditionalContent(clearSuspectBlobPoolsRequest(), "ClearSuspectBlobPoolsSpectraS3Request");
+        final String result = generator.getAdditionalContent("ClearSuspectBlobPoolsSpectraS3Request");
         assertThat(result, is(expected));
     }
 }

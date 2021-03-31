@@ -184,19 +184,19 @@ public class BaseClientGenerator_Test {
                 .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(getPhysicalPlacementForObjects()))
-                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(getPhysicalPlacementForObjectsWithFullDetails()))
-                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(verifyPhysicalPlacementForObjectsRequest()))
-                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()))
-                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(getEjectStorageDomainBlobsRequest()))
-                .isInstanceOf(ObjectNamePayloadCommandGenerator.class);
+                .isInstanceOf(Ds3GetObjectPayloadCommandGenerator.class);
 
         assertThat(generator.getCommandGenerator(clearSuspectBlobAzureTargetsRequest()))
                 .isInstanceOf(IdsPayloadCommandGenerator.class);

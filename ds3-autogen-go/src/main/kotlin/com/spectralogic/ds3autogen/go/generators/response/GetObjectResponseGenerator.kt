@@ -27,10 +27,6 @@ import com.spectralogic.ds3autogen.go.models.response.ResponseCode
  */
 class GetObjectResponseGenerator : BaseResponseGenerator() {
 
-    override fun toImportSet(): ImmutableSet<String> {
-        return ImmutableSet.of("io")
-    }
-
     /**
      * Retrieves the response payload struct content, which is an io.ReadCloser
      */

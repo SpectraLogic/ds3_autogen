@@ -32,7 +32,7 @@ public class StringPayloadGenerator_Test {
     @Test
     public void getAdditionalContent_Test() {
         final String expected = "self.body = request_payload\n";
-        final String result = generator.getAdditionalContent(null, null);
+        final String result = generator.getAdditionalContent(null);
         assertThat(result, is(expected));
     }
 

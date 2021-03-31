@@ -90,7 +90,7 @@ public final class Helper {
     }
 
     public static String getBulkVerb(final Operation operation) {
-        if (operation == Operation.START_BULK_GET) {
+        if (operation == Operation.START_BULK_GET || operation == Operation.START_BULK_STAGE) {
             return "GET";
         } else if (operation == Operation.START_BULK_PUT) {
             return "PUT";

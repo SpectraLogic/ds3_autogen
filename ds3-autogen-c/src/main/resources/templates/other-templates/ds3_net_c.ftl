@@ -271,11 +271,48 @@ static char* _canonicalize_amz_headers(GHashTable* headers) {
 }
 
 static char* _canonicalized_resource(ds3_str* path, GHashTable* query_params) {
+    gchar* versioning_query = NULL;
+
+    gchar* path_copy = g_strdup(path->value);
+    gchar* canonicalized_query;
+    gchar** query_strings;
+    GPtrArray* array = g_ptr_array_new();
+
+    // Canonicalize required query parameters in alpha numberic order
     if (g_hash_table_contains(query_params, "delete")) {
-        return g_strconcat(path->value, "?delete", NULL);
-    } else {
-        return g_strdup(path->value);
+        g_ptr_array_add(array, "delete");
     }
+
+    if (g_hash_table_contains(query_params, "versioning")) {
+        gchar* version_level = g_hash_table_lookup(query_params, "versioning");
+        versioning_query = g_strdup_printf("versioning=%s", version_level);
+        g_ptr_array_add(array, versioning_query);
+    }
+
+    if (g_hash_table_contains(query_params, "versions")) {
+        g_ptr_array_add(array, "versions");
+    }
+
+    // Finish the array with a terminating NULL
+    g_ptr_array_add(array, NULL);
+    query_strings = (gchar**)g_ptr_array_free(array, FALSE);
+
+    canonicalized_query = g_strjoinv("&", query_strings);
+
+    // Free individual dynamically allocated query strings
+    if (versioning_query != NULL) {
+        g_free(versioning_query);
+    }
+    g_free(query_strings);
+
+    if (strlen(canonicalized_query) > 0) {
+        gchar* canonicalized_path = g_strjoin("?", path_copy, canonicalized_query, NULL);
+        g_free(canonicalized_query);
+        g_free(path_copy);
+        return canonicalized_path;
+    }
+    g_free(canonicalized_query);
+    return path_copy;
 }
 
 static size_t _process_header_line(void* buffer, size_t size, size_t nmemb, void* user_data) {
@@ -535,7 +572,6 @@ ds3_error* net_process_request(const ds3_client* client,
                 }
                 ds3_string_multimap_free(response_headers);
                 ds3_str_free(response_data.status_message);
-                g_free(url);
 
                 if (response_data.status_code == 307) {
                     ds3_log_message(client->log, DS3_INFO, "Request encountered a 307 redirect");
@@ -548,9 +584,11 @@ ds3_error* net_process_request(const ds3_client* client,
                         error->message = ds3_str_init("Encountered too many redirects while attempting to fulfill the request");
                         error->code = DS3_ERROR_TOO_MANY_REDIRECTS;
                     } else {
+                        ds3_error_free(error);
                         continue;
                     }
                 }
+                g_free(url);
                 return error;
             }
             g_byte_array_free(response_data.body, TRUE);

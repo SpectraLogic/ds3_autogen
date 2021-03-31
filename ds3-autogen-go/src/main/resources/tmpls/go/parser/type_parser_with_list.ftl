@@ -13,3 +13,4 @@ func parse${modelName}Slice(tagName string, xmlNodes []XmlNode, aggErr *Aggregat
     }
     return result
 }
+

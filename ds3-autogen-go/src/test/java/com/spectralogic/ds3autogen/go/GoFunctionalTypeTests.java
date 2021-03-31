@@ -37,13 +37,10 @@ public class GoFunctionalTypeTests {
     private final static Logger LOG = LoggerFactory.getLogger(GoFunctionalTests.class);
     private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.MODEL, LOG);
 
-    private final static String requestName = "PlaceHolderRequest";
-
     @Test
     public void simpleEnumGeneration() throws IOException, TemplateModelException {
-        final String typeName = "DatabasePhysicalSpaceState";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/simpleEnum.xml");
 
@@ -74,17 +71,14 @@ public class GoFunctionalTypeTests {
         // Verify conversion to string pointer
         assertTrue(typeCode.contains("func (databasePhysicalSpaceState DatabasePhysicalSpaceState) StringPtr() *string {"));
 
-        // Verify type parser file was not generated for enum type
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(isEmpty(typeParserCode));
+        // Verify type parser code was not generated for enum type
+        assertFalse(typeCode.contains("parse("));
     }
 
     @Test
     public void checksumTypeEnum() throws IOException, TemplateModelException {
-        final String typeName = "ChecksumType";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/checksumType.xml");
 
@@ -119,17 +113,14 @@ public class GoFunctionalTypeTests {
         // Verify conversion to string pointer
         assertTrue(typeCode.contains("func (checksumType ChecksumType) StringPtr() *string {"));
 
-        // Verify type parser file was not generated for enum type
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(isEmpty(typeParserCode));
+        // Verify type parser code was not generated for enum type
+        assertFalse(typeCode.contains("parse("));
     }
 
     @Test
     public void simpleTypeGeneration() throws IOException, TemplateModelException {
-        final String typeName = "JobCompletedNotificationPayload";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/simpleType.xml");
 
@@ -150,24 +141,19 @@ public class GoFunctionalTypeTests {
         assertFalse(typeCode.contains("`xml:\"ObjectsNotPersisted>Object\"`"));
         assertFalse(typeCode.contains("`xml:\"ListedElements\"`"));
 
-        // Verify type parser file was generated
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(hasContent(typeParserCode));
-
-        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.CancelOccurred = parseBool(child.Content, aggErr)"));
-        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.JobId = parseString(child.Content)"));
-        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.NotificationGenerationDate = parseString(child.Content)"));
-        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ObjectsNotPersisted = parseBulkObjectSlice(\"Object\", child.Children, aggErr)"));
-        assertTrue(typeParserCode.contains("jobCompletedNotificationPayload.ListedElements = append(jobCompletedNotificationPayload.ListedElements, model)"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobCompletedNotificationPayload.\", child.XMLName.Local)"));
+        // Verify type parser code was generated
+        assertTrue(typeCode.contains("jobCompletedNotificationPayload.CancelOccurred = parseBool(child.Content, aggErr)"));
+        assertTrue(typeCode.contains("jobCompletedNotificationPayload.JobId = parseString(child.Content)"));
+        assertTrue(typeCode.contains("jobCompletedNotificationPayload.NotificationGenerationDate = parseString(child.Content)"));
+        assertTrue(typeCode.contains("jobCompletedNotificationPayload.ObjectsNotPersisted = parseBulkObjectSlice(\"Object\", child.Children, aggErr)"));
+        assertTrue(typeCode.contains("jobCompletedNotificationPayload.ListedElements = append(jobCompletedNotificationPayload.ListedElements, model)"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobCompletedNotificationPayload.\", child.XMLName.Local)"));
     }
 
     @Test
     public void jobType() throws IOException, TemplateModelException {
-        final String typeName = "Job";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/jobType.xml");
 
@@ -213,38 +199,33 @@ public class GoFunctionalTypeTests {
         assertFalse(typeCode.contains("`xml:\"UserName,attr\"`"));
 
 
-        // Verify type parser file was generated
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(hasContent(typeParserCode));
+        // Verify type parser code was generated
+        assertTrue(typeCode.contains("job.Aggregating = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("job.BucketName = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeCode.contains("job.CachedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("parseEnumFromString(attr.Value, &job.ChunkClientProcessingOrderGuarantee, aggErr)"));
+        assertTrue(typeCode.contains("job.CompletedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("job.EntirelyInCache = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("job.JobId = attr.Value"));
+        assertTrue(typeCode.contains("job.Naked = parseBoolFromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("job.Name = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeCode.contains("job.OriginalSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("parseEnumFromString(attr.Value, &job.Priority, aggErr)"));
+        assertTrue(typeCode.contains("parseEnumFromString(attr.Value, &job.RequestType, aggErr)"));
+        assertTrue(typeCode.contains("job.StartDate = attr.Value"));
+        assertTrue(typeCode.contains("parseEnumFromString(attr.Value, &job.Status, aggErr)"));
+        assertTrue(typeCode.contains("job.UserId = attr.Value"));
+        assertTrue(typeCode.contains("job.UserName = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing Job.\", attr.Name.Local)"));
 
-        assertTrue(typeParserCode.contains("job.Aggregating = parseBoolFromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("job.BucketName = parseNullableStringFromString(attr.Value)"));
-        assertTrue(typeParserCode.contains("job.CachedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.ChunkClientProcessingOrderGuarantee, aggErr)"));
-        assertTrue(typeParserCode.contains("job.CompletedSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("job.EntirelyInCache = parseBoolFromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("job.JobId = attr.Value"));
-        assertTrue(typeParserCode.contains("job.Naked = parseBoolFromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("job.Name = parseNullableStringFromString(attr.Value)"));
-        assertTrue(typeParserCode.contains("job.OriginalSizeInBytes = parseInt64FromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.Priority, aggErr)"));
-        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.RequestType, aggErr)"));
-        assertTrue(typeParserCode.contains("job.StartDate = attr.Value"));
-        assertTrue(typeParserCode.contains("parseEnumFromString(attr.Value, &job.Status, aggErr)"));
-        assertTrue(typeParserCode.contains("job.UserId = attr.Value"));
-        assertTrue(typeParserCode.contains("job.UserName = parseNullableStringFromString(attr.Value)"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing Job.\", attr.Name.Local)"));
-
-        assertTrue(typeParserCode.contains("job.Nodes = parseJobNodeSlice(\"Node\", child.Children, aggErr)"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing Job.\", child.XMLName.Local)"));
+        assertTrue(typeCode.contains("job.Nodes = parseJobNodeSlice(\"Node\", child.Children, aggErr)"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing Job.\", child.XMLName.Local)"));
     }
 
     @Test
     public void jobNodeType() throws IOException, TemplateModelException {
-        final String typeName = "JobNode";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/jobNodeType.xml");
 
@@ -263,23 +244,18 @@ public class GoFunctionalTypeTests {
         assertFalse(typeCode.contains("`xml:\"HttpsPort,attr\"`"));
         assertFalse(typeCode.contains("`xml:\"Id,attr\"`"));
 
-        // Verify type parser file was generated
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(hasContent(typeParserCode));
-
-        assertTrue(typeParserCode.contains("jobNode.EndPoint = parseNullableStringFromString(attr.Value)"));
-        assertTrue(typeParserCode.contains("jobNode.HttpPort = parseNullableIntFromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("jobNode.HttpsPort = parseNullableIntFromString(attr.Value, aggErr)"));
-        assertTrue(typeParserCode.contains("jobNode.Id = attr.Value"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing JobNode.\", attr.Name.Local)"));
+        // Verify type parser code was generated
+        assertTrue(typeCode.contains("jobNode.EndPoint = parseNullableStringFromString(attr.Value)"));
+        assertTrue(typeCode.contains("jobNode.HttpPort = parseNullableIntFromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("jobNode.HttpsPort = parseNullableIntFromString(attr.Value, aggErr)"));
+        assertTrue(typeCode.contains("jobNode.Id = attr.Value"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown attribute '%s' while parsing JobNode.\", attr.Name.Local)"));
     }
 
     @Test
     public void jobList() throws IOException, TemplateModelException {
-        final String typeName = "JobList";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/jobListType.xml");
 
@@ -292,26 +268,21 @@ public class GoFunctionalTypeTests {
 
         assertFalse(typeCode.contains("`xml:\"Job\"`"));
 
-        // Verify type parser file was generated
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(hasContent(typeParserCode));
+        // Verify type parser code was generated
+        assertFalse(typeCode.contains("case \"Jobs\":"));
+        assertFalse(typeCode.contains("jobList.Jobs = parseJobSlice(\"Job\", child.Children, aggErr)"));
 
-        assertFalse(typeParserCode.contains("case \"Jobs\":"));
-        assertFalse(typeParserCode.contains("jobList.Jobs = parseJobSlice(\"Job\", child.Children, aggErr)"));
-
-        assertTrue(typeParserCode.contains("case \"Job\":"));
-        assertTrue(typeParserCode.contains("var model Job"));
-        assertTrue(typeParserCode.contains("model.parse(&child, aggErr)"));
-        assertTrue(typeParserCode.contains("jobList.Jobs = append(jobList.Jobs, model)"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobList.\", child.XMLName.Local)"));
+        assertTrue(typeCode.contains("case \"Job\":"));
+        assertTrue(typeCode.contains("var model Job"));
+        assertTrue(typeCode.contains("model.parse(&child, aggErr)"));
+        assertTrue(typeCode.contains("jobList.Jobs = append(jobList.Jobs, model)"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing JobList.\", child.XMLName.Local)"));
     }
 
     @Test
     public void listBucketResultTest() throws IOException, TemplateModelException {
-        final String typeName = "ListBucketResult";
         final FileUtils fileUtils = mock(FileUtils.class);
-        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils, requestName, typeName);
+        final GoTestCodeUtil codeGenerator = new GoTestCodeUtil(fileUtils);
 
         codeGenerator.generateCode(fileUtils, "/input/listBucketResult.xml");
 
@@ -331,25 +302,21 @@ public class GoFunctionalTypeTests {
         assertTrue(typeCode.contains("Prefix *string"));
         assertTrue(typeCode.contains("Truncated bool"));
 
-        // Verify type parser file was generated
-        final String typeParserCode = codeGenerator.getTypeParserCode();
-        CODE_LOGGER.logFile(typeParserCode, FileTypeToLog.MODEL_PARSERS);
-        assertTrue(hasContent(typeParserCode));
+        // Verify type parser code was generated
+        assertTrue(typeCode.contains("case \"CommonPrefixes\":"));
+        assertTrue(typeCode.contains("var prefixes []string"));
+        assertTrue(typeCode.contains("prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)"));
+        assertTrue(typeCode.contains("listBucketResult.CommonPrefixes = append(listBucketResult.CommonPrefixes, prefixes...)"));
 
-        assertTrue(typeParserCode.contains("case \"CommonPrefixes\":"));
-        assertTrue(typeParserCode.contains("var prefixes []string"));
-        assertTrue(typeParserCode.contains("prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)"));
-        assertTrue(typeParserCode.contains("listBucketResult.CommonPrefixes = append(listBucketResult.CommonPrefixes, prefixes...)"));
-
-        assertTrue(typeParserCode.contains("listBucketResult.CreationDate = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Delimiter = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Marker = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.MaxKeys = parseInt(child.Content, aggErr)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Name = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.NextMarker = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Objects = append(listBucketResult.Objects, model)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Prefix = parseNullableString(child.Content)"));
-        assertTrue(typeParserCode.contains("listBucketResult.Truncated = parseBool(child.Content, aggErr)"));
-        assertTrue(typeParserCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing ListBucketResult.\", child.XMLName.Local)"));
+        assertTrue(typeCode.contains("listBucketResult.CreationDate = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.Delimiter = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.Marker = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.MaxKeys = parseInt(child.Content, aggErr)"));
+        assertTrue(typeCode.contains("listBucketResult.Name = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.NextMarker = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.Objects = append(listBucketResult.Objects, model)"));
+        assertTrue(typeCode.contains("listBucketResult.Prefix = parseNullableString(child.Content)"));
+        assertTrue(typeCode.contains("listBucketResult.Truncated = parseBool(child.Content, aggErr)"));
+        assertTrue(typeCode.contains("log.Printf(\"WARNING: unable to parse unknown xml tag '%s' while parsing ListBucketResult.\", child.XMLName.Local)"));
     }
 }

@@ -25,6 +25,8 @@ import com.spectralogic.ds3autogen.c.converters.ParameterConverter;
 import com.spectralogic.ds3autogen.c.converters.RequestConverter;
 import com.spectralogic.ds3autogen.c.helpers.RequestHelper;
 import com.spectralogic.ds3autogen.c.models.Parameter;
+import com.spectralogic.ds3autogen.c.models.ParameterModifier;
+import com.spectralogic.ds3autogen.c.models.ParameterPointerType;
 import com.spectralogic.ds3autogen.c.models.Request;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecEmptyImpl;
 import com.spectralogic.ds3autogen.docspec.Ds3DocSpecImpl;
@@ -33,6 +35,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class RequestConverter_Test {
@@ -80,6 +83,16 @@ public class RequestConverter_Test {
     }
 
     @Test
+    public void testStageObjectsHasRequestPayload() {
+        final ImmutableMap<String, Parameter> hasRequestPayload = RequestConverter.buildRequestPayloadMap();
+        final Parameter result = hasRequestPayload.get("stage_objects_job_spectra_s3_request");
+        assertNotNull(result);
+
+        assertThat(result.getName(), is("object_list"));
+        assertThat(result.getParameterType(), is("ds3_bulk_object_list_response"));
+    }
+
+    @Test
     public void testNullResponseForNoRequestPayload() {
         final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
         assertEquals(requestPayloadMap.get("unknownRequest"), null);
@@ -89,6 +102,24 @@ public class RequestConverter_Test {
     public void testRequestPayloadMapDoesNotContainEjectStorageDomain() {
         final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
         assertEquals(requestPayloadMap.get("eject_storage_domain_spectra_s3_request"), null);
+    }
+
+    @Test
+    public void testRequestPayloadMapContainsSuspectBlobCommands() {
+        final ImmutableMap<String, Parameter> requestPayloadMap = RequestConverter.buildRequestPayloadMap();
+
+        final Parameter expected = new Parameter(ParameterModifier.CONST, "ds3_ids_list", "ids", ParameterPointerType.SINGLE_POINTER, true);
+
+        assertThat(requestPayloadMap.get("clear_suspect_blob_azure_targets_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("clear_suspect_blob_ds3_targets_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("clear_suspect_blob_pools_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("clear_suspect_blob_s3_targets_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("clear_suspect_blob_tapes_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("mark_suspect_blob_azure_targets_as_degraded_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("mark_suspect_blob_ds3_targets_as_degraded_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("mark_suspect_blob_pools_as_degraded_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("mark_suspect_blob_s3_targets_as_degraded_spectra_s3_request"), is(expected));
+        assertThat(requestPayloadMap.get("mark_suspect_blob_tapes_as_degraded_spectra_s3_request"), is(expected));
     }
 
     @Test

@@ -1,0 +1,32 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.StageObjectsJobRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_STAGE" Resource="BUCKET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code> <!-- Manually added the expected 200 response -->
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.0D522E432703A7E48DBEDD1A6BB5CEF8</Version>
+            </RequestHandler>
+        </RequestHandlers>
+    </Contract>
+</Data>

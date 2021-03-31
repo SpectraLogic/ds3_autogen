@@ -51,7 +51,7 @@ public class GetObjectRequestGenerator extends BaseRequestGenerator {
      * Gets the python code that handles processing the request payload and headers
      */
     @Override
-    public String getAdditionalContent(final Ds3Request ds3Request, final String requestName) {
+    public String getAdditionalContent(final String requestName) {
         return "self.offset = offset\n" +
                 pythonIndent(2) + "self.stream = stream\n";
     }

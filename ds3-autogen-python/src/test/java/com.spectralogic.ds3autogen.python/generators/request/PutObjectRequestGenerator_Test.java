@@ -68,7 +68,7 @@ public class PutObjectRequestGenerator_Test {
                 "        self.object_name = typeCheckString(object_name)\n" +
                 "        object_data = StreamWithLength(stream, length)\n" +
                 "        self.body = object_data\n";
-        final String result = generator.getAdditionalContent(null, null);
+        final String result = generator.getAdditionalContent(null);
         assertThat(result, is(expected));
     }
 }

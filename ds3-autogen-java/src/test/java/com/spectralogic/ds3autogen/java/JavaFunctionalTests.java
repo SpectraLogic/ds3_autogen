@@ -1172,6 +1172,7 @@ public class JavaFunctionalTests {
         assertTrue(isOptParamOfType("Job", "String", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Offset", "long", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("ByteRanges", "Collection<Range>", requestName, requestGeneratedCode, true));
+        assertTrue(isOptParamOfType("VersionId", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("BucketName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("ObjectName", "String", requestName, requestGeneratedCode, false));
         assertTrue(isReqParamOfType("Channel", "WritableByteChannel", requestName, requestGeneratedCode, false));
@@ -2035,12 +2036,16 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractResponse", responseGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseGeneratedCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableMap", responseGeneratedCode));
+        assertTrue(hasImport("java.time.ZonedDateTime", responseGeneratedCode));
+        assertTrue(hasImport("java.util.UUID", responseGeneratedCode));
 
         assertTrue(isReqParamOfType("metadata", "Metadata", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("objectSize", "long", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("status", "Status", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("blobChecksumType", "ChecksumType.Type", responseName, responseGeneratedCode, false));
         assertTrue(isReqParamOfType("blobChecksums", "ImmutableMap<Long, String>", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("versionId", "UUID", responseName, responseGeneratedCode, false));
+        assertTrue(isReqParamOfType("creationDate", "ZonedDateTime", responseName, responseGeneratedCode, false));
 
         assertTrue(responseGeneratedCode.contains("public enum Status { EXISTS, DOESNTEXIST, UNKNOWN }"));
 
@@ -2068,16 +2073,20 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("com.spectralogic.ds3client.networking.Metadata", responseParserCode));
         assertTrue(hasImport("com.google.common.collect.ImmutableMap", responseParserCode));
         assertTrue(hasImport("com.spectralogic.ds3client.models.ChecksumType", responseParserCode));
+        assertTrue(hasImport("java.time.ZonedDateTime", responseParserCode));
+        assertTrue(hasImport("java.util.UUID", responseParserCode));
         assertTrue(responseParserCode.contains("import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;"));
         assertFalse(responseParserCode.contains("import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;"));
 
         // 200 response code
         assertTrue(responseParserCode.contains("final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());"));
         assertTrue(responseParserCode.contains("final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());"));
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("final ZonedDateTime creationDate = getCreationDate(response.getHeaders());"));
+        assertTrue(responseParserCode.contains("final UUID versionId = getVersionId(response.getHeaders());"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, HeadObjectResponse.Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());"));
 
         // 404 response code
-        assertTrue(responseParserCode.contains("return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());"));
+        assertTrue(responseParserCode.contains("return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());"));
 
         assertTrue(responseParserCode.contains("private final int[] expectedStatusCodes = new int[]{200, 404};"));
     }
@@ -2642,5 +2651,122 @@ public class JavaFunctionalTests {
 
         codeGenerator.generate(spec, fileUtils, Paths.get("."), new Ds3DocSpecEmptyImpl());
 
+    }
+
+    @Test
+    public void ejectStorageDomainTest() throws IOException, TemplateModelException {
+        final String requestName = "EjectStorageDomainBlobsSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/ejectStorageDomainBlobs.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
+
+        assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3ObjectList", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.utils.Guard", requestGeneratedCode));
+        assertTrue(hasImport("java.io.ByteArrayInputStream", requestGeneratedCode));
+        assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
+        assertTrue(hasImport("java.util.List", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.AbstractRequest", requestGeneratedCode));
+
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        assertTrue(isOptParamOfType("ejectLabel", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("ejectLocation", "String", requestName, requestGeneratedCode, false));
+
+        assertTrue(isReqParamOfType("bucketId", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("storageDomain", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("objects", "List<Ds3Object>", requestName, requestGeneratedCode, false));
+
+        assertTrue(requestGeneratedCode.contains("public InputStream getStream() {"));
+        assertTrue(requestGeneratedCode.contains("public long getSize() {"));
+
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+
+        final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
+        CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
+    }
+
+    @Test
+    public void stageObjectsJob() throws IOException, TemplateModelException {
+        final String requestName = "StageObjectsJobSpectraS3Request";
+        final FileUtils fileUtils = mock(FileUtils.class);
+        final TestGeneratedCode testGeneratedCode = new TestGeneratedCode(
+                fileUtils,
+                requestName,
+                "./ds3-sdk/src/main/java/com/spectralogic/ds3client/commands/spectrads3/");
+
+        testGeneratedCode.generateCode(fileUtils, "/input/stageObjectsJob.xml");
+
+        final String requestGeneratedCode = testGeneratedCode.getRequestGeneratedCode();
+        CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
+
+        assertTrue(extendsClass(requestName, "BulkRequest", requestGeneratedCode));
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3", requestGeneratedCode));
+
+        assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.commands.interfaces.BulkRequest", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.Priority", requestGeneratedCode));
+        assertTrue(hasImport("com.spectralogic.ds3client.models.bulk.Ds3Object", requestGeneratedCode));
+
+        assertTrue(hasCopyright(requestGeneratedCode));
+
+        assertTrue(isOptParamOfType("name", "String", requestName, requestGeneratedCode, false));
+        assertTrue(isOptParamOfType("priority", "Priority", requestName, requestGeneratedCode, true));
+
+        assertTrue(isReqParamOfType("bucketName", "String", requestName, requestGeneratedCode, true));
+        assertTrue(isReqParamOfType("objects", "Iterable<Ds3Object>", requestName, requestGeneratedCode, true));
+
+        assertTrue(requestGeneratedCode.contains("public StageObjectsJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {"));
+        assertTrue(requestGeneratedCode.contains("this.getQueryParams().put(\"operation\", \"start_bulk_stage\");"));
+
+        assertTrue(requestGeneratedCode.contains("public BulkCommand getCommand() {"));
+        assertTrue(requestGeneratedCode.contains("return BulkCommand.GET;"));
+
+        assertFalse(requestGeneratedCode.contains("public HttpVerb getVerb() {"));
+
+
+        final String responseGeneratedCode = testGeneratedCode.getResponseGeneratedCode();
+        CODE_LOGGER.logFile(responseGeneratedCode, FileTypeToLog.RESPONSE);
+
+        final String responseName = requestName.replace("Request", "Response");
+        assertTrue(extendsClass(responseName, "AbstractResponse", responseGeneratedCode));
+
+        final String ds3ClientGeneratedCode = testGeneratedCode.getDs3ClientGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3Client(requestName, ds3ClientGeneratedCode);
+
+        final String ds3ClientImplGeneratedCode = testGeneratedCode.getDs3ClientImplGeneratedCode();
+        CODE_LOGGER.logFile(ds3ClientImplGeneratedCode, FileTypeToLog.CLIENT);
+        testDs3ClientImpl(requestName, ds3ClientImplGeneratedCode);
+
+        final String responseParserCode = testGeneratedCode.getResponseParserGeneratedCode();
+        CODE_LOGGER.logFile(responseParserCode, FileTypeToLog.PARSER);
+        assertTrue(isOfPackage("com.spectralogic.ds3client.commands.parsers", responseParserCode));
     }
 }

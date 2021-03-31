@@ -17,13 +17,11 @@ package com.spectralogic.ds3autogen.go.generators.response;
 
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode;
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseType;
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -58,15 +56,5 @@ public class GetObjectResponseGenerator_Test {
     @Test
     public void toResponsePayloadStruct_Test() {
         assertThat(generator.toResponsePayloadStruct(ImmutableList.of()), is("Content io.ReadCloser"));
-    }
-
-    @Test
-    public void toImportSet_Test() {
-        final ImmutableSet<String> expectedImports = ImmutableSet.of("io");
-
-        final ImmutableSet<String> result = generator.toImportSet();
-
-        assertThat(result.size(), is(expectedImports.size()));
-        expectedImports.forEach(expected -> assertThat(result, hasItem(expected)));
     }
 }

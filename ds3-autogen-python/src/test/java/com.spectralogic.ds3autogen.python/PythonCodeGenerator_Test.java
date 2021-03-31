@@ -85,12 +85,15 @@ public class PythonCodeGenerator_Test {
         assertThat(generator.getRequestGenerator(markSuspectBlobS3TargetsAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
         assertThat(generator.getRequestGenerator(markSuspectBlobTapesAsDegradedRequest()), instanceOf(IdListRequestPayloadGenerator.class));
 
-        assertThat(generator.getRequestGenerator(getRequestBulkGet()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(generator.getRequestGenerator(getRequestBulkPut()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(generator.getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(generator.getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(generator.getRequestGenerator(getRequestMultiFileDelete()), instanceOf(ObjectsPayloadGenerator.class));
-        assertThat(generator.getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(ObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestBulkPut()), instanceOf(Ds3PutObjectsPayloadGenerator.class));
+
+        assertThat(generator.getRequestGenerator(getRequestMultiFileDelete()), instanceOf(DeleteObjectsPayloadGenerator.class));
+
+        assertThat(generator.getRequestGenerator(getRequestBulkGet()), instanceOf(Ds3GetObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getRequestVerifyPhysicalPlacement()), instanceOf(Ds3GetObjectsPayloadGenerator.class));
+        assertThat(generator.getRequestGenerator(getEjectStorageDomainBlobsRequest()), instanceOf(Ds3GetObjectsPayloadGenerator.class));
+
+        assertThat(generator.getRequestGenerator(getCompleteMultipartUploadRequest()), instanceOf(PartsRequestPayloadGenerator.class));
     }
 
     @Test

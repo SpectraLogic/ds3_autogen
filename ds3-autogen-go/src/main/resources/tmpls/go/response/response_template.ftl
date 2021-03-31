@@ -1,14 +1,3 @@
-<#include "../common/copyright.ftl" />
-
-package models
-
-import (
-    "net/http"
-    <#list imports as import>
-    "${import}"
-    </#list>
-)
-
 type ${name} struct {
     ${payloadStruct}
     Headers *http.Header
@@ -17,6 +6,7 @@ type ${name} struct {
 ${parseResponseMethod}
 
 func New${name}(webResponse WebResponse) (*${name}, error) {
+    defer webResponse.Body().Close()
     expectedStatusCodes := []int { ${expectedCodes} }
 
     switch code := webResponse.StatusCode(); code {
@@ -28,3 +18,4 @@ func New${name}(webResponse WebResponse) (*${name}, error) {
         return nil, buildBadStatusCodeError(webResponse, expectedStatusCodes)
     }
 }
+

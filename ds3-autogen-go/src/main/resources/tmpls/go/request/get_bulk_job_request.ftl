@@ -1,5 +1,3 @@
-<#include "request_header.ftl" />
-
 <#include "request_struct.ftl" />
 
 func New${name}(${constructor.constructorParams}, objectNames []string) *${name} {

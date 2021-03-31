@@ -209,7 +209,7 @@ public class BaseRequestGenerator_Test {
 
     @Test
     public void getAdditionalContent_Test() {
-        final String result = generator.getAdditionalContent(null, null);
+        final String result = generator.getAdditionalContent(null);
         assertThat(result, is(nullValue()));
     }
 

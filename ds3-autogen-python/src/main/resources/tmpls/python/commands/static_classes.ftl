@@ -6,24 +6,56 @@ class HeadRequestStatus(object):
     UNKNOWN = 'UNKNOWN'
 
 
-class FileObject(object):
-    def __init__(self, name, size=None):
+class Ds3PutObject(object):
+    def __init__(self, name, size):
         self.name = name
         self.size = size
 
     def to_xml(self):
         xml_object = xmldom.Element('Object')
         xml_object.set('Name', posixpath.normpath(self.name))
-        if self.size is not None:
-            xml_object.set('Size', str(self.size))
+        xml_object.set('Size', str(self.size))
         return xml_object
 
 
-class FileObjectList(object):
+class Ds3GetObject(object):
+    def __init__(self, name, length=None, offset=None, version_id=None):
+        self.name = name
+        self.length = length
+        self.offset = offset
+        self.version_id = version_id
+
+    def to_xml(self):
+        xml_object = xmldom.Element('Object')
+        xml_object.set('Name', posixpath.normpath(self.name))
+        if self.length is not None:
+            xml_object.set('Length', str(self.length))
+        if self.offset is not None:
+            xml_object.set('Offset', str(self.offset))
+        if self.version_id is not None:
+            xml_object.set('VersionId', self.version_id)
+        return xml_object
+
+
+class Ds3GetObjectList(object):
     def __init__(self, object_list):
         for obj in object_list:
-            if not isinstance(obj, FileObject):
-                raise TypeError("FileObjectList should only contain type: FileObject")
+            if not isinstance(obj, Ds3GetObject):
+                raise TypeError("Ds3GetObjectList should only contain type: Ds3GetObject")
+        self.object_list = object_list
+
+    def to_xml(self):
+        xml_object_list = xmldom.Element('Objects')
+        for obj in self.object_list:
+            xml_object_list.append(obj.to_xml())
+        return xml_object_list
+
+
+class Ds3PutObjectList(object):
+    def __init__(self, object_list):
+        for obj in object_list:
+            if not isinstance(obj, Ds3PutObject):
+                raise TypeError("Ds3PutObjectList should only contain type: Ds3PutObject")
         self.object_list = object_list
 
     def to_xml(self):

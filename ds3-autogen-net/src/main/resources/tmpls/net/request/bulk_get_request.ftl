@@ -38,8 +38,18 @@ namespace Ds3.Calls
 
         <#include "common/constructor.ftl" />
 
-        public ${name}(string bucketName, List<Ds3Object> ds3Objects)
-            : this(bucketName, ds3Objects.Select(o => o.Name), Enumerable.Empty<Ds3PartialObject>())
+        public ${name}(string bucketName, IEnumerable<string> fullObjects, IEnumerable<Ds3PartialObject> partialObjects)
+            : this(bucketName, fullObjects.Select(name => new Ds3Object(name, null)), partialObjects)
+        {
+        }
+
+        public ${name}(string bucketName, IEnumerable<Ds3Object> ds3Objects)
+            : this(bucketName, ds3Objects, Enumerable.Empty<Ds3PartialObject>())
+        {
+        }
+
+        public ${name}(string bucketName, IEnumerable<string> objectNames)
+            : this(bucketName, objectNames.Select(name => new Ds3Object(name, null)), Enumerable.Empty<Ds3PartialObject>())
         {
         }
 

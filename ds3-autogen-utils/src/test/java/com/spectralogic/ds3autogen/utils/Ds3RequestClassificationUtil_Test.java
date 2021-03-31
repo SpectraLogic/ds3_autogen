@@ -1122,6 +1122,12 @@ public class Ds3RequestClassificationUtil_Test {
     public void hasGetObjectsWithLengthOffsetRequestPayload_Test() {
         assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getRequestBulkGet()));
         assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(createVerifyJobRequest()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getPhysicalPlacementForObjects()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getPhysicalPlacementForObjectsWithFullDetails()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(verifyPhysicalPlacementForObjectsRequest()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(verifyPhysicalPlacementForObjectsWithFullDetailsRequest()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getEjectStorageDomainBlobsRequest()));
+        assertTrue(hasGetObjectsWithLengthOffsetRequestPayload(getStageObjectsJobRequest()));
 
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestBulkPut()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(clearSuspectBlobAzureTargetsRequest()));
@@ -1141,7 +1147,6 @@ public class Ds3RequestClassificationUtil_Test {
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestDeleteNotification()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestCreateNotification()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestGetNotification()));
-        assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestVerifyPhysicalPlacement()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestMultiFileDelete()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestCreateObject()));
         assertFalse(hasGetObjectsWithLengthOffsetRequestPayload(getRequestSpectraS3GetObject()));

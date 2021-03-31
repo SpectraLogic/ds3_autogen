@@ -90,7 +90,8 @@ public class GoCodeGenerator implements CodeGenerator {
                     spec.getTypes(),
                     spec.getRequests());
 
-            generateCommands(ds3Requests);
+            generateAllRequests(ds3Requests);
+            generateAllResponses(ds3Requests);
             generateClient(ds3Requests);
             generateAllTypes(typeMap);
         } catch (final Exception e) {
@@ -99,36 +100,43 @@ public class GoCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates Go code for requests and responses
+     * Generates the Go code for all request handlers, to be written to requests.go
      */
-    private void generateCommands(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
+    private void generateAllRequests(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
         if (isEmpty(ds3Requests)) {
-            LOG.info("There were no requests to generate.");
+            LOG.info("There were no requests to generate");
             return;
         }
-        for (final Ds3Request ds3Request : ds3Requests) {
-            generateRequest(ds3Request);
-            generateResponse(ds3Request);
+
+        final Path path = destDir.resolve(
+                BASE_PROJECT_PATH.resolve(
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/requests.go")));
+
+        LOG.info("Getting Output Stream for file: {}", path.toString());
+
+        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
+             final Writer writer = new OutputStreamWriter(outputStream)) {
+
+            // Generate the header info for the requests
+            final Template tmpl = config.getTemplate("request/request_header.ftl");
+            tmpl.process(null, writer);
+
+            // Generate each request and have the code append to the requests file
+            for (final Ds3Request ds3Request : ds3Requests) {
+                generateRequest(ds3Request, writer);
+            }
         }
     }
 
     /**
      * Generates the Go code for a request handler
      */
-    private void generateRequest(final Ds3Request ds3Request) throws IOException, TemplateException {
+    private void generateRequest(final Ds3Request ds3Request, final Writer writer) throws IOException, TemplateException {
         final Template tmpl = getRequestTemplate(ds3Request);
         final RequestModelGenerator<?> generator = getRequestGenerator(ds3Request);
         final Request request = generator.generate(ds3Request);
-        final Path path = destDir.resolve(
-                BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(request.getName())  + ".go")));
 
-        LOG.info("Getting Output Stream for file: {}", path.toString());
-
-        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
-             final Writer writer = new OutputStreamWriter(outputStream)) {
-            tmpl.process(request, writer);
-        }
+        tmpl.process(request, writer);
     }
 
     /**
@@ -151,9 +159,6 @@ public class GoCodeGenerator implements CodeGenerator {
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return new GetBulkJobRequestGenerator();
         }
-        if (hasSimpleObjectsRequestPayload(ds3Request)) {
-            return new ObjectNamesPayloadGenerator();
-        }
         if (hasIdsRequestPayload(ds3Request)) {
             return new IdsPayloadRequestGenerator();
         }
@@ -166,6 +171,9 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isMultiFileDeleteRequest(ds3Request)) {
             return new DeleteObjectsRequestGenerator();
         }
+        if (isCompleteBlobRequest(ds3Request)) {
+            return new CompleteBlobRequestGenerator();
+        }
         return new BaseRequestGenerator();
     }
 
@@ -176,32 +184,53 @@ public class GoCodeGenerator implements CodeGenerator {
         if (isGetObjectAmazonS3Request(ds3Request)) {
             return config.getTemplate("request/get_object_request.ftl");
         }
-        if (isAmazonCreateObjectRequest(ds3Request)) {
+        if (isAmazonCreateObjectRequest(ds3Request) || isCompleteBlobRequest(ds3Request)) {
             return config.getTemplate("request/put_object_request.ftl");
         }
         if (hasGetObjectsWithLengthOffsetRequestPayload(ds3Request)) {
             return config.getTemplate("request/get_bulk_job_request.ftl");
         }
-        return config.getTemplate("request/request_template.ftl");
+        return config.getTemplate("request/request_body.ftl");
     }
 
     /**
-     * Generates the Go code for a response handler/parser
+     * Generates the Go code for all response handlers, to be written to responses.go
      */
-    private void generateResponse(final Ds3Request ds3Request) throws IOException, TemplateException {
-        final Template tmpl = getResponseTemplate(ds3Request);
-        final ResponseModelGenerator<?> generator = getResponseGenerator(ds3Request);
-        final Response response = generator.generate(ds3Request);
+    private void generateAllResponses(final ImmutableList<Ds3Request> ds3Requests) throws IOException, TemplateException {
+        if (isEmpty(ds3Requests)) {
+            LOG.info("There were no requests to generate response handlers for");
+            return;
+        }
+
         final Path path = destDir.resolve(
                 BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(response.getName()) + ".go")));
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/responses.go")));
 
         LOG.info("Getting Output Stream for file: {}", path.toString());
 
         try (final OutputStream outputStream = fileUtils.getOutputFile(path);
              final Writer writer = new OutputStreamWriter(outputStream)) {
-            tmpl.process(response, writer);
+
+            // Generate the header info for the responses
+            final Template tmpl = config.getTemplate("response/response_header.ftl");
+            tmpl.process(null, writer);
+
+            // Generate each response and have the code append to the responses file
+            for (final Ds3Request ds3Request : ds3Requests) {
+                generateResponse(ds3Request, writer);
+            }
         }
+    }
+
+    /**
+     * Generates the Go code for a response handler/parser
+     */
+    private void generateResponse(final Ds3Request ds3Request, final Writer writer) throws IOException, TemplateException {
+        final Template tmpl = getResponseTemplate(ds3Request);
+        final ResponseModelGenerator<?> generator = getResponseGenerator(ds3Request);
+        final Response response = generator.generate(ds3Request);
+
+        tmpl.process(response, writer);
     }
 
     /**
@@ -225,7 +254,9 @@ public class GoCodeGenerator implements CodeGenerator {
      * Retrieves the appropriate template that will generate the Go response handler
      */
     private Template getResponseTemplate(final Ds3Request ds3Request) throws IOException {
-        //TODO special case if necessary
+        if (isGetObjectAmazonS3Request(ds3Request)) {
+            return config.getTemplate("response/response_get_object_template.ftl");
+        }
         return config.getTemplate("response/response_template.ftl");
     }
 
@@ -267,24 +298,6 @@ public class GoCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates all of the response models and their parsers
-     */
-    private void generateAllTypes(final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
-        if (isEmpty(typeMap)) {
-            LOG.info("There were no types to generate");
-            return;
-        }
-        for (final Ds3Type ds3Type : typeMap.values()) {
-            generateType(ds3Type);
-
-            // Generate type parser only if the ds3Type is not an enum
-            if (isEmpty(ds3Type.getEnumConstants())) {
-                generateTypeParser(ds3Type, typeMap);
-            }
-        }
-    }
-
-    /**
      * Retrieves the name of the Go Client file associated with the specified {@link HttpVerb}
      */
     public static String getClientFileName(final HttpVerb httpVerb) {
@@ -305,23 +318,50 @@ public class GoCodeGenerator implements CodeGenerator {
     }
 
     /**
+     * Generates all of the response models and their parsers
+     */
+    private void generateAllTypes(final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+        if (isEmpty(typeMap)) {
+            LOG.info("There were no types to generate");
+            return;
+        }
+
+
+        final Path path = destDir.resolve(
+                BASE_PROJECT_PATH.resolve(
+                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/responseModels.go")));
+
+        LOG.info("Getting Output Stream for file: {}", path.toString());
+
+        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
+             final Writer writer = new OutputStreamWriter(outputStream)) {
+
+            // Generate the header info for the models file
+            final Template tmpl = config.getTemplate("type/type_header.ftl");
+            tmpl.process(null, writer);
+
+            // Generate each model and have the code append to the responseModels file
+            for (final Ds3Type ds3Type : typeMap.values()) {
+                generateType(ds3Type, writer);
+
+                // Generate type parser only if the ds3Type is not an enum
+                if (isEmpty(ds3Type.getEnumConstants())) {
+                    generateTypeParser(ds3Type, typeMap, writer);
+                }
+            }
+        }
+    }
+
+    /**
      * Generates the response model parser for the specified {@link Ds3Type}
      */
-    private void generateTypeParser(final Ds3Type ds3Type, final ImmutableMap<String, Ds3Type> typeMap) throws IOException, TemplateException {
+    private void generateTypeParser(final Ds3Type ds3Type, final ImmutableMap<String, Ds3Type> typeMap, final Writer writer) throws IOException, TemplateException {
         final ImmutableSet<String> typesParsedAsSlices = getTypesParsedAsSlices(typeMap);
         final Template tmpl = getTypeParserTemplate(ds3Type, typesParsedAsSlices);
         final TypeParserModelGenerator<?> generator = getTypeParserGenerator(ds3Type);
         final TypeParser typeParser = generator.generate(ds3Type, typeMap);
-        final Path path = destDir.resolve(
-                BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(typeParser.getName()) + ".go")));
 
-        LOG.info("Getting OutputStream for file: {}", path.toString());
-
-        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
-             final Writer writer = new OutputStreamWriter(outputStream)) {
-            tmpl.process(typeParser, writer);
-        }
+        tmpl.process(typeParser, writer);
     }
 
     /**
@@ -361,20 +401,12 @@ public class GoCodeGenerator implements CodeGenerator {
     /**
      * Generates the response model represented by the specified {@link Ds3Type}
      */
-    private void generateType(final Ds3Type ds3Type) throws IOException, TemplateException {
+    private void generateType(final Ds3Type ds3Type, final Writer writer) throws IOException, TemplateException {
         final Template tmpl = getTypeTemplate(ds3Type);
         final TypeModelGenerator<?> generator = getTypeGenerator();
         final Type type = generator.generate(ds3Type);
-        final Path path = destDir.resolve(
-                BASE_PROJECT_PATH.resolve(
-                        Paths.get(COMMANDS_NAMESPACE.replace(".", "/") + "/" + decapitalize(type.getName()) + ".go")));
 
-        LOG.info("Getting OutputStream for file: {}", path.toString());
-
-        try (final OutputStream outputStream = fileUtils.getOutputFile(path);
-             final Writer writer = new OutputStreamWriter(outputStream)) {
-            tmpl.process(type, writer);
-        }
+        tmpl.process(type, writer);
     }
 
     /**
