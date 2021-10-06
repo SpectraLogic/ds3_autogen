@@ -5,13 +5,14 @@ package ${packageName};
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.io.Serializable;
 <#include "../imports.ftl"/>
 
 <#if javaHelper.stringHasContent(nameToMarshal)>
 @JacksonXmlRootElement(namespace = "${nameToMarshal}")
 </#if>
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ${name} {
+public class ${name} implements Serializable {
 
     // Variables
 <#list elements as elmt>
