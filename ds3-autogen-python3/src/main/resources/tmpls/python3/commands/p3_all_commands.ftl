@@ -4,7 +4,6 @@ import xml.etree.ElementTree as xmldom
 import os
 
 from abc import ABCMeta
-import posixpath
 from .ds3network import *
 
 
