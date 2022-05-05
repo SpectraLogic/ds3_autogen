@@ -935,7 +935,7 @@ public class JavaFunctionalTests {
         assertTrue(extendsClass(requestName, "AbstractRequest", requestGeneratedCode));
         assertTrue(isOptParamOfType("RollBack", "boolean", requestName, requestGeneratedCode, false));
         assertTrue(isOptParamOfType("Quiet", "boolean", requestName, requestGeneratedCode, false));
-        assertTrue(isReqParamOfType("Objects", "List<String>", requestName, requestGeneratedCode, false));
+        assertTrue(isReqParamOfType("Objects", "List<String>", requestName, requestGeneratedCode, true));
         assertFalse(isReqParamOfType("Delete", "boolean", requestName, requestGeneratedCode, false));
 
         assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
@@ -947,7 +947,7 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("java.util.ArrayList", requestGeneratedCode));
         assertTrue(hasImport("java.util.List", requestGeneratedCode));
-        assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
+        assertTrue(hasImport("java.nio.charset.StandardCharsets", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands", requestGeneratedCode));

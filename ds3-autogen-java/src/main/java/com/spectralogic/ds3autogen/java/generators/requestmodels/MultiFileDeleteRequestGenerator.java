@@ -60,21 +60,31 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
             final String requestName,
             final Ds3DocSpec docSpec) {
         final ImmutableList.Builder<Arguments> builder = ImmutableList.builder();
-        builder.addAll(constructorArgs);
+
+        if (hasContent(constructorArgs)) {
+            constructorArgs.stream()
+                    .filter(arg -> !arg.getName().equalsIgnoreCase("Delete"))
+                    .forEach(builder::add);
+        }
+
         builder.add(new Arguments("List<String>", "Objects"));
 
-        final ImmutableList<Arguments> updatedArgs = builder.build();
-        final ImmutableList<String> argNames = updatedArgs.stream()
+        final ImmutableList<String> additionalLines = ImmutableList.of(
+                "this.objects = namesToDeleteObjects(objects);");
+
+        final ImmutableList<String> argNames = builder.build().stream()
                 .map(Arguments::getName)
                 .collect(GuavaCollectors.immutableList());
 
-        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(updatedArgs);
+        final ImmutableList<ConstructorParam> constructorParams = toConstructorParams(builder.build());
 
         final ImmutableList<Precondition> preconditions = toPreconditions(constructorParams);
 
         return new RequestConstructor(
+                false,
+                additionalLines,
                 constructorParams,
-                updatedArgs,
+                constructorArgs,
                 queryParams,
                 preconditions,
                 toConstructorDocs(requestName, argNames, docSpec, 1));
@@ -96,10 +106,10 @@ public class MultiFileDeleteRequestGenerator extends BaseRequestGenerator {
                     .forEach(builder::add);
         }
 
-        builder.add(new Arguments("Iterable<Contents>", "Objs"));
+        builder.add(new Arguments("Iterable<Contents>", "Objects"));
 
         final ImmutableList<String> additionalLines = ImmutableList.of(
-                "this.objects = contentsToString(objs);");
+                "this.objects = contentsToDeleteObjects(objects);");
 
         final ImmutableList<String> argNames = builder.build().stream()
                 .map(Arguments::getName)
