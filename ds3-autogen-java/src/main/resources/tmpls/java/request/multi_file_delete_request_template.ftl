@@ -12,13 +12,13 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
 
     // Variables
-    private final List<String> objects;
+    private final List<DeleteObject> objects;
 <#include "common/variables.ftl"/>
     private boolean quiet = false;
     private long size;
@@ -26,12 +26,20 @@ public class ${name} extends ${parentClass} {
     // Constructor
     <#include "common/constructor.ftl"/>
 
-    private static List<String> contentsToString(final Iterable<Contents> objs) {
-        final List<String> objKeyList = new ArrayList<>();
-        for (final Contents obj : objs) {
-            objKeyList.add(obj.getKey());
+    private static List<DeleteObject> contentsToDeleteObjects(final Iterable<Contents> objects) {
+        final List<DeleteObject> objectsToDelete = new ArrayList<>();
+        for (final Contents obj : objects) {
+            objectsToDelete.add(new DeleteObject(obj.getKey(), obj.getVersionId()));
         }
-        return objKeyList;
+        return objectsToDelete;
+    }
+
+    private static List<DeleteObject> namesToDeleteObjects(final Iterable<String> objNames) {
+        final List<DeleteObject> objectsToDelete = new ArrayList<>();
+        for (final String objName : objNames) {
+            objectsToDelete.add(new DeleteObject(objName));
+        }
+        return objectsToDelete;
     }
 
     <#include "common/with_constructors.ftl"/>
@@ -46,16 +54,10 @@ public class ${name} extends ${parentClass} {
 
         final Delete delete = new Delete();
         delete.setQuiet(quiet);
-        final List<DeleteObject> deleteObjects = new ArrayList<>();
-
-        for(final String objName : objects) {
-            deleteObjects.add(new DeleteObject(objName));
-        }
-
-        delete.setDeleteObjectList(deleteObjects);
+        delete.setDeleteObjectList(objects);
 
         final String xmlOutput = XmlOutput.toXml(delete);
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
 
         return new ByteArrayInputStream(stringBytes);
@@ -63,7 +65,7 @@ public class ${name} extends ${parentClass} {
 
     <#include "common/getters_verb_path.ftl"/>
 
-    ${javaHelper.createGetter("Objects", "List<String>")}
+    ${javaHelper.createGetter("Objects", "List<DeleteObject>")}
 
     ${javaHelper.createGetter("Quiet", "boolean")}
 
