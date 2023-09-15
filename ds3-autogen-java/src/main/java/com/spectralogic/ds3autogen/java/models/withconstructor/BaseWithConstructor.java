@@ -17,9 +17,10 @@ package com.spectralogic.ds3autogen.java.models.withconstructor;
 
 import com.spectralogic.ds3autogen.api.models.Arguments;
 
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.getType;
+import static com.spectralogic.ds3autogen.java.helpers.JavaHelper.paramAssignmentRHS;
 import static com.spectralogic.ds3autogen.java.utils.WithConstructorUtil.*;
-import static com.spectralogic.ds3autogen.utils.Helper.indent;
-import static com.spectralogic.ds3autogen.utils.Helper.uncapFirst;
+import static com.spectralogic.ds3autogen.utils.Helper.*;
 
 /**
  * Creates a basic java with-constructor. This is used in the
@@ -39,7 +40,7 @@ public class BaseWithConstructor implements WithConstructor {
     public String toJavaCode() {
         return withConstructorFirstLine(param, requestName) +
                 indent(2) + argAssignmentLine(param) +
-                indent(2) + updateQueryParamLine(param.getName(), uncapFirst(param.getName())) +
+                indent(2) + updateQueryParamLine(param.getName(), uncapFirst(param.getInternalName())) +
                 indent(2) + "return this;\n" +
                 indent(1) + "}\n";
     }

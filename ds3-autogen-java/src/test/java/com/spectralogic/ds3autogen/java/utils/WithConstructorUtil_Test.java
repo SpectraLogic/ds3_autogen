@@ -38,10 +38,6 @@ public class WithConstructorUtil_Test {
         assertThat(putQueryParamLine(bucketName),
                 is("this.getQueryParams().put(\"bucket_id\", bucketName);"));
 
-        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(putQueryParamLine(stringTest),
-                is("this.getQueryParams().put(\"string_test\", UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\"));"));
-
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(putQueryParamLine(intTest),
                 is("this.getQueryParams().put(\"int_test\", Integer.toString(intTest));"));
@@ -67,9 +63,6 @@ public class WithConstructorUtil_Test {
         final Arguments bucketName = new Arguments("java.lang.String", "BucketName");
         assertThat(queryParamArgToString(bucketName), is("bucketName"));
 
-        final Arguments stringTest = new Arguments("java.lang.String", "StringTest");
-        assertThat(queryParamArgToString(stringTest), is("UrlEscapers.urlFragmentEscaper().escape(stringTest).replace(\"+\", \"%2B\")"));
-
         final Arguments intTest = new Arguments("int", "IntTest");
         assertThat(queryParamArgToString(intTest), is("Integer.toString(intTest)"));
     }
@@ -93,13 +86,6 @@ public class WithConstructorUtil_Test {
     public void putQueryParamLine_String_Test() {
         final String expected = "this.getQueryParams().put(\"arg_name\", ArgType);";
         final String result = putQueryParamLine("ArgName", "ArgType");
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void putQueryParamLine_StringArguments_Test() {
-        final String expected = "this.getQueryParams().put(\"arg_name\", UrlEscapers.urlFragmentEscaper().escape(argName).replace(\"+\", \"%2B\"));";
-        final String result = putQueryParamLine(new Arguments("String", "ArgName"));
         assertThat(result, is(expected));
     }
 

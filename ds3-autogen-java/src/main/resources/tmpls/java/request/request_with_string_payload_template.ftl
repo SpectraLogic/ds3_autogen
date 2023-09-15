@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
+import java.nio.charset.StandardCharsets;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
@@ -27,7 +28,7 @@ public class ${name} extends ${parentClass} {
         if (Guard.isStringNullOrEmpty(requestPayload)) {
             return null;
         }
-        final byte[] stringBytes = requestPayload.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = requestPayload.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

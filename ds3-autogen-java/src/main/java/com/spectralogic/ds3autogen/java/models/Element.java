@@ -50,6 +50,13 @@ public class Element {
         return name;
     }
 
+    public String getInternalName() {
+        if (name.equalsIgnoreCase("protected")) {
+            return name + "Flag";
+        }
+        return name;
+    }
+
     public String getType() {
         return type;
     }
