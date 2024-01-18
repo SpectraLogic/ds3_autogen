@@ -57,7 +57,7 @@ import static org.mockito.Mockito.mock;
 public class JavaFunctionalTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaFunctionalTests.class);
-    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.PARSER, LOG);
+    private final static GeneratedCodeLogger CODE_LOGGER = new GeneratedCodeLogger(FileTypeToLog.REQUEST, LOG);
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -122,7 +122,6 @@ public class JavaFunctionalTests {
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.serializer.XmlOutput", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
-        assertTrue(hasImport("com.google.common.net.UrlEscapers", requestGeneratedCode));
         assertTrue(hasImport("java.nio.charset.Charset", requestGeneratedCode));
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
 
@@ -427,6 +426,16 @@ public class JavaFunctionalTests {
         assertTrue(isOptParamOfType("ChunkClientProcessingOrderGuarantee", "JobChunkClientProcessingOrderGuarantee", requestName, requestGeneratedCode, true));
         assertTrue(isOptParamOfType("Priority", "Priority", requestName, requestGeneratedCode, true));
         assertFalse(isReqVariable("BucketName", "String", requestGeneratedCode));
+        assertFalse(isOptParamOfType("Protected", "boolean", requestName, requestGeneratedCode, false));
+        assertTrue(requestGeneratedCode.contains("private boolean protectedFlag;"));
+        assertTrue(requestGeneratedCode.contains("public GetBulkJobSpectraS3Request withProtected(final boolean protectedFlag) {\n" +
+                "        this.protectedFlag = protectedFlag;\n" +
+                "        this.updateQueryParam(\"protected\", protectedFlag);\n" +
+                "        return this;\n" +
+                "    }"));
+        assertTrue(requestGeneratedCode.contains("public boolean getProtected() {\n" +
+                "        return this.protectedFlag;\n" +
+                "    }"));
 
         assertTrue(hasImport("com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.BulkCommand", requestGeneratedCode));
@@ -1378,7 +1387,7 @@ public class JavaFunctionalTests {
         CODE_LOGGER.logFile(requestGeneratedCode, FileTypeToLog.REQUEST);
 
         assertTrue(extendsClass(requestName, "AbstractDeleteNotificationRequest", requestGeneratedCode));
-        assertTrue(hasPath("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()", requestGeneratedCode));
+        assertTrue(hasPath("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId()", requestGeneratedCode));
         assertTrue(isOfPackage("com.spectralogic.ds3client.commands.spectrads3.notifications", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
         assertTrue(hasCopyright(requestGeneratedCode));
@@ -2435,7 +2444,6 @@ public class JavaFunctionalTests {
         assertFalse(hasImport("com.spectralogic.ds3client.commands.AbstractRequest", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.networking.HttpVerb", requestGeneratedCode));
         assertTrue(hasImport("java.util.UUID", requestGeneratedCode));
-        assertTrue(hasImport("com.google.common.net.UrlEscapers", requestGeneratedCode));
         assertTrue(hasImport("com.spectralogic.ds3client.utils.SeekableByteChannelInputStream", requestGeneratedCode));
         assertTrue(hasImport("java.nio.channels.SeekableByteChannel", requestGeneratedCode));
         assertTrue(hasImport("java.io.InputStream", requestGeneratedCode));

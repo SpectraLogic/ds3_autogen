@@ -367,7 +367,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
             if (RequestConverterUtil.isResourceId(ds3Request.getResource())) {
                 builder.add("java.util.UUID");
             }
-            builder.add("com.google.common.net.UrlEscapers");
         }
 
         // Determine if any of the constructor parameters use the Nonnull annotation
@@ -446,9 +445,6 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                     && ds3Param.getType().contains(".")
                     && !ds3Param.getType().equals("java.lang.String")) {
                 importsBuilder.add(ConvertType.toModelName(ds3Param.getType()));
-            }
-            if (ds3Param.getType().endsWith("String") || ds3Param.getType().endsWith("UUID")) {
-                importsBuilder.add("com.google.common.net.UrlEscapers");
             }
         }
         return importsBuilder.build();
@@ -597,7 +593,7 @@ public class BaseRequestGenerator implements RequestModelGenerator<Request>, Req
                 && ds3Request.getIncludeInPath()
                 && (getNotificationType(ds3Request) == NotificationType.DELETE
                 || getNotificationType(ds3Request) == NotificationType.GET)) {
-            builder.append("/\"").append(" + this.getNotificationId().toString()");
+            builder.append("/\"").append(" + this.getNotificationId()");
         } else if (hasBucketNameInPath(ds3Request)) {
             builder.append("/\"").append(" + this.bucketName");
         } else if (isResourceAnArg(ds3Request.getResource(), ds3Request.getIncludeInPath())) {

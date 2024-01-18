@@ -6,8 +6,11 @@
                     <OptionalQueryParams>
                         <Param Name="Aggregating" Type="boolean"/>
                         <Param Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
+                        <Param Name="DeadJobCleanupAllowed" Type="boolean"/>
+                        <Param Name="ImplicitJobIdResolution" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
                         <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                        <Param Name="Protected" Type="boolean"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
                         <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
@@ -45,7 +48,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>12.16C01F7FD7B2B3EABC9D36FDAFF5E278</Version>
+                <Version>12.4521084E7C6C8D90D72D43B641CFC389</Version>
             </RequestHandler>
         </RequestHandlers>
     </Contract>

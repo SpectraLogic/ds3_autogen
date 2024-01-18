@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 <#include "../imports.ftl"/>
 
 public class ${name} extends ${parentClass} {
@@ -35,7 +36,7 @@ public class ${name} extends ${parentClass} {
 
         ${javaHelper.toXmlLine("xmlOutput", "objects", operation)}
 
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

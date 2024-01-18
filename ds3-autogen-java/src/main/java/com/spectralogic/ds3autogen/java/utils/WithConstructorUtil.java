@@ -34,7 +34,7 @@ public final class WithConstructorUtil {
      */
     public static String withConstructorFirstLine(final Arguments arg, final String requestName) {
         return indent(1) + "public " + requestName + " with" + capFirst(arg.getName()) +
-                "(final " + getType(arg) + " " + uncapFirst(arg.getName()) + ") {\n";
+                "(final " + getType(arg) + " " + uncapFirst(arg.getInternalName()) + ") {\n";
     }
 
     /**
@@ -43,7 +43,7 @@ public final class WithConstructorUtil {
      * Example: this.myVariable = myVariable;
      */
     public static String argAssignmentLine(final Arguments arg) {
-        return "this." + uncapFirst(arg.getName()) + " = " + paramAssignmentRHS(arg) + ";\n";
+        return "this." + uncapFirst(arg.getInternalName()) + " = " + paramAssignmentRHS(arg) + ";\n";
     }
 
     /**
@@ -91,9 +91,6 @@ public final class WithConstructorUtil {
                 || arg.getName().equalsIgnoreCase("BucketId")
                 || arg.getName().equalsIgnoreCase("BucketName")) {
             return uncapFirst(arg.getName());
-        }
-        if (arg.getType().endsWith("String")) {
-            return "UrlEscapers.urlFragmentEscaper().escape(" + uncapFirst(arg.getName()) + ").replace(\"+\", \"%2B\")";
         }
         return argToString(arg);
     }

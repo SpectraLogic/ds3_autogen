@@ -64,13 +64,13 @@ public class BaseRequestGenerator_Test {
     @Test
     public void getSpectraDs3RequestPath_Test() {
         final Ds3Request deleteNotification = getRequestDeleteNotification();
-        assertThat(getSpectraDs3RequestPath(deleteNotification), is("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId().toString()"));
+        assertThat(getSpectraDs3RequestPath(deleteNotification), is("\"/_rest_/job_created_notification_registration/\" + this.getNotificationId()"));
 
         final Ds3Request createNotification  = getRequestCreateNotification();
         assertThat(getSpectraDs3RequestPath(createNotification), is("\"/_rest_/job_created_notification_registration\""));
 
         final Ds3Request getNotification  = getRequestGetNotification();
-        assertThat(getSpectraDs3RequestPath(getNotification), is("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId().toString()"));
+        assertThat(getSpectraDs3RequestPath(getNotification), is("\"/_rest_/job_completed_notification_registration/\" + this.getNotificationId()"));
 
         final Ds3Request verifyPhysicalPlacement = getRequestVerifyPhysicalPlacement();
         assertThat(getSpectraDs3RequestPath(verifyPhysicalPlacement), is("\"/_rest_/bucket/\" + this.bucketName"));
@@ -319,10 +319,9 @@ public class BaseRequestGenerator_Test {
                 new Ds3Param("Name", "java.lang.String", true));
 
         final ImmutableSet<String> result = getImportsFromParamList(params);
-        assertThat(result.size(), is(3));
+        assertThat(result.size(), is(2));
         assertTrue(result.contains("java.util.UUID"));
         assertTrue(result.contains("com.spectralogic.ds3client.models.BlobStoreTaskPriority"));
-        assertTrue(result.contains("com.google.common.net.UrlEscapers"));
     }
 
     @Test
@@ -347,13 +346,12 @@ public class BaseRequestGenerator_Test {
                 generator.toConstructorList(request, "", new Ds3DocSpecEmptyImpl()));
 
         assertThat(result)
-                .hasSize(5)
+                .hasSize(4)
                 .contains(
                         "com.spectralogic.ds3client.commands.interfaces.AbstractRequest",
                         "com.spectralogic.ds3client.models.JobRequestType",
                         "com.spectralogic.ds3client.models.BlobStoreTaskPriority",
-                        "java.util.UUID",
-                        "com.google.common.net.UrlEscapers");
+                        "java.util.UUID");
     }
 
     @Test
@@ -756,7 +754,6 @@ public class BaseRequestGenerator_Test {
         final ImmutableList<String> expected = ImmutableList.of(
                 "com.spectralogic.ds3client.commands.interfaces.AbstractRequest",
                 "java.util.UUID",
-                "com.google.common.net.UrlEscapers",
                 "com.google.common.base.Preconditions",
                 "javax.annotation.Nonnull");
 

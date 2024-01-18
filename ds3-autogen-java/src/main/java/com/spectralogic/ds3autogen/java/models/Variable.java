@@ -35,6 +35,13 @@ public class Variable {
         return name;
     }
 
+    public String getInternalName() {
+        if (name.equalsIgnoreCase("protected")) {
+            return name+"Flag";
+        }
+        return name;
+    }
+
     public boolean isRequired() {
         return isRequired;
     }

@@ -164,7 +164,7 @@ public final class JavaHelper {
                 builder.append(indent(1)).append("@JacksonXmlElementWrapper(useWrapping = false)\n");
             }
         }
-        builder.append(indent(1)).append("private ").append(ResponseAndParserUtils.convertType(element)).append(" ").append(uncapFirst(element.getName()));
+        builder.append(indent(1)).append("private ").append(ResponseAndParserUtils.convertType(element)).append(" ").append(uncapFirst(element.getInternalName()));
         if (hasContent(element.getComponentType())) {
             builder.append(" = new ArrayList<>()");
         }
@@ -239,7 +239,7 @@ public final class JavaHelper {
         if (arg.getType().equals("UUID")) {
             return argToString(arg);
         }
-        return uncapFirst(arg.getName());
+        return uncapFirst(arg.getInternalName());
     }
 
     /**
