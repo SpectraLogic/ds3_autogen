@@ -1,7 +1,0 @@
-language: java
-os: linux
-dist: jammy
-jdk:
-  - openjdk17
-
-script: ./gradlew -S clean test
