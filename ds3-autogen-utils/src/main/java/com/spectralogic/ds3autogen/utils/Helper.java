@@ -28,8 +28,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty;
-import static kotlin.text.StringsKt.capitalize;
-import static kotlin.text.StringsKt.decapitalize;
+import static com.spectralogic.ds3autogen.api.models.apispec.StringsUtilKt.capitalize;
+import static com.spectralogic.ds3autogen.api.models.apispec.StringsUtilKt.decapitalize;
+
 
 public final class Helper {
 
@@ -53,10 +54,16 @@ public final class Helper {
     }
 
     public static String capFirst(final String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
         return capitalize(str);
     }
 
     public static String uncapFirst(final String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
         return decapitalize(str);
     }
 

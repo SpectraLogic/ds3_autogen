@@ -215,7 +215,8 @@ public class FunctionalTestHelper {
                 "def " + commandName + "\\(self, request\\):"
                 + "\\s+if not isinstance\\(request, " + requestName + "\\):"
                 + "\\s+raise TypeError\\('request for " + commandName + " should be of type " + requestName + " but was ' \\+ request\\.__class__\\.__name__\\)"
-                + "\\s+return " + toResponseName(requestName) + "\\(self\\.net_client.get_response\\(request\\), request\\)",
+                + "\\s+with self\\.net_client\\.open_response\\(request\\) as resp:"
+                + "\\s+return " + toResponseName(requestName) + "\\(resp, request\\)",
                 Pattern.MULTILINE | Pattern.UNIX_LINES);
         return search.matcher(code).find();
     }

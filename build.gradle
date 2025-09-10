@@ -13,9 +13,11 @@
  * ****************************************************************************
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.24' apply false
-    id 'com.github.spotbugs' version '6.0.20' apply false
+    id 'org.jetbrains.kotlin.jvm' version '2.2.10' apply false
 }
 
 allprojects {
@@ -26,9 +28,18 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'com.github.spotbugs'
 
-    sourceCompatibility = JavaVersion.VERSION_17
+    // Use a Java 17 toolchain for compilation
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+        // Explicitly set compatibility on the Java extension (avoids deprecated JavaPluginConvention)
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+
     repositories {
         mavenCentral()
         mavenLocal()
@@ -41,7 +52,7 @@ subprojects {
         implementation 'org.slf4j:slf4j-api:1.7.12'
         implementation 'org.slf4j:jcl-over-slf4j:1.7.12'
 
-        testImplementation('org.mockito:mockito-core:1.9.5') {
+        testImplementation('org.mockito:mockito-core:4.11.0') {
             exclude group: 'org.hamcrest'
         }
         testImplementation 'junit:junit:4.12'
@@ -55,5 +66,19 @@ subprojects {
 tasks.named('wrapper', Wrapper) {
     gradleVersion = '8.14'
     distributionType = Wrapper.DistributionType.ALL
+}
+
+subprojects {
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        tasks.withType(KotlinCompile).configureEach {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_17)
+            }
+        }
+        // Align Kotlin toolchain with Java 17
+        kotlin {
+            jvmToolchain(17)
+        }
+    }
 }
 

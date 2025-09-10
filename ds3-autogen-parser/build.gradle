@@ -20,4 +20,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
     implementation 'org.atteo:evo-inflector:1.2'
+    implementation project(':ds3-autogen-test-util')
 }

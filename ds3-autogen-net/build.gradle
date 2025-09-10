@@ -17,4 +17,5 @@ dependencies {
     implementation project(':ds3-autogen-api')
     implementation project(':ds3-autogen-utils')
     testImplementation project(':ds3-autogen-parser')
+    implementation project(':ds3-autogen-test-util')
 }
