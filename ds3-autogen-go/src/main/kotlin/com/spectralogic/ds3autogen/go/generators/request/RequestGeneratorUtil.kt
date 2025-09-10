@@ -44,7 +44,7 @@ fun toFunctionInput(arguments: ImmutableList<Arguments>): String {
  */
 fun usesStrconv(contractType: String): Boolean {
     val type = NormalizingContractNamesUtil.removePath(contractType)
-    when (type.toLowerCase()) {
+    when (type.lowercase()) {
         "boolean", "integer", "int", "double", "long" -> return true
         else -> return false
     }

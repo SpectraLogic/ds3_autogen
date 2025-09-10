@@ -14,9 +14,9 @@
  */
 
 dependencies {
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-utils')
-    testCompile project(':ds3-autogen-parser')
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
-    compile     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
+    implementation project(':ds3-autogen-api')
+    implementation project(':ds3-autogen-utils')
+    testImplementation project(':ds3-autogen-parser')
+    implementation     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
+    implementation     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
 }

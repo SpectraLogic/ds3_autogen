@@ -14,8 +14,8 @@
  */
 
 dependencies {
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-utils')
+    implementation project(':ds3-autogen-api')
+    implementation project(':ds3-autogen-utils')
 
-    testCompile project(':ds3-autogen-parser')
+    testImplementation project(':ds3-autogen-parser')
 }

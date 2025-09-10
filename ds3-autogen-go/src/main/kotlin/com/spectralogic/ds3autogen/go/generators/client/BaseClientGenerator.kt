@@ -69,7 +69,7 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
     /**
      * Retrieves the command generator for the specified Ds3Request.
      */
-    fun getCommandGenerator(ds3Request: Ds3Request): CommandModelGenerator<*> {
+    fun getCommandGenerator(ds3Request: Ds3Request): CommandModelGenerator {
         return when {
             isAmazonCreateObjectRequest(ds3Request) -> PutObjectCommandGenerator()
             isGetObjectAmazonS3Request(ds3Request) || isCompleteBlobRequest(ds3Request) -> GetObjectCommandGenerator()

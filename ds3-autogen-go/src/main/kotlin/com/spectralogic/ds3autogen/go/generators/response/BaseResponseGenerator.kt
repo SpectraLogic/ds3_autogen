@@ -16,7 +16,6 @@
 package com.spectralogic.ds3autogen.go.generators.response
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableSet
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
 import com.spectralogic.ds3autogen.go.models.response.Response
@@ -29,6 +28,7 @@ import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil.removePath
 import com.spectralogic.ds3autogen.utils.ResponsePayloadUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import java.util.stream.Collectors
+import com.spectralogic.ds3autogen.api.models.apispec.decapitalize
 
 open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseModelGeneratorUtil {
 

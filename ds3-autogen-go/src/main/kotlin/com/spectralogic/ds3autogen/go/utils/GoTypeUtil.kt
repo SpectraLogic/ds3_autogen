@@ -77,7 +77,7 @@ fun toGoResponseType(contractType: String, nullable: Boolean): String {
  */
 fun toGoType(contractType: String): String {
     val type: String = NormalizingContractNamesUtil.removePath(contractType)
-    return when (type.toLowerCase()) {
+    return when (type.lowercase()) {
         "boolean" -> "bool"
         "integer", "int" -> "int"
         "string", "uuid", "date" -> "string"

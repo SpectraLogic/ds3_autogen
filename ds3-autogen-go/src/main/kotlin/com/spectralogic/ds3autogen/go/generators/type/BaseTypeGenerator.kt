@@ -67,7 +67,7 @@ open class BaseTypeGenerator : TypeModelGenerator<Type>, TypeModelGeneratorUtil 
             return ImmutableList.of()
         }
         return ds3EnumConstants!!.stream()
-                .map { (name) -> name.toUpperCase() }
+                .map { (name) -> name.lowercase() }
                 .collect(GuavaCollectors.immutableList())
     }
 }

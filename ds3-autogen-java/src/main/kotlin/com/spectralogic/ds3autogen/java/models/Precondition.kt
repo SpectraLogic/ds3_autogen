@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3autogen.java.models
 
+import com.spectralogic.ds3autogen.api.models.apispec.decapitalize
+
 /**
  * Represents a Java precondition. Used to perform certain input validation
  * in Java request handler constructors.
@@ -22,6 +24,8 @@ package com.spectralogic.ds3autogen.java.models
 interface Precondition {
     fun toJavaCode(): String
 }
+
+
 
 /**
  * Represents a precondition check that a given parameter is not null.

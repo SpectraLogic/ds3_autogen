@@ -19,6 +19,6 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.go.models.client.Command
 
 @FunctionalInterface
-interface CommandModelGenerator<out T : Command> {
-    fun generate(ds3Request: Ds3Request): T
+interface CommandModelGenerator {
+    fun generate(ds3Request: Ds3Request): Command
 }
