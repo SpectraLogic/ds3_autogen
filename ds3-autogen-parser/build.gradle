@@ -14,10 +14,11 @@
  */
 
 dependencies {
-    compile     project(':ds3-autogen-api')
-    compile     project(':ds3-autogen-utils')
-    compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
-    compile     'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
-    compile     'org.atteo:evo-inflector:1.2'
+    implementation project(':ds3-autogen-api')
+    implementation project(':ds3-autogen-utils')
+    implementation 'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.5.0'
+    implementation 'org.atteo:evo-inflector:1.2'
+    implementation project(':ds3-autogen-test-util')
 }

@@ -17,6 +17,7 @@ package com.spectralogic.ds3autogen.java.models
 
 import com.spectralogic.ds3autogen.api.models.Arguments
 import com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent
+import com.spectralogic.ds3autogen.api.models.apispec.decapitalize
 
 open class ConstructorParam(
         name: String,

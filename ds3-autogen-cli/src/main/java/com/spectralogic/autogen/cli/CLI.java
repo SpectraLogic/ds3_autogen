@@ -55,7 +55,7 @@ public class CLI {
     }
 
     private Arguments processArgs(final String[] args) throws Exception {
-        final CommandLineParser parser = new BasicParser();
+        final CommandLineParser parser = new DefaultParser();
         final CommandLine cmd = parser.parse(options, args);
 
         final String directory = cmd.getOptionValue("d");

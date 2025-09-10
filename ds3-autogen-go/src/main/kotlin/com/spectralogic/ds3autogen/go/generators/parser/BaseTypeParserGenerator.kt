@@ -26,6 +26,8 @@ import com.spectralogic.ds3autogen.utils.ConverterUtil
 import com.spectralogic.ds3autogen.utils.Ds3ElementUtil
 import com.spectralogic.ds3autogen.utils.NormalizingContractNamesUtil
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
+import com.spectralogic.ds3autogen.api.models.apispec.decapitalize
+import com.spectralogic.ds3autogen.api.models.apispec.capitalize
 
 open class BaseTypeParserGenerator : TypeParserModelGenerator<TypeParser>, TypeParserGeneratorUtil {
 

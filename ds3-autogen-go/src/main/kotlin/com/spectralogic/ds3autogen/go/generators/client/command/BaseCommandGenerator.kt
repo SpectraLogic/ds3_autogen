@@ -31,7 +31,7 @@ import com.spectralogic.ds3autogen.utils.Helper
 import com.spectralogic.ds3autogen.utils.collections.GuavaCollectors
 import java.util.*
 
-open class BaseCommandGenerator : CommandModelGenerator<Command>, CommandGeneratorUtil {
+open class BaseCommandGenerator : CommandModelGenerator, CommandGeneratorUtil {
 
     override fun generate(ds3Request: Ds3Request): Command {
         return Command(
@@ -106,7 +106,7 @@ open class BaseCommandGenerator : CommandModelGenerator<Command>, CommandGenerat
         val goName = toGoParamName(ds3Param.name, ds3Param.type)
         val key = Helper.camelToUnderscore(ds3Param.name)
 
-        if (ds3Param.type.toLowerCase() == "void") {
+        if (ds3Param.type.lowercase() == "void") {
             return VoidOptionalQueryParamBuildLine(key, goName)
         }
 

@@ -14,7 +14,7 @@
  */
 
 dependencies {
-    compile project(':ds3-autogen-api')
-    compile project(':ds3-autogen-test-util')
-    compile 'junit:junit:4.12'
+    implementation project(':ds3-autogen-api')
+    implementation project(':ds3-autogen-test-util')
+    implementation 'junit:junit:4.12'
 }

@@ -12,5 +12,6 @@ class Client(object):
     def ${cmd.commandName}(${cmd.functionParams}):
         if not isinstance(request, ${cmd.requestType}):
             raise TypeError('request for ${cmd.commandName} should be of type ${cmd.requestType} but was ' + request.__class__.__name__)
-        return ${cmd.responseName}(${cmd.responseParams})
+        with self.net_client.open_response(request) as resp:
+            return ${cmd.responseName}(resp, request)
 </#list>

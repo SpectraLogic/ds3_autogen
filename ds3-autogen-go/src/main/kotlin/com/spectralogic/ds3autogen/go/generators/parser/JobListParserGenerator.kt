@@ -21,6 +21,8 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Type
 import com.spectralogic.ds3autogen.go.models.parser.ParseChildNodeAddToSlice
 import com.spectralogic.ds3autogen.go.models.parser.ParseElement
 import com.spectralogic.ds3autogen.go.utils.toGoType
+import com.spectralogic.ds3autogen.api.models.apispec.decapitalize
+import com.spectralogic.ds3autogen.api.models.apispec.capitalize
 
 /**
  * The Go generator for JobList parser. This is special-cased because there is

@@ -24,6 +24,7 @@ import com.spectralogic.ds3autogen.utils.Ds3RequestClassificationUtil
 import com.spectralogic.ds3autogen.utils.Ds3RequestUtils
 import com.spectralogic.ds3autogen.utils.RequestConverterUtil
 import com.spectralogic.ds3autogen.utils.models.NotificationType
+import com.spectralogic.ds3autogen.api.models.apispec.capitalize
 
 private const val PATH_REQUEST_REFERENCE = "request"
 
@@ -70,7 +71,7 @@ fun Ds3Request.getSpectraDs3RequestPath(): String {
     }
 
     val builder = StringBuilder("\"/_rest_/")
-            .append(resource!!.toString().toLowerCase())
+            .append(resource!!.toString().lowercase())
 
     if (Ds3RequestClassificationUtil.isNotificationRequest(this)
             && includeInPath

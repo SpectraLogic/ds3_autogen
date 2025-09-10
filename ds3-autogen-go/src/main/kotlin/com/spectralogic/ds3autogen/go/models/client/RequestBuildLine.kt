@@ -38,7 +38,7 @@ data class PathBuildLine(private val path: String) : RequestBuildLine {
 // Creates the Go request builder line for adding the operation query param
 data class OperationBuildLine(private val operation: Operation) : RequestBuildLine {
     override val line: String get() {
-        val op = operation.toString().toLowerCase()
+        val op = operation.toString().lowercase()
         return "WithQueryParam(\"operation\", \"$op\")."
     }
 }
