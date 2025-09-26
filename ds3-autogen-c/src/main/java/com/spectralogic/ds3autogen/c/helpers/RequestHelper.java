@@ -112,6 +112,7 @@ public final class RequestHelper {
         }
 
         builder.addAll(request.getRequiredQueryParams().stream()
+                .filter( parm -> !parm.getParameterType().equals("void"))
                 .filter(parm -> !parm.getParameterType().equals("ds3_bool")) // for required bool / void query param nothing to specify
                 .filter(parm -> !parm.getParameterType().equals("operation")) // for required spectrads3 operation query param nothing to specify
                 .map(Parameter::toString)

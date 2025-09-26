@@ -54,6 +54,9 @@ public class StructMember {
     }
 
     public String getName() {
+        if(name.equalsIgnoreCase("protected")) {
+            return name + "_flag";
+        }
         return name;
     }
 

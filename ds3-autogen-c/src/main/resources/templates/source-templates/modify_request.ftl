@@ -100,6 +100,14 @@ static void _set_query_param_flag(const ds3_request* _request, const char* key, 
     }
 }
 
+static void _set_query_param_ds3_bool(const ds3_request* _request, const char* key, ds3_bool value) {
+    if (value == True) {
+        _set_query_param(_request, key, "True");
+    } else {
+        _set_query_param(_request, key, "False");
+    }
+}
+
 static void _set_query_param_uint64_t(const ds3_request* _request, const char* key, uint64_t value) {
     char string_buffer[STRING_BUFFER_SIZE];
     memset(string_buffer, 0, sizeof(string_buffer));

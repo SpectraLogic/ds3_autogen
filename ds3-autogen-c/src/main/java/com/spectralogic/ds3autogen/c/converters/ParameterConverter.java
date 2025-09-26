@@ -38,6 +38,7 @@ public class ParameterConverter {
     public static String getParameterType(final Ds3Param ds3Param) {
         switch (ds3Param.getType()) {
             case "void":
+                return "void";
             case "java.lang.Boolean":
             case "boolean":
                 return "ds3_bool";
