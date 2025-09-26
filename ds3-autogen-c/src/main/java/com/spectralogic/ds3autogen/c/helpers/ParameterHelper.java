@@ -46,8 +46,7 @@ public class ParameterHelper {
                 || parm.getParameterType().equalsIgnoreCase("ds3_complete_multipart_upload_response") // special case
                 || parm.getParameterType().equalsIgnoreCase("ds3_delete_objects_response") // special case - delete objects list
                 || parm.getParameterType().equalsIgnoreCase("ds3_ids_list") // special case suspect blob commands
-                || parm.getParameterType().equalsIgnoreCase("void") // special case - file IO
-                || (parm.getParameterType().equalsIgnoreCase("ds3_bool") && parm.isRequired())
+                || (parm.getParameterType().equalsIgnoreCase("void") && parm.isRequired()) // special case - file IO
                 || parm.getParameterType().equalsIgnoreCase("operation")
                 || parm.getParameterPointerType().equals(ParameterPointerType.NONE)) {
             return false;
@@ -57,7 +56,7 @@ public class ParameterHelper {
 
     public static String getParameterCondition(final Parameter parm, final int depth) {
         switch(parm.getParameterType()) {
-            case "ds3_bool":
+            case "void":
                 if (parm.isRequired()) {
                     throw new InvalidParameterException(parm.getName() + " Required bool query param should not require a condition: " + parm.getParameterType());
                 }
@@ -66,6 +65,7 @@ public class ParameterHelper {
             case "float":
             case "int":
             case "char":
+            case "ds3_bool":
                 return indent(depth) + "if (" + parm.getName() + " != NULL) {\n";
             default:
                 if (parm.getParameterType().startsWith("ds3_")) {  // enum type
@@ -96,6 +96,8 @@ public class ParameterHelper {
             case "ds3_ids_list":
                 return indent(depth) + "request->ids = (" + parm.getParameterType() + "*) " + parm.getName() + ";\n";
             case "ds3_bool":
+                return indent(depth) + "_set_query_param_ds3_bool((ds3_request*) request, \"" + parm.getName() + "\", value);\n";
+            case "void":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"" + parm.getName() + "\", NULL);\n";
             case "operation":
                 return indent(depth) + "_set_query_param((ds3_request*) request, \"operation\", \"" + parm.getName() + "\");\n";
@@ -124,6 +126,7 @@ public class ParameterHelper {
 
     public static String generateSetQueryParamSignature(final Parameter parm) {
         switch(parm.getParameterType()) {
+            case "void":
             case "ds3_bool":
                 return "void ds3_request_set_" + parm.getName() + "(const ds3_request* request, ds3_bool value)";
             case "ds3_str":
@@ -150,6 +153,8 @@ public class ParameterHelper {
             case "uint64_t":
                 return "_set_query_param_" + parm.getParameterType()+ "(request, \"" + parm.getName() + "\", value);\n";
             case "ds3_bool":
+                return "_set_query_param_ds3_bool(request, \"" + parm.getName() + "\", value);\n";
+            case "void":
                 return "_set_query_param_flag(request, \"" + parm.getName() + "\", value);\n";
             default:
                 // Enum parameter type
