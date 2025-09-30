@@ -16,6 +16,7 @@
 package com.spectralogic.ds3autogen.api.models.enums;
 
 public enum Resource {
+    ABM_CONFIG,
     ACTIVE_JOB,
     AZURE_DATA_REPLICATION_RULE,
     AZURE_TARGET,
