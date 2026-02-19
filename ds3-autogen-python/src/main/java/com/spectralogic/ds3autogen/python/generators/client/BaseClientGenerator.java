@@ -62,6 +62,6 @@ public class BaseClientGenerator implements ClientModelGenerator<BaseClient>, Cl
 
     @Override
     public String getResponseParameters() {
-        return "self.net_client.get_response(request), request";
+        return "resp, request";
     }
 }
