@@ -32,7 +32,7 @@ public class GetObjectCommandGenerator_Test {
 
     @Test
     public void getResponseParametersTest() {
-        final String expected = "self.net_client.get_response(request), request, buffer_size";
+        final String expected = "resp, request, buffer_size";
         assertThat(generator.getResponseParameters(), is(expected));
     }
 }

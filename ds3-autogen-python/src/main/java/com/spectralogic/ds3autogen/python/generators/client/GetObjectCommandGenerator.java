@@ -24,6 +24,6 @@ public class GetObjectCommandGenerator extends BaseClientGenerator {
 
     @Override
     public String getResponseParameters() {
-        return "self.net_client.get_response(request), request, buffer_size";
+        return "resp, request, buffer_size";
     }
 }
