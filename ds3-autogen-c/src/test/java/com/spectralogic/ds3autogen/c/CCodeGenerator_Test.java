@@ -773,7 +773,7 @@ public class CCodeGenerator_Test {
                 "    ds3_error* error = NULL;\n" +
                 "    GPtrArray* active_jobs_array = g_ptr_array_new();\n" +
                 "\n" +
-                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Jobs\");\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
                 "    if (error != NULL) {\n" +
                 "        return error;\n" +
                 "    }\n" +
@@ -844,7 +844,7 @@ public class CCodeGenerator_Test {
                 "    ds3_error* error = NULL;\n" +
                 "    GPtrArray* completed_jobs_array = g_ptr_array_new();\n" +
                 "\n" +
-                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Jobs\");\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
                 "    if (error != NULL) {\n" +
                 "        return error;\n" +
                 "    }\n" +
@@ -915,7 +915,7 @@ public class CCodeGenerator_Test {
                 "    ds3_error* error = NULL;\n" +
                 "    GPtrArray* canceled_jobs_array = g_ptr_array_new();\n" +
                 "\n" +
-                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Jobs\");\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
                 "    if (error != NULL) {\n" +
                 "        return error;\n" +
                 "    }\n" +
