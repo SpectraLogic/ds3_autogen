@@ -3,9 +3,8 @@
 package models
 
 import (
-    "errors"
-    "fmt"
-    "bytes"
-    "log"
+	"bytes"
+	"errors"
+	"fmt"
+	"log"
 )
-

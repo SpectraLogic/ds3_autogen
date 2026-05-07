@@ -72,7 +72,7 @@ public class BaseClientGenerator_Test {
                 "GetBucketHandler",
                 ImmutableList.of(
                         new HttpVerbBuildLine(HttpVerb.GET),
-                        new PathBuildLine("\"/\" + request.BucketName"),
+                        new PathBuildLine("\"/\"+request.BucketName"),
                         new OptionalQueryParamBuildLine("delimiter", "request.Delimiter"),
                         new OptionalQueryParamBuildLine("marker", "request.Marker"),
                         new OptionalQueryParamBuildLine("max_keys", "networking.IntPtrToStrPtr(request.MaxKeys)"),
@@ -147,14 +147,14 @@ public class BaseClientGenerator_Test {
                         "DeleteBucketHandler",
                         ImmutableList.of(
                                 new HttpVerbBuildLine(HttpVerb.DELETE),
-                                new PathBuildLine("\"/_rest_/bucket/\" + request.BucketName"),
+                                new PathBuildLine("\"/_rest_/bucket/\"+request.BucketName"),
                                 new VoidOptionalQueryParamBuildLine("force", "Force")
                         )),
                 new Command(
                         "CreateGetJobHandler",
                         ImmutableList.of(
                                 new HttpVerbBuildLine(HttpVerb.PUT),
-                                new PathBuildLine("\"/_rest_/bucket/\" + request.BucketName"),
+                                new PathBuildLine("\"/_rest_/bucket/\"+request.BucketName"),
                                 new OptionalQueryParamBuildLine("chunk_client_processing_order_guarantee", "networking.InterfaceToStrPtr(request.ChunkClientProcessingOrderGuarantee)"),
                                 new OptionalQueryParamBuildLine("priority", "networking.InterfaceToStrPtr(request.Priority)"),
                                 new OperationBuildLine(Operation.START_BULK_GET),

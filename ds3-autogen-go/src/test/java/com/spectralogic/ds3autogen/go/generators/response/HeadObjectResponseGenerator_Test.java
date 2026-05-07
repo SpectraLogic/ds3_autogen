@@ -32,7 +32,7 @@ public class HeadObjectResponseGenerator_Test {
     @Test
     public void toResponsePayloadStructTest() {
         final String expected = "BlobChecksumType ChecksumType\n" +
-                "    BlobChecksums map[int64]string";
+                "\tBlobChecksums map[int64]string";
 
         assertThat(generator.toResponsePayloadStruct(getHeadObjectRequest().getDs3ResponseCodes()), is(expected));
     }
@@ -40,14 +40,14 @@ public class HeadObjectResponseGenerator_Test {
     @Test
     public void toResponseCodeTest() {
         final String expected = "checksumType, err := getBlobChecksumType(webResponse.Header())\n" +
-                "        if err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        checksumMap, err := getBlobChecksumMap(webResponse.Header())\n" +
-                "        if err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        return &HeadObjectResponse{BlobChecksumType: checksumType, BlobChecksums: checksumMap, Headers: webResponse.Header()}, nil";
+                "\t\tif err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\tchecksumMap, err := getBlobChecksumMap(webResponse.Header())\n" +
+                "\t\tif err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\treturn &HeadObjectResponse{BlobChecksumType: checksumType, BlobChecksums: checksumMap, Headers: webResponse.Header()}, nil";
 
         final Ds3ResponseCode ds3ResponseCode = new Ds3ResponseCode(200,
                 ImmutableList.of(new Ds3ResponseType("null", null)));

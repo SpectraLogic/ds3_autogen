@@ -20,6 +20,7 @@ import com.spectralogic.ds3autogen.api.models.apispec.Ds3Request
 import com.spectralogic.ds3autogen.api.models.apispec.Ds3ResponseCode
 import com.spectralogic.ds3autogen.go.models.response.Response
 import com.spectralogic.ds3autogen.go.models.response.ResponseCode
+import com.spectralogic.ds3autogen.go.models.response.ResponseStructField
 import com.spectralogic.ds3autogen.go.utils.goIndent
 import com.spectralogic.ds3autogen.utils.ConverterUtil.hasContent
 import com.spectralogic.ds3autogen.utils.ConverterUtil.isEmpty
@@ -39,11 +40,40 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
 
         val name = NormalizingContractNamesUtil.toResponseName(ds3Request.name)
         val payloadStruct = toResponsePayloadStruct(ds3Request.ds3ResponseCodes)
+        val payloadFields = toResponsePayloadFields(ds3Request.ds3ResponseCodes)
         val expectedCodes = toExpectedStatusCodes(ds3Request.ds3ResponseCodes)
         val parseResponseMethod = toParseResponseMethod(name, payloadStruct, ds3Request.ds3ResponseCodes)
         val responseCodes = toResponseCodeList(ds3Request.ds3ResponseCodes, name)
 
-        return Response(name, payloadStruct, expectedCodes, parseResponseMethod, responseCodes)
+        return Response(name, payloadStruct, payloadFields, expectedCodes, parseResponseMethod, responseCodes)
+    }
+
+    /**
+     * Returns the response payload fields as structured (name, type) pairs so the
+     * template can compute gofmt-compatible alignment when emitting the struct.
+     */
+    open fun toResponsePayloadFields(expectedResponseCodes: ImmutableList<Ds3ResponseCode>?): ImmutableList<ResponseStructField> {
+        val payloadStruct = toResponsePayloadStruct(expectedResponseCodes)
+        if (payloadStruct.isEmpty()) {
+            return ImmutableList.of()
+        }
+        return parsePayloadStruct(payloadStruct)
+    }
+
+    /**
+     * Splits the legacy multi-line payload struct string into structured fields.
+     * Each line is "Name Type" optionally prefixed by indentation.
+     */
+    private fun parsePayloadStruct(payloadStruct: String): ImmutableList<ResponseStructField> {
+        val fields = ImmutableList.builder<ResponseStructField>()
+        for (rawLine in payloadStruct.split("\n")) {
+            val line = rawLine.trim()
+            if (line.isEmpty()) continue
+            val firstSpace = line.indexOf(' ')
+            if (firstSpace < 0) continue
+            fields.add(ResponseStructField(line.substring(0, firstSpace), line.substring(firstSpace + 1).trim()))
+        }
+        return fields.build()
     }
 
     /**
@@ -63,7 +93,7 @@ open class BaseResponseGenerator : ResponseModelGenerator<Response>, ResponseMod
         val modelName = name.decapitalize()
         val dereference = toDereferenceResponsePayload(payloadStruct)
         return "func ($modelName *$name) parse(webResponse WebResponse) error {\n" +
-                goIndent(1) + "    return parseResponsePayload(webResponse, $dereference$modelName.$elementName)\n" +
+                goIndent(1) + "return parseResponsePayload(webResponse, $dereference$modelName.$elementName)\n" +
                 "}"
     }
 

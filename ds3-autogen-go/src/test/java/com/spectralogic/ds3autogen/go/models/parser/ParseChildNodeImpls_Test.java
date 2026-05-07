@@ -69,8 +69,8 @@ public class ParseChildNodeImpls_Test {
     @Test
     public void ParseChildNodeAddToSliceTest() {
         final String expected = String.format("var model %s\n" +
-                "            model.parse(&child, aggErr)\n" +
-                "            %s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+                "\t\t\tmodel.parse(&child, aggErr)\n" +
+                "\t\t\t%s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAddToSlice(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
@@ -80,8 +80,8 @@ public class ParseChildNodeImpls_Test {
     @Test
     public void ParseChildNodeAddEnumToSliceTest() {
         final String expected = String.format("var model %s\n" +
-                "            parseEnum(child.Content, &model, aggErr)\n" +
-                "            %s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+                "\t\t\tparseEnum(child.Content, &model, aggErr)\n" +
+                "\t\t\t%s.%s = append(%s.%s, model)", CHILD_TYPE, MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAddEnumToSlice(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
@@ -91,7 +91,7 @@ public class ParseChildNodeImpls_Test {
     @Test
     public void ParseChildNodeAddStringToSliceTest() {
         final String expected = String.format("var str = parseString(child.Content)\n" +
-                "            %s.%s = append(%s.%s, str)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+                "\t\t\t%s.%s = append(%s.%s, str)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAddStringToSlice(XML_TAG, MODEL_NAME, PARAM_NAME);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));
@@ -119,8 +119,8 @@ public class ParseChildNodeImpls_Test {
     @Test
     public void ParseChildNodeAsCommonPrefixTest() {
         final String expected = String.format("var prefixes []string\n" +
-                "            prefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)\n" +
-                "            %s.%s = append(%s.%s, prefixes...)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
+                "\t\t\tprefixes = parseStringSlice(\"Prefix\", child.Children, aggErr)\n" +
+                "\t\t\t%s.%s = append(%s.%s, prefixes...)", MODEL_NAME, PARAM_NAME, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAsCommonPrefix(MODEL_NAME, PARAM_NAME);
         assertThat(parseElement.getXmlTag(), is("CommonPrefixes"));
@@ -130,8 +130,8 @@ public class ParseChildNodeImpls_Test {
     @Test
     public void ParseChildNodeAsNullableDs3TypeTest() {
         final String expected = String.format("var model %s\n" +
-                "            model.parse(&child, aggErr)\n" +
-                "            %s.%s = &model", CHILD_TYPE, MODEL_NAME, PARAM_NAME);
+                "\t\t\tmodel.parse(&child, aggErr)\n" +
+                "\t\t\t%s.%s = &model", CHILD_TYPE, MODEL_NAME, PARAM_NAME);
 
         final ParseElement parseElement = new ParseChildNodeAsNullableDs3Type(XML_TAG, MODEL_NAME, PARAM_NAME, CHILD_TYPE);
         assertThat(parseElement.getXmlTag(), is(XML_TAG));

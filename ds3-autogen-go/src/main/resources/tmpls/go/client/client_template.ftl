@@ -3,65 +3,63 @@
 package ds3
 
 import (
-    "context"
-    "github.com/SpectraLogic/ds3_go_sdk/ds3/models"
-    "github.com/SpectraLogic/ds3_go_sdk/ds3/networking"
+	"context"
+	"github.com/SpectraLogic/ds3_go_sdk/ds3/models"
+	"github.com/SpectraLogic/ds3_go_sdk/ds3/networking"
 <#if usesStrconv>
-    "strconv"
+	"strconv"
 </#if>
 )
-
 <#list commandsNoRedirect as cmd>
+
 func (client *Client) ${cmd.name}(ctx context.Context, request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
-    // Build the http request
-    httpRequest, err := networking.NewHttpRequestBuilder().
-        <#list cmd.requestBuildLine as line>
-        ${line.line}
-        </#list>
-        Build(ctx, client.connectionInfo)
+	// Build the http request
+	httpRequest, err := networking.NewHttpRequestBuilder().
+		<#list cmd.requestBuildLine as line>
+		${line.line}
+		</#list>
+		Build(ctx, client.connectionInfo)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
+	networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
 
-    // Invoke the HTTP request.
-    response, requestErr := networkRetryDecorator.Invoke(httpRequest)
-    if requestErr != nil {
-        return nil, requestErr
-    }
+	// Invoke the HTTP request.
+	response, requestErr := networkRetryDecorator.Invoke(httpRequest)
+	if requestErr != nil {
+		return nil, requestErr
+	}
 
-    // Create a response object based on the result.
-    return models.New${cmd.name}Response(response)
+	// Create a response object based on the result.
+	return models.New${cmd.name}Response(response)
 }
-
 </#list>
-
 <#list commandsWithRedirect as cmd>
+
 func (client *Client) ${cmd.name}(ctx context.Context, request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
-    // Build the http request
-    httpRequest, err := networking.NewHttpRequestBuilder().
-        <#list cmd.requestBuildLine as line>
-        ${line.line}
-        </#list>
-        Build(ctx, client.connectionInfo)
+	// Build the http request
+	httpRequest, err := networking.NewHttpRequestBuilder().
+		<#list cmd.requestBuildLine as line>
+		${line.line}
+		</#list>
+		Build(ctx, client.connectionInfo)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
-    httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(networkRetryDecorator, client.clientPolicy.maxRedirect)
+	networkRetryDecorator := networking.NewNetworkRetryDecorator(client.sendNetwork, client.clientPolicy.maxRetries)
+	httpRedirectDecorator := networking.NewHttpTempRedirectDecorator(networkRetryDecorator, client.clientPolicy.maxRedirect)
 
-    // Invoke the HTTP request.
-    response, requestErr := httpRedirectDecorator.Invoke(httpRequest)
-    if requestErr != nil {
-        return nil, requestErr
-    }
+	// Invoke the HTTP request.
+	response, requestErr := httpRedirectDecorator.Invoke(httpRequest)
+	if requestErr != nil {
+		return nil, requestErr
+	}
 
-    // Create a response object based on the result.
-    return models.New${cmd.name}Response(response)
+	// Create a response object based on the result.
+	return models.New${cmd.name}Response(response)
 }
-
 </#list>

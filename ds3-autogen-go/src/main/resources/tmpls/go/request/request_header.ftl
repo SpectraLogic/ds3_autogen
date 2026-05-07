@@ -3,7 +3,6 @@
 package models
 
 import (
-    "fmt"
-    "strings"
+	"fmt"
+	"strings"
 )
-

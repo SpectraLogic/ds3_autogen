@@ -51,10 +51,10 @@ fun Ds3Request.getAmazonS3RequestPath(): String {
     }
     val builder = StringBuilder("\"/\"")
     if (bucketRequirement == Requirement.REQUIRED) {
-        builder.append(" + ").append(PATH_REQUEST_REFERENCE).append(".BucketName")
+        builder.append("+").append(PATH_REQUEST_REFERENCE).append(".BucketName")
     }
     if (objectRequirement == Requirement.REQUIRED) {
-        builder.append(" + \"/\" + ").append(PATH_REQUEST_REFERENCE).append(".ObjectName")
+        builder.append("+\"/\"+").append(PATH_REQUEST_REFERENCE).append(".ObjectName")
     }
     return builder.toString()
 }
@@ -77,12 +77,12 @@ fun Ds3Request.getSpectraDs3RequestPath(): String {
             && includeInPath
             && (RequestConverterUtil.getNotificationType(this) == NotificationType.DELETE
                 || RequestConverterUtil.getNotificationType(this) == NotificationType.GET)) {
-        builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE).append(".NotificationId")
+        builder.append("/\"").append("+").append(PATH_REQUEST_REFERENCE).append(".NotificationId")
     } else if (Ds3RequestUtils.hasBucketNameInPath(this)) {
-        builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE).append(".BucketName")
+        builder.append("/\"").append("+").append(PATH_REQUEST_REFERENCE).append(".BucketName")
     } else if (this.isGoResourceAnArg()) {
         val resourceArg = this.getGoArgFromResource()
-        builder.append("/\"").append(" + ").append(PATH_REQUEST_REFERENCE)
+        builder.append("/\"").append("+").append(PATH_REQUEST_REFERENCE)
                 .append(".").append(resourceArg.name.capitalize())
     } else {
         builder.append("\"")

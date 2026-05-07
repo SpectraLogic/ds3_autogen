@@ -26,8 +26,8 @@ public class GoFormattingUtil_Test {
     public void goIndentTest() {
         assertThat(GoFormattingUtilKt.goIndent(-1), is(""));
         assertThat(GoFormattingUtilKt.goIndent(0), is(""));
-        assertThat(GoFormattingUtilKt.goIndent(1), is("    "));
-        assertThat(GoFormattingUtilKt.goIndent(2), is("        "));
-        assertThat(GoFormattingUtilKt.goIndent(3), is("            "));
+        assertThat(GoFormattingUtilKt.goIndent(1), is("\t"));
+        assertThat(GoFormattingUtilKt.goIndent(2), is("\t\t"));
+        assertThat(GoFormattingUtilKt.goIndent(3), is("\t\t\t"));
     }
 }

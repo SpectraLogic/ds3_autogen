@@ -167,11 +167,11 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toPayloadResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := body.parse(webResponse); err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        body.Headers = webResponse.Header()\n" +
-                "        return &body, nil";
+                "\t\tif err := body.parse(webResponse); err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\tbody.Headers = webResponse.Header()\n" +
+                "\t\treturn &body, nil";
 
         final ResponseCode result = generator.toPayloadResponseCode(200, "ResponseName");
         assertThat(result.getCode(), is(200));
@@ -190,10 +190,10 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toStringPayloadResponseCode() {
         final String expect = "content, err := getResponseBodyAsString(webResponse)\n" +
-                "        if err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        return &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
+                "\t\tif err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\treturn &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
 
         final ResponseCode result = generator.toStringPayloadResponseCode(200, "ResponseName");
         assertThat(result.getCode(), is(200));
@@ -221,10 +221,10 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toResponseCode_StringPayload_Test() {
         final String expectedGoCode = "content, err := getResponseBodyAsString(webResponse)\n" +
-                "        if err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        return &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
+                "\t\tif err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\treturn &ResponseName{Content: content, Headers: webResponse.Header()}, nil";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,
@@ -238,11 +238,11 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toResponseCode_Test() {
         final String expectedGoCode = "var body ResponseName\n" +
-                "        if err := body.parse(webResponse); err != nil {\n" +
-                "            return nil, err\n" +
-                "        }\n" +
-                "        body.Headers = webResponse.Header()\n" +
-                "        return &body, nil";
+                "\t\tif err := body.parse(webResponse); err != nil {\n" +
+                "\t\t\treturn nil, err\n" +
+                "\t\t}\n" +
+                "\t\tbody.Headers = webResponse.Header()\n" +
+                "\t\treturn &body, nil";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
                 200,
@@ -267,11 +267,11 @@ public class BaseResponseGenerator_Test {
     public void toResponseCodeList_Test() {
         final ImmutableList<ResponseCode> expectedCodes = ImmutableList.of(
                 new ResponseCode(200, "var body ResponseName\n" +
-                        "        if err := body.parse(webResponse); err != nil {\n" +
-                        "            return nil, err\n" +
-                        "        }\n" +
-                        "        body.Headers = webResponse.Header()\n" +
-                        "        return &body, nil"),
+                        "\t\tif err := body.parse(webResponse); err != nil {\n" +
+                        "\t\t\treturn nil, err\n" +
+                        "\t\t}\n" +
+                        "\t\tbody.Headers = webResponse.Header()\n" +
+                        "\t\treturn &body, nil"),
                 new ResponseCode(204, "return &ResponseName{Headers: webResponse.Header()}, nil")
         );
 
@@ -330,7 +330,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toParseResponseMethod_WithDereference_Test() {
         final String expected = "func (modelName *ModelName) parse(webResponse WebResponse) error {\n" +
-                "        return parseResponsePayload(webResponse, &modelName.TestType)\n" +
+                "\treturn parseResponsePayload(webResponse, &modelName.TestType)\n" +
                 "}";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(
@@ -349,7 +349,7 @@ public class BaseResponseGenerator_Test {
     @Test
     public void toParseResponseMethod_WithoutDereference_Test() {
         final String expected = "func (modelName *ModelName) parse(webResponse WebResponse) error {\n" +
-                "        return parseResponsePayload(webResponse, modelName.TestType)\n" +
+                "\treturn parseResponsePayload(webResponse, modelName.TestType)\n" +
                 "}";
 
         final Ds3ResponseCode responseCode = new Ds3ResponseCode(

@@ -1,19 +1,26 @@
+<#assign maxConstLen = 0>
+<#list enumConstants as const>
+	<#if (enumPrefix + const)?length gt maxConstLen>
+		<#assign maxConstLen = (enumPrefix + const)?length>
+	</#if>
+</#list>
+
 type ${name} Enum
 
 const (
-    <#list enumConstants as const>
-    ${enumPrefix}${const} ${name} = 1 + iota
-    </#list>
+<#list enumConstants as const>
+	${(enumPrefix + const)?right_pad(maxConstLen)} ${name} = 1 + iota
+</#list>
 )
 
 <#include "enum_unmarshal_to_string.ftl" />
 
 func new${name}FromContent(content []byte, aggErr *AggregateError) *${name} {
-    if len(content) == 0 {
-        // no value
-        return nil
-    }
-    result := new(${name})
-    parseEnum(content, result, aggErr)
-    return result
+	if len(content) == 0 {
+		// no value
+		return nil
+	}
+	result := new(${name})
+	parseEnum(content, result, aggErr)
+	return result
 }
