@@ -37,7 +37,9 @@ ${requestHelper.generateParameterValidationBlock(requestEntry)}
 <#elseif requestEntry.supportsPagination()>
     error = _parse_top_level_${requestEntry.getResponseType()}(client, request, response, xml_blob);
 
-    (*response)->paging = _parse_paging_headers(return_headers);
+    if (error == NULL) {
+        (*response)->paging = _parse_paging_headers(return_headers);
+    }
     ds3_string_multimap_free(return_headers);
 
     return error;

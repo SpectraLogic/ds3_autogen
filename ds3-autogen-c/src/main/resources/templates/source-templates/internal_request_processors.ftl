@@ -9,7 +9,7 @@ static ds3_error* _internal_request_dispatcher(
     if (client == NULL || request == NULL) {
         return ds3_create_error(DS3_ERROR_MISSING_ARGS, "All arguments must be filled in for request processing");
     }
-    return net_process_request(client, request, read_user_struct, read_handler_func, write_user_struct, write_handler_func, return_headers);
+    return client->net_callback(client, request, read_user_struct, read_handler_func, write_user_struct, write_handler_func, return_headers);
 }
 
 static int num_chars_in_ds3_str(const ds3_str *const str, char ch) {
