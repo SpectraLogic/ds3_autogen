@@ -1,0 +1,97 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetJobsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="FullDetails" Type="void"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobsApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.A91ACBDE9427D4617DBA938B01FD4A65</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee">
+                <EnumConstants>
+                    <EnumConstant Name="IN_ORDER"/>
+                    <EnumConstant Name="ANY"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType">
+                <EnumConstants>
+                    <EnumConstant Name="PUT"/>
+                    <EnumConstant Name="GET"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                <EnumConstants>
+                    <EnumConstant Name="CRITICAL"/>
+                    <EnumConstant Name="URGENT"/>
+                    <EnumConstant Name="HIGH"/>
+                    <EnumConstant Name="NORMAL"/>
+                    <EnumConstant Name="LOW"/>
+                    <EnumConstant Name="BACKGROUND"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.IomType">
+                <EnumConstants>
+                    <EnumConstant Name="RESTORE"/>
+                    <EnumConstant Name="NONE"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.server.domain.JobApiBean">
+                <Elements>
+                    <Element Name="Aggregating" Type="boolean"/>
+                    <Element Name="BucketId" Type="java.util.UUID"/>
+                    <Element Name="CachedSizeInBytes" Type="long"/>
+                    <Element Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
+                    <Element Name="CompletedSizeInBytes" Type="long"/>
+                    <Element Name="CreatedAt" Type="java.util.Date"/>
+                    <Element Name="DeadJobCleanupAllowed" Type="boolean"/>
+                    <Element Name="ErrorMessage" Type="java.lang.String"/>
+                    <Element Name="Id" Type="java.util.UUID"/>
+                    <Element Name="ImplicitJobIdResolution" Type="boolean"/>
+                    <Element Name="IomType" Type="com.spectralogic.s3.common.dao.domain.ds3.IomType"/>
+                    <Element Name="MinimizeSpanningAcrossMedia" Type="boolean"/>
+                    <Element Name="Naked" Type="boolean"/>
+                    <Element Name="Name" Type="java.lang.String"/>
+                    <Element Name="OriginalSizeInBytes" Type="long"/>
+                    <Element Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                    <Element Name="Protected" Type="boolean"/>
+                    <Element Name="Rechunked" Type="java.util.Date"/>
+                    <Element Name="Replicating" Type="boolean"/>
+                    <Element Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType"/>
+                    <Element Name="Truncated" Type="boolean"/>
+                    <Element Name="TruncatedDueToTimeout" Type="boolean"/>
+                    <Element Name="UserId" Type="java.util.UUID"/>
+                    <Element Name="VerifyAfterWrite" Type="boolean"/>
+                </Elements>
+            </Type>
+            <Type Name="com.spectralogic.s3.server.domain.JobsApiBean" NameToMarshal="">
+                <Elements>
+                    <Element ComponentType="com.spectralogic.s3.server.domain.JobApiBean" Name="Jobs" Type="array">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.CustomMarshaledName">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="CollectionValue" Value="Jobs" ValueType="java.lang.String"/>
+                                    <AnnotationElement Name="CollectionValueRenderingMode" Value="SINGLE_BLOCK_FOR_ALL_ELEMENTS" ValueType="com.spectralogic.util.marshal.CustomMarshaledName$CollectionNameRenderingMode"/>
+                                    <AnnotationElement Name="Value" Value="Job" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>

@@ -1,0 +1,200 @@
+<Data>
+    <Contract>
+        <RequestHandlers>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.GetCanceledJobsRequestHandler">
+                <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="CANCELED_JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="CanceledDueToTimeout" Type="boolean"/>
+                        <Param Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee"/>
+                        <Param Name="LastPage" Type="void"/>
+                        <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="PageLength" Type="int"/>
+                        <Param Name="PageOffset" Type="int"/>
+                        <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                        <Param Name="Rechunked" Type="java.util.Date"/>
+                        <Param Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType"/>
+                        <Param Name="Truncated" Type="boolean"/>
+                        <Param Name="UserId" Type="java.util.UUID"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.ds3.CanceledJob" Type="array"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.2CB8F6FD0FD4AAB2DBFDA3B66906F811</Version>
+            </RequestHandler>
+        </RequestHandlers>
+        <Types>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee">
+                <EnumConstants>
+                    <EnumConstant Name="IN_ORDER"/>
+                    <EnumConstant Name="ANY"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType">
+                <EnumConstants>
+                    <EnumConstant Name="PUT"/>
+                    <EnumConstant Name="GET"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                <EnumConstants>
+                    <EnumConstant Name="CRITICAL"/>
+                    <EnumConstant Name="URGENT"/>
+                    <EnumConstant Name="HIGH"/>
+                    <EnumConstant Name="NORMAL"/>
+                    <EnumConstant Name="LOW"/>
+                    <EnumConstant Name="BACKGROUND"/>
+                </EnumConstants>
+            </Type>
+            <Type Name="com.spectralogic.s3.common.dao.domain.ds3.CanceledJob">
+                <Elements>
+                    <Element Name="BucketId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CachedSizeInBytes" Type="long">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="CanceledDueToTimeout" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ChunkClientProcessingOrderGuarantee" Type="com.spectralogic.s3.common.dao.domain.ds3.JobChunkClientProcessingOrderGuarantee">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="IN_ORDER" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="CompletedSizeInBytes" Type="long">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="CreatedAt" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DateCanceled" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultToCurrentDate">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Value" Value="0" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="ErrorMessage" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Id" Type="java.util.UUID">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Naked" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Name" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultStringValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="Untitled" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="OriginalSizeInBytes" Type="long">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Priority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="NORMAL" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Rechunked" Type="java.util.Date">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType">
+                        <Annotations/>
+                    </Element>
+                    <Element Name="Truncated" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="UserId" Type="java.util.UUID">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="DEFAULT" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.References">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.User" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                </Elements>
+            </Type>
+        </Types>
+    </Contract>
+</Data>
