@@ -3,18 +3,19 @@
 package ds3
 
 import (
+    "context"
     "github.com/SpectraLogic/ds3_go_sdk/ds3/models"
     "github.com/SpectraLogic/ds3_go_sdk/ds3/networking"
 )
 
 <#list commandsNoRedirect as cmd>
-func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
+func (client *Client) ${cmd.name}(ctx context.Context, request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
     // Build the http request
     httpRequest, err := networking.NewHttpRequestBuilder().
         <#list cmd.requestBuildLine as line>
         ${line.line}
         </#list>
-        Build(client.connectionInfo)
+        Build(ctx, client.connectionInfo)
 
     if err != nil {
         return nil, err
@@ -35,13 +36,13 @@ func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.$
 </#list>
 
 <#list commandsWithRedirect as cmd>
-func (client *Client) ${cmd.name}(request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
+func (client *Client) ${cmd.name}(ctx context.Context, request *models.${cmd.name}Request) (*models.${cmd.name}Response, error) {
     // Build the http request
     httpRequest, err := networking.NewHttpRequestBuilder().
         <#list cmd.requestBuildLine as line>
         ${line.line}
         </#list>
-        Build(client.connectionInfo)
+        Build(ctx, client.connectionInfo)
 
     if err != nil {
         return nil, err
