@@ -215,4 +215,13 @@ public class Ds3SpecParserImpl_Test {
         assertThat(spec.getRequests(), is(notNullValue()));
         assertThat(spec.getTypes(), is(notNullValue()));
     }
+
+    @Test
+    public void fullXml_6_0_0() throws IOException {
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(Ds3SpecParserImpl_Test.class.getResourceAsStream("/specs/6_0_0_3247577_contract.xml"));
+        assertThat(spec, is(notNullValue()));
+        assertThat(spec.getRequests(), is(notNullValue()));
+        assertThat(spec.getTypes(), is(notNullValue()));
+    }
 }
