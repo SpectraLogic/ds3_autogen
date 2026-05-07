@@ -30,8 +30,19 @@ open class BaseClientGenerator : ClientModelGenerator<Client> {
     override fun generate(ds3Requests: ImmutableList<Ds3Request>): Client {
         val commandsNoRedirect = toCommandList(ds3Requests, false)
         val commandsWithRedirect = toCommandList(ds3Requests, true)
+        val usesStrconv = anyCommandUsesStrconv(commandsNoRedirect) || anyCommandUsesStrconv(commandsWithRedirect)
 
-        return Client(commandsNoRedirect, commandsWithRedirect)
+        return Client(commandsNoRedirect, commandsWithRedirect, usesStrconv)
+    }
+
+    /**
+     * Determines whether any command in the list emits a request build line that
+     * references the Go strconv package. Required query params for primitive types
+     * (int, int64, bool, float64) are converted to strings using strconv, so the
+     * generated client file must import strconv when any such command is present.
+     */
+    fun anyCommandUsesStrconv(commands: ImmutableList<Command>): Boolean {
+        return commands.any { cmd -> cmd.requestBuildLine.any { it.line.contains("strconv.") } }
     }
 
     /**
