@@ -6,6 +6,9 @@ import (
     "context"
     "github.com/SpectraLogic/ds3_go_sdk/ds3/models"
     "github.com/SpectraLogic/ds3_go_sdk/ds3/networking"
+<#if usesStrconv>
+    "strconv"
+</#if>
 )
 
 <#list commandsNoRedirect as cmd>

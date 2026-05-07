@@ -19,4 +19,5 @@ import com.google.common.collect.ImmutableList
 
 data class Client(
         val commandsNoRedirect: ImmutableList<Command>,
-        val commandsWithRedirect: ImmutableList<Command>)
+        val commandsWithRedirect: ImmutableList<Command>,
+        val usesStrconv: Boolean)

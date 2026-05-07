@@ -86,6 +86,9 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithQueryParam(\"id\", request.Id)."));
         assertTrue(client.contains("WithOptionalQueryParam(\"upload_id\", request.UploadId)."));
         assertTrue(client.contains("WithOptionalQueryParam(\"offset\", networking.Int64PtrToStrPtr(request.Offset))."));
+
+        // Client must not import strconv when no command uses strconv-based conversions.
+        assertFalse(client.contains("\"strconv\""));
     }
 
     @Test
@@ -872,6 +875,9 @@ public class GoFunctionalTests {
         assertTrue(client.contains("WithQueryParam(\"part_number\", strconv.Itoa(request.PartNumber))."));
         assertTrue(client.contains("WithQueryParam(\"upload_id\", request.UploadId)."));
         assertTrue(client.contains("WithReader(request.Content)."));
+
+        // Client must import strconv when any command uses strconv-based conversions.
+        assertTrue(client.contains("\"strconv\""));
     }
 
     @Test
