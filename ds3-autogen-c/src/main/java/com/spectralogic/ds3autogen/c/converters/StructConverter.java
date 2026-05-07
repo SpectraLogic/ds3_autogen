@@ -77,7 +77,7 @@ public final class StructConverter {
     }
 
     private static String convertNameToMarshall(final Ds3Type ds3Type) {
-        if (ds3Type.getName().endsWith("JobList")) {
+        if (ds3Type.getName().endsWith(".JobList")) {
             return "Jobs";
         } else if (ConverterUtil.isEmpty(ds3Type.getNameToMarshal())) {
             return "Data";

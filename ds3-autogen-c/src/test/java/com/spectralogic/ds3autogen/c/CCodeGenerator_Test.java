@@ -744,6 +744,290 @@ public class CCodeGenerator_Test {
     }
 
     @Test
+    public void testGetActiveJobs() throws Exception {
+        final String inputSpecFile = "/input/GetActiveJobs_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput = "static ds3_error* _parse_top_level_ds3_active_job_list_response(const ds3_client* client, const ds3_request* request, ds3_active_job_list_response** _response, GByteArray* xml_blob) {\n" +
+                "    xmlDocPtr doc;\n" +
+                "    xmlNodePtr root;\n" +
+                "    xmlNodePtr child_node;\n" +
+                "    ds3_active_job_list_response* response;\n" +
+                "    ds3_error* error = NULL;\n" +
+                "    GPtrArray* active_jobs_array = g_ptr_array_new();\n" +
+                "\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
+                "    if (error != NULL) {\n" +
+                "        return error;\n" +
+                "    }\n" +
+                "\n" +
+                "    response = g_new0(ds3_active_job_list_response, 1);\n" +
+                "\n" +
+                "    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n" +
+                "        if (element_equal(child_node, \"Job\")) {\n" +
+                "            ds3_active_job_response* active_jobs_response = NULL;\n" +
+                "            error = _parse_ds3_active_job_response(client, doc, child_node, &active_jobs_response);\n" +
+                "            response->active_jobs = (ds3_active_job_response**)active_jobs_array->pdata;\n" +
+                "            g_ptr_array_add(active_jobs_array, active_jobs_response);\n" +
+                "        } else {\n" +
+                "            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_active_job_list_response [%s]\\n\", child_node->name, root->name);\n" +
+                "        }\n" +
+                "\n" +
+                "        if (error != NULL) {\n" +
+                "            break;\n" +
+                "        }\n" +
+                "\n" +
+                "    }\n" +
+                "\n" +
+                "    response->active_jobs = (ds3_active_job_response**)active_jobs_array->pdata;\n" +
+                "    response->num_active_jobs = active_jobs_array->len;\n" +
+                "    g_ptr_array_free(active_jobs_array, FALSE);\n" +
+                "\n" +
+                "    xmlFreeDoc(doc);\n" +
+                "\n" +
+                "    if (error == NULL) {\n" +
+                "        *_response = response;\n" +
+                "    } else {\n" +
+                "        ds3_active_job_list_response_free(response);\n" +
+                "    }\n" +
+                "\n" +
+                "    return error;\n" +
+                "}";
+
+        assertTrue(output.contains(expectedOutput));
+    }
+
+    @Test
+    public void testGetCompletedJobs() throws Exception {
+        final String inputSpecFile = "/input/GetCompletedJobs_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput = "static ds3_error* _parse_top_level_ds3_completed_job_list_response(const ds3_client* client, const ds3_request* request, ds3_completed_job_list_response** _response, GByteArray* xml_blob) {\n" +
+                "    xmlDocPtr doc;\n" +
+                "    xmlNodePtr root;\n" +
+                "    xmlNodePtr child_node;\n" +
+                "    ds3_completed_job_list_response* response;\n" +
+                "    ds3_error* error = NULL;\n" +
+                "    GPtrArray* completed_jobs_array = g_ptr_array_new();\n" +
+                "\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
+                "    if (error != NULL) {\n" +
+                "        return error;\n" +
+                "    }\n" +
+                "\n" +
+                "    response = g_new0(ds3_completed_job_list_response, 1);\n" +
+                "\n" +
+                "    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n" +
+                "        if (element_equal(child_node, \"CompletedJob\")) {\n" +
+                "            ds3_completed_job_response* completed_jobs_response = NULL;\n" +
+                "            error = _parse_ds3_completed_job_response(client, doc, child_node, &completed_jobs_response);\n" +
+                "            response->completed_jobs = (ds3_completed_job_response**)completed_jobs_array->pdata;\n" +
+                "            g_ptr_array_add(completed_jobs_array, completed_jobs_response);\n" +
+                "        } else {\n" +
+                "            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_completed_job_list_response [%s]\\n\", child_node->name, root->name);\n" +
+                "        }\n" +
+                "\n" +
+                "        if (error != NULL) {\n" +
+                "            break;\n" +
+                "        }\n" +
+                "\n" +
+                "    }\n" +
+                "\n" +
+                "    response->completed_jobs = (ds3_completed_job_response**)completed_jobs_array->pdata;\n" +
+                "    response->num_completed_jobs = completed_jobs_array->len;\n" +
+                "    g_ptr_array_free(completed_jobs_array, FALSE);\n" +
+                "\n" +
+                "    xmlFreeDoc(doc);\n" +
+                "\n" +
+                "    if (error == NULL) {\n" +
+                "        *_response = response;\n" +
+                "    } else {\n" +
+                "        ds3_completed_job_list_response_free(response);\n" +
+                "    }\n" +
+                "\n" +
+                "    return error;\n" +
+                "}";
+
+        assertTrue(output.contains(expectedOutput));
+    }
+
+    @Test
+    public void testGetCanceledJobs() throws Exception {
+        final String inputSpecFile = "/input/GetCanceledJobs_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput = "static ds3_error* _parse_top_level_ds3_canceled_job_list_response(const ds3_client* client, const ds3_request* request, ds3_canceled_job_list_response** _response, GByteArray* xml_blob) {\n" +
+                "    xmlDocPtr doc;\n" +
+                "    xmlNodePtr root;\n" +
+                "    xmlNodePtr child_node;\n" +
+                "    ds3_canceled_job_list_response* response;\n" +
+                "    ds3_error* error = NULL;\n" +
+                "    GPtrArray* canceled_jobs_array = g_ptr_array_new();\n" +
+                "\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Data\");\n" +
+                "    if (error != NULL) {\n" +
+                "        return error;\n" +
+                "    }\n" +
+                "\n" +
+                "    response = g_new0(ds3_canceled_job_list_response, 1);\n" +
+                "\n" +
+                "    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n" +
+                "        if (element_equal(child_node, \"CanceledJob\")) {\n" +
+                "            ds3_canceled_job_response* canceled_jobs_response = NULL;\n" +
+                "            error = _parse_ds3_canceled_job_response(client, doc, child_node, &canceled_jobs_response);\n" +
+                "            response->canceled_jobs = (ds3_canceled_job_response**)canceled_jobs_array->pdata;\n" +
+                "            g_ptr_array_add(canceled_jobs_array, canceled_jobs_response);\n" +
+                "        } else {\n" +
+                "            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_canceled_job_list_response [%s]\\n\", child_node->name, root->name);\n" +
+                "        }\n" +
+                "\n" +
+                "        if (error != NULL) {\n" +
+                "            break;\n" +
+                "        }\n" +
+                "\n" +
+                "    }\n" +
+                "\n" +
+                "    response->canceled_jobs = (ds3_canceled_job_response**)canceled_jobs_array->pdata;\n" +
+                "    response->num_canceled_jobs = canceled_jobs_array->len;\n" +
+                "    g_ptr_array_free(canceled_jobs_array, FALSE);\n" +
+                "\n" +
+                "    xmlFreeDoc(doc);\n" +
+                "\n" +
+                "    if (error == NULL) {\n" +
+                "        *_response = response;\n" +
+                "    } else {\n" +
+                "        ds3_canceled_job_list_response_free(response);\n" +
+                "    }\n" +
+                "\n" +
+                "    return error;\n" +
+                "}";
+
+        assertTrue(output.contains(expectedOutput));
+    }
+
+    @Test
+    public void testGetJobs() throws Exception {
+        final String inputSpecFile = "/input/GetJobs_WithResponsePayload.xml";
+        final TestFileUtilsImpl fileUtils = new TestFileUtilsImpl();
+        final Ds3SpecParser parser = new Ds3SpecParserImpl();
+        final Ds3ApiSpec spec = parser.getSpec(CCodeGenerator_Test.class.getResourceAsStream(inputSpecFile));
+
+        final ImmutableList<Request> allRequests = CCodeGenerator.getAllRequests(spec, new Ds3DocSpecEmptyImpl());
+        final ImmutableList<Enum> allEnums = CCodeGenerator.getAllEnums(spec);
+        final ImmutableSet<String> enumNames = EnumHelper.getEnumNamesSet(allEnums);
+        final ImmutableSet<String> arrayMemberTypes = CCodeGenerator.getArrayMemberTypes(spec, enumNames);
+        final ImmutableSet<String> responseTypes = RequestHelper.getResponseTypes(allRequests);
+        final ImmutableList<Struct> allStructs = CCodeGenerator.getAllStructs(spec, enumNames, responseTypes, ImmutableSet.of(), arrayMemberTypes, ImmutableSet.of());
+        final ImmutableList<Struct> allOrderedStructs = StructHelper.getStructsOrderedList(allStructs, enumNames);
+        final Source source = SourceConverter.toSource(allEnums, allOrderedStructs, allRequests);
+
+        final CCodeGenerator codeGenerator = new CCodeGenerator();
+        codeGenerator.processTemplate(source, "source-templates/ds3_requests.ftl", fileUtils.getOutputStream());
+
+        final ByteArrayOutputStream bstream = (ByteArrayOutputStream) fileUtils.getOutputStream();
+        final String output = new String(bstream.toByteArray());
+
+        final String expectedOutput = "static ds3_error* _parse_top_level_ds3_job_list_response(const ds3_client* client, const ds3_request* request, ds3_job_list_response** _response, GByteArray* xml_blob) {\n" +
+                "    xmlDocPtr doc;\n" +
+                "    xmlNodePtr root;\n" +
+                "    xmlNodePtr child_node;\n" +
+                "    ds3_job_list_response* response;\n" +
+                "    ds3_error* error = NULL;\n" +
+                "    GPtrArray* jobs_array = g_ptr_array_new();\n" +
+                "\n" +
+                "    error = _get_request_xml_nodes(xml_blob, &doc, &root, \"Jobs\");\n" +
+                "    if (error != NULL) {\n" +
+                "        return error;\n" +
+                "    }\n" +
+                "\n" +
+                "    response = g_new0(ds3_job_list_response, 1);\n" +
+                "\n" +
+                "    for (child_node = root->xmlChildrenNode; child_node != NULL; child_node = child_node->next) {\n" +
+                "        if (element_equal(child_node, \"Job\")) {\n" +
+                "            ds3_job_response* jobs_response = NULL;\n" +
+                "            error = _parse_ds3_job_response(client, doc, child_node, &jobs_response);\n" +
+                "            response->jobs = (ds3_job_response**)jobs_array->pdata;\n" +
+                "            g_ptr_array_add(jobs_array, jobs_response);\n" +
+                "        } else {\n" +
+                "            ds3_log_message(client->log, DS3_ERROR, \"Unknown node[%s] of ds3_job_list_response [%s]\\n\", child_node->name, root->name);\n" +
+                "        }\n" +
+                "\n" +
+                "        if (error != NULL) {\n" +
+                "            break;\n" +
+                "        }\n" +
+                "\n" +
+                "    }\n" +
+                "\n" +
+                "    response->jobs = (ds3_job_response**)jobs_array->pdata;\n" +
+                "    response->num_jobs = jobs_array->len;\n" +
+                "    g_ptr_array_free(jobs_array, FALSE);\n" +
+                "\n" +
+                "    xmlFreeDoc(doc);\n" +
+                "\n" +
+                "    if (error == NULL) {\n" +
+                "        *_response = response;\n" +
+                "    } else {\n" +
+                "        ds3_job_list_response_free(response);\n" +
+                "    }\n" +
+                "\n" +
+                "    return error;\n" +
+                "}";
+
+        assertTrue(output.contains(expectedOutput));
+    }
+
+    @Test
     public void testRequestDocumentation() throws IOException {
         final Ds3DocSpecParser docSpecParser = new Ds3DocSpecParserImpl(new NameMapper());
         final Ds3DocSpec docSpec = docSpecParser.getDocSpec(CCodeGenerator_Test.class.getResourceAsStream("/input/testCommandDocumentation.json"));
