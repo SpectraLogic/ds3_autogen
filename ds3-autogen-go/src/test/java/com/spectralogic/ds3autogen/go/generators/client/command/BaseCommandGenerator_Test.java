@@ -37,7 +37,7 @@ public class BaseCommandGenerator_Test {
         assertThat(result)
                 .containsExactlyInAnyOrder(
                         new HttpVerbBuildLine(HttpVerb.PUT),
-                        new PathBuildLine("\"/\" + request.BucketName + \"/\" + request.ObjectName"),
+                        new PathBuildLine("\"/\"+request.BucketName+\"/\"+request.ObjectName"),
                         new OptionalQueryParamBuildLine("job", "request.Job"),
                         new OptionalQueryParamBuildLine("offset", "networking.Int64PtrToStrPtr(request.Offset)")
                 );
@@ -50,7 +50,7 @@ public class BaseCommandGenerator_Test {
         assertThat(result)
                 .containsExactlyInAnyOrder(
                         new HttpVerbBuildLine(HttpVerb.GET),
-                        new PathBuildLine("\"/\" + request.BucketName"),
+                        new PathBuildLine("\"/\"+request.BucketName"),
                         new OptionalQueryParamBuildLine("delimiter", "request.Delimiter"),
                         new OptionalQueryParamBuildLine("marker", "request.Marker"),
                         new OptionalQueryParamBuildLine("max_keys", "networking.IntPtrToStrPtr(request.MaxKeys)"),

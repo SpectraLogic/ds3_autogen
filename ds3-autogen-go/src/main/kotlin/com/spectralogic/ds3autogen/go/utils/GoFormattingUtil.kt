@@ -20,7 +20,7 @@ package com.spectralogic.ds3autogen.go.utils
  */
 
 /** The standard indentation used in the Go SDK */
-private val GO_INDENT = "    "
+private val GO_INDENT = "\t"
 
 /**
  * Creates the specified indentation in accordance with the Go SDK formatting

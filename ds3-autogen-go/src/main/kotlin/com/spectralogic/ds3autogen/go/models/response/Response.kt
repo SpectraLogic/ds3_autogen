@@ -16,11 +16,13 @@
 package com.spectralogic.ds3autogen.go.models.response
 
 import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableSet
+
+data class ResponseStructField(val name: String, val type: String)
 
 data class Response(
         val name: String,
         val payloadStruct: String, //The struct definition for the response payload
+        val payloadFields: ImmutableList<ResponseStructField>, //Payload fields, used by templates for aligned struct emission
         val expectedCodes: String,
         val parseResponseMethod: String, //Contains the Go code for the parse method if one is needed, else empty
         val responseCodes: ImmutableList<ResponseCode>)
